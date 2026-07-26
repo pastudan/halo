@@ -916,491 +916,748 @@ void FUN_00137690(int object_handle, short region_index)
   FUN_0013c6e0(object_handle, region_index, *(unsigned int *)(region + 0x20));
 }
 
-/* object_cause_damage (0x137d20) — Apply damage to an object and its hierarchy.
- *
- * Main damage application entry point. Computes a random damage scale from
- * the damage effect tag, modifies it by game engine / difficulty / team
- * modifiers, iterates the object hierarchy to collect damaged objects, handles
- * unit passengers (recursive self-call), notifies player effects, then enters
- * a damage loop: for each damaged object, resolves collision model and
- * material, applies shield damage (FUN_00136bc0), body damage (FUN_001377d0),
- * commits results (FUN_00136f40), and optionally deletes the object.
- *
- * Confirmed: SUB ESP,0x74 at 0x137d23 → 0x74 bytes of locals.
- * Confirmed: tag_get(0x6a707421, *damage_params) at 0x137d34.
- * Confirmed: EDI = jpt_tag + 0x1c4 at 0x137d3f.
- * Confirmed: get_global_random_seed_address() takes 0 args at 0x137da5.
- * Confirmed: random_real_range(seed, min=*(jpt+0x1d4), max=*(jpt+0x1d8)) at
- * 0x137dab. Confirmed: FUN_00136890(@eax=object_handle) at 0x137e2c, 0x137e35.
- * Confirmed: game_engine_get_damage_multiplier(player_a, player_b) at 0x137e3b,
- * 2 cdecl args. Confirmed: ai_adjust_damage(player_index, damage_params,
- * &scale) at 0x137e19, 3 args. Confirmed:
- * game_allegiance_get_team_is_friendly(team_a, team_b) at 0x137e54. Confirmed:
- * FUN_000b5590(0) at 0x137e62, returns float on FPU. Confirmed: object parent
- * chain walk via +0xcc at 0x137ec6. Confirmed:
- * object_get_and_verify_type(handle, -1) at 0x137eec. Confirmed:
- * tag_get(0x6f626a65, *obj) at 0x137efb for object definition. Confirmed:
- * tag_get(0x636f6c6c, collision_ref) at 0x137f11 for collision model.
- * Confirmed: takes_body_damage = ~(coll_flags >> 4) & 1 at 0x137f18-0x137f22.
- * Confirmed: obj+0xa0 (widget handle) added to damaged list at 0x137f54.
- * Confirmed: unit hierarchy walk via +0xc8 at 0x137fa3.
- * Confirmed: recursive self-call at 0x138037 for passenger units.
- * BUG1-FIX: FUN_00136bc0 arg7 = &damage_scale (EBP-0xc) at 0x1382db-0x1382de.
- * BUG2-FIX: FUN_001377d0 arg10 = &body_damage (EBP-0x24) at 0x138354-0x138357.
- * BUG3-FIX: get_global_random_seed_address() is 0-arg; min/max from jpt tag.
- * BUG4-FIX: driver path passes *(unit+0x1c8) to FUN_000a3b80, not player_index.
- * BUG5-FIX: FUN_00136f40 last two args: (int)effect_ptr, material_index.
- */
-void object_cause_damage(void *damage_params, int object_handle,
-                         short node_index, short region_index,
-                         short permutation_index, unsigned int flags)
+/* object_cause_damage (0x137d20) — XBE naked draft (batch 50). */
+#if defined(__clang__)
+static void *(*const b137d20_tag)(int, int) = tag_get;
+static void (*const b137d20_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b137d20_exitfn)(int) = system_exit;
+static int *(*const b137d20_gseed)(void) = get_global_random_seed_address;
+static float (*const b137d20_rrange)(int *, float, float) = random_real_range;
+static void *(*const b137d20_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void *(*const b137d20_get)(int, int) = object_get_and_verify_type;
+static char (*const b137d20_c3f900)(int player_index, void *damage_params, float *scale) = ai_adjust_damage;
+static bool (*const b137d20_gerun)(void) = game_engine_running;
+static int (*const b137d20_c136890)(int object_index) = FUN_00136890;
+static float (*const b137d20_cad530)(int player_a, int player_b) = game_engine_get_damage_multiplier;
+static bool (*const b137d20_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
+static float (*const b137d20_cb5590)(int16_t value_type) = FUN_000b5590;
+static void (*const b137d20_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static int (*const b137d20_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static void (*const b137d20_ca3b80)(int player_index, void *damage_params, void *position, float damage_amount, float scale) = FUN_000a3b80;
+static void *(*const b137d20_elem)(void *, int, int) = tag_block_get_element;
+static char (*const b137d20_c1b1d00)(int object_handle, void *position) = unit_unsuspecting;
+static void (*const b137d20_c137540)(int object_handle) = object_deplete_body;
+static void (*const b137d20_c136bc0)(int current_object_handle, void *collision_model, void *material, void *damage_effect, void *damage_params, unsigned int *flags, float *shield_damage, float *body_damage) = FUN_00136bc0;
+static void (*const b137d20_c1377d0)(int object_handle, int region_index, int node_index, unsigned int param_4, void *collision_model, void *material, void *damage_effect, void *damage_params, unsigned int *flags, float *body_damage, void **param_11, float scale) = FUN_001377d0;
+static const char * (*const b137d20_cb5490)(short material_type) = FUN_000b5490;
+static const char * (*const b137d20_c1ba1f0)(int tag_index) = tag_get_name;
+static char * (*const b137d20_c1d9710)(const char *str, int c) = strrchr;
+static void (*const b137d20_cff4d0)(int channel, const char *format, ...) = console_printf;
+static void (*const b137d20_c136f40)(int object_handle, void *damage_data, unsigned int flags, float body_vitality, float shield_vitality, int param_4, int param_5) = FUN_00136f40;
+static void (*const b137d20_odel)(int) = object_delete;
+
+__attribute__((naked, noinline))
+void object_cause_damage(void *damage_params __attribute__((unused)), int object_handle __attribute__((unused)), short node_index __attribute__((unused)), short region_index __attribute__((unused)), short permutation_index __attribute__((unused)), unsigned int flags __attribute__((unused)))
 {
-  unsigned int *dp; /* damage_params as uint32 pointer */
-  int jpt_tag;
-  char *jpt_offset; /* damage effect data at jpt_tag + 0x1c4 */
-  char was_modified; /* EBP+0xb: set when damage modifier applied */
-  unsigned char takes_body_damage; /* EBP-0x1 */
-  char damage_reported; /* EBP-0x2 */
-  int damaged_object_count; /* EBP-0x8, used as short in some comparisons */
-  float damage_scale; /* EBP-0xc: also serves as body_damage output for
-                         FUN_00136bc0 */
-  unsigned int damage_flags; /* EBP-0x10 */
-  char *object_data; /* EBP-0x14 */
-  /* jpt_offset stored at EBP-0x18 */
-  void *material_data; /* EBP-0x1c */
-  int current_object_handle; /* EBP-0x20 */
-  float body_damage; /* EBP-0x24 */
-  float shield_damage; /* EBP-0x28 */
-  void *collision_model; /* EBP-0x2c */
-  int material_index; /* EBP-0x30, only low 16 bits used */
-  void *effect_ptr; /* EBP-0x34 */
-  int damaged_object_indices[16]; /* EBP-0x74 */
-
-  int i;
-  int iter_handle;
-  char *obj;
-  unsigned int *coll_flags_ptr;
-  char *unit_check;
-  int child_handle;
-  char *child_obj;
-  int child_unit;
-  unsigned int saved_flags;
-  int driver_handle;
-  int player_idx;
-  short count_short;
-  char cVar;
-  float fVar;
-  float modifier;
-  int *seed;
-  int obj_tag;
-  int coll_ref;
-
-  dp = (unsigned int *)damage_params;
-
-  /* Get damage effect tag data */
-  jpt_tag = (int)tag_get(0x6a707421, dp[0]);
-  jpt_offset = (char *)jpt_tag + 0x1c4;
-  was_modified = 0;
-  takes_body_damage = 1;
-
-  /* Assert region_index in valid range */
-  if (region_index != -1 && (region_index < 0 || region_index >= 8)) {
-    display_assert("region_index==NONE || (region_index>=0 && "
-                   "region_index<MAXIMUM_REGIONS_PER_OBJECT)",
-                   "c:\\halo\\SOURCE\\objects\\damage.c", 0x338, 1);
-    system_exit(-1);
-  }
-
-  /* Track last damaged object for debug */
-  if (dp[2] != (unsigned int)-1) {
-    *(int *)0x46f070 = object_handle;
-  }
-
-  /* BUG3-FIX: get_global_random_seed_address takes ZERO args.
-   * The min/max values come from the jpt tag at offsets 0x1d4 and 0x1d8
-   * (relative to jpt_tag base, which is jpt_offset+0x10 and jpt_offset+0x14).
-   */
-  seed = get_global_random_seed_address();
-  damage_scale = random_real_range(
-    seed, *(float *)(jpt_offset + 0x10), /* min = *(jpt_tag + 0x1d4) */
-    *(float *)(jpt_offset + 0x14)); /* max = *(jpt_tag + 0x1d8) */
-
-  /* Compute initial damage scale:
-   * scale = (random * damage_params[0x40] + (1.0 - damage_params[0x40]) *
-   * jpt_offset[0xc])
-   *         * damage_params[0x44] */
-  damage_scale =
-    (damage_scale * *(float *)((char *)dp + 0x40) +
-     (1.0f - *(float *)((char *)dp + 0x40)) * *(float *)(jpt_offset + 0xc)) *
-    *(float *)((char *)dp + 0x44);
-
-  /* Check if attacker has a player owner; if so, apply AI damage modifier */
-  if (dp[3] != (unsigned int)-1) {
-    unit_check = (char *)object_try_and_get_and_verify_type(dp[3], 3);
-    if (unit_check != (char *)0) {
-      if (*(int *)(unit_check + 0x2d8) != -1) {
-        unit_check =
-          (char *)object_get_and_verify_type(*(int *)(unit_check + 0x2d8), 3);
-      }
-      i = *(int *)(unit_check + 0x1a8);
-      if (i == -1) {
-        i = *(int *)(unit_check + 0x1a4);
-      }
-      if (i != -1) {
-        ai_adjust_damage(i, damage_params, &damage_scale);
-      }
-    }
-  }
-
-  /* Apply game engine or team-based damage modifiers */
-  cVar = game_engine_running();
-  if (cVar != 0) {
-    /* Game engine path: get player indices for both sides */
-    player_idx = FUN_00136890(object_handle);
-    i = FUN_00136890(dp[3]);
-    modifier = game_engine_get_damage_multiplier(i, player_idx);
-    was_modified = 0;
-  } else {
-    /* Campaign path: check team allegiance for difficulty scale */
-    if (*(short *)((char *)dp + 0x10) == -1)
-      goto after_modifier;
-    cVar =
-      game_allegiance_get_team_is_friendly(*(short *)((char *)dp + 0x10), 1);
-    if (cVar == 0)
-      goto after_modifier;
-    modifier = FUN_000b5590(0);
-    was_modified = 1;
-  }
-  damage_scale = modifier * damage_scale;
-
-after_modifier:
-  /* Build list of objects to damage */
-  i = 0;
-  damaged_object_count = 0;
-  damage_reported = 0;
-
-  if ((dp[1] & 5) == 0) {
-    /* Walk object parent chain collecting all linked objects */
-    iter_handle = object_handle;
-    while (iter_handle != -1) {
-      if ((unsigned short)i >= 16) {
-        display_assert(
-          "damaged_object_count<sizeof(damaged_object_indices)/sizeof(long)",
-          "c:\\halo\\SOURCE\\objects\\damage.c", 0x37e, 1);
-        system_exit(-1);
-      }
-      damaged_object_indices[(short)(unsigned short)i] = iter_handle;
-      i++;
-      obj = (char *)object_get_and_verify_type(iter_handle, -1);
-      iter_handle = *(int *)(obj + 0xcc);
-    }
-    damaged_object_count = i;
-  } else {
-    /* Direct damage: single object */
-    damaged_object_count = 1;
-    i = damaged_object_count;
-    damaged_object_indices[0] = object_handle;
-  }
-
-  /* Get the root object's definition tag */
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
-
-  /* Check collision model for body damage flag */
-  coll_ref = *(int *)(obj_tag + 0x7c);
-  if (coll_ref != -1) {
-    coll_flags_ptr = (unsigned int *)tag_get(0x636f6c6c, coll_ref);
-    takes_body_damage = (unsigned char)((~(*coll_flags_ptr >> 4)) & 1);
-  }
-
-  /* Add widget object if present */
-  if (*(int *)(obj + 0xa0) != -1) {
-    if ((unsigned short)i >= 16) {
-      display_assert(
-        "damaged_object_count<sizeof(damaged_object_indices)/sizeof(long)",
-        "c:\\halo\\SOURCE\\objects\\damage.c", 0x397, 1);
-      system_exit(-1);
-    }
-    damaged_object_indices[(short)(unsigned short)i] = *(int *)(obj + 0xa0);
-    i++;
-    damaged_object_count = i;
-  }
-
-  /* Handle unit passengers: recursive damage for seated units */
-  if ((*(unsigned char *)((char *)dp + 0x4) & 1) == 0 &&
-      *(short *)(obj + 0x64) == 1) {
-    char *unit_data;
-    int unit_tag;
-
-    unit_data = (char *)object_get_and_verify_type(object_handle, 3);
-    unit_tag = (int)tag_get(0x756e6974, *(int *)unit_data);
-    /* Modify damage multiplier for seated damage */
-    *(float *)((char *)dp + 0x44) =
-      (1.0f - *(float *)(jpt_offset + 0x18)) * *(float *)(unit_tag + 0x184);
-    child_handle = *(int *)(unit_data + 0xc8);
-    while (child_handle != -1) {
-      child_obj = (char *)object_get_and_verify_type(child_handle, -1);
-      if ((unsigned short)damaged_object_count >= 16) {
-        display_assert(
-          "damaged_object_count<sizeof(damaged_object_indices)/sizeof(long)",
-          "c:\\halo\\SOURCE\\objects\\damage.c", 0x3ab, 1);
-        system_exit(-1);
-      }
-      if (*(short *)(child_obj + 0x64) == 0) {
-        child_unit = (int)object_get_and_verify_type(child_handle, 3);
-        if (*(int *)(child_unit + 0x1c8) == -1) {
-          /* No driver: check if this is the unit's gunner seat */
-          if (child_handle != *(int *)(unit_data + 0x2d4))
-            goto next_child;
-          saved_flags = dp[1] | 0x20;
-        } else {
-          saved_flags = dp[1] & ~0x20u;
-        }
-        dp[1] = saved_flags;
-        /* Recursive call for passenger */
-        object_cause_damage(damage_params, child_handle, (short)-1,
-                            (short)-1, /* dup-args-ok: all sentinel -1 */
-                            (short)-1, 0);
-        dp[1] = dp[1] & ~0x20u;
-      }
-    next_child:
-      child_handle = *(int *)(child_obj + 0xc4);
-    }
-    i = damaged_object_count;
-    *(unsigned int *)((char *)dp + 0x44) = 0x3f800000; /* 1.0f */
-  }
-
-  /* Notify player effects for each damaged unit */
-  if ((short)(unsigned short)i > 0) {
-    int *list_ptr;
-    unsigned int list_count;
-    list_ptr = damaged_object_indices;
-    list_count = (unsigned int)(unsigned short)i;
-    do {
-      unit_check = (char *)object_try_and_get_and_verify_type(*list_ptr, 3);
-      if (unit_check != (char *)0) {
-        driver_handle = *(int *)(unit_check + 0x1c8);
-        if (driver_handle != -1) {
-          /* BUG4-FIX: driver present → pass driver_handle (the value at +0x1c8)
-           * directly to FUN_000a3b80, NOT local_player_get_player_index(0).
-           * Disasm: MOV EAX,[EAX+0x1c8]; ... JMP 0x1380bb; PUSH EAX. */
-          FUN_000a3b80(driver_handle, damage_params, (char *)dp + 0x34,
-                       *(float *)((char *)dp + 0x40), damage_scale);
-        } else {
-          /* No driver: check global flag */
-          if (*(char *)0x5aa895 == 0)
-            goto skip_player_effect;
-          player_idx = local_player_get_player_index(0);
-          FUN_000a3b80(player_idx, damage_params, (char *)dp + 0x34,
-                       *(float *)((char *)dp + 0x40), damage_scale);
-        }
-      }
-    skip_player_effect:
-      list_ptr++;
-      list_count--;
-    } while (list_count != 0);
-  }
-
-  /* Main damage loop: apply damage to each object while scale > 0 */
-  if (!(damage_scale > 0.0f))
-    return;
-
-  do {
-    count_short = (short)damaged_object_count;
-    damaged_object_count--;
-    if (count_short < 1)
-      return;
-
-    current_object_handle = damaged_object_indices[(short)damaged_object_count];
-    object_data = (char *)object_get_and_verify_type(current_object_handle, -1);
-    obj_tag = (int)tag_get(0x6f626a65, *(int *)object_data);
-
-    shield_damage = 0.0f;
-    body_damage = 0.0f;
-    effect_ptr = (void *)0;
-    damage_flags = 0;
-    material_index = -1;
-
-    coll_ref = *(int *)(obj_tag + 0x7c);
-    if (coll_ref == -1)
-      goto after_collision_block;
-
-    {
-      unsigned char *coll_data;
-      unsigned char is_forced;
-
-      coll_data = (unsigned char *)tag_get(0x636f6c6c, coll_ref);
-      is_forced = (unsigned char)((dp[1] >> 2) & 1);
-      collision_model = (void *)coll_data;
-
-      /* Look up node material if valid */
-      if (node_index >= 0 && (int)node_index < *(int *)(coll_data + 0x28c)) {
-        int node_elem;
-        node_elem = (int)tag_block_get_element((int *)(coll_data + 0x28c),
-                                               (int)node_index, 0x40);
-        material_index = (material_index & 0xffff0000) |
-                         (unsigned int)*(unsigned short *)(node_elem + 0x32);
-      }
-
-      /* Set modifier flag if applicable */
-      if (was_modified != 0) {
-        damage_flags = 0x20;
-      }
-
-      /* Check team allegiance for this specific object */
-      if (*(short *)((char *)dp + 0x10) != -1) {
-        cVar = game_allegiance_get_team_is_friendly(
-          *(unsigned short *)(object_data + 0x68),
-          *(unsigned short *)((char *)dp + 0x10));
-        if (cVar == 0) {
-          damage_flags |= 0x10;
-        }
-      }
-
-      /* Resolve permutation/material data */
-      if ((unsigned short)damaged_object_count == 0 && permutation_index >= 0 &&
-          (int)permutation_index < *(int *)(coll_data + 0x234)) {
-        material_data = (void *)tag_block_get_element(
-          (int *)(coll_data + 0x234), (int)permutation_index, 0x48);
-      } else if (*(short *)(coll_data + 4) >= 0 &&
-                 (int)*(short *)(coll_data + 4) < *(int *)(coll_data + 0x234)) {
-        material_data = (void *)tag_block_get_element(
-          (int *)(coll_data + 0x234), (int)*(short *)(coll_data + 4), 0x48);
-      } else {
-        material_data = (void *)0x46f028;
-      }
-
-      /* Copy material type to damage params */
-      *(unsigned short *)((char *)dp + 0x4c) =
-        *(unsigned short *)((char *)material_data + 0x24);
-
-      /* Force damage if debug override is active */
-      if (*(char *)0x5aa897 != 0 && dp[2] != (unsigned int)-1) {
-        is_forced = 1;
-      }
-
-      /* Check if object should be destroyed (depleted body) */
-      if (((*(short *)jpt_offset == 2 &&
-            unit_unsuspecting(current_object_handle, (char *)dp + 0x28) != 0 &&
-            (*(unsigned char *)(object_data + 0xb7) & 8) == 0) ||
-           is_forced != 0) &&
-          (*(unsigned char *)(object_data + 0xb6) & 4) == 0) {
-        *(unsigned int *)(object_data + 0x90) = 0;
-        object_deplete_body(current_object_handle);
-        damage_flags |= 0x41;
-      }
-
-      /* Apply shield damage (FUN_00136bc0) */
-      if ((*(unsigned char *)((char *)dp + 0x4) & 0x20) == 0 &&
-          (*(unsigned int *)(jpt_offset + 0x4) & 0x200) == 0 &&
-          *(float *)(object_data + 0x8c) > 0.0f &&
-          ((unsigned short)damaged_object_count == 0 ||
-           (*coll_data & 1) != 0)) {
-        /* BUG1-FIX: arg7 = &damage_scale (EBP-0xc), NOT &body_damage.
-         * After the call, damage_scale holds the remaining body damage.
-         * Disasm at 0x1382db: LEA ECX,[EBP-0xc]; PUSH ECX → last arg. */
-        FUN_00136bc0(current_object_handle, collision_model, material_data,
-                     jpt_offset, damage_params, &damage_flags, &shield_damage,
-                     &damage_scale);
-        coll_data = (unsigned char *)collision_model;
-      }
-
-      /* Apply body damage (FUN_001377d0) */
-      count_short = (short)damaged_object_count;
-      if ((count_short == 0 ||
-           (takes_body_damage != 0 && (*coll_data & 2) != 0)) &&
-          (*(unsigned int *)(jpt_offset + 0x4) & 0x40) == 0) {
-        int body_node;
-        int body_region;
-        unsigned int body_flags_mask;
-
-        /* Check if shield-only damage should zero the scale */
-        if ((*coll_data & 0x20) != 0 &&
-            (*(unsigned int *)(jpt_offset + 0x4) & 0x20) == 0) {
-          damage_scale = 0.0f;
-        }
-
-        if (count_short == 0) {
-          body_node = (int)node_index;
-          body_region = (int)region_index;
-        } else {
-          body_node = -1;
-          body_region = -1;
-        }
-
-        body_flags_mask = (count_short != 0) ? 0 : flags;
-
-        /* BUG2-FIX: arg10 = &body_damage (EBP-0x24), NOT &shield_damage.
-         * Disasm at 0x138354: LEA EDX,[EBP-0x24]; PUSH EDX. */
-        FUN_001377d0(current_object_handle, body_region, body_node,
-                     body_flags_mask, coll_data, material_data, jpt_offset,
-                     damage_params, &damage_flags, &body_damage, &effect_ptr,
-                     damage_scale);
-        damaged_object_count = 0;
-      }
-
-      /* Report damage for the first object that actually took damage */
-      if (damage_reported == 0 && (shield_damage > *(float *)0x253f44 ||
-                                   body_damage > *(float *)0x253f44)) {
-        if (shield_damage > body_damage) {
-          /* Shield damage dominates: report shield material type */
-          *(unsigned short *)((char *)dp + 0x4c) =
-            *(unsigned short *)((char *)coll_data + 0xd2);
-          *(unsigned int *)((char *)dp + 0x48) =
-            *(unsigned int *)(object_data + 0x94);
-        } else {
-          /* Body damage dominates: clamp body vitality to [0, 1] */
-          fVar = 0.0f;
-          if (*(float *)(object_data + 0x90) >= 0.0f) {
-            fVar = 1.0f;
-            if (*(float *)(object_data + 0x90) <= 1.0f) {
-              fVar = *(float *)(object_data + 0x90);
-            }
-          }
-          *(float *)((char *)dp + 0x48) = fVar;
-        }
-
-        /* Debug logging */
-        if (*(char *)0x5a90c0 != 0 &&
-            current_object_handle == *(int *)0x46f070) {
-          const char *mat_name;
-          const char *tag_path;
-          const char *filename;
-          /* FUN_000b5490 takes 1 arg (material_type) and returns a name string.
-           * Confirmed: ADD ESP,0x4 at 0x13845a (1 cdecl arg).
-           * The material_data, damage doubles are pre-positioned on the stack
-           * for console_printf varargs via MSVC lazy cleanup. */
-          mat_name =
-            FUN_000b5490(*(unsigned short *)((char *)material_data + 0x24));
-          tag_path = tag_get_name(dp[0]);
-          filename = strrchr(tag_path, 0x5c);
-          console_printf(0, "%s: \"%s\" \"%s\" k=%0.2f S[%3.2f] B[%3.2f]",
-                         filename + 1, mat_name, material_data,
-                         (double)*(float *)((char *)dp + 0x40),
-                         (double)shield_damage, (double)body_damage);
-        }
-        damage_reported = 1;
-      }
-    }
-
-  after_collision_block:
-    /* BUG5-FIX: FUN_00136f40 register args: EBX=object_handle,
-     * ESI=damage_params. Stack args: flags, shield_damage(body_vitality),
-     * body_damage(shield_vitality), (int)effect_ptr, material_index. Disasm at
-     * 0x138489-0x1384a0: MOV ECX,[EBP-0x30] (material_index) → PUSH ECX
-     * (last/arg7) MOV EDX,[EBP-0x34] (effect_ptr) → PUSH EDX (arg6) MOV
-     * EAX,[EBP-0x24] (body_damage) → PUSH EAX (arg5) MOV ECX,[EBP-0x28]
-     * (shield_damage) → PUSH ECX (arg4) MOV EDX,[EBP-0x10] (damage_flags) →
-     * PUSH EDX (arg3) */
-    FUN_00136f40(current_object_handle, damage_params, damage_flags,
-                 shield_damage, body_damage, (int)effect_ptr, material_index);
-
-    /* Delete object if flagged */
-    if ((damage_flags & 4) != 0) {
-      object_delete(current_object_handle);
-    }
-  } while (damage_scale > 0.0f);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x74, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6a707421\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movw 0x14(%%ebp), %%ax\n\t"
+      "addl $0x1c4, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "movl %%edi, -0x18(%%ebp)\n\t"
+      "movb $0, 0xb(%%ebp)\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "je .Lobject_cause_damage_2\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lobject_cause_damage_1\n\t"
+      "cmpw $8, %%ax\n\t"
+      "jl .Lobject_cause_damage_2\n\t"
+      ".Lobject_cause_damage_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x338\n\t"
+      "pushl $0x29af50\n\t"
+      "pushl $0x29b138\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_cause_damage_2:\n\t"
+      "cmpl $-1, 0x8(%%esi)\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "je .Lobject_cause_damage_3\n\t"
+      "movl %%ebx, 0x46f070\n\t"
+      ".Lobject_cause_damage_3:\n\t"
+      "movl 0x14(%%edi), %%ecx\n\t"
+      "movl 0x10(%%edi), %%edx\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "movl %%ecx, -0x34(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "movl %%edx, %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%edx, -0x30(%%ebp)\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rrange]\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x40(%%esi)\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "fmuls 0xc(%%edi)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fmuls 0x44(%%esi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "je .Lobject_cause_damage_7\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lobject_cause_damage_7\n\t"
+      "movl 0x2d8(%%eax), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lobject_cause_damage_4\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lobject_cause_damage_4:\n\t"
+      "movl 0x1a8(%%eax), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lobject_cause_damage_5\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "jmp .Lobject_cause_damage_6\n\t"
+      ".Lobject_cause_damage_5:\n\t"
+      "movl 0x1a4(%%eax), %%eax\n\t"
+      ".Lobject_cause_damage_6:\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_cause_damage_7\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c3f900]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lobject_cause_damage_7:\n\t"
+      "call *%[gerun]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_8\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c136890]\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "call *%[c136890]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cad530]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lobject_cause_damage_9\n\t"
+      ".Lobject_cause_damage_8:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x10(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lobject_cause_damage_10\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca7a30]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_10\n\t"
+      "pushl $0\n\t"
+      "call *%[cb5590]\n\t"
+      "addl $4, %%esp\n\t"
+      "movb $1, 0xb(%%ebp)\n\t"
+      ".Lobject_cause_damage_9:\n\t"
+      "fmuls -0xc(%%ebp)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      ".Lobject_cause_damage_10:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testb $5, %%al\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "movb $0, -0x2(%%ebp)\n\t"
+      "jne .Lobject_cause_damage_13\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lobject_cause_damage_14\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobject_cause_damage_11:\n\t"
+      "cmpw $0x10, %%di\n\t"
+      "jb .Lobject_cause_damage_12\n\t"
+      "pushl $1\n\t"
+      "pushl $0x37e\n\t"
+      "pushl $0x29af50\n\t"
+      "pushl $0x29b0f0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_cause_damage_12:\n\t"
+      "movswl %%di, %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%ebx, -0x74(%%ebp,%%eax,4)\n\t"
+      "incl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl 0xcc(%%eax), %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "jne .Lobject_cause_damage_11\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      "jmp .Lobject_cause_damage_14\n\t"
+      ".Lobject_cause_damage_13:\n\t"
+      "movl $1, -0x8(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "movl %%ebx, -0x74(%%ebp)\n\t"
+      ".Lobject_cause_damage_14:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x7c(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_cause_damage_15\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x636f6c6c\n\t"
+      "call *%[tag]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "shrl $4, %%eax\n\t"
+      "notb %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "andb $1, %%al\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      ".Lobject_cause_damage_15:\n\t"
+      "cmpl $-1, 0xa0(%%ebx)\n\t"
+      "je .Lobject_cause_damage_17\n\t"
+      "cmpw $0x10, %%di\n\t"
+      "jb .Lobject_cause_damage_16\n\t"
+      "pushl $1\n\t"
+      "pushl $0x397\n\t"
+      "pushl $0x29af50\n\t"
+      "pushl $0x29b0f0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_cause_damage_16:\n\t"
+      "movl 0xa0(%%ebx), %%ecx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "incl %%edi\n\t"
+      "movl %%ecx, -0x74(%%ebp,%%eax,4)\n\t"
+      "movl %%edi, -0x8(%%ebp)\n\t"
+      ".Lobject_cause_damage_17:\n\t"
+      "testb $1, 0x4(%%esi)\n\t"
+      "jne .Lobject_cause_damage_24\n\t"
+      "cmpw $1, 0x64(%%ebx)\n\t"
+      "jne .Lobject_cause_damage_24\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl $3\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "movl %%ebx, -0x34(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "flds 0x2533c8\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "fsubs 0x18(%%ecx)\n\t"
+      "movl 0xc8(%%ebx), %%ebx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "fmuls 0x184(%%eax)\n\t"
+      "fstps 0x44(%%esi)\n\t"
+      "je .Lobject_cause_damage_23\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lobject_cause_damage_18:\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $0x10, -0x8(%%ebp)\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jb .Lobject_cause_damage_19\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3ab\n\t"
+      "pushl $0x29af50\n\t"
+      "pushl $0x29b0f0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_cause_damage_19:\n\t"
+      "cmpw $0, 0x64(%%edi)\n\t"
+      "jne .Lobject_cause_damage_22\n\t"
+      "pushl $3\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x1c8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "jne .Lobject_cause_damage_20\n\t"
+      "movl -0x34(%%ebp), %%edx\n\t"
+      "cmpl 0x2d4(%%edx), %%ebx\n\t"
+      "jne .Lobject_cause_damage_22\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "orl $0x20, %%eax\n\t"
+      "jmp .Lobject_cause_damage_21\n\t"
+      ".Lobject_cause_damage_20:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "andl $0xffffffdf, %%eax\n\t"
+      ".Lobject_cause_damage_21:\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "call *%[c137d20]\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "addl $0x18, %%esp\n\t"
+      "andl $0xffffffdf, %%eax\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      ".Lobject_cause_damage_22:\n\t"
+      "movl 0xc4(%%edi), %%ebx\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "jne .Lobject_cause_damage_18\n\t"
+      ".Lobject_cause_damage_23:\n\t"
+      "movl -0x8(%%ebp), %%edi\n\t"
+      "movl $0x3f800000, 0x44(%%esi)\n\t"
+      ".Lobject_cause_damage_24:\n\t"
+      "testw %%di, %%di\n\t"
+      "jle .Lobject_cause_damage_29\n\t"
+      "leal -0x74(%%ebp), %%ebx\n\t"
+      "movzwl %%di, %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lobject_cause_damage_25:\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lobject_cause_damage_28\n\t"
+      "movl 0x1c8(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lobject_cause_damage_26\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl 0x40(%%esi), %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "leal 0x34(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "jmp .Lobject_cause_damage_27\n\t"
+      ".Lobject_cause_damage_26:\n\t"
+      "movb 0x5aa895, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_28\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movl 0x40(%%esi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x34(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0\n\t"
+      "call *%[cba3c0]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobject_cause_damage_27:\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca3b80]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lobject_cause_damage_28:\n\t"
+      "addl $4, %%ebx\n\t"
+      "decl %%edi\n\t"
+      "jne .Lobject_cause_damage_25\n\t"
+      ".Lobject_cause_damage_29:\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_cause_damage_59\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lobject_cause_damage_30:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movw %%ax, %%dx\n\t"
+      "decl %%eax\n\t"
+      "testw %%dx, %%dx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jle .Lobject_cause_damage_59\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl -0x74(%%ebp,%%eax,4), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, -0x20(%%ebp)\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x7c(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl $0, -0x28(%%ebp)\n\t"
+      "movl $0, -0x24(%%ebp)\n\t"
+      "movl $0, -0x34(%%ebp)\n\t"
+      "movl $0, -0x10(%%ebp)\n\t"
+      "movl $0xffffffff, -0x30(%%ebp)\n\t"
+      "je .Lobject_cause_damage_57\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x636f6c6c\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x4(%%esi), %%ebx\n\t"
+      "shrl $2, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "andb $1, %%bl\n\t"
+      "cmpw $0, 0x10(%%ebp)\n\t"
+      "movl %%edi, -0x2c(%%ebp)\n\t"
+      "jl .Lobject_cause_damage_31\n\t"
+      "movswl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x28c(%%edi), %%edx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "leal 0x28c(%%edi), %%eax\n\t"
+      "jge .Lobject_cause_damage_31\n\t"
+      "pushl $0x40\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movw 0x32(%%eax), %%dx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movw %%dx, -0x30(%%ebp)\n\t"
+      ".Lobject_cause_damage_31:\n\t"
+      "movb 0xb(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_32\n\t"
+      "movl $0x20, -0x10(%%ebp)\n\t"
+      ".Lobject_cause_damage_32:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x10(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .Lobject_cause_damage_33\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x68(%%eax), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca7a30]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_cause_damage_33\n\t"
+      "orl $0x10, -0x10(%%ebp)\n\t"
+      ".Lobject_cause_damage_33:\n\t"
+      "cmpw $0, -0x8(%%ebp)\n\t"
+      "jne .Lobject_cause_damage_34\n\t"
+      "movw 0x18(%%ebp), %%cx\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .Lobject_cause_damage_34\n\t"
+      "movl 0x234(%%edi), %%edx\n\t"
+      "leal 0x234(%%edi), %%eax\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jge .Lobject_cause_damage_34\n\t"
+      "pushl $0x48\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "jmp .Lobject_cause_damage_36\n\t"
+      ".Lobject_cause_damage_34:\n\t"
+      "movw 0x4(%%edi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lobject_cause_damage_35\n\t"
+      "movl 0x234(%%edi), %%edx\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "leal 0x234(%%edi), %%ecx\n\t"
+      "jge .Lobject_cause_damage_35\n\t"
+      "pushl $0x48\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "jmp .Lobject_cause_damage_36\n\t"
+      ".Lobject_cause_damage_35:\n\t"
+      "movl $0x46f028, -0x1c(%%ebp)\n\t"
+      ".Lobject_cause_damage_36:\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "movw 0x24(%%edx), %%ax\n\t"
+      "movw %%ax, 0x4c(%%esi)\n\t"
+      "movb 0x5aa897, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_37\n\t"
+      "cmpl $-1, 0x8(%%esi)\n\t"
+      "je .Lobject_cause_damage_37\n\t"
+      "movb $1, %%bl\n\t"
+      ".Lobject_cause_damage_37:\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "cmpw $2, (%%ecx)\n\t"
+      "jne .Lobject_cause_damage_38\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "leal 0x28(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1b1d00]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_38\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "testb $8, 0xb7(%%ecx)\n\t"
+      "je .Lobject_cause_damage_39\n\t"
+      ".Lobject_cause_damage_38:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lobject_cause_damage_40\n\t"
+      ".Lobject_cause_damage_39:\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "testb $4, 0xb6(%%edx)\n\t"
+      "jne .Lobject_cause_damage_40\n\t"
+      "movl -0x20(%%ebp), %%ecx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0, 0x90(%%eax)\n\t"
+      "call *%[c137540]\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "orl $0x41, %%eax\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      ".Lobject_cause_damage_40:\n\t"
+      "testb $0x20, 0x4(%%esi)\n\t"
+      "jne .Lobject_cause_damage_42\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "testb $2, %%ah\n\t"
+      "jne .Lobject_cause_damage_42\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "flds 0x8c(%%eax)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_cause_damage_42\n\t"
+      "cmpw $0, -0x8(%%ebp)\n\t"
+      "je .Lobject_cause_damage_41\n\t"
+      "testb $1, (%%edi)\n\t"
+      "je .Lobject_cause_damage_42\n\t"
+      ".Lobject_cause_damage_41:\n\t"
+      "movl -0x20(%%ebp), %%edi\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "leal -0x28(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c136bc0]\n\t"
+      "movl -0x2c(%%ebp), %%edi\n\t"
+      "addl $0x1c, %%esp\n\t"
+      ".Lobject_cause_damage_42:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "testw %%dx, %%dx\n\t"
+      "je .Lobject_cause_damage_43\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_49\n\t"
+      "testb $2, (%%edi)\n\t"
+      "je .Lobject_cause_damage_49\n\t"
+      ".Lobject_cause_damage_43:\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "movl 0x4(%%ecx), %%eax\n\t"
+      "testb $0x40, %%al\n\t"
+      "jne .Lobject_cause_damage_49\n\t"
+      "testb $0x20, (%%edi)\n\t"
+      "je .Lobject_cause_damage_44\n\t"
+      "testb $0x20, %%al\n\t"
+      "jne .Lobject_cause_damage_44\n\t"
+      "movl $0, -0xc(%%ebp)\n\t"
+      ".Lobject_cause_damage_44:\n\t"
+      "testw %%dx, %%dx\n\t"
+      "jne .Lobject_cause_damage_45\n\t"
+      "movswl 0x10(%%ebp), %%ecx\n\t"
+      "jmp .Lobject_cause_damage_46\n\t"
+      ".Lobject_cause_damage_45:\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      ".Lobject_cause_damage_46:\n\t"
+      "testw %%dx, %%dx\n\t"
+      "jne .Lobject_cause_damage_47\n\t"
+      "movswl 0x14(%%ebp), %%eax\n\t"
+      "jmp .Lobject_cause_damage_48\n\t"
+      ".Lobject_cause_damage_47:\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      ".Lobject_cause_damage_48:\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x1c(%%ebp), %%ebx\n\t"
+      "leal -0x34(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x24(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x1c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "cmpw %%dx, -0x8(%%ebp)\n\t"
+      "pushl %%edi\n\t"
+      "setne %%dl\n\t"
+      "decl %%edx\n\t"
+      "andl %%ebx, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1377d0]\n\t"
+      "addl $0x30, %%esp\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      ".Lobject_cause_damage_49:\n\t"
+      "movb -0x2(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lobject_cause_damage_57\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lobject_cause_damage_50\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_cause_damage_57\n\t"
+      ".Lobject_cause_damage_50:\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fcomps -0x24(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_cause_damage_51\n\t"
+      "movw 0xd2(%%edi), %%cx\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "movw %%cx, 0x4c(%%esi)\n\t"
+      "movl 0x94(%%edx), %%eax\n\t"
+      "movl %%eax, 0x48(%%esi)\n\t"
+      "jmp .Lobject_cause_damage_55\n\t"
+      ".Lobject_cause_damage_51:\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "flds 0x90(%%ecx)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lobject_cause_damage_52\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .Lobject_cause_damage_54\n\t"
+      ".Lobject_cause_damage_52:\n\t"
+      "flds 0x90(%%ecx)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lobject_cause_damage_53\n\t"
+      "flds 0x2533c8\n\t"
+      "jmp .Lobject_cause_damage_54\n\t"
+      ".Lobject_cause_damage_53:\n\t"
+      "flds 0x90(%%ecx)\n\t"
+      ".Lobject_cause_damage_54:\n\t"
+      "fstps 0x48(%%esi)\n\t"
+      ".Lobject_cause_damage_55:\n\t"
+      "movb 0x5a90c0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lobject_cause_damage_56\n\t"
+      "movl -0x20(%%ebp), %%ecx\n\t"
+      "cmpl 0x46f070, %%ecx\n\t"
+      "jne .Lobject_cause_damage_56\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x24(%%eax), %%dx\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x40(%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[cb5490]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl $0x5c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ba1f0]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d9710]\n\t"
+      "addl $8, %%esp\n\t"
+      "incl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x29b0c4\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      ".Lobject_cause_damage_56:\n\t"
+      "movb $1, -0x2(%%ebp)\n\t"
+      ".Lobject_cause_damage_57:\n\t"
+      "movl -0x30(%%ebp), %%ecx\n\t"
+      "movl -0x34(%%ebp), %%edx\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "movl -0x20(%%ebp), %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c136f40]\n\t"
+      "movb -0x10(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb $4, %%al\n\t"
+      "je .Lobject_cause_damage_58\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[odel]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Lobject_cause_damage_58:\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lobject_cause_damage_30\n\t"
+      ".Lobject_cause_damage_59:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b137d20_tag), [assert] "m"(b137d20_assert), [exitfn] "m"(b137d20_exitfn), [gseed] "m"(b137d20_gseed), [rrange] "m"(b137d20_rrange), [tryget] "m"(b137d20_tryget), [get] "m"(b137d20_get), [c3f900] "m"(b137d20_c3f900), [gerun] "m"(b137d20_gerun), [c136890] "m"(b137d20_c136890), [cad530] "m"(b137d20_cad530), [ca7a30] "m"(b137d20_ca7a30), [cb5590] "m"(b137d20_cb5590), [c137d20] "m"(b137d20_c137d20), [cba3c0] "m"(b137d20_cba3c0), [ca3b80] "m"(b137d20_ca3b80), [elem] "m"(b137d20_elem), [c1b1d00] "m"(b137d20_c1b1d00), [c137540] "m"(b137d20_c137540), [c136bc0] "m"(b137d20_c136bc0), [c1377d0] "m"(b137d20_c1377d0), [cb5490] "m"(b137d20_cb5490), [c1ba1f0] "m"(b137d20_c1ba1f0), [c1d9710] "m"(b137d20_c1d9710), [cff4d0] "m"(b137d20_cff4d0), [c136f40] "m"(b137d20_c136f40), [odel] "m"(b137d20_odel)
+      : "memory");
 }
+#else
+#error "object_cause_damage: clang naked draft required"
+#endif
+
 
 /* FUN_00137170 (0x137170) — Build damage-effect marker arrays and fire an
  * effect for a damage impact.

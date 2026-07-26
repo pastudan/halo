@@ -3126,985 +3126,1736 @@ typedef struct biped_collision_result {
   int flags; /* +0x28 */
 } biped_collision_result;
 
-/* FUN_001a2f40 (0x1a2f40) — biped ground/movement physics step.
- *
- * Largest function in bipeds.obj (~5.3 KB, ~1613 instructions). The Ghidra
- * decompiler output for this routine is heavily polluted ("type propagation
- * not settling"; return-address pushes modelled as struct stores; pervasive
- * (char*)/(char**) casts on what are really float scratch slots), so it was
- * used only as a control-flow skeleton and EVERY store offset, FPU operand
- * order, branch sense, and the integer-vs-float nature of each store was
- * cross-checked against the raw disassembly.
- *
- * ABI (Confirmed): single register argument in ESI (read-before-write at the
- *   prologue; caller FUN_001a5300 does `LEA ESI,[EBP-0xe4]; CALL` with no
- *   pushes and discards EAX). Returns void. Huge _chkstk frame (0xafac) for a
- *   ~44 KB debug-draw scratch buffer passed to FUN_0014ec30.
- *
- * `physics` (ESI) is a biped movement/physics state struct accessed as a flat
- * float array. Field map (index = byte offset / 4), all Confirmed:
- *   +0x04  flags (u16); bit 0x10/0x20/0x01 select movement mode, bit 0x200
- *          selects the surface-walk sub-mode, bits 0x40/0x80/0x100 select the
- *          debug-draw colour.
- *   +0x08  position[3]
- *   +0x14  control / forward basis axis (physics[5..7])
- *   +0x20  ground-plane normal (physics[8..0xa]); +0x2c plane_d at physics[0xb]
- *   +0x2c  velocity[3] (physics[0xb..0xd])  [NOTE: aliases ground-plane d]
- *   +0x38  step-height offset (physics[0xe])
- *   +0x3c  control direction (physics[0xf..0x11])
- *   +0x48  friction (used as 1.0 - friction; 1.0f = *(float*)0x2533c8)
- *   +0x4c  max-speed clamp (mode 0x10, physics[0x13])
- *   +0x50  max-speed clamp (mode 0x01, physics[0x14])
- *   +0x54/0x58  line-of-sight direction/origin args to FUN_00150550
- *   +0x60..0x7c slope-response material curve breakpoints (physics[0x18..0x1f])
- *   +0x80  ground-plane struct (physics+0x80 = physics[0x20..0x23])
- *   +0xa0  result/state word (mixed u16/byte access to the SAME field)
- *   +0xa4  surface datum handle (physics[0x29]); +0xa8 plane reference
- *          (physics[0x2a]) — both 32-bit handles in float slots, "none" = -1
- *   +0xac  new_position (assert string &physics->new_position @0x2b5080)
- *   +0xb8  new_velocity (assert string &physics->new_velocity @0x2b5068)
- *   +0xc4  result point (physics[0x31]); +0xc8 step distance (physics[0x32])
- *
- * NOTE (Confirmed): byte offsets +0xac and +0xb8 are new_position /
- * new_velocity from the binary's own assert strings — the decompiler's field
- * labels for these are inverted; the assert strings are authoritative.
- *
- * NOTE (Confirmed): the ESI[0x26]/[0x27]/[0x29]/[0x2a] "−NAN" stores the
- * decompiler shows are integer `MOV dword ptr [...],0xffffffff` (the "none"
- * datum handle), NOT float NaN loads — verified in the listing. The NaN
- * *checks* in the two final asserts are `AND reg,0x7f800000; CMP 0x7f800000`.
- *
- * Status: dormant (ported=false). This is a faithful full reconstruction kept
- * dead-code while iterating; the orchestrator flips the port toggle.
- */
-void FUN_001a2f40(void *physics_arg /* @esi */)
+/* FUN_001a2f40 (0x1a2f40) — XBE naked draft (batch 50). */
+#if defined(__clang__)
+static void (*const b1a2f40_chkstk)(void) = FUN_001d90e0;
+static bool (*const b1a2f40_ca16b0)(float *point) = valid_real_point3d;
+static char * (*const b1a2f40_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b1a2f40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1a2f40_exitfn)(int) = system_exit;
+static int (*const b1a2f40_c84a10)(float *vector) = real_vector3d_valid;
+static void (*const b1a2f40_c1a2d90)(float *forward, float *left, float *up) = biped_build_flying_axes;
+static float (*const b1a2f40_norm)(float *) = normalize3d;
+static float (*const b1a2f40_mag)(float *) = magnitude3d;
+static void (*const b1a2f40_cross)(float *, float *, float *) = cross_product3d;
+static float *(*const b1a2f40_vsca)(float *, float *, float, float *) = vector3d_scale_add;
+static int (*const b1a2f40_c150550)(void *out_point, float *direction, float *origin, int arg4, int arg5, int arg6, float *out_point2, void *out_arg8, int max_results, void *results) = FUN_00150550;
+static void *(*const b1a2f40_get)(int, int) = object_get_and_verify_type;
+static void *(*const b1a2f40_gbsp)(void) = global_collision_bsp_get;
+static void *(*const b1a2f40_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b1a2f40_c99640)(int structure_bsp, uint32_t plane_reference, float *out_plane) = bsp3d_get_plane_from_designator;
+static float (*const b1a2f40_c121a0)(const float *a, const float *b) = distance_squared3d;
+static void *(*const b1a2f40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static float (*const b1a2f40_c12170)(float *vector) = FUN_00012170;
+static float (*const b1a2f40_v2fe0)(float *) = FUN_00012fe0;
+static void *(*const b1a2f40_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void *(*const b1a2f40_tag)(int, int) = tag_get;
+static bool (*const b1a2f40_c4ec30)(int, float *, float, float, float, int, void *) = FUN_0014ec30;
+static char (*const b1a2f40_c14c4b0)(void *features, float *position, float *velocity, void *out_result) = FUN_0014c4b0;
+
+__attribute__((naked, noinline))
+void FUN_001a2f40(void *physics __attribute__((unused)))
 {
-  float *physics;
-  float *velocity; /* physics + 0xb (EBX = ESI+0x2c) */
-  float *position; /* physics + 2  (EDI = ESI+0x8)  */
-  unsigned short flags;
-  unsigned int flags_word; /* full flags promoted [EBP-0x48] */
-  float damp; /* 1.0 - friction (physics[0x12]) */
-  float length3;
-  float clamp;
-
-  /* --- back-half locals --- */
-  char debug_scratch[44040]; /* local_afb0: ~44 KB FUN_0014ec30 buffer (forces
-                              * the _chkstk prologue the original uses) */
-  char surface_result[44]; /* local_3a8: FUN_0014c4b0 out-result */
-  biped_collision_result results[16]; /* local_378 base; FUN_00150550 array */
-  int result_count; /* local_40: u16 count from FUN_00150550 */
-  int draw_color; /* pcVar10: debug-draw colour code */
-  float gx, gy; /* local_5c, local_60: carried planar normal */
-  float pos_world[3]; /* local_34/30: position copy */
-  float new_pos[3]; /* local_9c/98/94: new_position+step */
-  float los_dir[3]; /* local_7c/78/74: line-of-sight out point */
-  float surf[3]; /* local_6c/68/64: projected surface point */
-  float disp[3]; /* local_58/54/50: clamp scratch vec3 */
-  float best_t; /* local_4c */
-  int best_index; /* local_3c */
-  int tval;
-  float r, t, fdist;
-  void *obj;
-  void *tag;
-  float proj_seg[3]; /* scale_add scratch in the LOS gate */
-  float los_dir2[3]; /* local_18: second LOS out point */
-  unsigned int isnan_tmp;
-  char material_local; /* [EBP-0x31]: (flags>>9)&1 material flag */
-  physics = (float *)physics_arg;
-  velocity = physics + 0xb; /* +0x2c */
-  position = physics + 2; /* +0x08 */
-
-  gx = 0.0f; /* local_5c = 0.0 (prologue) */
-  gy = 0.0f; /* local_60 = 0.0 (prologue) */
-  material_local = (char)((*(unsigned short *)((char *)physics + 4) >> 9) & 1);
-
-  /* assert_valid_real_point3d(&physics->position) */
-  if (valid_real_point3d(position) == 0) {
-    display_assert(csprintf(error_string_buffer,
-                            "%s: assert_valid_real_point3d(%f, %f, %f)",
-                            "&physics->position", (double)position[0],
-                            (double)position[1], (double)position[2]),
-                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0xbae, true);
-    system_exit(-1);
-  }
-  /* assert_valid_real_vector2d(&physics->velocity) */
-  if (real_vector3d_valid(velocity) == 0) {
-    display_assert(csprintf(error_string_buffer,
-                            "%s: assert_valid_real_vector2d(%f, %f, %f)",
-                            "&physics->velocity", (double)velocity[0],
-                            (double)velocity[1], (double)velocity[2]),
-                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0xbaf, true);
-    system_exit(-1);
-  }
-
-  flags = *(unsigned short *)((char *)physics + 4);
-  flags_word = flags;
-  *(unsigned short *)((char *)physics + 0xa0) = 0;
-
-  if ((flags & 0x10) != 0) {
-    /* ---- mode 0x10 (0x1a3037..0x1a3149): oriented/flying movement ----
-     * The original double-stores the displacement into a raw copy (local_30..)
-     * and a unit copy (local_54..); normalize3d destroys the unit copy in
-     * place; the clamp branch scales the unit, the no-clamp branch reads back
-     * the raw. Modelling that as two vec3s reproduces the movl/movl pairs. */
-    float left[3];
-    float up[3];
-    float t0, t1, t2;
-    float dx, dy, dz;
-
-    biped_build_flying_axes(physics + 5, left, up);
-
-    t0 = left[0] * physics[0x10] + up[0] * physics[0x11] +
-         physics[0xf] * physics[5];
-    t1 = physics[6] * physics[0xf] + left[1] * physics[0x10] +
-         up[1] * physics[0x11];
-    t2 = physics[7] * physics[0xf] + left[2] * physics[0x10] +
-         up[2] * physics[0x11];
-
-    damp = *(float *)0x2533c8 - physics[0x12];
-
-    dx = damp * t0 - velocity[0];
-    dy = damp * t1 - physics[0xc];
-    dz = damp * t2 - physics[0xd];
-
-    disp[0] = dx;
-    disp[1] = dy;
-    disp[2] = dz;
-    length3 = normalize3d(disp);
-    if (length3 > physics[0x13]) {
-      clamp = physics[0x13];
-      dx = disp[0] * clamp;
-      dy = disp[1] * clamp;
-      dz = disp[2] * clamp;
-    }
-    physics[0x2e] = dx + velocity[0];
-    physics[0x2f] = dy + physics[0xc];
-    physics[0x30] = dz + physics[0xd];
-    *(unsigned short *)((char *)physics + 0xa0) =
-      (unsigned short)((*(unsigned short *)((char *)physics + 0xa0) & 0xfffd) |
-                       1);
-    goto LAB_001a36a4;
-  }
-
-  if ((flags & 0x20) != 0) {
-    /* ---- mode 0x20 (0x1a3152..0x1a318b): planar heading carry ----
-     * new_velocity.xy = rotate(control.xy) by the forward axis; z carried as a
-     * raw 32-bit copy. gx/gy double-store to both new_velocity and the carried
-     * planar normal (fsts + fstps). */
-    gx = physics[0x2e] = physics[0xf] * physics[5] - physics[6] * physics[0x10];
-    *(int *)((char *)physics + 0xc0) =
-      *(int *)&physics[0x11]; /* +0xc0 int mov */
-    gy = physics[0x2f] = physics[0xf] * physics[6] + physics[0x10] * physics[5];
-    goto LAB_001a36a4;
-  }
-
-  if ((flags & 1) != 0) {
-    /* ---- mode 0x01 (0x1a3198..0x1a3264): ground tangent movement ----
-     * The original computes both planar cross-products, THEN damp = 1-friction,
-     * duplicates damp (fld st0) and multiplies it into each before subtracting
-     * velocity. magnitude3d normalizes tang in-place, so keep the raw deltas
-     * for the original's no-clamp branch at 0x1a3219. */
-    float tang[3];
-    float c0, c1;
-    float raw0, raw1;
-
-    c0 = physics[0xf] * physics[5] - physics[6] * physics[0x10];
-    c1 = physics[0xf] * physics[6] + physics[0x10] * physics[5];
-    damp = *(float *)0x2533c8 - physics[0x12];
-
-    raw0 = damp * c0 - velocity[0];
-    raw1 = damp * c1 - physics[0xc];
-    tang[0] = raw0;
-    tang[1] = raw1;
-    /* magnitude3d at 0x12f10 is the 2D normalize helper; it only reads/writes
-     * tang[0]/tang[1]. Keep tang[2] zero for a complete local vec3. */
-    tang[2] = 0.0f;
-
-    length3 = magnitude3d(tang);
-    if (length3 > physics[0x14]) {
-      clamp = physics[0x14];
-      tang[0] = tang[0] * clamp;
-      tang[1] = tang[1] * clamp;
-    } else {
-      tang[0] = raw0;
-      tang[1] = raw1;
-    }
-    physics[0x2e] = tang[0] + velocity[0];
-    physics[0x2f] = tang[1] + physics[0xc];
-    physics[0x30] = physics[0xd] - *(float *)0x32512c;
-    *(unsigned short *)((char *)physics + 0xa0) =
-      (unsigned short)((unsigned char)flags_word & 2);
-    goto LAB_001a36a4;
-  }
-
-  /* ---- (flags & 1): ground tangent already handled above; fall here only for
-   * the default surface-walk mode entered at 0x1a3269. The decompiler's
-   * mode-0x01 test (0x1a3190 TEST AL,1) gates the planar tangent above; the
-   * surface-walk path proper starts at 0x1a3269. ---- */
-  {
-    float magnitude; /* local_40 (-0x3c): control-direction magnitude */
-    short submode; /* local_38: flags & 0x200 */
-    float vecA[3]; /* local_30/2c/28 */
-    float vecB[3]; /* local_24/20/1c */
-    float d[3]; /* local_18/14/10: must be contiguous for normalize3d(&d[0]) */
-    float curve_scale; /* fVar1: slope-response result */
-    float damp2;
-    char curve_flag; /* local_1: secondary state byte */
-    float *gp; /* EDI = physics + 0x20 ground-plane normal */
-
-    magnitude =
-      sqrtf(physics[0xf] * physics[0xf] + physics[0x10] * physics[0x10] +
-            physics[0x11] * physics[0x11]); /* 0x1a327d..0x1a328f */
-    submode = (short)(flags_word & 0x200);
-
-    if (submode != 0) {
-      /* ---- 0x1a329e: in-plane axis recovery via cross products ---- */
-      gp = physics + 0x20;
-      vecB[0] = physics[8];
-      vecB[1] = physics[9];
-      vecB[2] = physics[10];
-      cross_product3d(gp, vecB, vecA);
-      if (normalize3d(vecA) == *(float *)0x2533c0) {
-        cross_product3d(gp, (float *)(*(int *)0x31fc44), vecA);
-        if (normalize3d(vecA) == *(float *)0x2533c0) {
-          cross_product3d(gp, (float *)(*(int *)0x31fc3c), vecA);
-          normalize3d(vecA);
-        }
-      }
-      cross_product3d(vecA, gp, vecB);
-      normalize3d(vecB);
-      d[0] = vecB[0] * physics[0xf] + vecA[0] * physics[0x10];
-      d[1] = vecB[1] * physics[0xf] + vecA[1] * physics[0x10];
-      d[2] = vecB[2] * physics[0xf] + vecA[2] * physics[0x10] + physics[0x11];
-      normalize3d(d); /* submode normalizes here, JMP 0x34f6 skips below */
-    } else {
-      /* else-if and else share the normalize at 0x34ea; only else has
-       * the material multiply. */
-      /* Routing (0x1a3?: flds physics[0x22]; fcomps threshold; test 0x41/jne
-       * 0x1a33ed): the JUMP taken when physics[0x22] <= threshold goes to the
-       * full-projection body (0x1a33ed, else below); the fall-through
-       * (physics[0x22] > threshold) runs the single-component solve at
-       * 0x1a339b. The lift had this inverted (`<=`), so steep planes
-       * (physics[0x22] ~ 0) hit the divide-by-physics[0x22] below -> 0/0 NaN
-       * (new_position.z = -1.#IND) and broken slope movement; full projection
-       * (cross-product/Gram-Schmidt) is the steep-plane path. */
-      if (physics[0x22] > *(float *)0x253f44) {
-        /* ---- 0x1a339b: solve d[2] via the dominant (z) normal component ---- */
-        gp = physics + 0x20;
-        d[0] = physics[0xf] * physics[5] - physics[6] * physics[0x10];
-        gx = d[0];
-        d[1] = physics[0x10] * physics[5] + physics[0xf] * physics[6];
-        gy = d[1];
-        d[2] = (d[1] * physics[0x21] + d[0] * gp[0]) / physics[0x22];
-        d[2] = physics[0x11] - d[2];
-      } else {
-        /* ---- 0x1a33ed: full ground-plane projection ---- */
-        gp = physics + 0x20;
-        vecB[0] = physics[8];
-        vecB[1] = physics[9];
-        vecB[2] = physics[10];
-        cross_product3d((float *)(*(int *)0x31fc44), vecB, vecA);
-        normalize3d(vecA);
-        vector3d_scale_add(
-          vecB, gp, -(vecB[0] * gp[0] + vecB[1] * gp[1] + vecB[2] * gp[2]),
-          vecB);
-        vector3d_scale_add(
-          vecA, gp, -(vecA[0] * gp[0] + vecA[1] * gp[1] + vecA[2] * gp[2]),
-          vecA);
-        gx = physics[0xf] * physics[5] - physics[6] * physics[0x10];
-        gy = physics[0x10] * physics[5] + physics[0xf] * physics[6];
-        d[0] = vecB[0] * physics[0xf] + vecA[0] * physics[0x10];
-        d[1] = vecB[1] * physics[0xf] + vecA[1] * physics[0x10];
-        d[2] = vecB[2] * physics[0xf] + vecA[2] * physics[0x10] + physics[0x11];
-        /* material gate: multiply d[2] when material_local == 0 */
-        if (material_local == 0) {
-          d[2] = d[2] * *(float *)0x254cc4;
-        }
-      }
-      normalize3d(d); /* shared normalize at 0x34ea */
-    }
-
-    /* ---- slope-response curve (0x1a34f6..0x1a358f) ---- */
-    {
-      curve_flag = 0;
-
-      /* slope-response breakpoint curve (0x1a34f6..0x1a358f). Comparison
-       * senses transcribed exactly from the FCOMP/TEST/Jcc pairs:
-       *   0x1a3503 FCOMP[0x6c] TEST 0x41 JP   -> goto 3518 iff height > [0x1b]
-       *   0x1a351b FCOMP[0x68] TEST 0x5  JP   -> goto 3549 iff height >= [0x1a]
-       *   0x1a3549 FCOMP[0x78] TEST 0x1  JNZ  -> goto 355b iff height <  [0x1e]
-       *   0x1a355e FCOMP[0x74] TEST 0x41 JNZ  -> goto 358c iff height <= [0x1d]
-       */
-      if (submode != 0) {
-        /* 0x1a34fd: submode != 0 -> JNZ 0x358c, curve = magnitude */
-        curve_scale = magnitude;
-      } else if (!(d[2] > physics[0x1b])) {
-        curve_scale = magnitude * physics[0x1c];
-      } else if (d[2] < physics[0x1a]) {
-        curve_scale =
-          ((physics[0x1c] - *(float *)0x2533c8) * (d[2] - physics[0x1a]) /
-             (physics[0x1b] - physics[0x1a]) +
-           *(float *)0x2533c8) *
-          magnitude;
-      } else if (d[2] < physics[0x1e]) {
-        if (d[2] <= physics[0x1d]) {
-          curve_scale = magnitude;
-        } else {
-          curve_scale =
-            ((physics[0x1f] - *(float *)0x2533c8) * (d[2] - physics[0x1d]) /
-               (physics[0x1e] - physics[0x1d]) +
-             *(float *)0x2533c8) *
-            magnitude;
-        }
-      } else {
-        curve_scale = magnitude * physics[0x1f];
-      }
-
-      damp2 = (*(float *)0x2533c8 - physics[0x12]) * curve_scale;
-      /* Save the pre-normalize displacement before normalize3d() unit-
-       * normalizes disp in place: the keep-raw branch below needs the
-       * ORIGINAL (un-normalized) vector, not the unit vector. The original
-       * computes each component into vecB's stack slots (local_24/20/1c,
-       * reused here) and copies to the working disp slots (local_54/50/4c).
-       * Collapsing the two into one disp[] dropped the save, so the keep-raw
-       * branch returned a unit-length (magnitude 1.0) displacement on every
-       * sub-max-speed frame -> "slow then suddenly fast" biped movement. */
-      vecB[0] = d[0] * damp2 - velocity[0];
-      disp[0] = vecB[0];
-      vecB[1] = d[1] * damp2 - physics[0xc];
-      disp[1] = vecB[1];
-      vecB[2] = d[2] * damp2 - physics[0xd];
-      disp[2] = vecB[2];
-      length3 = normalize3d(disp); /* 0x1a35e2; ST0 -> compare */
-      if (length3 < physics[0x13] || length3 == physics[0x13]) {
-        /* 0x1a361f: keep raw (pre-normalize) disp -> restore saved vecB */
-        disp[0] = vecB[0];
-        disp[1] = vecB[1];
-        disp[2] = vecB[2];
-        curve_flag = 0;
-      } else {
-        if (submode == 0) {
-          curve_flag =
-            (char)(((unsigned char)flags_word >> 1) & 1); /* 0x1a35fb */
-        }
-        clamp = physics[0x13];
-        disp[0] = disp[0] * clamp; /* 0x1a360a */
-        disp[1] = disp[1] * clamp;
-        disp[2] = disp[2] * clamp;
-      }
-
-      /* new_velocity = disp - ground_normal*0x25f0d0 + velocity (0x1a3637..) */
-      gp = physics + 0x20;
-      r = physics[0x20] * *(float *)0x25f0d0; /* gp[0] */
-      t = physics[0x21] * *(float *)0x25f0d0;
-      fdist = physics[0x22] * *(float *)0x25f0d0;
-      *(unsigned short *)((char *)physics + 0xa0) =
-        (unsigned short)(-(unsigned short)(curve_flag != 0) & 2); /* 0x1a364d */
-      physics[0x2e] = (disp[0] - r) + velocity[0]; /* 0x1a3672 */
-      physics[0x2f] = (disp[1] - t) + physics[0xc]; /* 0x1a3676 */
-      physics[0x30] = (disp[2] - fdist) + physics[0xd]; /* 0x1a3681 */
-      if ((*(unsigned char *)((char *)physics + 0xa0) & 2) == 0) {
-        goto LAB_001a36a4;
-      }
-      physics[0x30] =
-        physics[0x30] - *(float *)0x32512c; /* 0x1a3692 step-down */
-    }
-  }
-
-LAB_001a36a4:
-  /* ---- debug-draw colour select (0x1a36a4..0x1a36d2) ---- */
-  flags = *(unsigned short *)((char *)physics + 4);
-  if ((flags & 0x40) != 0) {
-    draw_color = 0;
-  } else if ((char)flags < 0) {
-    draw_color = 0xc0a0;
-  } else {
-    draw_color =
-      (int)((-(unsigned int)((flags & 0x100) != 0) & 0xffdfff00) + 0x20c3a0);
-  }
-
-  /* position copy (local_34/30/2c) and ray endpoint (local_9c/98/94). The
-   * endpoint z carries the step-height offset physics[0xe]. (0x1a36d2..) */
-  pos_world[0] = physics[2];
-  pos_world[1] = physics[3];
-  pos_world[2] = physics[4];
-  new_pos[0] = physics[0x2e];
-  new_pos[1] = physics[0x2f];
-  new_pos[2] = physics[0x30] + physics[0xe];
-
-  /* ---- collision/line-of-sight query (0x1a36d2..0x1a3803) ---- */
-  if (*(char *)0x4e4cf2 == '\0') {
-    /* live path: 10-arg query. Arg order matches the push sequence at
-     * 0x1a37ce..0x1a37f6 (last push = first C arg):
-     *   draw_color, &pos_world, &new_pos, physics[0x15], physics[0x16],
-     *   physics[0], &los_dir2, &los_dir, 0x10, results. */
-    result_count =
-      FUN_00150550((void *)draw_color, pos_world, new_pos,
-                   *(int *)&physics[0x15], *(int *)&physics[0x16],
-                   *(int *)&physics[0], &los_dir2[0], &los_dir[0], 0x10,
-                   results);
-  } else {
-    /* debug-draw line record (0x1a3721..0x1a37cc): no query runs, count stays
-     * 1. Builds results[0] (point/normal/plane_d/handles) from the position
-     * and the basis at *0x31fc44, plus the los_dir endpoints. Dead in normal
-     * play (gated on debug global 0x4e4cf2); objdump offsets 0x7e1..0x889
-     * show los_dir (later new_velocity) is bare new_pos.xy/0, while los_dir2
-     * (later new_position) is pos_world.xy + new_pos.xy and pos_world.z. */
-    results[0].point[1] = physics[2];
-    results[0].point[2] = physics[3];
-    results[0].point[3] = physics[4];
-    results[0].normal[0] = *(float *)(*(int *)0x31fc44);
-    results[0].point[0] = 0.0f;
-    results[0].normal[1] = *(float *)(*(int *)0x31fc44 + 4);
-    results[0].normal[2] = *(float *)(*(int *)0x31fc44 + 8);
-    results[0].plane_d = -physics[4];
-    los_dir[0] = new_pos[0];
-    results[0].surface_handle = -1;
-    results[0].flags = -1; /* word 0xffff into +0x2a */
-    los_dir[1] = new_pos[1];
-    *(int *)&results[0].object_handle = *(int *)&physics[0];
-    los_dir2[0] = pos_world[0] + new_pos[0];
-    los_dir2[1] = pos_world[1] + new_pos[1];
-    los_dir2[2] = pos_world[2];
-    los_dir[2] = 0.0f;
-    result_count = 1;
-  }
-
-  /* ---- debug-draw stub (0x1a3803..0x1a3880) ---- */
-  if (*(char *)0x4e4cf0 != '\0') {
-    obj = object_get_and_verify_type(*(int *)&physics[0], -1);
-    if (*(int *)((char *)obj + 0x70) != -1) {
-      *(float *)0x5a8d00 = pos_world[0];
-      *(int *)0x5a8d04 = *(int *)&pos_world[1];
-      *(int *)0x5a8d08 = *(int *)&pos_world[2];
-      *(int *)0x5a8d1c = 1;
-      *(float *)0x5a8cf0 = new_pos[0];
-      *(float *)0x5a8cf4 = new_pos[1];
-      *(float *)0x5a8cf8 = new_pos[2];
-      *(int *)0x324fc4 = 0x3f800000;
-      *(float *)0x4761b8 = physics[0x16];
-      *(float *)0x4761bc = physics[0x15];
-    }
-  }
-
-  /* the query count (low 16 bits) drives the result-walk and a state bit */
-  if ((unsigned short)result_count < 0x10) {
-    *(unsigned char *)((char *)physics + 0xa0) &= 0xf7;
-  } else {
-    *(unsigned char *)((char *)physics + 0xa0) |= 8;
-  }
-
-  /* ---- nearest 'mach' surface-plane refinement (0x1a3899..0x1a3d32) ----
-   * Only when the count==0 AND a valid mach-surface block (physics[0x24]) is
-   * present. Walks the surface block's edge list, projecting the new_velocity
-   * (physics+0xb8) onto each candidate plane and keeping the nearest in-range
-   * hit, then snaps the ground plane / +0xc4 to it. Held FPU values across the
-   * named calls (bsp3d_get_plane / distance helpers) are kept in C scalars. */
-  *(int *)((char *)physics + 0xa8) = 0xffffffff; /* physics[0x2a] = none */
-  /* note: the entry test reuses the count==0 ZF from the >0x10 compare */
-  if ((unsigned short)result_count == 0 &&
-      *(int *)((char *)physics + 0x90) != -1) {
-    int surf_block; /* EDI = global_collision_bsp_get() */
-    int surf_index; /* physics[0x24] index */
-    int best_edge; /* local_38 */
-    float best_dist; /* local_48 */
-    float nrm_d; /* local_8 */
-    float proj[3]; /* local_6c/68/64 */
-    float plane0[4]; /* local_8c/88/84/80 (from bsp3d_get_plane) */
-    float planeN[4]; /* local_58/54/4c projected plane */
-    char edge_swap; /* local_1 */
-    float bestN[4]; /* local_ac/a8/a4/a0 region: ff58/5c/60/64 */
-    int sel_edge;
-    int edge0, edge1;
-    void *ce; /* current edge element */
-    float *pa, *pb;
-
-    surf_block = (int)global_collision_bsp_get();
-    surf_index = *(int *)((char *)physics + 0x90);
-    best_edge = 0xffffffff;
-    *(unsigned int *)&best_dist = 0x7f7fffff;
-    if (surf_index >= 0 && surf_index < *(int *)(surf_block + 0x3c)) {
-      void *surf =
-        tag_block_get_element((void *)(surf_block + 0x3c), surf_index, 0xc);
-      edge0 = *(int *)surf;
-      edge1 = *(int *)((char *)surf + 4);
-      bsp3d_get_plane_from_designator(surf_block, edge0, plane0);
-      /* DEVIATION-FIX 2026-06-17: this count==0 mach-edge block operates on the
-       * collision-query swept out-points, NOT physics+0xb8. The original keeps
-       * THREE distinct stack vec3s; the prior lift collapsed two of them, which
-       * silently dropped the edge de-penetration push-outs and corrupted the
-       * surviving new_velocity (= los_dir, copied unconditionally at 0x1a4160).
-       *   los_dir2 (EBP-0x18) = query out-point-1 -> new_position (+0xac):
-       *                         nrm_d, proj base, in-range test, depth, push-out
-       *   proj     (EBP-0x6c) = projection of los_dir2 onto plane0: t2, distance
-       *   los_dir  (EBP-0x78) = query out-point-2 -> new_velocity (+0xb8):
-       *                         side dot, face dot, in-place scale_add
-       * nrm_d / proj-base read los_dir2 (disasm 0x9cc..0xa14). */
-      nrm_d = -(plane0[0] * los_dir2[0] + plane0[1] * los_dir2[1] +
-                plane0[2] * los_dir2[2] - plane0[3]);
-      proj[0] = plane0[0] * nrm_d + los_dir2[0];
-      proj[1] = plane0[1] * nrm_d + los_dir2[1];
-      proj[2] = plane0[2] * nrm_d + los_dir2[2];
-      ce = (void *)edge1;
-      do {
-        void *edge =
-          tag_block_get_element((void *)(surf_block + 0x48), (int)ce, 0x18);
-        surf_index = *(int *)((char *)physics + 0x90);
-        edge_swap = (char)(surf_index == *(int *)((char *)edge + 0x14));
-        sel_edge = *(int *)((char *)edge + 0x10 + (edge_swap == 0 ? 4 : 0));
-        if (sel_edge != -1) {
-          void *e2 =
-            tag_block_get_element((void *)(surf_block + 0x3c), sel_edge, 0xc);
-          if ((*(unsigned char *)((char *)physics + 0x14) & 2) != 0 ||
-              (*(unsigned char *)((char *)e2 + 8) & 4) != 0) {
-            float side;
-            bsp3d_get_plane_from_designator(surf_block, *(int *)e2, plane0);
-            /* side dots plane0 with los_dir (out-point-2), disasm 0xa8b */
-            side = plane0[0] * los_dir[0] + plane0[1] * los_dir[1] +
-                   plane0[2] * los_dir[2];
-            nrm_d = side;
-            if (!(*(float *)0x2533c0 < side) &&
-                physics[0x16] * *(float *)0x255964 <
-                  (plane0[0] * los_dir2[0] + plane0[1] * los_dir2[1] +
-                   plane0[2] * los_dir2[2] - plane0[3])) {
-              void *v0 = tag_block_get_element((void *)(surf_block + 0x54),
-                                               *(int *)edge, 0x10);
-              void *v1 = tag_block_get_element(
-                (void *)(surf_block + 0x54), *(int *)((char *)edge + 4), 0x10);
-              float ev[3], t2;
-              pa = (float *)v0;
-              pb = (float *)v1;
-              ev[0] = pb[0] - pa[0];
-              ev[1] = pb[1] - pa[1];
-              ev[2] = pb[2] - pa[2];
-              t2 = ((proj[0] - pa[0]) * ev[0] + (proj[1] - pa[1]) * ev[1] +
-                    (proj[2] - pa[2]) * ev[2]) /
-                   (ev[0] * ev[0] + ev[1] * ev[1] + ev[2] * ev[2]);
-              if (!(*(float *)0x2533c0 < t2)) {
-                planeN[0] = pa[0];
-                planeN[1] = pa[1];
-                planeN[2] = pa[2];
-              } else if (t2 <= *(float *)0x2533c8) {
-                vector3d_scale_add(pa, ev, t2, planeN);
-              } else {
-                planeN[0] = pb[0];
-                planeN[1] = pb[1];
-                planeN[2] = pb[2];
-              }
-              if (distance_squared3d(proj, planeN) < best_dist) {
-                best_dist = distance_squared3d(proj, planeN);
-                best_edge = sel_edge;
-                bestN[0] = plane0[0];
-                bestN[1] = plane0[1];
-                bestN[2] = plane0[2];
-                bestN[3] = plane0[3];
-                nrm_d = side;
-              }
-            }
-          }
-        }
-        ce = (void *)*(int *)((char *)edge + 8 + (edge_swap != 0 ? 4 : 0));
-      } while (ce != (void *)edge1);
-
-      if (best_edge != -1 &&
-          (physics[0x16] + physics[0x16]) * (physics[0x16] + physics[0x16]) >=
-            best_dist &&
-          nrm_d <= *(float *)0x2b509c) {
-        /* depth dots bestN with los_dir2 (out-point-1), disasm 0xc83 */
-        float depth = (bestN[0] * los_dir2[0] + bestN[1] * los_dir2[1] +
-                       bestN[2] * los_dir2[2]) -
-                      (bestN[3] + physics[0x16]);
-        if ((depth < 0.0f ? -depth : depth) <=
-            physics[0x16] * *(float *)0x253398) {
-          /* face dots bestN with los_dir (out-point-2), disasm 0xcc8 */
-          float face =
-            bestN[0] * los_dir[0] + bestN[2] * los_dir[2] + bestN[1] * los_dir[1];
-          /* push-out de-penetrates los_dir2 (-> new_position), disasm 0xcec */
-          float pushv = -depth;
-          los_dir2[0] = bestN[0] * pushv + los_dir2[0];
-          los_dir2[1] = bestN[1] * pushv + los_dir2[1];
-          los_dir2[2] = bestN[2] * pushv + los_dir2[2];
-          if (*(float *)0x256348 < face) {
-            /* In-place adjust of the swept out-point (new_velocity source):
-             * los_dir += -(face+k)*bestN. Original (0x1a3c65..0x1a3c8b) aliases
-             * base==out==EBP-0x78 (= los_dir); scale_add is component-wise so
-             * in-place is safe. */
-            vector3d_scale_add(los_dir, bestN, -(face + *(float *)0x2546a4),
-                               los_dir);
-          }
-          /* build a draw record from the plane (0x1a3c8f..0x1a3dce).
-           * Original synthetic-contact layout (verified vs disasm):
-           *   point[0]=0 (0xd9f movl $0); spatial XYZ in point[1..3]
-           *     (0xd8c/0xdd5/0xdec); object_handle=-1 (0xdb1 eax=0xffffffff);
-           *   surface_handle=best_edge (0xdb7 ecx); flags=0xffff0000
-           *     (0xdc0..0xdce bytes 00,00,ff,ff); result_count=1 (0xd92
-           *   movl $0x1,-0x3c) so the refinement loop below actually processes
-           *   this synthetic edge contact (prior lift left result_count==0, so
-           *   the loop skipped it and the ground-plane snap never ran). */
-          pushv = -physics[0x16];
-          results[0].normal[0] = bestN[0];
-          results[0].normal[1] = bestN[1];
-          results[0].normal[2] = bestN[2];
-          results[0].plane_d = bestN[3];
-          results[0].point[0] = 0.0f;                            /* +0x00 */
-          results[0].point[1] = bestN[0] * pushv + los_dir2[0];  /* +0x04 X */
-          results[0].point[2] = bestN[1] * pushv + los_dir2[1];  /* +0x08 Y */
-          results[0].point[3] = bestN[2] * pushv + los_dir2[2];  /* +0x0c Z */
-          results[0].object_handle = -1;                         /* +0x20 */
-          results[0].surface_handle = best_edge;                 /* +0x24 */
-          results[0].flags = (int)0xffff0000;                    /* +0x28 */
-          /* BISECT 2026-06-18: `result_count = 1;` (orig 0xd92) intentionally
-           * omitted. Setting it un-gates the edge-snap (physics+0xa4=best_edge),
-           * Loop B/C, and metric loop in the count==0 path — which correlates
-           * with an MP-load decals.c:479 cluster_index crash (FUN_001a2f40 not
-           * on the crash stack => persistent/global state via an unverified
-           * best_edge). Re-enable only after best_edge is re-derived from the
-           * mach-edge fallback disasm. */
-          *(int *)((char *)physics + 0xa8) = best_edge;
-          *(unsigned char *)((char *)physics + 0xb1) = 0;
-          *(unsigned char *)((char *)physics + 0xb2) = 0;
-        }
-      }
-    }
-  }
-
-  /* ---- planar-normal clamp (0x1a3d34..0x1a3d69) ---- */
-  r = gx * gx + gy * gy;
-  if (*(float *)0x2b5098 < r) {
-    r = (float)(*(double *)0x2573d8 / sqrtf(r));
-    gy = gy * r;
-    gx = r * gx;
-  }
-
-  /* ---- result-array refinement (0x1a3d69..) ---- */
-  best_index = 0xffffffff;
-  {
-    char loop_flag9; /* local_9 */
-    char loop_flag1; /* local_1 */
-    float loop_best; /* local_48 */
-    float loop_metric; /* ff74 */
-    biped_collision_result *e;
-    int n;
-    loop_flag9 = 0;
-    loop_flag1 = 0;
-    *(unsigned int *)&loop_best = 0xff7fffff;
-    *(unsigned int *)&loop_metric = 0xff7fffff;
-    if ((*(unsigned short *)((char *)physics + 4) & 0x10) != 0) {
-      goto LAB_001a401e;
-    }
-    if ((short)(unsigned short)result_count <= 0) {
-      goto LAB_001a401e;
-    }
-    /* ---- loop A: ground-plane select over the result array ---- */
-    for (n = 0; n < (short)(unsigned short)result_count; n++) {
-      char want, same;
-      float metric;
-      e = &results[n];
-      if ((char)*(unsigned char *)((char *)physics + 4) < 0 ||
-          (material_local == 0 && (e->flags & 4) == 0)) {
-        want = 0;
-      } else {
-        want = 1;
-      }
-      /* same-as-cached test: physics+0xa8 (cached surface_handle) vs the best
-       * entry's surface_handle (+0x24). Confirmed original 0x1a3dd1
-       * cmp [ebp+ecx-0x354],eax with buffer base ebp-0x378 and ecx=n*0x2c =>
-       * entry+0x24 = surface_handle. The 2026-06-18 bisect wrongly used .flags
-       * (+0x28); restored to match the binary (see +0xa4 fix below). */
-      if (*(int *)((char *)physics + 0xa8) != -1 &&
-          *(int *)((char *)physics + 0xa8) ==
-              results[(short)best_index].surface_handle) {
-        same = 1;
-      } else {
-        same = 0;
-      }
-      metric = -(physics[0x2e] * e->normal[0] + e->normal[2] * physics[0x30] +
-                 physics[0x2f] * e->normal[1]);
-      if (want == 0) {
-        /* 0x1a3f13: FCOMP normal[2] (flds 0x4(%edi)) vs loop_best, test 0x41/jne
-         * -> take when normal[2] > loop_best (MAXIMUM: most upward-facing ground
-         * plane; Z is the up axis). loop_best inits to -FLT_MAX. The
-         * compare/store use normal[2] (Z/up), NOT normal[1] (Y): selecting on Y
-         * lets a vertical wall (normal ~= +/-Y, Z~=0) win as "ground", so the
-         * biped is projected along/up the wall after a high-velocity contact. */
-        if (loop_flag9 == 0 && e->normal[2] > loop_best) {
-          goto loopA_take;
-        }
-      } else if ((material_local != 0 ||
-                  gx * e->normal[0] + gy * e->normal[1] <=
-                    *(float *)0x253398) &&
-                 (loop_flag9 == 0 || same ||
-                  (loop_flag1 == 0 && loop_metric < metric))) {
-      loopA_take:
-        loop_flag9 = want;
-        best_index = n;
-        loop_flag1 = same;
-        loop_best = e->normal[2]; /* 0x1a3f26: mov 0x4(%edi) = normal[2] (Z/up) */
-        loop_metric = metric;
-      }
-      if ((*(unsigned char *)((char *)physics + 0xa0) & 0x10) == 0) {
-        if ((e->flags & 8) == 0 && e->object_handle != -1) {
-          /* DEVIATION: hardened datum_get -> object_try_and_get_and_verify_type
-           * to survive stale handles; original calls raw datum_get @0x1a3e97
-           * then tests (1 << (od[3] & 0x1f)) & 0x40 (type-6 mask). The
-           * verifying accessor (object_try @0x13d640) performs the identical
-           * (mask & (1 << (type & 0x1f))) test, but adds salt/generation
-           * validation so a stale handle returns NULL instead of dereferencing
-           * a freed datum slot. */
-          if (object_try_and_get_and_verify_type(e->object_handle, 0x40) !=
-              (void *)0) {
-            goto loopA_nomark;
-          }
-        }
-        *(unsigned char *)((char *)physics + 0xa0) |= 0x10;
-      loopA_nomark:;
-      }
-    }
-    if ((short)best_index == -1) {
-      goto LAB_001a401e;
-    }
-    e = &results[(short)best_index];
-    /* selected entry: compute the result normal dot (local_3c) */
-    best_t = -(e->normal[0] * new_pos[0] + e->normal[2] * new_pos[2] +
-               e->normal[1] * new_pos[1]);
-    if (loop_flag9 == 0 && loop_flag1 == 0) {
-      /* 0x1a3ff8: flds -0x48(%ebp) = loop_best (the selected entry's normal[2],
-       * Z/up), compared against physics[0x19] (stand-on-slope threshold). */
-      if (loop_best < physics[0x19]) {
-        goto LAB_001a401e;
-      }
-      if ((*(unsigned short *)((char *)physics + 4) & 1) != 0 &&
-          physics[0x17] < *(float *)0x2548fc) {
-        float seg[3], slen;
-        vector3d_scale_add(&new_pos[0], &e->normal[0], best_t, proj_seg);
-        slen = FUN_00012170(proj_seg);
-        if (physics[0x17] * physics[0x17] < slen) {
-          float md = FUN_00012fe0(&new_pos[0]);
-          if (best_t / md < physics[0x18]) {
-            goto LAB_001a401e;
-          }
-        }
-        (void)seg;
-        (void)slen;
-      }
-    }
-    /* snap ground plane (+0x80 = entry.normal[3]) + surface handle (+0xa4) to
-     * the selected entry, then +0xc4 from the normal dot. EDI = &entry.normal
-     */
-    {
-      /* +0xa4 surface index = e->surface_handle (entry+0x24), NOT .flags (+0x28).
-       * Confirmed original 0x1a3fb9 mov ebx,[ebp+ebx-0x354] with buffer base
-       * ebp-0x378 (edi=entry+0x10) and ebx=best_index*0x2c => entry+0x24, stored
-       * to physics+0xa4 at 0x1a3fe6 -> biped+0x430. The 2026-06-18 bisect wrongly
-       * reverted to .flags, writing a flags bitfield (e.g. 0x30000) into the
-       * pathfinding last_good_surface field, so biped_find_pathfinding_surface_index
-       * passed it to collision_surface_find_closest_point2d and asserted
-       * (tag_groups.c:3089) on AI-spawned bipeds. Restored to match the binary. */
-      int sel_surface = e->surface_handle;
-      *(unsigned char *)((char *)physics + 0xa0) &= 0xfe;
-      *(int *)((char *)physics + 0x80) = *(int *)&e->normal[0];
-      *(int *)((char *)physics + 0x84) = *(int *)&e->normal[1];
-      *(int *)((char *)physics + 0x88) = *(int *)&e->normal[2];
-      *(int *)((char *)physics + 0x8c) = *(int *)&e->plane_d;
-      *(int *)((char *)physics + 0xa4) = sel_surface;
-      if (sel_surface != -1 &&
-          sel_surface == *(int *)((char *)physics + 0xa8)) {
-        *(int *)((char *)physics + 0xc4) = 0;
-        goto LAB_001a4062;
-      }
-      /* 0x1a40b6: -(new_pos . ground_normal); new_pos[i] pairs with
-       * physics[0x20+i] (i.e. +0x80+4i). The prior lift swapped x/y
-       * (new_pos[0]*[0x21] + new_pos[1]*[0x20]), corrupting the +0xc4 signed
-       * plane distance used by downstream positioning. */
-      physics[0x31] =
-        -(new_pos[0] * physics[0x20] + new_pos[1] * physics[0x21] +
-          new_pos[2] * physics[0x22]);
-      goto LAB_001a4062;
-    }
-  }
-  goto LAB_001a4062_done;
-
-LAB_001a401e:
-  *(unsigned char *)((char *)physics + 0xa0) |= 1;
-  *(int *)((char *)physics + 0x80) = *(int *)0x32513c;
-  *(int *)((char *)physics + 0x84) = *(int *)0x325140;
-  *(int *)((char *)physics + 0x88) = *(int *)0x325144;
-  *(int *)((char *)physics + 0x8c) = *(int *)0x325148;
-  *(int *)((char *)physics + 0xa4) = 0xffffffff;
-  physics[0x31] = 0.0f;
-
-LAB_001a4062:
-LAB_001a4062_done:
-  /* ---- loop B: nearest object (0x1a4062..0x1a40ec). Pointer-walk over the
-   * object_handle field at stride 0x2c (matches the original's add edi,0x2c).
-   */
-  {
-    int near_obj = 0xffffffff;
-    int near_type = 0;
-    float near_dist;
-    int n;
-    int *eh;
-    *(unsigned int *)&near_dist = 0;
-    if ((short)(unsigned short)result_count > 0) {
-      eh = &results[0].object_handle;
-      n = (unsigned short)result_count;
-      do {
-        if (*eh != -1) {
-          void *o;
-          float ddx, ddy, ddz, d2;
-          /* Faithful: original CALL 0x13d680 object_get_and_verify_type
-           * (asserting, mask -1). Result used directly, NO NULL check
-           * (orig 0x1a408a: mov ecx,eax; flds [ecx+0x18]). The inner datum_get
-           * asserts/HALTs on a stale handle — which only occurs if FUN_0014f2c0
-           * returns a count larger than the filled records. Loop C below stays
-           * object_try_and_get_and_verify_type (0x13d640) — that IS faithful. */
-          o = object_get_and_verify_type(*eh, -1);
-          ddx = *(float *)((char *)o + 0x18) - los_dir[0];
-          ddy = *(float *)((char *)o + 0x1c) - los_dir[1];
-          ddz = *(float *)((char *)o + 0x20) - los_dir[2];
-          d2 = ddx * ddx + ddy * ddy + ddz * ddz;
-          if (near_obj != -1) {
-            if ((short)near_type == 1) {
-              if (*(short *)((char *)o + 0x64) != 1)
-                goto loopB_next;
-            } else if (*(short *)((char *)o + 0x64) == 1) {
-              goto loopB_take;
-            }
-            if (d2 <= near_dist)
-              goto loopB_next;
-          }
-        loopB_take:
-          near_dist = d2;
-          near_obj = *eh;
-          near_type = (near_type & 0xffff0000) |
-                      (unsigned short)*(short *)((char *)o + 0x64);
-        }
-      loopB_next:
-        eh = (int *)((char *)eh + 0x2c);
-        n--;
-      } while (n != 0);
-    }
-    *(int *)((char *)physics + 0x98) = near_obj;
-  }
-
-  /* ---- loop C: 'mach' tag scan (0x1a40f2..0x1a4160). Pointer-walk. ---- */
-  *(int *)((char *)physics + 0x9c) = 0xffffffff;
-  if ((short)(unsigned short)result_count > 0) {
-    int n = (unsigned short)result_count;
-    int *eh = &results[0].object_handle;
-    do {
-      int handle = *eh;
-      if (handle != -1) {
-        void *t2obj = object_try_and_get_and_verify_type(handle, 0x80);
-        if (t2obj != (void *)0) {
-          void *mtag = tag_get(0x6d616368, *(int *)t2obj);
-          if ((*(unsigned char *)((char *)mtag + 0x292) & 4) != 0 &&
-              *(short *)((char *)mtag + 0x2ea) != -1) {
-            *(int *)((char *)physics + 0x9c) = handle;
-          }
-        }
-      }
-      eh = (int *)((char *)eh + 0x2c);
-      n--;
-    } while (n != 0);
-  }
-
-  /* ---- writeback (0x1a4160..0x1a41de): new_position (+0xac) = los_dir2 (the
-   * near LOS out-point, raw 32-bit copy); new_velocity (+0xb8) = los_dir (the
-   * far out-point); step distance (+0xc8) = |los_dir - new_pos|; then the z
-   * step-down.
-   * DEVIATION-FIX 2026-06-17: the prior lift wrote new_position = los_dir -
-   * los_dir2 and derived the step from that, corrupting the biped position
-   * every frame (bipeds float to the ceiling; the camera/PVS derived from the
-   * bad position culls all BSP geometry -> split-screen skybox flicker). The
-   * original (objdump of delinked bipeds_FUN_001a2f40.obj, 0x1a4160) integer-
-   * copies los_dir2 into new_position and takes the step magnitude from
-   * (los_dir - new_pos). ---- */
-  {
-    float d0 = los_dir[0] - new_pos[0];
-    float d1 = los_dir[1] - new_pos[1];
-    float d2 = los_dir[2] - new_pos[2];
-    *(int *)&physics[0x2b] = *(int *)&los_dir2[0]; /* +0xac new_position */
-    *(int *)&physics[0x2c] = *(int *)&los_dir2[1];
-    *(int *)&physics[0x2d] = *(int *)&los_dir2[2];
-    *(int *)&physics[0x2e] = *(int *)&los_dir[0]; /* +0xb8 new_velocity */
-    *(int *)&physics[0x2f] = *(int *)&los_dir[1];
-    *(int *)&physics[0x30] = *(int *)&los_dir[2];
-    physics[0x32] = sqrtf(d0 * d0 + d1 * d1 + d2 * d2); /* +0xc8 step */
-  }
-  physics[0x30] = physics[0x30] - physics[0xe];
-
-  /* ---- biped step-down (0x1a41de..0x1a42da) ---- */
-  flags = *(unsigned short *)((char *)physics + 4);
-  if ((flags & 4) != 0 && (flags & 8) != 0) {
-    obj = object_get_and_verify_type(*(int *)&physics[0], 1);
-    if (*(int *)((char *)obj + 0x1c8) != -1) {
-      tag = tag_get(0x62697064, *(int *)obj);
-      if ((*(unsigned char *)((char *)tag + 0x2f4) & 0x18) == 0) {
-        float half = *(float *)((char *)tag + 0x424) * *(float *)0x253398;
-        *(int *)&surf[0] = *(int *)&physics[0x2b]; /* movl copies (0x1a4239) */
-        *(int *)&surf[1] = *(int *)&physics[0x2c];
-        surf[2] = physics[0x2d] + half;
-        if (FUN_0014ec30(
-              (int)((-(unsigned int)((flags & 0x80) != 0) & 0xffdffd00) +
-                    0x20c3a0),
-              surf, half, 0.0f, *(float *)((char *)tag + 0x42c),
-              *(int *)&physics[0],
-              debug_scratch)) {
-          float fr =
-            *(float *)((char *)tag + 0x424) -
-            (*(float *)((char *)tag + 0x42c) + *(float *)((char *)tag + 0x42c));
-          disp[0] = fr * *(float *)(*(int *)0x31fc44);
-          disp[1] = fr * *(float *)(*(int *)0x31fc44 + 4);
-          disp[2] = fr * *(float *)(*(int *)0x31fc44 + 8);
-          if (FUN_0014c4b0(debug_scratch, &physics[0x2b], disp,
-                           surface_result)) {
-            *(unsigned char *)((char *)physics + 0xa0) |= 4;
-          }
-        }
-      }
-    }
-  }
-
-  /* ---- final NaN asserts (0x1a42dc..0x1a4409) ----
-   * The original reads each component through a single pointer to the vector
-   * base (EDI=&physics->new_position at +0xac, EAX=&physics->new_velocity at
-   * +0xb8) and copies it to a scratch slot ([EBP-0x40]) before the
-   * exponent-mask test. Model with pointer-indexed reads so MSVC reproduces
-   * the [EDI]/[EDI+4]/[EDI+8] addressing and the per-component temp store. */
-  {
-    unsigned int *np = (unsigned int *)&physics[0x2b];
-    isnan_tmp = np[0];
-    if ((isnan_tmp & 0x7f800000) == 0x7f800000 ||
-        ((isnan_tmp = np[1]), (isnan_tmp & 0x7f800000) == 0x7f800000) ||
-        ((isnan_tmp = np[2]), (isnan_tmp & 0x7f800000) == 0x7f800000)) {
-      display_assert(csprintf(error_string_buffer,
-                              "%s: assert_valid_real_point3d(%f, %f, %f)",
-                              "&physics->new_position", (double)physics[0x2b],
-                              (double)physics[0x2c], (double)physics[0x2d]),
-                     "c:\\halo\\SOURCE\\units\\bipeds.c", 0xee2, true);
-      system_exit(-1);
-    }
-  }
-  {
-    unsigned int *nv = (unsigned int *)&physics[0x2e];
-    isnan_tmp = nv[0];
-    if ((isnan_tmp & 0x7f800000) == 0x7f800000 ||
-        ((isnan_tmp = nv[1]), (isnan_tmp & 0x7f800000) == 0x7f800000) ||
-        ((isnan_tmp = nv[2]), (isnan_tmp & 0x7f800000) == 0x7f800000)) {
-      display_assert(csprintf(error_string_buffer,
-                              "%s: assert_valid_real_vector2d(%f, %f, %f)",
-                              "&physics->new_velocity", (double)physics[0x2e],
-                              (double)physics[0x2f], (double)physics[0x30]),
-                     "c:\\halo\\SOURCE\\units\\bipeds.c", 0xee3, true);
-      system_exit(-1);
-    }
-  }
-  (void)flags_word;
-  (void)tval;
-  (void)fdist;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl $0xafac, %%eax\n\t"
+      "call *%[chkstk]\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "pushl %%edi\n\t"
+      "leal 0x8(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "movl $0, -0x58(%%ebp)\n\t"
+      "movl $0, -0x5c(%%ebp)\n\t"
+      "shrl $9, %%eax\n\t"
+      "andb $1, %%al\n\t"
+      "movb %%al, -0x31(%%ebp)\n\t"
+      "call *%[ca16b0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2f40_1\n\t"
+      "flds 0x10(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xbae\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0xc(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2b50b4\n\t"
+      "pushl $0x26ae04\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a2f40_1:\n\t"
+      "pushl %%ebx\n\t"
+      "leal 0x2c(%%esi), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c84a10]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2f40_2\n\t"
+      "flds 0x34(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xbaf\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x30(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%ebx)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2b50a0\n\t"
+      "pushl $0x26ae40\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a2f40_2:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "testb $0x10, %%al\n\t"
+      "movw $0, 0xa0(%%esi)\n\t"
+      "movl %%eax, -0x48(%%ebp)\n\t"
+      "je .LFUN_001a2f40_5\n\t"
+      "leal -0x54(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x6c(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x14(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a2d90]\n\t"
+      "flds -0x6c(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fmuls 0x44(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "flds -0x68(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "fmuls 0x44(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x1c(%%esi)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "flds -0x64(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x4c(%%ebp)\n\t"
+      "fmuls 0x44(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fstps -0x64(%%ebp)\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x48(%%esi)\n\t"
+      "fsts -0x60(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fstps -0x6c(%%ebp)\n\t"
+      "flds -0x60(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x60(%%ebp)\n\t"
+      "fmuls -0x64(%%ebp)\n\t"
+      "flds -0x6c(%%ebp)\n\t"
+      "fsubs (%%ebx)\n\t"
+      "fstps -0x30(%%ebp)\n\t"
+      "movl -0x30(%%ebp), %%edi\n\t"
+      "fxch %%st(1)\n\t"
+      "movl %%edi, -0x54(%%ebp)\n\t"
+      "fsubs 0x4(%%ebx)\n\t"
+      "fstps -0x2c(%%ebp)\n\t"
+      "movl -0x2c(%%ebp), %%edx\n\t"
+      "movl %%edx, -0x50(%%ebp)\n\t"
+      "fsubs 0x8(%%ebx)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4c(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x4c(%%esi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_3\n\t"
+      "flds 0x4c(%%esi)\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "fmuls -0x4c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_4\n\t"
+      ".LFUN_001a2f40_3:\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      "movl -0x2c(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x1c(%%ebp)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "movl %%edi, -0x24(%%ebp)\n\t"
+      "movl %%edx, -0x20(%%ebp)\n\t"
+      ".LFUN_001a2f40_4:\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "leal 0xb8(%%esi), %%eax\n\t"
+      "fadds (%%ebx)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "fstps (%%eax)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fadds 0x4(%%ebx)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "fadds 0x8(%%ebx)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "movw 0xa0(%%esi), %%cx\n\t"
+      "andl $0xfffd, %%ecx\n\t"
+      "orl $1, %%ecx\n\t"
+      "movw %%cx, 0xa0(%%esi)\n\t"
+      "jmp .LFUN_001a2f40_26\n\t"
+      ".LFUN_001a2f40_5:\n\t"
+      "testb $0x20, %%al\n\t"
+      "je .LFUN_001a2f40_6\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "movl 0x44(%%esi), %%edx\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "leal 0xb8(%%esi), %%eax\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "movl %%edx, 0xc0(%%esi)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fsts (%%eax)\n\t"
+      "fstps -0x58(%%ebp)\n\t"
+      "flds 0x40(%%esi)\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "fmuls 0x18(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts 0xbc(%%esi)\n\t"
+      "fstps -0x5c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_26\n\t"
+      ".LFUN_001a2f40_6:\n\t"
+      "testb $1, %%al\n\t"
+      "je .LFUN_001a2f40_9\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "leal -0x44(%%ebp), %%ecx\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "pushl %%ecx\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "flds 0x40(%%esi)\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "fmuls 0x18(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x2533c8\n\t"
+      "fsubs 0x48(%%esi)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "fstps -0x44(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstp %%st(2)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x44(%%ebp)\n\t"
+      "fsubs (%%ebx)\n\t"
+      "fstps -0xb0(%%ebp)\n\t"
+      "movl -0xb0(%%ebp), %%edi\n\t"
+      "movl %%edi, -0x44(%%ebp)\n\t"
+      "fsubs 0x30(%%esi)\n\t"
+      "fstps -0xac(%%ebp)\n\t"
+      "movl -0xac(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x40(%%ebp)\n\t"
+      "call *%[mag]\n\t"
+      "fcomps 0x50(%%esi)\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_7\n\t"
+      "flds 0x50(%%esi)\n\t"
+      "flds -0x44(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0xb8(%%ebp)\n\t"
+      "fmuls -0x40(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_8\n\t"
+      ".LFUN_001a2f40_7:\n\t"
+      "movl -0xac(%%ebp), %%edx\n\t"
+      "movl %%edx, -0xb4(%%ebp)\n\t"
+      "flds -0xb4(%%ebp)\n\t"
+      "movl %%edi, -0xb8(%%ebp)\n\t"
+      ".LFUN_001a2f40_8:\n\t"
+      "flds -0xb8(%%ebp)\n\t"
+      "movb -0x48(%%ebp), %%cl\n\t"
+      "fadds (%%ebx)\n\t"
+      "leal 0xb8(%%esi), %%eax\n\t"
+      "andb $2, %%cl\n\t"
+      "movzbw %%cl, %%cx\n\t"
+      "fstps (%%eax)\n\t"
+      "fadds 0x30(%%esi)\n\t"
+      "fstps 0xbc(%%esi)\n\t"
+      "flds 0x34(%%esi)\n\t"
+      "fsubs 0x32512c\n\t"
+      "movw %%cx, 0xa0(%%esi)\n\t"
+      "jmp .LFUN_001a2f40_25\n\t"
+      ".LFUN_001a2f40_9:\n\t"
+      "flds 0x44(%%esi)\n\t"
+      "andl $0x200, %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "flds 0x40(%%esi)\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "movl %%eax, -0x38(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsqrt\n\t"
+      "fstps -0x3c(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "je .LFUN_001a2f40_11\n\t"
+      "leal 0x20(%%esi), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%eax, -0x24(%%ebp)\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x20(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x24(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x80(%%esi), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%edx, -0x1c(%%ebp)\n\t"
+      "call *%[cross]\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_001a2f40_10\n\t"
+      "movl 0x31fc44, %%ecx\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cross]\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jp .LFUN_001a2f40_10\n\t"
+      "movl 0x31fc3c, %%ecx\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[cross]\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_001a2f40_10:\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[cross]\n\t"
+      "leal -0x24(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "pushl %%eax\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadds 0x44(%%esi)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_001a2f40_15\n\t"
+      ".LFUN_001a2f40_11:\n\t"
+      "flds 0x88(%%esi)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_12\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "leal 0x80(%%esi), %%edi\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "flds 0x40(%%esi)\n\t"
+      "movl %%ecx, -0x58(%%ebp)\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "fmuls 0x18(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "movl -0x14(%%ebp), %%edx\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "movl %%edx, -0x5c(%%ebp)\n\t"
+      "fmuls 0x84(%%esi)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls (%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fdivs 0x88(%%esi)\n\t"
+      "fsubrs 0x44(%%esi)\n\t"
+      "jmp .LFUN_001a2f40_13\n\t"
+      ".LFUN_001a2f40_12:\n\t"
+      "leal 0x20(%%esi), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x24(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "movl %%edx, -0x20(%%ebp)\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x31fc44, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%ecx, -0x1c(%%ebp)\n\t"
+      "call *%[cross]\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "leal 0x80(%%esi), %%edi\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "leal -0x24(%%ebp), %%edx\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fmuls (%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fchs\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[vsca]\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fmuls 0x8(%%edi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "leal -0x30(%%ebp), %%ecx\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fmuls (%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fchs\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[vsca]\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "flds 0x18(%%esi)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x58(%%ebp)\n\t"
+      "flds 0x40(%%esi)\n\t"
+      "fmuls 0x14(%%esi)\n\t"
+      "flds 0x3c(%%esi)\n\t"
+      "fmuls 0x18(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fstps -0x5c(%%ebp)\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "movb -0x31(%%ebp), %%al\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "testb %%al, %%al\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls 0x3c(%%esi)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fmuls 0x40(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fadds 0x44(%%esi)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_14\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls 0x254cc4\n\t"
+      ".LFUN_001a2f40_13:\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      ".LFUN_001a2f40_14:\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[norm]\n\t"
+      "addl $4, %%esp\n\t"
+      ".LFUN_001a2f40_15:\n\t"
+      "cmpw $0, -0x38(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .LFUN_001a2f40_19\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fcomps 0x6c(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_001a2f40_16\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fmuls 0x70(%%esi)\n\t"
+      "jmp .LFUN_001a2f40_20\n\t"
+      ".LFUN_001a2f40_16:\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fcomps 0x68(%%esi)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a2f40_17\n\t"
+      "fsubs 0x68(%%esi)\n\t"
+      "flds 0x70(%%esi)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fmulp %%st(1)\n\t"
+      "flds 0x6c(%%esi)\n\t"
+      "fsubs 0x68(%%esi)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fadds 0x2533c8\n\t"
+      "fmuls -0x3c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_20\n\t"
+      ".LFUN_001a2f40_17:\n\t"
+      "fcomps 0x78(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001a2f40_18\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fmuls 0x7c(%%esi)\n\t"
+      "jmp .LFUN_001a2f40_20\n\t"
+      ".LFUN_001a2f40_18:\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fcomps 0x74(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_19\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fsubs 0x74(%%esi)\n\t"
+      "flds 0x7c(%%esi)\n\t"
+      "fsubs 0x2533c8\n\t"
+      "fmulp %%st(1)\n\t"
+      "flds 0x78(%%esi)\n\t"
+      "fsubs 0x74(%%esi)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fadds 0x2533c8\n\t"
+      "fmuls -0x3c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_20\n\t"
+      ".LFUN_001a2f40_19:\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      ".LFUN_001a2f40_20:\n\t"
+      "flds 0x2533c8\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "fsubs 0x48(%%esi)\n\t"
+      "fmulp %%st(1)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fstps -0x68(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fstps -0x64(%%ebp)\n\t"
+      "fsubs (%%ebx)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "movl -0x24(%%ebp), %%ecx\n\t"
+      "movl %%ecx, -0x54(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "flds -0x68(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "fsubs 0x30(%%esi)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "movl -0x20(%%ebp), %%edx\n\t"
+      "flds -0x64(%%ebp)\n\t"
+      "movl %%edx, -0x50(%%ebp)\n\t"
+      "fsubs 0x34(%%esi)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "movl -0x1c(%%ebp), %%eax\n\t"
+      "movl %%eax, -0x4c(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x4c(%%esi)\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_23\n\t"
+      "cmpw $0, -0x38(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_21\n\t"
+      "movb -0x48(%%ebp), %%al\n\t"
+      "shrb $1, %%al\n\t"
+      "andb $1, %%al\n\t"
+      "jmp .LFUN_001a2f40_22\n\t"
+      ".LFUN_001a2f40_21:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      ".LFUN_001a2f40_22:\n\t"
+      "flds 0x4c(%%esi)\n\t"
+      "flds -0x54(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x30(%%ebp)\n\t"
+      "flds -0x50(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x2c(%%ebp)\n\t"
+      "fmuls -0x4c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_24\n\t"
+      ".LFUN_001a2f40_23:\n\t"
+      "movl -0x20(%%ebp), %%eax\n\t"
+      "movl -0x1c(%%ebp), %%ecx\n\t"
+      "movl -0x24(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x2c(%%ebp)\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl %%ecx, -0x28(%%ebp)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "movl %%edx, -0x30(%%ebp)\n\t"
+      ".LFUN_001a2f40_24:\n\t"
+      "flds (%%edi)\n\t"
+      "negb %%al\n\t"
+      "fmuls 0x25f0d0\n\t"
+      "fsubrs -0x30(%%ebp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0x25f0d0\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $2, %%eax\n\t"
+      "fsubrs -0x2c(%%ebp)\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "movw %%ax, 0xa0(%%esi)\n\t"
+      "fmuls 0x25f0d0\n\t"
+      "leal 0xb8(%%esi), %%eax\n\t"
+      "fsubr %%st(3), %%st(0)\n\t"
+      "fstps -0x28(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fadds (%%ebx)\n\t"
+      "fstps (%%eax)\n\t"
+      "fadds 0x4(%%ebx)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "fadds 0x8(%%ebx)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "movb 0xa0(%%esi), %%cl\n\t"
+      "testb $2, %%cl\n\t"
+      "je .LFUN_001a2f40_26\n\t"
+      "flds 0xc0(%%esi)\n\t"
+      "fsubs 0x32512c\n\t"
+      ".LFUN_001a2f40_25:\n\t"
+      "fstps 0xc0(%%esi)\n\t"
+      ".LFUN_001a2f40_26:\n\t"
+      "movw 0x4(%%esi), %%cx\n\t"
+      "testb $0x40, %%cl\n\t"
+      "je .LFUN_001a2f40_27\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "jmp .LFUN_001a2f40_29\n\t"
+      ".LFUN_001a2f40_27:\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jns .LFUN_001a2f40_28\n\t"
+      "movl $0xc0a0, %%ecx\n\t"
+      "jmp .LFUN_001a2f40_29\n\t"
+      ".LFUN_001a2f40_28:\n\t"
+      "andl $0x100, %%ecx\n\t"
+      "negl %%ecx\n\t"
+      "sbbl %%ecx, %%ecx\n\t"
+      "andl $0xffdfff00, %%ecx\n\t"
+      "addl $0x20c3a0, %%ecx\n\t"
+      ".LFUN_001a2f40_29:\n\t"
+      "leal 0x8(%%esi), %%edx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "movl (%%edi), %%ebx\n\t"
+      "movl %%ebx, -0x30(%%ebp)\n\t"
+      "movl 0x4(%%edi), %%ebx\n\t"
+      "movl 0x8(%%edi), %%edi\n\t"
+      "movl %%ebx, -0x2c(%%ebp)\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl (%%ebx), %%eax\n\t"
+      "movl %%edi, -0x28(%%ebp)\n\t"
+      "movl 0x4(%%ebx), %%edi\n\t"
+      "movl 0x8(%%ebx), %%ebx\n\t"
+      "movl %%ebx, -0x90(%%ebp)\n\t"
+      "flds -0x90(%%ebp)\n\t"
+      "fadds 0x38(%%esi)\n\t"
+      "movb 0x4e4cf2, %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl %%eax, -0x98(%%ebp)\n\t"
+      "fstps -0x90(%%ebp)\n\t"
+      "movl %%edi, -0x94(%%ebp)\n\t"
+      "je .LFUN_001a2f40_30\n\t"
+      "movl (%%edx), %%ecx\n\t"
+      "flds -0x28(%%ebp)\n\t"
+      "movl %%ecx, -0x374(%%ebp)\n\t"
+      "fchs\n\t"
+      "movl 0x4(%%edx), %%ecx\n\t"
+      "movl 0x8(%%edx), %%edx\n\t"
+      "movl %%ecx, -0x370(%%ebp)\n\t"
+      "movl 0x31fc44, %%ecx\n\t"
+      "movl %%edx, -0x36c(%%ebp)\n\t"
+      "movl $0, -0x378(%%ebp)\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x368(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%edx, -0x364(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "fstps -0x35c(%%ebp)\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "movl %%eax, -0x78(%%ebp)\n\t"
+      "fadds -0x78(%%ebp)\n\t"
+      "movl -0x90(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x360(%%ebp)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "orl $0xffffffff, %%ecx\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      "movl %%edi, -0x74(%%ebp)\n\t"
+      "fadds -0x74(%%ebp)\n\t"
+      "movl %%ecx, -0x354(%%ebp)\n\t"
+      "movw %%cx, -0x34e(%%ebp)\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "movl $1, %%ebx\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x70(%%ebp)\n\t"
+      "movl %%ebx, -0x3c(%%ebp)\n\t"
+      "movl %%edx, -0x358(%%ebp)\n\t"
+      "movb $0, -0x350(%%ebp)\n\t"
+      "movb $0, -0x34f(%%ebp)\n\t"
+      "movl $0, -0x70(%%ebp)\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_31\n\t"
+      ".LFUN_001a2f40_30:\n\t"
+      "leal -0x378(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x10\n\t"
+      "leal -0x78(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x58(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x54(%%esi), %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x98(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x30(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c150550]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl %%ebx, -0x3c(%%ebp)\n\t"
+      ".LFUN_001a2f40_31:\n\t"
+      "movb 0x4e4cf0, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a2f40_32\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x70(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_001a2f40_32\n\t"
+      "movl -0x30(%%ebp), %%edx\n\t"
+      "movl -0x2c(%%ebp), %%eax\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x5a8d00\n\t"
+      "movl -0x98(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x5a8d04\n\t"
+      "movl -0x94(%%ebp), %%eax\n\t"
+      "movl %%ecx, 0x5a8d08\n\t"
+      "movl -0x90(%%ebp), %%ecx\n\t"
+      "movb $1, 0x5a8d1c\n\t"
+      "movl %%edx, 0x5a8cf0\n\t"
+      "movl %%eax, 0x5a8cf4\n\t"
+      "movl %%ecx, 0x5a8cf8\n\t"
+      "movl $0x3f800000, 0x324fc4\n\t"
+      "movl 0x58(%%esi), %%edx\n\t"
+      "movl %%edx, 0x4761b8\n\t"
+      "movl 0x54(%%esi), %%eax\n\t"
+      "movl %%eax, 0x4761bc\n\t"
+      ".LFUN_001a2f40_32:\n\t"
+      "cmpw $0x10, %%bx\n\t"
+      "jl .LFUN_001a2f40_33\n\t"
+      "orb $8, 0xa0(%%esi)\n\t"
+      "jmp .LFUN_001a2f40_34\n\t"
+      ".LFUN_001a2f40_33:\n\t"
+      "andb $0xf7, 0xa0(%%esi)\n\t"
+      ".LFUN_001a2f40_34:\n\t"
+      "testw %%bx, %%bx\n\t"
+      "movl $0xffffffff, 0xa8(%%esi)\n\t"
+      "jne .LFUN_001a2f40_44\n\t"
+      "cmpl $-1, 0x90(%%esi)\n\t"
+      "je .LFUN_001a2f40_44\n\t"
+      "call *%[gbsp]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x90(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%edi, -0x60(%%ebp)\n\t"
+      "movl $0xffffffff, -0x38(%%ebp)\n\t"
+      "movl $0x7f7fffff, -0x48(%%ebp)\n\t"
+      "jl .LFUN_001a2f40_44\n\t"
+      "movl 0x3c(%%edi), %%edx\n\t"
+      "cmpl %%edx, %%eax\n\t"
+      "leal 0x3c(%%edi), %%ecx\n\t"
+      "jge .LFUN_001a2f40_44\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl 0x4(%%eax), %%ebx\n\t"
+      "leal -0x88(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, -0xac(%%ebp)\n\t"
+      "call *%[c99640]\n\t"
+      "flds -0x80(%%ebp)\n\t"
+      "fmuls -0x10(%%ebp)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "flds -0x84(%%ebp)\n\t"
+      "fmuls -0x14(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls -0x88(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs -0x7c(%%ebp)\n\t"
+      "fchs\n\t"
+      "flds -0x88(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x18(%%ebp)\n\t"
+      "fstps -0x6c(%%ebp)\n\t"
+      "flds -0x84(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x14(%%ebp)\n\t"
+      "fstps -0x68(%%ebp)\n\t"
+      "flds -0x80(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x10(%%ebp)\n\t"
+      "fstps -0x64(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_001a2f40_35:\n\t"
+      "pushl $0x18\n\t"
+      "leal 0x48(%%edi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movl 0x90(%%esi), %%eax\n\t"
+      "movl 0x14(%%ebx), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "sete %%al\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testb %%al, %%al\n\t"
+      "sete %%cl\n\t"
+      "movb %%al, -0x1(%%ebp)\n\t"
+      "movl 0x10(%%ebx,%%ecx,4), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movl %%eax, -0xb4(%%ebp)\n\t"
+      "je .LFUN_001a2f40_41\n\t"
+      "pushl $0xc\n\t"
+      "pushl %%eax\n\t"
+      "leal 0x3c(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $2, 0x5(%%esi)\n\t"
+      "jne .LFUN_001a2f40_36\n\t"
+      "testb $4, 0x8(%%eax)\n\t"
+      "je .LFUN_001a2f40_41\n\t"
+      ".LFUN_001a2f40_36:\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "leal -0x88(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c99640]\n\t"
+      "flds -0x84(%%ebp)\n\t"
+      "fmuls -0x74(%%ebp)\n\t"
+      "addl $0xc, %%esp\n\t"
+      "flds -0x80(%%ebp)\n\t"
+      "fmuls -0x70(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x78(%%ebp)\n\t"
+      "fmuls -0x88(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_41\n\t"
+      "flds -0x80(%%ebp)\n\t"
+      "fmuls -0x10(%%ebp)\n\t"
+      "flds -0x84(%%ebp)\n\t"
+      "fmuls -0x14(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls -0x88(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsubs -0x7c(%%ebp)\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fmuls 0x255964\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a2f40_41\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "movl -0x60(%%ebp), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "addl $0x54, %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x4(%%ebx), %%edx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl -0x60(%%ebp), %%eax\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%edx\n\t"
+      "addl $0x54, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds (%%ecx)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fsubs (%%edi)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "flds -0x6c(%%ebp)\n\t"
+      "fsubs (%%edi)\n\t"
+      "flds -0x68(%%ebp)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "flds -0x64(%%ebp)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fmuls -0x1c(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x20(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls -0x24(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls -0x1c(%%ebp)\n\t"
+      "flds -0x20(%%ebp)\n\t"
+      "fmuls -0x20(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x24(%%ebp)\n\t"
+      "fmuls -0x24(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fsts -0x8c(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a2f40_37\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl 0x4(%%edi), %%ecx\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "movl %%eax, -0x54(%%ebp)\n\t"
+      "movl %%ecx, -0x50(%%ebp)\n\t"
+      "movl %%edx, -0x4c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_39\n\t"
+      ".LFUN_001a2f40_37:\n\t"
+      "flds -0x8c(%%ebp)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_38\n\t"
+      "movl (%%ecx), %%eax\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "movl %%eax, -0x54(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%eax\n\t"
+      "movl %%edx, -0x50(%%ebp)\n\t"
+      "movl %%eax, -0x4c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_39\n\t"
+      ".LFUN_001a2f40_38:\n\t"
+      "movl -0x8c(%%ebp), %%edx\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[vsca]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_001a2f40_39:\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x6c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c121a0]\n\t"
+      "fcoms -0x48(%%ebp)\n\t"
+      "movl -0x60(%%ebp), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a2f40_40\n\t"
+      "movl -0xb4(%%ebp), %%eax\n\t"
+      "fstps -0x48(%%ebp)\n\t"
+      "movl -0x88(%%ebp), %%ecx\n\t"
+      "movl -0x84(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x38(%%ebp)\n\t"
+      "movl -0x80(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0xa8(%%ebp)\n\t"
+      "movl -0x7c(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0xa4(%%ebp)\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl %%eax, -0xa0(%%ebp)\n\t"
+      "movl %%ecx, -0x9c(%%ebp)\n\t"
+      "movl %%edx, -0x40(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_41\n\t"
+      ".LFUN_001a2f40_40:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001a2f40_41:\n\t"
+      "movzbl -0x1(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebx,%%eax,4), %%ebx\n\t"
+      "movl -0xac(%%ebp), %%ecx\n\t"
+      "cmpl 0x4(%%ecx), %%ebx\n\t"
+      "jne .LFUN_001a2f40_35\n\t"
+      "movl -0x38(%%ebp), %%ecx\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_001a2f40_44\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "flds -0x48(%%ebp)\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_001a2f40_44\n\t"
+      "flds -0x40(%%ebp)\n\t"
+      "fcomps 0x2b509c\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_001a2f40_44\n\t"
+      "flds -0xa0(%%ebp)\n\t"
+      "fmuls -0x10(%%ebp)\n\t"
+      "flds -0xa4(%%ebp)\n\t"
+      "fmuls -0x14(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0xa8(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x9c(%%ebp)\n\t"
+      "fadds 0x58(%%esi)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fsts -0x8(%%ebp)\n\t"
+      "fabs\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fmuls 0x253398\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_001a2f40_44\n\t"
+      "flds -0xa4(%%ebp)\n\t"
+      "fmuls -0x74(%%ebp)\n\t"
+      "flds -0xa0(%%ebp)\n\t"
+      "fmuls -0x70(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0xa8(%%ebp)\n\t"
+      "fmuls -0x78(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fchs\n\t"
+      "flds -0xa8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x18(%%ebp)\n\t"
+      "fstps -0x18(%%ebp)\n\t"
+      "flds -0xa4(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x14(%%ebp)\n\t"
+      "fstps -0x14(%%ebp)\n\t"
+      "flds -0xa0(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x10(%%ebp)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fcoms 0x256348\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_42\n\t"
+      "fadds 0x2546a4\n\t"
+      "leal -0x78(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "fchs\n\t"
+      "leal -0xa8(%%ebp), %%eax\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x78(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[vsca]\n\t"
+      "movl -0x38(%%ebp), %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "jmp .LFUN_001a2f40_43\n\t"
+      ".LFUN_001a2f40_42:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001a2f40_43:\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "movl -0xa4(%%ebp), %%eax\n\t"
+      "fchs\n\t"
+      "movl -0xa8(%%ebp), %%edx\n\t"
+      "flds -0xa8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "movl %%eax, -0x364(%%ebp)\n\t"
+      "movl -0x9c(%%ebp), %%eax\n\t"
+      "movl %%edx, -0x368(%%ebp)\n\t"
+      "fadds -0x18(%%ebp)\n\t"
+      "movl -0xa0(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x35c(%%ebp)\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "fstps -0x374(%%ebp)\n\t"
+      "movl $1, -0x3c(%%ebp)\n\t"
+      "flds -0xa4(%%ebp)\n\t"
+      "movl $0, -0x378(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "movl %%edx, -0x360(%%ebp)\n\t"
+      "movl %%eax, -0x358(%%ebp)\n\t"
+      "movl %%ecx, -0x354(%%ebp)\n\t"
+      "fadds -0x14(%%ebp)\n\t"
+      "movb $0, -0x350(%%ebp)\n\t"
+      "movb $0, -0x34f(%%ebp)\n\t"
+      "movw %%ax, -0x34e(%%ebp)\n\t"
+      "fstps -0x370(%%ebp)\n\t"
+      "movl %%ecx, 0xa8(%%esi)\n\t"
+      "flds -0xa0(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fadds -0x10(%%ebp)\n\t"
+      "fstps -0x36c(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001a2f40_44:\n\t"
+      "flds -0x5c(%%ebp)\n\t"
+      "fmuls -0x5c(%%ebp)\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fmuls -0x58(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fcoms 0x2b5098\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_45\n\t"
+      "fsqrt\n\t"
+      "fdivrl 0x2573d8\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x58(%%ebp)\n\t"
+      "fmuls -0x5c(%%ebp)\n\t"
+      "fstps -0x5c(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_46\n\t"
+      ".LFUN_001a2f40_45:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001a2f40_46:\n\t"
+      "testb $0x10, 0x4(%%esi)\n\t"
+      "movl $0xffffffff, -0x38(%%ebp)\n\t"
+      "movb $0, -0x9(%%ebp)\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "movl $0xff7fffff, -0x48(%%ebp)\n\t"
+      "movl $0xff7fffff, -0x8c(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_61\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, -0x3c(%%ebp)\n\t"
+      "jle .LFUN_001a2f40_61\n\t"
+      "leal -0x364(%%ebp), %%edi\n\t"
+      ".LFUN_001a2f40_47:\n\t"
+      "movb 0x4(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "js .LFUN_001a2f40_49\n\t"
+      "movb -0x31(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2f40_48\n\t"
+      "testb $4, 0x14(%%edi)\n\t"
+      "je .LFUN_001a2f40_49\n\t"
+      ".LFUN_001a2f40_48:\n\t"
+      "movb $1, %%dl\n\t"
+      "jmp .LFUN_001a2f40_50\n\t"
+      ".LFUN_001a2f40_49:\n\t"
+      "xorb %%dl, %%dl\n\t"
+      ".LFUN_001a2f40_50:\n\t"
+      "movl 0xa8(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001a2f40_51\n\t"
+      "movswl -0x38(%%ebp), %%ecx\n\t"
+      "imull $0x2c, %%ecx, %%ecx\n\t"
+      "cmpl %%eax, -0x354(%%ebp,%%ecx,1)\n\t"
+      "jne .LFUN_001a2f40_51\n\t"
+      "movb $1, %%cl\n\t"
+      "jmp .LFUN_001a2f40_52\n\t"
+      ".LFUN_001a2f40_51:\n\t"
+      "xorb %%cl, %%cl\n\t"
+      ".LFUN_001a2f40_52:\n\t"
+      "testb %%dl, %%dl\n\t"
+      "flds 0xbc(%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0xc0(%%esi)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0xb8(%%esi)\n\t"
+      "fmuls -0x4(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fchs\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "je .LFUN_001a2f40_54\n\t"
+      "movb -0x31(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2f40_53\n\t"
+      "flds -0x5c(%%ebp)\n\t"
+      "fmuls (%%edi)\n\t"
+      "flds -0x58(%%ebp)\n\t"
+      "fmuls -0x4(%%edi)\n\t"
+      "faddp %%st(1)\n\t"
+      "fcomps 0x253398\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_001a2f40_56\n\t"
+      ".LFUN_001a2f40_53:\n\t"
+      "movb -0x9(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a2f40_55\n\t"
+      "testb %%cl, %%cl\n\t"
+      "jne .LFUN_001a2f40_55\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2f40_56\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps -0x8c(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_001a2f40_55\n\t"
+      "jmp .LFUN_001a2f40_56\n\t"
+      ".LFUN_001a2f40_54:\n\t"
+      "movb -0x9(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2f40_56\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fcomps -0x48(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_56\n\t"
+      ".LFUN_001a2f40_55:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movb %%dl, -0x9(%%ebp)\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "movl %%ebx, -0x38(%%ebp)\n\t"
+      "movb %%cl, -0x1(%%ebp)\n\t"
+      "movl %%edx, -0x48(%%ebp)\n\t"
+      "movl %%eax, -0x8c(%%ebp)\n\t"
+      ".LFUN_001a2f40_56:\n\t"
+      "testb $0x10, 0xa0(%%esi)\n\t"
+      "jne .LFUN_001a2f40_58\n\t"
+      "testb $8, 0x14(%%edi)\n\t"
+      "jne .LFUN_001a2f40_57\n\t"
+      "movl 0xc(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001a2f40_58\n\t"
+      "movl 0x5a8d50, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movb 0x3(%%eax), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x40, %%dl\n\t"
+      "jne .LFUN_001a2f40_58\n\t"
+      ".LFUN_001a2f40_57:\n\t"
+      "orb $0x10, 0xa0(%%esi)\n\t"
+      ".LFUN_001a2f40_58:\n\t"
+      "incl %%ebx\n\t"
+      "addl $0x2c, %%edi\n\t"
+      "cmpw -0x3c(%%ebp), %%bx\n\t"
+      "jl .LFUN_001a2f40_47\n\t"
+      "movl -0x38(%%ebp), %%eax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "je .LFUN_001a2f40_61\n\t"
+      "movswl %%ax, %%ebx\n\t"
+      "imull $0x2c, %%ebx, %%ebx\n\t"
+      "leal -0x368(%%ebp,%%ebx,1), %%edi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%ecx, -0x88(%%ebp)\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%edx, -0x84(%%ebp)\n\t"
+      "movl 0xc(%%eax), %%edx\n\t"
+      "flds -0x84(%%ebp)\n\t"
+      "movb -0x9(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "fmuls -0x94(%%ebp)\n\t"
+      "movl %%ecx, -0x80(%%ebp)\n\t"
+      "movl %%edx, -0x7c(%%ebp)\n\t"
+      "flds -0x80(%%ebp)\n\t"
+      "fmuls -0x90(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x88(%%ebp)\n\t"
+      "fmuls -0x98(%%ebp)\n\t"
+      "faddp %%st(1)\n\t"
+      "fchs\n\t"
+      "fstps -0x38(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_59\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_001a2f40_59\n\t"
+      "flds -0x48(%%ebp)\n\t"
+      "fcomps 0x64(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001a2f40_61\n\t"
+      "testb $1, 0x4(%%esi)\n\t"
+      "je .LFUN_001a2f40_59\n\t"
+      "flds 0x5c(%%esi)\n\t"
+      "fcomps 0x2548fc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a2f40_59\n\t"
+      "movl -0x38(%%ebp), %%ecx\n\t"
+      "leal -0x6c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x88(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x98(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[vsca]\n\t"
+      "movl 0x5c(%%esi), %%ecx\n\t"
+      "leal -0x6c(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "call *%[c12170]\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls -0x8(%%ebp)\n\t"
+      "addl $0x14, %%esp\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_001a2f40_59\n\t"
+      "leal -0x98(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[v2fe0]\n\t"
+      "fdivrs -0x38(%%ebp)\n\t"
+      "addl $4, %%esp\n\t"
+      "fcomps 0x60(%%esi)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_001a2f40_61\n\t"
+      ".LFUN_001a2f40_59:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movl -0x354(%%ebp,%%ebx,1), %%ebx\n\t"
+      "andb $0xfe, 0xa0(%%esi)\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "leal 0x80(%%esi), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edi), %%edx\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "movl 0xc(%%edi), %%edx\n\t"
+      "movl %%edx, 0xc(%%ecx)\n\t"
+      "movl %%ebx, 0xa4(%%esi)\n\t"
+      "je .LFUN_001a2f40_60\n\t"
+      "cmpl 0xa8(%%esi), %%ebx\n\t"
+      "je .LFUN_001a2f40_62\n\t"
+      ".LFUN_001a2f40_60:\n\t"
+      "flds -0x94(%%ebp)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "flds -0x90(%%ebp)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds -0x98(%%ebp)\n\t"
+      "fmuls (%%eax)\n\t"
+      "faddp %%st(1)\n\t"
+      "fchs\n\t"
+      "fstps 0xc4(%%esi)\n\t"
+      "jmp .LFUN_001a2f40_63\n\t"
+      ".LFUN_001a2f40_61:\n\t"
+      "orb $1, 0xa0(%%esi)\n\t"
+      "movl 0x32513c, %%ecx\n\t"
+      "leal 0x80(%%esi), %%eax\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl 0x325140, %%edx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "movl 0x325144, %%ecx\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "movl 0x325148, %%edx\n\t"
+      "movl %%edx, 0xc(%%eax)\n\t"
+      "movl $0xffffffff, 0xa4(%%esi)\n\t"
+      ".LFUN_001a2f40_62:\n\t"
+      "movl $0, 0xc4(%%esi)\n\t"
+      ".LFUN_001a2f40_63:\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "cmpw $0, -0x3c(%%ebp)\n\t"
+      "jle .LFUN_001a2f40_67\n\t"
+      "movzwl -0x3c(%%ebp), %%eax\n\t"
+      "leal -0x358(%%ebp), %%edi\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_001a2f40_64:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_001a2f40_66\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "flds 0x18(%%ecx)\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "fsubs -0x78(%%ebp)\n\t"
+      "flds 0x1c(%%ecx)\n\t"
+      "fsubs -0x74(%%ebp)\n\t"
+      "flds 0x20(%%ecx)\n\t"
+      "fsubs -0x70(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fld %%st(2)\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fld %%st(3)\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fstp %%st(3)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "je .LFUN_001a2f40_78\n\t"
+      "movl $1, %%eax\n\t"
+      "cmpw %%ax, -0x40(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_76\n\t"
+      "cmpw %%ax, 0x64(%%ecx)\n\t"
+      "je .LFUN_001a2f40_77\n\t"
+      ".LFUN_001a2f40_65:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_001a2f40_66:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $0x2c, %%edi\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_64\n\t"
+      ".LFUN_001a2f40_67:\n\t"
+      "movl -0x3c(%%ebp), %%eax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "movl %%ebx, 0x98(%%esi)\n\t"
+      "movl $0xffffffff, 0x9c(%%esi)\n\t"
+      "jle .LFUN_001a2f40_70\n\t"
+      "movzwl %%ax, %%edx\n\t"
+      "leal -0x358(%%ebp), %%ebx\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      ".LFUN_001a2f40_68:\n\t"
+      "movl (%%ebx), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .LFUN_001a2f40_69\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%edi\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001a2f40_69\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x6d616368\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x292(%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $4, %%cl\n\t"
+      "je .LFUN_001a2f40_69\n\t"
+      "cmpw $-1, 0x2ea(%%eax)\n\t"
+      "je .LFUN_001a2f40_69\n\t"
+      "movl %%edi, 0x9c(%%esi)\n\t"
+      ".LFUN_001a2f40_69:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "addl $0x2c, %%ebx\n\t"
+      "decl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_68\n\t"
+      ".LFUN_001a2f40_70:\n\t"
+      "flds -0x78(%%ebp)\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "fsubs -0x98(%%ebp)\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "flds -0x74(%%ebp)\n\t"
+      "leal 0xac(%%esi), %%edi\n\t"
+      "fsubs -0x94(%%ebp)\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "flds -0x70(%%ebp)\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "fsubs -0x90(%%ebp)\n\t"
+      "movl -0x10(%%ebp), %%edx\n\t"
+      "movl %%eax, 0x4(%%ecx)\n\t"
+      "movl %%edx, 0x8(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "movl -0x78(%%ebp), %%ecx\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "movl -0x74(%%ebp), %%edx\n\t"
+      "fld %%st(2)\n\t"
+      "leal 0xb8(%%esi), %%eax\n\t"
+      "fmul %%st(3), %%st(0)\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl -0x70(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "faddp %%st(1)\n\t"
+      "movl %%ecx, 0x8(%%eax)\n\t"
+      "fld %%st(3)\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "testb $4, %%al\n\t"
+      "fmul %%st(4), %%st(0)\n\t"
+      "faddp %%st(1)\n\t"
+      "fsqrt\n\t"
+      "fstps 0xc8(%%esi)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0xc0(%%esi)\n\t"
+      "fsubs 0x38(%%esi)\n\t"
+      "fstps 0xc0(%%esi)\n\t"
+      "je .LFUN_001a2f40_71\n\t"
+      "testb $8, %%al\n\t"
+      "je .LFUN_001a2f40_71\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "pushl $1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[get]\n\t"
+      "movl 0x1c8(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .LFUN_001a2f40_71\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x62697064\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "movb 0x2f4(%%ebx), %%al\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $0x18, %%al\n\t"
+      "jne .LFUN_001a2f40_71\n\t"
+      "movb 0x4(%%esi), %%al\n\t"
+      "flds 0x424(%%ebx)\n\t"
+      "fmuls 0x253398\n\t"
+      "movl %%edi, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -0x6c(%%ebp)\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "movl 0x8(%%ecx), %%ecx\n\t"
+      "andb $0x80, %%al\n\t"
+      "movl %%edx, -0x68(%%ebp)\n\t"
+      "negb %%al\n\t"
+      "movl %%ecx, -0x64(%%ebp)\n\t"
+      "flds -0x64(%%ebp)\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "fadds -0x8(%%ebp)\n\t"
+      "leal -0xafac(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x42c(%%ebx), %%edx\n\t"
+      "fstps -0x64(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%ecx\n\t"
+      "andl $0xffdffd00, %%eax\n\t"
+      "leal -0x6c(%%ebp), %%edx\n\t"
+      "addl $0x20c3a0, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c4ec30]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a2f40_71\n\t"
+      "flds 0x42c(%%ebx)\n\t"
+      "movl 0x31fc44, %%eax\n\t"
+      "fadd %%st(0), %%st(0)\n\t"
+      "leal -0x54(%%ebp), %%ecx\n\t"
+      "leal -0xafac(%%ebp), %%edx\n\t"
+      "fsubrs 0x424(%%ebx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls (%%eax)\n\t"
+      "fstps -0x54(%%ebp)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls 0x4(%%eax)\n\t"
+      "fstps -0x50(%%ebp)\n\t"
+      "fmuls 0x8(%%eax)\n\t"
+      "leal -0x3a4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "fstps -0x4c(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c14c4b0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001a2f40_71\n\t"
+      "orb $4, 0xa0(%%esi)\n\t"
+      ".LFUN_001a2f40_71:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x7f800000, %%ecx\n\t"
+      "cmpl $0x7f800000, %%ecx\n\t"
+      "movl %%eax, -0x40(%%ebp)\n\t"
+      "popl %%ebx\n\t"
+      "je .LFUN_001a2f40_72\n\t"
+      "movl 0x4(%%edi), %%edx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "movl %%edx, -0x40(%%ebp)\n\t"
+      "je .LFUN_001a2f40_72\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x40(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_73\n\t"
+      ".LFUN_001a2f40_72:\n\t"
+      "flds 0xb4(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xee2\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0xb0(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2b5080\n\t"
+      "pushl $0x26ae04\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a2f40_73:\n\t"
+      "movl 0xb8(%%esi), %%ecx\n\t"
+      "leal 0xb8(%%esi), %%eax\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x40(%%ebp)\n\t"
+      "popl %%edi\n\t"
+      "je .LFUN_001a2f40_74\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x40(%%ebp)\n\t"
+      "je .LFUN_001a2f40_74\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "movl %%ecx, %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "movl %%ecx, -0x40(%%ebp)\n\t"
+      "jne .LFUN_001a2f40_75\n\t"
+      ".LFUN_001a2f40_74:\n\t"
+      "flds 0xc0(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0xee3\n\t"
+      "pushl $0x2b4d5c\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0xbc(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%eax)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x2b5068\n\t"
+      "pushl $0x26ae40\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001a2f40_75:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_001a2f40_76:\n\t"
+      "cmpw %%ax, 0x64(%%ecx)\n\t"
+      "je .LFUN_001a2f40_78\n\t"
+      ".LFUN_001a2f40_77:\n\t"
+      "fcoms -0xac(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_001a2f40_65\n\t"
+      ".LFUN_001a2f40_78:\n\t"
+      "movw 0x64(%%ecx), %%cx\n\t"
+      "fstps -0xac(%%ebp)\n\t"
+      "movl (%%edi), %%ebx\n\t"
+      "movw %%cx, -0x40(%%ebp)\n\t"
+      "jmp .LFUN_001a2f40_66\n\t"
+      :
+      : [chkstk] "m"(b1a2f40_chkstk), [ca16b0] "m"(b1a2f40_ca16b0), [c8d9d0] "m"(b1a2f40_c8d9d0), [assert] "m"(b1a2f40_assert), [exitfn] "m"(b1a2f40_exitfn), [c84a10] "m"(b1a2f40_c84a10), [c1a2d90] "m"(b1a2f40_c1a2d90), [norm] "m"(b1a2f40_norm), [mag] "m"(b1a2f40_mag), [cross] "m"(b1a2f40_cross), [vsca] "m"(b1a2f40_vsca), [c150550] "m"(b1a2f40_c150550), [get] "m"(b1a2f40_get), [gbsp] "m"(b1a2f40_gbsp), [elem] "m"(b1a2f40_elem), [c99640] "m"(b1a2f40_c99640), [c121a0] "m"(b1a2f40_c121a0), [dget] "m"(b1a2f40_dget), [c12170] "m"(b1a2f40_c12170), [v2fe0] "m"(b1a2f40_v2fe0), [tryget] "m"(b1a2f40_tryget), [tag] "m"(b1a2f40_tag), [c4ec30] "m"(b1a2f40_c4ec30), [c14c4b0] "m"(b1a2f40_c14c4b0)
+      : "memory");
 }
+#else
+#error "FUN_001a2f40: clang naked draft required"
+#endif
+
 /* --- bipeds.obj orphan shells (2026-07-26) --- */
 
 /* kb export alias @ 0x1a0db0 */

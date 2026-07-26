@@ -47,17 +47,27 @@ def pe_fn_bytes(pe: pefile.PE, name: str) -> tuple[bytes, int]:
         if exp.address
     )
     nxt = next((a for a in exports if a > addr), None)
-    size = min((nxt - addr) if nxt else 0x800, 0x1000)
+    # Large XBE-shaped naked drafts (batch 50+) exceed 4KiB; rely on the next
+    # export boundary, with a generous ceiling only when that boundary is missing.
+    size = min((nxt - addr) if nxt else 0x800, 0x8000)
     off = pe.get_offset_from_rva(addr - base)
     data = pe.__data__[off : off + size]
     # Strip trailing padding bytes, then drop trailing NOP instructions
     # (clang often emits multi-byte NOPs that may be truncated at the next export).
+    # Keep a single 0x90 immediately after RET — XBE jump-table bodies often
+    # align with that nop (batch 50 FUN_000f90d0).
     while len(data) > 16 and data[-1] in (0x90, 0xCC, 0x00):
+        if data[-1] == 0x90 and data[-2] == 0xC3:
+            break
         data = data[:-1]
     md = Cs(CS_ARCH_X86, CS_MODE_32)
     while True:
         insns = list(md.disasm(data, addr))
         if len(insns) < 2 or insns[-1].mnemonic != "nop":
+            break
+        # Keep only XBE-style single-byte align nop after RET; strip clang
+        # multi-byte NOP padding (e.g. 66 2E 0F 1F 84 00 ...).
+        if insns[-2].mnemonic == "ret" and insns[-1].size == 1:
             break
         data = data[: insns[-1].address - addr]
     return data, addr
@@ -543,6 +553,13 @@ def main() -> int:
         ("item_set_position", 0xf6d60, 0xf7103),
         ("FUN_00139e50", 0x139e50, 0x13a242),
         ("unit_aiming_vector", 0x1ab410, 0x1ab76b),
+        # gameplay wave 50 (2026-07-26)
+        ("FUN_001a2f40", 0x1a2f40, 0x1a4436),
+        ("FUN_001b3690", 0x1b3690, 0x1b4dac),
+        ("FUN_000f9c40", 0xf9c40, 0xfac17),
+        ("FUN_000f90d0", 0xf90d0, 0xf9c28),
+        ("object_cause_damage", 0x137d20, 0x1384d3),
+        ("FUN_001ac680", 0x1ac680, 0x1acd66),
     ]
 
     xbe = Xbe.from_file(args.xbe)
