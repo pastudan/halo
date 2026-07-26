@@ -28926,11 +28926,13 @@
       "functions": [
         {
           "addr": "0xa3e60",
-          "decl": "void FUN_000a3e60(void);"
+          "decl": "void FUN_000a3e60(void);",
+          "ported": false
         },
         {
           "addr": "0xa3ea0",
-          "decl": "void FUN_000a3ea0(void);"
+          "decl": "void FUN_000a3ea0(void);",
+          "ported": false
         },
         {
           "addr": "0xa3ef0",
@@ -28954,47 +28956,58 @@
         },
         {
           "addr": "0xa4000",
-          "decl": "void FUN_000a4000(void);"
+          "decl": "void FUN_000a4000(void);",
+          "ported": false
         },
         {
           "addr": "0xa40a0",
-          "decl": "void weather_particle_system_new(void);"
+          "decl": "void weather_particle_system_new(void);",
+          "ported": false
         },
         {
           "addr": "0xa4200",
-          "decl": "void weather_particle_system_delete(void);"
+          "decl": "void weather_particle_system_delete(void);",
+          "ported": false
         },
         {
           "addr": "0xa4310",
-          "decl": "void FUN_000a4310(void);"
+          "decl": "void FUN_000a4310(void);",
+          "ported": false
         },
         {
           "addr": "0xa45d0",
-          "decl": "void FUN_000a45d0(void);"
+          "decl": "void FUN_000a45d0(void);",
+          "ported": false
         },
         {
           "addr": "0xa4610",
-          "decl": "void FUN_000a4610(void);"
+          "decl": "void FUN_000a4610(void);",
+          "ported": false
         },
         {
           "addr": "0xa48c0",
-          "decl": "void FUN_000a48c0(void);"
+          "decl": "void FUN_000a48c0(void);",
+          "ported": false
         },
         {
           "addr": "0xa4a00",
-          "decl": "void FUN_000a4a00(void);"
+          "decl": "void FUN_000a4a00(void);",
+          "ported": false
         },
         {
           "addr": "0xa4ab0",
-          "decl": "void FUN_000a4ab0(void);"
+          "decl": "void FUN_000a4ab0(void);",
+          "ported": false
         },
         {
           "addr": "0xa4be0",
-          "decl": "void FUN_000a4be0(void);"
+          "decl": "void FUN_000a4be0(void);",
+          "ported": false
         },
         {
           "addr": "0xa4e20",
-          "decl": "void weather_particle_system_render(void);"
+          "decl": "void weather_particle_system_render(void);",
+          "ported": false
         }
       ],
       "name": "weather_particle_systems.obj",

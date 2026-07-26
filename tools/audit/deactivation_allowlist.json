@@ -15447,5 +15447,96 @@
     "object": "game.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa3e60",
+    "name": "FUN_000a3e60",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa3ea0",
+    "name": "FUN_000a3ea0",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4000",
+    "name": "FUN_000a4000",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa40a0",
+    "name": "weather_particle_system_new",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4200",
+    "name": "weather_particle_system_delete",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4310",
+    "name": "FUN_000a4310",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa45d0",
+    "name": "FUN_000a45d0",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4610",
+    "name": "FUN_000a4610",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa48c0",
+    "name": "FUN_000a48c0",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4a00",
+    "name": "FUN_000a4a00",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4ab0",
+    "name": "FUN_000a4ab0",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4be0",
+    "name": "FUN_000a4be0",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0xa4e20",
+    "name": "weather_particle_system_render",
+    "object": "weather_particle_systems.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
