@@ -14024,7 +14024,8 @@
         {
           "addr": "0xf5800",
           "decl": "unsigned short FUN_000f5800(int16_t slot_index@<si>);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_000f5800"
         },
         {
           "addr": "0xf5900",
@@ -28459,12 +28460,14 @@
         {
           "addr": "0x1a2a60",
           "decl": "void FUN_001a2a60(int unit_handle@<edi>, char *state);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001a2a60"
         },
         {
           "addr": "0x1a2b10",
           "decl": "void FUN_001a2b10(int unit_handle@<edi>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001a2b10"
         },
         {
           "addr": "0x1a2b90",
@@ -29594,7 +29597,7 @@
         {
           "addr": "0x1b5400",
           "decl": "int16_t FUN_001b5400(int unit_handle, int seat_name_substr);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5500",
@@ -29635,12 +29638,12 @@
         {
           "addr": "0x1b5770",
           "decl": "void vehicle_reset(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5820",
           "decl": "char vehicle_new(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5890",
@@ -29670,12 +29673,12 @@
         {
           "addr": "0x1b5ff0",
           "decl": "void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b6140",
           "decl": "void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b6250",
@@ -33736,7 +33739,8 @@
         {
           "addr": "0xfbd10",
           "decl": "char weapon_new(int weapon_handle);",
-          "ported": true
+          "ported": true,
+          "name": "weapon_new"
         },
         {
           "addr": "0xfbea0",
@@ -33763,7 +33767,8 @@
         {
           "addr": "0xfc550",
           "decl": "void weapon_build_weapon_interface_state(int weapon_handle, int out_state);",
-          "ported": true
+          "ported": true,
+          "name": "weapon_build_weapon_interface_state"
         },
         {
           "addr": "0xfc690",
@@ -39323,13 +39328,15 @@
         },
         {
           "addr": "0x139350",
-          "decl": "int16_t FUN_00139350(int light_handle, int16_t *out_buffer, int16_t max_count);",
-          "ported": false
+          "decl": "int16_t FUN_00139350(int light_handle@<eax>, int16_t *out_buffer@<ebx>, int16_t max_count@<di>);",
+          "ported": false,
+          "name": "FUN_00139350"
         },
         {
           "addr": "0x1393b0",
           "decl": "float object_get_self_illumination(int object_handle);",
-          "ported": false
+          "ported": false,
+          "name": "object_get_self_illumination"
         }
       ],
       "name": "object_lights.obj",

@@ -1684,7 +1684,7 @@ static void (*const b1a0f10_exitfn)(int) = system_exit;
 static bool (*const b1a0f10_o9f3b0)(void *) = FUN_0009f3b0;
 static void *(*const b1a0f10_elem)(void *, int, int) = tag_block_get_element;
 static short (*const b1a0f10_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
-static void (*const b1a0f10_c9f570)(int effect_tag_index, int param_2, void *position, int param_4) = FUN_0009f570;
+static void (*const b1a0f10_c9f570)(int effect_tag_index, int param_2, void *position, int param_4) = (void *)FUN_0009f570;
 
 __attribute__((naked, noinline))
 void FUN_001a0f10(int unit_handle __attribute__((unused)), int param_2 __attribute__((unused)), short index __attribute__((unused)))
@@ -4113,159 +4113,63 @@ void FUN_001a2900(int unit_handle __attribute__((unused)), char *state __attribu
 #endif
 
 
-/* FUN_001a2a60 (0x1a2a60) — XBE naked draft (batch 64). */
-#if defined(__clang__)
-static void *(*const b1a2a60_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a2a60_tag)(int, int) = tag_get;
-static bool (*const b1a2a60_c930a0)(void) = cinematic_in_progress;
-static void (*const b1a2a60_c1a0f10)(int unit_handle, int param_2, short index) = FUN_001a0f10;
-static void (*const b1a2a60_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
-
-__attribute__((naked, noinline))
-void FUN_001a2a60(int unit_handle __attribute__((unused)), char *state __attribute__((unused)))
+/* FUN_001a2a60 (0x1a2a60) — readable C lift. */
+void FUN_001a2a60(int unit_handle, char *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x428(%%esi), %%dl\n\t"
-      "movb 0x429(%%esi), %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incb %%dl\n\t"
-      "movb %%dl, %%al\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "cmpb %%cl, %%al\n\t"
-      "movb %%dl, 0x428(%%esi)\n\t"
-      "jl .LFUN_001a2a60_1\n\t"
-      "movw %%bx, 0x460(%%esi)\n\t"
-      ".LFUN_001a2a60_1:\n\t"
-      "call *%[c930a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001a2a60_3\n\t"
-      "movb 0x428(%%esi), %%cl\n\t"
-      "movb $2, %%al\n\t"
-      "cmpb %%al, %%cl\n\t"
-      "je .LFUN_001a2a60_2\n\t"
-      "cmpw %%bx, 0x460(%%esi)\n\t"
-      "jne .LFUN_001a2a60_3\n\t"
-      "cmpb %%al, 0x429(%%esi)\n\t"
-      "jge .LFUN_001a2a60_3\n\t"
-      ".LFUN_001a2a60_2:\n\t"
-      "pushl $5\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "call *%[c1a0f10]\n\t"
-      "pushl $5\n\t"
-      "pushl %%edi\n\t"
-      "movl $1, %%ebx\n\t"
-      "call *%[c1a0f10]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_001a2a60_3:\n\t"
-      "cmpw $1, 0x460(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "sete %%cl\n\t"
-      "addb $0x15, %%cl\n\t"
-      "pushl $0x2b4f9c\n\t"
-      "movl %%edi, %%eax\n\t"
-      "movb %%cl, (%%edx)\n\t"
-      "call *%[c1a2800]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a2a60_get), [tag] "m"(b1a2a60_tag), [c930a0] "m"(b1a2a60_c930a0), [c1a0f10] "m"(b1a2a60_c1a0f10), [c1a2800] "m"(b1a2a60_c1a2800)
-      : "memory");
+  extern char DAT_002b4f9c[];
+  char *unit;
+  unsigned char counter;
+  unsigned char limit;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 1);
+  (void)tag_get(0x62697064, *(int *)unit); /* 'bipd' */
+  counter = (unsigned char)(unit[0x428] + 1);
+  limit = (unsigned char)unit[0x429];
+  unit[0x428] = (char)counter;
+  if (counter >= limit)
+    *(int16_t *)(unit + 0x460) = -1;
+
+  if (!cinematic_in_progress()) {
+    if ((unsigned char)unit[0x428] == 2 ||
+        (*(int16_t *)(unit + 0x460) == -1 &&
+         (unsigned char)unit[0x429] < 2)) {
+      FUN_001a0f10(unit_handle, 5, 0);
+      FUN_001a0f10(unit_handle, 5, 1);
+    }
+  }
+
+  *state = (char)((*(int16_t *)(unit + 0x460) == 1) ? 0x16 : 0x15);
+  FUN_001a2800(unit_handle, DAT_002b4f9c);
 }
-#else
-#error "FUN_001a2a60: clang naked draft required"
-#endif
 
 
-/* FUN_001a2b10 (0x1a2b10) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static void *(*const b1a2b10_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a2b10_tag)(int, int) = tag_get;
-static void (*const b1a2b10_c1a0f10)(int unit_handle, int param_2, short index) = FUN_001a0f10;
-static void (*const b1a2b10_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
-
-__attribute__((naked, noinline))
-void FUN_001a2b10(int unit_handle __attribute__((unused)))
+/* FUN_001a2b10 (0x1a2b10) — readable C lift. */
+void FUN_001a2b10(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x45a(%%esi), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpb $3, %%al\n\t"
-      "jle .LFUN_001a2b10_1\n\t"
-      "flds 0x20(%%esi)\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "flds 0x18(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fcomps 0x25620c\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_001a2b10_1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $2\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "call *%[c1a0f10]\n\t"
-      "pushl $2\n\t"
-      "pushl %%edi\n\t"
-      "movl $1, %%ebx\n\t"
-      "call *%[c1a0f10]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_001a2b10_1:\n\t"
-      "pushl $0x2b4fac\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c1a2800]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a2b10_get), [tag] "m"(b1a2b10_tag), [c1a0f10] "m"(b1a2b10_c1a0f10), [c1a2800] "m"(b1a2b10_c1a2800)
-      : "memory");
+  extern char DAT_002b4fac[];
+  char *unit;
+  float x, y, z;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 1);
+  (void)tag_get(0x62697064, *(int *)unit); /* 'bipd' */
+  if ((signed char)unit[0x45a] > 3) {
+    x = *(float *)(unit + 0x18);
+    y = *(float *)(unit + 0x1c);
+    z = *(float *)(unit + 0x20);
+    if (x * x + y * y + z * z > *(float *)0x25620c) {
+      FUN_001a0f10(unit_handle, 2, 0);
+      FUN_001a0f10(unit_handle, 2, 1);
+    }
+  }
+  FUN_001a2800(unit_handle, DAT_002b4fac);
 }
-#else
-#error "FUN_001a2b10: clang naked draft required"
-#endif
 
 
 /* FUN_001a2b90 (0x1a2b90) — XBE naked draft (batch 55). */
 #if defined(__clang__)
 static void *(*const b1a2b90_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1a2b90_tag)(int, int) = tag_get;
-static char (*const b1a2b90_c1a2290)(int unit_handle) = FUN_001a2290;
+static char (*const b1a2b90_c1a2290)(int unit_handle) = (void *)FUN_001a2290;
 static void *(*const b1a2b90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static float (*const b1a2b90_c13070)(float *a, float *b) = FUN_00013070;
 static float *(*const b1a2b90_vsca)(float *, float *, float, float *) = vector3d_scale_add;

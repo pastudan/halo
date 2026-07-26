@@ -1899,6 +1899,7 @@ char weapon_new(int weapon_handle)
   return 1;
 }
 
+
 /* 0xfbea0 — assert non-deletable network weapons are not deleted in MP. */
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((noinline))
@@ -2405,6 +2406,43 @@ void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
   }
 }
 
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_data = (char *)tag_get(0x77656170, *(int *)weapon);
+  out = (char *)out_state;
+
+  *(int *)out = *(int *)(weapon + 0x1ec);
+  *(int *)(out + 4) = *(int *)(weapon + 0x1f0);
+  out[8] = (char)(weapon[0x1dc] & 1);
+  mag_block = (void *)(tag_data + 0x4f0);
+  *(int16_t *)(out + 0xa) = *(int16_t *)mag_block;
+  count = *(int *)mag_block;
+
+  for (i = 0; (int)i < count; i++) {
+    char *mag_entry;
+    char *mag_def;
+    char *rec;
+    int16_t state;
+    char busy;
+
+    (void)tag_get(0x77656170, *(int *)weapon);
+    if ((int16_t)i < 0 || (int)i >= *(int *)(tag_data + 0x4f0)) {
+      display_assert(DAT_0028adb8, DAT_0028ad48, 0x672, 1);
+      system_exit(-1);
+    }
+    mag_entry = weapon + ((int)i * 3 + 0x96) * 4;
+    mag_def = (char *)tag_block_get_element(mag_block, (int)i, 0x70);
+    state = *(int16_t *)mag_entry;
+    busy = (state == 1 || state == 3) ? 1 : 0;
+    rec = out + 0xc + (int)i * 10;
+    rec[0] = busy;
+    rec[1] = (state == 0) ? 1 : 0;
+    *(int16_t *)(rec + 2) = *(int16_t *)(mag_entry + 8);
+    *(int16_t *)(rec + 4) = *(int16_t *)(mag_def + 0xa);
+    *(int16_t *)(rec + 6) = *(int16_t *)(mag_entry + 6);
+    *(int16_t *)(rec + 8) = *(int16_t *)(mag_def + 8);
+  }
+}
+
 /* 0xfc690 — true if magazine 0 is currently in the reloading state. */
 char weapon_reloading(int weapon_handle)
 {
@@ -2447,16 +2485,44 @@ int16_t weapon_rotate_zoom_level(int weapon_handle, int16_t zoom_level)
 float weapon_get_zoom_magnification(int weapon_handle, int16_t zoom_level)
 {
   extern char DAT_0028ad48[];
-  extern char DAT_0028aeec[];
   extern char DAT_0028aed8[];
-  extern char DAT_0025eb8c[];
-  float result;
-  float t;
-  float min_mag;
-  float max_mag;
-  char *weapon;
+  extern char DAT_0028aeec[];
   char *tag_data;
-  int16_t levels;
+  float result;
+  float min_zoom;
+  float max_zoom;
+  float t;
+
+  tag_data = (char *)tag_get(
+      0x77656170, *(int *)object_get_and_verify_type(weapon_handle, 4));
+  result = *(float *)0x2533c8;
+  if (zoom_level < 0 || zoom_level >= *(int16_t *)(tag_data + 0x3da))
+    return result;
+
+  if (*(int16_t *)(tag_data + 0x3da) > 1)
+    t = (float)zoom_level / (float)(*(int16_t *)(tag_data + 0x3da) - 1);
+  else
+    t = 0.0f;
+
+  min_zoom = (*(float *)(tag_data + 0x3dc) > *(float *)0x2533c0)
+                 ? *(float *)(tag_data + 0x3dc)
+                 : *(float *)0x2533c8;
+  max_zoom = (*(float *)(tag_data + 0x3e0) > *(float *)0x2533c0)
+                 ? *(float *)(tag_data + 0x3e0)
+                 : *(float *)0x2533c8;
+
+  result = FUN_001d9e70(max_zoom / min_zoom, t) * min_zoom;
+
+  if ((*(unsigned int *)&result & 0x7f800000u) == 0x7f800000u) {
+    display_assert(DAT_0028aeec, DAT_0028ad48, 0x5a2, 1);
+    system_exit(-1);
+  }
+  if (!(result > *(float *)0x2533c0)) {
+    display_assert(DAT_0028aed8, DAT_0028ad48, 0x5a3, 1);
+    system_exit(-1);
+  }
+  return result;
+}
 
   result = 1.0f;
   weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
@@ -2799,6 +2865,7 @@ void FUN_000fd520(int16_t trigger_index /*@<eax>*/, int weapon_handle /*@<ecx>*/
   weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
   trig = FUN_000fb320(weapon, trigger_index);
   tag = tag_get(0x77656170, *(int *)weapon);
+  (void)trig;
   (void)tag_block_get_element((char *)tag + 0x4fc, (int)trigger_index, 0x114);
   *(int *)(weapon + 0x200) = -1;
   FUN_000fcec0(trigger_index, weapon_handle);

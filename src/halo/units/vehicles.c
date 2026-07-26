@@ -991,139 +991,24 @@ void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags,
 #endif
 
 
-/* 0x1b5400 — Exit seated units whose seat name matches a substring. */
-#if defined(__clang__)
-static void *(*const b5400_get)(int, int) = object_get_and_verify_type;
-static void *(*const b5400_tag)(int, int) = tag_get;
-static int (*const b5400_strlen)(const char *) = csstrlen;
-static void (*const b5400_iter_new)(void *, int, int) = object_iterator_new;
-static void *(*const b5400_iter_next)(void *) = object_iterator_next;
-static void *(*const b5400_elem)(void *, int, int) = tag_block_get_element;
-static char *(*const b5400_strcpy)(char *, const char *) = csstrcpy;
-static char *(*const b5400_tolower)(char *) = csstr_tolower;
-static char *(*const b5400_strstr)(const char *, const char *) = crt_strstr;
-static char (*const b5400_exit_seat)(int) = unit_try_and_exit_seat;
-
-__attribute__((naked, noinline))
-int16_t FUN_001b5400(int unit_handle __attribute__((unused)), int seat_name_substr __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x114, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 8(%%ebp), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%eax, -4(%%ebp)\n\t"
-      "je .LFUN_001b5400_7\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 12(%%ebp), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001b5400_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[xlen]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001b5400_1\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .LFUN_001b5400_2\n\t"
-      ".LFUN_001b5400_1:\n\t"
-      "movb $1, %%bl\n\t"
-      ".LFUN_001b5400_2:\n\t"
-      "pushl $0\n\t"
-      "leal -20(%%ebp), %%ecx\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[inew]\n\t"
-      "leal -20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[inxt]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001b5400_6\n\t"
-      ".LFUN_001b5400_3:\n\t"
-      "cmpl %%edi, 204(%%eax)\n\t"
-      "jne .LFUN_001b5400_5\n\t"
-      "movswl 672(%%eax), %%eax\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%eax\n\t"
-      "leal 740(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "addl $4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -276(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[xcpy]\n\t"
-      "leal -276(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[xlwr]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_001b5400_4\n\t"
-      "movl 12(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -276(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[xstr]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001b5400_5\n\t"
-      ".LFUN_001b5400_4:\n\t"
-      "movl -12(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[xexit]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001b5400_5\n\t"
-      "incl -4(%%ebp)\n\t"
-      ".LFUN_001b5400_5:\n\t"
-      "leal -20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[inxt]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001b5400_3\n\t"
-      ".LFUN_001b5400_6:\n\t"
-      "movw -4(%%ebp), %%ax\n\t"
-      ".LFUN_001b5400_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b5400_get), [tag] "m"(b5400_tag), [xlen] "m"(b5400_strlen), [inew] "m"(b5400_iter_new), [inxt] "m"(b5400_iter_next), [elem] "m"(b5400_elem), [xcpy] "m"(b5400_strcpy), [xlwr] "m"(b5400_tolower), [xstr] "m"(b5400_strstr), [xexit] "m"(b5400_exit_seat)
-      : "memory");
-}
-#else
+/* FUN_001b5400 (0x1b5400) — readable C lift: exit seats matching name. */
 int16_t FUN_001b5400(int unit_handle, int seat_name_substr)
 {
   object_iter_t iter;
   char *unit_tag;
   char *unit_obj;
   char seat_name[0x110];
-  int16_t exit_count = 0;
-  const char *needle = (const char *)(uintptr_t)seat_name_substr;
+  int16_t exit_count;
+  const char *needle;
   char match_any;
 
+  exit_count = 0;
+  needle = (const char *)(uintptr_t)seat_name_substr;
   if (unit_handle == -1)
     return 0;
 
   unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_tag = (char *)tag_get('tinu', *(int *)unit_obj);
+  unit_tag = (char *)tag_get(0x756e6974, *(int *)unit_obj); /* 'unit' */
   if (needle != 0 && csstrlen(needle) != 0)
     match_any = 0;
   else
@@ -1154,7 +1039,6 @@ int16_t FUN_001b5400(int unit_handle, int seat_name_substr)
 
   return exit_count;
 }
-#endif
 
 
 /* 0x1b5500 — Exit vehicle seat when unit is seated with a valid seat index. */
@@ -1213,49 +1097,16 @@ void FUN_001b5610(int vehicle_handle, char flag)
 }
 
 
-/* 0x1b5680 — True when the vehicle up-axis Z exceeds the flip threshold. */
-#if defined(__clang__)
-static void *(*const vehicle_is_flipped_get)(int, int) =
-    object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-char vehicle_is_flipped(int vehicle_handle __attribute__((unused)))
-{
-  /* XBE: fcomp threshold; test ah,5 / jp -> 0; else 1 (value > threshold). */
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds 0x38(%%eax)\n\t"
-      "fcomps 0x2549d4\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp 1f\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(vehicle_is_flipped_get)
-      : "memory");
-}
-#else
+/* vehicle_is_flipped (0x1b5680) — readable C lift. */
 char vehicle_is_flipped(int vehicle_handle)
 {
   char *vehicle_obj = (char *)object_get_and_verify_type(vehicle_handle, 2);
 
-  if (*(float *)(vehicle_obj + 0x38) > *(float *)0x2549d4)
+  /* XBE: fcomp + test ah,5 / jp -> 0; else 1 when up-Z is below threshold. */
+  if (*(float *)(vehicle_obj + 0x38) < *(float *)0x2549d4)
     return 1;
   return 0;
 }
-#endif
 
 /* 0x1b56b0 — Update wheel-compression counters (vehicle@eax, physics@edi). */
 void FUN_001b56b0(int vehicle_handle, void *physics_state)
@@ -1303,124 +1154,58 @@ void set_real_quaternion(float *quat, float w, int x, int y, int z)
   *(int *)(quat + 3) = z;
 }
 
-/* vehicle_reset (0x1b5770) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void *(*const b1b5770_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1b5770_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void vehicle_reset(int vehicle_handle __attribute__((unused)))
+/* vehicle_reset (0x1b5770) — readable C lift. */
+void vehicle_reset(int vehicle_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl $8\n\t"
-      "leal 0x44c(%%esi), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movw %%bx, 0x424(%%esi)\n\t"
-      "movw %%bx, 0x426(%%esi)\n\t"
-      "movb %%bl, 0x428(%%esi)\n\t"
-      "movb %%bl, 0x429(%%esi)\n\t"
-      "movb %%bl, 0x42a(%%esi)\n\t"
-      "movb %%bl, 0x42b(%%esi)\n\t"
-      "movl %%ebx, 0x42c(%%esi)\n\t"
-      "movl %%ebx, 0x430(%%esi)\n\t"
-      "movl %%ebx, 0x434(%%esi)\n\t"
-      "movl %%ebx, 0x438(%%esi)\n\t"
-      "movl %%ebx, 0x43c(%%esi)\n\t"
-      "movl %%ebx, 0x440(%%esi)\n\t"
-      "movl %%ebx, 0x448(%%esi)\n\t"
-      "movl %%ebx, 0x444(%%esi)\n\t"
-      "call *%[memset]\n\t"
-      "movl %%ebx, 0x460(%%esi)\n\t"
-      "movl %%ebx, 0x464(%%esi)\n\t"
-      "movl %%ebx, 0x468(%%esi)\n\t"
-      "movl %%ebx, 0x46c(%%esi)\n\t"
-      "movl %%ebx, 0x470(%%esi)\n\t"
-      "movl %%ebx, 0x474(%%esi)\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%ebx, 0x478(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1b5770_get), [memset] "m"(b1b5770_memset)
-      : "memory");
+  char *vehicle;
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  *(int16_t *)(vehicle + 0x424) = 0;
+  *(int16_t *)(vehicle + 0x426) = 0;
+  vehicle[0x428] = 0;
+  vehicle[0x429] = 0;
+  vehicle[0x42a] = 0;
+  vehicle[0x42b] = 0;
+  *(int *)(vehicle + 0x42c) = 0;
+  *(int *)(vehicle + 0x430) = 0;
+  *(int *)(vehicle + 0x434) = 0;
+  *(int *)(vehicle + 0x438) = 0;
+  *(int *)(vehicle + 0x43c) = 0;
+  *(int *)(vehicle + 0x440) = 0;
+  *(int *)(vehicle + 0x448) = 0;
+  *(int *)(vehicle + 0x444) = 0;
+  csmemset(vehicle + 0x44c, 0, 8);
+  *(int *)(vehicle + 0x460) = 0;
+  *(int *)(vehicle + 0x464) = 0;
+  *(int *)(vehicle + 0x468) = 0;
+  *(int *)(vehicle + 0x46c) = 0;
+  *(int *)(vehicle + 0x470) = 0;
+  *(int *)(vehicle + 0x474) = 0;
+  *(int *)(vehicle + 0x478) = 0;
 }
-#else
-#error "vehicle_reset: clang naked draft required"
-#endif
 
 
-/* vehicle_new (0x1b5820) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-static void *(*const b1b5820_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1b5820_tag)(int, int) = tag_get;
-static void (*const b1b5820_c1b5770)(int vehicle_handle) = vehicle_reset;
-
-__attribute__((naked, noinline))
-char vehicle_new(int vehicle_handle __attribute__((unused)))
+/* vehicle_new (0x1b5820) — readable C lift. */
+char vehicle_new(int vehicle_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $2\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c1b5770]\n\t"
-      "movl 0x8c(%%edi), %%ecx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "jne .Lvehicle_new_1\n\t"
-      "orl $0x20, %%ecx\n\t"
-      "jmp .Lvehicle_new_2\n\t"
-      ".Lvehicle_new_1:\n\t"
-      "andl $0xffffffdf, %%ecx\n\t"
-      ".Lvehicle_new_2:\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "cmpl %%eax, 0x8c(%%edi)\n\t"
-      "movb $1, %%al\n\t"
-      "je .Lvehicle_new_3\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x253398\n\t"
-      "fadds 0x14(%%esi)\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      ".Lvehicle_new_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1b5820_get), [tag] "m"(b1b5820_tag), [c1b5770] "m"(b1b5820_c1b5770)
-      : "memory");
+  char *vehicle;
+  char *vehicle_tag;
+  int flags;
+
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehicle_tag = (char *)tag_get(0x76656869, *(int *)vehicle); /* 'vehi' */
+  vehicle_reset(vehicle_handle);
+  flags = *(int *)(vehicle + 4);
+  if (*(int *)(vehicle_tag + 0x8c) == -1)
+    flags |= 0x20;
+  else
+    flags &= ~0x20;
+  *(int *)(vehicle + 4) = flags;
+  if (*(int *)(vehicle_tag + 0x8c) != -1)
+    *(float *)(vehicle + 0x14) =
+        *(float *)(vehicle + 0x14) +
+        *(float *)(vehicle_tag + 4) * *(float *)0x253398;
+  return 1;
 }
-#else
-#error "vehicle_new: clang naked draft required"
-#endif
 
 
 /* 0x1b5890 — Preprocess vehicle node orientations from model_animations
@@ -2013,133 +1798,7 @@ float *FUN_001b5f20(float *a, float *b, float *out, float scale_a, float scale_b
 }
 
 
-/* 0x1b5ff0 — accumulate throttle/steer into antipodal wheel channels.
- * wheel_state arrives in EDI (register); handle/physics_buffer are cdecl. */
-#if defined(__clang__)
-static void *(*const FUN_001b5ff0_get)(int, int) = object_get_and_verify_type;
-static void *(*const FUN_001b5ff0_tag)(int, int) = tag_get;
-static void (*const FUN_001b5ff0_fmod)(void) = FUN_001daf7e;
-static void (*const FUN_001b5ff0_apply)(int, void *, void *, float *, float *) =
-    FUN_00154270;
-
-__attribute__((naked, noinline))
-void FUN_001b5ff0(int vehicle_handle __attribute__((unused)),
-                  void *physics_buffer __attribute__((unused)),
-                  void *wheel_state __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x8c(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x70687973\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x42c(%%esi)\n\t"
-      "fsubs 0x434(%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x434(%%esi)\n\t"
-      "fadds 0x42c(%%esi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fadds 0x43c(%%esi)\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fstps 0x43c(%%esi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "flds 0x310(%%ebx)\n\t"
-      "call *%[xfmod]\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fsts 0x43c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp 1f\n\t"
-      "fadds 0x310(%%ebx)\n\t"
-      "fstps 0x43c(%%esi)\n\t"
-      "jmp 2f\n\t"
-      "1:\n\t"
-      "fstp %%st(0)\n\t"
-      "2:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fadds 0x440(%%esi)\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fstps 0x440(%%esi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "flds 0x310(%%ebx)\n\t"
-      "call *%[xfmod]\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fsts 0x440(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp 3f\n\t"
-      "fadds 0x310(%%ebx)\n\t"
-      "fstps 0x440(%%esi)\n\t"
-      "jmp 4f\n\t"
-      "3:\n\t"
-      "fstp %%st(0)\n\t"
-      "4:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl 0x68(%%eax), %%ecx\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl $2, %%ecx\n\t"
-      "popl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "jne 5f\n\t"
-      "movl -4(%%ebp), %%ecx\n\t"
-      "movl -8(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "movl %%eax, 0x1c(%%edi)\n\t"
-      "movl %%eax, 0x20(%%edi)\n\t"
-      "movl %%eax, 0x24(%%edi)\n\t"
-      "movl $0x3f800000, %%ecx\n\t"
-      "movl %%ecx, 0x28(%%edi)\n\t"
-      "movl %%edx, 0x60(%%edi)\n\t"
-      "movl %%eax, 0x7c(%%edi)\n\t"
-      "movl %%eax, 0x80(%%edi)\n\t"
-      "movl %%eax, 0x84(%%edi)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, 0x88(%%edi)\n\t"
-      "movl 8(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[apply]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "5:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[apply]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_001b5ff0_get), [tag] "m"(FUN_001b5ff0_tag),
-        [xfmod] "m"(FUN_001b5ff0_fmod), [apply] "m"(FUN_001b5ff0_apply)
-      : "memory");
-}
-#else
+/* FUN_001b5ff0 (0x1b5ff0) — readable C lift. */
 void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state)
 {
   char *veh;
@@ -2190,120 +1849,8 @@ void FUN_001b5ff0(int vehicle_handle, void *physics_buffer, void *wheel_state)
     FUN_00154270(vehicle_handle, 0, physics_buffer, 0, 0);
   }
 }
-#endif
 
-/* 0x1b6140 — accumulate throttle into a steering wheel channel.
- * wheel_state arrives in EDI; handle/physics_buffer are cdecl. */
-#if defined(__clang__)
-static void *(*const FUN_001b6140_get)(int, int) = object_get_and_verify_type;
-static void *(*const FUN_001b6140_tag)(int, int) = tag_get;
-static void (*const FUN_001b6140_fmod)(void) = FUN_001daf7e;
-static void (*const FUN_001b6140_apply)(int, void *, void *, float *, float *) =
-    FUN_00154270;
-
-__attribute__((naked, noinline))
-void FUN_001b6140(int vehicle_handle __attribute__((unused)),
-                  void *physics_buffer __attribute__((unused)),
-                  void *wheel_state __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x8c(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x70687973\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x42c(%%esi)\n\t"
-      "fadds 0x438(%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%eax, -8(%%ebp)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fstps 0x438(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "flds 0x310(%%ebx)\n\t"
-      "call *%[xfmod]\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fsts 0x438(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp 1f\n\t"
-      "fadds 0x310(%%ebx)\n\t"
-      "fstps 0x438(%%esi)\n\t"
-      "jmp 2f\n\t"
-      "1:\n\t"
-      "fstp %%st(0)\n\t"
-      "2:\n\t"
-      "movl -8(%%ebp), %%eax\n\t"
-      "movl 0x68(%%eax), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl $2, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "jne 3f\n\t"
-      "flds 0x434(%%esi)\n\t"
-      "movl 0x42c(%%esi), %%ecx\n\t"
-      "fmuls 0x253398\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "movl 8(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x1c(%%edi)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "movl %%eax, 0x20(%%edi)\n\t"
-      "fcos\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsin\n\t"
-      "fsts 0x24(%%edi)\n\t"
-      "fld %%st(1)\n\t"
-      "fstps 0x28(%%edi)\n\t"
-      "movl 0x42c(%%esi), %%edx\n\t"
-      "movl %%edx, 0x60(%%edi)\n\t"
-      "movl %%eax, 0x7c(%%edi)\n\t"
-      "fchs\n\t"
-      "movl %%eax, 0x80(%%edi)\n\t"
-      "fstps 0x84(%%edi)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "fstps 0x88(%%edi)\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[apply]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "3:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[apply]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_001b6140_get), [tag] "m"(FUN_001b6140_tag),
-        [xfmod] "m"(FUN_001b6140_fmod), [apply] "m"(FUN_001b6140_apply)
-      : "memory");
-}
-#else
+/* FUN_001b6140 (0x1b6140) — readable C lift. */
 void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state)
 {
   char *veh;
@@ -2332,8 +1879,8 @@ void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state)
     float s;
     float c;
     angle = *(float *)(veh + 0x434) * *(float *)0x253398;
-    s = sinf(angle);
-    c = cosf(angle);
+    s = xbox_sinf(angle);
+    c = xbox_cosf(angle);
     *(float *)(ws + 0) = *(float *)(veh + 0x42c);
     *(int *)(ws + 0x1c) = 0;
     *(int *)(ws + 0x20) = 0;
@@ -2349,7 +1896,6 @@ void FUN_001b6140(int vehicle_handle, void *physics_buffer, void *wheel_state)
     FUN_00154270(vehicle_handle, 0, physics_buffer, 0, 0);
   }
 }
-#endif
 
 /* FUN_001b6250 (0x1b6250) — flying-vehicle wheel/contact setup (physics type 3).
  * wheel_state arrives in ESI from the caller. */
@@ -5352,7 +4898,7 @@ void FUN_001b81d0(int object_handle, void *unused_scratch, void *force_buffer)
 #if defined(__clang__)
 static float (*const b8570_mag)(float *) = magnitude3d;
 static float (*const b8570_norm)(float *) = normalize3d;
-static short (*const b8570_a57b0)(float *, float) = FUN_000a57b0;
+static short (*const b8570_a57b0)(float *, float) = (void *)FUN_000a57b0;
 static void (*const b8570_mscale)(float *, float *, float *) = matrix_scale_transform_vector;
 static void (*const b8570_m3x3v)(void *, vector3_t *, vector3_t *) = real_matrix3x3_transform_vector;
 static void (*const b8570_m4x3)(void *, float *, float *, float *) = matrix4x3_from_forward_up_position;

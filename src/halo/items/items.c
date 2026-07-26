@@ -248,7 +248,7 @@ static void (*const bf5750_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedb
 static wchar_t * (*const bf5750_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 static void (*const bf5750_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bf5750_exitfn)(int) = system_exit;
-static unsigned short (*const bf5750_cf5800)(int16_t slot_index /* */) = FUN_000f5800;
+static unsigned short (*const bf5750_cf5800)(int16_t slot_index /* */) = (void *)FUN_000f5800;
 
 __attribute__((naked, noinline))
 char FUN_000f5750(void)
@@ -3386,7 +3386,7 @@ char FUN_000f56b0(void)
 }
 
 
-/* FUN_000f5800 (0xf5800) — readable C lift. */
+/* FUN_000f5800 (0xf5800) — readable C lift: soft-keyboard glyph lookup. */
 unsigned short FUN_000f5800(int16_t slot_index)
 {
   extern char DAT_0028a97c[];
@@ -3451,7 +3451,7 @@ static void (*const f5900_rdraw)(void *, short *, const void *, int, unsigned sh
 static void (*const f5900_u9cdb0)(short *, void *, short *, short *) = FUN_0019cdb0;
 static unsigned int (*const f5900_msys)(void) = system_milliseconds;
 static void *(*const f5900_u9cff0)(void *, unsigned short) = FUN_0019cff0;
-static unsigned short (*const f5900_f5800)(short) = FUN_000f5800;
+static unsigned short (*const f5900_f5800)(short) = (void *)FUN_000f5800;
 
 __attribute__((naked, noinline))
 void FUN_000f5900(void)

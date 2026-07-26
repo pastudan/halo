@@ -116,161 +116,59 @@ void light_delete(int light_handle)
                                   (char *)light + 0x10);
   datum_delete(*(data_t **)0x5a90bc, light_handle);
 }
-/* FUN_00139350 (0x139350) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-static void *(*const b139350_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b139350_c191690)(void *cluster_list, int *out_cluster, int cluster_handle) = FUN_00191690;
-static int (*const b139350_c1916d0)(int partition, int *state) = FUN_001916d0;
-
-__attribute__((naked, noinline))
-int16_t FUN_00139350(int light_handle __attribute__((unused)), int16_t *out_buffer __attribute__((unused)), int16_t max_count __attribute__((unused)))
+/* FUN_00139350 (0x139350) — readable C lift: collect light clusters. */
+int16_t FUN_00139350(int light_handle, int16_t *out_buffer, int16_t max_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x5a90bc, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x5a90b0\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c191690]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .LFUN_00139350_2\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_00139350_1:\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_00139350_2\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x5a90b0\n\t"
-      "movw %%ax, (%%ebx,%%ecx,2)\n\t"
-      "incl %%esi\n\t"
-      "call *%[c1916d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jl .LFUN_00139350_1\n\t"
-      ".LFUN_00139350_2:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b139350_dget), [c191690] "m"(b139350_c191690), [c1916d0] "m"(b139350_c1916d0)
-      : "memory");
+  void *light;
+  int state;
+  int16_t count;
+  int16_t cluster;
+
+  light = datum_get(*(data_t **)0x5a90bc, light_handle);
+  cluster = (int16_t)FUN_00191690((void *)0x5a90b0, &state,
+                                  *(int *)((char *)light + 0x10));
+  count = 0;
+  if (max_count > 0) {
+    while (cluster != (int16_t)0xffff && count < max_count) {
+      out_buffer[count] = cluster;
+      count = (int16_t)(count + 1);
+      cluster = (int16_t)FUN_001916d0(0x5a90b0, &state);
+    }
+  }
+  return count;
 }
-#else
-#error "FUN_00139350: clang naked draft required"
-#endif
 
 
-/* object_get_self_illumination (0x1393b0) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static void *(*const b1393b0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1393b0_tag)(int, int) = tag_get;
-static void *(*const b1393b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static float (*const b1393b0_c7a750)(float *color) = real_rgb_color_brightness;
-static float (*const b1393b0_c1393b0)(int object_handle) = object_get_self_illumination;
-
-__attribute__((naked, noinline))
-float object_get_self_illumination(int object_handle __attribute__((unused)))
+/* object_get_self_illumination (0x1393b0) — readable C lift. */
+float object_get_self_illumination(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x140(%%ebx), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jle .Lobject_get_self_illumination_3\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lobject_get_self_illumination_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lobject_get_self_illumination_1:\n\t"
-      "movb 0xf4(%%eax,%%esi,1), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lobject_get_self_illumination_2\n\t"
-      "movl 0xfc(%%esi,%%eax,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lobject_get_self_illumination_2\n\t"
-      "movl 0x5a90bc, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x14, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7a750]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".Lobject_get_self_illumination_2:\n\t"
-      "movl 0x140(%%ebx), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lobject_get_self_illumination_1\n\t"
-      ".Lobject_get_self_illumination_3:\n\t"
-      "movl 0xc8(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lobject_get_self_illumination_4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1393b0]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "addl $4, %%esp\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".Lobject_get_self_illumination_4:\n\t"
-      "movl 0xc4(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lobject_get_self_illumination_5\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1393b0]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lobject_get_self_illumination_5:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1393b0_get), [tag] "m"(b1393b0_tag), [dget] "m"(b1393b0_dget), [c7a750] "m"(b1393b0_c7a750), [c1393b0] "m"(b1393b0_c1393b0)
-      : "memory");
+  char *obj;
+  char *obj_tag;
+  int count;
+  int i;
+  float sum;
+  int light_handle;
+  void *light_datum;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  obj_tag = (char *)tag_get(0x6f626a65, *(int *)obj); /* 'obje' */
+  count = *(int *)(obj_tag + 0x140);
+  sum = 0.0f;
+  for (i = 0; i < count; i++) {
+    if (obj[0xf4 + i] != 0)
+      continue;
+    light_handle = *(int *)(obj + 0xfc + i * 4);
+    if (light_handle == -1)
+      continue;
+    light_datum = datum_get(*(void **)0x5a90bc, light_handle);
+    sum += real_rgb_color_brightness((float *)((char *)light_datum + 0x14));
+  }
+  if (*(int *)(obj + 0xc8) != -1)
+    sum += object_get_self_illumination(*(int *)(obj + 0xc8));
+  if (*(int *)(obj + 0xc4) != -1)
+    sum += object_get_self_illumination(*(int *)(obj + 0xc4));
+  return sum;
 }
-#else
-#error "object_get_self_illumination: clang naked draft required"
-#endif
 
 
 __attribute__((unused)) __attribute__((unused))
