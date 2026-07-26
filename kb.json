@@ -11805,7 +11805,7 @@
         {
           "addr": "0xc4ae0",
           "decl": "void FUN_000c4ae0(int16_t function_index@<eax>, char *dest);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc4b00",
@@ -12259,7 +12259,7 @@
         {
           "addr": "0xc99e0",
           "decl": "void FUN_000c99e0(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9a20",
@@ -34858,18 +34858,21 @@
         },
         {
           "addr": "0x4a650",
-          "decl": "void FUN_0004a650(int actor_handle);",
-          "ported": false
+          "decl": "void ai_debug_communication_suppress(int a0, int a1);",
+          "ported": true,
+          "name": "ai_debug_communication_suppress"
         },
         {
           "addr": "0x4a680",
           "decl": "void ai_debug_communication_ignore(int a0, int a1);",
-          "ported": true
+          "ported": true,
+          "name": "ai_debug_communication_ignore"
         },
         {
           "addr": "0x4a6b0",
           "decl": "void ai_debug_communication_focus(int a0, int a1);",
-          "ported": true
+          "ported": true,
+          "name": "ai_debug_communication_focus"
         },
         {
           "addr": "0x4a6e0",
