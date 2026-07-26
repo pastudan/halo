@@ -36097,10 +36097,10 @@
         },
         {
           "addr": "0x643d0",
-          "decl": "void FUN_000643d0(int actor_handle);",
+          "decl": "int FUN_000643d0(int actor_handle);",
           "name": "FUN_000643d0",
           "source_path": "src/halo/ai/props.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x645a0",

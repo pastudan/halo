@@ -978,40 +978,13 @@ void prop_add(int actor_handle __attribute__((unused)), int prop_index __attribu
 #endif
 
 
-/* FUN_000643d0 (0x643d0) — XBE naked draft (batch 100). */
-#if defined(__clang__)
-static int (*const b643d0_c119610)(data_t *data) = data_new_at_index;
-static void (*const b643d0_c64170)(int actor_handle, int prop_index, int unit_handle) = prop_add;
-
-__attribute__((naked, noinline))
-void FUN_000643d0(int actor_handle __attribute__((unused)))
+/* FUN_000643d0 (0x643d0) — readable C lift. */
+int FUN_000643d0(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "call *%[c64170]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119610] "m"(b643d0_c119610), [c64170] "m"(b643d0_c64170)
-      : "memory");
+  int idx = data_new_at_index(*(void **)0x5ab23c);
+  prop_add(actor_handle, idx, -1);
+  return idx;
 }
-#else
-#error "FUN_000643d0: clang naked draft required"
-#endif
-
 
 /* prop_new_unacknowledged (0x645a0) — XBE naked draft (batch 81). */
 #if defined(__clang__)
