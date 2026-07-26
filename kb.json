@@ -34742,7 +34742,7 @@
         },
         {
           "addr": "0x49430",
-          "decl": "void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, int param_3, char param_4);",
+          "decl": "void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, float radius, char color);",
           "ported": false
         },
         {
@@ -35806,8 +35806,8 @@
         },
         {
           "addr": "0x59d30",
-          "decl": "void encounter_modify_pursuit_desires(int encounter_handle, int16_t profile_index, char *flag, int16_t *a, int16_t *b, int16_t *c, int16_t *d, char *e);",
-          "ported": false
+          "decl": "void encounter_modify_pursuit_desires(int encounter_handle, int16_t profile_index, char *flag, int16_t *a, char *e, int16_t *b, int16_t *c, int16_t *d);",
+          "ported": true
         },
         {
           "addr": "0x59dd0",

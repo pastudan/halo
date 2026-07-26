@@ -5619,77 +5619,35 @@ int FUN_00059c40(int encounter_handle __attribute__((unused)), int16_t pursuit_i
 #endif
 
 
-/* encounter_modify_pursuit_desires (0x59d30) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-static scenario_t * (*const b59d30_c18e380)(void) = global_scenario_get;
-static void *(*const b59d30_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void encounter_modify_pursuit_desires(int encounter_handle __attribute__((unused)), int16_t profile_index __attribute__((unused)), char *flag __attribute__((unused)), int16_t *a __attribute__((unused)), int16_t *b __attribute__((unused)), int16_t *c __attribute__((unused)), int16_t *d __attribute__((unused)), char *e __attribute__((unused)))
+/* encounter_modify_pursuit_desires (0x59d30) — readable C lift. */
+void encounter_modify_pursuit_desires(int encounter_handle, int16_t profile_index,
+                                      char *flag, int16_t *a, char *e,
+                                      int16_t *b, int16_t *c, int16_t *d)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl $0xe8\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x80(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "movb 0x28(%%eax), %%cl\n\t"
-      "movw 0x28(%%esi), %%si\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb $2, %%cl\n\t"
-      "je .Lencounter_modify_pursuit_desires_1\n\t"
-      "movl $1, %%esi\n\t"
-      ".Lencounter_modify_pursuit_desires_1:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "decl %%eax\n\t"
-      "popl %%esi\n\t"
-      "je .Lencounter_modify_pursuit_desires_2\n\t"
-      "decl %%eax\n\t"
-      "jne .Lencounter_modify_pursuit_desires_3\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "movb $1, (%%eax)\n\t"
-      "movl 0x24(%%ebp), %%eax\n\t"
-      "movw $0, (%%ecx)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movw $0, (%%edx)\n\t"
-      "movw $0, (%%eax)\n\t"
-      "movb $0, (%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lencounter_modify_pursuit_desires_2:\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "movw $1, (%%edx)\n\t"
-      "movw $2, (%%eax)\n\t"
-      "movw $2, (%%ecx)\n\t"
-      ".Lencounter_modify_pursuit_desires_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b59d30_c18e380), [elem] "m"(b59d30_elem)
-      : "memory");
+  void *enc;
+  void *prof;
+  short mode;
+
+  enc = tag_block_get_element((char *)global_scenario_get() + 0x42c,
+                              (int)(encounter_handle & 0xffff), 0xb0);
+  prof = tag_block_get_element((char *)enc + 0x80, (int)profile_index, 0xe8);
+  mode = *(short *)((char *)enc + 0x28);
+  if ((*(char *)((char *)prof + 0x28) & 2) != 0)
+    mode = 1;
+  if (mode == 1) {
+    *a = 1;
+    *c = 2;
+    *d = 2;
+    return;
+  }
+  if (mode == 2) {
+    *flag = 1;
+    *b = 0;
+    *c = 0;
+    *d = 0;
+    *e = 0;
+  }
 }
-#else
-#error "encounter_modify_pursuit_desires: clang naked draft required"
-#endif
-
-
 /* encounters_initialize (0x566a0) — readable C lift. */
 void encounters_initialize(int16_t team_a, int16_t team_b)
 {

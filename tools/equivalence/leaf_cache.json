@@ -2142,6 +2142,11 @@
     "confidence": "high",
     "coverage_pct": 100.0
   },
+  "0x59d30": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 55.9
+  },
   "0x5ac60": {
     "class": "leaf",
     "confidence": "high",
