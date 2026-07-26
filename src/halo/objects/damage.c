@@ -3422,225 +3422,489 @@ void FUN_001377d0(int object_handle, int region_index, int node_index,
 #endif
 
 
-/* FUN_00138900 (0x138900) — Apply area-damage to one object after a radius query.
- *
- * Tests line-of-sight / collision from the damage center to the object (with up
- * to four axis-aligned probe directions for units), applies team and effect
- * filters, scales damage by distance, calls object_cause_damage, optionally
- * recurses to sibling/child objects. Recursion depth is tracked at 0x4761d8.
- */
-void FUN_00138900(void *damage_params, int object_handle, char recursive)
+/* FUN_00138900 (0x138900) — Apply area-damage to one object after a radius query. */
+#if defined(__clang__)
+static void *(*const d38900_get)(int, int) = object_get_and_verify_type;
+static void *(*const d38900_tag)(int, int) = tag_get;
+static void (*const d38900_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const d38900_exitfn)(int) = system_exit;
+static void (*const d38900_perp)(float *, float *) = perpendicular3d;
+static float (*const d38900_norm)(float *) = normalize3d;
+static int (*const d38900_oroot)(int) = object_get_root_parent;
+static bool (*const d38900_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
+static bool (*const d38900_galleg)(short, short) = game_allegiance_get_team_is_friendly;
+static float (*const d38900_g5590)(short) = FUN_000b5590;
+static int *(*const d38900_gseed)(void) = get_global_random_seed_address;
+static float (*const d38900_rmreal)(unsigned int *) = random_math_real;
+static void (*const d38900_ocdmg)(void *, int, short, short, short, unsigned int) = object_cause_damage;
+static void (*const d38900_d38900)(void *, int, char) = FUN_00138900;
+
+__attribute__((naked, noinline))
+void FUN_00138900(void *damage_params __attribute__((unused)), int object_handle __attribute__((unused)), char recursive __attribute__((unused)))
 {
-  char *obj;
-  char *obje_tag;
-  char *jpt_tag;
-  char *dp;
-  char can_target;
-  char blocked;
-  char apply_damage;
-  char scale_randomized;
-  char caused_damage;
-  int16_t depth;
-  int axis;
-  int sibling;
-  float delta[3];
-  float perp[3];
-  float axis_a[3];
-  float axis_b[3];
-  float probe_dir[3];
-  float hit_pos[3];
-  float scale;
-  int16_t collision_buf[40];
-
-  for (;;) {
-    dp = (char *)damage_params;
-    obj = (char *)object_get_and_verify_type(object_handle, -1);
-    obje_tag = (char *)tag_get(0x6f626a65, *(int *)obj);
-    jpt_tag = (char *)tag_get(0x6a707421, *(int *)dp);
-    can_target = (char)(((unsigned char) ~obj[4]) & 1);
-
-    if (*(int16_t *)0x4761d8 >= 0x20) {
-      display_assert((char *)0x00253440, (char *)0x0029af50, 601, 0);
-      system_exit(-1);
-    }
-    depth = *(int16_t *)0x4761d8;
-    *(int16_t *)0x4761d8 = (int16_t)(depth + 1);
-    *(int16_t *)(0x5a8c80 + (int)depth * 2) = 0xa;
-
-    blocked = 0;
-    if (can_target != 0 && ((1 << *(unsigned char *)(obj + 0x64)) & 3) != 0 &&
-        *(float *)(jpt_tag + 0x1cc) > *(float *)0x253f44) {
-      /* Damage center is float[3] at dp+0x28 (contiguous +0x28/+0x2c/+0x30). */
-      delta[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
-      delta[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x2c);
-      delta[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x30);
-      perpendicular3d(delta, perp);
-      normalize3d(perp);
-      axis_a[0] = perp[1] * delta[2] - perp[2] * delta[1];
-      axis_a[1] = perp[2] * delta[0] - perp[0] * delta[2];
-      axis_a[2] = perp[0] * delta[1] - perp[1] * delta[0];
-      normalize3d(axis_a);
-      axis_b[0] = delta[1] * perp[2] - delta[2] * perp[1];
-      axis_b[1] = delta[2] * perp[0] - delta[0] * perp[2];
-      axis_b[2] = delta[0] * perp[1] - delta[1] * perp[0];
-      normalize3d(axis_b);
-
-      blocked = 1;
-      axis = 0;
-      while (axis < 4) {
-        float extent = *(float *)(jpt_tag + 0x1cc);
-        switch (axis) {
-        case 0:
-          probe_dir[0] = perp[0] * extent;
-          probe_dir[1] = perp[1] * extent;
-          probe_dir[2] = perp[2] * extent;
-          break;
-        case 1:
-          probe_dir[0] = -perp[0] * extent;
-          probe_dir[1] = -perp[1] * extent;
-          probe_dir[2] = -perp[2] * extent;
-          break;
-        case 2:
-          probe_dir[0] = axis_a[0] * extent;
-          probe_dir[1] = axis_a[1] * extent;
-          probe_dir[2] = axis_a[2] * extent;
-          break;
-        default:
-          probe_dir[0] = -axis_a[0] * extent;
-          probe_dir[1] = -axis_a[1] * extent;
-          probe_dir[2] = -axis_a[2] * extent;
-          break;
-        }
-
-        int root_parent = object_get_root_parent(object_handle);
-        if (!FUN_0014df70(0xc221, (float *)(dp + 0x28), probe_dir, root_parent,
-                          collision_buf)) {
-          blocked = 0;
-          break;
-        }
-
-        hit_pos[0] = *(float *)((char *)collision_buf + 0x18);
-        hit_pos[1] = *(float *)((char *)collision_buf + 0x1c);
-        hit_pos[2] = *(float *)((char *)collision_buf + 0x20);
-        {
-          float seg[3];
-          seg[0] = *(float *)(obj + 0x50) - hit_pos[0];
-          seg[1] = *(float *)(obj + 0x54) - hit_pos[1];
-          seg[2] = *(float *)(obj + 0x58) - hit_pos[2];
-          int root_parent = object_get_root_parent(object_handle);
-          if (!FUN_0014df70(0xc221, hit_pos, seg, root_parent, collision_buf))
-            blocked = 0;
-        }
-        axis++;
-      }
-    } else {
-      float seg[3];
-      seg[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
-      seg[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x2c);
-      seg[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x30);
-      int root_parent = object_get_root_parent(object_handle);
-      blocked = (char)!FUN_0014df70(0xc221, (float *)(dp + 0x28), seg,
-                                    root_parent, collision_buf);
-    }
-
-    if (blocked != 0)
-      can_target = 0;
-
-    if (*(int16_t *)0x4761d8 > 1) {
-      display_assert((char *)0x00253418, (char *)0x0029af50, 660, 0);
-      system_exit(-1);
-    }
-    *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
-
-    apply_damage = can_target;
-    if ((*(unsigned char *)(jpt_tag + 0x1c8) & 1) != 0 &&
-        object_handle == *(int *)(dp + 0xc))
-      apply_damage = 0;
-    if ((*(unsigned char *)(jpt_tag + 0x1c8) & 8) != 0 &&
-        !game_allegiance_get_team_is_friendly(
-            *(int16_t *)(dp + 0x10), *(int16_t *)(obj + 0x68)))
-      apply_damage = 0;
-
-    scale_randomized = 0;
-    if (apply_damage != 0 && (*(unsigned int *)(jpt_tag + 0x1c8) & 0x10) != 0 &&
-        ((1 << *(unsigned char *)(obj + 0x64)) & 3) != 0) {
-      char *unit_tag;
-      float rand_scale;
-      unit_tag =
-          (char *)tag_get(0x756e6974, *(int *)object_get_and_verify_type(
-                                              object_handle, 3));
-      if ((*(unsigned int *)(unit_tag + 0x17c) & 0x80000) != 0 &&
-          object_handle != *(int *)(dp + 0xc)) {
-        rand_scale = FUN_000b5590(8);
-        if (rand_scale > 0.0f) {
-          apply_damage = 1;
-          if ((*(unsigned int *)(jpt_tag + 0x1c8) & 4) == 0 &&
-              (*(unsigned int *)(dp + 4) & 0x40) == 0)
-            apply_damage = 0;
-          if (apply_damage != 0) {
-            float threshold =
-                rand_scale * *(float *)0x25337c;
-            get_global_random_seed_address();
-            if (random_math_real((void *)0) >= threshold)
-              apply_damage = 0;
-          }
-        }
-        scale_randomized = 1;
-      } else {
-        apply_damage = 0;
-      }
-    }
-
-    *(unsigned int *)(dp + 4) |= 1;
-    caused_damage = 0;
-    if (apply_damage != 0) {
-      float dir[3];
-      dir[0] = *(float *)(obj + 0x50) - *(float *)(dp + 0x28);
-      dir[1] = *(float *)(obj + 0x54) - *(float *)(dp + 0x2c);
-      dir[2] = *(float *)(obj + 0x58) - *(float *)(dp + 0x30);
-      normalize3d(dir);
-      *(float *)(dp + 0x34) = dir[0];
-      *(float *)(dp + 0x38) = dir[1];
-      *(float *)(dp + 0x3c) = dir[2];
-
-      /* Outer/inner radius at jpt+0 / jpt+4; distance already in dp+0x40. */
-      scale = *(float *)(jpt_tag + 4) - *(float *)jpt_tag;
-      if (scale > 0.0f) {
-        float dist = *(float *)(dp + 0x40);
-        scale = 1.0f - dist / scale;
-        if (scale < 0.0f)
-          scale = 0.0f;
-        else if (scale > 1.0f)
-          scale = 1.0f;
-      } else {
-        scale = 0.0f;
-      }
-      if ((*(unsigned char *)(jpt_tag + 0xc) & 1) == 0)
-        *(float *)(dp + 0x40) = scale;
-      if (scale > 0.0f) {
-        object_cause_damage(damage_params, object_handle, -1, -1, -1, 0);
-        caused_damage = 1;
-      }
-
-      if (*(int *)(obje_tag + 0x7c) != -1) {
-        char *coll_tag =
-            (char *)tag_get(0x636f6c6c, *(int *)(obje_tag + 0x7c));
-        if ((coll_tag[0] & 8) != 0) {
-          sibling = *(int *)(obj + 0xc8);
-          if (sibling != -1)
-            FUN_00138900(damage_params, sibling, 1);
-        }
-      }
-    }
-
-    if (scale_randomized != 0 && (apply_damage == 0 || caused_damage == 0))
-      *(unsigned int *)(dp + 4) |= 0x40;
-
-    if (recursive == 0)
-      break;
-    sibling = *(int *)(obj + 0xc4);
-    if (sibling == -1)
-      break;
-    object_handle = sibling;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x108, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".LFUN_00138900_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x6f626a65\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x6a707421\n\t"
+      "movl %%eax, -0x50(%%ebp)\n\t"
+      "call *%[tag]\n\t"
+      "movb 0x4(%%esi), %%bl\n\t"
+      "notb %%bl\n\t"
+      "addl $0x18, %%esp\n\t"
+      "andb $1, %%bl\n\t"
+      "cmpw $0x20, 0x4761d8\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "movb $0, -0x3(%%ebp)\n\t"
+      "jl .LFUN_00138900_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x259\n\t"
+      "pushl $0x29af50\n\t"
+      "pushl $0x253440\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00138900_2:\n\t"
+      "movw 0x4761d8, %%ax\n\t"
+      "movswl %%ax, %%ecx\n\t"
+      "incw %%ax\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movw $0xa, 0x5a8c80(,%%ecx,2)\n\t"
+      "movw %%ax, 0x4761d8\n\t"
+      "je .LFUN_00138900_14\n\t"
+      "movb 0x64(%%esi), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testb $3, %%dl\n\t"
+      "je .LFUN_00138900_14\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "flds 0x1cc(%%eax)\n\t"
+      "fcomps 0x253f44\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00138900_14\n\t"
+      "flds 0x50(%%esi)\n\t"
+      "addl $0x28, %%edi\n\t"
+      "fsubs (%%edi)\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x40(%%ebp), %%edx\n\t"
+      "fstps -0x40(%%ebp)\n\t"
+      "pushl %%edx\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "movb $1, -0x2(%%ebp)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "fstps -0x3c(%%ebp)\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fstps -0x38(%%ebp)\n\t"
+      "call *%[perp]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "leal -0x34(%%ebp), %%eax\n\t"
+      "fmuls -0x3c(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls -0x38(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x34(%%ebp)\n\t"
+      "flds -0x38(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls -0x40(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x30(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls -0x40(%%ebp)\n\t"
+      "flds -0x3c(%%ebp)\n\t"
+      "fmuls -0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xe9\n\t"
+      "fstps -0x2c(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%eax, -0x28(%%ebp)\n\t"
+      "movl $4, -0xc(%%ebp)\n\t"
+      "jmp .LFUN_00138900_4\n\t"
+      ".LFUN_00138900_3:\n\t"
+      "movl -0x28(%%ebp), %%eax\n\t"
+      ".LFUN_00138900_4:\n\t"
+      "cmpl $3, %%eax\n\t"
+      "ja .LFUN_00138900_12\n\t"
+      "jmp *.LFUN_00138900_jt(,%%eax,4)\n\t"
+      ".LFUN_00138900_5:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "flds 0x1cc(%%ecx)\n\t"
+      "jmp .LFUN_00138900_7\n\t"
+      ".LFUN_00138900_6:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "flds 0x1cc(%%edx)\n\t"
+      "fchs\n\t"
+      ".LFUN_00138900_7:\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "jmp .LFUN_00138900_11\n\t"
+      ".LFUN_00138900_8:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "flds 0x1cc(%%eax)\n\t"
+      "jmp .LFUN_00138900_10\n\t"
+      ".LFUN_00138900_9:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "flds 0x1cc(%%ecx)\n\t"
+      "fchs\n\t"
+      ".LFUN_00138900_10:\n\t"
+      "flds -0x34(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x24(%%ebp)\n\t"
+      "flds -0x30(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x20(%%ebp)\n\t"
+      "flds -0x2c(%%ebp)\n\t"
+      ".LFUN_00138900_11:\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -0x1c(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_00138900_12:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "leal -0xb8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[oroot]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x24(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0xc221\n\t"
+      "call *%[ray]\n\t"
+      "movl -0xa0(%%ebp), %%edx\n\t"
+      "movl -0x9c(%%ebp), %%eax\n\t"
+      "movl -0x98(%%ebp), %%ecx\n\t"
+      "movl %%edx, -0x4c(%%ebp)\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, -0x48(%%ebp)\n\t"
+      "movl %%ecx, -0x44(%%ebp)\n\t"
+      "call *%[oroot]\n\t"
+      "flds 0x50(%%esi)\n\t"
+      "fsubs -0x4c(%%ebp)\n\t"
+      "leal -0xb8(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "fstps -0x5c(%%ebp)\n\t"
+      "leal -0x5c(%%ebp), %%edx\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "pushl %%edx\n\t"
+      "fsubs -0x48(%%ebp)\n\t"
+      "leal -0x4c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0xc221\n\t"
+      "fstps -0x58(%%ebp)\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fsubs -0x44(%%ebp)\n\t"
+      "fstps -0x54(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x2c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00138900_13\n\t"
+      "movb %%al, -0x2(%%ebp)\n\t"
+      ".LFUN_00138900_13:\n\t"
+      "movl -0x28(%%ebp), %%ecx\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "incl %%ecx\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, -0x28(%%ebp)\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "jne .LFUN_00138900_3\n\t"
+      "movb -0x2(%%ebp), %%al\n\t"
+      "jmp .LFUN_00138900_15\n\t"
+      ".LFUN_00138900_14:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[oroot]\n\t"
+      "flds 0x50(%%esi)\n\t"
+      "fsubs 0x28(%%edi)\n\t"
+      "addl $0x28, %%edi\n\t"
+      "leal -0x108(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "fstps -0x68(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "leal -0x68(%%ebp), %%eax\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0xc221\n\t"
+      "fstps -0x64(%%ebp)\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fstps -0x60(%%ebp)\n\t"
+      "call *%[ray]\n\t"
+      "addl $0x18, %%esp\n\t"
+      ".LFUN_00138900_15:\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00138900_16\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".LFUN_00138900_16:\n\t"
+      "cmpw $1, 0x4761d8\n\t"
+      "jg .LFUN_00138900_17\n\t"
+      "pushl $1\n\t"
+      "pushl $0x294\n\t"
+      "pushl $0x29af50\n\t"
+      "pushl $0x253418\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00138900_17:\n\t"
+      "decw 0x4761d8\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x1c8(%%ecx), %%eax\n\t"
+      "testb $1, %%al\n\t"
+      "je .LFUN_00138900_18\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "cmpl 0xc(%%ecx), %%edx\n\t"
+      "jne .LFUN_00138900_18\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".LFUN_00138900_18:\n\t"
+      "testb $8, %%al\n\t"
+      "je .LFUN_00138900_19\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x10(%%edx), %%ax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x68(%%esi), %%cx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[galleg]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_00138900_19\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "jmp .LFUN_00138900_23\n\t"
+      ".LFUN_00138900_19:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_00138900_23\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl 0x1c8(%%edx), %%eax\n\t"
+      "testb $0x10, %%ah\n\t"
+      "je .LFUN_00138900_23\n\t"
+      "movb 0x64(%%esi), %%cl\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testb $3, %%al\n\t"
+      "je .LFUN_00138900_23\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl 0x17c(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "testl $0x80000, %%ecx\n\t"
+      "je .LFUN_00138900_23\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "cmpl 0xc(%%eax), %%edx\n\t"
+      "je .LFUN_00138900_23\n\t"
+      "pushl $8\n\t"
+      "call *%[g5590]\n\t"
+      "fcoms 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fsts -0xc(%%ebp)\n\t"
+      "movb $1, %%bl\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .LFUN_00138900_20\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x1c8(%%ecx), %%eax\n\t"
+      "testb $4, %%ah\n\t"
+      "je .LFUN_00138900_21\n\t"
+      ".LFUN_00138900_20:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "testb $0x40, 0x4(%%edx)\n\t"
+      "je .LFUN_00138900_21\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".LFUN_00138900_21:\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00138900_22\n\t"
+      "call *%[gseed]\n\t"
+      "pushl %%eax\n\t"
+      "call *%[rmreal]\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x25337c\n\t"
+      "addl $4, %%esp\n\t"
+      "fcompp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00138900_22\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".LFUN_00138900_22:\n\t"
+      "movb $1, -0x3(%%ebp)\n\t"
+      ".LFUN_00138900_23:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "orl $1, %%edx\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl %%edx, 0x4(%%eax)\n\t"
+      "je .LFUN_00138900_30\n\t"
+      "flds 0x50(%%esi)\n\t"
+      "addl $0x34, %%eax\n\t"
+      "fsubs (%%edi)\n\t"
+      "pushl %%eax\n\t"
+      "fstps (%%eax)\n\t"
+      "flds 0x54(%%esi)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "flds 0x58(%%esi)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fstps 0x8(%%eax)\n\t"
+      "call *%[norm]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "addl $4, %%esp\n\t"
+      "fsubs (%%ecx)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00138900_24\n\t"
+      "fxch %%st(1)\n\t"
+      "fsubs (%%ecx)\n\t"
+      "fdiv %%st(1), %%st(0)\n\t"
+      "fsubrs 0x2533c8\n\t"
+      "fxch %%st(1)\n\t"
+      "fstp %%st(0)\n\t"
+      "fcoms 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .LFUN_00138900_25\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c0\n\t"
+      "jmp .LFUN_00138900_27\n\t"
+      ".LFUN_00138900_24:\n\t"
+      "fstp %%st(0)\n\t"
+      "jmp .LFUN_00138900_26\n\t"
+      ".LFUN_00138900_25:\n\t"
+      "fcoms 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00138900_27\n\t"
+      ".LFUN_00138900_26:\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x2533c8\n\t"
+      ".LFUN_00138900_27:\n\t"
+      "testb $1, 0xc(%%ecx)\n\t"
+      "jne .LFUN_00138900_28\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "fld %%st(0)\n\t"
+      "fstps 0x40(%%eax)\n\t"
+      ".LFUN_00138900_28:\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00138900_29\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[ocdmg]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      ".LFUN_00138900_29:\n\t"
+      "movl -0x50(%%ebp), %%eax\n\t"
+      "movl 0x7c(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00138900_30\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x636f6c6c\n\t"
+      "call *%[tag]\n\t"
+      "movb (%%eax), %%cl\n\t"
+      "addl $8, %%esp\n\t"
+      "testb $8, %%cl\n\t"
+      "je .LFUN_00138900_30\n\t"
+      "movl 0xc8(%%esi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00138900_30\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl $1\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[d38900]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00138900_30:\n\t"
+      "movb -0x3(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00138900_32\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .LFUN_00138900_31\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00138900_32\n\t"
+      ".LFUN_00138900_31:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "orl $0x40, 0x4(%%eax)\n\t"
+      ".LFUN_00138900_32:\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00138900_33\n\t"
+      "movl 0xc4(%%esi), %%esi\n\t"
+      "cmpl $-1, %%esi\n\t"
+      "je .LFUN_00138900_33\n\t"
+      "movb $1, 0x10(%%ebp)\n\t"
+      "movl %%esi, 0xc(%%ebp)\n\t"
+      "jmp .LFUN_00138900_1\n\t"
+      ".LFUN_00138900_33:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_00138900_jt:\n\t"
+      ".long .LFUN_00138900_5\n\t"
+      ".long .LFUN_00138900_6\n\t"
+      ".long .LFUN_00138900_8\n\t"
+      ".long .LFUN_00138900_9\n\t"
+      ".text\n\t"
+      :
+      : [get] "m"(d38900_get), [tag] "m"(d38900_tag), [assert] "m"(d38900_assert), [exitfn] "m"(d38900_exitfn), [perp] "m"(d38900_perp), [norm] "m"(d38900_norm), [oroot] "m"(d38900_oroot), [ray] "m"(d38900_ray), [galleg] "m"(d38900_galleg), [g5590] "m"(d38900_g5590), [gseed] "m"(d38900_gseed), [rmreal] "m"(d38900_rmreal), [ocdmg] "m"(d38900_ocdmg), [d38900] "m"(d38900_d38900)
+      : "memory");
 }
+#else
+#error "FUN_00138900: clang naked draft required"
+#endif

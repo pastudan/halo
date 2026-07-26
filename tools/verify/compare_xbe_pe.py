@@ -533,4 +533,55 @@ def main() -> int:
         ("first_person_weapon_update", 0xdd580, 0xddad8),
         ("FUN_001345b0", 0x1345b0, 0x134adb),
         ("FUN_00136bc0", 0x136bc0, 0x136f3e),
+        # gameplay wave 47 (2026-07-26)
+        ("FUN_000f1710", 0xf1710, 0xf1ecc),
+        ("FUN_000f5900", 0xf5900, 0xf5ee5),
+        ("FUN_00138900", 0x138900, 0x138e11),
+        ("FUN_001b6250", 0x1b6250, 0x1b6555),
+        ("FUN_001b69a0", 0x1b69a0, 0x1b6c9a),
+        ("weapon_export_function_values", 0xfbf00, 0xfc243),
     ]
+
+    xbe = Xbe.from_file(args.xbe)
+    pe = pefile.PE(args.pe)
+    rows = []
+
+    print("=== Structural mnemonic match (XBE orig vs clang lift) ===")
+    print("(Interim — VC71 needs RXDK CL.Exe; equivalence needs delinked .obj)\n")
+
+    for name, va, end in targets:
+        orig = xbe_bytes(xbe, va, end)
+        cand, cand_va = pe_fn_bytes(pe, name)
+        o_m = mnemonics(orig, va)
+        c_m = mnemonics(cand, cand_va)
+        ratio = SequenceMatcher(None, o_m, c_m, autojunk=False).ratio() * 100.0
+        o_calls = sum(1 for m in o_m if m == "call")
+        c_calls = sum(1 for m in c_m if m == "call")
+        print(
+            f"{name}: {ratio:5.1f}%  "
+            f"orig_insns={len(o_m)} cand_insns={len(c_m)} "
+            f"calls {o_calls}->{c_calls}  "
+            f"orig_bytes={len(orig)} cand_bytes={len(cand)}"
+        )
+        rows.append(
+            {
+                "name": name,
+                "addr": hex(va),
+                "match_pct": round(ratio, 2),
+                "orig_insns": len(o_m),
+                "cand_insns": len(c_m),
+                "orig_calls": o_calls,
+                "cand_calls": c_calls,
+                "note": "clang-vs-xbe interim; not VC71",
+            }
+        )
+
+    out = Path(args.json_out)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_text(json.dumps(rows, indent=2) + "\n")
+    print(f"\nwrote {out}")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())
