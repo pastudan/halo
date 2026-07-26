@@ -1358,40 +1358,163 @@ void FUN_001bc620(void)
   (void)esi;
 }
 
-/* 0x1bd020 */
-void cache_file_read_header_into_slot(short map_file_index)
+/* cache_file_read_header_into_slot (0x1bd020) — XBE naked draft (batch 84). */
+#if defined(__clang__)
+static void (*const b1bd020_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1bd020_exitfn)(int) = system_exit;
+static int (*const b1bd020_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+static void (*const b1bd020_c1d18aa)(void) = FUN_001d18aa;
+static void (*const b1bd020_c1bc3b0)(void) = FUN_001bc3b0;
+static unsigned int __stdcall (*const b1bd020_c1d01c4)(unsigned int milliseconds, int alertable) = SleepEx;
+static bool (*const b1bd020_c1b9ce0)(void *header, const char *path, int report_errors) = cache_file_header_verify;
+static void *(*const b1bd020_memset)(void *, int, unsigned int) = csmemset;
+static int (*const b1bd020_c1d2240)(void) = xapi_GetLastError;
+static char * (*const b1bd020_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+
+__attribute__((naked, noinline))
+void cache_file_read_header_into_slot(short map_file_index __attribute__((unused)))
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-
-  /* test (int16_t)esi, (int16_t)esi -> jl 0x1bd039 */
-  /* cmp (int16_t)esi, 6 -> jl 0x1bd059 */
-  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
-  system_exit(0);
-  crt_sprintf((char *)(uintptr_t)edx, (char *)0x002b8e24);
-  FUN_001d18aa();
-  FUN_001bc3b0();
-  SleepEx(5000, 0);
-  /* cmp eax, 0xc0 -> jne 0x1bd0ea */
-  /* test (char)eax, (char)eax -> je 0x1bd0d0 */
-  /* test (char)eax, (char)eax -> je 0x1bd133 */
-  cache_file_header_verify((void *)(uintptr_t)esi, (char *)(uintptr_t)ecx, 0);
-  /* test (char)eax, (char)eax -> jne 0x1bd19f */
-  csmemset((void *)(uintptr_t)esi, 0, 2048);
-  csmemset((void *)(uintptr_t)edx, 0, 0);
-  xapi_GetLastError();
-  csprintf((char *)0x005ab100, (char *)0x002b8f4c);
-  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jl 0x1bd176 */
-  /* cmp (int16_t)eax, 6 -> jl 0x1bd196 */
-  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
-  system_exit(0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x124, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "movw 0x8(%%ebp), %%si\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lcache_file_read_header_into_slot_1\n\t"
+      "cmpw $6, %%si\n\t"
+      "jl .Lcache_file_read_header_into_slot_2\n\t"
+      ".Lcache_file_read_header_into_slot_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x485\n\t"
+      "pushl $0x2b8c98\n\t"
+      "pushl $0x2b8de4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcache_file_read_header_into_slot_2:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "imull $0x80c, %%ecx, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x124(%%ebp), %%edx\n\t"
+      "leal 0x4e61d8(%%ecx), %%esi\n\t"
+      "pushl $0x2b8e24\n\t"
+      "pushl %%edx\n\t"
+      "movl %%esi, -0xc(%%ebp)\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl $0\n\t"
+      "leal 0x4(%%esi), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d18aa]\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "leal -0x1(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0\n\t"
+      "leal 0xc(%%esi), %%ecx\n\t"
+      "pushl $0x800\n\t"
+      "pushl %%ecx\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "movl $0x1bc8f0, %%ebx\n\t"
+      "leal -0x24(%%ebp), %%esi\n\t"
+      "movl $0x1d19e7, %%edi\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "call *%[c1bc3b0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "jne .Lcache_file_read_header_into_slot_4\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lcache_file_read_header_into_slot_3:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1388\n\t"
+      "call *%[c1d01c4]\n\t"
+      "cmpl $0xc0, %%eax\n\t"
+      "jne .Lcache_file_read_header_into_slot_4\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lcache_file_read_header_into_slot_3\n\t"
+      ".Lcache_file_read_header_into_slot_4:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lcache_file_read_header_into_slot_5\n\t"
+      "movl -0x10(%%ebp), %%esi\n\t"
+      "pushl $0\n\t"
+      "leal -0x124(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1b9ce0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lcache_file_read_header_into_slot_8\n\t"
+      "pushl $0x800\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "pushl $8\n\t"
+      "pushl $0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lcache_file_read_header_into_slot_5:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x42e\n\t"
+      "pushl $0x2b8c98\n\t"
+      "call *%[c1d2240]\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x2b8f4c\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "movw 0x8(%%ebp), %%ax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lcache_file_read_header_into_slot_6\n\t"
+      "cmpw $6, %%ax\n\t"
+      "jl .Lcache_file_read_header_into_slot_7\n\t"
+      ".Lcache_file_read_header_into_slot_6:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x485\n\t"
+      "pushl $0x2b8c98\n\t"
+      "pushl $0x2b8de4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcache_file_read_header_into_slot_7:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl $0xffffffff, (%%eax)\n\t"
+      ".Lcache_file_read_header_into_slot_8:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b1bd020_assert), [exitfn] "m"(b1bd020_exitfn), [c1d90f0] "m"(b1bd020_c1d90f0), [c1d18aa] "m"(b1bd020_c1d18aa), [c1bc3b0] "m"(b1bd020_c1bc3b0), [c1d01c4] "m"(b1bd020_c1d01c4), [c1b9ce0] "m"(b1bd020_c1b9ce0), [memset] "m"(b1bd020_memset), [c1d2240] "m"(b1bd020_c1d2240), [c8d9d0] "m"(b1bd020_c8d9d0)
+      : "memory");
 }
+#else
+#error "cache_file_read_header_into_slot: clang naked draft required"
+#endif
+

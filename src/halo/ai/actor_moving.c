@@ -1527,104 +1527,134 @@ build_vector:
   actor_move_transform_avoidance_vector(matrix, vec, out_vec);
 }
 
-/* 0x2b5d0 — actor_move_get_avoidance_direction: initialize trigonometric lookup
- * tables.
- *
- * Confirmed: no arguments, no calls, writes table blocks rooted at
- * 0x6327e0 and 0x6325c0 using constants/tables at 0x25577c..0x25581c.
- * Confirmed: first loop runs 9 iterations (EDX=9), stride 0x1c (7 floats).
- * Confirmed: second stage runs 2 outer iterations × 8 inner iterations,
- * with destination stride 0x38 (14 floats) per inner iteration.
- */
+/* actor_move_get_avoidance_direction (0x2b5d0) — XBE naked draft (batch 84). */
+#if defined(__clang__)
+
+
+__attribute__((naked, noinline))
 void actor_move_get_avoidance_direction(void)
 {
-  /* First-stage table: 9 rows of 7 floats, base 0x6327e0, stride 0x1c. */
-  float *p_a = (float *)0x6327e0;
-  /* Second-stage table rooted at 0x6325c0; the working outer pointer starts
-   * at 0x6325cc (entry stores reach back via p_b[-3..0] and forward p_b[1..3]).
-   * The outer pointer advances 7 floats per outer iteration; the inner pointer
-   * advances 14 floats (0x38) per inner iteration. */
-  float *outer_b = (float *)0x6325cc;
-  /* Per-column basis vectors, reset to 0x632780 at the start of each outer
-   * iteration (only 8 entries are ever live, stride 0xc). */
-  float *basis;
-  float *p_b;
-
-  const float *angle_table_9 = (const float *)0x2557cc;
-  const float *scale_table_9 = (const float *)0x2557a8;
-  const float *length_table_9 = (const float *)0x255784;
-  const float k_angle = *(const float *)0x255780;
-  const float k_length = *(const float *)0x25577c;
-  const float k_base = *(const float *)0x255778;
-
-  const float *outer_angles = (const float *)0x25581c;
-  const float *outer_scales = (const float *)0x255814;
-  const float *inner_angles;
-  const float k_inner_base = *(const float *)0x2557f0;
-
-  int i;
-  int row;
-  int col;
-  float angle, sin_angle, cos_angle, scaled_angle, sin_scaled, scaled_len;
-  float sin_outer, cos_outer, row_scale;
-  float inner, cos_inner, sin_inner;
-
-  for (i = 0; i < 9; i++) {
-    angle = angle_table_9[i];
-    sin_angle = x87_fsin(angle);
-    cos_angle = x87_fcos(angle);
-    scaled_angle = k_angle * scale_table_9[i];
-    sin_scaled = x87_fsin(scaled_angle);
-    scaled_len = k_length * length_table_9[i];
-
-    p_a[0] = k_base;
-    p_a[1] = 0.0f;
-    p_a[2] = scaled_len * cos_angle;
-    p_a[3] = scaled_len * sin_angle;
-    p_a[4] = x87_fcos(scaled_angle);
-    p_a[5] = sin_scaled * cos_angle;
-    p_a[6] = sin_scaled * sin_angle;
-    p_a += 7;
-  }
-
-  for (row = 0; row < 2; row++) {
-    sin_outer = x87_fsin(outer_angles[row]);
-    cos_outer = x87_fcos(outer_angles[row]);
-    row_scale = outer_scales[row];
-
-    basis = (float *)0x632780;
-    p_b = outer_b;
-    inner_angles = (const float *)0x2557f4;
-
-    for (col = 0; col < 8; col++) {
-      inner = inner_angles[col];
-      cos_inner = x87_fcos(inner);
-      sin_inner = x87_fsin(inner);
-
-      basis[0] = 0.0f;
-      basis[1] = cos_inner;
-      basis[2] = sin_inner;
-
-      /* table_b entry base = p_b + 3 floats:
-       *   [+0] k_inner_base
-       *   [+0x10] row_scale * basis[0..2]
-       *   [+0x1c] sin_outer * basis[0..2], with [+0x1c] then overwritten by
-       *           cos_outer (the sin_outer*basis[0] product is dead). */
-      p_b[-3] = k_inner_base;
-      p_b[-2] = row_scale * basis[0];
-      p_b[-1] = row_scale * basis[1];
-      p_b[0] = row_scale * basis[2];
-      p_b[1] = sin_outer * basis[0];
-      p_b[2] = sin_outer * basis[1];
-      p_b[3] = sin_outer * basis[2];
-      p_b[1] = cos_outer;
-
-      basis += 3;
-      p_b += 14;
-    }
-    outer_b += 7;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl $0x6327e4, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movl $9, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "jmp .Lactor_move_get_avoidance_direction_1\n\t"
+      "leal (%%esp), %%esp\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lactor_move_get_avoidance_direction_1:\n\t"
+      "flds 0x2557cc(%%ecx)\n\t"
+      "movl 0x255778, %%esi\n\t"
+      "fsin\n\t"
+      "movl %%esi, -0x4(%%eax)\n\t"
+      "movl $0, (%%eax)\n\t"
+      "addl $4, %%ecx\n\t"
+      "addl $0x1c, %%eax\n\t"
+      "decl %%edx\n\t"
+      "flds 0x2557c8(%%ecx)\n\t"
+      "fcos\n\t"
+      "flds 0x255780\n\t"
+      "fmuls 0x2557a4(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fsin\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "flds 0x25577c\n\t"
+      "fmuls 0x255780(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      "fstps -0x18(%%eax)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      "fstps -0x14(%%eax)\n\t"
+      "fcos\n\t"
+      "fstps -0x10(%%eax)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fstps -0xc(%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "fstps -0x8(%%eax)\n\t"
+      "fstp %%st(0)\n\t"
+      "jne .Lactor_move_get_avoidance_direction_1\n\t"
+      "movl $0x6325cc, %%ecx\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl $2, -0x8(%%ebp)\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lactor_move_get_avoidance_direction_2:\n\t"
+      "flds 0x25581c(%%edi)\n\t"
+      "movl $0x2557f4, %%edx\n\t"
+      "fsin\n\t"
+      "movl $0x632788, %%eax\n\t"
+      "movl $8, %%esi\n\t"
+      "flds 0x25581c(%%edi)\n\t"
+      "fcos\n\t"
+      "flds 0x255814(%%edi)\n\t"
+      ".Lactor_move_get_avoidance_direction_3:\n\t"
+      "flds (%%edx)\n\t"
+      "movl 0x2557f0, %%ebx\n\t"
+      "fcos\n\t"
+      "movl $0, -0x8(%%eax)\n\t"
+      "movl %%ebx, -0xc(%%ecx)\n\t"
+      "addl $4, %%edx\n\t"
+      "addl $0xc, %%eax\n\t"
+      "addl $0x38, %%ecx\n\t"
+      "decl %%esi\n\t"
+      "fstps -0x10(%%eax)\n\t"
+      "flds -0x4(%%edx)\n\t"
+      "fsin\n\t"
+      "fstps -0xc(%%eax)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls -0x14(%%eax)\n\t"
+      "fstps -0x40(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls -0x10(%%eax)\n\t"
+      "fstps -0x3c(%%ecx)\n\t"
+      "fld %%st(0)\n\t"
+      "fmuls -0xc(%%eax)\n\t"
+      "fstps -0x38(%%ecx)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls -0x14(%%eax)\n\t"
+      "fstps -0x34(%%ecx)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls -0x10(%%eax)\n\t"
+      "fstps -0x30(%%ecx)\n\t"
+      "fld %%st(2)\n\t"
+      "fmuls -0xc(%%eax)\n\t"
+      "fstps -0x2c(%%ecx)\n\t"
+      "fld %%st(1)\n\t"
+      "fstps -0x34(%%ecx)\n\t"
+      "jne .Lactor_move_get_avoidance_direction_3\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "fstp %%st(0)\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $0x1c, %%ecx\n\t"
+      "fstp %%st(0)\n\t"
+      "addl $4, %%edi\n\t"
+      "decl %%eax\n\t"
+      "movl %%ecx, -0x4(%%ebp)\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jne .Lactor_move_get_avoidance_direction_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      :
+      : "memory");
 }
+#else
+#error "actor_move_get_avoidance_direction: clang naked draft required"
+#endif
+
 
 /* actor_path_3d_available (0x2b720) — Check if vehicle actor should brake.
  *
@@ -4313,85 +4343,135 @@ void actor_destination_update(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* 0x2d720 — actor_move_to_point: Set actor movement to point-movement mode
- * (move_type=2, dest=destination xyz, dest_node=param_3, override=param_4).
- *
- * Clears the actor's +0x3b8 movement flag (0xffff), wakes the actor via
- * actor_set_dormant, then checks if the actor is already in mode 2 heading to
- * the same destination node (+0x47c == param_3) and within the close-enough
- * threshold (squared distance from active dest at +0x470..+0x478 to the
- * requested destination <= *0x255d1c). If so and the actor is still active
- * (+0x4c) and not sleeping (+0x4a4), refreshes the path (store_distance=0);
- * otherwise returns 1. If not already at the target, sets up the movement
- * block at +0x400 (mode=2, dest xyz at +0x404, dest_node at +0x410,
- * override at +0x414), copies the 24-byte block to the active slot at +0x46c,
- * and kicks off a path refresh (store_distance=1).
- *
- * Confirmed: datum_get(*0x6325a4, actor_handle) at 0x2d730.
- * Confirmed: NULL-destination assert("destination", file, 0x3b7, 1) +
- *            system_exit(-1) at 0x2d752-0x2d759.
- * Confirmed: MOV [ESI+0x3b8],0xffff at 0x2d764.
- * Confirmed: actor_set_dormant(actor_handle, 0) at 0x2d76d.
- * Confirmed: CMP [ESI+0x46c],2 / CMP [ESI+0x47c],param_3 at 0x2d77b-0x2d787.
- * Confirmed: FLD/FSUB squared-distance vs FCOMP [0x255d1c]; TEST AH,0x41 =
- *            dist_sq <= threshold at 0x2d78c-0x2d7c7.
- * Confirmed: setup stores at 0x2d7f2-0x2d820 (offsets 0x402,0x400,0x404,
- *            0x408,0x40c,0x410,0x414).
- * Confirmed: REP MOVSD ECX=6 from actor+0x400 to actor+0x46c at 0x2d837.
- * Confirmed: actor_path_refresh(actor_handle,1,0) at 0x2d839.
- * Confirmed: actor_path_refresh(actor_handle,0,0) at 0x2d7df.
- * Confirmed: return 1 via MOV AL,1 at 0x2d848.
- */
-char actor_move_to_point(int actor_handle, float *destination, int param_3,
-                         int param_4)
-{
-  char *actor;
-  float dx;
-  float dy;
-  float dz;
-  float dist_sq;
-  int iVar3;
-  int *pending_state;
-  short *active_state;
+/* actor_move_to_point (0x2d720) — XBE naked draft (batch 84). */
+#if defined(__clang__)
+static void *(*const b2d720_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void (*const b2d720_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b2d720_exitfn)(int) = system_exit;
+static void (*const b2d720_c3ca40)(int actor_handle, char flag) = actor_set_dormant;
+static char (*const b2d720_c2cdb0)(int actor_handle, char store_distance, void *override_path) = actor_path_refresh;
 
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  if (destination == (float *)0x0) {
-    display_assert("destination", "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x3b7,
-                   1);
-    system_exit(-1);
-  }
-  *(int16_t *)(actor + 0x3b8) = -1;
-  actor_set_dormant(actor_handle, 0);
-  if ((*(int16_t *)(actor + 0x46c) == 2) &&
-      (*(int *)(actor + 0x47c) == param_3)) {
-    dx = *(float *)(actor + 0x470) - destination[0];
-    dy = *(float *)(actor + 0x474) - destination[1];
-    dz = *(float *)(actor + 0x478) - destination[2];
-    dist_sq = dx * dx + dy * dy + dz * dz;
-    if (dist_sq <= *(float *)0x255d1c) {
-      if ((*(char *)(actor + 0x4c) != '\0') &&
-          (*(char *)(actor + 0x4a4) == '\0')) {
-        return actor_path_refresh(actor_handle, 0, 0);
-      }
-      return 1;
-    }
-  }
-  *(char *)(actor + 0x402) = 0;
-  *(int16_t *)(actor + 0x400) = 2;
-  *(float *)(actor + 0x404) = destination[0];
-  *(float *)(actor + 0x408) = destination[1];
-  *(float *)(actor + 0x40c) = destination[2];
-  *(int *)(actor + 0x410) = param_3;
-  *(int *)(actor + 0x414) = param_4;
-  pending_state = (int *)(actor + 0x400);
-  active_state = (short *)(actor + 0x46c);
-  for (iVar3 = 6; iVar3 != 0; iVar3--) {
-    *(int *)active_state = *pending_state;
-    pending_state++;
-    active_state += 2;
-  }
-  return actor_path_refresh(actor_handle, 1, 0);
+__attribute__((naked, noinline))
+char actor_move_to_point(int actor_handle __attribute__((unused)), float *destination __attribute__((unused)), int param_3 __attribute__((unused)), int param_4 __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jne .Lactor_move_to_point_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3b7\n\t"
+      "pushl $0x255984\n\t"
+      "pushl $0x255d94\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lactor_move_to_point_1:\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "movw $0xffff, 0x3b8(%%esi)\n\t"
+      "call *%[c3ca40]\n\t"
+      "leal 0x46c(%%esi), %%edx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $2, (%%edx)\n\t"
+      "jne .Lactor_move_to_point_2\n\t"
+      "movl 0x47c(%%esi), %%ecx\n\t"
+      "cmpl 0x10(%%ebp), %%ecx\n\t"
+      "jne .Lactor_move_to_point_2\n\t"
+      "flds 0x470(%%esi)\n\t"
+      "fsubs (%%edi)\n\t"
+      "flds 0x474(%%esi)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "flds 0x478(%%esi)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fcomps 0x255d1c\n\t"
+      "fstp %%st(0)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "fstp %%st(0)\n\t"
+      "je .Lactor_move_to_point_2\n\t"
+      "movb 0x4c(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_move_to_point_3\n\t"
+      "movb 0x4a4(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_move_to_point_3\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c2cdb0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_move_to_point_2:\n\t"
+      "leal 0x400(%%esi), %%eax\n\t"
+      "movb $0, 0x402(%%esi)\n\t"
+      "movw $2, (%%eax)\n\t"
+      "movl (%%edi), %%ebx\n\t"
+      "leal 0x404(%%esi), %%ecx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl 0x4(%%edi), %%ebx\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%edi), %%edi\n\t"
+      "movl %%edi, 0x8(%%ecx)\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x410(%%esi)\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl %%ecx, 0x414(%%esi)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, %%esi\n\t"
+      "pushl $1\n\t"
+      "movl $6, %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "rep movsl\n\t"
+      "call *%[c2cdb0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lactor_move_to_point_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2d720_dget), [assert] "m"(b2d720_assert), [exitfn] "m"(b2d720_exitfn), [c3ca40] "m"(b2d720_c3ca40), [c2cdb0] "m"(b2d720_c2cdb0)
+      : "memory");
 }
+#else
+#error "actor_move_to_point: clang naked draft required"
+#endif
+
 
 /* 0x2d850 — Set actor movement to far-movement mode (move_type=4,
  * dest=param_2).

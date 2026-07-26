@@ -1012,10 +1012,23 @@ def main() -> int:
         ("actor_get_stopping_distances", 0x2a610, 0x2a7d1),
         ("FUN_001108b0", 0x1108b0, 0x110a0c),
         ("network_game_server_stalled_on_client", 0x12e1d0, 0x12e395),
-        ("actor_move_try_evasion_direction", 0x2ab40, 0x2acc4, [(0x2acc4, 0x2acd8)]),
+        ("actor_move_try_evasion_direction", 0x2ab40, 0x2acc1, [(0x2acc4, 0x2acd8)]),
         ("FUN_00064b40", 0x64b40, 0x64ccb),
         ("object_update", 0x1444f0, 0x144694),
         ("build_path_edges_for_surface", 0x5f240, 0x5f3b4),
+        # gameplay wave 84 (2026-07-26) — cache/net/AI/memory Capstone weaks
+        ("cache_file_read_header_into_slot", 0x1bd020, 0x1bd1a4),
+        ("array_resize", 0x117b90, 0x117cee),
+        ("actor_perception_find_sense_position", 0x31a90, 0x31bfb),
+        ("FUN_0011aa40", 0x11aa40, 0x11abac),
+        ("FUN_0011ba50", 0x11ba50, 0x11bb70),
+        ("actor_expected_acknowledgement", 0x32940, 0x32aba),
+        ("rasterizer_text_draw_cached_chars", 0x183cf0, 0x183e52),
+        ("FUN_0011a770", 0x11a770, 0x11a8b9, [(0x11a8bc, 0x11a8d0)]),
+        ("actor_move_get_avoidance_direction", 0x2b5d0, 0x2b71b),
+        ("convex_hull2d_test_vector", 0x1063f0, 0x106503),
+        ("memory_pool_block_resize", 0x11e8a0, 0x11e9b6),
+        ("actor_move_to_point", 0x2d720, 0x2d84d),
     ]
 
     xbe = Xbe.from_file(args.xbe)

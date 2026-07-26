@@ -2666,71 +2666,160 @@ void array_new(int *table, int element_size)
   table[2] = 0;
 }
 
-/* Resize a dynamic array to new_count elements. Reallocates the element
- * buffer via debug_realloc and zero-initializes any newly allocated entries.
- * Returns 1 on success, 0 if new_count < 0, new_count > INT_MAX, or
- * if the realloc result is inconsistent with new_count (allocation failure).
- * Wrapped in profiling guards (0x449ef1 / 0x320e40 / 0x320e38).
- * 0x117b90 / circular_queue.obj (array.c line 33-44) */
-int array_resize(int *array, int new_count)
-{
-  int success;
-  int old_count;
-  int element_size;
-  int new_elements;
-  int new_nonzero;
-  int old_nonzero;
+/* array_resize (0x117b90) — XBE naked draft (batch 84). */
+#if defined(__clang__)
+static void (*const b117b90_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b117b90_exitfn)(int) = system_exit;
+static void (*const b117b90_penter)(void *) = profile_enter_private;
+static void * (*const b117b90_c8f040)(void *ptr, int new_size, const char *file, int line) = debug_realloc;
+static void *(*const b117b90_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b117b90_pexit)(void *) = profile_exit_private;
 
-  success = 0;
-  if (array == (int *)0x0) {
-    display_assert("array", "c:\\halo\\SOURCE\\memory\\array.c", 0x21, 1);
-    system_exit(-1);
-  }
-  if (array[0] < 1) {
-    display_assert("array->element_size>0", "c:\\halo\\SOURCE\\memory\\array.c",
-                   0x22, 1);
-    system_exit(-1);
-  }
-  if (array[1] < 0) {
-    display_assert("array->count>=0", "c:\\halo\\SOURCE\\memory\\array.c", 0x23,
-                   1);
-    system_exit(-1);
-  }
-  old_nonzero = (array[1] != 0);
-  if (old_nonzero != (array[2] != 0)) {
-    display_assert("(array->count!=0)==(array->elements!=NULL)",
-                   "c:\\halo\\SOURCE\\memory\\array.c", 0x24, 1);
-    system_exit(-1);
-  }
-  if (*(char *)0x449ef1 != 0 && *(char *)0x320e40 != 0) {
-    profile_enter_private((void *)0x320e38);
-  }
-  if (new_count >= 0) {
-    if (new_count != array[1]) {
-      new_elements =
-        (int)debug_realloc((void *)array[2], array[0] * new_count,
-                           "c:\\halo\\SOURCE\\memory\\array.c", 0x2c);
-      new_nonzero = (new_elements != 0);
-      if ((new_count != 0) != (new_nonzero != 0)) {
-        goto done;
-      }
-      old_count = array[1];
-      if (old_count < new_count) {
-        element_size = array[0];
-        csmemset((void *)(new_elements + old_count * element_size), 0,
-                 (new_count - old_count) * element_size);
-      }
-      array[1] = new_count;
-      array[2] = new_elements;
-    }
-    success = 1;
-  }
-done:
-  if (*(char *)0x449ef1 != 0 && *(char *)0x320e40 != 0) {
-    profile_exit_private((void *)0x320e38);
-  }
-  return success;
+__attribute__((naked, noinline))
+int array_resize(int *array __attribute__((unused)), int new_count __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "jne .Larray_resize_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x21\n\t"
+      "pushl $0x28e9c4\n\t"
+      "pushl $0x28e9bc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Larray_resize_1:\n\t"
+      "cmpl $0, (%%esi)\n\t"
+      "jg .Larray_resize_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x22\n\t"
+      "pushl $0x28e9c4\n\t"
+      "pushl $0x28ea20\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Larray_resize_2:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .Larray_resize_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x23\n\t"
+      "pushl $0x28e9c4\n\t"
+      "pushl $0x28ea10\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Larray_resize_3:\n\t"
+      "movl 0x4(%%esi), %%ebx\n\t"
+      "movl 0x8(%%esi), %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "setne %%al\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "testl %%edi, %%edi\n\t"
+      "setne %%cl\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .Larray_resize_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x24\n\t"
+      "pushl $0x28e9c4\n\t"
+      "pushl $0x28e9e4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Larray_resize_4:\n\t"
+      "movb 0x449ef1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Larray_resize_5\n\t"
+      "movb 0x320e40, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Larray_resize_5\n\t"
+      "pushl $0x320e38\n\t"
+      "call *%[penter]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Larray_resize_5:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jl .Larray_resize_8\n\t"
+      "cmpl $0x7fffffff, %%edi\n\t"
+      "jg .Larray_resize_8\n\t"
+      "cmpl 0x4(%%esi), %%edi\n\t"
+      "je .Larray_resize_7\n\t"
+      "movl (%%esi), %%edx\n\t"
+      "movl 0x8(%%esi), %%eax\n\t"
+      "imull %%edi, %%edx\n\t"
+      "pushl $0x2c\n\t"
+      "pushl $0x28e9c4\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8f040]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "setne %%cl\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testl %%edi, %%edi\n\t"
+      "setne %%dl\n\t"
+      "cmpl %%ecx, %%edx\n\t"
+      "jne .Larray_resize_8\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "cmpl %%eax, %%edi\n\t"
+      "jle .Larray_resize_6\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "movl %%edi, %%edx\n\t"
+      "subl %%eax, %%edx\n\t"
+      "imull %%ecx, %%eax\n\t"
+      "imull %%ecx, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Larray_resize_6:\n\t"
+      "movl %%edi, 0x4(%%esi)\n\t"
+      "movl %%ebx, 0x8(%%esi)\n\t"
+      ".Larray_resize_7:\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      ".Larray_resize_8:\n\t"
+      "movb 0x449ef1, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "je .Larray_resize_9\n\t"
+      "movb 0x320e40, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Larray_resize_9\n\t"
+      "pushl $0x320e38\n\t"
+      "call *%[pexit]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Larray_resize_9:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b117b90_assert), [exitfn] "m"(b117b90_exitfn), [penter] "m"(b117b90_penter), [c8f040] "m"(b117b90_c8f040), [memset] "m"(b117b90_memset), [pexit] "m"(b117b90_pexit)
+      : "memory");
 }
+#else
+#error "array_resize: clang naked draft required"
+#endif
+
 
 /* Dispose of a dynamic array: free its element buffer and reset fields.
  * Asserts non-null array, non-negative count, and consistency between
