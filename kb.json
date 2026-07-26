@@ -5227,7 +5227,7 @@
         {
           "addr": "0xa57b0",
           "decl": "char FUN_000a57b0(float *vec, float max_len);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a57b0"
         },
         {
@@ -12337,7 +12337,8 @@
         {
           "addr": "0xc9f30",
           "decl": "void FUN_000c9f30(int damage_type, int object_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c9f30"
         },
         {
           "addr": "0xc9f90",
@@ -18619,7 +18620,8 @@
         {
           "addr": "0xbae10",
           "decl": "bool player_examine_nearby_unit(int player_unit_handle, int nearby_unit_handle);",
-          "ported": false
+          "ported": false,
+          "name": "player_examine_nearby_unit"
         },
         {
           "addr": "0xbae20",
@@ -20373,12 +20375,12 @@
         },
         {
           "addr": "0xe2820",
-          "decl": "void FUN_000e2820(void);",
+          "decl": "void FUN_000e2820(float *unused, float alpha, float *color, float progress);",
           "ported": false
         },
         {
           "addr": "0xe2880",
-          "decl": "void FUN_000e2880(void);",
+          "decl": "void FUN_000e2880(float *color@<ecx>, float progress);",
           "ported": false
         },
         {
@@ -29593,7 +29595,7 @@
         {
           "addr": "0x1b5680",
           "decl": "char vehicle_is_flipped(int vehicle_handle);",
-          "ported": false,
+          "ported": true,
           "name": "vehicle_is_flipped"
         },
         {
@@ -40518,7 +40520,7 @@
         },
         {
           "addr": "0x62b20",
-          "decl": "char FUN_00062b20(unsigned char *flag_base, int index, char skip_check, void *block, void *bitvec);",
+          "decl": "char FUN_00062b20(unsigned char *flag_base @<eax>, int index @<edx>, char skip_check @<ebx>, void *block, void *bitvec);",
           "ported": true,
           "name": "FUN_00062b20"
         },

@@ -4311,64 +4311,25 @@ char FUN_000c8ec0(int16_t function_index __attribute__((unused)), int root_datum
 #endif
 
 
-/* FUN_000c95f0 (0xc95f0) — XBE naked draft (batch 158). */
-#if defined(__clang__)
-static int (*const bc95f0_cce200)(void) = FUN_000ce200;
-static int (*const bc95f0_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const bc95f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bc95f0_cce2b0)(int list_handle, int object_handle) = FUN_000ce2b0;
-
-__attribute__((naked, noinline))
+/* FUN_000c95f0 (0xc95f0) — readable C lift: collect object list from players. */
 int FUN_000c95f0(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce200]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c95f0_3\n\t"
-      ".LFUN_000c95f0_1:\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c95f0_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce2b0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000c95f0_2:\n\t"
-      "movl 0x5aa6d4, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000c95f0_1\n\t"
-      ".LFUN_000c95f0_3:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [cce200] "m"(bc95f0_cce200), [c1198f0] "m"(bc95f0_c1198f0), [dget] "m"(bc95f0_dget), [cce2b0] "m"(bc95f0_cce2b0)
-      : "memory");
-}
-#else
-#error "FUN_000c95f0: clang naked draft required"
-#endif
+  int list_handle;
+  int player;
+  char *node;
+  int obj;
 
+  list_handle = FUN_000ce200();
+  player = data_next_index(*(data_t **)0x5aa6d4, -1);
+  while (player != -1) {
+    node = (char *)datum_get(*(data_t **)0x5aa6d4, player);
+    obj = *(int *)(node + 0x34);
+    if (obj != -1)
+      FUN_000ce2b0(list_handle, obj);
+    player = data_next_index(*(data_t **)0x5aa6d4, player);
+  }
+  return list_handle;
+}
 
 /* FUN_000c9650 (0xc9650) — XBE naked draft (batch 138). */
 #if defined(__clang__)
@@ -5194,66 +5155,22 @@ void FUN_000c9ec0(int damage_type __attribute__((unused)), int16_t scenario_inde
 #endif
 
 
-/* FUN_000c9f30 (0xc9f30) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static void (*const bc9f30_c136750)(void *damage_params, int tag_index) = damage_data_new;
-static vector3_t * (*const bc9f30_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const bc9f30_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-static void (*const bc9f30_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
-
-__attribute__((naked, noinline))
-void FUN_000c9f30(int damage_type __attribute__((unused)), int object_handle __attribute__((unused)))
+/* FUN_000c9f30 (0xc9f30) — readable C lift: apply damage at object world pos. */
+void FUN_000c9f30(int damage_type, int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x54, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c9f30_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x54(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c136750]\n\t"
-      "leal -0x38(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1412f0]\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "movl -0x34(%%ebp), %%ecx\n\t"
-      "movl -0x30(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x28(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x40(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x24(%%ebp)\n\t"
-      "call *%[c18f180]\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c137d20]\n\t"
-      "addl $0x30, %%esp\n\t"
-      ".LFUN_000c9f30_1:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c136750] "m"(bc9f30_c136750), [c1412f0] "m"(bc9f30_c1412f0), [c18f180] "m"(bc9f30_c18f180), [c137d20] "m"(bc9f30_c137d20)
-      : "memory");
-}
-#else
-#error "FUN_000c9f30: clang naked draft required"
-#endif
+  char damage[0x54];
+  float world[3];
 
+  if (object_handle == -1)
+    return;
+  damage_data_new(damage, damage_type);
+  object_get_world_position(object_handle, (vector3_t *)world);
+  *(float *)(damage + 0x28) = world[0];
+  *(float *)(damage + 0x2c) = world[1];
+  *(float *)(damage + 0x30) = world[2];
+  scenario_location_from_point(damage + 0x14, world);
+  object_cause_damage(damage, object_handle, -1, -1, -1, 0);
+}
 
 /* FUN_000ca010 (0xca010) — readable C lift. */
 float FUN_000ca010(int object_handle)
