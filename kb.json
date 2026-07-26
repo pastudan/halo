@@ -13886,8 +13886,9 @@
         },
         {
           "addr": "0xdff00",
-          "decl": "void interface_get_rgb_color(void);",
-          "ported": false
+          "decl": "int16_t *interface_get_rgb_color(int interface_tag_index, int16_t color_index, int16_t *out_rgb);",
+          "ported": true,
+          "name": "interface_get_rgb_color"
         },
         {
           "addr": "0xdff70",
@@ -20339,7 +20340,8 @@
         {
           "addr": "0xe1f00",
           "decl": "void FUN_000e1f00(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000e1f00"
         },
         {
           "addr": "0xe1f20",
@@ -20353,8 +20355,9 @@
         },
         {
           "addr": "0xe21b0",
-          "decl": "void FUN_000e21b0(void);",
-          "ported": false
+          "decl": "int FUN_000e21b0(void *texture, unsigned int level, void *locked_rect@<edx>, void *rect@<ecx>, unsigned int flags@<eax>);",
+          "ported": false,
+          "name": "FUN_000e21b0"
         },
         {
           "addr": "0xe21e0",
@@ -20369,7 +20372,8 @@
         {
           "addr": "0xe2470",
           "decl": "void SetTextureStageStateSmart(int stage, int state, int value);",
-          "ported": false
+          "ported": false,
+          "name": "SetTextureStageStateSmart"
         },
         {
           "addr": "0xe2650",
@@ -20384,12 +20388,14 @@
         {
           "addr": "0xe2820",
           "decl": "void FUN_000e2820(float *unused, float alpha, float *color, float progress);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000e2820"
         },
         {
           "addr": "0xe2880",
           "decl": "void FUN_000e2880(float *color@<ecx>, float progress);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000e2880"
         },
         {
           "addr": "0xe28e0",

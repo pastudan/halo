@@ -1566,57 +1566,19 @@ void FUN_000df4e0(void)
 #endif
 
 
-/* interface_get_rgb_color (0xdff00) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static void * (*const bdff00_cded20)(int interface_tag_index, short color_index, void *out_color) = interface_get_color;
-static void (*const bdff00_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void interface_get_rgb_color(void)
+/* interface_get_rgb_color (0xdff00) — readable C lift. */
+int16_t *interface_get_rgb_color(int interface_tag_index, int16_t color_index, int16_t *out_rgb)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cded20]\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls 0x2647cc\n\t"
-      "addl $0xc, %%esp\n\t"
-      "call *%[ftol]\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x2647cc\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "call *%[ftol]\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x2647cc\n\t"
-      "movw %%ax, 0x2(%%esi)\n\t"
-      "call *%[ftol]\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x2647cc\n\t"
-      "movw %%ax, 0x4(%%esi)\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x6(%%esi)\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cded20] "m"(bdff00_cded20), [ftol] "m"(bdff00_ftol)
-      : "memory");
+  float tmp[4];
+  float scale;
+  interface_get_color(interface_tag_index, color_index, tmp);
+  scale = *(float *)0x2647cc;
+  out_rgb[0] = (int16_t)(int)(tmp[0] * scale);
+  out_rgb[1] = (int16_t)(int)(tmp[1] * scale);
+  out_rgb[2] = (int16_t)(int)(tmp[2] * scale);
+  out_rgb[3] = (int16_t)(int)(tmp[3] * scale);
+  return out_rgb;
 }
-#else
-#error "interface_get_rgb_color: clang naked draft required"
-#endif
-
 
 /* interface_draw_fullscreen_overlays (0xdff70) — XBE naked draft (batch 179). */
 #if defined(__clang__)
