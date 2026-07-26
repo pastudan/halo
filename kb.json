@@ -4886,7 +4886,7 @@
         },
         {
           "addr": "0x145740",
-          "decl": "int FUN_00145740(int a0);",
+          "decl": "int FUN_00145740(int object_handle);",
           "ported": false
         },
         {
@@ -8168,7 +8168,7 @@
         },
         {
           "addr": "0xde0e0",
-          "decl": "void FUN_000de0e0(void);",
+          "decl": "void FUN_000de0e0(int object_handle, int16_t local_player_index);",
           "ported": false
         },
         {
@@ -29570,7 +29570,7 @@
         },
         {
           "addr": "0x1b5d90",
-          "decl": "void vehicle_render_debug(void);",
+          "decl": "void vehicle_render_debug(int vehicle_handle);",
           "ported": false
         },
         {
@@ -33726,7 +33726,7 @@
         },
         {
           "addr": "0xfcdd0",
-          "decl": "void FUN_000fcdd0(int trigger_index, int weapon_handle);",
+          "decl": "void FUN_000fcdd0(int16_t trigger_index, int weapon_handle);",
           "ported": false
         },
         {
@@ -39137,12 +39137,7 @@
         },
         {
           "addr": "0x139350",
-          "decl": "int16_t FUN_00139350(int light_handle@<eax>, int16_t *out_buffer@<ebx>, int16_t max_count@<di>);",
-          "reg_args": {
-            "light_handle": "eax",
-            "out_buffer": "ebx",
-            "max_count": "di"
-          },
+          "decl": "int16_t FUN_00139350(int light_handle, int16_t *out_buffer, int16_t max_count);",
           "ported": false
         },
         {

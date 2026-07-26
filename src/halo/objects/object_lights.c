@@ -68,26 +68,28 @@ void light_delete(int light_handle)
   (void)ecx;
 }
 
-/* 0x139350 */
+/* 0x139350 — collect gel/cluster indices overlapping a light's partition. */
 int16_t FUN_00139350(int light_handle, int16_t *out_buffer, int16_t max_count)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  char *light;
+  int16_t cluster;
+  int16_t count;
+  int iter_state;
 
-  datum_get((void *)(uintptr_t)ecx, 0);
-  FUN_00191690((void *)0x005a90b0, (void *)(uintptr_t)eax, 0);
-  /* test (int16_t)edi, (int16_t)edi -> jle 0x1393a4 */
-  /* cmp (int16_t)eax, 0xffff -> je 0x1393a4 */
-  FUN_001916d0(0, (void *)0);
-  /* cmp (int16_t)esi, (int16_t)edi -> jl 0x139380 */
-  return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  light = (char *)datum_get(*(void **)0x5a90bc, light_handle);
+  cluster = (int16_t)FUN_00191690((void *)0x005a90b0, &iter_state,
+                                  *(int *)(light + 0x10));
+  count = 0;
+  if (max_count > 0) {
+    while (cluster != (int16_t)0xffff) {
+      out_buffer[count] = cluster;
+      count++;
+      cluster = (int16_t)FUN_001916d0((int)0x005a90b0, &iter_state);
+      if (count >= max_count)
+        break;
+    }
+  }
+  return count;
 }
 
 /* 0x1393b0 — sum self-illumination from attached lights (+ parent/child). */

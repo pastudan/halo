@@ -806,25 +806,30 @@ void vehicle_accelerate(int handle, float *velocity)
   *(int *)(veh + 4) &= ~0x20;
 }
 
-/* 0x1b5d90 */
-void vehicle_render_debug(void)
+/* 0x1b5d90 — debug-iterate a vehicle's physics wheel/contact slots. */
+void vehicle_render_debug(int vehicle_handle)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
+  char *veh;
+  char *vehi_tag;
+  char *phys_tag;
+  int physics_tag_index;
+  int wheel_count;
+  int16_t i;
 
-  object_get_and_verify_type(0, 2);
-  tag_get('ihev', *(int *)(eax));
-  /* cmp eax, -1 -> je 0x1b5de8 */
-  tag_get('syhp', 0);
-  /* relift: relift: mov (char)ecx, byte ptr [0x5054f4] */
-  /* test (char)ecx, (char)ecx -> je 0x1b5de8 */
-  /* test eax, eax -> jle 0x1b5de8 */
-  /* cmp edx, eax -> jl 0x1b5de0 */
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi_tag = (char *)tag_get(0x76656869, *(int *)veh); /* 'vehi' */
+  physics_tag_index = *(int *)(vehi_tag + 0x8c);
+  if (physics_tag_index == -1)
+    return;
 
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  phys_tag = (char *)tag_get(0x70687973, physics_tag_index); /* 'phys' */
+  if (*(char *)0x5054f4 == 0)
+    return;
+
+  wheel_count = *(int *)(phys_tag + 0x74);
+  for (i = 0; (int)i < wheel_count; i++) {
+    /* XBE body is an empty debug loop over wheel slots. */
+  }
 }
 
 /* FUN_001b5f20 (0x1b5f20) — Project a delta vector onto a reference axis and

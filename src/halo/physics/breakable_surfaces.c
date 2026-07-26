@@ -1044,18 +1044,24 @@ void FUN_00145660(int object_handle /* @<eax> */, int animation_graph_tag,
   *(int *)(obj + 0x7c) = animation_graph_tag;
 }
 
-/* 0x145740 */
-int FUN_00145740(int a0)
+/* 0x145740 — remaining frames on a device object's bound animation. */
+int FUN_00145740(int object_handle)
 {
-  int eax = 0;
+  char *obj;
+  char *anim;
+  int remaining;
+  int mask;
 
-  object_get_and_verify_type(0, 64);
-  /* test (char)eax, 1 -> je 0x1457a2 */
-  tag_get('rtna', 0);
-  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
-  return 0;
+  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
+  if ((obj[0x1a4] & 1) == 0)
+    return 0;
 
-  (void)eax;
+  anim = (char *)tag_block_get_element(
+      (char *)tag_get(0x616e7472, *(int *)(obj + 0x7c)) + 0x74,
+      (int)*(int16_t *)(obj + 0x80), 0xb4);
+  remaining = (int)*(int16_t *)(anim + 0x22) - (int)*(int16_t *)(obj + 0x82) - 2;
+  mask = remaining <= 0 ? 0 : -1;
+  return remaining & mask;
 }
 
 /* 0x1457b0 */

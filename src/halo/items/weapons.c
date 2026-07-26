@@ -1356,17 +1356,20 @@ void FUN_000fb910(int weapon_handle, int16_t trigger_index, char flag)
 
 /* 0xfb990 — Reset trigger charge from weapon animation state. */
 #if defined(__i386__) && defined(__GNUC__)
-__attribute__((regparm(1)))
+__attribute__((noinline))
 #endif
 void FUN_000fb990(int weapon_handle)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char state = weapon_obj[0x1e8];
+  char *weapon_obj;
+  int state;
 
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  tag_get(0x77656170, *(int *)weapon_obj);
+  state = (int)(signed char)weapon_obj[0x1e8];
   if (state == 3)
-    FUN_000fb910(weapon_handle, 0, 1);
+    FUN_000fb910(weapon_handle, (int16_t)0, 1);
   else if (state == 4)
-    FUN_000fb910(weapon_handle, 1, 1);
+    FUN_000fb910(weapon_handle, (int16_t)1, 1);
 }
 
 /* 0xfba00 */
@@ -1828,43 +1831,52 @@ void FUN_000fcd10(int trigger_index, int weapon_handle)
   first_person_weapon_message_from_weapon(weapon_handle, 0xe);
 }
 
-/* 0xfcdd0 */
-void FUN_000fcdd0(int trigger_index, int weapon_handle)
+/* 0xfcdd0 — clear a weapon trigger's charge/state after definition lookup. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
+void FUN_000fcdd0(int16_t trigger_index, int weapon_handle)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  char *weapon_obj;
   char *trigger_entry;
+  int trigger_idx;
 
-  weapon_get_trigger_entry(weapon_obj, (int16_t)trigger_index);
-  tag_get(0x77656170, *(int *)weapon_obj);
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  FUN_000fb320(weapon_obj, trigger_index);
   tag_block_get_element(
-    (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc, trigger_index,
-    0x114);
+      (char *)tag_get(0x77656170, *(int *)weapon_obj) + 0x4fc,
+      (int)trigger_index, 0x114);
 
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
   if (trigger_index < 0 || trigger_index >= 2) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0xa11, 1);
+    display_assert((char *)0x0028ae40, (char *)0x0028ad48, 0xa11, 1);
     system_exit(-1);
   }
 
-  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  trigger_entry = weapon_get_trigger_entry(weapon_obj, (int16_t)trigger_index);
+  trigger_idx = (int)trigger_index;
+  trigger_entry = (char *)weapon_obj + trigger_idx * 36 + 0x210;
   trigger_entry[1] = 0;
   *(int16_t *)(trigger_entry + 2) = 0;
 }
 
-/* 0xfce60 */
+/* 0xfce60 — force a weapon trigger into overheated/empty recovery state. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
 void FUN_000fce60(int weapon_handle, int16_t trigger_index)
 {
-  char *weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
-  char *trigger_entry;
+  char *weapon_obj;
+  int idx;
 
-  if (trigger_index < 0 || trigger_index >= 2) {
-    display_assert(0, "c:\\halo\\SOURCE\\items\\weapons.c", 0xa11, 1);
+  weapon_obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  if ((int16_t)trigger_index < 0 || (int16_t)trigger_index >= 2) {
+    display_assert((char *)0x0028ae40, (char *)0x0028ad48, 0xa11, 1);
     system_exit(-1);
   }
 
-  trigger_entry = weapon_get_trigger_entry(weapon_obj, trigger_index);
-  trigger_entry[1] = 7;
-  *(int16_t *)(trigger_entry + 2) = (int16_t)-1;
+  idx = (int)(int16_t)trigger_index;
+  weapon_obj[idx * 36 + 0x211] = 7;
+  *(int16_t *)(weapon_obj + idx * 36 + 0x212) = (int16_t)-1;
 }
 
 /* 0xfcec0 */

@@ -1370,18 +1370,25 @@ int16_t first_person_weapon_get_marker_by_name_render(int object_handle,
                                                 out_markers, max_markers);
 }
 
-/* 0xde0e0 */
-void FUN_000de0e0(void)
+/* 0xde0e0 — bind an object into a local player's first-person weapon slot. */
+#if defined(__i386__) && defined(__GNUC__)
+__attribute__((noinline))
+#endif
+void FUN_000de0e0(int object_handle, int16_t local_player_index)
 {
-  int esi = 0;
+  char *fp;
+  int base;
 
-  /* test (int16_t)esi, (int16_t)esi -> jl 0xde0ee */
-  /* cmp (int16_t)esi, 4 -> jl 0xde10e */
-  display_assert((char *)0x00266fc0, (char *)0x00282294, 1433, 0);
-  system_exit(0);
-  FUN_000dde80(0);
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
 
-  (void)esi;
+  base = *(int *)0x46bea8;
+  fp = (char *)(base + (int)(int16_t)local_player_index * 0x1ea0);
+  fp[0x50] = 0;
+  *(int *)(fp + 4) = object_handle;
+  FUN_000dde80((int)(int16_t)local_player_index);
 }
 
 /* 0xde360 */

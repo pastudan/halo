@@ -395,6 +395,14 @@ def main() -> int:
         ("lights_initialize_for_new_map", 0x1392b0, 0x1392e0),
         ("lights_dispose_from_old_map", 0x1392e0, 0x139300),
         ("first_person_weapon_get_marker_by_name_render", 0xddb90, 0xddbd0),
+        # gameplay wave 31 (2026-07-26)
+        ("FUN_00145740", 0x145740, 0x1457b0),
+        ("FUN_000de0e0", 0xde0e0, 0xde140),
+        ("FUN_00139350", 0x139350, 0x1393b0),
+        ("vehicle_render_debug", 0x1b5d90, 0x1b5df0),
+        ("FUN_000fb990", 0xfb990, 0xfba00),
+        ("FUN_000fce60", 0xfce60, 0xfcec0),
+        ("FUN_000fcdd0", 0xfcdd0, 0xfce60),
     ]
 
     xbe = Xbe.from_file(args.xbe)
