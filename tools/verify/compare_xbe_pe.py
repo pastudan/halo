@@ -3469,6 +3469,8 @@ def main() -> int:
         ("uiscntrl", 0x19e5a0, 0x19e5b3),
         ("plane_negate", 0x994d0, 0x994f9),
         ("sound_is_active", 0x1c88a0, 0x1c88b8),
+        # gameplay wave 293 (2026-07-26) — Capstone weaks
+        ("FUN_00113a90", 0x113a90, 0x1145f8),
     ]
 
     xbe = Xbe.from_file(args.xbe)
