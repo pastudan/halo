@@ -34260,7 +34260,7 @@
         {
           "addr": "0x30e60",
           "decl": "int16_t FUN_00030e60(int unused, int16_t *count, int16_t max_count, void *array @<eax>, int key @<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00030e60"
         },
         {
