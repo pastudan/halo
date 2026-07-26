@@ -30710,7 +30710,7 @@
         {
           "addr": "0x19b510",
           "decl": "char *draw_string_get_string(short index);",
-          "ported": false,
+          "ported": true,
           "name": "draw_string_get_string"
         },
         {
