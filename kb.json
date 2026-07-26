@@ -23469,23 +23469,28 @@
         },
         {
           "addr": "0x1ac030",
-          "decl": "void FUN_001ac030(int a0, int a1);"
+          "decl": "void FUN_001ac030(int unit_handle, char flag);",
+          "ported": false
         },
         {
           "addr": "0x1ac070",
-          "decl": "void FUN_001ac070(int a0, int a1);"
+          "decl": "void FUN_001ac070(int unit_handle, char flag);",
+          "ported": false
         },
         {
           "addr": "0x1ac0a0",
-          "decl": "void FUN_001ac0a0(int a0, int a1);"
+          "decl": "void FUN_001ac0a0(int unit_handle, char flag);",
+          "ported": false
         },
         {
           "addr": "0x1ac0e0",
-          "decl": "int FUN_001AC0E0(int a0);"
+          "decl": "int FUN_001AC0E0(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x1ac150",
-          "decl": "int FUN_001ac150(int a0);"
+          "decl": "char FUN_001ac150(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x1ac180",
@@ -23494,23 +23499,28 @@
         },
         {
           "addr": "0x1ac350",
-          "decl": "void sound_dispose(void);"
+          "decl": "int16_t sound_dispose(int unit_handle);",
+          "ported": false
         },
         {
           "addr": "0x1ac3b0",
-          "decl": "char FUN_001ac3b0(int unit_handle, int weapon_handle);"
+          "decl": "char FUN_001ac3b0(int unit_handle, int weapon_handle);",
+          "ported": false
         },
         {
           "addr": "0x1be100",
-          "decl": "void FUN_001be100(void);"
+          "decl": "void FUN_001be100(void *cache_entry);",
+          "ported": false
         },
         {
           "addr": "0x1be140",
-          "decl": "void FUN_001be140(void);"
+          "decl": "void FUN_001be140(void *cache_entry);",
+          "ported": false
         },
         {
           "addr": "0x1be170",
-          "decl": "void FUN_001be170(void);"
+          "decl": "char FUN_001be170(int cache_handle);",
+          "ported": false
         },
         {
           "addr": "0x1be1b0",
@@ -23566,27 +23576,33 @@
         },
         {
           "addr": "0x1cb960",
-          "decl": "void sound_try_and_get(void);"
+          "decl": "char sound_try_and_get(int sound_index);",
+          "ported": false
         },
         {
           "addr": "0x1cb980",
-          "decl": "void sound_enable(int a0);"
+          "decl": "void sound_enable(char enabled);",
+          "ported": false
         },
         {
           "addr": "0x1cb990",
-          "decl": "void sound_scripted_dialog_is_playing(void);"
+          "decl": "char sound_scripted_dialog_is_playing(void);",
+          "ported": false
         },
         {
           "addr": "0x1cb9b0",
-          "decl": "void sound_manager_set_sound_environment(void);"
+          "decl": "void sound_manager_set_sound_environment(void *environment);",
+          "ported": false
         },
         {
           "addr": "0x1cb9d0",
-          "decl": "void FUN_001cb9d0(void);"
+          "decl": "void FUN_001cb9d0(void);",
+          "ported": false
         },
         {
           "addr": "0x1cba00",
-          "decl": "void FUN_001cba00(void);"
+          "decl": "float FUN_001cba00(float scale, float a, float b, float t);",
+          "ported": false
         },
         {
           "addr": "0x1cbc20",

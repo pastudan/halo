@@ -5871,5 +5871,117 @@
     "object": "weapons.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ac030",
+    "name": "FUN_001ac030",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ac070",
+    "name": "FUN_001ac070",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ac0a0",
+    "name": "FUN_001ac0a0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ac0e0",
+    "name": "FUN_001AC0E0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ac150",
+    "name": "FUN_001ac150",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ac350",
+    "name": "sound_dispose",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1ac3b0",
+    "name": "FUN_001ac3b0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1be100",
+    "name": "FUN_001be100",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1be140",
+    "name": "FUN_001be140",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1be170",
+    "name": "FUN_001be170",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb960",
+    "name": "sound_try_and_get",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb980",
+    "name": "sound_enable",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb990",
+    "name": "sound_scripted_dialog_is_playing",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb9b0",
+    "name": "sound_manager_set_sound_environment",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cb9d0",
+    "name": "FUN_001cb9d0",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
+  },
+  {
+    "addr": "0x1cba00",
+    "name": "FUN_001cba00",
+    "object": "sound_manager.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-25"
   }
 ]
