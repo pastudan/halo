@@ -79,35 +79,14 @@ void cinematic_skip_stop(void) {
 
 
 
-/* cinematic_show_letterbox (0x92e90) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-static int (*const b92e90_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void cinematic_show_letterbox(int a0 __attribute__((unused)))
+/* cinematic_show_letterbox (0x92e90) — readable C lift. */
+void cinematic_show_letterbox(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x44df00, %%ecx\n\t"
-      "movb %%al, 0x8(%%ecx)\n\t"
-      "je .Lcinematic_show_letterbox_1\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x44df00, %%edx\n\t"
-      "movl %%eax, 0x4(%%edx)\n\t"
-      ".Lcinematic_show_letterbox_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(b92e90_gtime)
-      : "memory");
+  void *p = *(void **)0x44df00;
+  *((char *)p + 8) = (char)a0;
+  if (a0)
+    *(int *)((char *)p + 4) = game_time_get();
 }
-#else
-#error "cinematic_show_letterbox: clang naked draft required"
-#endif
-
 
 /* draw_quad (0x92ec0) — XBE naked draft (batch 271). */
 #if defined(__clang__)
@@ -750,31 +729,11 @@ void cinematic_render(void)
 #endif
 
 
-/* FUN_00093640 (0x93640) — XBE naked draft (batch 291). */
-#if defined(__clang__)
-static void (*const b93640_c930b0)(int a0, float a1) = cinematic_set_title_delayed;
-
-__attribute__((naked, noinline))
-void FUN_00093640(int a0 __attribute__((unused)))
+/* FUN_00093640 (0x93640) — readable C lift. */
+void FUN_00093640(int title)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c930b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c930b0] "m"(b93640_c930b0)
-      : "memory");
+  cinematic_set_title_delayed(title, 0);
 }
-#else
-#error "FUN_00093640: clang naked draft required"
-#endif
-
 
 /* FUN_00093660 (0x93660) — XBE naked draft (batch 255). */
 #if defined(__clang__)

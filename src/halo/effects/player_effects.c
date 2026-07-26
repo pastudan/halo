@@ -633,73 +633,29 @@ void player_telefrag_effect_stop(void)
 #endif
 
 
-/* player_effect_screen_fade_in (0xa2970) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-static int (*const ba2970_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void player_effect_screen_fade_in(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)), int a3 __attribute__((unused)))
+/* player_effect_screen_fade_in (0xa2970) — readable C lift. */
+void player_effect_screen_fade_in(float a0, int a1, int a2, short a3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "fstps 0x3b0(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x3b4(%%eax)\n\t"
-      "movw 0x14(%%ebp), %%cx\n\t"
-      "movl %%edx, 0x3b8(%%eax)\n\t"
-      "movw %%cx, 0x3c0(%%eax)\n\t"
-      "movb $0, 0x3c2(%%eax)\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x4557ec, %%edx\n\t"
-      "movl %%eax, 0x3bc(%%edx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(ba2970_gtime)
-      : "memory");
+  char *p = *(char **)0x4557ec;
+  *(float *)(p + 0x3b0) = a0;
+  *(int *)(p + 0x3b4) = a1;
+  *(int *)(p + 0x3b8) = a2;
+  *(short *)(p + 0x3c0) = a3;
+  p[0x3c2] = (char)0;
+  *(int *)(p + 0x3bc) = game_time_get();
 }
-#else
-#error "player_effect_screen_fade_in: clang naked draft required"
-#endif
 
-
-/* player_effect_screen_fade_out (0xa29c0) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-static int (*const ba29c0_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void player_effect_screen_fade_out(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)), int a3 __attribute__((unused)))
+/* player_effect_screen_fade_out (0xa29c0) — readable C lift. */
+void player_effect_screen_fade_out(float a0, int a1, int a2, short a3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "fstps 0x3b0(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x3b4(%%eax)\n\t"
-      "movw 0x14(%%ebp), %%cx\n\t"
-      "movl %%edx, 0x3b8(%%eax)\n\t"
-      "movw %%cx, 0x3c0(%%eax)\n\t"
-      "movb $1, 0x3c2(%%eax)\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x4557ec, %%edx\n\t"
-      "movl %%eax, 0x3bc(%%edx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(ba29c0_gtime)
-      : "memory");
+  char *p = *(char **)0x4557ec;
+  *(float *)(p + 0x3b0) = a0;
+  *(int *)(p + 0x3b4) = a1;
+  *(int *)(p + 0x3b8) = a2;
+  *(short *)(p + 0x3c0) = a3;
+  p[0x3c2] = (char)1;
+  *(int *)(p + 0x3bc) = game_time_get();
 }
-#else
-#error "player_effect_screen_fade_out: clang naked draft required"
-#endif
-
 
 /* player_effect_get_damage_indicators (0xa2a10) — XBE naked draft (batch 157). */
 #if defined(__clang__)

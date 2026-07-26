@@ -137,8 +137,35 @@ def run_uni(name: str, addr: int, seeds: int, timeout: float) -> dict:
     }
 
 
-def update_decl(addr: int, decl: str) -> None:
+def sync_decl_h(name: str, decl: str) -> bool:
+    """Patch HFUNC line in build/generated/decl.h (cmake regen is often stale)."""
+    path = ROOT / "build" / "generated" / "decl.h"
+    if not path.exists():
+        return False
+    d = (decl or "").strip().rstrip(";")
+    if not d or d.lstrip().startswith("*") or "(" not in d:
+        return False
+    text = path.read_text(encoding="utf-8", errors="replace")
+    pat = re.compile(rf"^HFUNC\s+.+\b{re.escape(name)}\s*\([^;]*\);", re.M)
+    new_line = f"HFUNC {d};"
+    new_text, n = pat.subn(new_line, text, count=1)
+    if n:
+        path.write_text(new_text, encoding="utf-8")
+        return True
+    return False
+
+
+def update_decl(addr: int, decl: str, name: str | None = None) -> None:
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
+    decl = (decl or "").strip()
+    if (
+        not decl
+        or decl.lstrip().startswith("*")
+        or len(decl) > 240
+        or "(" not in decl
+        or ")" not in decl
+    ):
+        return
     if not decl.endswith(";"):
         decl += ";"
     for o in kb.get("objects", []):
@@ -146,6 +173,8 @@ def update_decl(addr: int, decl: str) -> None:
             if isinstance(fn, dict) and fn.get("addr") and int(fn["addr"], 16) == addr:
                 fn["decl"] = decl
                 KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
+                if name:
+                    sync_decl_h(name, decl)
                 return
 
 
@@ -203,11 +232,54 @@ def commit_chunk(n: int, touched: set[Path], label: str = "emit") -> str | None:
     sha = subprocess.run(
         ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
     ).stdout.strip()
-    try:
-        git_push()
-    except SystemExit as e:
-        print("push failed", e, flush=True)
-    print(f"COMMIT+PUSH {sha}", flush=True)
+    subprocess.run(["git", "fetch", "pastudan"], cwd=ROOT, capture_output=True)
+    rb = subprocess.run(
+        ["git", "rebase", "pastudan/track-a-collision-bsp"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if rb.returncode != 0:
+        # union kb on conflict then continue once
+        merge_remote()
+        subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
+        subprocess.run(
+            ["git", "-c", "core.editor=true", "rebase", "--continue"],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+    merge_remote()
+    if subprocess.run(["git", "diff", "--quiet", "kb.json"], cwd=ROOT).returncode != 0:
+        subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
+        subprocess.run(
+            ["git", "commit", "-m", "fix(track-a): union ported:true after emit-prove rebase."],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        sha = subprocess.run(
+            ["git", "rev-parse", "HEAD"], cwd=ROOT, capture_output=True, text=True
+        ).stdout.strip()
+    r = subprocess.run(
+        ["git", "push", "pastudan", "HEAD:track-a-collision-bsp"],
+        cwd=ROOT, capture_output=True, text=True,
+    )
+    if r.returncode != 0:
+        print("push failed", r.stdout, r.stderr, flush=True)
+        # one more fetch/rebase/union/push
+        subprocess.run(["git", "fetch", "pastudan"], cwd=ROOT, capture_output=True)
+        subprocess.run(["git", "rebase", "pastudan/track-a-collision-bsp"], cwd=ROOT, capture_output=True)
+        merge_remote()
+        subprocess.run(["git", "add", "kb.json"], cwd=ROOT, capture_output=True)
+        subprocess.run(
+            ["git", "commit", "-m", "fix(track-a): union ported:true before retry push."],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        r = subprocess.run(
+            ["git", "push", "pastudan", "HEAD:track-a-collision-bsp"],
+            cwd=ROOT, capture_output=True, text=True,
+        )
+        if r.returncode != 0:
+            print("push retry failed", r.stdout, r.stderr, flush=True)
+        else:
+            print(f"COMMIT+PUSH {sha}", flush=True)
+    else:
+        print(f"COMMIT+PUSH {sha}", flush=True)
     return sha
 
 
@@ -225,7 +297,18 @@ def main() -> int:
         default=True,
         help="Skip lifts that call same-TU naked/unproven callees (default: on)",
     )
+    ap.add_argument(
+        "--addrs",
+        default="",
+        help="Comma/space separated hex addrs to include (optional filter)",
+    )
     args = ap.parse_args()
+    addr_filter: set[int] | None = None
+    if args.addrs.strip():
+        addr_filter = set()
+        for tok in re.split(r"[\s,]+", args.addrs.strip()):
+            if tok:
+                addr_filter.add(int(tok, 16))
 
     merge_remote()
     kb, name_by, decl_by, src_by, ported = law.load_kb_names()
@@ -238,6 +321,8 @@ def main() -> int:
     skipped_same = 0
     for i, ai in enumerate(starts):
         if ported.get(ai) is not False:
+            continue
+        if addr_filter is not None and ai not in addr_filter:
             continue
         src = src_by.get(ai) or ""
         if any(s in src.lower() for s in SKIP):
@@ -339,13 +424,16 @@ def main() -> int:
             f"/* {name} (0x{ai:x}) — readable C lift. */\n{body}"
         )
         sig_m = re.search(
-            rf"^([\w\s\*]+?\b{re.escape(name)}\s*\([^{{]*\))", c_src, re.M
+            rf"^(?:void|int|char|short|float|double|bool|unsigned|signed|uint\w+_t|int\w+_t)"
+            rf"[\w\s\*]*\b{re.escape(name)}\s*\([^;{{]*\)",
+            c_src,
+            re.M,
         )
         if sig_m:
-            update_decl(ai, sig_m.group(1).strip())
-            if not regen_decl_h():
-                print("  decl.h FAIL", flush=True)
-                continue
+            update_decl(ai, sig_m.group(0).strip(), name=name)
+            # Best-effort cmake regen; direct HFUNC patch above is authoritative.
+            regen_decl_h()
+            sync_decl_h(name, sig_m.group(0).strip())
         new_text = text[: span[0]] + c_src + "\n" + text[span[1] :]
         if any(t in c_src for t in ("uint8_t", "uint16_t", "uint32_t", "int8_t", "int16_t")):
             if "#include <stdint.h>" not in new_text:

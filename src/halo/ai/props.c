@@ -2055,47 +2055,18 @@ void FUN_00064f50(void)
 #endif
 
 
-/* FUN_00064fa0 (0x64fa0) — XBE naked draft (batch 172). */
-#if defined(__clang__)
-static void (*const b64fa0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-
-__attribute__((naked, noinline))
-void FUN_00064fa0(void)
+/* FUN_00064fa0 (0x64fa0) — readable C lift. */
+int FUN_00064fa0(void *prop, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movzwl 0x3a(%%edx), %%ecx\n\t"
-      "movl $0x2c9994, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00064fa0_1:\n\t"
-      "cmpl %%ecx, 0x4(%%eax)\n\t"
-      "je .LFUN_00064fa0_2\n\t"
-      "addl $0xc, %%eax\n\t"
-      "cmpl $0x2c99c4, %%eax\n\t"
-      "jb .LFUN_00064fa0_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00064fa0_2:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25f530\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68a30] "m"(b64fa0_c68a30)
-      : "memory");
+  unsigned short key = *(unsigned short *)((char *)prop + 0x3a);
+  unsigned int *entry = (unsigned int *)0x2c9994;
+  unsigned int *end = (unsigned int *)0x2c99c4;
+  while (entry < end && entry[1] != (unsigned int)key)
+    entry = (unsigned int *)((char *)entry + 0xc);
+  unsigned int *p = (entry < end) ? entry : (unsigned int *)0;
+  FUN_00068a30(*(int *)prop, (const char *)0x25f530, (const char *)(unsigned long)p[0], a1);
+  return -1;
 }
-#else
-#error "FUN_00064fa0: clang naked draft required"
-#endif
-
 
 /* FUN_00064fe0 (0x64fe0) — readable C lift. */
 int FUN_00064fe0(void *prop)
@@ -2136,48 +2107,18 @@ int FUN_00065060(void *prop)
   return -1;
 }
 
-/* FUN_000650a0 (0x650a0) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static void (*const b650a0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-
-__attribute__((naked, noinline))
-void FUN_000650a0(void)
+/* FUN_000650a0 (0x650a0) — readable C lift. */
+int FUN_000650a0(void *prop, int a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movzwl 0x3a(%%edx), %%ecx\n\t"
-      "movl $0x2c9994, %%eax\n\t"
-      "nop\n\t"
-      ".LFUN_000650a0_1:\n\t"
-      "cmpl %%ecx, 0x4(%%eax)\n\t"
-      "je .LFUN_000650a0_2\n\t"
-      "addl $0xc, %%eax\n\t"
-      "cmpl $0x2c99c4, %%eax\n\t"
-      "jb .LFUN_000650a0_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_000650a0_2:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25f570\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68a30] "m"(b650a0_c68a30)
-      : "memory");
+  unsigned short key = *(unsigned short *)((char *)prop + 0x3a);
+  unsigned int *entry = (unsigned int *)0x2c9994;
+  unsigned int *end = (unsigned int *)0x2c99c4;
+  while (entry < end && entry[1] != (unsigned int)key)
+    entry = (unsigned int *)((char *)entry + 0xc);
+  unsigned int *p = (entry < end) ? entry : (unsigned int *)0;
+  FUN_00068a30(*(int *)prop, (const char *)0x25f570, (const char *)(unsigned long)p[0], a1);
+  return -1;
 }
-#else
-#error "FUN_000650a0: clang naked draft required"
-#endif
-
 
 /* FUN_000650e0 (0x650e0) — readable C lift. */
 int FUN_000650e0(void *prop)

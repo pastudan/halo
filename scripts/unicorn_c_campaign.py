@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -220,9 +221,12 @@ def run_unicorn(name: str, addr_int: int, seeds: int, timeout: float = 25.0) -> 
         str(outj),
     ]
     t0 = time.time()
+    # Stub same-TU sibling calls like the oracle's extern stubs.
+    env = os.environ.copy()
+    env.setdefault("BIPED_SIBLING_RESOLVE", "1")
     try:
         proc = subprocess.run(
-            cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout
+            cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout, env=env
         )
         timed_out = False
     except subprocess.TimeoutExpired as exc:

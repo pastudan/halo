@@ -382,31 +382,12 @@ void *xbox_texture_cache_get_hardware_format(void *hardware_format, bool block,
 }
 /* --- xbox_texture_cache.obj batch drafts (2026-07-26) --- */
 
-/* texture_cache_delete (0x1be920) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static void (*const b1be920_c119520)(data_t *data) = data_dispose;
-static void (*const b1be920_c11d890)(void *cache) = lruv_cache_dispose;
-
-__attribute__((naked, noinline))
+/* texture_cache_delete (0x1be920) — readable C lift. */
 void texture_cache_delete(void)
 {
-  __asm__ volatile(
-      "movl 0x4ea978, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119520]\n\t"
-      "movl 0x4ea980, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c11d890]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c119520] "m"(b1be920_c119520), [c11d890] "m"(b1be920_c11d890)
-      : "memory");
+  data_dispose(*(void **)0x4ea978);
+  lruv_cache_dispose(*(void **)0x4ea980);
 }
-#else
-#error "texture_cache_delete: clang naked draft required"
-#endif
-
 
 /* texture_cache_open (0x1be940) — readable C lift. */
 void texture_cache_open(void)
@@ -592,31 +573,13 @@ void FUN_001becc0(void)
 #endif
 
 
-/* texture_cache_flush (0x1bed30) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static void (*const b1bed30_c1e6fb0)(void) = D3DDevice_KickPushBuffer;
-static void (*const b1bed30_c1e8a00)(void) = D3DDevice_IsBusy;
-static void (*const b1bed30_c11ddc0)(void *cache) = lruv_cache_dispose_all;
-
-__attribute__((naked, noinline))
+/* texture_cache_flush (0x1bed30) — readable C lift. */
 void texture_cache_flush(void)
 {
-  __asm__ volatile(
-      "call *%[c1e6fb0]\n\t"
-      "call *%[c1e8a00]\n\t"
-      "movl 0x4ea980, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11ddc0]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c1e6fb0] "m"(b1bed30_c1e6fb0), [c1e8a00] "m"(b1bed30_c1e8a00), [c11ddc0] "m"(b1bed30_c11ddc0)
-      : "memory");
+  D3DDevice_KickPushBuffer();
+  D3DDevice_IsBusy();
+  lruv_cache_dispose_all(*(void **)0x4ea980);
 }
-#else
-#error "texture_cache_flush: clang naked draft required"
-#endif
-
 
 /* FUN_001bed50 (0x1bed50) — XBE naked draft (batch 285). */
 #if defined(__clang__)

@@ -1377,7 +1377,7 @@ void FUN_000e1f00(void)
 static void __stdcall (*const be1f20_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = D3DDevice_SetVertexData4f;
 
 __attribute__((naked, noinline))
-void FUN_000e1f20(void)
+void FUN_000e1f20(int a0, int a1, int a2, int a3, int a4, int a5)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

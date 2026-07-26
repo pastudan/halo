@@ -8,6 +8,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import subprocess
 import sys
@@ -34,14 +35,82 @@ from unicorn_c_campaign import (  # noqa: E402
     resolve_src,
     run_unicorn,
 )
+from tu_compile import docker_compile, regen_decl_h as _regen_decl_h  # noqa: E402
 import lift_assert_wrappers as law  # noqa: E402
 import lift_thin_wrappers as ltw  # noqa: E402
+
+
+def regen_decl_h() -> bool:
+    """Prefer full cmake regen; fall back to knowledge.py if cache is broken."""
+    if _regen_decl_h() and (ROOT / "build" / "generated" / "decl.h").exists():
+        return True
+    r = subprocess.run(
+        [
+            "docker",
+            "run",
+            "--rm",
+            "-u",
+            f"{os.getuid()}:{os.getgid()}",
+            "-v",
+            f"{ROOT}:/work",
+            "-w",
+            "/work",
+            "halo-re-build:latest",
+            "bash",
+            "-c",
+            "python3 tools/analysis/knowledge.py "
+            "--gen-header build/generated/decl.h "
+            "--gen-def build/generated/halo.xbe.def "
+            "--gen-thunks build/generated/thunks.c",
+        ],
+        cwd=ROOT,
+        capture_output=True,
+        text=True,
+    )
+    ok = (ROOT / "build" / "generated" / "decl.h").exists() and r.returncode == 0
+    if not ok:
+        print("regen_decl_h FAIL", (r.stderr or r.stdout)[-400:], flush=True)
+    return ok
+
 
 LEDGER_TAG = "lift_ai"
 COMMIT_EVERY = 10
 DATUM_GET = 0x119320
 DATA_NEW = 0x119610
 PROP_ADD = 0x64170
+
+
+def collect_call_targets(ops: list[tuple[str, str]]) -> list[int]:
+    calls: list[int] = []
+    for m, o in ops:
+        if m == "call":
+            mm = re.search(r"0x([0-9a-fA-F]+)", o)
+            if mm:
+                calls.append(int(mm.group(1), 16))
+        elif m == "jmp" and "dword" not in o:
+            mm = re.search(r"0x([0-9a-fA-F]+)", o)
+            if mm:
+                calls.append(int(mm.group(1), 16))
+    return calls
+
+
+def same_tu_safe(
+    addr: int,
+    src: str,
+    calls: list[int],
+    src_by: dict[int, str],
+    ported: dict[int, object],
+    starts_set: set[int],
+) -> tuple[bool, int | None]:
+    """Reject lifts that call an unproven same-TU function (Unicorn naked crash)."""
+    for c in calls:
+        if c == addr:
+            continue
+        if c not in starts_set:
+            continue  # mid-function label / not a kb symbol
+        if src_by.get(c) == src and ported.get(c) is not True:
+            return False, c
+    return True, None
 
 
 def load_names():
@@ -73,6 +142,28 @@ def set_kb_decl(addr: int, decl: str) -> None:
                         fn["name"] = m.group(1)
                 KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
                 return
+
+
+def patch_decl_h(name: str, decl: str) -> bool:
+    """Best-effort sync of one HFUNC line in build/generated/decl.h from C/kb decl."""
+    path = ROOT / "build" / "generated" / "decl.h"
+    if not path.exists():
+        return False
+    d = decl.strip().rstrip(";")
+    text = path.read_text(encoding="utf-8", errors="replace")
+    pat = re.compile(
+        rf"^HFUNC\s+.+\b{re.escape(name)}\s*\([^;]*\);", re.M
+    )
+    new_line = f"HFUNC {d};"
+    new_text, n = pat.subn(new_line, text, count=1)
+    if n:
+        path.write_text(new_text, encoding="utf-8")
+        return True
+    # append if missing
+    if f" {name}(" not in text and f" {name} (" not in text:
+        path.write_text(text.rstrip() + "\n" + new_line + "\n", encoding="utf-8")
+        return True
+    return False
 
 
 def merge_remote_kb() -> None:
@@ -227,10 +318,9 @@ def try_emit_ai(
     if not (
         len(mid) >= 2 and mid[0] == ("push", "ebp") and mid[1] == ("mov", "ebp, esp")
     ):
-        # FUN_00053890 — no frame
-        body = _emit_53890(ops, decl, name, name_by)
+        body, new_decl = _emit_53890(ops, decl, name, name_by)
         if body:
-            return body
+            return body, new_decl
         return None, None
 
     frame = mid[2:]
@@ -239,60 +329,23 @@ def try_emit_ai(
     while frame and frame[-1][0] == "pop" and frame[-1][1] in ("esi", "edi", "ebx"):
         frame = frame[:-1]
     if frame and frame[-1][0] == "add" and "esp" in frame[-1][1]:
-        # keep for some patterns; strip later
         pass
 
-    # prop debug table printers (0x64fe0 family)
-    body = _emit_prop_table(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # encounter_force_activate / deactivate
-    body = _emit_encounter_force(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # FUN_000643d0: data_new + prop_add
-    body = _emit_643d0(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # actor_communication_team
-    body = _emit_comm_team(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # FUN_000600c0
-    body = _emit_600c0(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # path disc helpers 60070 / 600f0
-    body = _emit_path_disc(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # prop_orphan-style: a2 in eax, stack a0/a1
-    body = _emit_reg_eax_third(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # perception tried_to_* pair
-    body = _emit_tried_to(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # ai_debug_communication_* already thin — covered
-
-    # generic: datum_get(global, arg0); store imm16 at +off; return/tail
-    body = _emit_datum_store16(frame, decl, name, name_by)
-    if body:
-        return body
-
-    # generic single forward with immediates (debug wrappers)
-    body = _emit_debug_imm_wrapper(frame, decl, name, name_by)
-    if body:
-        return body
+    for emitter in (
+        _emit_prop_table,
+        _emit_encounter_force,
+        _emit_643d0,
+        _emit_comm_team,
+        _emit_600c0,
+        _emit_path_disc,
+        _emit_reg_eax_third,
+        _emit_tried_to,
+        _emit_datum_store16,
+        _emit_debug_imm_wrapper,
+    ):
+        body, new_decl = emitter(frame, decl, name, name_by)
+        if body:
+            return body, new_decl
 
     return None, None
 
@@ -313,51 +366,35 @@ def _emit_prop_table(frame, decl, name, name_by):
     )
     if call_i is None:
         return None, None
-    # collect pushes immediately before call
-    pushes = []
+    # Collect up to 4 pushes before call, allowing movs between them.
+    pushes: list[str] = []
     j = call_i - 1
-    while j >= 0 and frame[j][0] == "push":
-        pushes.append(frame[j][1])
+    while j >= 0 and len(pushes) < 4:
+        m, o = frame[j]
+        if m == "push":
+            pushes.append(o)
+        elif m == "mov":
+            pass
+        else:
+            break
         j -= 1
     pushes.reverse()
     if len(pushes) != 4:
         return None, None
-    # variants: [fmtB, name, fmtA, prop0] or [a1, name, fmt, prop0]
-    # After loop: mov eax,[eax]; mov ecx,[edx]; then pushes.
-    # Two-arg variant inserts mov ecx,[ebp+0xc] before mov eax,[eax]
+    # Two-arg variant loads a1 from [ebp+0xc] into ecx before the push sequence.
     two_arg = any(x == ("mov", "ecx, dword ptr [ebp + 0xc]") for x in frame[:call_i])
     fn = name_by.get(0x68A30) or "FUN_00068a30"
+    # cdecl args = reverse of push order → last push is arg0
+    # one-arg XBE: push immA; push eax(name); push immB; push ecx(prop0)
+    #   → (prop0, immB, name, immA)
+    # two-arg XBE: push ecx(a1); push eax(name); push imm; push ecx(prop0)
+    #   → (prop0, imm, name, a1)
     if two_arg:
-        new_decl = f"int {name}(void *prop, int a1);"
-        body = f"""int {name}(void *prop, int a1)
-{{
-  unsigned short key = *(unsigned short *)((char *)prop + 0x3a);
-  unsigned int *entry = (unsigned int *)0x2c9994;
-  unsigned int *end = (unsigned int *)0x2c99c4;
-  while (entry < end && entry[1] != (unsigned int)key)
-    entry = (unsigned int *)((char *)entry + 0xc);
-  unsigned int *p = (entry < end) ? entry : (unsigned int *)0;
-  {fn}(*(int *)prop, (const char *){pushes[1] if False else pushes[2]}, (const char *)p[0], a1);
-  return -1;
-}}
-"""
-        # fix push mapping: push a1; push name; push fmt; push prop0
-        # pushes = [a1_reg_or_imm, name=eax, fmt, prop0] — actually order is
-        # push ecx(a1); push eax(name); push fmt; push ecx(prop0)
-        # so pushes[0]=a1, [1]=eax(name), [2]=fmt, [3]=prop0 — but we use a1 param
-        fmt = None
-        for p in pushes:
-            if p.startswith("0x25f"):
-                # first imm format-like among pushes that aren't a1
-                pass
-        # re-parse from known structure of 650a0
-        # pushes: ecx(a1), eax(name), imm fmt, ecx(prop field) — after reverse of collection
         imm_fmt = [p for p in pushes if re.match(r"0x[0-9a-fA-F]+$", p)]
         if len(imm_fmt) < 1:
             return None, None
-        fmt = imm_fmt[0] if len(imm_fmt) == 1 else imm_fmt[-1]
-        # For 650a0: pushes = [ecx, eax, 0x25f570, ecx] = a1, name, fmt, prop0
-        fmt = pushes[2]
+        fmt = imm_fmt[0]
+        new_decl = f"int {name}(void *prop, int a1);"
         body = f"""int {name}(void *prop, int a1)
 {{
   unsigned short key = *(unsigned short *)((char *)prop + 0x3a);
@@ -372,9 +409,6 @@ def _emit_prop_table(frame, decl, name, name_by):
 """
         return body, new_decl
 
-    # one-arg: pushes are [immA, name, immB, prop0] or [immB, name, immA, prop0]
-    # from 64fe0: push 0x25f554; push eax; push 0x25f530; push ecx
-    # → args: prop0, 0x25f530, name, 0x25f554
     if not (
         re.match(r"0x[0-9a-fA-F]+$", pushes[0])
         and pushes[1] == "eax"
@@ -675,7 +709,7 @@ def _emit_debug_imm_wrapper(frame, decl, name, name_by):
     # cdecl: last push is first arg → a0, a1, a4, a3, a2
     body = f"""{sig}
 {{
-  {fn}({ps[0]}, {ps[1]}, (void *){a4}, {a3}, {a2});
+  {fn}({ps[0]}, {ps[1]}, (void *)(uintptr_t){a4}, {a3}, (int)(uintptr_t){a2});
 }}
 """
     return body, None
@@ -708,11 +742,36 @@ def _emit_53890(ops, decl, name, name_by):
     return c, new_decl
 
 
+def find_naked_block_ai(text: str, name: str, addr: int):
+    """find_naked_block plus i386/#if naked frame-thunk style used in ai/."""
+    span = find_naked_block(text, name, addr)
+    if span is not None:
+        return span
+    span = find_naked_block(text, f"FUN_{addr:08x}", addr)
+    if span is not None:
+        return span
+    addr_hex = f"0x{addr:x}"
+    for nm in (name, f"FUN_{addr:08x}", f"FUN_{addr:08X}"):
+        # Tail-call naked: #if i386 asm jmp; #else C; #endif \n}
+        pat = re.compile(
+            rf"/\*[^*]*\b{re.escape(addr_hex)}\b[^*]*\*/\s*"
+            rf"#if defined\(__i386__\)[^\n]*\n"
+            rf"__attribute__\(\(naked\)\)\s*\n"
+            rf"#endif\s*\n"
+            rf"[\w\s\*]+?\b{re.escape(nm)}\s*\([^{{]*\)\s*\{{\s*"
+            rf"#if defined\(__i386__\)[\s\S]*?#else[\s\S]*?#endif\s*\n"
+            rf"\}}\s*\n",
+            re.M | re.I,
+        )
+        m = pat.search(text)
+        if m:
+            return m.start(), m.end()
+    return None
+
+
 def apply_body(path: Path, name: str, addr: int, c_src: str) -> tuple[str | None, str | None]:
     text = path.read_text(encoding="utf-8", errors="replace")
-    span = find_naked_block(text, name, addr)
-    if span is None:
-        span = find_naked_block(text, f"FUN_{addr:08x}", addr)
+    span = find_naked_block_ai(text, name, addr)
     if span is None:
         return None, "locate"
     needs_stdint = any(
@@ -731,10 +790,32 @@ def apply_body(path: Path, name: str, addr: int, c_src: str) -> tuple[str | None
     return text, None
 
 
-def prove_addr(name: str, addr: int, seeds: int, timeout: float) -> dict:
+def prove_addr(
+    name: str,
+    addr: int,
+    seeds: int,
+    timeout: float,
+    src: str | None = None,
+    decl_changed: bool = False,
+) -> dict:
     if not ensure_oracle(addr):
         return {"ok": False, "err": "oracle", "passed": 0, "failed": 0, "errors": 0}
-    res = run_unicorn(hex(addr), addr, seeds, timeout=timeout)
+    if decl_changed and not regen_decl_h():
+        return {"ok": False, "err": "decl.h", "passed": 0, "failed": 0, "errors": 0}
+    if src:
+        src_rel = src.replace("\\", "/")
+        if "src/halo/" in src_rel:
+            src_rel = src_rel.split("src/halo/", 1)[1]
+        if not docker_compile(src_rel):
+            return {
+                "ok": False,
+                "err": "compile",
+                "passed": 0,
+                "failed": 0,
+                "errors": 0,
+            }
+    # Unicorn by function name (not 0xaddr) — required for correct candidate bind.
+    res = run_unicorn(name, addr, seeds, timeout=timeout)
     if not clear_pass(res, seeds):
         res2 = run_unicorn(name, addr, seeds, timeout=timeout)
         if clear_pass(res2, seeds) or (res2.get("passed") or 0) > (res.get("passed") or 0):
@@ -744,6 +825,7 @@ def prove_addr(name: str, addr: int, seeds: int, timeout: float) -> dict:
         "passed": res.get("passed"),
         "failed": res.get("failed"),
         "errors": res.get("errors"),
+        "err": None if clear_pass(res, seeds) else "unicorn",
     }
 
 
@@ -756,11 +838,22 @@ def main() -> int:
     ap.add_argument("--max-size", type=int, default=256)
     ap.add_argument("--no-push", action="store_true")
     ap.add_argument("--prove-only", action="store_true")
+    ap.add_argument(
+        "--allow-wrappers",
+        action="store_true",
+        help="Allow lifting wrappers that call same-TU unproven (unsafe; default leaf-first)",
+    )
+    ap.add_argument(
+        "--inventory",
+        action="store_true",
+        help="Print leaf/wrapper inventory and exit",
+    )
     args = ap.parse_args()
 
     merge_remote_kb()
     kb, name_by, decl_by, src_by, ported = load_names()
     _, starts = load_kb(KB_PATH)
+    starts_set = set(starts)
     xbe = Xbe((ROOT / "halo-patched" / "cachebeta.xbe").read_bytes())
     md = Cs(CS_ARCH_X86, CS_MODE_32)
     true0, false0 = count_ported(kb)
@@ -776,8 +869,48 @@ def main() -> int:
             ai_false += 1
     print(f"ai baseline true={ai_true} false={ai_false} kb true={true0} false={false0}", flush=True)
 
+    if args.inventory:
+        leaves = wrappers = 0
+        for i, ai in enumerate(starts):
+            if ported.get(ai) is not False:
+                continue
+            src = src_by.get(ai) or ""
+            if not src.startswith("ai/"):
+                continue
+            sp = resolve_src(src)
+            if not sp or not is_naked_near_def(
+                sp.read_text(errors="replace").splitlines(), name_by[ai], hex(ai)
+            ):
+                continue
+            end = starts[i + 1] if i + 1 < len(starts) else ai + args.max_size
+            try:
+                raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size))
+            except Exception:
+                continue
+            ops: list[tuple[str, str]] = []
+            for insn in md.disasm(raw, ai):
+                ops.append((insn.mnemonic, insn.op_str))
+                if insn.mnemonic in ("ret", "retn"):
+                    break
+                if insn.mnemonic == "jmp" and len(ops) <= 14:
+                    break
+            calls = collect_call_targets(ops)
+            ok, bad = same_tu_safe(ai, src, calls, src_by, ported, starts_set)
+            if ok:
+                leaves += 1
+            else:
+                wrappers += 1
+                print(
+                    f"  wrapper {hex(ai)} {name_by[ai]} blocked_by={hex(bad)} "
+                    f"{name_by.get(bad, '?')}",
+                    flush=True,
+                )
+        print(f"inventory naked leaves={leaves} wrappers={wrappers}", flush=True)
+        return 0
+
     jobs: list[dict] = []
     seen: set[int] = set()
+    skipped_same_tu = 0
 
     if not args.prove_only:
         for i, ai in enumerate(starts):
@@ -798,7 +931,8 @@ def main() -> int:
             if not is_naked_near_def(text0.splitlines(), name, hex(ai)):
                 continue
             try:
-                raw = xbe_bytes(xbe, ai, min(size, args.max_size))
+                # end is absolute VA (library also accepts length if end<=va)
+                raw = xbe_bytes(xbe, ai, min(end, ai + args.max_size))
             except Exception:
                 continue
             ops: list[tuple[str, str]] = []
@@ -812,13 +946,23 @@ def main() -> int:
             else:
                 continue
 
+            calls = collect_call_targets(ops)
+            ok, bad = same_tu_safe(ai, src, calls, src_by, ported, starts_set)
+            if not ok and not args.allow_wrappers:
+                skipped_same_tu += 1
+                continue
+
             # encounter_force special (ends with jmp)
             body = None
             new_decl = None
             if ops and ops[-1][0] == "jmp":
-                body, new_decl = _emit_encounter_force_ops(ops, decl_by.get(ai, ""), name, name_by)
+                body, new_decl = _emit_encounter_force_ops(
+                    ops, decl_by.get(ai, ""), name, name_by
+                )
             if body is None:
-                body, new_decl = try_emit_ai(ops, decl_by.get(ai) or f"void {name}(void);", name, name_by)
+                body, new_decl = try_emit_ai(
+                    ops, decl_by.get(ai) or f"void {name}(void);", name, name_by
+                )
             if not body:
                 continue
             jobs.append(
@@ -834,8 +978,10 @@ def main() -> int:
             )
             seen.add(ai)
 
-    # prove-only readable leftovers in ai/
-    for o_src, ai in [(src_by[a], a) for a in sorted(src_by) if (src_by[a] or "").startswith("ai/")]:
+    # prove readable leftovers in ai/ (leaf-first: skip if still depends on same-TU naked)
+    for o_src, ai in [
+        (src_by[a], a) for a in sorted(src_by) if (src_by[a] or "").startswith("ai/")
+    ]:
         if ported.get(ai) is not False or ai in seen:
             continue
         sp = resolve_src(o_src)
@@ -844,16 +990,27 @@ def main() -> int:
         name = name_by[ai]
         if is_naked_near_def(sp.read_text(errors="replace").splitlines(), name, hex(ai)):
             continue
-        jobs.append({"addr": ai, "name": name, "src": o_src, "kind": "prove", "body": None, "size": 0})
+        jobs.append(
+            {
+                "addr": ai,
+                "name": name,
+                "src": o_src,
+                "kind": "prove",
+                "body": None,
+                "size": 0,
+            }
+        )
         seen.add(ai)
 
+    # leaf-first: smaller lifts before prove wrappers
     jobs.sort(key=lambda j: (0 if j["kind"] == "lift" else 1, j.get("size", 0), j["addr"]))
     if args.limit:
         jobs = jobs[: args.limit]
 
     print(
         f"ai-campaign jobs={len(jobs)} lift={sum(1 for j in jobs if j['kind']=='lift')} "
-        f"prove={sum(1 for j in jobs if j['kind']=='prove')}",
+        f"prove={sum(1 for j in jobs if j['kind']=='prove')} "
+        f"skipped_same_tu={skipped_same_tu}",
         flush=True,
     )
 
@@ -877,17 +1034,26 @@ def main() -> int:
         path = resolve_src(src)
         orig = None
 
+        decl_changed = False
         if kind == "lift":
             if path is None:
                 print("  no source", flush=True)
                 continue
             if job.get("decl"):
                 set_kb_decl(ai, job["decl"])
-                for stale in (ROOT / "build" / "generated").glob("decl.h"):
-                    try:
-                        stale.unlink()
-                    except OSError:
-                        pass
+                patch_decl_h(name, job["decl"])
+                decl_changed = True
+            # Sync kb decl from emitted C signature when present
+            sig_m = re.search(
+                rf"^([\w\s\*]+?\b{re.escape(name)}\s*\([^{{]*\))",
+                job["body"],
+                re.M,
+            )
+            if sig_m:
+                d = sig_m.group(1).strip() + ";"
+                set_kb_decl(ai, d)
+                patch_decl_h(name, d)
+                decl_changed = True
             text0 = path.read_text(encoding="utf-8", errors="replace")
             if not is_naked_near_def(text0.splitlines(), name, hex(ai)):
                 kind = "prove"
@@ -899,10 +1065,24 @@ def main() -> int:
                 touched.add(path)
 
         t0 = time.time()
-        res = prove_addr(name, ai, args.seeds, args.timeout)
+        # Prefer in-place decl.h patch; full regen only when patch missed
+        if decl_changed and not (ROOT / "build" / "generated" / "decl.h").exists():
+            if not regen_decl_h():
+                if orig is not None and path is not None:
+                    path.write_text(orig, encoding="utf-8")
+                print("  decl.h missing FAIL", flush=True)
+                continue
+        res = prove_addr(
+            name,
+            ai,
+            args.seeds,
+            args.timeout,
+            src=src,
+            decl_changed=False,  # already patched; avoid slow/fragile full regen
+        )
         print(
             f"  unicorn {res.get('passed')}/{res.get('failed')}/{res.get('errors')} "
-            f"ok={res.get('ok')} dt={time.time()-t0:.1f}",
+            f"ok={res.get('ok')} err={res.get('err')} dt={time.time()-t0:.1f}",
             flush=True,
         )
         append_ledger(

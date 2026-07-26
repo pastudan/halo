@@ -238,37 +238,14 @@ void telnet_console_process(void)
 }
 /* --- telnet_console.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00130ec0 (0x130ec0) — XBE naked draft (batch 183). */
-#if defined(__clang__)
-static data_t * (*const b130ec0_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-static void (*const b130ec0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_00130ec0 (0x130ec0) — readable C lift. */
 void FUN_00130ec0(void)
 {
-  __asm__ volatile(
-      "pushl $0x2bc\n\t"
-      "pushl $0xc\n\t"
-      "pushl $0x29a9e0\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5a90d4\n\t"
-      "jne .LFUN_00130ec0_1\n\t"
-      "pushl $0x29a9bc\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00130ec0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c1bfe10] "m"(b130ec0_c1bfe10), [c8f390] "m"(b130ec0_c8f390)
-      : "memory");
+  void *p = game_state_data_new(0x29a9e0, 0xc, 0x2bc);
+  *(void **)0x5a90d4 = p;
+  if (p == NULL)
+    error(p, 0x29a9bc);
 }
-#else
-#error "FUN_00130ec0: clang naked draft required"
-#endif
-
 
 /* FUN_00130ef0 (0x130ef0) — readable C lift. */
 void FUN_00130ef0(void)
@@ -1390,37 +1367,14 @@ void telnet_console_print(void)
 #endif
 
 
-/* FUN_001319b0 (0x1319b0) — XBE naked draft (batch 183). */
-#if defined(__clang__)
-static data_t * (*const b1319b0_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-static void (*const b1319b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_001319b0 (0x1319b0) — readable C lift. */
 void FUN_001319b0(void)
 {
-  __asm__ volatile(
-      "pushl $0x16bc\n\t"
-      "pushl $2\n\t"
-      "pushl $0x29aac0\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5a90d0\n\t"
-      "jne .LFUN_001319b0_1\n\t"
-      "pushl $0x29aaa0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001319b0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c1bfe10] "m"(b1319b0_c1bfe10), [c8f390] "m"(b1319b0_c8f390)
-      : "memory");
+  void *p = game_state_data_new(0x29aac0, 2, 0x16bc);
+  *(void **)0x5a90d0 = p;
+  if (p == NULL)
+    error(p, 0x29aaa0);
 }
-#else
-#error "FUN_001319b0: clang naked draft required"
-#endif
-
 
 /* FUN_001319e0 (0x1319e0) — readable C lift. */
 void FUN_001319e0(void)
