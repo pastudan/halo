@@ -966,6 +966,19 @@ def main() -> int:
         ("rasterizer_text_cache_character", 0x183880, 0x183bfc),
         ("actor_action_try_to_dive", 0x1fe70, 0x20120, [(0x20120, 0x20130), (0x20130, 0x20140)]),
         ("FUN_0002bab0", 0x2bab0, 0x2bd7d),
+        # gameplay wave 81 (2026-07-26) — rasterizer/AI/net Capstone weaks
+        ("rasterizer_draw_dynamic_vertices", 0x15d5b0, 0x15d8a1),
+        ("FUN_00195790", 0x195790, 0x1959ec),
+        ("FUN_0002b830", 0x2b830, 0x2baa2),
+        ("FUN_0002ade0", 0x2ade0, 0x2b01b),
+        ("FUN_0011beb0", 0x11beb0, 0x11c0f0),
+        ("actor_perception_desire_prop", 0x2f6e0, 0x2f905),
+        ("rasterizer_present", 0x157e40, 0x1580ab),
+        ("actor_move_try_evasion_vector", 0x2a8f0, 0x2ab3d),
+        ("FUN_00064cd0", 0x64cd0, 0x64e7e, [(0x64e80, 0x64ea4)]),
+        ("prop_add", 0x64170, 0x643c2),
+        ("FUN_0005ef80", 0x5ef80, 0x5f1cc),
+        ("prop_new_unacknowledged", 0x645a0, 0x647c0),
     ]
 
     xbe = Xbe.from_file(args.xbe)

@@ -621,141 +621,247 @@ char FUN_0002f5f0(int actor_handle, float scale, float visibility,
   return 1;
 }
 
-/* 0x2f6e0 — decide whether an actor wants a prop acknowledgement. */
-char actor_perception_desire_prop(
-    int actor_handle, int existing_prop, int unit_handle, int owner_handle,
-    char field_63, char field_12e, char friendly, char field_127,
-    int16_t field_76, int16_t scale, float visibility, int sense,
-    char *out_flag)
+/* actor_perception_desire_prop (0x2f6e0) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static void *(*const b2f6e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b2f6e0_get)(int, int) = object_get_and_verify_type;
+static int16_t (*const b2f6e0_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
+
+__attribute__((naked, noinline))
+char actor_perception_desire_prop(int actor_handle __attribute__((unused)), int existing_prop __attribute__((unused)), int unit_handle __attribute__((unused)), int owner_handle __attribute__((unused)), char field_63 __attribute__((unused)), char field_12e __attribute__((unused)), char friendly __attribute__((unused)), char field_127 __attribute__((unused)), int16_t field_76 __attribute__((unused)), int16_t scale __attribute__((unused)), float visibility __attribute__((unused)), int sense __attribute__((unused)), char *out_flag __attribute__((unused)))
 {
-  char *actor;
-  char *owner;
-  char *unit;
-  char *encounter;
-  char desire;
-  char out_desire;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  if (owner_handle == -1)
-    owner = 0;
-  else
-    owner = (char *)datum_get(actor_data, owner_handle);
-
-  desire = field_127;
-  out_desire = 0;
-
-  if (field_127 != 0 && friendly == 0)
-    goto finish;
-  if ((int16_t)existing_prop >= 4 && (int16_t)existing_prop <= 5) {
-    desire = 0;
-    goto finish;
-  }
-  if (field_63 != 0) {
-    desire = 1;
-    goto finish;
-  }
-  if (owner != 0 && *(char *)(owner + 8) != 0 && *(char *)(owner + 0x13) == 0) {
-    desire = 0;
-    goto finish;
-  }
-  if ((int16_t)existing_prop == -1) {
-    if (field_12e != 0 || scale > 0) {
-      desire = 1;
-      goto finish;
-    }
-  }
-  if (visibility < *(float *)0x255fe0) {
-    desire = 0;
-    goto finish;
-  }
-
-  if (desire != 0) {
-    encounter = 0;
-    if (*(int *)(actor + 0x34) != -1) {
-      encounter =
-          (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
-      unit = (char *)object_get_and_verify_type(unit_handle, 3);
-      {
-        int max_teams = *(int *)(encounter + 0x58);
-        int actor_teams = *(int *)(actor + 0x3a0);
-        int unit_teams = *(int *)(unit + 0x3cc);
-        if (max_teams < actor_teams)
-          max_teams = actor_teams;
-        if (max_teams != -1 && unit_teams != -1 && unit_teams < max_teams)
-          desire = 0;
-      }
-      if (desire != 0) {
-        char hidden = 0;
-        if (*(char *)(encounter + 0x45) != 0 ||
-            *(char *)(encounter + 0x44) != 0 || *(char *)(encounter + 0x42) != 0)
-          hidden = 0;
-        else
-          hidden = 1;
-        if (hidden != 0) {
-          if (visibility <= *(float *)0x255fdc) {
-            desire = 1;
-            goto finish;
-          }
-        } else if (field_127 != 0) {
-          if (visibility <= *(float *)0x2533c0) {
-            desire = 1;
-            goto finish;
-          }
-          if (field_127 != 0 && field_76 > 0x96) {
-            desire = 0;
-            goto finish;
-          }
-        }
-      }
-    }
-    if (actor_action_try_to_panic(actor_handle) > 1) {
-      desire = 0;
-      goto finish;
-    }
-    if (field_127 != 0) {
-      float threshold = *(float *)0x254e74;
-      if (*(int16_t *)(actor + 0x6a) < 3)
-        threshold = *(float *)0x254df8;
-      if (visibility > threshold) {
-        desire = 0;
-        goto finish;
-      }
-    }
-    desire = 1;
-    goto finish;
-  }
-
-  if (field_127 != 0) {
-    if (visibility > *(float *)0x255fd8) {
-      desire = 1;
-      out_desire = 1;
-    } else if (visibility <= *(float *)0x255fdc) {
-      desire = 1;
-      out_desire = 0;
-    } else {
-      desire = 0;
-    }
-    goto finish;
-  }
-
-  if (*(int16_t *)(actor + 0x6e) >= 4) {
-    out_desire = 1;
-    goto finish;
-  }
-  if (*(char *)(actor + 0x1cc) != 0) {
-    out_desire = 0;
-    goto finish;
-  }
-  if (visibility > *(float *)0x254e74)
-    out_desire = 1;
-  else
-    out_desire = 0;
-
-finish:
-  if (out_flag != 0)
-    *out_flag = out_desire;
-  return desire;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "jne .Lactor_perception_desire_prop_1\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "jmp .Lactor_perception_desire_prop_2\n\t"
+      ".Lactor_perception_desire_prop_1:\n\t"
+      "movl 0x6325a4, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lactor_perception_desire_prop_2:\n\t"
+      "movb 0x20(%%ebp), %%dl\n\t"
+      "testb %%dl, %%dl\n\t"
+      "movw 0xc(%%ebp), %%cx\n\t"
+      "movb 0x24(%%ebp), %%bl\n\t"
+      "movb $0, 0x17(%%ebp)\n\t"
+      "je .Lactor_perception_desire_prop_3\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_perception_desire_prop_4\n\t"
+      ".Lactor_perception_desire_prop_3:\n\t"
+      "cmpw $4, %%cx\n\t"
+      "jl .Lactor_perception_desire_prop_4\n\t"
+      "cmpw $5, %%cx\n\t"
+      "jg .Lactor_perception_desire_prop_4\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_4:\n\t"
+      "cmpb $0, 0x1c(%%ebp)\n\t"
+      "je .Lactor_perception_desire_prop_5\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_5:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_perception_desire_prop_7\n\t"
+      "cmpb $0, 0x8(%%eax)\n\t"
+      "je .Lactor_perception_desire_prop_6\n\t"
+      "cmpb $0, 0x13(%%eax)\n\t"
+      "je .Lactor_perception_desire_prop_7\n\t"
+      ".Lactor_perception_desire_prop_6:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_7:\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "jne .Lactor_perception_desire_prop_9\n\t"
+      "movb 0x18(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_desire_prop_8\n\t"
+      "cmpw $0, 0x34(%%ebp)\n\t"
+      "jle .Lactor_perception_desire_prop_9\n\t"
+      ".Lactor_perception_desire_prop_8:\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_9:\n\t"
+      "flds 0x30(%%ebp)\n\t"
+      "fcomps 0x255fe0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_perception_desire_prop_10\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_10:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lactor_perception_desire_prop_23\n\t"
+      "movl 0x34(%%edi), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "movb $1, %%bl\n\t"
+      "je .Lactor_perception_desire_prop_17\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 0x58(%%esi), %%ecx\n\t"
+      "movl 0x3a0(%%edi), %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jg .Lactor_perception_desire_prop_11\n\t"
+      "movl %%edx, %%ecx\n\t"
+      ".Lactor_perception_desire_prop_11:\n\t"
+      "cmpl $-1, %%ecx\n\t"
+      "je .Lactor_perception_desire_prop_13\n\t"
+      "movl 0x3cc(%%eax), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lactor_perception_desire_prop_12\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jge .Lactor_perception_desire_prop_13\n\t"
+      ".Lactor_perception_desire_prop_12:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_perception_desire_prop_13:\n\t"
+      "movb 0x45(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_desire_prop_14\n\t"
+      "movb 0x44(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_desire_prop_14\n\t"
+      "movb 0x42(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_desire_prop_14\n\t"
+      "movb $1, %%al\n\t"
+      "jmp .Lactor_perception_desire_prop_15\n\t"
+      ".Lactor_perception_desire_prop_14:\n\t"
+      "xorb %%al, %%al\n\t"
+      ".Lactor_perception_desire_prop_15:\n\t"
+      "testb %%bl, %%bl\n\t"
+      "popl %%esi\n\t"
+      "je .Lactor_perception_desire_prop_30\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lactor_perception_desire_prop_16\n\t"
+      "flds 0x30(%%ebp)\n\t"
+      "fcomps 0x255fdc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_desire_prop_20\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_16:\n\t"
+      "movb 0x20(%%ebp), %%dl\n\t"
+      ".Lactor_perception_desire_prop_17:\n\t"
+      "flds 0x2c(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lactor_perception_desire_prop_18\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_18:\n\t"
+      "testb %%dl, %%dl\n\t"
+      "je .Lactor_perception_desire_prop_19\n\t"
+      "cmpw $0x96, 0x28(%%ebp)\n\t"
+      "jle .Lactor_perception_desire_prop_19\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_19:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d6d0]\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpw $1, %%ax\n\t"
+      "jle .Lactor_perception_desire_prop_21\n\t"
+      ".Lactor_perception_desire_prop_20:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_21:\n\t"
+      "movb 0x20(%%ebp), %%al\n\t"
+      "flds 0x254e74\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_desire_prop_22\n\t"
+      "cmpw $3, 0x6a(%%edi)\n\t"
+      "jge .Lactor_perception_desire_prop_22\n\t"
+      "fstp %%st(0)\n\t"
+      "flds 0x254df8\n\t"
+      ".Lactor_perception_desire_prop_22:\n\t"
+      "flds 0x30(%%ebp)\n\t"
+      "fcomp %%st(1)\n\t"
+      "fnstsw %%ax\n\t"
+      "fstp %%st(0)\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_desire_prop_20\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_23:\n\t"
+      "testb %%dl, %%dl\n\t"
+      "flds 0x30(%%ebp)\n\t"
+      "je .Lactor_perception_desire_prop_24\n\t"
+      "fcomps 0x255fd8\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_28\n\t"
+      ".Lactor_perception_desire_prop_24:\n\t"
+      "fcomps 0x255fdc\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lactor_perception_desire_prop_25\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lactor_perception_desire_prop_26\n\t"
+      ".Lactor_perception_desire_prop_25:\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lactor_perception_desire_prop_26:\n\t"
+      "cmpw $4, 0x6e(%%edi)\n\t"
+      "jl .Lactor_perception_desire_prop_27\n\t"
+      "movb $1, 0x17(%%ebp)\n\t"
+      "jmp .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_27:\n\t"
+      "movb 0x1cc(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lactor_perception_desire_prop_29\n\t"
+      "flds 0x30(%%ebp)\n\t"
+      "fcomps 0x254e74\n\t"
+      ".Lactor_perception_desire_prop_28:\n\t"
+      "fnstsw %%ax\n\t"
+      "movb $1, 0x17(%%ebp)\n\t"
+      "testb $0x41, %%ah\n\t"
+      "je .Lactor_perception_desire_prop_30\n\t"
+      ".Lactor_perception_desire_prop_29:\n\t"
+      "movb $0, 0x17(%%ebp)\n\t"
+      ".Lactor_perception_desire_prop_30:\n\t"
+      "movl 0x38(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lactor_perception_desire_prop_31\n\t"
+      "movb 0x17(%%ebp), %%cl\n\t"
+      "movb %%cl, (%%eax)\n\t"
+      ".Lactor_perception_desire_prop_31:\n\t"
+      "popl %%edi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b2f6e0_dget), [get] "m"(b2f6e0_get), [c1d6d0] "m"(b2f6e0_c1d6d0)
+      : "memory");
 }
+#else
+#error "actor_perception_desire_prop: clang naked draft required"
+#endif
+
 
 /* 0x2fb60 — fpatan(y, x) */
 float arctangent(float y, float x)

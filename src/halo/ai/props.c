@@ -545,100 +545,228 @@ char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin,
   return 1;
 }
 
-/* 0x64170 — link a new prop into an actor's prop chain. */
-void prop_add(int actor_handle, int prop_index, int unit_handle)
+/* prop_add (0x64170) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static int (*const b64170_gtime)(void) = game_time_get;
+static void (*const b64170_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const b64170_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void *(*const b64170_get)(int, int) = object_get_and_verify_type;
+static void *(*const b64170_tag)(int, int) = tag_get;
+static void (*const b64170_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b64170_exitfn)(int) = system_exit;
+static bool (*const b64170_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
+static bool (*const b64170_ca7a90)(int16_t team_a, int16_t team_b) = game_team_is_ally;
+static bool (*const b64170_ca7ae0)(int16_t team_a, int16_t team_b) = game_team_ally_status_changed;
+
+__attribute__((naked, noinline))
+void prop_add(int actor_handle __attribute__((unused)), int prop_index __attribute__((unused)), int unit_handle __attribute__((unused)))
 {
-  char *actor;
-  char *prop;
-  char *unit;
-  void *unit_tag;
-  char is_biped_flag;
-  char orphan_flag;
-  int16_t status_word;
-  int now;
-
-  if (prop_index == -1) {
-    now = game_time_get();
-    if (*(int *)0x2c97b8 != -1 && now < *(int *)0x2c97b8 + 900) {
-      error(2, (char *)0x0025f1a8);
-    }
-    *(int *)0x2c97b8 = now;
-    return;
-  }
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  prop = (char *)datum_get(prop_data, prop_index);
-  *(int *)(prop + 4) = actor_handle;
-  *(int16_t *)(prop + 0x66) = -1;
-  *(int16_t *)(prop + 0x6c) = -1;
-  *(int *)(prop + 0x18) = unit_handle;
-  *(char *)(prop + 0x74) = 0;
-  *(int *)(prop + 0x70) = 0;
-  *(int16_t *)(prop + 0xb0) = -1;
-  *(char *)(prop + 0xb8) = 0;
-  *(int *)(prop + 0xb4) = -1;
-  *(int *)(prop + 0x7c) = -1;
-  *(int *)(prop + 0x8c) = -1;
-  *(char *)(prop + 0x4e) = 0;
-  *(int *)(prop + 0x1c) = -1;
-  *(int *)(prop + 0xc) = -1;
-  *(int16_t *)(prop + 0x6a) = 0;
-  *(int *)(prop + 0xa0) = -1;
-
-  if (unit_handle != -1) {
-    unit = (char *)object_get_and_verify_type(unit_handle, 3);
-    unit_tag = tag_get('unit', *(int *)unit);
-    if (unit_handle == *(int *)(actor + 0x18)) {
-      display_assert("unit_index != actor->meta.unit_index",
-                     "c:\\halo\\SOURCE\\ai\\props.c", 0xe8, 1);
-      system_exit(-1);
-    }
-    if (*(int16_t *)(unit + 0x64) != 0) {
-      display_assert("prop_unit->object.type == _object_type_biped",
-                     "c:\\halo\\SOURCE\\ai\\props.c", 0xe9, 1);
-      system_exit(-1);
-    }
-    *(int16_t *)(prop + 0x12) = *(int16_t *)(unit + 0x68);
-    *(char *)(prop + 0x60) = game_allegiance_get_team_is_friendly(
-        *(int16_t *)(prop + 0x12), *(int16_t *)(actor + 0x3e));
-    *(char *)(prop + 0x61) =
-        game_team_is_ally(*(int16_t *)(prop + 0x12),
-                          *(int16_t *)(actor + 0x3e));
-    *(char *)(prop + 0x62) = game_team_ally_status_changed(
-        *(int16_t *)(prop + 0x12), *(int16_t *)(actor + 0x3e));
-    is_biped_flag = (char)((*(char *)(unit + 0xb6) >> 2) & 1);
-    *(char *)(prop + 0x127) = is_biped_flag;
-    *(int *)(prop + 0x20) = *(int *)(unit_tag + 0x284);
-    if (is_biped_flag != 0 && *(int16_t *)(unit + 0x3d0) == 0)
-      orphan_flag = 1;
-    else
-      orphan_flag = 0;
-    *(char *)(prop + 0x128) = orphan_flag;
-    *(int16_t *)(prop + 0x76) = (int16_t)(orphan_flag ? 0x3e8 : 0);
-    *(char *)(prop + 0x12e) = (*(int *)(unit + 0x70) != -1);
-    if (*(int *)(unit + 0x1a8) != -1) {
-      *(char *)(prop + 0x14) = 1;
-      *(int *)(prop + 0x1c) = *(int *)(unit + 0x1a8);
-      *(int *)(prop + 0x28) = game_time_get();
-    } else {
-      *(int *)(prop + 0x1c) = *(int *)(unit + 0x1a4);
-    }
-    if (*(char *)(prop + 0x12e) != 0)
-      status_word = 6;
-    else if (*(int *)(prop + 0x1c) != unit_handle) {
-      char *owner;
-
-      owner = (char *)datum_get(*(void **)0x6325a4, *(int *)(prop + 0x1c));
-      status_word = *(int16_t *)(owner + 4);
-    } else {
-      status_word = -1;
-    }
-    *(int16_t *)(prop + 0x10) = status_word;
-  }
-
-  *(int *)(prop + 8) = *(int *)(actor + 0x50);
-  *(int *)(actor + 0x50) = prop_index;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "orl $0xffffffff, %%edi\n\t"
+      "cmpl %%edi, %%esi\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "jne .Lprop_add_2\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x2c97b8, %%eax\n\t"
+      "cmpl %%edi, %%eax\n\t"
+      "je .Lprop_add_1\n\t"
+      "addl $0x384, %%eax\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jl .Lprop_add_12\n\t"
+      ".Lprop_add_1:\n\t"
+      "pushl $0x300\n\t"
+      "pushl $0x25f1a8\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl %%esi, 0x2c97b8\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lprop_add_2:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%edi, %%ebx\n\t"
+      "movw %%di, 0x66(%%esi)\n\t"
+      "movw %%di, 0x6c(%%esi)\n\t"
+      "movl %%ebx, 0x18(%%esi)\n\t"
+      "movb $0, 0x74(%%esi)\n\t"
+      "movl %%eax, 0x70(%%esi)\n\t"
+      "movw %%di, 0xb0(%%esi)\n\t"
+      "movb %%al, 0xb8(%%esi)\n\t"
+      "movl %%edi, 0xb4(%%esi)\n\t"
+      "movl %%edi, 0x7c(%%esi)\n\t"
+      "movl %%edi, 0x8c(%%esi)\n\t"
+      "movb %%al, 0x4e(%%esi)\n\t"
+      "movl %%edi, 0x1c(%%esi)\n\t"
+      "movl %%edi, 0xc(%%esi)\n\t"
+      "movw %%ax, 0x6a(%%esi)\n\t"
+      "movl %%edi, 0xa0(%%esi)\n\t"
+      "je .Lprop_add_11\n\t"
+      "pushl $3\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "movl 0x18(%%edx), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl %%eax, %%ebx\n\t"
+      "jne .Lprop_add_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe8\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x25f180\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lprop_add_3:\n\t"
+      "cmpw $0, 0x64(%%edi)\n\t"
+      "je .Lprop_add_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0xe9\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x25f150\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lprop_add_4:\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x68(%%edi), %%ax\n\t"
+      "movw %%ax, 0x12(%%esi)\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movw 0x3e(%%eax), %%cx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[ca7a30]\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw 0x12(%%esi), %%dx\n\t"
+      "movb %%al, 0x60(%%esi)\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x3e(%%ebx), %%ax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ca7a90]\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0x12(%%esi), %%cx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movb %%al, 0x61(%%esi)\n\t"
+      "movw 0x3e(%%ebx), %%dx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[ca7ae0]\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb %%al, 0x62(%%esi)\n\t"
+      "movb 0xb6(%%edi), %%al\n\t"
+      "shrb $2, %%al\n\t"
+      "andb $1, %%al\n\t"
+      "movb %%al, 0x127(%%esi)\n\t"
+      "movl 0x284(%%ecx), %%edx\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%edx, 0x20(%%esi)\n\t"
+      "je .Lprop_add_5\n\t"
+      "cmpw $0, 0x3d0(%%edi)\n\t"
+      "jne .Lprop_add_5\n\t"
+      "movl $1, %%ecx\n\t"
+      "jmp .Lprop_add_6\n\t"
+      ".Lprop_add_5:\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      ".Lprop_add_6:\n\t"
+      "negb %%al\n\t"
+      "movb %%cl, 0x128(%%esi)\n\t"
+      "sbbl %%eax, %%eax\n\t"
+      "andl $0x3e8, %%eax\n\t"
+      "movw %%ax, 0x76(%%esi)\n\t"
+      "movl 0x70(%%edi), %%ecx\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "cmpl %%ebx, %%ecx\n\t"
+      "setne %%al\n\t"
+      "movb %%al, 0x12e(%%esi)\n\t"
+      "cmpl %%ebx, 0x1a8(%%edi)\n\t"
+      "je .Lprop_add_7\n\t"
+      "movb $1, 0x14(%%esi)\n\t"
+      "movl 0x1a8(%%edi), %%ecx\n\t"
+      "movl %%ecx, 0x1c(%%esi)\n\t"
+      "call *%[gtime]\n\t"
+      "movl %%eax, 0x28(%%esi)\n\t"
+      "jmp .Lprop_add_8\n\t"
+      ".Lprop_add_7:\n\t"
+      "movl 0x1a4(%%edi), %%edx\n\t"
+      "movl %%edx, 0x1c(%%esi)\n\t"
+      ".Lprop_add_8:\n\t"
+      "movb 0x12e(%%esi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lprop_add_9\n\t"
+      "movw $6, 0x10(%%esi)\n\t"
+      "jmp .Lprop_add_11\n\t"
+      ".Lprop_add_9:\n\t"
+      "movl 0x1c(%%esi), %%eax\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .Lprop_add_10\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "movw 0x4(%%eax), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "movw %%cx, 0x10(%%esi)\n\t"
+      "jmp .Lprop_add_11\n\t"
+      ".Lprop_add_10:\n\t"
+      "movw %%bx, 0x10(%%esi)\n\t"
+      ".Lprop_add_11:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movl 0x50(%%eax), %%edx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      "movl %%ecx, 0x50(%%eax)\n\t"
+      ".Lprop_add_12:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [gtime] "m"(b64170_gtime), [c8f390] "m"(b64170_c8f390), [dget] "m"(b64170_dget), [get] "m"(b64170_get), [tag] "m"(b64170_tag), [assert] "m"(b64170_assert), [exitfn] "m"(b64170_exitfn), [ca7a30] "m"(b64170_ca7a30), [ca7a90] "m"(b64170_ca7a90), [ca7ae0] "m"(b64170_ca7ae0)
+      : "memory");
 }
+#else
+#error "prop_add: clang naked draft required"
+#endif
+
 
 /* 0x643d0 */
 void FUN_000643d0(int actor_handle)
@@ -649,101 +777,219 @@ void FUN_000643d0(int actor_handle)
   prop_add(actor_handle, prop_index, -1);
 }
 
-/* 0x645a0 — find or allocate an unacknowledged prop for a unit. */
-int prop_new_unacknowledged(int actor_handle, int unit_handle, char friendly)
+/* prop_new_unacknowledged (0x645a0) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static void *(*const b645a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static char (*const b645a0_c2f6e0)(int actor_handle, int existing_prop, int unit_handle, int owner_handle, char field_63, char field_12e, char friendly, char field_127, int16_t field_76, int16_t scale, float visibility, int sense, char *out_flag) = actor_perception_desire_prop;
+static int (*const b645a0_c119610)(data_t *data) = data_new_at_index;
+static void (*const b645a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b645a0_exitfn)(int) = system_exit;
+static void (*const b645a0_c3b410)(int actor_handle, int old_prop, int new_prop) = FUN_0003b410;
+static void (*const b645a0_c64400)(int actor_handle, int prop_handle) = FUN_00064400;
+static void *(*const b645a0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b645a0_c64170)(int actor_handle, int prop_index, int unit_handle) = prop_add;
+
+__attribute__((naked, noinline))
+int prop_new_unacknowledged(int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), char friendly __attribute__((unused)))
 {
-  char *actor;
-  char *prop;
-  int prop_handle;
-  int best_handle;
-  int alt_handle;
-  float best_vis;
-  float alt_vis;
-  int match_count;
-  char out_flag;
-  int16_t threshold;
-  float vis;
-  int16_t status;
-
-  best_handle = -1;
-  alt_handle = -1;
-  best_vis = 3.4028235e38f;
-  alt_vis = 3.4028235e38f;
-  match_count = 0;
-
-  actor = (char *)datum_get(actor_data, actor_handle);
-  prop_handle = *(int *)(actor + 0x50);
-  while (prop_handle != -1) {
-    prop = (char *)datum_get(prop_data, prop_handle);
-    status = *(int16_t *)(prop + 0x24);
-    if (status >= 4 && status <= 5 && *(int *)(prop + 0xc) == -1) {
-      vis = *(float *)(prop + 0x11c);
-      out_flag = 0;
-      if (actor_perception_desire_prop(
-              actor_handle, -1, *(int *)(prop + 0x18), *(int *)(prop + 0x1c),
-              *(char *)(prop + 0x63), *(char *)(prop + 0x12e),
-              *(char *)(prop + 0x60), *(char *)(prop + 0x127),
-              *(int16_t *)(prop + 0x76), *(int16_t *)(prop + 0x6a), vis,
-              *(int *)(prop + 0x20), &out_flag)) {
-        if (*(char *)(prop + 0x60) != friendly) {
-          prop_handle = *(int *)(prop + 8);
-          continue;
-        }
-        match_count++;
-        if (out_flag == 0) {
-          prop_handle = *(int *)(prop + 8);
-          continue;
-        }
-        if (*(float *)(prop + 0x11c) <= alt_vis) {
-          alt_handle = prop_handle;
-          alt_vis = *(float *)(prop + 0x11c);
-        }
-      } else if (*(float *)(prop + 0x11c) <= best_vis) {
-        best_handle = prop_handle;
-        best_vis = *(float *)(prop + 0x11c);
-      }
-    }
-    prop_handle = *(int *)(prop + 8);
-  }
-
-  prop_handle = best_handle;
-  if (prop_handle == -1) {
-    prop_handle = alt_handle;
-    if (prop_handle == -1)
-      goto allocate_new;
-    threshold = (int16_t)(friendly ? 6 : 4);
-    if (match_count < threshold)
-      goto allocate_new;
-    if (prop_handle == -1)
-      goto allocate_new;
-  }
-
-  prop = (char *)datum_get(prop_data, prop_handle);
-  if (*(int *)(prop + 0xc) != -1) {
-    display_assert("prop->parent_prop_index == NONE",
-                   "c:\\halo\\SOURCE\\ai\\props.c", 0x9e, 1);
-    system_exit(-1);
-  }
-  if (*(int *)(prop + 0xc) != -1) {
-    display_assert("prop->parent_prop_index == NONE",
-                   "c:\\halo\\SOURCE\\ai\\props.c", 0x9f, 1);
-    system_exit(-1);
-  }
-  FUN_0003b410(actor_handle, prop_handle, -1);
-  FUN_00064400(actor_handle, prop_handle);
-  {
-    int16_t saved_type = *(int16_t *)prop;
-    csmemset(prop, 0, 0x138);
-    *(int16_t *)prop = saved_type;
-  }
-  prop_add(actor_handle, prop_handle, unit_handle);
-  return prop_handle;
-
-allocate_new:
-  prop_handle = data_new_at_index(prop_data);
-  prop_add(actor_handle, prop_handle, unit_handle);
-  return prop_handle;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x18(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl $0x7f7fffff, -0xc(%%ebp)\n\t"
+      "movl $0x7f7fffff, -0x10(%%ebp)\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "call *%[dget]\n\t"
+      "movl 0x50(%%eax), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".Lprop_new_unacknowledged_1:\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "je .Lprop_new_unacknowledged_4\n\t"
+      "movl 0x5ab23c, %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "movl 0x8(%%esi), %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpw $4, %%ax\n\t"
+      "jl .Lprop_new_unacknowledged_2\n\t"
+      "cmpw $5, %%ax\n\t"
+      "jle .Lprop_new_unacknowledged_1\n\t"
+      ".Lprop_new_unacknowledged_2:\n\t"
+      "cmpl $-1, 0xc(%%esi)\n\t"
+      "jne .Lprop_new_unacknowledged_1\n\t"
+      "flds 0x11c(%%esi)\n\t"
+      "movl 0x20(%%esi), %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "fld %%st(0)\n\t"
+      "movw 0x6a(%%esi), %%cx\n\t"
+      ".byte 0xd8, 0xc9\n\t"
+      "leal -0x1(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movw 0x76(%%esi), %%ax\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb 0x127(%%esi), %%cl\n\t"
+      "fstp %%st(0)\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movb 0x60(%%esi), %%dl\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movb 0x12e(%%esi), %%al\n\t"
+      "pushl %%ecx\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb 0x63(%%esi), %%cl\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x1c(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x18(%%esi), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $-1\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c2f6e0]\n\t"
+      "addl $0x34, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lprop_new_unacknowledged_3\n\t"
+      "flds 0x11c(%%esi)\n\t"
+      "fcomps -0xc(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lprop_new_unacknowledged_1\n\t"
+      "movl 0x11c(%%esi), %%edx\n\t"
+      "movl %%ebx, -0x14(%%ebp)\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "jmp .Lprop_new_unacknowledged_1\n\t"
+      ".Lprop_new_unacknowledged_3:\n\t"
+      "movb 0x10(%%ebp), %%al\n\t"
+      "cmpb %%al, 0x60(%%esi)\n\t"
+      "jne .Lprop_new_unacknowledged_1\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "incl %%ecx\n\t"
+      "testb %%al, %%al\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "je .Lprop_new_unacknowledged_1\n\t"
+      "flds 0x11c(%%esi)\n\t"
+      "fcomps -0x10(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jp .Lprop_new_unacknowledged_1\n\t"
+      "movl 0x11c(%%esi), %%ecx\n\t"
+      "movl %%ebx, -0x18(%%ebp)\n\t"
+      "movl %%ecx, -0x10(%%ebp)\n\t"
+      "jmp .Lprop_new_unacknowledged_1\n\t"
+      ".Lprop_new_unacknowledged_4:\n\t"
+      "movl -0x14(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Lprop_new_unacknowledged_6\n\t"
+      "movl -0x18(%%ebp), %%edi\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "je .Lprop_new_unacknowledged_5\n\t"
+      "movb 0x10(%%ebp), %%cl\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "testb %%cl, %%cl\n\t"
+      "setne %%dl\n\t"
+      "leal 0x4(%%edx,%%edx,1), %%edx\n\t"
+      "cmpw %%dx, -0x8(%%ebp)\n\t"
+      "jl .Lprop_new_unacknowledged_5\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "jne .Lprop_new_unacknowledged_6\n\t"
+      ".Lprop_new_unacknowledged_5:\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119610]\n\t"
+      "addl $4, %%esp\n\t"
+      "movl %%eax, %%edi\n\t"
+      "jmp .Lprop_new_unacknowledged_8\n\t"
+      ".Lprop_new_unacknowledged_6:\n\t"
+      "movl 0x5ab23c, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[dget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "orl $0xffffffff, %%ebx\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .Lprop_new_unacknowledged_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9e\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x255f50\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[exitfn]\n\t"
+      "movl 0xc(%%esi), %%eax\n\t"
+      "addl $0x14, %%esp\n\t"
+      "cmpl %%ebx, %%eax\n\t"
+      "je .Lprop_new_unacknowledged_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x9f\n\t"
+      "pushl $0x25f134\n\t"
+      "pushl $0x25f46c\n\t"
+      "call *%[assert]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lprop_new_unacknowledged_7:\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c3b410]\n\t"
+      "movl %%ebx, %%eax\n\t"
+      "call *%[c64400]\n\t"
+      "movw (%%esi), %%bx\n\t"
+      "pushl $0x138\n\t"
+      "pushl $0\n\t"
+      "pushl %%esi\n\t"
+      "call *%[memset]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movw %%bx, (%%esi)\n\t"
+      ".Lprop_new_unacknowledged_8:\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c64170]\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b645a0_dget), [c2f6e0] "m"(b645a0_c2f6e0), [c119610] "m"(b645a0_c119610), [assert] "m"(b645a0_assert), [exitfn] "m"(b645a0_exitfn), [c3b410] "m"(b645a0_c3b410), [c64400] "m"(b645a0_c64400), [memset] "m"(b645a0_memset), [c64170] "m"(b645a0_c64170)
+      : "memory");
 }
+#else
+#error "prop_new_unacknowledged: clang naked draft required"
+#endif
+
 
 /* 0x647c0 — copy a prop record and reset orphan transition fields. */
 void FUN_000647c0(int dest_prop, int src_prop)
@@ -949,62 +1195,242 @@ int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
   return prop_handle;
 }
 
-/* 0x64cd0 — read a typed field from a prop structure (tag dispatch). */
-int FUN_00064cd0(char *prop, int tag, void *out)
+/* FUN_00064cd0 (0x64cd0) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static void (*const b64cd0_c65f00)(void) = TIFFVGetField;
+
+__attribute__((naked, noinline))
+int FUN_00064cd0(char *prop __attribute__((unused)), int tag __attribute__((unused)), void *out __attribute__((unused)))
 {
-  switch (tag) {
-  case 0xfe:
-    *(int16_t *)out = *(int16_t *)(prop + 0x34);
-    return 1;
-  case 0xff:
-    *(int16_t *)out = *(int16_t *)(prop + 0x36);
-    return 1;
-  case 0x100:
-    *(int16_t *)out = *(int16_t *)(prop + 0x3e);
-    return 1;
-  case 0x101:
-    *(int16_t *)out = *(int16_t *)(prop + 0x40);
-    return 1;
-  case 0x102:
-    *(int16_t *)out = *(int16_t *)(prop + 0x42);
-    return 1;
-  case 0x103:
-    *(int16_t *)out = *(int16_t *)(prop + 0x44);
-    return 1;
-  case 0x104:
-    *(int *)out = *(int *)(prop + 0x48);
-    return 1;
-  case 0x105:
-    *(int16_t *)out = *(int16_t *)(prop + 0x4c);
-    return 1;
-  case 0x119:
-    *(int16_t *)out = *(int16_t *)(prop + 0x50);
-    return 1;
-  case 0x11c:
-    *(int16_t *)out = *(int16_t *)(prop + 0x5e);
-    return 1;
-  case 0x125:
-    *(int16_t *)out = *(int16_t *)(prop + 0x5c);
-    return 1;
-  case 0x128:
-    *(int *)out = *(int *)(prop + 0x6c);
-    return 1;
-  case 0x13d:
-    *(int16_t *)out = *(int16_t *)(prop + 0x46);
-    return 1;
-  case 0x80e4:
-    *(int16_t *)out = *(int16_t *)(prop + 0x38) - 1;
-    return 1;
-  case 0x80e5:
-    *(int16_t *)out = *(int16_t *)(prop + 0x24);
-    return 1;
-  case 0x80e6:
-    *(int *)out = *(int *)(prop + 0x30);
-    return 1;
-  default:
-    return 0;
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0xc(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c65f00]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_00064cd0_19\n\t"
+      "cmpl $0x119, %%ebx\n\t"
+      "jg .LFUN_00064cd0_10\n\t"
+      "je .LFUN_00064cd0_9\n\t"
+      "leal -0xfe(%%ebx), %%eax\n\t"
+      "cmpl $0x1a, %%eax\n\t"
+      "ja .LFUN_00064cd0_15\n\t"
+      "movzbl 0x64ea4(%%eax), %%eax\n\t"
+      "jmp *.LFUN_00064cd0_jt(,%%eax,4)\n\t"
+      ".LFUN_00064cd0_1:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movw 0x34(%%esi), %%dx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%dx, (%%ecx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_2:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movw 0x36(%%esi), %%cx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%cx, (%%eax)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_3:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movw 0x3e(%%esi), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, (%%edx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_4:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movw 0x40(%%esi), %%dx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%dx, (%%ecx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_5:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movw 0x42(%%esi), %%cx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%cx, (%%eax)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_6:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movw 0x44(%%esi), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, (%%edx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_7:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movl 0x48(%%esi), %%edx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_8:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movw 0x4c(%%esi), %%cx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%cx, (%%eax)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_9:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movw 0x50(%%esi), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, (%%edx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_10:\n\t"
+      "cmpl $0x13d, %%ebx\n\t"
+      "jg .LFUN_00064cd0_14\n\t"
+      "je .LFUN_00064cd0_13\n\t"
+      "subl $0x11c, %%ebx\n\t"
+      "je .LFUN_00064cd0_12\n\t"
+      "subl $9, %%ebx\n\t"
+      "je .LFUN_00064cd0_11\n\t"
+      "subl $3, %%ebx\n\t"
+      "jne .LFUN_00064cd0_15\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movw 0x5c(%%esi), %%dx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%dx, (%%ecx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_11:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl 0x6c(%%esi), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_12:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movw 0x5e(%%esi), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, (%%edx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_13:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movw 0x46(%%esi), %%dx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%dx, (%%ecx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_14:\n\t"
+      "subl $0x80e4, %%ebx\n\t"
+      "je .LFUN_00064cd0_18\n\t"
+      "decl %%ebx\n\t"
+      "je .LFUN_00064cd0_17\n\t"
+      "decl %%ebx\n\t"
+      "je .LFUN_00064cd0_16\n\t"
+      ".LFUN_00064cd0_15:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_16:\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "movl 0x30(%%esi), %%ecx\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, (%%eax)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_17:\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "movw 0x24(%%esi), %%ax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movw %%ax, (%%edx)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00064cd0_18:\n\t"
+      "movw 0x38(%%esi), %%cx\n\t"
+      "movl (%%edi), %%edx\n\t"
+      "decw %%cx\n\t"
+      "movw %%cx, (%%edx)\n\t"
+      ".LFUN_00064cd0_19:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_00064cd0_jt:\n\t"
+      ".long .LFUN_00064cd0_1\n\t"
+      ".long .LFUN_00064cd0_2\n\t"
+      ".long .LFUN_00064cd0_3\n\t"
+      ".long .LFUN_00064cd0_4\n\t"
+      ".long .LFUN_00064cd0_5\n\t"
+      ".long .LFUN_00064cd0_6\n\t"
+      ".long .LFUN_00064cd0_7\n\t"
+      ".long .LFUN_00064cd0_8\n\t"
+      ".long .LFUN_00064cd0_15\n\t"
+      ".text\n\t"
+      :
+      : [c65f00] "m"(b64cd0_c65f00)
+      : "memory");
 }
+#else
+#error "FUN_00064cd0: clang naked draft required"
+#endif
+
 
 /* 0x64ec0 — wrapper around FUN_00064cd0. */
 int FUN_00064ec0(char *prop, int tag, void *out)

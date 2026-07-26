@@ -1090,98 +1090,241 @@ int FUN_0011be10(short *table, void *key)
   return *table + element_ptr;
 }
 
-/* hashtable_grow — resize the hashtable by adding capacity bits (0x11beb0).
- * Source: hashtable.c lines 0x86-0xb0. */
-int FUN_0011beb0(short *table, short growth_bits)
-{
-  short *array_hdr;
-  unsigned short old_capacity_bits;
-  short old_count;
-  int old_bitmap;
-  int old_array_data;
-  int old_array_capacity;
-  int old_array_p2;
-  int new_capacity;
-  int bitmap_bytes;
-  int new_bitmap;
-  int i;
-  short idx;
-  int element_ptr;
-  int dest_ptr;
+/* FUN_0011beb0 (0x11beb0) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static void (*const b11beb0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b11beb0_exitfn)(int) = system_exit;
+static void * (*const b11beb0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b11beb0_c117b20)(int *table, int element_size) = array_new;
+static int (*const b11beb0_c117b90)(int *array, int new_count) = array_resize;
+static void *(*const b11beb0_memset)(void *, int, unsigned int) = csmemset;
+static int (*const b11beb0_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
+static int (*const b11beb0_c11be10)(short *table, void *key) = FUN_0011be10;
+static void * (*const b11beb0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const b11beb0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+static void (*const b11beb0_c117cf0)(int *table) = FUN_00117cf0;
 
-  old_count = table[2];
-  old_bitmap = *(int *)(table + 0xc);
-  array_hdr = table + 0xe;
-  old_capacity_bits = (unsigned short)table[3];
-  old_array_data = *(int *)array_hdr;
-  old_array_capacity = *(int *)(table + 0x10);
-  old_array_p2 = *(int *)(table + 0x12);
-  if (((*table < 1) || (table[1] < 1)) ||
-      ((*(float *)(table + 4) <= 0.0f) ||
-       (*(float *)(table + 4) > 1.0f) ||
-       ((old_capacity_bits != 0xffff &&
-         ((1 << ((unsigned char)old_capacity_bits & 0x1f)) !=
-          *(int *)(table + 0x10)))))) {
-    display_assert("hashtable_valid(table)",
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x86, 1);
-    system_exit(-1);
-  }
-  if (growth_bits < 1) {
-    display_assert("growth_bits>0",
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x87, 1);
-    system_exit(-1);
-  }
-  if ((int)growth_bits + (int)table[3] > 0xf) {
-    display_assert("table->capacity_bits+growth_bits<SHORT_BITS",
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x88, 1);
-    system_exit(-1);
-  }
-  table[3] = table[3] + growth_bits;
-  new_capacity = (int)(short)(1 << ((unsigned char)table[3] & 0x1f));
-  bitmap_bytes = ((new_capacity + 0x1f) >> 5) << 2;
-  table[2] = 0;
-  new_bitmap = (int)debug_malloc(bitmap_bytes, 0,
-    "c:\\halo\\SOURCE\\memory\\hashtable.c", 0x8f);
-  *(int *)(table + 0xc) = new_bitmap;
-  if (new_bitmap != 0) {
-    array_reset((int *)array_hdr, *(int *)array_hdr);
-    if (array_resize((int *)array_hdr, new_capacity)) {
-      csmemset((void *)*(int *)(table + 0xc), 0, bitmap_bytes);
-      if (0 < old_array_capacity) {
-        idx = 0;
-        i = 0;
-        do {
-          if ((*(unsigned int *)(old_bitmap + (i >> 5) * 4) &
-               (1 << ((unsigned char)i & 0x1f))) != 0) {
-            element_ptr = array_get_element(&old_array_data, i,
-                                            old_array_data);
-            dest_ptr = FUN_0011be10(table, (void *)element_ptr);
-            csmemcpy((void *)dest_ptr,
-                     (void *)(element_ptr + *table),
-                     (int)table[1]);
-          }
-          idx = idx + 1;
-          i = (int)idx;
-        } while (i < old_array_capacity);
-      }
-      if (old_bitmap != 0) {
-        debug_free((void *)old_bitmap,
-                   "c:\\halo\\SOURCE\\memory\\hashtable.c", 0xa8);
-      }
-      array_dispose(&old_array_data);
-      return 1;
-    }
-    debug_free((void *)*(int *)(table + 0xc),
-               "c:\\halo\\SOURCE\\memory\\hashtable.c", 0xb0);
-  }
-  table[3] = (short)old_capacity_bits;
-  table[2] = old_count;
-  *(int *)(table + 0xc) = old_bitmap;
-  *(int *)array_hdr = old_array_data;
-  *(int *)(table + 0x10) = old_array_capacity;
-  *(int *)(table + 0x12) = old_array_p2;
-  return 0;
+__attribute__((naked, noinline))
+int FUN_0011beb0(short *table __attribute__((unused)), short growth_bits __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "movw 0x4(%%esi), %%ax\n\t"
+      "movl 0x18(%%esi), %%edx\n\t"
+      "movw %%ax, -0xc(%%ebp)\n\t"
+      "leal 0x1c(%%esi), %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpw $0, (%%esi)\n\t"
+      "movw 0x6(%%esi), %%cx\n\t"
+      "movl %%eax, 0x8(%%ebp)\n\t"
+      "movl %%edx, -0x4(%%ebp)\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movl %%edx, -0x18(%%ebp)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "movl %%edx, -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jle .LFUN_0011beb0_1\n\t"
+      "cmpw $0, 0x2(%%esi)\n\t"
+      "jle .LFUN_0011beb0_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0011beb0_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fcomps 0x2533c8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jp .LFUN_0011beb0_1\n\t"
+      "cmpw $-1, %%cx\n\t"
+      "je .LFUN_0011beb0_2\n\t"
+      "movl 0x20(%%esi), %%eax\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "cmpl %%eax, %%edx\n\t"
+      "je .LFUN_0011beb0_2\n\t"
+      ".LFUN_0011beb0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x86\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f69c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011beb0_2:\n\t"
+      "movw 0xc(%%ebp), %%di\n\t"
+      "testw %%di, %%di\n\t"
+      "jg .LFUN_0011beb0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x87\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f724\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011beb0_3:\n\t"
+      "movswl 0x6(%%esi), %%ecx\n\t"
+      "movswl %%di, %%eax\n\t"
+      "addl %%ecx, %%eax\n\t"
+      "cmpl $0x10, %%eax\n\t"
+      "jl .LFUN_0011beb0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x88\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0x28f6f8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0011beb0_4:\n\t"
+      "addw %%di, 0x6(%%esi)\n\t"
+      "movw 0x6(%%esi), %%cx\n\t"
+      "movl $1, %%eax\n\t"
+      "shll %%cl, %%eax\n\t"
+      "pushl $0x8f\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl $0\n\t"
+      "movswl %%ax, %%ebx\n\t"
+      "leal 0x1f(%%ebx), %%edi\n\t"
+      "sarl $5, %%edi\n\t"
+      "shll $2, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "movw $0, 0x4(%%esi)\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x18(%%esi)\n\t"
+      "je .LFUN_0011beb0_11\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117b20]\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c117b90]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0011beb0_10\n\t"
+      "movl 0x18(%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .LFUN_0011beb0_7\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".LFUN_0011beb0_5:\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "andl $0x1f, %%ecx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl %%eax, %%ecx\n\t"
+      "sarl $5, %%ecx\n\t"
+      "testl %%edx, (%%ebx,%%ecx,4)\n\t"
+      "je .LFUN_0011beb0_6\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117ee0]\n\t"
+      "movswl 0x2(%%esi), %%ecx\n\t"
+      "movswl (%%esi), %%edx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "pushl %%ecx\n\t"
+      "addl %%eax, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl %%esi, %%eax\n\t"
+      "call *%[c11be10]\n\t"
+      "addl $4, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_0011beb0_6:\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "incl %%edi\n\t"
+      "movswl %%di, %%eax\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jl .LFUN_0011beb0_5\n\t"
+      "jmp .LFUN_0011beb0_8\n\t"
+      ".LFUN_0011beb0_7:\n\t"
+      "movl -0x4(%%ebp), %%ebx\n\t"
+      ".LFUN_0011beb0_8:\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "je .LFUN_0011beb0_9\n\t"
+      "pushl $0xa8\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_0011beb0_9:\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c117cf0]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0011beb0_10:\n\t"
+      "movl 0x18(%%esi), %%ecx\n\t"
+      "pushl $0xb0\n\t"
+      "pushl $0x28f678\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "jmp .LFUN_0011beb0_12\n\t"
+      ".LFUN_0011beb0_11:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      ".LFUN_0011beb0_12:\n\t"
+      "movw -0x8(%%ebp), %%dx\n\t"
+      "movw -0xc(%%ebp), %%ax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movw %%dx, 0x6(%%esi)\n\t"
+      "movl -0x18(%%ebp), %%edx\n\t"
+      "movw %%ax, 0x4(%%esi)\n\t"
+      "movl -0x14(%%ebp), %%eax\n\t"
+      "movl %%ecx, 0x18(%%esi)\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movl %%edx, (%%ebx)\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, 0x4(%%ebx)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ecx, 0x8(%%ebx)\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b11beb0_assert), [exitfn] "m"(b11beb0_exitfn), [c8ee60] "m"(b11beb0_c8ee60), [c117b20] "m"(b11beb0_c117b20), [c117b90] "m"(b11beb0_c117b90), [memset] "m"(b11beb0_memset), [c117ee0] "m"(b11beb0_c117ee0), [c11be10] "m"(b11beb0_c11be10), [c8e0b0] "m"(b11beb0_c8e0b0), [c8ef70] "m"(b11beb0_c8ef70), [c117cf0] "m"(b11beb0_c117cf0)
+      : "memory");
 }
+#else
+#error "FUN_0011beb0: clang naked draft required"
+#endif
+
 
 /* hashtable_insert — validate, grow if needed, then put (0x11c0f0).
  * Source: hashtable.c line 0x5d. */

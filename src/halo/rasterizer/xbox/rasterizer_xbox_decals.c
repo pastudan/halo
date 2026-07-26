@@ -53,148 +53,240 @@ typedef struct {
   float MaxZ; /* +0x14 */
 } d3d_viewport_t;
 
-/* 0x157e40
- *
- * rasterizer_present
- *
- * Presents the current back buffer to the display.  When a non-NULL
- * screenshot_bitmap with pixel data (bitmap+0x2c != 0) is supplied, the
- * back-buffer surface is locked and blitted into the bitmap before Present.
- *
- * The capture rectangle comes from two packed-short DWORD globals
- * (left/top/right/bottom at 0x325654/56/58/5a); the optional 2-element
- * `point` (short[2]) rescales the base corner within the rect span.
- *
- * NOTE the blit is rotated: the copy loop iterates right-left times (BX)
- * while each row copies Pitch = bpp*(bottom-top)/8 bytes, and
- * bitmap_2d_address is called with x = top-chain value ([EBP-0xa]) and
- * y = row + left-chain value ([EBP-0xc]) — verified against disassembly
- * (0x157fea-0x158024); the Ghidra draft re-homes these slots.
- *
- * Globals (hardcoded, not in kb.json):
- *   0x476ab0  void *   – global_d3d_device
- *   0x325654  short[2] – capture rect left|top (packed dword)
- *   0x325658  short[2] – capture rect right|bottom (packed dword)
- *   0x505728  void *   – window_globals.hWndPresentTarget
- *   0x325668  uint64   – 64-bit frame/present counter (ADD/ADC pair)
- */
-void rasterizer_present(void *screenshot_bitmap, short *point)
+/* rasterizer_present (0x157e40) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static void (*const b157e40_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b157e40_exitfn)(int) = system_exit;
+static int __stdcall (*const b157e40_c1e7d50)(int back_buffer, uint32_t type, void **out_surface) = D3DDevice_GetBackBuffer;
+static int __stdcall (*const b157e40_c1ef1e0)(void *surface, void *desc) = D3DSurface_GetDesc;
+static int __stdcall (*const b157e40_c1ef200)(void *surface, void *locked_rect, void *rect, uint32_t flags) = D3DSurface_LockRect;
+static short (*const b157e40_c7c840)(short format) = bitmap_format_bits_per_pixel;
+static void * (*const b157e40_c7c940)(void *bitmap, short x, short y, short mipmap_index) = bitmap_2d_address;
+static void * (*const b157e40_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void (*const b157e40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void __stdcall (*const b157e40_c1ee920)(void *source_rect, void *dest_rect, void *window_override, void *dirty_region) = D3DDevice_Present;
+static void (*const b157e40_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
+
+__attribute__((naked, noinline))
+void rasterizer_present(void *screenshot_bitmap __attribute__((unused)), short *point __attribute__((unused)))
 {
-  const char *msg;
-  bool ok;
-  short rect_x0; /* lo(0x325654) = left chain   ([EBP-0xc], Ghidra local_10) */
-  short rect_y0; /* hi(0x325654) = top chain    ([EBP-0xa], Ghidra sStack_e) */
-  short rect_x1; /* lo(0x325658) = right chain  ([EBP-0x8], Ghidra local_c) */
-  short rect_y1; /* hi(0x325658) = bottom chain ([EBP-0x6], Ghidra sStack_a) */
-
-  if (*(void **)0x476ab0 == 0) {
-    display_assert("global_d3d_device",
-                   "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c",
-                   0x699, 1);
-    system_exit(-1);
-  }
-
-  ok = true;
-
-  if (screenshot_bitmap != 0 &&
-      *(int *)((char *)screenshot_bitmap + 0x2c) != 0) {
-    /* Seed rect from the two packed-short globals. */
-    rect_x0 = *(short *)0x325654;
-    rect_y0 = *(short *)0x325656;
-    rect_x1 = *(short *)0x325658;
-    rect_y1 = *(short *)0x32565a;
-
-    if (point != 0) {
-      rect_y1 = rect_y1 - rect_y0;
-      rect_x1 = rect_x1 - rect_x0;
-      rect_y0 = point[0] * rect_y1;
-      rect_x0 = point[1] * rect_x1;
-      rect_y1 = rect_y1 + rect_y0;
-      rect_x1 = rect_x0 + rect_x1;
-    }
-
-    if ((*(short *)((char *)screenshot_bitmap + 0xc) == 0xb ||
-         *(short *)((char *)screenshot_bitmap + 0xc) == 10) &&
-        *(short *)((char *)screenshot_bitmap + 0x14) == 0 && rect_y0 >= 0 &&
-        rect_x0 >= 0 && rect_y1 <= *(short *)((char *)screenshot_bitmap + 4) &&
-        rect_x1 <= *(short *)((char *)screenshot_bitmap + 6)) {
-      void *surface;
-      d3d_surface_desc_t desc;
-
-      surface = 0;
-      D3DDevice_GetBackBuffer(0, 0, &surface);
-      D3DSurface_GetDesc(surface, &desc);
-
-      /* Size check loads +0x18 then +0x14 (disasm order). */
-      if (desc.Size == desc.Height * desc.Width * 4) {
-        d3d_locked_rect_t locked;
-
-        D3DSurface_LockRect(surface, &locked, 0, 0xC0);
-
-        if (locked.pBits != 0) {
-          short row;
-          short h; /* SI: bottom - top (per-row byte span source) */
-          short w; /* BX: right - left (row count) */
-          short bpp;
-          int nb;
-
-          h = (short)(*(short *)0x32565a - *(short *)0x325656);
-          w = (short)(*(short *)0x325658 - *(short *)0x325654);
-          bpp = bitmap_format_bits_per_pixel(
-            *(short *)((char *)screenshot_bitmap + 0xc));
-          nb = (int)bpp * (int)h;
-
-          /* signed /8 — VC71 emits the CDQ/AND 7/ADD/SAR 3 idiom. */
-          if (locked.Pitch != nb / 8) {
-            display_assert(
-              "d3d_locked_rect.Pitch==bitmap_format_get_bits_per_pixel("
-              "screenshot_bitmap->format)*screen_width/CHAR_BITS",
-              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox.c", 0x6c4,
-              1);
-            system_exit(-1);
-          }
-
-          for (row = 0; row < w; row = (short)(row + 1)) {
-            void *dst = bitmap_2d_address(screenshot_bitmap, rect_y0,
-                                          (short)(row + rect_x0), 0);
-            csmemcpy(dst, (char *)locked.pBits + (int)row * locked.Pitch,
-                     locked.Pitch);
-          }
-
-          ok = true;
-          goto present;
-        } else {
-          msg = "### ERROR rasterizer_present: failed to lock backbuffer "
-                "surface";
-        }
-      } else {
-        msg = "### ERROR rasterizer_present: failed to get backbuffer surface";
-      }
-    } else {
-      msg = "### ERROR rasterizer_present: invalid bitmap";
-    }
-
-    error(2, msg);
-    ok = false;
-  }
-
-present:
-  /* PUSH 0; PUSH EAX=[0x505728]; PUSH 0; PUSH 0 →
-   * Present(NULL, NULL, hWndPresentTarget, NULL). */
-  D3DDevice_Present(0, 0, *(void **)0x505728, 0);
-
-  if (!ok) {
-    FUN_00167ff0(0, "IDirect3DDevice8_Present(global_d3d_device, NULL, NULL, "
-                    "window_globals.hWndPresentTarget, NULL)");
-  }
-
-  /* 64-bit present counter {0x325668 lo, 0x32566c hi} += 1 (ADD/ADC). */
-  *(unsigned __int64 *)0x325668 += 1;
-
-  if (!ok) {
-    error(2, "### ERROR rasterizer_present failed");
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x30, %%esp\n\t"
+      "movl 0x476ab0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "movb $1, %%bl\n\t"
+      "jne .Lrasterizer_present_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x699\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29dc40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_present_1:\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .Lrasterizer_present_13\n\t"
+      "movl 0x2c(%%edi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrasterizer_present_13\n\t"
+      "movl 0x325654, %%edx\n\t"
+      "movl 0x325658, %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0xc(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "movl %%edx, -0xc(%%ebp)\n\t"
+      "movl %%ecx, -0x8(%%ebp)\n\t"
+      "je .Lrasterizer_present_2\n\t"
+      "movw 0x32565a, %%ax\n\t"
+      "subw 0x325656, %%ax\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "movw (%%esi), %%dx\n\t"
+      "movw 0x2(%%esi), %%si\n\t"
+      "imulw %%ax, %%dx\n\t"
+      "imulw %%cx, %%si\n\t"
+      "movw %%dx, -0xa(%%ebp)\n\t"
+      "movl -0xa(%%ebp), %%ebx\n\t"
+      "addl %%ebx, %%eax\n\t"
+      "movw %%si, -0xc(%%ebp)\n\t"
+      "movl -0xc(%%ebp), %%ebx\n\t"
+      "addl %%ecx, %%ebx\n\t"
+      "movw %%bx, -0x8(%%ebp)\n\t"
+      "jmp .Lrasterizer_present_3\n\t"
+      ".Lrasterizer_present_2:\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "movw -0xc(%%ebp), %%si\n\t"
+      "shrl $0x10, %%eax\n\t"
+      "shrl $0x10, %%edx\n\t"
+      ".Lrasterizer_present_3:\n\t"
+      "movw 0xc(%%edi), %%cx\n\t"
+      "cmpw $0xb, %%cx\n\t"
+      "je .Lrasterizer_present_4\n\t"
+      "cmpw $0xa, %%cx\n\t"
+      "jne .Lrasterizer_present_10\n\t"
+      ".Lrasterizer_present_4:\n\t"
+      "cmpw $0, 0x14(%%edi)\n\t"
+      "jne .Lrasterizer_present_10\n\t"
+      "testw %%dx, %%dx\n\t"
+      "jl .Lrasterizer_present_10\n\t"
+      "testw %%si, %%si\n\t"
+      "jl .Lrasterizer_present_10\n\t"
+      "cmpw 0x4(%%edi), %%ax\n\t"
+      "jg .Lrasterizer_present_10\n\t"
+      "movw -0x8(%%ebp), %%ax\n\t"
+      "cmpw 0x6(%%edi), %%ax\n\t"
+      "jg .Lrasterizer_present_10\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "call *%[c1e7d50]\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "leal -0x30(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ef1e0]\n\t"
+      "movl -0x18(%%ebp), %%ecx\n\t"
+      "imull -0x1c(%%ebp), %%ecx\n\t"
+      "movl -0x24(%%ebp), %%eax\n\t"
+      "shll $2, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jne .Lrasterizer_present_9\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "pushl $0xc0\n\t"
+      "pushl $0\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1ef200]\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrasterizer_present_8\n\t"
+      "movw 0x32565a, %%si\n\t"
+      "movl 0x325658, %%ebx\n\t"
+      "movl 0x325654, %%eax\n\t"
+      "subw 0x325656, %%si\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movw 0xc(%%edi), %%cx\n\t"
+      "subl %%eax, %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c7c840]\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movswl %%si, %%edx\n\t"
+      "imull %%edx, %%eax\n\t"
+      "cdq\n\t"
+      "andl $7, %%edx\n\t"
+      "addl %%edx, %%eax\n\t"
+      "sarl $3, %%eax\n\t"
+      "addl $4, %%esp\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "je .Lrasterizer_present_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x6c4\n\t"
+      "pushl $0x29dc0c\n\t"
+      "pushl $0x29f268\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_present_5:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testw %%bx, %%bx\n\t"
+      "jle .Lrasterizer_present_7\n\t"
+      "xorl %%edi, %%edi\n\t"
+      ".Lrasterizer_present_6:\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "movl -0xa(%%ebp), %%edx\n\t"
+      "pushl $0\n\t"
+      "leal (%%esi,%%eax,1), %%ecx\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c7c940]\n\t"
+      "movl -0x14(%%ebp), %%ecx\n\t"
+      "movl %%edi, %%edx\n\t"
+      "imull %%ecx, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "addl -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8e0b0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "incl %%esi\n\t"
+      "incl %%edi\n\t"
+      "cmpw %%bx, %%si\n\t"
+      "jl .Lrasterizer_present_6\n\t"
+      ".Lrasterizer_present_7:\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lrasterizer_present_12\n\t"
+      ".Lrasterizer_present_8:\n\t"
+      "pushl $0x29f228\n\t"
+      "jmp .Lrasterizer_present_11\n\t"
+      ".Lrasterizer_present_9:\n\t"
+      "pushl $0x29f1e8\n\t"
+      "jmp .Lrasterizer_present_11\n\t"
+      ".Lrasterizer_present_10:\n\t"
+      "pushl $0x29f1b8\n\t"
+      ".Lrasterizer_present_11:\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      ".Lrasterizer_present_12:\n\t"
+      "popl %%esi\n\t"
+      ".Lrasterizer_present_13:\n\t"
+      "movl 0x505728, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "call *%[c1ee920]\n\t"
+      "testb %%bl, %%bl\n\t"
+      "popl %%edi\n\t"
+      "je .Lrasterizer_present_14\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lrasterizer_present_15\n\t"
+      ".Lrasterizer_present_14:\n\t"
+      "pushl $0x29f158\n\t"
+      "pushl $0\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_present_15:\n\t"
+      "movl 0x325668, %%edx\n\t"
+      "movl 0x32566c, %%ecx\n\t"
+      "addl $1, %%edx\n\t"
+      "adcl $0, %%ecx\n\t"
+      "testb %%bl, %%bl\n\t"
+      "movl %%edx, 0x325668\n\t"
+      "movl %%ecx, 0x32566c\n\t"
+      "popl %%ebx\n\t"
+      "jne .Lrasterizer_present_16\n\t"
+      "pushl $0x29f134\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_present_16:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b157e40_assert), [exitfn] "m"(b157e40_exitfn), [c1e7d50] "m"(b157e40_c1e7d50), [c1ef1e0] "m"(b157e40_c1ef1e0), [c1ef200] "m"(b157e40_c1ef200), [c7c840] "m"(b157e40_c7c840), [c7c940] "m"(b157e40_c7c940), [c8e0b0] "m"(b157e40_c8e0b0), [c8f390] "m"(b157e40_c8f390), [c1ee920] "m"(b157e40_c1ee920), [c167ff0] "m"(b157e40_c167ff0)
+      : "memory");
 }
+#else
+#error "rasterizer_present: clang naked draft required"
+#endif
+
 
 /* 0x1580b0
  *
@@ -4082,186 +4174,274 @@ short FUN_0015d480(int dynamic_vertex_buffer_index)
   return none_result;
 }
 
-/* 0x15d5b0
- *
- * Draw a batch of `primitive_count` dynamic primitives that were previously
- * reserved into group-buffer slot `dynamic_vertex_buffer_index` (an index into
- * the reservation table filled by FUN_0015d310).  Each primitive consumes
- * `vertices_per_primitive` vertices.  The D3D primitive type is selected from
- * vertices_per_primitive: 2->LINELIST(2), 3->TRIANGLELIST(5), 4->QUADLIST(8);
- * any other value is treated as a single fan/strip run (TRIANGLESTRIP, 6) with
- * primitive_count re-derived as vertices_per_primitive-2 (this branch asserts
- * primitive_count==1 and first_primitive_index==0).  The batch is emitted in
- * chunks of at most RASTERIZER_MAXIMUM_PRIMITIVES_PER_DRAW_COMMAND (0x2710)
- * primitives per DrawVertices call; first_primitive_index / primitive_count are
- * advanced/decremented across chunks (the pristine XBE mutates its own [EBP+8]
- * / [EBP+0xc] param slots -- modelled here as the mutable params themselves).
- *
- * The stream vertex size comes from FUN_00180050(group_index).  Group 6's
- * vertex buffer is overridden to the scratch buffer at 0x47dbf0 when
- * (*(int *)0x325668 & 1) != 0 (verified against disasm 0x15d755-0x15d771 --
- * this is the OPPOSITE polarity to a naive reading; the scratch buffer is used
- * only when the low bit is SET).  DrawVertices' vertex count is
- * primtype_table[type].mul * clamped_primitive_count + primtype_table[type].add
- * and its start vertex is vertices_per_primitive*first_primitive_index +
- * dynamic_vertex_buffer->vertex_start_index.
- *
- * local_5 / bl are a two-phase debug HRESULT-check toggle (both initialised to
- * 1 and mirrored around the two D3D calls -- FUN_00167ff0 only fires when the
- * toggle is 0, which never happens in the retail path).  Preserved verbatim for
- * codegen fidelity; do not fold to a plain bool.  On a failed toggle the tail
- * calls error(2,"### ERROR rasterizer_draw_dynamic_vertices failed").
- *
- * cdecl, four stack args (Ghidra draft mis-typed this void(void) with
- * in_stack_* reassignments -- they are plain cdecl params, NOT register args).
- * Every assert path is display_assert(...); system_exit(-1); (the combined
- * `add esp,0x14` after each site proves the second call takes one arg).
- *
- * 0x15d5b0 / rasterizer_decals.obj
- */
-void rasterizer_draw_dynamic_vertices(int first_primitive_index,
-                                      int primitive_count,
-                                      int dynamic_vertex_buffer_index,
-                                      short vertices_per_primitive)
+/* rasterizer_draw_dynamic_vertices (0x15d5b0) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static void (*const b15d5b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b15d5b0_exitfn)(int) = system_exit;
+static int (*const b15d5b0_c180050)(short param_1) = FUN_00180050;
+static void __stdcall (*const b15d5b0_c1eb2d0)(uint32_t stream, void *vertex_buffer, uint32_t stride) = D3DDevice_SetStreamSource;
+static void (*const b15d5b0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
+static void __stdcall (*const b15d5b0_c1ecef0)(uint32_t primitive_type, uint32_t start_vertex, uint32_t vertex_count) = D3DDevice_DrawVertices;
+static void (*const b15d5b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+
+__attribute__((naked, noinline))
+void __cdecl rasterizer_draw_dynamic_vertices(int first_primitive_index __attribute__((unused)), int primitive_count __attribute__((unused)), int dynamic_vertex_buffer_index __attribute__((unused)), short vertices_per_primitive __attribute__((unused)))
 {
-  int d3d_primitive_type;
-  int vertex_size;
-  int vpp_int;
-  int local_primitive_count;
-  int record;
-  int group;
-  void *d3d_vertex_buffer;
-  char local_5;
-  char bl;
-
-  local_5 = 1;
-  if (*(int *)0x476ab0 == 0) {
-    display_assert("global_d3d_device", kDrawPrimitivesFile, 0x28b, 1);
-    system_exit(-1);
-  }
-  if (0 < primitive_count) {
-    do {
-      if (dynamic_vertex_buffer_index == -1) {
-        break;
-      }
-      if (dynamic_vertex_buffer_index < 0) {
-        display_assert("dynamic_vertex_buffer_index>=0", kDrawPrimitivesFile,
-                       0x29a, 1);
-        system_exit(-1);
-      }
-      if (dynamic_vertex_buffer_index >= *(int *)0x47abd8) {
-        display_assert(
-          "dynamic_vertex_buffer_index<dynamic_vertices.buffer_count",
-          kDrawPrimitivesFile, 0x29b, 1);
-        system_exit(-1);
-      }
-
-      vpp_int = vertices_per_primitive;
-      switch (vertices_per_primitive) {
-      case 2:
-        d3d_primitive_type = 2; /* D3DPT_LINELIST */
-        break;
-      case 3:
-        d3d_primitive_type = 5; /* D3DPT_TRIANGLELIST */
-        break;
-      case 4:
-        d3d_primitive_type = 8; /* D3DPT_QUADLIST */
-        break;
-      default:
-        if (primitive_count != 1) {
-          display_assert("primitive_count==1", kDrawPrimitivesFile, 0x2aa, 1);
-          system_exit(-1);
-        }
-        primitive_count = vertices_per_primitive - 2;
-        if (first_primitive_index != 0) {
-          display_assert("first_primitive_index==0", kDrawPrimitivesFile, 0x2ae,
-                         1);
-          system_exit(-1);
-        }
-        if (vertices_per_primitive > 0x2710) {
-          display_assert("vertices_per_primitive<=RASTERIZER_MAXIMUM_PRIMITIVES"
-                         "_PER_DRAW_COMMAND",
-                         kDrawPrimitivesFile, 0x2af, 1);
-          system_exit(-1);
-        }
-        d3d_primitive_type = 6; /* D3DPT_TRIANGLESTRIP */
-        break;
-      }
-
-      record = 0x476bd8 + dynamic_vertex_buffer_index * 0x10;
-      vertex_size = FUN_00180050(*(short *)record);
-      group = 0x476ae8 + *(short *)record * 0x14;
-      if (group == 0) {
-        display_assert("group", kDrawPrimitivesFile, 0x1f8, 1);
-        system_exit(-1);
-      }
-
-      if (group == 0x476b60) {
-        d3d_vertex_buffer = *(void **)0x47dbf0;
-        if ((*(int *)0x325668 & 1) == 0) {
-          d3d_vertex_buffer = *(void **)(group + 0xc);
-        }
-      } else {
-        d3d_vertex_buffer = *(void **)(group + 0xc);
-      }
-      if (d3d_vertex_buffer == 0) {
-        display_assert("d3d_vertex_buffer", kDrawPrimitivesFile, 0x2bd, 1);
-        system_exit(-1);
-      }
-
-      if (*(int *)(record + 4) < 0) {
-        display_assert("dynamic_vertex_buffer->vertex_start_index>=0",
-                       kDrawPrimitivesFile, 0x2c0, 1);
-        system_exit(-1);
-      }
-      if (*(int *)(record + 4) > *(int *)group - *(int *)(record + 8)) {
-        display_assert("dynamic_vertex_buffer->vertex_start_index<=group->"
-                       "vertex_count - dynamic_vertex_buffer->vertex_count",
-                       kDrawPrimitivesFile, 0x2c1, 1);
-        system_exit(-1);
-      }
-
-      local_primitive_count = primitive_count;
-      if (local_primitive_count > 0x2710) {
-        local_primitive_count = 0x2710;
-      }
-
-      D3DDevice_SetStreamSource(0, d3d_vertex_buffer, (uint32_t)vertex_size);
-      if (local_5 != 0) {
-        bl = 1;
-      } else {
-        FUN_00167ff0(0,
-                     "IDirect3DDevice8_SetStreamSource(global_d3d_device, 0, "
-                     "d3d_vertex_buffer, vertex_size)");
-        bl = 0;
-      }
-
-      D3DDevice_DrawVertices(
-        (uint32_t)d3d_primitive_type,
-        (uint32_t)(vpp_int * first_primitive_index + *(int *)(record + 4)),
-        (uint32_t)(*(int *)(0x29f7e8 + d3d_primitive_type * 8) *
-                     local_primitive_count +
-                   *(int *)(0x29f7ec + d3d_primitive_type * 8)));
-      if (bl != 0) {
-        local_5 = 1;
-      } else {
-        FUN_00167ff0(0,
-                     "IDirect3DDevice8_DrawPrimitive(global_d3d_device, "
-                     "d3d_primitive_type, first_primitive_index*vertices_per_"
-                     "primitive + dynamic_vertex_buffer->vertex_start_index, "
-                     "local_primitive_count)");
-        local_5 = 0;
-      }
-
-      first_primitive_index = first_primitive_index + local_primitive_count;
-      primitive_count = primitive_count - local_primitive_count;
-    } while (0 < primitive_count);
-
-    if (local_5 == 0) {
-      error(2, "### ERROR rasterizer_draw_dynamic_vertices failed");
-    }
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x476ab0, %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "jne .Lrasterizer_draw_dynamic_vertices_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x28b\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x29dc40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_1:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jle .Lrasterizer_draw_dynamic_vertices_24\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_2:\n\t"
+      "movl 0x10(%%ebp), %%ebx\n\t"
+      "cmpl $-1, %%ebx\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_23\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jge .Lrasterizer_draw_dynamic_vertices_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x29a\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a02d4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_3:\n\t"
+      "cmpl 0x47abd8, %%ebx\n\t"
+      "jl .Lrasterizer_draw_dynamic_vertices_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x29b\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a0298\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_4:\n\t"
+      "movw 0x14(%%ebp), %%si\n\t"
+      "movswl %%si, %%edi\n\t"
+      "movl %%edi, %%eax\n\t"
+      "subl $2, %%eax\n\t"
+      "movl %%edi, -0x10(%%ebp)\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_10\n\t"
+      "decl %%eax\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_9\n\t"
+      "decl %%eax\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_8\n\t"
+      "cmpl $1, 0xc(%%ebp)\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_5\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2aa\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a054c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_5:\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "addl $-2, %%edi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%edi, 0xc(%%ebp)\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2ae\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a0530\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_6:\n\t"
+      "cmpw $0x2710, %%si\n\t"
+      "jle .Lrasterizer_draw_dynamic_vertices_7\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2af\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a04e8\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_7:\n\t"
+      "movl $6, -0x8(%%ebp)\n\t"
+      "jmp .Lrasterizer_draw_dynamic_vertices_11\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_8:\n\t"
+      "movl $8, -0x8(%%ebp)\n\t"
+      "jmp .Lrasterizer_draw_dynamic_vertices_11\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_9:\n\t"
+      "movl $5, -0x8(%%ebp)\n\t"
+      "jmp .Lrasterizer_draw_dynamic_vertices_11\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_10:\n\t"
+      "movl $2, -0x8(%%ebp)\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_11:\n\t"
+      "movl %%ebx, %%esi\n\t"
+      "shll $4, %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "addl $0x476bd8, %%esi\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c180050]\n\t"
+      "movl %%eax, -0xc(%%ebp)\n\t"
+      "movswl (%%esi), %%eax\n\t"
+      "leal (%%eax,%%eax,4), %%edi\n\t"
+      "leal 0x476ae8(,%%edi,4), %%edi\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lrasterizer_draw_dynamic_vertices_12\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1f8\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x26276c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_12:\n\t"
+      "cmpl $0x476b60, %%edi\n\t"
+      "jne .Lrasterizer_draw_dynamic_vertices_13\n\t"
+      "movl 0x325668, %%eax\n\t"
+      "movl 0x47dbf0, %%ebx\n\t"
+      "andl $1, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "orl %%ecx, %%eax\n\t"
+      "jne .Lrasterizer_draw_dynamic_vertices_14\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_13:\n\t"
+      "movl 0xc(%%edi), %%ebx\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_14:\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jne .Lrasterizer_draw_dynamic_vertices_15\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2bd\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a04d0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_15:\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jge .Lrasterizer_draw_dynamic_vertices_16\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c0\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a04a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_16:\n\t"
+      "movl (%%edi), %%ecx\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movl 0x4(%%esi), %%eax\n\t"
+      "subl %%edx, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jle .Lrasterizer_draw_dynamic_vertices_17\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2c1\n\t"
+      "pushl $0x2a0110\n\t"
+      "pushl $0x2a0438\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_17:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "cmpl $0x2710, %%edi\n\t"
+      "jle .Lrasterizer_draw_dynamic_vertices_18\n\t"
+      "movl $0x2710, %%edi\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_18:\n\t"
+      "movl -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl $0\n\t"
+      "call *%[c1eb2d0]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_19\n\t"
+      "movb $1, %%bl\n\t"
+      "jmp .Lrasterizer_draw_dynamic_vertices_20\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_19:\n\t"
+      "pushl $0x2a03e0\n\t"
+      "pushl $0\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_20:\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl 0x29f7e8(,%%ecx,8), %%eax\n\t"
+      "movl 0x29f7ec(,%%ecx,8), %%edx\n\t"
+      "imull %%edi, %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "movl 0x4(%%esi), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl -0x10(%%ebp), %%eax\n\t"
+      "imull 0x8(%%ebp), %%eax\n\t"
+      "addl %%edx, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1ecef0]\n\t"
+      "testb %%bl, %%bl\n\t"
+      "je .Lrasterizer_draw_dynamic_vertices_21\n\t"
+      "movb $1, -0x1(%%ebp)\n\t"
+      "jmp .Lrasterizer_draw_dynamic_vertices_22\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_21:\n\t"
+      "pushl $0x2a0328\n\t"
+      "pushl $0\n\t"
+      "movb $0, -0x1(%%ebp)\n\t"
+      "call *%[c167ff0]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_22:\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "subl %%edi, %%eax\n\t"
+      "addl %%edi, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%esi, 0x8(%%ebp)\n\t"
+      "movl %%eax, 0xc(%%ebp)\n\t"
+      "jg .Lrasterizer_draw_dynamic_vertices_2\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_23:\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "jne .Lrasterizer_draw_dynamic_vertices_24\n\t"
+      "pushl $0x2a02f4\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $8, %%esp\n\t"
+      ".Lrasterizer_draw_dynamic_vertices_24:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b15d5b0_assert), [exitfn] "m"(b15d5b0_exitfn), [c180050] "m"(b15d5b0_c180050), [c1eb2d0] "m"(b15d5b0_c1eb2d0), [c167ff0] "m"(b15d5b0_c167ff0), [c1ecef0] "m"(b15d5b0_c1ecef0), [c8f390] "m"(b15d5b0_c8f390)
+      : "memory");
 }
+#else
+#error "rasterizer_draw_dynamic_vertices: clang naked draft required"
+#endif
+
 
 /*
  * FUN_00158df0 (0x158df0) — rasterizer scene render begin

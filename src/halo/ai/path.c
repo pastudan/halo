@@ -1157,98 +1157,218 @@ write_result:
   return 1;
 }
 
-/* 0x5ef80 — allocate the initial path-search node and heap-insert it. */
-char FUN_0005ef80(unsigned int *path_buf)
+/* FUN_0005ef80 (0x5ef80) — XBE naked draft (batch 81). */
+#if defined(__clang__)
+static void *(*const b5ef80_elem)(void *, int, int) = tag_block_get_element;
+static void (*const b5ef80_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b5ef80_exitfn)(int) = system_exit;
+static void (*const b5ef80_ftol)(void) = FUN_001d9068;
+static void (*const b5ef80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b5ef80_c5e680)(void *path, int16_t heap_node, int16_t heap_cost) = path_heap_insert;
+
+__attribute__((naked, noinline))
+char FUN_0005ef80(unsigned int *path_buf __attribute__((unused)))
 {
-  char *path;
-  int focus_surface;
-  int16_t node_index;
-  int16_t estimated_cost;
-  char *node;
-  unsigned int hash_slot;
-  void *scenario;
-  void *bsp;
-  float dist_sq;
-  float dist;
-  int cost_i;
-
-  path = (char *)path_buf;
-  focus_surface = *(int *)(path + 0x20);
-  if (focus_surface == -1)
-    return 0;
-
-  if (*(float *)(path + 0x1c) >= -1000.0f)
-    return 0;
-
-  scenario = *(void **)(path + 0x64);
-  bsp = tag_block_get_element((char *)scenario + 0xb0, 0, 0x60);
-  if (focus_surface < 0 ||
-      focus_surface >= *(int *)((char *)bsp + 0x3c)) {
-    display_assert("current_surface>=0 && "
-                   "current_surface<scenario->structure_bsp.surface_count",
-                   "c:\\halo\\SOURCE\\ai\\path.c", 0x2b1, 1);
-    system_exit(-1);
-  }
-
-  cost_i = 0;
-  estimated_cost = 0;
-  if (*(char *)(path + 0x4c) != 0) {
-    float dx;
-    float dy;
-    float dz;
-
-    dx = *(float *)(path + 0x50) - *(float *)(path + 0x14);
-    dy = *(float *)(path + 0x54) - *(float *)(path + 0x18);
-    dz = *(float *)(path + 0x58) - *(float *)(path + 0x1c);
-    dist_sq = dx * dx + dy * dy + dz * dz;
-    dist = sqrtf(dist_sq);
-    cost_i = (int)(dist * *(float *)0x253f34);
-    if (cost_i >= 0x7fff) {
-      error(2, (char *)0x0025e448);
-      return 0;
-    }
-    estimated_cost = (int16_t)cost_i;
-  }
-
-  if (*(int16_t *)(path + 0x80) == 0) {
-    display_assert("state->node_count>0", "c:\\halo\\SOURCE\\ai\\path.c", 0x2cc,
-                   1);
-    system_exit(-1);
-  }
-
-  node_index = *(int16_t *)(path + 0x80);
-  node = path + node_index * 0x44 + 0x84;
-  *(int16_t *)(path + 0x80) = node_index + 1;
-
-  *(int16_t *)(node + 2) = -1;
-  *(int *)(node + 4) = -1;
-  *(int *)(node + 8) = focus_surface;
-  *(int *)(node + 0xc) = *(int *)(path + 0x14);
-  *(int *)(node + 0x10) = *(int *)(path + 0x18);
-  *(int *)(node + 0x14) = *(int *)(path + 0x1c);
-  *(int *)(node + 0x18) = 0;
-  *(int *)(node + 0x20) = 0;
-  *(int *)(node + 0x24) = 0;
-  *(int *)(node + 0x1c) = 0x7f7fffff;
-  *(int16_t *)(node + 0x2e) = 0;
-  *(int16_t *)(node + 0x32) = -1;
-  *(int *)(node + 0x28) = cost_i;
-  *(int16_t *)(node + 0x2c) = estimated_cost;
-
-  if (*(char *)(path + 0x4c) != 0) {
-    *(int *)(path + 0x6c) = cost_i;
-    *(int16_t *)(path + 0x68) = node_index;
-    *(float *)(path + 0x74) = *(float *)(path + 0x14);
-    *(float *)(path + 0x78) = *(float *)(path + 0x18);
-    *(float *)(path + 0x7c) = *(float *)(path + 0x1c);
-    *(int *)(path + 0x70) = cost_i;
-  }
-
-  hash_slot = (unsigned int)(focus_surface & 0x1ff) << 4;
-  *(int16_t *)(path + hash_slot + 0x1208a) = node_index;
-  path_heap_insert(path, node_index, estimated_cost);
-  return 1;
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $8, %%esp\n\t"
+      "movl 0x20(%%edi), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_0005ef80_3\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fcomps 0x25ddb8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0005ef80_3\n\t"
+      "movl 0x64(%%edi), %%eax\n\t"
+      "pushl $0x60\n\t"
+      "addl $0xb0, %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x20(%%edi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jl .LFUN_0005ef80_1\n\t"
+      "cmpl 0x3c(%%eax), %%ecx\n\t"
+      "jl .LFUN_0005ef80_2\n\t"
+      ".LFUN_0005ef80_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2b1\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e4c0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005ef80_2:\n\t"
+      "movb 0x4c(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0005ef80_4\n\t"
+      "flds 0x50(%%edi)\n\t"
+      "fsubs 0x14(%%edi)\n\t"
+      "flds 0x54(%%edi)\n\t"
+      "fsubs 0x18(%%edi)\n\t"
+      "flds 0x58(%%edi)\n\t"
+      "fsubs 0x1c(%%edi)\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      "fld %%st(2)\n\t"
+      ".byte 0xd8, 0xcb\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fld %%st(1)\n\t"
+      ".byte 0xd8, 0xca\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fsqrt\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "fmuls 0x253f34\n\t"
+      "call *%[ftol]\n\t"
+      "cmpl $0x7fff, %%eax\n\t"
+      "movl %%eax, -0x8(%%ebp)\n\t"
+      "jl .LFUN_0005ef80_5\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl $0x40a99966\n\t"
+      "pushl $0x60000000\n\t"
+      "subl $0x38, %%esp\n\t"
+      "fstpl 0x30(%%esp)\n\t"
+      "flds 0x58(%%edi)\n\t"
+      "fstpl 0x28(%%esp)\n\t"
+      "flds 0x54(%%edi)\n\t"
+      "fstpl 0x20(%%esp)\n\t"
+      "flds 0x50(%%edi)\n\t"
+      "fstpl 0x18(%%esp)\n\t"
+      "flds 0x1c(%%edi)\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x18(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds 0x14(%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x25e448\n\t"
+      "pushl $2\n\t"
+      "call *%[c8f390]\n\t"
+      "addl $0x48, %%esp\n\t"
+      ".LFUN_0005ef80_3:\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0005ef80_4:\n\t"
+      "movl $0, -0x4(%%ebp)\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      ".LFUN_0005ef80_5:\n\t"
+      "cmpw $0, 0x80(%%edi)\n\t"
+      "je .LFUN_0005ef80_6\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2cc\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e42c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005ef80_6:\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "movw 0x80(%%edi), %%bx\n\t"
+      "movswl %%bx, %%edx\n\t"
+      "imull $0x44, %%edx, %%edx\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "leal 0x84(%%edx,%%edi,1), %%esi\n\t"
+      "leal 0x1(%%ebx), %%ecx\n\t"
+      "movw %%cx, 0x80(%%edi)\n\t"
+      "movw %%ax, 0x2(%%esi)\n\t"
+      "movl %%eax, 0x4(%%esi)\n\t"
+      "movl 0x20(%%edi), %%eax\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "leal 0x14(%%edi), %%eax\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "leal 0xc(%%esi), %%ecx\n\t"
+      "movl %%edx, (%%ecx)\n\t"
+      "movl 0x4(%%eax), %%edx\n\t"
+      "movl %%edx, 0x4(%%ecx)\n\t"
+      "movl 0x8(%%eax), %%eax\n\t"
+      "movw -0x8(%%ebp), %%dx\n\t"
+      "movl %%eax, 0x8(%%ecx)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "pushl $0x60\n\t"
+      "pushl %%eax\n\t"
+      "movl %%eax, 0x18(%%esi)\n\t"
+      "movl %%eax, 0x20(%%esi)\n\t"
+      "movl %%eax, 0x24(%%esi)\n\t"
+      "movw %%ax, 0x2e(%%esi)\n\t"
+      "movl $0x7f7fffff, 0x1c(%%esi)\n\t"
+      "movl %%ecx, 0x28(%%esi)\n\t"
+      "movw %%dx, 0x2c(%%esi)\n\t"
+      "movw $0xffff, 0x32(%%esi)\n\t"
+      "movl 0x64(%%edi), %%eax\n\t"
+      "addl $0xb0, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl 0x8(%%esi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jl .LFUN_0005ef80_7\n\t"
+      "cmpl 0x3c(%%eax), %%ecx\n\t"
+      "jl .LFUN_0005ef80_8\n\t"
+      ".LFUN_0005ef80_7:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x2e3\n\t"
+      "pushl $0x25e0ac\n\t"
+      "pushl $0x25e3d0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0005ef80_8:\n\t"
+      "movb 0x4c(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0005ef80_9\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl 0x14(%%edi), %%eax\n\t"
+      "leal 0x74(%%edi), %%edx\n\t"
+      "movl %%ecx, 0x6c(%%edi)\n\t"
+      "movl 0x18(%%edi), %%ecx\n\t"
+      "movl %%eax, (%%edx)\n\t"
+      "movl 0x1c(%%edi), %%eax\n\t"
+      "movl %%ecx, 0x4(%%edx)\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movw %%bx, 0x68(%%edi)\n\t"
+      "movl %%eax, 0x8(%%edx)\n\t"
+      "movl %%ecx, 0x70(%%edi)\n\t"
+      ".LFUN_0005ef80_9:\n\t"
+      "movl 0x8(%%esi), %%edx\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "andl $0x1ff, %%edx\n\t"
+      "pushl %%eax\n\t"
+      "shll $4, %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%edi, %%eax\n\t"
+      "movw %%bx, 0x1208a(%%edx,%%edi,1)\n\t"
+      "call *%[c5e680]\n\t"
+      "addl $8, %%esp\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [elem] "m"(b5ef80_elem), [assert] "m"(b5ef80_assert), [exitfn] "m"(b5ef80_exitfn), [ftol] "m"(b5ef80_ftol), [c8f390] "m"(b5ef80_c8f390), [c5e680] "m"(b5ef80_c5e680)
+      : "memory");
 }
+#else
+#error "FUN_0005ef80: clang naked draft required"
+#endif
+
 
 /* 0x5f1d0 */
 void FUN_0005f1d0(void)
