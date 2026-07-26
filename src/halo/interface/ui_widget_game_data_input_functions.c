@@ -2214,10 +2214,22 @@ void get_editable_playlist_profile_display_name(void *widget)
   (void)esi;
 }
 
-/* 0xf3690 */
-void FUN_000f3690(void *widget)
+/* 0xf3690 — collect up to 3 child widget text handles for item UI sync. */
+void FUN_000f3690(int *out_handles, void *widget)
 {
-  /* relift: no calls detected — manual review */
+  int i;
+  if (out_handles == 0)
+    return;
+  for (i = 0; i < 3; i++)
+    out_handles[i] = -1;
+  if (widget == 0)
+    return;
+  for (i = 0; i < 3; i++) {
+    char *child = (char *)widget_instance_get_nth_child(widget, i);
+    if (child == 0)
+      break;
+    out_handles[i] = *(int *)child;
+  }
 }
 
 /* 0xf3740 */
@@ -2340,7 +2352,7 @@ void FUN_000f39c0(void *widget)
   /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xf3a49 */
   display_assert((char *)0x00289710, (char *)0x00288938, 481, 0);
   system_exit(0);
-  FUN_000f3690((void *)0);
+  FUN_000f3690(0, 0);
   /* relift: cmp dword ptr [ebp + eax*4 - 0x24], -1 -> je 0xf3c6e */
   widget_instance_get_nth_child((void *)(uintptr_t)edi, 0);
   tag_get('aLeD', 0);
@@ -2377,7 +2389,7 @@ void FUN_000f39c0(void *widget)
   /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xf3cff */
   display_assert((char *)0x00289810, (char *)0x00288938, 1662, 0);
   system_exit(0);
-  FUN_000f3690((void *)0);
+  FUN_000f3690(0, 0);
   /* cmp ecx, edx -> je 0xf3d24 */
   /* cmp eax, 0xc -> jl 0xf3d10 */
   multiplayer_game_set_text_box_for_teams_noteams((void *)(uintptr_t)edx);

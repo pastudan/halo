@@ -2191,6 +2191,156 @@ void FUN_001b8570(int object_handle, float dt, void *contact_buf,
       force_b[2] += up[2] * lift;
     }
 
+    /* Air/partial-ground control: steer into force_b while ground_frac < 1. */
+    if (*(float *)(veh + 0x444) < *(float *)0x2533c8) {
+      float *forward = (float *)(veh + 0x24);
+      float *up = (float *)(veh + 0x30);
+      float side[3];
+      float turn[3];
+      float *plane = *(float **)0x31fc08;
+      float air_force[3];
+      float sx, sy, air_blend, yaw_scale;
+
+      side[0] = forward[2] * up[1] - forward[1] * up[2];
+      side[1] = forward[0] * up[2] - forward[2] * up[0];
+      side[2] = forward[1] * up[0] - forward[0] * up[1];
+      turn[0] = up[2] * forward[1] - up[1] * forward[2];
+      turn[1] = up[0] * forward[2] - up[2] * forward[0];
+      turn[2] = up[1] * forward[0] - up[0] * forward[1];
+      (void)magnitude3d(side);
+      (void)magnitude3d(turn);
+
+      air_force[0] = plane[0];
+      air_force[1] = plane[1];
+      air_force[2] = 0.0f;
+
+      if (*(float *)(veh + 0x38) > 0.0f) {
+        float fwd_dot = forward[0] * *(float *)(veh + 0x3c) +
+                        forward[1] * *(float *)(veh + 0x40);
+        float side_dot = side[0] * *(float *)(veh + 0x3c) +
+                         side[1] * *(float *)(veh + 0x40);
+        float corr_x = side[0] * *(float *)(veh + 0x3c) +
+                       side[1] * *(float *)(veh + 0x40);
+        float corr_y = -(forward[0] * *(float *)(veh + 0x3c) +
+                         forward[1] * *(float *)(veh + 0x40));
+        float dx = plane[0] - fwd_dot;
+        float dy = plane[1] - side_dot;
+        dx -= corr_x * *(float *)0x254cc0;
+        dy -= corr_y * *(float *)0x254cc0;
+        sx = dx * *(float *)(veh + 0x228);
+        sy = dy * *(float *)(veh + 0x22c);
+        if (sx < 0.0f)
+          sx = -fabsf(dx);
+        else if (sx > 0.0f)
+          sx = fabsf(dx);
+        else
+          sx = 0.0f;
+        if (sy < 0.0f)
+          sy = -fabsf(dy);
+        else if (sy > 0.0f)
+          sy = fabsf(dy);
+        else
+          sy = 0.0f;
+        sx = sx + 1.0f;
+        if (sx < *(float *)0x2533e4)
+          sx = *(float *)0x2533e4;
+        else if (sx > *(float *)0x254e04)
+          sx = *(float *)0x254e04;
+        sy = sy + 1.0f;
+        if (sy < *(float *)0x2533e4)
+          sy = *(float *)0x2533e4;
+        else if (sy > *(float *)0x254e04)
+          sy = *(float *)0x254e04;
+        air_force[0] += sx * *(float *)(veh + 0x228) * *(float *)0x2b7d58;
+        air_force[1] += sy * *(float *)(veh + 0x22c) * *(float *)0x2b7d58;
+        air_blend = (1.0f - *(float *)(veh + 0x38)) * *(float *)0x2b7d54;
+        air_force[0] += air_blend * dx;
+        air_force[1] += air_blend * dy;
+      } else {
+        air_force[0] += *(float *)(veh + 0x228) * *(float *)0x2b7d58;
+        air_force[1] += *(float *)(veh + 0x22c) * *(float *)0x2b7d58;
+      }
+
+      {
+        float *grav = *(float **)0x31fc38;
+        float torque = *(float *)(phys + 0x54);
+        air_force[0] = grav[0] + side[0] * air_force[0] * torque;
+        air_force[1] = grav[1] + side[1] * air_force[1] * torque;
+        air_force[2] = grav[2] + side[2] * air_force[2] * torque;
+        yaw_scale = -air_force[0] * *(float *)(phys + 0x50);
+        /* reuse turn as yaw axis contribution onto air_force */
+        air_force[0] += forward[0] * yaw_scale;
+        air_force[1] += forward[1] * yaw_scale;
+        air_force[2] += forward[2] * yaw_scale;
+        air_blend = 1.0f - *(float *)(veh + 0x444);
+        force_b[0] += air_force[0] * air_blend;
+        force_b[1] += air_force[1] * air_blend;
+        force_b[2] += air_force[2] * air_blend;
+      }
+    }
+
+    /* Banked-flight extra forces when vehicle flags bit 3 set. */
+    if ((*(unsigned char *)(veh + 0x424) & 8) != 0) {
+      float *forward = (float *)(veh + 0x24);
+      float *up = (float *)(veh + 0x30);
+      float *world_up = *(float **)0x31fc44;
+      float side[3];
+      float speed_frac;
+      float bank;
+
+      speed_frac = (forward[0] * *(float *)(veh + 0x18) +
+                    forward[1] * *(float *)(veh + 0x1c) +
+                    forward[2] * *(float *)(veh + 0x20)) /
+                   *(float *)(vehi + 0x2f8);
+      if (speed_frac < 0.0f)
+        speed_frac = 0.0f;
+      else if (speed_frac > 1.0f)
+        speed_frac = 1.0f;
+
+      side[0] = up[1] * forward[2] - up[2] * forward[1];
+      side[1] = up[2] * forward[0] - up[0] * forward[2];
+      side[2] = up[0] * forward[1] - up[1] * forward[0];
+
+      if (speed_frac > 0.0f) {
+        bank = *(float *)(phys + 0x54) * *(float *)(veh + 0x444) * speed_frac *
+               *(float *)0x2b7d50;
+        force_b[0] += side[0] * bank;
+        force_b[1] += side[1] * bank;
+        force_b[2] += side[2] * bank;
+        bank = *(float *)(phys + 8) * *(float *)(veh + 0x444) * speed_frac *
+               *(float *)0x2b7d4c;
+        force_a[0] += world_up[0] * bank;
+        force_a[1] += world_up[1] * bank;
+        force_a[2] += world_up[2] * bank;
+      }
+
+      if ((unsigned char)*(veh + 0x428) > 0) {
+        float lateral[3];
+        float fade;
+        lateral[0] = side[1] * world_up[2] - side[2] * world_up[1];
+        lateral[1] = side[2] * world_up[0] - side[0] * world_up[2];
+        lateral[2] = side[0] * world_up[1] - side[1] * world_up[0];
+        if (normalize3d(lateral) > 0.0f) {
+          fade = 1.0f - (float)(unsigned char)*(veh + 0x428) *
+                            *(float *)0x2546a4;
+          if (fade < 0.0f)
+            fade = 0.0f;
+          else if (fade > 1.0f)
+            fade = 1.0f;
+          bank = (1.0f - *(float *)(veh + 0x444)) * *(float *)(phys + 8) *
+                 fade * *(float *)0x2b7d48;
+          force_a[0] += lateral[0] * bank;
+          force_a[1] += lateral[1] * bank;
+          force_a[2] += lateral[2] * bank;
+          bank = (1.0f - *(float *)(veh + 0x444)) * *(float *)(phys + 8) *
+                 fade * *(float *)0x255ef8;
+          force_a[0] += world_up[0] * bank;
+          force_a[1] += world_up[1] * bank;
+          force_a[2] += world_up[2] * bank;
+        }
+      }
+    }
+
     force_a[0] *= mass;
     force_a[1] *= mass;
     force_a[2] *= mass;

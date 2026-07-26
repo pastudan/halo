@@ -13926,7 +13926,7 @@
         },
         {
           "addr": "0xf4cf0",
-          "decl": "void FUN_000f4cf0(void);",
+          "decl": "void FUN_000f4cf0(void *widget);",
           "ported": false
         },
         {
@@ -23575,7 +23575,7 @@
         },
         {
           "addr": "0x1c2bf0",
-          "decl": "void saved_game_file_name_unique(void);",
+          "decl": "char saved_game_file_name_unique(void);",
           "ported": false
         },
         {
@@ -27810,7 +27810,7 @@
         },
         {
           "addr": "0xf3690",
-          "decl": "void FUN_000f3690(void *widget);",
+          "decl": "void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */);",
           "ported": false
         },
         {

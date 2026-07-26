@@ -634,19 +634,17 @@ void saved_game_perform_file_system_checks(void)
   (void)ebp;
 }
 
-/* 0x1c2bf0 */
-void saved_game_file_name_unique(void)
+/* 0x1c2bf0 — return non-zero if current profile name is unique. */
+char saved_game_file_name_unique(void)
 {
-  int eax = 0;
-  int edx = 0;
+  wchar_t *name = *(wchar_t **)0x46cf08;
+  char ascii[256];
 
-  /* test eax, eax -> je 0x1c2c3a */
-  /* relift: cmp word ptr [eax], 0 -> je 0x1c2c3a */
-  wide_to_ascii((wchar_t *)(uintptr_t)eax, (char *)(uintptr_t)edx, 0);
+  if (name == 0 || name[0] == 0)
+    return 0;
+  wide_to_ascii(name, ascii, 255);
   FUN_001d2f22();
-
-  (void)eax;
-  (void)edx;
+  return 1;
 }
 
 /* 0x1c2c50 */

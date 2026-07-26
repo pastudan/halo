@@ -5423,7 +5423,7 @@ void FUN_000f3c80(void)
   /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xf3cff */
   display_assert((char *)0x00289810, (char *)0x00288938, 1662, 0);
   system_exit(0);
-  FUN_000f3690((void *)0);
+  FUN_000f3690(0, 0);
   /* cmp ecx, edx -> je 0xf3d24 */
   /* cmp eax, 0xc -> jl 0xf3d10 */
   multiplayer_game_set_text_box_for_teams_noteams((void *)(uintptr_t)edx);

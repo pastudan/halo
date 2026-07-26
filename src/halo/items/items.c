@@ -1160,7 +1160,7 @@ void multiplayer_settings_select_list_update_item(void)
   /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xf428c */
   display_assert((char *)0x00289b88, (char *)0x00288938, 1931, ebx);
   system_exit(0);
-  FUN_000f3690((void *)0);
+  FUN_000f3690(0, 0);
   /* cmp ecx, edx -> je 0xf42b4 */
   /* cmp eax, 0xc -> jl 0xf42a0 */
   multiplayer_game_set_text_box_for_game_ruleset((void *)(uintptr_t)edx);
@@ -1328,7 +1328,7 @@ void FUN_000f4b60(void)
   /* relift: cmp dword ptr [edi + 0x3e0], 3 -> je 0xf4bf4 */
   display_assert((char *)0x00289fd8, (char *)0x00288938, 2378, 0);
   system_exit(0);
-  FUN_000f3690((void *)0);
+  FUN_000f3690(0, 0);
   /* relift: cmp dword ptr [ebp + edi*4 - 0xc], -1 -> je 0xf4ce5 */
   widget_instance_get_nth_child((void *)(uintptr_t)esi, 0);
   tag_get('aLeD', 0);
@@ -1351,49 +1351,63 @@ void FUN_000f4b60(void)
   (void)ebp;
 }
 
-/* 0xf4cf0 */
-void FUN_000f4cf0(void)
+/* 0xf4cf0 — sync multiplayer item UI child text-box indices from parent widget. */
+void FUN_000f4cf0(void *widget)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  char *tag;
+  int handles[4];
+  int index;
 
-  tag_get(0x44654c61, 0);
-  /* relift: cmp word ptr [esi], 2 -> je 0xf4d34 */
-  display_assert((char *)0x0028974c, (char *)0x00288938, 2495, 0);
-  system_exit(0);
-  /* relift: cmp dword ptr [esi + 0x3e0], 3 -> je 0xf4d5d */
-  display_assert((char *)0x00289710, (char *)0x00288938, 2496, 0);
-  system_exit(0);
-  FUN_000f3690((void *)0);
-  /* relift: cmp dword ptr [ebp + ebx*4 - 0x10], -1 -> je 0xf4e8b */
-  widget_instance_get_nth_child((void *)(uintptr_t)edi, 0);
-  tag_get('aLeD', 0);
-  /* test ecx, ecx -> jne 0xf4dc8 */
-  display_assert((char *)0x002896d0, (char *)0x00288938, 2514, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [eax], 1 -> je 0xf4dfe */
-  display_assert((char *)0x00289688, (char *)0x00288938, 2516, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [eax], 0 -> je 0xf4e34 */
-  display_assert((char *)0x00289640, (char *)0x00288938, 2518, 0);
-  system_exit(0);
-  tag_get('aLeD', 0);
-  /* relift: cmp word ptr [eax], 1 -> je 0xf4e6d */
-  display_assert((char *)0x002895f0, (char *)0x00288938, 2520, 0);
-  system_exit(0);
+  tag = (char *)tag_get(0x44654c61, *(int *)widget); /* 'aLeD' */
+  if (*(int16_t *)tag != 2) {
+    display_assert((char *)0x0028974c, (char *)0x00288938, 0x9bf, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(tag + 0x3e0) != 3) {
+    display_assert((char *)0x00289710, (char *)0x00288938, 0x9c0, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  FUN_000f3690(handles, widget);
+
+  for (index = 0; index < 3; index++) {
+    char *child_inst;
+    char *child_def;
+    char *nested;
+    char *leaf;
+    int16_t value;
+
+    if (handles[index] == -1)
+      break;
+
+    child_inst = (char *)widget_instance_get_nth_child(widget, index);
+    child_def = *(char **)(child_inst + 0x34);
+    nested = *(char **)(child_def + 0x2c);
+    leaf = *(char **)(nested + 0x2c);
+
+    if (*(int *)((char *)tag_get(0x44654c61, *(int *)child_inst) + 0x3e0) ==
+        0) {
+      display_assert((char *)0x002896d0, (char *)0x00288938, 0x9d2, 1);
+      system_exit(-1);
+    }
+    if (*(int16_t *)tag_get(0x44654c61, *(int *)child_def) != 1) {
+      display_assert((char *)0x00289688, (char *)0x00288938, 0x9d4, 1);
+      system_exit(-1);
+    }
+    if (*(int16_t *)tag_get(0x44654c61, *(int *)nested) != 0) {
+      display_assert((char *)0x00289640, (char *)0x00288938, 0x9d6, 1);
+      system_exit(-1);
+    }
+    if (*(int16_t *)tag_get(0x44654c61, *(int *)leaf) != 1) {
+      display_assert((char *)0x002895f0, (char *)0x00288938, 0x9d8, 1);
+      system_exit(-1);
+    }
+
+    value = (int16_t)handles[index];
+    *(int16_t *)(child_def + 0x40) = value;
+    *(int16_t *)((char *)widget + 0x50) = value;
+    *(int16_t *)(leaf + 0x40) = value;
+  }
 }
 
 /* 0xf5640 */
@@ -1468,88 +1482,81 @@ void FUN_000f5800(void)
   (void)esi;
 }
 
-/* 0xf5900 */
+/* 0xf5900 — draw the item/profile name UI (font, bitmap, editable string). */
 void FUN_000f5900(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
+  void *ui_globals;
+  char *font_tag;
+  float color_white[4];
+  float color_grey[4];
+  int16_t full_rect[4];
+  int16_t text_rect[4];
+  void *bitmap;
 
-  /* relift: cmp dword ptr [eax + 0xc], edi -> jne 0xf5974 */
-  display_assert((char *)0x0028a9d8, (char *)0x0028a854, 1035, 0);
-  system_exit(0);
-  tag_get('tnof', 0);
-  display_assert((char *)0x0028a9c0, (char *)0x0028a854, 1037, 0);
-  system_exit(0);
-  FUN_00077040(0, 0, 0);
-  /* cmp edi, esi -> jne 0xf5a01 */
-  display_assert((char *)0x00263768, (char *)0x0028a854, 1045, 0);
-  system_exit(0);
-  draw_bitmap_in_rect(0, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)(uintptr_t)esi, 0, 0, 0);
-  draw_string_set_font(0, 0, 0, 0, (void *)(uintptr_t)edx);
-  /* cmp ecx, edi -> je 0xf5a7f */
-  FUN_0019d420(0, 0);
-  rasterizer_draw_string((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)(uintptr_t)esi, 0, (void *)(uintptr_t)eax);
-  draw_string_set_font(0, 0, 0, 0, (void *)(uintptr_t)edx);
-  FUN_00077040(0, 0, 0);
-  /* cmp edi, esi -> je 0xf5b06 */
-  FUN_0019cdb0((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
-  draw_bitmap_in_rect(0, (void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)(uintptr_t)esi, 0x7f7f7f7f, 0, 0);
-  rasterizer_draw_string((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)(uintptr_t)esi, 0, (void *)(uintptr_t)edx);
-  /* test (char)eax, (char)eax -> jne 0xf5c0d */
-  /* relift: cmp dword ptr [0x46cf14], -1 -> je 0xf5c0d */
-  system_milliseconds();
-  /* test dl, 1 -> je 0xf5c0d */
-  FUN_00077040(0, 0, 0);
-  /* cmp ebx, esi -> je 0xf5bc4 */
-  FUN_0019cff0();
-  /* test eax, eax -> je 0xf5bca */
-  /* relift: cmp ebx, dword ptr [0x46cf0c] -> jae 0xf5bb9 */
-  draw_bitmap_in_rect(0, (void *)0, (void *)0, (void *)0, 0, 0, 0);
-  draw_string_set_font(0, 0, 0, 0, (void *)(uintptr_t)eax);
+  color_white[0] = 1.0f;
+  color_white[1] = 1.0f;
+  color_white[2] = 1.0f;
+  color_white[3] = 1.0f;
+  color_grey[0] = 0.9f;
+  color_grey[1] = 0.9f;
+  color_grey[2] = 0.9f;
+  color_grey[3] = 0.9f;
+
+  ui_globals = *(void **)0x46cef4;
+  if (ui_globals == 0 || *(int *)((char *)ui_globals + 0xc) == -1) {
+    display_assert((char *)0x0028a9d8, (char *)0x0028a854, 0x40b, 1);
+    system_exit(-1);
+    ui_globals = *(void **)0x46cef4;
+  }
+
+  font_tag = (char *)tag_get(0x666f6e74, *(int *)((char *)ui_globals + 0xc)); /* 'font' */
+  if (font_tag == 0) {
+    display_assert((char *)0x0028a9c0, (char *)0x0028a854, 0x40d, 1);
+    system_exit(-1);
+  }
+
+  full_rect[0] = 0;
+  full_rect[1] = 0;
+  full_rect[2] = 0x1e0;
+  full_rect[3] = 0x280;
+
+  if (*(int *)((char *)ui_globals + 0x1c) != -1) {
+    bitmap = FUN_00077040(*(int *)((char *)ui_globals + 0x1c), 0, 0);
+    if (bitmap == 0) {
+      display_assert((char *)0x00263768, (char *)0x0028a854, 0x415, 1);
+      system_exit(-1);
+    }
+    draw_bitmap_in_rect((int)(uintptr_t)bitmap, full_rect, full_rect, full_rect,
+                        0, 0, 0);
+  }
+
+  draw_string_set_font(*(int *)((char *)ui_globals + 0xc), 0, 0, -1,
+                       color_white);
+
+  if (*(int *)((char *)ui_globals + 0x2c) != -1) {
+    text_rect[0] = 0x4e;
+    text_rect[1] = 0x72;
+    text_rect[2] = 0x6e;
+    text_rect[3] = 0x280;
+    FUN_0019d420(*(int *)((char *)ui_globals + 0x2c),
+                 (int)*(uint16_t *)0x46cf04);
+    rasterizer_draw_string((void *)text_rect, text_rect, color_grey, 0,
+                           (unsigned short *)0);
+  }
+
+  draw_string_set_font(*(int *)((char *)ui_globals + 0xc), 0, 0, -1,
+                       color_white);
+
+  if (*(void **)0x46cf08 != 0) {
+    text_rect[0] = 0x4e;
+    text_rect[1] = 0x8c;
+    text_rect[2] = 0x1c2;
+    text_rect[3] = 0xa0;
+    rasterizer_draw_string((void *)0x46cf08, text_rect, color_white, 0,
+                           *(unsigned short **)0x46cf0c);
+  }
+
   FUN_000f5800();
-  FUN_0019cff0();
-  /* test eax, eax -> jne 0xf5c88 */
-  FUN_0019cff0();
-  /* test eax, eax -> je 0xf5cc3 */
-  rasterizer_draw_string((void *)(uintptr_t)ecx, (void *)0, (void *)0, 0, (void *)(uintptr_t)eax);
-  /* cmp ecx, esi -> jne 0xf5cf6 */
-  /* relift: cmp word ptr [0x46cefe], 4 -> jne 0xf5cf2 */
-  /* cmp eax, -1 -> je 0xf5d23 */
-  FUN_00077040(0, 0, 0);
-  /* test eax, eax -> je 0xf5d23 */
-  draw_bitmap_in_rect(0, (void *)(uintptr_t)edi, (void *)0, (void *)0, 0, 0, 0);
-  /* relift: cmp dword ptr [edx + 0x2c], -1 -> je 0xf5ede */
-  /* cmp esi, 0x2c -> jge 0xf5ede */
-  FUN_0019d420(0, 0);
-  /* cmp eax, 7 -> ja 0xf5e45 */
-  /* relift: cmp ecx, dword ptr [ebp - 4] -> jne 0xf5dcf */
-  /* relift: cmp word ptr [0x46cefe], 4 -> jne 0xf5e2c */
-  /* relift: cmp ecx, dword ptr [ebp - 4] -> je 0xf5dc1 */
-  /* test (char)eax, (char)eax -> je 0xf5dcf */
-  /* relift: cmp ecx, dword ptr [ebp - 4] -> je 0xf5dc1 */
-  /* test (char)eax, (char)eax -> je 0xf5dcf */
-  /* cmp eax, -1 -> je 0xf5e65 */
-  FUN_00077040(0, 0, 0);
-  display_assert((char *)0x0028a9a8, (char *)0x0028a854, 1407, 0);
-  system_exit(0);
-  /* test eax, eax -> je 0xf5ea7 */
-  rasterizer_draw_string((void *)(uintptr_t)edx, (void *)0, (void *)0, 0, (void *)0);
-  /* test edi, edi -> je 0xf5ebe */
-  draw_bitmap_in_rect(0, (void *)(uintptr_t)ebx, (void *)(uintptr_t)ebx, (void *)0, 0, 0, 0);
-  /* mem[0xd4000f5d] = eax */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
 }
 
 /* 0xf5f10 */
@@ -1585,79 +1592,117 @@ void items_initialize_for_new_map(void)
   (void)0;
 }
 
-/* 0xf5fb0 */
+/* 0xf5fb0 — handle item-name UI keyboard/controller actions (jump table). */
 char FUN_000f5fb0(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
+  int action;
+  wchar_t *buf;
 
-  /* cmp eax, 7 -> ja 0xf621d */
-  ustrcmp((wchar_t *)0x0046cf18, (wchar_t *)(uintptr_t)edx);
-  /* test eax, eax -> je 0xf603a */
-  /* relift: cmp word ptr [eax], (int16_t)ebx -> je 0xf6024 */
-  saved_game_file_name_unique();
-  /* test (char)eax, (char)eax -> jne 0xf603a */
-  ui_widget_display_error(27, 0, 0, ebx);
-  FUN_000f57a0();
-  ui_widget_display_error(29, 0, 0, ebx);
-  FUN_000f57a0();
-  ui_play_audio_feedback_sound(0);
-  event_manager_flush();
-  ui_play_audio_feedback_sound(0);
-  ui_play_audio_feedback_sound(0);
-  ui_play_audio_feedback_sound(0);
-  /* relift: cmp byte ptr [0x46cf07], 1 -> jne 0xf6118 */
-  /* relift: cmp word ptr [0x46cefc], (int16_t)ebx -> ja 0xf60e9 */
-  display_assert((char *)0x0028aa58, (char *)0x0028a854, 853, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)ecx, 0, eax);
-  /* mem[0x0046cf0c] = edx */
-  FUN_000f5f30();
-  /* relift: cmp eax, dword ptr [0x46cf08] -> jbe 0xf6137 */
-  /* mem[0x0046cf0c] = eax */
-  ui_play_audio_feedback_sound(0);
-  /* relift: cmp word ptr [ecx], (int16_t)ebx -> je 0xf6137 */
-  /* relift: cmp byte ptr [0x46cf07], 1 -> jne 0xf61b9 */
-  /* relift: cmp word ptr [0x46cefc], (int16_t)ebx -> ja 0xf6190 */
-  display_assert((char *)0x0028aa58, (char *)0x0028a854, 888, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)eax, 0, edx);
-  /* mem[0x0046cf0c] = ecx */
-  object_get_type();
-  /* cmp eax, 2 -> jl 0xf620e */
-  csmemmove((void *)(uintptr_t)eax, (void *)0, 0);
-  /* mem[0x0046cf0c] = edx */
-  ui_play_audio_feedback_sound(0);
-  ui_play_audio_feedback_sound(0);
-  /* relift: cmp byte ptr [0x46cf07], 1 -> jne 0xf6277 */
-  /* relift: cmp word ptr [0x46cefc], (int16_t)ebx -> ja 0xf624f */
-  display_assert((char *)0x0028aa58, (char *)0x0028a854, 913, 0);
-  system_exit(0);
-  csmemset((void *)(uintptr_t)edx, 0, ecx);
-  /* mem[0x0046cf0c] = eax */
-  ustrlen((void *)(uintptr_t)ecx);
-  /* cmp eax, 2 -> jl 0xf6392 */
-  csmemmove((void *)(uintptr_t)eax, (void *)0, 0);
-  FUN_000f5800();
-  /* mem[0x0046cf0c] = ecx */
-  ustrcmp((wchar_t *)(uintptr_t)eax, (wchar_t *)0x0028aa44);
-  /* test eax, eax -> jne 0xf638e */
-  system_milliseconds();
-  /* cmp edx, 9 -> jbe 0xf6325 */
-  align_to_character();
-  ustrlen((void *)(uintptr_t)eax);
-  /* mem[0x0046cf0c] = edx */
-  csmemset((void *)(uintptr_t)ecx, 0, eax);
-  /* mem[0x0046cf0c] = edx */
-  ui_play_audio_feedback_sound(0);
-  return 0;
+  action = (int)(signed char)*(
+      (char *)0x28a790 +
+      (int)*(int16_t *)0x46cef8 * 11 + (int)*(int16_t *)0x46cefa);
+  action -= 0x24;
+  buf = *(wchar_t **)0x46cf08;
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
+  if ((unsigned)action > 7) {
+    if (*(char *)0x46cf07 == 1) {
+      if (*(uint16_t *)0x46cefc == 0) {
+        display_assert((char *)0x0028aa58, (char *)0x0028a854, 0x391, 1);
+        system_exit(-1);
+      }
+      csmemset(buf, 0, *(uint16_t *)0x46cefc);
+      *(wchar_t **)0x46cf0c = buf;
+      *(char *)0x46cf07 = 0;
+    }
+    if ((int)*(uint16_t *)0x46cefc -
+            (int)ustrlen((unsigned short *)buf) * 2 - 2 >=
+        2) {
+      ustrlen((unsigned short *)buf);
+      FUN_000f5800();
+      ustrcmp(buf, (wchar_t *)0x0028aa44);
+      align_to_character();
+      ustrlen((unsigned short *)buf);
+      ui_play_audio_feedback_sound(2);
+    } else {
+      ui_play_audio_feedback_sound(4);
+    }
+  } else if (action == 0) {
+    if (ustrcmp(buf, (wchar_t *)0x46cf18) != 0) {
+      if (buf[0] != 0) {
+        if (saved_game_file_name_unique() == 0) {
+          ui_widget_display_error(0x1b, -1, 1, 0);
+          FUN_000f57a0();
+        } else {
+          *(char *)0x46cf06 = 1;
+        }
+      } else {
+        ui_widget_display_error(0x1d, -1, 1, 0);
+        FUN_000f57a0();
+      }
+    } else {
+      *(char *)0x46cf06 = 1;
+    }
+    ui_play_audio_feedback_sound(3);
+    *(char *)0x46cef0 = 0;
+    event_manager_flush();
+  } else if (action == 1) {
+    ui_play_audio_feedback_sound(1);
+    *(char *)0x46cef1 = (char)(*(char *)0x46cef1 == 0);
+  } else if (action == 2) {
+    ui_play_audio_feedback_sound(1);
+    *(char *)0x46cef2 = (char)(*(char *)0x46cef2 == 0);
+  } else if (action == 3) {
+    ui_play_audio_feedback_sound(1);
+    *(char *)0x46cef3 = (char)(*(char *)0x46cef3 == 0);
+  } else if (action == 4) {
+    if (*(char *)0x46cf07 == 1) {
+      if (*(uint16_t *)0x46cefc == 0) {
+        display_assert((char *)0x0028aa58, (char *)0x0028a854, 0x355, 1);
+        system_exit(-1);
+      }
+      csmemset(buf, 0, *(uint16_t *)0x46cefc);
+      *(wchar_t **)0x46cf0c = buf;
+      *(char *)0x46cf07 = 0;
+    } else {
+      FUN_000f5f30();
+    }
+  } else if (action == 5) {
+    if ((uintptr_t)*(void **)0x46cf0c > (uintptr_t)buf)
+      *(wchar_t **)0x46cf0c =
+          (wchar_t *)((char *)*(void **)0x46cf0c - 2);
+    *(char *)0x46cf07 = 0;
+    ui_play_audio_feedback_sound(1);
+  } else if (action == 6) {
+    if (**(wchar_t **)0x46cf0c != 0)
+      *(wchar_t **)0x46cf0c = *(wchar_t **)0x46cf0c + 1;
+    *(char *)0x46cf07 = 0;
+    ui_play_audio_feedback_sound(1);
+  } else {
+    if (*(char *)0x46cf07 == 1) {
+      if (*(uint16_t *)0x46cefc == 0) {
+        display_assert((char *)0x0028aa58, (char *)0x0028a854, 0x378, 1);
+        system_exit(-1);
+      }
+      csmemset(buf, 0, *(uint16_t *)0x46cefc);
+      *(wchar_t **)0x46cf0c = buf;
+      *(char *)0x46cf07 = 0;
+    }
+    object_get_type();
+    if (ustrlen((unsigned short *)buf) >= 2) {
+      wchar_t *cursor = *(wchar_t **)0x46cf0c;
+      csmemmove(cursor, cursor + 1,
+                (unsigned int)((char *)buf + *(uint16_t *)0x46cefc -
+                               (char *)(cursor + 1)));
+      ui_play_audio_feedback_sound(2);
+    } else {
+      ui_play_audio_feedback_sound(4);
+    }
+  }
+
+  if (*((char *)0x28a790 + (int)*(int16_t *)0x46cef8 * 11 +
+        (int)*(int16_t *)0x46cefa) != 0x25)
+    *(char *)0x46cef1 = 0;
+  return 1;
 }
 
 /* 0xf6a60 */
@@ -1840,9 +1885,52 @@ void item_update(int item_handle)
               FUN_00012fb0(hit_normal, into, vel);
               if (!game_engine_running() && *(int *)(item_tag + 0x70) == -1)
                 object_set_garbage_flag(item_handle, 1);
+              *(unsigned int *)(item + 4) |= 0x20;
+              *(float *)(item + 0x1c8) = hit_normal[0];
+              *(float *)(item + 0x1cc) = hit_normal[1];
+              *(float *)(item + 0x1d0) = hit_normal[2];
+              FUN_000f6b80(item_handle);
+              *(int *)(item + 0x1b0) = -1;
             }
           }
+        } else {
+          float slide = hit_normal[0] * vel[0] * *(float *)0x25686c -
+                        hit_normal[1] * vel[1] * *(float *)0x256870 -
+                        hit_normal[2] * vel[2] * *(float *)0x256870;
+          if (surface != 2 && slide < *(float *)0x2533ec)
+            slide = *(float *)0x2533ec;
+          vel[0] += hit_normal[0] * slide;
+          vel[1] += hit_normal[1] * slide;
+          vel[2] += hit_normal[2] * slide;
+          FUN_0014dc30(0x1ff3e9, (float *)((char *)collision + 0x18),
+                       item_handle);
         }
+      }
+
+      *(float *)(item + 0x18) = vel[0];
+      *(float *)(item + 0x1c) = vel[1];
+      *(float *)(item + 0x20) = vel[2];
+      object_translate(item_handle, end, (void *)((char *)collision + 0xc));
+    } else {
+      *(float *)(item + 0x18) = vel[0];
+      *(float *)(item + 0x1c) = vel[1];
+      *(float *)(item + 0x20) = vel[2];
+      object_translate(item_handle, end, 0);
+    }
+  } else if ((*(unsigned char *)(item_tag + 0x17c) & 4) == 0) {
+    char marker_buf[0xd0];
+    object_get_markers_by_string_id(item_handle, (void *)0x0028aa90, marker_buf,
+                                    1);
+    if ((*(unsigned int *)(item + 0x1a4) & 8) != 0 &&
+        *(int16_t *)(item + 0x1aa) != (int16_t)-1) {
+      if (*(int16_t *)(item + 0x1ac) == global_structure_bsp_index_get()) {
+        float drop[3];
+        FUN_00012fb0(*(float **)0x31fc50, *(float *)0x32512c, drop);
+        *(unsigned int *)(item + 0x1a4) &= ~8u;
+        *(int16_t *)(item + 0x1aa) = -1;
+        *(float *)(item + 0x18) += drop[0];
+        *(float *)(item + 0x1c) += drop[1];
+        *(float *)(item + 0x20) += drop[2];
       }
     }
   }
