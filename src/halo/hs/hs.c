@@ -3967,47 +3967,14 @@ void FUN_000c4030(const char *token __attribute__((unused)))
 #endif
 
 
-/* FUN_000c40b0 (0xc40b0) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-static void (*const bc40b0_cc4030)(const char *token) = FUN_000c4030;
-
-__attribute__((naked, noinline))
-void FUN_000c40b0(const char **tokens __attribute__((unused)), int16_t start __attribute__((unused)), int16_t end __attribute__((unused)))
+/* FUN_000c40b0 (0xc40b0) — readable C lift. */
+void FUN_000c40b0(const char **tokens, int16_t start, int16_t end)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "jge .LFUN_000c40b0_2\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%esi,%%edx,4), %%edi\n\t"
-      "movzwl %%ax, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000c40b0_1:\n\t"
-      "movl (%%edi), %%esi\n\t"
-      "call *%[cc4030]\n\t"
-      "addl $4, %%edi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_000c40b0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000c40b0_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc4030] "m"(bc40b0_cc4030)
-      : "memory");
+  int16_t i;
+  for (i = start; i < end; i++) {
+    FUN_000c4030(tokens[i]);
+  }
 }
-#else
-#error "FUN_000c40b0: clang naked draft required"
-#endif
-
 
 /* FUN_000c40f0 (0xc40f0) — XBE naked draft (batch 165). */
 #if defined(__clang__)

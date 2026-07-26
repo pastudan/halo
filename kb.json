@@ -11668,8 +11668,8 @@
         },
         {
           "addr": "0xc40b0",
-          "decl": "void FUN_000c40b0(const char **tokens, int16_t start@<ecx>, int16_t end@<eax>);",
-          "ported": false
+          "decl": "void FUN_000c40b0(const char **tokens, int16_t start @<ecx>, int16_t end @<eax>);",
+          "ported": true
         },
         {
           "addr": "0xc40f0",
