@@ -438,6 +438,123 @@ void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags,
 }
 
 /* 0x1b5400 — Exit seated units whose seat name matches a substring. */
+#if defined(__clang__)
+static void *(*const b5400_get)(int, int) = object_get_and_verify_type;
+static void *(*const b5400_tag)(int, int) = tag_get;
+static int (*const b5400_strlen)(const char *) = csstrlen;
+static void (*const b5400_iter_new)(void *, int, int) = object_iterator_new;
+static void *(*const b5400_iter_next)(void *) = object_iterator_next;
+static void *(*const b5400_elem)(void *, int, int) = tag_block_get_element;
+static char *(*const b5400_strcpy)(char *, const char *) = csstrcpy;
+static char *(*const b5400_tolower)(char *) = csstr_tolower;
+static char *(*const b5400_strstr)(const char *, const char *) = crt_strstr;
+static char (*const b5400_exit_seat)(int) = unit_try_and_exit_seat;
+
+__attribute__((naked, noinline))
+int16_t FUN_001b5400(int unit_handle __attribute__((unused)), int seat_name_substr __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x114, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 8(%%ebp), %%edi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "cmpl $-1, %%edi\n\t"
+      "movl %%eax, -4(%%ebp)\n\t"
+      "je .LFUN_001b5400_7\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "call *%[get]\n\t"
+      "movl (%%eax), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x756e6974\n\t"
+      "call *%[tag]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl 12(%%ebp), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001b5400_1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[xlen]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001b5400_1\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "jmp .LFUN_001b5400_2\n\t"
+      ".LFUN_001b5400_1:\n\t"
+      "movb $1, %%bl\n\t"
+      ".LFUN_001b5400_2:\n\t"
+      "pushl $0\n\t"
+      "leal -20(%%ebp), %%ecx\n\t"
+      "pushl $3\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[inew]\n\t"
+      "leal -20(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[inxt]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001b5400_6\n\t"
+      ".LFUN_001b5400_3:\n\t"
+      "cmpl %%edi, 204(%%eax)\n\t"
+      "jne .LFUN_001b5400_5\n\t"
+      "movswl 672(%%eax), %%eax\n\t"
+      "pushl $0x11c\n\t"
+      "pushl %%eax\n\t"
+      "leal 740(%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[elem]\n\t"
+      "addl $4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -276(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[xcpy]\n\t"
+      "leal -276(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[xlwr]\n\t"
+      "addl $0x18, %%esp\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .LFUN_001b5400_4\n\t"
+      "movl 12(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -276(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[xstr]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_001b5400_5\n\t"
+      ".LFUN_001b5400_4:\n\t"
+      "movl -12(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[xexit]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_001b5400_5\n\t"
+      "incl -4(%%ebp)\n\t"
+      ".LFUN_001b5400_5:\n\t"
+      "leal -20(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[inxt]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .LFUN_001b5400_3\n\t"
+      ".LFUN_001b5400_6:\n\t"
+      "movw -4(%%ebp), %%ax\n\t"
+      ".LFUN_001b5400_7:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b5400_get), [tag] "m"(b5400_tag), [xlen] "m"(b5400_strlen), [inew] "m"(b5400_iter_new), [inxt] "m"(b5400_iter_next), [elem] "m"(b5400_elem), [xcpy] "m"(b5400_strcpy), [xlwr] "m"(b5400_tolower), [xstr] "m"(b5400_strstr), [xexit] "m"(b5400_exit_seat)
+      : "memory");
+}
+#else
 int16_t FUN_001b5400(int unit_handle, int seat_name_substr)
 {
   object_iter_t iter;
@@ -483,6 +600,8 @@ int16_t FUN_001b5400(int unit_handle, int seat_name_substr)
 
   return exit_count;
 }
+#endif
+
 
 /* 0x1b5500 — Exit vehicle seat when unit is seated with a valid seat index. */
 #if defined(__clang__)
@@ -1029,6 +1148,112 @@ void vehicle_preprocess_node_orientations(int vehicle_handle, void *node_output)
 }
 
 /* 0x1b5c90 — add an impulse to vehicle velocity and clear the grounded bit. */
+#if defined(__clang__)
+static void *(*const va_get)(int, int) = object_get_and_verify_type;
+static void *(*const va_tag)(int, int) = tag_get;
+static float (*const va_norm)(float *) = normalize3d;
+
+__attribute__((naked, noinline))
+void vehicle_accelerate(int handle __attribute__((unused)), float *velocity __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movl (%%esi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x76656869\n\t"
+      "call *%[tag]\n\t"
+      "movl 140(%%eax), %%eax\n\t"
+      "addl $0x10, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lvehicle_accelerate_2\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x70687973\n\t"
+      "call *%[tag]\n\t"
+      "flds 24(%%esi)\n\t"
+      "movl 12(%%ebp), %%eax\n\t"
+      "fadds (%%eax)\n\t"
+      "leal -12(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "fstps 24(%%esi)\n\t"
+      "flds 28(%%esi)\n\t"
+      "fadds 4(%%eax)\n\t"
+      "fstps 28(%%esi)\n\t"
+      "flds 32(%%esi)\n\t"
+      "fadds 8(%%eax)\n\t"
+      "fstps 32(%%esi)\n\t"
+      "movl 0x31fc44, %%ecx\n\t"
+      "flds 8(%%eax)\n\t"
+      "fmuls 4(%%ecx)\n\t"
+      "flds 4(%%eax)\n\t"
+      "fmuls 8(%%ecx)\n\t"
+      ".byte 0xde, 0xe9\n\t" /* fsubp st(1) */
+      "fstps -12(%%ebp)\n\t"
+      "flds 8(%%ecx)\n\t"
+      "fmuls (%%eax)\n\t"
+      "flds 8(%%eax)\n\t"
+      "fmuls (%%ecx)\n\t"
+      ".byte 0xde, 0xe9\n\t" /* fsubp st(1) */
+      "fstps -8(%%ebp)\n\t"
+      "flds 4(%%eax)\n\t"
+      "fmuls (%%ecx)\n\t"
+      "flds (%%eax)\n\t"
+      "fmuls 4(%%ecx)\n\t"
+      ".byte 0xde, 0xe9\n\t" /* fsubp st(1) */
+      "fstps -4(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcoms 0x2533c0\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .Lvehicle_accelerate_1\n\t"
+      "fmuls 0x256980\n\t"
+      "flds -12(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "flds -8(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fstps -8(%%ebp)\n\t"
+      "flds -4(%%ebp)\n\t"
+      "fmul %%st(2), %%st(0)\n\t"
+      "fstps -4(%%ebp)\n\t"
+      "fadds 60(%%esi)\n\t"
+      "fstps 60(%%esi)\n\t"
+      "fstp %%st(0)\n\t"
+      "flds -8(%%ebp)\n\t"
+      "fadds 64(%%esi)\n\t"
+      "fstps 64(%%esi)\n\t"
+      "flds -4(%%ebp)\n\t"
+      "fadds 68(%%esi)\n\t"
+      "fstps 68(%%esi)\n\t"
+      "movl 4(%%esi), %%eax\n\t"
+      "andl $0xffffffdf, %%eax\n\t"
+      "movl %%eax, 4(%%esi)\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvehicle_accelerate_1:\n\t"
+      "movl 4(%%esi), %%eax\n\t"
+      "fstp %%st(0)\n\t"
+      "andl $0xffffffdf, %%eax\n\t"
+      "movl %%eax, 4(%%esi)\n\t"
+      ".Lvehicle_accelerate_2:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(va_get), [tag] "m"(va_tag), [norm] "m"(va_norm)
+      : "memory");
+}
+#else
 void vehicle_accelerate(int handle, float *velocity)
 {
   char *veh;
@@ -1061,6 +1286,8 @@ void vehicle_accelerate(int handle, float *velocity)
 
   *(int *)(veh + 4) &= ~0x20;
 }
+#endif
+
 
 /* 0x1b5d90 — debug-iterate a vehicle's physics wheel/contact slots. */
 void vehicle_render_debug(int vehicle_handle)
@@ -1927,6 +2154,155 @@ void FUN_001b69a0(int vehicle_handle, void *wheel_buffer, void *scratch_buffer)
 }
 
 /* 0x1b6ca0 — Decay vehicle impulse and re-seat orientation after a collision. */
+#if defined(__clang__)
+static void *(*const b6ca0_get)(int, int) = object_get_and_verify_type;
+static float (*const b6ca0_norm)(float *) = normalize3d;
+static void (*const b6ca0_rot)(float *, float *, float, float) = FUN_001092d0;
+static void (*const b6ca0_xfrm)(float *, float *, float *) = matrix_scale_transform_vector;
+static void (*const b6ca0_setpos)(int, float *, float *, float *) = object_set_position;
+
+__attribute__((naked, noinline))
+void FUN_001b6ca0(int vehicle_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x64, %%esp\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $2\n\t"
+      "pushl %%eax\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "decw 1062(%%edi)\n\t"
+      "flds 24(%%edi)\n\t"
+      "fmuls 0x2b7cf8\n\t"
+      "leal 24(%%edi), %%esi\n\t"
+      "leal 60(%%edi), %%ebx\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "fstps (%%esi)\n\t"
+      "flds 4(%%esi)\n\t"
+      "fmuls 0x2b7cf8\n\t"
+      "fstps 4(%%esi)\n\t"
+      "flds 8(%%esi)\n\t"
+      "fmuls 0x2b7cf8\n\t"
+      "fstps 8(%%esi)\n\t"
+      "flds (%%ebx)\n\t"
+      "fmuls 0x2b7cf8\n\t"
+      "fstps (%%ebx)\n\t"
+      "flds 4(%%ebx)\n\t"
+      "fmuls 0x2b7cf8\n\t"
+      "fstps 4(%%ebx)\n\t"
+      "flds 8(%%ebx)\n\t"
+      "fmuls 0x2b7cf8\n\t"
+      "fstps 8(%%ebx)\n\t"
+      "flds (%%esi)\n\t"
+      "fadds 12(%%edi)\n\t"
+      "fstps -48(%%ebp)\n\t"
+      "flds 16(%%edi)\n\t"
+      "fadds 4(%%esi)\n\t"
+      "fstps -44(%%ebp)\n\t"
+      "flds 20(%%edi)\n\t"
+      "fadds 8(%%esi)\n\t"
+      "fstps -40(%%ebp)\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl 4(%%ecx), %%eax\n\t"
+      "movl 8(%%ecx), %%ecx\n\t"
+      "movl %%edx, -12(%%ebp)\n\t"
+      "leal -12(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl %%eax, -8(%%ebp)\n\t"
+      "movl %%ecx, -4(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcoms 0x2533c0\n\t"
+      "addl $0xc, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .LFUN_001b6ca0_1\n\t"
+      "fld %%st(0)\n\t"
+      "subl $8, %%esp\n\t"
+      "fcos\n\t"
+      "leal -12(%%ebp), %%eax\n\t"
+      "leal -100(%%ebp), %%ecx\n\t"
+      "fstps 4(%%esp)\n\t"
+      "fsin\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[rot]\n\t"
+      "leal -36(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 36(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -100(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[xfrm]\n\t"
+      "leal -24(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal 48(%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -100(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[xfrm]\n\t"
+      "addl $0x28, %%esp\n\t"
+      "jmp .LFUN_001b6ca0_2\n\t"
+      ".LFUN_001b6ca0_1:\n\t"
+      "leal 36(%%edi), %%edx\n\t"
+      "fstp %%st(0)\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl %%eax, -36(%%ebp)\n\t"
+      "movl 4(%%edx), %%ecx\n\t"
+      "movl %%ecx, -32(%%ebp)\n\t"
+      "movl 8(%%edx), %%edx\n\t"
+      "movl %%edx, -28(%%ebp)\n\t"
+      "leal 48(%%edi), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "movl %%ecx, -24(%%ebp)\n\t"
+      "movl 4(%%eax), %%edx\n\t"
+      "movl %%edx, -20(%%ebp)\n\t"
+      "movl 8(%%eax), %%eax\n\t"
+      "movl %%eax, -16(%%ebp)\n\t"
+      ".LFUN_001b6ca0_2:\n\t"
+      "cmpw $0, 1062(%%edi)\n\t"
+      "jne .LFUN_001b6ca0_3\n\t"
+      "movl 0x31fc38, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, (%%esi)\n\t"
+      "movl 4(%%ecx), %%eax\n\t"
+      "movl %%eax, 4(%%esi)\n\t"
+      "movl 8(%%ecx), %%ecx\n\t"
+      "movl %%ecx, 8(%%esi)\n\t"
+      "movl 0x31fc38, %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "movl %%eax, (%%ebx)\n\t"
+      "movl 4(%%edx), %%ecx\n\t"
+      "movl %%ecx, 4(%%ebx)\n\t"
+      "movl 8(%%edx), %%edx\n\t"
+      "movl %%edx, 8(%%ebx)\n\t"
+      ".LFUN_001b6ca0_3:\n\t"
+      "leal -24(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl 8(%%ebp), %%eax\n\t"
+      "leal -36(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -48(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[setpos]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(b6ca0_get), [norm] "m"(b6ca0_norm), [rot] "m"(b6ca0_rot), [xfrm] "m"(b6ca0_xfrm), [setpos] "m"(b6ca0_setpos)
+      : "memory");
+}
+#else
 void FUN_001b6ca0(int vehicle_handle)
 {
   char *veh;
@@ -1981,6 +2357,8 @@ void FUN_001b6ca0(int vehicle_handle)
 
   object_set_position(vehicle_handle, position, forward, up);
 }
+#endif
+
 
 /* 0x1b6e20 — Spawn vehicle scrape/spark effects from wheel contact markers. */
 void FUN_001b6e20(int vehicle_handle)
@@ -2643,6 +3021,167 @@ void vehicle_export_function_values(int vehicle_handle)
 }
 
 /* 0x1b8060 — true when vehicle contact normals oppose the stuck probe vector. */
+#if defined(__clang__)
+static void *(*const vstuck_get)(int, int) = object_get_and_verify_type;
+static char (*const vstuck_contact)(int *, int) = FUN_001509c0;
+static void *(*const vstuck_elem)(void *, int, int) = tag_block_get_element;
+static void (*const vstuck_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+static vector3_t *(*const vstuck_wpos)(int, vector3_t *) = object_get_world_position;
+static float (*const vstuck_norm)(float *) = normalize3d;
+
+__attribute__((naked, noinline))
+char vehicle_stuck(int unit_handle __attribute__((unused)), float *vec __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x64, %%esp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 8(%%ebp), %%esi\n\t"
+      "pushl $2\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl 1144(%%eax), %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "movl %%eax, -4(%%ebp)\n\t"
+      "je .Lvehicle_stuck_4\n\t"
+      "leal -100(%%ebp), %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[contact]\n\t"
+      "addl $8, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lvehicle_stuck_4\n\t"
+      "movl 0x31fc1c, %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "movl %%edx, -16(%%ebp)\n\t"
+      "movl 4(%%ecx), %%eax\n\t"
+      "movl %%eax, -12(%%ebp)\n\t"
+      "movl 8(%%ecx), %%ecx\n\t"
+      "movl -96(%%ebp), %%eax\n\t"
+      "addl $0x74, %%eax\n\t"
+      "movl %%ecx, -8(%%ebp)\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .Lvehicle_stuck_5\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lvehicle_stuck_1:\n\t"
+      "movl -4(%%ebp), %%ebx\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "testl %%edx, 1144(%%ebx)\n\t"
+      "je .Lvehicle_stuck_2\n\t"
+      "pushl $0x80\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "flds -16(%%ebp)\n\t"
+      "fadds 56(%%eax)\n\t"
+      "addl $0x38, %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "incl %%esi\n\t"
+      "fstps -16(%%ebp)\n\t"
+      "flds -12(%%ebp)\n\t"
+      "fadds 4(%%eax)\n\t"
+      "fstps -12(%%ebp)\n\t"
+      "flds -8(%%ebp)\n\t"
+      "fadds 8(%%eax)\n\t"
+      "fstps -8(%%ebp)\n\t"
+      ".Lvehicle_stuck_2:\n\t"
+      "movl -96(%%ebp), %%eax\n\t"
+      "movl 116(%%eax), %%edx\n\t"
+      "incl %%edi\n\t"
+      "addl $0x74, %%eax\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jl .Lvehicle_stuck_1\n\t"
+      "testw %%si, %%si\n\t"
+      "jle .Lvehicle_stuck_3\n\t"
+      "movswl %%si, %%eax\n\t"
+      "movl %%eax, -4(%%ebp)\n\t"
+      "leal -28(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "fildl -4(%%ebp)\n\t"
+      "leal -16(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -92(%%ebp), %%eax\n\t"
+      "fdivrs 0x2533c8\n\t"
+      "pushl %%eax\n\t"
+      "flds -16(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -16(%%ebp)\n\t"
+      "flds -12(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -12(%%ebp)\n\t"
+      "flds -8(%%ebp)\n\t"
+      "fmul %%st(1), %%st(0)\n\t"
+      "fstps -8(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "call *%[xfrmpt]\n\t"
+      "movl 8(%%ebp), %%edx\n\t"
+      "leal -40(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[wpos]\n\t"
+      "flds -28(%%ebp)\n\t"
+      "fsubs -40(%%ebp)\n\t"
+      "movl 12(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "fstps (%%eax)\n\t"
+      "flds -24(%%ebp)\n\t"
+      "fsubs -36(%%ebp)\n\t"
+      "fstps 4(%%eax)\n\t"
+      "flds -20(%%ebp)\n\t"
+      "fsubs -32(%%ebp)\n\t"
+      "fstps 8(%%eax)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $0x18, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x44, %%ah\n\t"
+      "jnp .Lvehicle_stuck_3\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvehicle_stuck_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorb %%al, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvehicle_stuck_4:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lvehicle_stuck_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(vstuck_get), [contact] "m"(vstuck_contact), [elem] "m"(vstuck_elem), [xfrmpt] "m"(vstuck_xfrmpt), [wpos] "m"(vstuck_wpos), [norm] "m"(vstuck_norm)
+      : "memory");
+}
+#else
 char vehicle_stuck(int unit_handle, float *vec)
 {
   char *vehicle;
@@ -2703,6 +3242,8 @@ char vehicle_stuck(int unit_handle, float *vec)
     return 0;
   return 1;
 }
+#endif
+
 
 /* 0x1b81d0 — vehicle ground force / wheel integration.
  * Caller pushes (handle, scratch_a, force_buffer). scratch_a is unused here. */
