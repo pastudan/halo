@@ -33814,8 +33814,8 @@
         },
         {
           "addr": "0xfd150",
-          "decl": "void FUN_000fd150(int weapon_handle);",
-          "ported": false,
+          "decl": "void FUN_000fd150(int weapon_handle@<esi>);",
+          "ported": true,
           "name": "FUN_000fd150"
         },
         {

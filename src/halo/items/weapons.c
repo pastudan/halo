@@ -3917,44 +3917,17 @@ void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y,
 }
 #endif
 
-/* FUN_000fd150 (0xfd150) — XBE naked draft (batch 171). */
-#if defined(__clang__)
-static void *(*const bfd150_get)(int, int) = object_get_and_verify_type;
-static int (*const bfd150_cfba20)(int weapon_handle, char param_2, int16_t state) = weapon_set_animation_state;
-
-__attribute__((naked, noinline))
-void FUN_000fd150(int weapon_handle __attribute__((unused)))
+/* FUN_000fd150 (0xfd150) — readable C lift: reset weapon anim if not in fire states. */
+void FUN_000fd150(int weapon_handle /*@<esi>*/)
 {
-  __asm__ volatile(
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movb 0x1e8(%%eax), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb $7, %%al\n\t"
-      "jl .LFUN_000fd150_1\n\t"
-      "cmpb $8, %%al\n\t"
-      "jle .LFUN_000fd150_2\n\t"
-      "cmpb $0xa, %%al\n\t"
-      "je .LFUN_000fd150_2\n\t"
-      ".LFUN_000fd150_1:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "call *%[cfba20]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000fd150_2:\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfd150_get), [cfba20] "m"(bfd150_cfba20)
-      : "memory");
-}
-#else
-#error "FUN_000fd150: clang naked draft required"
-#endif
+  char *weapon;
+  unsigned char state;
 
+  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
+  state = *(unsigned char *)(weapon + 0x1e8);
+  if (state < 7 || (state > 8 && state != 10))
+    weapon_set_animation_state(weapon_handle, 1, 0);
+}
 
 /* 0xfd510 */
 void weapon_stop_reload(int weapon_handle)
