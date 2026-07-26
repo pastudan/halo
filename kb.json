@@ -32062,35 +32062,43 @@
       "functions": [
         {
           "addr": "0x19c5d0",
-          "decl": "void FUN_0019c5d0(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, char *text);"
+          "decl": "void FUN_0019c5d0(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, char *text);",
+          "ported": false
         },
         {
           "addr": "0x19c960",
-          "decl": "void FUN_0019c960(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, unsigned short *text);"
+          "decl": "void FUN_0019c960(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, unsigned short *text);",
+          "ported": false
         },
         {
           "addr": "0x19ccf0",
-          "decl": "void FUN_0019ccf0(void);"
+          "decl": "void FUN_0019ccf0(void);",
+          "ported": false
         },
         {
           "addr": "0x19cdb0",
-          "decl": "void FUN_0019cdb0(short *out_rect, void *text, short *out_bounds, short *in_rect);"
+          "decl": "void FUN_0019cdb0(short *out_rect, void *text, short *out_bounds, short *in_rect);",
+          "ported": false
         },
         {
           "addr": "0x19ce70",
-          "decl": "void FUN_0019ce70(void);"
+          "decl": "void FUN_0019ce70(void);",
+          "ported": false
         },
         {
           "addr": "0x19cec0",
-          "decl": "void FUN_0019cec0(void);"
+          "decl": "void FUN_0019cec0(void);",
+          "ported": false
         },
         {
           "addr": "0x19cff0",
-          "decl": "void FUN_0019cff0(void);"
+          "decl": "void FUN_0019cff0(void);",
+          "ported": false
         },
         {
           "addr": "0x19d060",
-          "decl": "void set_language_code(short code);"
+          "decl": "void set_language_code(short code);",
+          "ported": false
         },
         {
           "addr": "0x19d080",
@@ -32114,43 +32122,53 @@
         },
         {
           "addr": "0x19d380",
-          "decl": "void FUN_0019d380(void);"
+          "decl": "void FUN_0019d380(void);",
+          "ported": false
         },
         {
           "addr": "0x19d3c0",
-          "decl": "char *FUN_0019d3c0(int index, short param_2);"
+          "decl": "char *FUN_0019d3c0(int index, short param_2);",
+          "ported": false
         },
         {
           "addr": "0x19d420",
-          "decl": "int FUN_0019d420(int param_1, int param_2);"
+          "decl": "int FUN_0019d420(int param_1, int param_2);",
+          "ported": false
         },
         {
           "addr": "0x19d480",
-          "decl": "void umemchr(void);"
+          "decl": "void umemchr(void);",
+          "ported": false
         },
         {
           "addr": "0x19d4f0",
-          "decl": "void umemcpy(void);"
+          "decl": "void umemcpy(void);",
+          "ported": false
         },
         {
           "addr": "0x19d590",
-          "decl": "void umemcmp(void);"
+          "decl": "void umemcmp(void);",
+          "ported": false
         },
         {
           "addr": "0x19d600",
-          "decl": "void umemmove(void);"
+          "decl": "void umemmove(void);",
+          "ported": false
         },
         {
           "addr": "0x19d670",
-          "decl": "void umemset(void);"
+          "decl": "void umemset(void);",
+          "ported": false
         },
         {
           "addr": "0x19d6e0",
-          "decl": "void align_to_character(void);"
+          "decl": "void align_to_character(void);",
+          "ported": false
         },
         {
           "addr": "0x19d760",
-          "decl": "void ustrcat(void);"
+          "decl": "void ustrcat(void);",
+          "ported": false
         }
       ],
       "name": "international_strings.obj",

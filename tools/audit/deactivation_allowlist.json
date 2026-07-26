@@ -13963,5 +13963,131 @@
     "object": "bitmaps.obj",
     "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
     "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19c5d0",
+    "name": "FUN_0019c5d0",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19c960",
+    "name": "FUN_0019c960",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19ccf0",
+    "name": "FUN_0019ccf0",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19cdb0",
+    "name": "FUN_0019cdb0",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19ce70",
+    "name": "FUN_0019ce70",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19cec0",
+    "name": "FUN_0019cec0",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19cff0",
+    "name": "FUN_0019cff0",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d060",
+    "name": "set_language_code",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d380",
+    "name": "FUN_0019d380",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d3c0",
+    "name": "FUN_0019d3c0",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d420",
+    "name": "FUN_0019d420",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d480",
+    "name": "umemchr",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d4f0",
+    "name": "umemcpy",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d590",
+    "name": "umemcmp",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d600",
+    "name": "umemmove",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d670",
+    "name": "umemset",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d6e0",
+    "name": "align_to_character",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
+  },
+  {
+    "addr": "0x19d760",
+    "name": "ustrcat",
+    "object": "international_strings.obj",
+    "reason": "draft lift pending VC71/equivalence \u2014 keep inactive until scored",
+    "since": "2026-07-26"
   }
 ]
