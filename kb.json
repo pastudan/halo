@@ -7395,15 +7395,18 @@
         },
         {
           "addr": "0x199420",
-          "decl": "void file_reference_create(void);"
+          "decl": "void file_reference_create(void);",
+          "ported": false
         },
         {
           "addr": "0x1995c0",
-          "decl": "void file_printf(void);"
+          "decl": "void file_printf(void);",
+          "ported": false
         },
         {
           "addr": "0x1996d0",
-          "decl": "void file_reference_copy(void);"
+          "decl": "void file_reference_copy(void);",
+          "ported": false
         },
         {
           "addr": "0x1997f0",
@@ -7419,11 +7422,13 @@
         },
         {
           "addr": "0x199a60",
-          "decl": "void directory_create_or_delete_contents(void);"
+          "decl": "void directory_create_or_delete_contents(void);",
+          "ported": false
         },
         {
           "addr": "0x199b20",
-          "decl": "void FUN_00199b20(void);"
+          "decl": "void FUN_00199b20(void);",
+          "ported": false
         }
       ],
       "name": "files.obj",
