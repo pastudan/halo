@@ -39022,7 +39022,7 @@
         {
           "addr": "0x165de0",
           "decl": "void FUN_00165de0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x165ea0",

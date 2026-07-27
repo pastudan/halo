@@ -8378,6 +8378,25 @@ void FUN_00165dd0(void)
   FUN_0016fa40(0x11);
 }
 
+/* FUN_00165de0 (0x165de0) — readable C lift. */
+void FUN_00165de0(short index, float scale, float *out)
+{
+  float *row;
+
+  row = (float *)(0x47ddfc + (int)index * 0x4c);
+  if (index < 0 || index >= 4) {
+    display_assert((const char *)0x2a1d18, (const char *)0x2a1cc8, 0x1e4, true);
+    system_exit(-1);
+  }
+  if (!out) {
+    display_assert((const char *)0x2a1d0c, (const char *)0x2a1cc8, 0x1e5, true);
+    system_exit(-1);
+  }
+  out[0] = row[2] * row[0] * scale;
+  out[1] = row[1] * row[2] * scale;
+  out[2] = 0.0f;
+}
+
 
 
 /* FUN_00165ea0 (0x165ea0) — XBE naked draft (batch 328). */
