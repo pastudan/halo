@@ -23359,7 +23359,8 @@
         {
           "addr": "0x1848d0",
           "decl": "void rasterizer_sort_internal(void);",
-          "ported": false
+          "ported": true,
+          "name": "rasterizer_sort_internal"
         },
         {
           "addr": "0x184980",
@@ -30917,18 +30918,21 @@
         },
         {
           "addr": "0x182840",
-          "decl": "void rasterizer_xbox_bitmap_swizzle2d_byte(void);",
-          "ported": false
+          "decl": "void rasterizer_xbox_bitmap_swizzle2d_byte(unsigned char *dest, unsigned char *src, int16_t width, int16_t height);",
+          "ported": false,
+          "name": "rasterizer_xbox_bitmap_swizzle2d_byte"
         },
         {
           "addr": "0x182910",
-          "decl": "void rasterizer_xbox_bitmap_swizzle2d_word(void);",
-          "ported": false
+          "decl": "void rasterizer_xbox_bitmap_swizzle2d_word(uint16_t *dest, uint16_t *src, int16_t width, int16_t height);",
+          "ported": false,
+          "name": "rasterizer_xbox_bitmap_swizzle2d_word"
         },
         {
           "addr": "0x1829f0",
-          "decl": "void rasterizer_xbox_bitmap_swizzle2d_long(void);",
-          "ported": false
+          "decl": "void rasterizer_xbox_bitmap_swizzle2d_long(uint32_t *dest, uint32_t *src, int16_t width, int16_t height);",
+          "ported": false,
+          "name": "rasterizer_xbox_bitmap_swizzle2d_long"
         },
         {
           "addr": "0x182ac0",

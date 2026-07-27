@@ -617,86 +617,40 @@ void group_sorted_indices_cmpfn(void)
 #endif
 
 
-/* rasterizer_sort_internal (0x1848d0) — XBE naked draft (batch 145). */
-#if defined(__clang__)
-static void (*const b1848d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1848d0_exitfn)(int) = system_exit;
-static void __cdecl (*const b1848d0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
-
-__attribute__((naked, noinline))
+/* rasterizer_sort_internal (0x1848d0) — readable C lift from XBE leaf.
+ * Init group index permutation, qsort, write back sorted ranks. */
 void rasterizer_sort_internal(void)
 {
-  __asm__ volatile(
-      "movl 0x4d0cf4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lrasterizer_sort_internal_3\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "nop\n\t"
-      ".Lrasterizer_sort_internal_1:\n\t"
-      "movl 0x4d0cec, %%edx\n\t"
-      "leal (%%esi,%%esi,4), %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "jne .Lrasterizer_sort_internal_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x192\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x26276c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x4d0cf4, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_sort_internal_2:\n\t"
-      "movl 0x4d0cfc, %%edx\n\t"
-      "movw %%di, (%%edx,%%esi,2)\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .Lrasterizer_sort_internal_1\n\t"
-      ".Lrasterizer_sort_internal_3:\n\t"
-      "pushl $0x184750\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4d0cfc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9260]\n\t"
-      "movl 0x4d0cf4, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .Lrasterizer_sort_internal_5\n\t"
-      "movl 0x4d0cec, %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x4d0cfc, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lrasterizer_sort_internal_4\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lrasterizer_sort_internal_4:\n\t"
-      "movswl (%%ebx,%%eax,2), %%ecx\n\t"
-      "leal (%%ecx,%%ecx,4), %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "incl %%edx\n\t"
-      "movl %%eax, 0x90(%%ecx,%%edi,1)\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "jl .Lrasterizer_sort_internal_4\n\t"
-      "popl %%ebx\n\t"
-      ".Lrasterizer_sort_internal_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1848d0_assert), [exitfn] "m"(b1848d0_exitfn), [c1d9260] "m"(b1848d0_c1d9260)
-      : "memory");
-}
-#else
-#error "rasterizer_sort_internal: clang naked draft required"
-#endif
+  int count;
+  int i;
+  int16_t *indices;
+  unsigned char *groups;
+  int16_t rank;
+  unsigned char *elem;
 
+  count = *(int *)0x4d0cf4;
+  if (count > 0) {
+    for (i = 0; i < count; i++) {
+      groups = *(unsigned char **)0x4d0cec;
+      elem = groups + i * 0xa0;
+      if (!elem) {
+        display_assert((const char *)0x26276c, (const char *)0x2b0ca8, 0x192, 1);
+        system_exit(-1);
+      }
+      indices = *(int16_t **)0x4d0cfc;
+      indices[i] = (int16_t)i;
+    }
+    qsort(*(void **)0x4d0cfc, (unsigned)count, 2,
+          (int (__cdecl *)(const void *, const void *))group_sorted_indices_cmpfn);
+    groups = *(unsigned char **)0x4d0cec;
+    indices = *(int16_t **)0x4d0cfc;
+    for (i = 0; i < count; i++) {
+      rank = indices[i];
+      elem = groups + (int)rank * 0xa0;
+      *(int *)(elem + 0x90) = i;
+    }
+  }
+}
 
 /* FUN_00184980 (0x184980) — XBE naked draft (batch 121). */
 #if defined(__clang__)
