@@ -1695,6 +1695,10 @@
     "confidence": "high",
     "coverage_pct": 63.7
   },
+  "0x2d": {
+    "confidence": "moderate",
+    "coverage_pct": 32.6
+  },
   "0x2d0": {
     "confidence": "moderate",
     "coverage_pct": 30.5
@@ -1704,6 +1708,10 @@
   },
   "0x2d9b0": {
     "class": "non_leaf"
+  },
+  "0x2f": {
+    "confidence": "moderate",
+    "coverage_pct": 32.6
   },
   "0x2f470": {
     "class": "non_leaf"
@@ -1738,6 +1746,10 @@
   "0x3f000034": {
     "confidence": "moderate",
     "coverage_pct": 56.3
+  },
+  "0x3f80002c": {
+    "confidence": "moderate",
+    "coverage_pct": 32.6
   },
   "0x4": {
     "confidence": "weak",
@@ -2548,7 +2560,9 @@
     "coverage_pct": 69.2
   },
   "0xe9320": {
-    "class": "non_leaf"
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 0.0
   },
   "0xe9d40": {
     "class": "non_leaf",

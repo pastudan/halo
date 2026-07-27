@@ -27447,7 +27447,7 @@
         },
         {
           "addr": "0xe5090",
-          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, int widget, int16_t a7);",
+          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, void *widget, int16_t a7);",
           "ported": true
         },
         {
@@ -27646,7 +27646,8 @@
         {
           "addr": "0xe9320",
           "decl": "void *ui_widget_spawn_from_event_handler(void *widget, int tag_index);",
-          "ported": false
+          "ported": false,
+          "name": "ui_widget_spawn_from_event_handler"
         },
         {
           "addr": "0xe9450",
@@ -27671,7 +27672,8 @@
         {
           "addr": "0xe9a90",
           "decl": "char FUN_000e9a90(void *widget);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000e9a90"
         },
         {
           "addr": "0xe9bd0",
@@ -27748,7 +27750,8 @@
         {
           "addr": "0xeaa10",
           "decl": "char FUN_000eaa10(void *widget);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000eaa10"
         },
         {
           "addr": "0xeab70",
@@ -27769,7 +27772,8 @@
         {
           "addr": "0xeaec0",
           "decl": "char FUN_000eaec0(void *widget);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000eaec0"
         },
         {
           "addr": "0xeb020",
@@ -27879,7 +27883,8 @@
         {
           "addr": "0xeead0",
           "decl": "void playlist_profile_initialize_ctf_rules(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "playlist_profile_initialize_ctf_rules"
         },
         {
           "addr": "0xeebe0",
@@ -28002,7 +28007,8 @@
         {
           "addr": "0xf04c0",
           "decl": "void FUN_000f04c0(void *widget);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000f04c0"
         },
         {
           "addr": "0xf0620",
@@ -28087,7 +28093,8 @@
         {
           "addr": "0xf2560",
           "decl": "void FUN_000f2560(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2560"
         },
         {
           "addr": "0xf2690",
@@ -28097,7 +28104,8 @@
         {
           "addr": "0xf2720",
           "decl": "void FUN_000f2720(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2720"
         },
         {
           "addr": "0xf2850",
@@ -28175,7 +28183,8 @@
         {
           "addr": "0xf3400",
           "decl": "void game_options_menu_update_pic_desc(void *widget);",
-          "ported": false
+          "ported": false,
+          "name": "game_options_menu_update_pic_desc"
         },
         {
           "addr": "0xf3540",
@@ -28202,12 +28211,14 @@
         {
           "addr": "0xf3740",
           "decl": "void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count);",
-          "ported": false
+          "ported": false,
+          "name": "multiplayer_game_set_text_box_for_game_ruleset"
         },
         {
           "addr": "0xf3850",
           "decl": "void multiplayer_game_set_text_box_for_teams_noteams(void *widget);",
-          "ported": false
+          "ported": false,
+          "name": "multiplayer_game_set_text_box_for_teams_noteams"
         },
         {
           "addr": "0xf3960",
