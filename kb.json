@@ -32933,13 +32933,13 @@
         {
           "addr": "0x1ff03f",
           "decl": "float *__stdcall mat4x4_transform_vec4(float *out, float *in, float *matrix);",
-          "ported": true,
+          "ported": false,
           "name": "mat4x4_transform_vec4"
         },
         {
           "addr": "0x1ff913",
           "decl": "void __stdcall matrix_build_perspective_projection(void *matrix_out, float fov, float aspect, float z_near, float z_far);",
-          "ported": true,
+          "ported": false,
           "name": "matrix_build_perspective_projection"
         },
         {
@@ -39472,7 +39472,7 @@
           "addr": "0x1b9bf0",
           "comment": "Validate and resolve a tag index to its tag_instance record pointer. Asserts if tags not loaded or index out of range. Source: cache/cache_files.c",
           "decl": "int *tag_instance_resolve(int tag_index@<edi>);",
-          "ported": true,
+          "ported": false,
           "name": "tag_instance_resolve"
         },
         {
@@ -39500,7 +39500,7 @@
         {
           "addr": "0x1b9ce0",
           "decl": "bool cache_file_header_verify(void *header, const char *path, int report_errors);",
-          "ported": true,
+          "ported": false,
           "name": "cache_file_header_verify"
         },
         {
