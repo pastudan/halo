@@ -6615,75 +6615,26 @@ check_tick:
 
 /* Dispatch post-rasterize based on game phase (afdf0 already implemented above). */
 
-/* game_engine_player_event (0xad0c0) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void (*const bad0c0_cacef0)(int player_handle, int hud_player, int param3) = game_engine_hud_update_player;
-static void (*const bad0c0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const bad0c0_c119810)(data_iter_t *iterator) = data_iterator_next;
-
-__attribute__((naked, noinline))
-void game_engine_player_event(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+/* game_engine_player_event (0xad0c0) — readable C lift. */
+void game_engine_player_event(int param_1, int param_2, int param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "je .Lgame_engine_player_event_1\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lgame_engine_player_event_4\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "call *%[cacef0]\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgame_engine_player_event_1:\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgame_engine_player_event_4\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lgame_engine_player_event_2:\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lgame_engine_player_event_3\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[cacef0]\n\t"
-      ".Lgame_engine_player_event_3:\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lgame_engine_player_event_2\n\t"
-      "popl %%esi\n\t"
-      ".Lgame_engine_player_event_4:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cacef0] "m"(bad0c0_cacef0), [c1197b0] "m"(bad0c0_c1197b0), [c119810] "m"(bad0c0_c119810)
-      : "memory");
+  data_iter_t iter;
+  void *player;
+  int handle;
+  if (param_1 != -1) {
+    if (param_2 == -1)
+      return;
+    game_engine_hud_update_player(param_1, param_3, param_2);
+    return;
+  }
+  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
+  for (player = data_iterator_next(&iter); player != 0; player = data_iterator_next(&iter)) {
+    if (param_2 == -1)
+      continue;
+    handle = *(int *)((char *)&iter + 8);
+    game_engine_hud_update_player(handle, param_3, param_2);
+  }
 }
-#else
-#error "game_engine_player_event: clang naked draft required"
-#endif
-
 
 /* Score display wrapper (ad140 already implemented above). */
 

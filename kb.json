@@ -9375,7 +9375,7 @@
           "addr": "0xad0c0",
           "decl": "void game_engine_player_event(int param_1, int param_2, int param_3);",
           "name": "game_engine_player_event",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/game/game_engine.c"
         },
         {
