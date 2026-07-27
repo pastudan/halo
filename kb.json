@@ -32939,7 +32939,7 @@
         {
           "addr": "0x1ff913",
           "decl": "void __stdcall matrix_build_perspective_projection(void *matrix_out, float fov, float aspect, float z_near, float z_far);",
-          "ported": false,
+          "ported": true,
           "name": "matrix_build_perspective_projection"
         },
         {
