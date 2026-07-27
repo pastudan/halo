@@ -21129,8 +21129,9 @@
         },
         {
           "addr": "0x17c140",
-          "decl": "void FUN_0017c140(void);",
-          "ported": false
+          "decl": "char FUN_0017c140(void *shader @<esi>, short index @<di>);",
+          "ported": false,
+          "name": "FUN_0017c140"
         },
         {
           "addr": "0x17c1b0",
@@ -30826,7 +30827,7 @@
           "addr": "0x1827c0",
           "name": "rasterizer_swizzle_interleave_bits",
           "decl": "void rasterizer_swizzle_interleave_bits(short param_1, short param_2, short param_3, unsigned int param_4, unsigned int param_5, unsigned int param_6, unsigned int *param_7);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x182840",
