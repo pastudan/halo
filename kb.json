@@ -24493,7 +24493,7 @@
           "addr": "0x18e9b0",
           "decl": "bool scenario_location_potentially_visible(void *location);",
           "name": "scenario_location_potentially_visible",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x18ea50",

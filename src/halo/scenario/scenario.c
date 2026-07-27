@@ -2530,85 +2530,38 @@ void scenario_location_reset(int *location)
   *(int16_t *)((char *)location + 6) = NONE;
 }
 
-/* FUN_0018e500 (0x18e500) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void (*const b18e500_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b18e500_exitfn)(int) = system_exit;
-static void *(*const b18e500_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void * FUN_0018e500(int16_t material_type __attribute__((unused)))
+/* FUN_0018e500 (0x18e500) — readable C lift from XBE leaf. */
+void *FUN_0018e500(int16_t material_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5064d4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0018e500_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdd\n\t"
-      "pushl $0x2b2038\n\t"
-      "pushl $0x2b20ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0018e500_1:\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "cmpw $-1, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x5064d4, %%edi\n\t"
-      "je .LFUN_0018e500_3\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0018e500_2\n\t"
-      "cmpw $0x21, %%si\n\t"
-      "jl .LFUN_0018e500_3\n\t"
-      ".LFUN_0018e500_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11e\n\t"
-      "pushl $0x2b2038\n\t"
-      "pushl $0x2b20c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0018e500_3:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0018e500_4\n\t"
-      "movl 0x194(%%edi), %%edx\n\t"
-      "leal 0x194(%%edi), %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jge .LFUN_0018e500_4\n\t"
-      "pushl $0x374\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0018e500_4:\n\t"
-      "movb 0x4d8a74, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0018e500_5\n\t"
-      "movl $0xffffffff, 0x4d8a70\n\t"
-      "movb $1, 0x4d8a74\n\t"
-      ".LFUN_0018e500_5:\n\t"
-      "popl %%edi\n\t"
-      "movl $0x4d8700, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b18e500_assert), [exitfn] "m"(b18e500_exitfn), [elem] "m"(b18e500_elem)
-      : "memory");
+  void *globals;
+
+  globals = *(void **)0x5064d4;
+  if (globals == 0) {
+    extern char DAT_002b20ac[];
+    extern char DAT_002b2038[];
+    display_assert(DAT_002b20ac, DAT_002b2038, 0xdd, 1);
+    system_exit(-1);
+  }
+  if (material_type != (int16_t)-1) {
+    if (material_type < 0 || material_type >= 0x21) {
+      extern char DAT_002b20c0[];
+      extern char DAT_002b2038[];
+      display_assert(DAT_002b20c0, DAT_002b2038, 0x11e, 1);
+      system_exit(-1);
+    }
+  }
+  if (material_type >= 0 &&
+      (int)material_type < *(int *)((char *)globals + 0x194)) {
+    return tag_block_get_element((char *)globals + 0x194, (int)material_type,
+                                 0x374);
+  }
+  if (*(char *)0x4d8a74 == 0) {
+    *(int *)0x4d8a70 = -1;
+    *(char *)0x4d8a74 = 1;
+  }
+  return (void *)0x4d8700;
 }
-#else
-#error "FUN_0018e500: clang naked draft required"
-#endif
+
 
 
 /* 0x18e5c0 — does the BSP location's cluster have a "stop" background-sound
@@ -2929,71 +2882,38 @@ valid:
           (1u << (cluster_index & 0x1f))) != 0;
 }
 
-/* scenario_location_potentially_visible (0x18e9b0) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void (*const b18e9b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b18e9b0_exitfn)(int) = system_exit;
-static void * (*const b18e9b0_cba6c0)(void) = players_get_combined_pvs;
-
-__attribute__((naked, noinline))
-bool scenario_location_potentially_visible(void *location __attribute__((unused)))
+/* scenario_location_potentially_visible (0x18e9b0) — readable C lift. */
+bool scenario_location_potentially_visible(void *location)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $0, 0x4(%%esi)\n\t"
-      "jl .Lscenario_location_potentially_visible_2\n\t"
-      "movl 0x5064e0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lscenario_location_potentially_visible_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc5\n\t"
-      "pushl $0x2b2038\n\t"
-      "pushl $0x2b206c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lscenario_location_potentially_visible_1:\n\t"
-      "movswl 0x4(%%esi), %%eax\n\t"
-      "movl 0x5064e0, %%ecx\n\t"
-      "cmpl 0x134(%%ecx), %%eax\n\t"
-      "jl .Lscenario_location_potentially_visible_3\n\t"
-      ".Lscenario_location_potentially_visible_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ef\n\t"
-      "pushl $0x2b2038\n\t"
-      "pushl $0x2b0f40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lscenario_location_potentially_visible_3:\n\t"
-      "movswl 0x4(%%esi), %%esi\n\t"
-      "call *%[cba6c0]\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "movl %%esi, %%edx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "sarl $5, %%edx\n\t"
-      "movl (%%eax,%%edx,4), %%eax\n\t"
-      "andl %%esi, %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b18e9b0_assert), [exitfn] "m"(b18e9b0_exitfn), [cba6c0] "m"(b18e9b0_cba6c0)
-      : "memory");
+  int16_t cluster;
+  void *bsp;
+  uint32_t *pvs;
+  uint32_t bit;
+
+  cluster = *(int16_t *)((char *)location + 4);
+  if (cluster >= 0) {
+    bsp = *(void **)0x5064e0;
+    if (bsp == 0) {
+      extern char DAT_002b206c[];
+      extern char DAT_002b2038[];
+      display_assert(DAT_002b206c, DAT_002b2038, 0xc5, 1);
+      system_exit(-1);
+    }
+    if ((int)cluster < *(int *)((char *)bsp + 0x134)) {
+      pvs = (uint32_t *)players_get_combined_pvs();
+      bit = 1u << (cluster & 0x1f);
+      return (pvs[cluster >> 5] & bit) != 0;
+    }
+  }
+  {
+    extern char DAT_002b0f40[];
+    extern char DAT_002b2038[];
+    display_assert(DAT_002b0f40, DAT_002b2038, 0x1ef, 1);
+    system_exit(-1);
+  }
+  return 0;
 }
-#else
-#error "scenario_location_potentially_visible: clang naked draft required"
-#endif
+
 
 
 /* 0x18ea50 — find a named entry in a scenario tag's name block (param_1+0x204,
