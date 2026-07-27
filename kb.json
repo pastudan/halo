@@ -20071,7 +20071,7 @@
         {
           "addr": "0x908a0",
           "decl": "void profile_find_frame_value(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x90cd0",
