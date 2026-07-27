@@ -575,45 +575,19 @@ void FUN_00067b80(void)
 #endif
 
 
-/* FUN_00067c10 (0x67c10) — XBE naked draft (batch 376). */
-#if defined(__clang__)
-static void (*const b67c10_c67760)(void) = (void *)FUN_00067760;
-
-__attribute__((naked, noinline))
-void FUN_00067c10(void)
+/* FUN_00067c10 (0x67c10) — readable C lift.
+ * ABI: count@<eax>, tag@<dx>, src@<ecx>, type cdecl, out cdecl. */
+int FUN_00067c10(unsigned int count /*@<eax>*/, unsigned short tag /*@<dx>*/,
+                 unsigned int *src /*@<ecx>*/, unsigned short type, void *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $1, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movw %%dx, (%%edi)\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "movw %%dx, 0x2(%%edi)\n\t"
-      "movl %%eax, 0x4(%%edi)\n\t"
-      "jne .LFUN_00067c10_1\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00067c10_1:\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c67760]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c67760] "m"(b67c10_c67760)
-      : "memory");
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = type;
+  *((unsigned int *)out + 1) = count;
+  if (count != 1u)
+    return ((int (*)(void *))FUN_00067760)(src);
+  *((unsigned int *)out + 2) = *src;
+  return 1;
 }
-#else
-#error "FUN_00067c10: clang naked draft required"
-#endif
-
 
 /* FUN_00067c50 (0x67c50) — XBE naked draft (batch 330). */
 #if defined(__clang__)
