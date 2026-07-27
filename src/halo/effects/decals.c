@@ -3045,11 +3045,13 @@ void FUN_0017cc90(void)
   FUN_0016fa40(11);
 }
 
-/* FUN_0017cca0 (0x17cca0) — readable C lift (jmp thunk to 0x172520). */
+/* FUN_0017cca0 (0x17cca0) — readable C lift (jmp thunk). */
 void FUN_0017cca0(void)
 {
-  ((void (*)(void))0x172520)();
+  FUN_00172520();
 }
+
+
 
 /* 0x17cce0 */
 void FUN_0017cce0(void)

@@ -1773,58 +1773,20 @@ void saved_game_perform_file_system_checks(void)
 #endif
 
 
-/* saved_game_file_name_unique (0x1c2bf0) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static char * (*const b1c2bf0_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
-static void (*const b1c2bf0_c1d2f22)(void) = FUN_001d2f22;
-
-__attribute__((naked, noinline))
-char saved_game_file_name_unique(void)
+/* saved_game_file_name_unique (0x1c2bf0) — readable C lift. */
+char saved_game_file_name_unique(wchar_t *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x108, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsaved_game_file_name_unique_1\n\t"
-      "cmpw $0, (%%eax)\n\t"
-      "je .Lsaved_game_file_name_unique_1\n\t"
-      "pushl $0x100\n\t"
-      "leal -0x108(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x32eb94, %%eax\n\t"
-      "pushl $8\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19f3a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d2f22]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movb $1, %%al\n\t"
-      "jne .Lsaved_game_file_name_unique_2\n\t"
-      ".Lsaved_game_file_name_unique_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".Lsaved_game_file_name_unique_2:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19f3a0] "m"(b1c2bf0_c19f3a0), [c1d2f22] "m"(b1c2bf0_c1d2f22)
-      : "memory");
-}
-#else
-#error "saved_game_file_name_unique: clang naked draft required"
-#endif
+  char tmp[8];
+  char buf[0x100];
+  char *prefix;
 
+  if (name == 0 || name[0] == 0)
+    return 0;
+  prefix = wide_to_ascii((const wchar_t *)*(void **)0x32eb94, tmp, 8);
+  if (FUN_001d2f22(prefix, name, 3, 0, buf, 0x100) != 0)
+    return 1;
+  return 0;
+}
 
 /* saved_game_file_remember_player1_last_used_profile_directory (0x1c2c50) — XBE naked draft (batch 257). */
 #if defined(__clang__)

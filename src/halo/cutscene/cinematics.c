@@ -204,6 +204,24 @@ void cinematic_suppress_bsp_object_creation(char suppress)
   g[0xb] = suppress;
 }
 
+/* cinematic_stop (0x93050) — readable C lift. */
+void cinematic_stop(void)
+{
+  unsigned char *g;
+
+  g = *(unsigned char **)0x44df00;
+  g[8] = 0;
+  player_input_enable(1);
+  ai_globals_dialogue_triggers_enabled(1);
+  g = *(unsigned char **)0x44df00;
+  g[9] = 0;
+  FUN_0017d950();
+  if (*(void **)0x47e4d0 != 0)
+    csmemset(*(void **)0x47e4d0, 0, 0x10);
+  FUN_0017dec0(0);
+  ui_widget_display_deferred_errors();
+}
+
 /* cinematic_set_title_delayed (0x930b0) — readable C lift from XBE leaf. */
 void cinematic_set_title_delayed(int title_index, float delay_seconds)
 {

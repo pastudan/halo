@@ -3787,85 +3787,40 @@ int FUN_000f9c40(int projectile_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_000fac20 (0xfac20) — XBE naked draft (batch 64). */
-#if defined(__clang__)
-static void *(*const bfac20_tag)(int, int) = tag_get;
-static void *(*const bfac20_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-float FUN_000fac20(int weapon_tag_index __attribute__((unused)), float *out_field8 __attribute__((unused)))
+/* FUN_000fac20 (0xfac20) — readable C lift. */
+float FUN_000fac20(int weapon_tag_index, float *out_field8)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "pushl $0x114\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "je .LFUN_000fac20_1\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      ".LFUN_000fac20_1:\n\t"
-      "movl 0xa0(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "je .LFUN_000fac20_3\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x70726f6a\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x230(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000fac20_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6a707421\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x1d8(%%eax)\n\t"
-      "fadds 0x1d4(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".LFUN_000fac20_2:\n\t"
-      "movl 0x220(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000fac20_3\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x6a707421\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x1d8(%%eax)\n\t"
-      "fadds 0x1d4(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "fmuls 0x253398\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000fac20_3:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(bfac20_tag), [elem] "m"(bfac20_elem)
-      : "memory");
-}
-#else
-#error "FUN_000fac20: clang naked draft required"
-#endif
+  void *weap;
+  void *elem;
+  void *proj;
+  void *jpt;
+  int proj_index;
+  int tag_index;
+  float acc;
 
+  weap = tag_get(0x77656170, weapon_tag_index);
+  elem = tag_block_get_element((char *)weap + 0x4fc, 0, 0x114);
+  if (out_field8)
+    *(int *)out_field8 = *(int *)((char *)elem + 8);
+  acc = 0.0f;
+  proj_index = *(int *)((char *)elem + 0xa0);
+  if (proj_index == -1)
+    return acc;
+  proj = tag_get(0x70726f6a, proj_index);
+  tag_index = *(int *)((char *)proj + 0x230);
+  if (tag_index != -1) {
+    jpt = tag_get(0x6a707421, tag_index);
+    acc = (*(float *)((char *)jpt + 0x1d8) + *(float *)((char *)jpt + 0x1d4))
+          * *(float *)0x253398;
+  }
+  tag_index = *(int *)((char *)proj + 0x220);
+  if (tag_index == -1)
+    return acc;
+  jpt = tag_get(0x6a707421, tag_index);
+  return acc
+         + (*(float *)((char *)jpt + 0x1d8) + *(float *)((char *)jpt + 0x1d4))
+               * *(float *)0x253398;
+}
 
 /*
  * Wrapper: advance animation state by one frame (update_kind=1) for the
