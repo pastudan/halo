@@ -35524,7 +35524,7 @@
         {
           "addr": "0x2bab0",
           "decl": "void FUN_0002bab0(char use_3d , float *movement_direction , float *facing_direction , float *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002bab0"
         },
         {
@@ -35680,7 +35680,7 @@
         {
           "addr": "0x303f0",
           "decl": "void actor_situation_update(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_situation_update"
         },
         {
@@ -35839,7 +35839,7 @@
         {
           "addr": "0x355f0",
           "decl": "void FUN_000355f0(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000355f0"
         }
       ],
