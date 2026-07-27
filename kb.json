@@ -24855,8 +24855,9 @@
         },
         {
           "addr": "0x1ca900",
-          "decl": "void FUN_001ca900(void);",
-          "ported": false
+          "decl": "void FUN_001ca900(int channel_index@<eax>);",
+          "ported": false,
+          "name": "FUN_001ca900"
         },
         {
           "addr": "0x1ca970",
@@ -40452,7 +40453,8 @@
         {
           "addr": "0x11aca0",
           "decl": "bool encode_packet_group(group_definition *group, void *data, char *encoded_buf, int32_t *encoded_size, int16_t type, int one);",
-          "ported": false
+          "ported": true,
+          "name": "encode_packet_group"
         },
         {
           "addr": "0x11abb0",

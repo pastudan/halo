@@ -32,133 +32,45 @@ char data_packet_group_append_packet_header(void *group, unsigned char *buf_base
   return 1;
 }
 
-/* encode_packet_group (0x11aca0) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void (*const b11aca0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11aca0_exitfn)(int) = system_exit;
-static bool (*const b11aca0_c11b650)(int definition, short version, void *data, char *buffer, short *buffer_size_out, short maximum_buffer_size) = FUN_0011b650;
-static void (*const b11aca0_c11abb0)(void) = data_packet_group_append_packet_header;
-
-__attribute__((naked, noinline))
-bool encode_packet_group(group_definition *group __attribute__((unused)), void *data __attribute__((unused)), char *encoded_buf __attribute__((unused)), int32_t *encoded_size __attribute__((unused)), int16_t type __attribute__((unused)), int one __attribute__((unused)))
+/* encode_packet_group (0x11aca0) — readable C lift. */
+bool encode_packet_group(group_definition *group, void *data, char *encoded_buf,
+                         int32_t *encoded_size, int16_t type, int version)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jne .Lencode_packet_group_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x84\n\t"
-      "pushl $0x28f1f0\n\t"
-      "pushl $0x28f408\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencode_packet_group_1:\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lencode_packet_group_2\n\t"
-      "cmpw 0x4(%%edi), %%si\n\t"
-      "jl .Lencode_packet_group_3\n\t"
-      ".Lencode_packet_group_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85\n\t"
-      "pushl $0x28f1f0\n\t"
-      "pushl $0x28f380\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencode_packet_group_3:\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lencode_packet_group_4\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lencode_packet_group_5\n\t"
-      ".Lencode_packet_group_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x86\n\t"
-      "pushl $0x28f1f0\n\t"
-      "pushl $0x28f318\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencode_packet_group_5:\n\t"
-      "movl 0x10(%%edi), %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%ecx,%%eax,8), %%esi\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lencode_packet_group_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8b\n\t"
-      "pushl $0x28f1f0\n\t"
-      "pushl $0x28f3f4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencode_packet_group_6:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0xc(%%edi), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11b650]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lencode_packet_group_7\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c11abb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lencode_packet_group_8\n\t"
-      "movl 0x46e804, %%eax\n\t"
-      "jmp .Lencode_packet_group_9\n\t"
-      ".Lencode_packet_group_7:\n\t"
-      "movl $0x28f3dc, -0x4(%%ebp)\n\t"
-      ".Lencode_packet_group_8:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".Lencode_packet_group_9:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "sete %%cl\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x46e804\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11aca0_assert), [exitfn] "m"(b11aca0_exitfn), [c11b650] "m"(b11aca0_c11b650), [c11abb0] "m"(b11aca0_c11abb0)
-      : "memory");
+  unsigned int err;
+  char *entry;
+  int definition;
+
+  err = 0;
+  if (!group) {
+    display_assert((const char *)0x28f408, (const char *)0x28f1f0, 0x84, 1);
+    system_exit(-1);
+  }
+  if (type < 0 || type >= *(int16_t *)((char *)group + 4)) {
+    display_assert((const char *)0x28f380, (const char *)0x28f1f0, 0x85, 1);
+    system_exit(-1);
+  }
+  if (!encoded_buf || !encoded_size) {
+    display_assert((const char *)0x28f318, (const char *)0x28f1f0, 0x86, 1);
+    system_exit(-1);
+  }
+  entry = *(char **)((char *)group + 0x10) + (int)type * 8;
+  definition = *(int *)(entry + 4);
+  if (!definition) {
+    display_assert((const char *)0x28f3f4, (const char *)0x28f1f0, 0x8b, 1);
+    system_exit(-1);
+  }
+  if (!FUN_0011b650(definition, (short)version, data, encoded_buf,
+                    (short *)encoded_size, *(short *)((char *)group + 0xc))) {
+    err = 0x28f3dcu;
+  } else if (!data_packet_group_append_packet_header(group,
+                                                    (unsigned char *)encoded_buf,
+                                                    (short *)encoded_size,
+                                                    type)) {
+    err = *(unsigned int *)0x46e804;
+  }
+  *(unsigned int *)0x46e804 = err;
+  return err == 0;
 }
-#else
-#error "encode_packet_group: clang naked draft required"
-#endif
 
 
 /* compute_packet_field_sizes (0x11add0) — XBE naked draft (batch 118). */
