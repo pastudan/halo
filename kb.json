@@ -40173,8 +40173,8 @@
         },
         {
           "addr": "0x1be6b0",
-          "decl": "void FUN_001be6b0(void);",
-          "ported": false
+          "decl": "void FUN_001be6b0(float *out_a@<eax>, float *out_c@<ecx>, float *uv@<edx>);",
+          "ported": true
         },
         {
           "addr": "0x1be7b0",
