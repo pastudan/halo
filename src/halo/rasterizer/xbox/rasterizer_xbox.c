@@ -383,35 +383,18 @@ void rasterizer_spin_end(void)
   (void)0;
 }
 
-/* _rasterizer_windows_begin (0x1559d0) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-static void (*const b1559d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1559d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* _rasterizer_windows_begin (0x1559d0) — readable C lift from XBE leaf. */
 void _rasterizer_windows_begin(void)
 {
-  __asm__ volatile(
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .L_rasterizer_windows_begin_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x533\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".L_rasterizer_windows_begin_1:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1559d0_assert), [exitfn] "m"(b1559d0_exitfn)
-      : "memory");
+  extern char DAT_0029dc40[];
+  extern char DAT_0029dc0c[];
+
+  if (*(int *)0x476ab0 == 0) {
+    display_assert(DAT_0029dc40, DAT_0029dc0c, 0x533, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "_rasterizer_windows_begin: clang naked draft required"
-#endif
+
 
 
 /* _rasterizer_window_get_fog (0x155a00) — XBE naked draft (batch 380). */
@@ -455,35 +438,18 @@ void _rasterizer_window_get_fog(void)
 #endif
 
 
-/* _rasterizer_windows_end (0x155a40) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-static void (*const b155a40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b155a40_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* _rasterizer_windows_end (0x155a40) — readable C lift from XBE leaf. */
 void _rasterizer_windows_end(void)
 {
-  __asm__ volatile(
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .L_rasterizer_windows_end_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x65d\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".L_rasterizer_windows_end_1:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b155a40_assert), [exitfn] "m"(b155a40_exitfn)
-      : "memory");
+  extern char DAT_0029dc40[];
+  extern char DAT_0029dc0c[];
+
+  if (*(int *)0x476ab0 == 0) {
+    display_assert(DAT_0029dc40, DAT_0029dc0c, 0x65d, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "_rasterizer_windows_end: clang naked draft required"
-#endif
+
 
 
 /* _rasterizer_frame_end (0x155a70) — XBE naked draft (batch 335). */

@@ -7037,8 +7037,9 @@
         },
         {
           "addr": "0x861d0",
-          "decl": "void director_inhibit_facing(void);",
-          "ported": false
+          "decl": "void director_inhibit_facing(short user_index);",
+          "ported": true,
+          "name": "director_inhibit_facing"
         },
         {
           "addr": "0x86220",
@@ -21648,7 +21649,8 @@
         {
           "addr": "0x1559d0",
           "decl": "void _rasterizer_windows_begin(void);",
-          "ported": false
+          "ported": true,
+          "name": "_rasterizer_windows_begin"
         },
         {
           "addr": "0x155a00",
@@ -21658,7 +21660,8 @@
         {
           "addr": "0x155a40",
           "decl": "void _rasterizer_windows_end(void);",
-          "ported": false
+          "ported": true,
+          "name": "_rasterizer_windows_end"
         },
         {
           "addr": "0x155a70",

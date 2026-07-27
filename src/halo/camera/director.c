@@ -1355,46 +1355,19 @@ void FUN_00085c80(void)
 #endif
 
 
-/* director_inhibit_facing (0x861d0) — XBE naked draft (batch 174). */
-#if defined(__clang__)
-static void (*const b861d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b861d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void director_inhibit_facing(void)
+/* director_inhibit_facing (0x861d0) — readable C lift from XBE leaf. */
+void director_inhibit_facing(short user_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Ldirector_inhibit_facing_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Ldirector_inhibit_facing_2\n\t"
-      ".Ldirector_inhibit_facing_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldirector_inhibit_facing_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0xf8, %%eax, %%eax\n\t"
-      "movb $1, 0x335301(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b861d0_assert), [exitfn] "m"(b861d0_exitfn)
-      : "memory");
+  extern char DAT_00266fc0[];
+  extern char DAT_0026700c[];
+
+  if (user_index < 0 || user_index >= 4) {
+    display_assert(DAT_00266fc0, DAT_0026700c, 0xb3, true);
+    system_exit(-1);
+  }
+  *((unsigned char *)0x335301 + (int)user_index * 0xf8) = 1;
 }
-#else
-#error "director_inhibit_facing: clang naked draft required"
-#endif
+
 
 
 /* director_inhibited_facing (0x86270) — readable C lift. */
