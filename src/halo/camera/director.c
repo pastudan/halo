@@ -1638,136 +1638,34 @@ void FUN_00086670(void)
 #endif
 
 
-/* director_load_camera (0x86900) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static void * (*const b86900_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static void (*const b86900_c1da081)(void) = (void (*)(void))_fscanf;
-static int (*const b86900_c1d9dac)(void *stream) = crt_fclose;
-static void (*const b86900_c89350)(void) = (void (*)(void))FUN_00089350;
-static void (*const b86900_c8aa80)(float *forward, float *up) = observer_up_from_forward;
-static float (*const b86900_c10c510)(float *v1, float *v2) = FUN_0010c510;
-
-__attribute__((naked, noinline))
+/* director_load_camera (0x86900) — readable C lift (restored pre-naked). */
 void director_load_camera(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x34, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2658a4\n\t"
-      "pushl $0x267084\n\t"
-      "call *%[c1d9e59]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Ldirector_load_camera_2\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x30(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x267078\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1da081]\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x24(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x267078\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1da081]\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x267078\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1da081]\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x267074\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1da081]\n\t"
-      "addl $0x48, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9dac]\n\t"
-      "leal -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x3352bc\n\t"
-      "call *%[c89350]\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8aa80]\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10c510]\n\t"
-      "fstps 0x3352d0\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "addl $0x20, %%esp\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fxch %%st(3)\n\t"
-      "fmuls -0x28(%%ebp)\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fxch %%st(2)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fstp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldirector_load_camera_1\n\t"
-      "flds 0x3352d0\n\t"
-      "fchs\n\t"
-      "fstps 0x3352d0\n\t"
-      ".Ldirector_load_camera_1:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x3352d4\n\t"
-      "movl $0x893a0, 0x3352b8\n\t"
-      "movl $0x3f800000, 0x335374\n\t"
-      "movb $0, 0x335370\n\t"
-      "movw $2, 0x3352b0\n\t"
-      ".Ldirector_load_camera_2:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d9e59] "m"(b86900_c1d9e59), [c1da081] "m"(b86900_c1da081), [c1d9dac] "m"(b86900_c1d9dac), [c89350] "m"(b86900_c89350), [c8aa80] "m"(b86900_c8aa80), [c10c510] "m"(b86900_c10c510)
-      : "memory");
-}
-#else
-#error "director_load_camera: clang naked draft required"
-#endif
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  crt_fopen((char *)0x00267084, (char *)0x002658a4);
+  /* test esi, esi -> je 0x86a40 */
+  _fscanf();
+  _fscanf();
+  _fscanf();
+  _fscanf();
+  crt_fclose((void *)(uintptr_t)esi);
+  FUN_00089350();
+  observer_up_from_forward((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
+  FUN_0010c510((float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  /* test (char)eax, 0x41 -> jne 0x86a13 */
+  /* mem[0x003352d4] = ecx */
+  /* mem[0x003352b8] = 0x893a0 */
+  /* mem[0x00335374] = 0x3f800000 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+}
 
 /* FUN_00086a50 (0x86a50) — readable C lift (restored pre-naked). */
 void FUN_00086a50(void)
