@@ -16575,12 +16575,14 @@
         {
           "addr": "0x13ca30",
           "decl": "int FUN_0013ca30(int param_1, int param_2, int *param_3);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0013ca30"
         },
         {
           "addr": "0x13cab0",
           "decl": "int FUN_0013cab0(int param_1, int param_2);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0013cab0"
         },
         {
           "addr": "0x13cb30",

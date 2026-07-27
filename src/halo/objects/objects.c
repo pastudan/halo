@@ -4165,126 +4165,48 @@ int16_t FUN_0013c9e0(int tag_index)
   return -1;
 }
 
-/* FUN_0013ca30 (0x13ca30) — XBE naked draft (batch 67). */
-#if defined(__clang__)
-static void * (*const b13ca30_c13c100)(int16_t object_type) = FUN_0013c100;
-static void (*const b13ca30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b13ca30_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_0013ca30(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int *param_3 __attribute__((unused)))
+/* FUN_0013ca30 (0x13ca30) — readable C lift from XBE leaf. */
+int FUN_0013ca30(int base, int object_type, int *out_extra)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13c100]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $-1, 0xa(%%esi)\n\t"
-      "jne .LFUN_0013ca30_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4ff\n\t"
-      "pushl $0x29b6b8\n\t"
-      "pushl $0x29b780\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013ca30_1:\n\t"
-      "movw 0xa(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0013ca30_2\n\t"
-      "cmpw $0x5bc, %%ax\n\t"
-      "jbe .LFUN_0013ca30_3\n\t"
-      ".LFUN_0013ca30_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x500\n\t"
-      "pushl $0x29b6b8\n\t"
-      "pushl $0x29b6f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013ca30_3:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0013ca30_4\n\t"
-      "movswl 0xe(%%esi), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".LFUN_0013ca30_4:\n\t"
-      "movswl 0xa(%%esi), %%eax\n\t"
-      "addl 0x8(%%ebp), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c13c100] "m"(b13ca30_c13c100), [assert] "m"(b13ca30_assert), [exitfn] "m"(b13ca30_exitfn)
-      : "memory");
+  void *def;
+  short off;
+
+  def = FUN_0013c100((int16_t)object_type);
+  if (*(short *)((char *)def + 0xa) == -1) {
+    display_assert((const char *)0x29b780, (const char *)0x29b6b8, 0x4ff, true);
+    system_exit(-1);
+  }
+  off = *(short *)((char *)def + 0xa);
+  if (off < 0 || (unsigned short)off > 0x5bc) {
+    display_assert((const char *)0x29b6f8, (const char *)0x29b6b8, 0x500, true);
+    system_exit(-1);
+  }
+  if (out_extra)
+    *out_extra = (int)*(short *)((char *)def + 0xe);
+  return base + (int)off;
 }
-#else
-#error "FUN_0013ca30: clang naked draft required"
-#endif
 
 
-/* FUN_0013cab0 (0x13cab0) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void * (*const b13cab0_c13c100)(int16_t object_type) = FUN_0013c100;
-static void (*const b13cab0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b13cab0_exitfn)(int) = system_exit;
 
-__attribute__((naked, noinline))
-int FUN_0013cab0(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)))
+/* FUN_0013cab0 (0x13cab0) — readable C lift from XBE leaf. */
+int FUN_0013cab0(int base, int object_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13c100]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $-1, 0xc(%%esi)\n\t"
-      "jne .LFUN_0013cab0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x50d\n\t"
-      "pushl $0x29b6b8\n\t"
-      "pushl $0x29b834\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013cab0_1:\n\t"
-      "movw 0xc(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0013cab0_2\n\t"
-      "cmpw $0x5bc, %%ax\n\t"
-      "jbe .LFUN_0013cab0_3\n\t"
-      ".LFUN_0013cab0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x50e\n\t"
-      "pushl $0x29b6b8\n\t"
-      "pushl $0x29b7b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013cab0_3:\n\t"
-      "movswl 0xc(%%esi), %%eax\n\t"
-      "addl 0x8(%%ebp), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c13c100] "m"(b13cab0_c13c100), [assert] "m"(b13cab0_assert), [exitfn] "m"(b13cab0_exitfn)
-      : "memory");
+  void *def;
+  short off;
+
+  def = FUN_0013c100((int16_t)object_type);
+  if (*(short *)((char *)def + 0xc) == -1) {
+    display_assert((const char *)0x29b834, (const char *)0x29b6b8, 0x50d, true);
+    system_exit(-1);
+  }
+  off = *(short *)((char *)def + 0xc);
+  if (off < 0 || (unsigned short)off > 0x5bc) {
+    display_assert((const char *)0x29b7b0, (const char *)0x29b6b8, 0x50e, true);
+    system_exit(-1);
+  }
+  return base + (int)off;
 }
-#else
-#error "FUN_0013cab0: clang naked draft required"
-#endif
+
 
 
 /* FUN_0013cb30 (0x13cb30) — readable C lift. */
