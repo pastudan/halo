@@ -293,29 +293,12 @@ void FUN_000d44f0(int cursor, short *element, int param_1, int param_2)
 
 /* HUD message display system. */
 
-/* hud_messaging_initialize (0xd4680) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static void * (*const bd4680_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-
-__attribute__((naked, noinline))
+/* hud_messaging_initialize (0xd4680) — readable C lift. */
+extern char DAT_00281ac4[];
 void hud_messaging_initialize(void)
 {
-  __asm__ volatile(
-      "pushl $0x11a8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x281ac4\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, 0x46bd18\n\t"
-      "ret\n\t"
-      :
-      : [c1bfbf0] "m"(bd4680_c1bfbf0)
-      : "memory");
+  *(void **)0x46bd18 = game_state_malloc(DAT_00281ac4, NULL, 0x11a8);
 }
-#else
-#error "hud_messaging_initialize: clang naked draft required"
-#endif
-
 
 /* FUN_000d46a0 (0xd46a0)
  * Sets the player globals pointer and zeroes the hud messaging buffer. */

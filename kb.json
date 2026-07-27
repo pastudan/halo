@@ -13120,7 +13120,7 @@
           "addr": "0xd4680",
           "decl": "void hud_messaging_initialize(void);",
           "name": "hud_messaging_initialize",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/interface/hud_messaging.c"
         },
         {
