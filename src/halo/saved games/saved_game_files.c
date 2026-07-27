@@ -2677,75 +2677,35 @@ void FUN_001c3430(void)
 #endif
 
 
-/* FUN_001c3500 (0x1c3500) — XBE naked draft (batch 258). */
-#if defined(__clang__)
-static void (*const b1c3500_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c3500_exitfn)(int) = system_exit;
-static bool (*const b1c3500_c19a930)(file_ref_t *info) = file_close;
-static void (*const b1c3500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_001c3500(void)
+/* FUN_001c3500 (0x1c3500) — readable C lift from XBE leaf. */
+char FUN_001c3500(int16_t slot_index)
 {
-  __asm__ volatile(
-      "testw %%si, %%si\n\t"
-      "je .LFUN_001c3500_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x77c\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bacc8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3500_1:\n\t"
-      "movb 0x4eacc8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c3500_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x77e\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2baac8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3500_2:\n\t"
-      "cmpw $9, %%si\n\t"
-      "jb .LFUN_001c3500_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x77f\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bad24\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3500_3:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19a930]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_001c3500_4\n\t"
-      "movzwl %%si, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2bacf4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c3500_4:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c3500_assert), [exitfn] "m"(b1c3500_exitfn), [c19a930] "m"(b1c3500_c19a930), [c8f390] "m"(b1c3500_c8f390)
-      : "memory");
+  char ok;
+  extern char DAT_002ba8e8[];
+  extern char DAT_002bacc8[];
+  extern char DAT_002baac8[];
+  extern char DAT_002bad24[];
+  extern char DAT_002bacf4[];
+
+  if (slot_index != 0) {
+    display_assert(DAT_002bacc8, DAT_002ba8e8, 0x77c, 1);
+    system_exit(-1);
+  }
+  if (*(char *)0x4eacc8 != 0) {
+    display_assert(DAT_002baac8, DAT_002ba8e8, 0x77e, 1);
+    system_exit(-1);
+  }
+  if ((uint16_t)slot_index >= 9) {
+    display_assert(DAT_002bad24, DAT_002ba8e8, 0x77f, 1);
+    system_exit(-1);
+  }
+  ok = (char)file_close((file_ref_t *)0x4eabb0);
+  if (!ok) {
+    error(2, DAT_002bacf4, (unsigned)(uint16_t)slot_index);
+  }
+  return ok;
 }
-#else
-#error "FUN_001c3500: clang naked draft required"
-#endif
+
 
 
 /* FUN_001c35a0 (0x1c35a0) — readable C lift from XBE leaf. */

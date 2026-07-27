@@ -23859,8 +23859,9 @@
         },
         {
           "addr": "0x1c3500",
-          "decl": "void FUN_001c3500(void);",
-          "ported": false
+          "decl": "char FUN_001c3500(int16_t slot_index@<si>);",
+          "ported": true,
+          "name": "FUN_001c3500"
         },
         {
           "addr": "0x1c35a0",
