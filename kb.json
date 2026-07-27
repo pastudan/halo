@@ -23726,8 +23726,9 @@
         },
         {
           "addr": "0x1c1c00",
-          "decl": "void FUN_001c1c00(void);",
-          "ported": false
+          "decl": "void FUN_001c1c00(int16_t local_player_index);",
+          "ported": true,
+          "name": "FUN_001c1c00"
         },
         {
           "addr": "0x1c1cc0",
@@ -23851,8 +23852,9 @@
         },
         {
           "addr": "0x1c2b20",
-          "decl": "void saved_game_perform_file_system_checks(void);",
-          "ported": false
+          "decl": "int saved_game_perform_file_system_checks(void);",
+          "ported": false,
+          "name": "saved_game_perform_file_system_checks"
         },
         {
           "addr": "0x1c2bf0",
@@ -23994,7 +23996,8 @@
         {
           "addr": "0x1c4600",
           "decl": "wchar_t *saved_game_file_get_display_name(int file_index);",
-          "ported": false
+          "ported": false,
+          "name": "saved_game_file_get_display_name"
         },
         {
           "addr": "0x1c46c0",
