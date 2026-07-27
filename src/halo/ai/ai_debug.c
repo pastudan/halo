@@ -1270,86 +1270,43 @@ void ai_debug_lineoffire_addpill(float *vec_a, float *vec_b, float param_3, char
   *(int *)0x5acad4 = slot + 1;
 }
 
-/* FUN_000494e0 (0x494e0) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static void (*const b494e0_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-static void (*const b494e0_c189860)(char flag, void *center, void *height_vec, float radius, void *color) = FUN_00189860;
-
-__attribute__((naked, noinline))
+/* FUN_000494e0 (0x494e0) — readable C lift from XBE leaf.
+ * Debug draw for AI look/idle props when enabled. */
 void FUN_000494e0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movb 0x5acab8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000494e0_5\n\t"
-      "flds 0x5acabc\n\t"
-      "movb 0x5acab9, %%al\n\t"
-      "fadds 0x5acac8\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x2ee6d4, %%eax\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x5acac0\n\t"
-      "fadds 0x5acacc\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x5acac4\n\t"
-      "fadds 0x5acad0\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jne .LFUN_000494e0_1\n\t"
-      "movl 0x2ee6d0, %%eax\n\t"
-      ".LFUN_000494e0_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x5acabc\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl 0x5acad4, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000494e0_4\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x5acae8, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000494e0_2:\n\t"
-      "movb 0x5acad8(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x2ee6d0, %%eax\n\t"
-      "jne .LFUN_000494e0_3\n\t"
-      "movl 0x2ee6d8, %%eax\n\t"
-      ".LFUN_000494e0_3:\n\t"
-      "movl 0x5acc68(,%%esi,4), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0xc0(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl $1\n\t"
-      "call *%[c189860]\n\t"
-      "movl 0x5acad4, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "incl %%esi\n\t"
-      "addl $0xc, %%edi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_000494e0_2\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_000494e0_4:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000494e0_5:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c189270] "m"(b494e0_c189270), [c189860] "m"(b494e0_c189860)
-      : "memory");
+  float sum[3];
+  void *color;
+  int i;
+  int count;
+  char *centers;
+  void *radius_color;
+  void *height;
+
+  if (*(unsigned char *)0x5acab8 == 0)
+    return;
+  sum[0] = *(float *)0x5acabc + *(float *)0x5acac8;
+  sum[1] = *(float *)0x5acac0 + *(float *)0x5acacc;
+  sum[2] = *(float *)0x5acac4 + *(float *)0x5acad0;
+  if (*(unsigned char *)0x5acab9 != 0)
+    color = *(void **)0x2ee6d4;
+  else
+    color = *(void **)0x2ee6d0;
+  FUN_00189270(1, (float *)0x5acabc, sum, color);
+  count = *(int *)0x5acad4;
+  if (count <= 0)
+    return;
+  centers = (char *)0x5acae8;
+  for (i = 0; i < count; i++) {
+    if (*(unsigned char *)(0x5acad8 + i) != 0)
+      radius_color = *(void **)0x2ee6d0;
+    else
+      radius_color = *(void **)0x2ee6d8;
+    height = centers + 0xc0;
+    FUN_00189860(1, centers, height, *(float *)(0x5acc68 + i * 4), radius_color);
+    centers += 0xc;
+  }
 }
-#else
-#error "FUN_000494e0: clang naked draft required"
-#endif
+
 
 
 /* FUN_000495b0 (0x495b0) — readable C lift. */
