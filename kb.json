@@ -458,8 +458,8 @@
         },
         {
           "addr": "0x1330a0",
-          "decl": "void FUN_001330a0(void);",
-          "ported": false
+          "decl": "void FUN_001330a0(int handle);",
+          "ported": true
         },
         {
           "addr": "0x133170",
