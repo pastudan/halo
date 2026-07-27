@@ -20715,8 +20715,9 @@
         },
         {
           "addr": "0x16f6c0",
-          "decl": "void FUN_0016f6c0(void);",
-          "ported": false
+          "decl": "char FUN_0016f6c0(void);",
+          "ported": true,
+          "name": "FUN_0016f6c0"
         },
         {
           "addr": "0x16f730",
@@ -32055,14 +32056,14 @@
         {
           "addr": "0x11c530",
           "name": "FUN_0011c530",
-          "decl": "void FUN_0011c530(int cache, int block);",
-          "ported": false
+          "decl": "void FUN_0011c530(int cache, void *pointer);",
+          "ported": true
         },
         {
           "addr": "0x11c580",
           "name": "FUN_0011c580",
           "decl": "void FUN_0011c580(int cache, void *pointer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c5d0",
@@ -32102,7 +32103,7 @@
         },
         {
           "addr": "0x11c870",
-          "decl": "void lrar_cache_new(void);",
+          "decl": "void *lrar_cache_new(const char *name, unsigned int minimum_address, unsigned int maximum_address, short block_count, short alignment_bit, short boundary_bit, void (*lock_proc)(short *, short), void (*unlock_proc)(short *));",
           "name": "lrar_cache_new",
           "ported": false,
           "source_path": "src/halo/memory/lruv_cache.c"

@@ -5186,53 +5186,25 @@ void FUN_0016f610(void)
 #endif
 
 
-/* FUN_0016f6c0 (0x16f6c0) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-static void *(*const b16f6c0_memset)(void *, int, unsigned int) = csmemset;
-static bool __stdcall (*const b16f6c0_c1d33fb)(void *freq) = (void *)QueryPerformanceFrequency;
-
-__attribute__((naked, noinline))
-void FUN_0016f6c0(void)
+/* FUN_0016f6c0 (0x16f6c0) — readable C lift from XBE leaf. */
+char FUN_0016f6c0(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $0x1d, %%ecx\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_0016f6c0_1:\n\t"
-      "movl %%esi, 0x47e358(%%eax)\n\t"
-      "movl %%esi, 0x47e35c(%%eax)\n\t"
-      "movl %%esi, 0x47e270(%%eax)\n\t"
-      "movl %%esi, 0x47e274(%%eax)\n\t"
-      "addl $8, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "jne .LFUN_0016f6c0_1\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x47e108\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x47e088\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x47e008\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl $0x325178\n\t"
-      "call *%[c1d33fb]\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b16f6c0_memset), [c1d33fb] "m"(b16f6c0_c1d33fb)
-      : "memory");
+  int i;
+
+  for (i = 0; i < 0x1d; i++) {
+    *(int *)(0x47e358 + i * 8) = 0;
+    *(int *)(0x47e35c + i * 8) = 0;
+    *(int *)(0x47e270 + i * 8) = 0;
+    *(int *)(0x47e274 + i * 8) = 0;
+  }
+  csmemset((void *)0x47e108, 0, 0x80);
+  csmemset((void *)0x47e088, 0, 0x80);
+  csmemset((void *)0x47e008, 0, 0x80);
+  QueryPerformanceFrequency((void *)0x325178);
+  return 1;
 }
-#else
-#error "FUN_0016f6c0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_0016f730 (0x16f730) — XBE naked draft (batch 329). */

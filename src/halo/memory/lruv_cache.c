@@ -414,96 +414,44 @@ void * FUN_0011c5f0(int cache __attribute__((unused)), int size __attribute__((u
 #endif
 
 
-/* FUN_0011c530 (0x11c530) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void (*const b11c530_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11c530_exitfn)(int) = system_exit;
-static void (*const b11c530_c11c290)(int cache) = FUN_0011c290;
-static void (*const b11c530_c11c210)(int cache, int block) = FUN_0011c210;
-
-__attribute__((naked, noinline))
-void FUN_0011c530(int cache __attribute__((unused)), int block __attribute__((unused)))
+/* FUN_0011c530 (0x11c530) — readable C lift from XBE leaf. */
+void FUN_0011c530(int cache, void *pointer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x10(%%eax), %%esi\n\t"
-      "jne .LFUN_0011c530_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12a\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl $0x267eec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011c530_1:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c11c290]\n\t"
-      "call *%[c11c210]\n\t"
-      "orl $1, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11c530_assert), [exitfn] "m"(b11c530_exitfn), [c11c290] "m"(b11c530_c11c290), [c11c210] "m"(b11c530_c11c210)
-      : "memory");
+  extern char DAT_00267eec[];
+  extern char DAT_0028f768[];
+  unsigned char *hdr;
+
+  if (pointer == 0) {
+    display_assert(DAT_00267eec, DAT_0028f768, 0x12a, true);
+    system_exit(-1);
+  }
+  hdr = (unsigned char *)pointer - 0x10;
+  FUN_0011c290(cache);
+  FUN_0011c210(cache, (int)hdr);
+  *(int *)(hdr + 4) |= 1;
 }
-#else
-#error "FUN_0011c530: clang naked draft required"
-#endif
 
 
-/* FUN_0011c580 (0x11c580) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void (*const b11c580_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11c580_exitfn)(int) = system_exit;
-static void (*const b11c580_c11c290)(int cache) = FUN_0011c290;
-static void (*const b11c580_c11c210)(int cache, int block) = FUN_0011c210;
 
-__attribute__((naked, noinline))
-void FUN_0011c580(int cache __attribute__((unused)), void *pointer __attribute__((unused)))
+
+/* FUN_0011c580 (0x11c580) — readable C lift from XBE leaf. */
+void FUN_0011c580(int cache, void *pointer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x10(%%eax), %%esi\n\t"
-      "jne .LFUN_0011c580_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13a\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl $0x267eec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011c580_1:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c11c290]\n\t"
-      "call *%[c11c210]\n\t"
-      "andl $0xfffffffe, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11c580_assert), [exitfn] "m"(b11c580_exitfn), [c11c290] "m"(b11c580_c11c290), [c11c210] "m"(b11c580_c11c210)
-      : "memory");
+  extern char DAT_00267eec[];
+  extern char DAT_0028f768[];
+  unsigned char *hdr;
+
+  if (pointer == 0) {
+    display_assert(DAT_00267eec, DAT_0028f768, 0x13a, true);
+    system_exit(-1);
+  }
+  hdr = (unsigned char *)pointer - 0x10;
+  FUN_0011c290(cache);
+  FUN_0011c210(cache, (int)hdr);
+  *(int *)(hdr + 4) &= ~1;
 }
-#else
-#error "FUN_0011c580: clang naked draft required"
-#endif
+
+
 
 
 /* lrar_cache_dispose (0x11cab0) — XBE naked draft (batch 85). */
@@ -1571,43 +1519,19 @@ int lruv_block_get_address(void *lruv, int block_index)
   return block->first_page_index << (c->page_size_bits & 0x1f);
 }
 
-/* lruv_block_touched (0x11da30) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void (*const b11da30_c11d550)(void *cache, char do_full_check) = lruv_cache_verify;
-static void *(*const b11da30_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-bool lruv_block_touched(void *lruv __attribute__((unused)), int block_index __attribute__((unused)))
+/* lruv_block_touched (0x11da30) — readable C lift from XBE leaf. */
+bool lruv_block_touched(void *lruv, int block_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11d550]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x3c(%%esi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x14(%%eax), %%eax\n\t"
-      "subl 0x30(%%esi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11d550] "m"(b11da30_c11d550), [dget] "m"(b11da30_dget)
-      : "memory");
+  void *block;
+  int delta;
+
+  lruv_cache_verify(lruv, 0);
+  block = datum_get(*(void **)((char *)lruv + 0x3c), block_index);
+  delta = *(int *)((char *)block + 0x14) - *(int *)((char *)lruv + 0x30);
+  return delta == 0;
 }
-#else
-#error "lruv_block_touched: clang naked draft required"
-#endif
+
+
 
 
 /* lruv_cache_get_page_usage (0x11da60) — XBE naked draft (batch 88). */
