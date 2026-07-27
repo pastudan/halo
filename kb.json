@@ -7013,8 +7013,9 @@
       "functions": [
         {
           "addr": "0x85a40",
-          "decl": "void FUN_00085a40(void);",
-          "ported": false
+          "decl": "char FUN_00085a40(int handle@<edi>);",
+          "ported": true,
+          "name": "FUN_00085a40"
         },
         {
           "addr": "0x85ab0",

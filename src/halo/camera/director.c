@@ -676,72 +676,28 @@ void director_update(float delta_time)
 }
 /* --- director.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00085a40 (0x85a40) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void *(*const b85a40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b85a40_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b85a40_c119810)(data_iter_t *iterator) = data_iterator_next;
-
-__attribute__((naked, noinline))
-void FUN_00085a40(void)
+/* FUN_00085a40 (0x85a40) — readable C lift from XBE leaf.
+ * Returns true if another player datum shares field +0x20 with handle. */
+char FUN_00085a40(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "movl 0x20(%%eax), %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00085a40_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00085a40_1:\n\t"
-      "cmpl %%edi, -0x8(%%ebp)\n\t"
-      "je .LFUN_00085a40_2\n\t"
-      "cmpl %%esi, 0x20(%%eax)\n\t"
-      "je .LFUN_00085a40_4\n\t"
-      ".LFUN_00085a40_2:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00085a40_1\n\t"
-      ".LFUN_00085a40_3:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00085a40_4:\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b85a40_dget), [c1197b0] "m"(b85a40_c1197b0), [c119810] "m"(b85a40_c119810)
-      : "memory");
+  data_iter_t iter;
+  void *self;
+  void *cur;
+  int field20;
+
+  self = datum_get(*(data_t **)0x5aa6d4, handle);
+  field20 = *(int *)((char *)self + 0x20);
+  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
+  for (cur = data_iterator_next(&iter); cur != (void *)0; cur = data_iterator_next(&iter)) {
+    if ((int)iter.datum_handle != handle) {
+      if (*(int *)((char *)cur + 0x20) == field20) {
+        return 1;
+      }
+    }
+  }
+  return 0;
 }
-#else
-#error "FUN_00085a40: clang naked draft required"
-#endif
+
 
 
 /* FUN_00085ab0 (0x85ab0) — XBE naked draft (batch 138). */
@@ -972,7 +928,7 @@ static void *(*const b85c80_tryget)(int, int) = object_try_and_get_and_verify_ty
 static void (*const b85c80_c10cc40)(float *out, float *angles) = angles_to_vector;
 static void (*const b85c80_c8aa80)(float *forward, float *up) = observer_up_from_forward;
 static bool (*const b85c80_cb5c30)(void) = game_time_get_paused;
-static void (*const b85c80_c85a40)(void) = FUN_00085a40;
+static char (*const b85c80_c85a40)(int) = FUN_00085a40;
 static void (*const b85c80_c85ab0)(void) = FUN_00085ab0;
 static void *(*const b85c80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static bool (*const b85c80_gerun)(void) = game_engine_running;
@@ -2888,7 +2844,7 @@ static void (*const b87f20_assert)(const char *, const char *, int, bool) = disp
 static void (*const b87f20_exitfn)(int) = system_exit;
 static void (*const b87f20_c853c0)(int param_1, unsigned short *param_2, unsigned int *param_3) = FUN_000853c0;
 static void (*const b87f20_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const b87f20_c87eb0)(void) = FUN_00087eb0;
+static void (*const b87f20_c87eb0)(int) = FUN_00087eb0;
 
 __attribute__((naked, noinline))
 void editor_camera_update(void)
@@ -3014,7 +2970,7 @@ static void (*const b88050_exitfn)(int) = system_exit;
 static void (*const b88050_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
 static void (*const b88050_c879d0)(void) = editor_camera_set_position;
 static void (*const b88050_c85280)(float *position, float *forward, float *up, float param_4, short param_5, int param_6) = FUN_00085280;
-static void (*const b88050_c87eb0)(void) = FUN_00087eb0;
+static void (*const b88050_c87eb0)(int) = FUN_00087eb0;
 static void (*const b88050_cff4d0)(int channel, const char *format, ...) = console_printf;
 
 __attribute__((naked, noinline))
