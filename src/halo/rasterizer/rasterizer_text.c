@@ -2024,131 +2024,72 @@ void rasterizer_memory_pool_delete(void)
 
 /* rasterizer_swizzle.c */
 
-/* rasterizer_swizzle_compute_masks (0x182690) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static int16_t (*const b182690_c108db0)(unsigned int value) = (void *)FUN_00108db0;
-static void (*const b182690_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b182690_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void rasterizer_swizzle_compute_masks(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)), unsigned short param_3 __attribute__((unused)), unsigned short param_4 __attribute__((unused)), unsigned int *param_5 __attribute__((unused)))
+/* rasterizer_swizzle_compute_masks (0x182690) — readable C lift (restored pre-naked). */
+void rasterizer_swizzle_compute_masks(short param_1, short param_2,
+                                      unsigned short param_3,
+                                      unsigned short param_4,
+                                      unsigned int *param_5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c108db0]\n\t"
-      "movswl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "call *%[c108db0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jg .Lrasterizer_swizzle_compute_masks_1\n\t"
-      "movl %%esi, 0x8(%%ebp)\n\t"
-      ".Lrasterizer_swizzle_compute_masks_1:\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "decl %%eax\n\t"
-      "cmpw $0x3f, %%ax\n\t"
-      "jg .Lrasterizer_swizzle_compute_masks_2\n\t"
-      "movswl 0x10(%%ebp), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl %%edx, %%esi\n\t"
-      "andl %%eax, %%esi\n\t"
-      "movzwl 0x2b07e0(,%%esi,2), %%edi\n\t"
-      "movswl 0x14(%%ebp), %%esi\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "andl %%eax, %%ebx\n\t"
-      "movzwl 0x2b07e0(,%%ebx,2), %%eax\n\t"
-      "jmp .Lrasterizer_swizzle_compute_masks_4\n\t"
-      ".Lrasterizer_swizzle_compute_masks_2:\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "sarl $6, %%ebx\n\t"
-      "cmpl $0x3f, %%ebx\n\t"
-      "jle .Lrasterizer_swizzle_compute_masks_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x56\n\t"
-      "pushl $0x2b087c\n\t"
-      "pushl $0x2b086c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_swizzle_compute_masks_3:\n\t"
-      "movswl 0x10(%%ebp), %%edx\n\t"
-      "movswl 0x14(%%ebp), %%esi\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $6, %%eax\n\t"
-      "andl %%ebx, %%eax\n\t"
-      "movzwl 0x2b07e0(,%%eax,2), %%edi\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $0x3f, %%ecx\n\t"
-      "movzwl 0x2b07e0(,%%ecx,2), %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "sarl $6, %%ecx\n\t"
-      "andl %%ebx, %%ecx\n\t"
-      "shll $0xc, %%edi\n\t"
-      "orl %%eax, %%edi\n\t"
-      "movzwl 0x2b07e0(,%%ecx,2), %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "andl $0x3f, %%ecx\n\t"
-      "movzwl 0x2b07e0(,%%ecx,2), %%ecx\n\t"
-      "shll $0xc, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      ".Lrasterizer_swizzle_compute_masks_4:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "shll $1, %%eax\n\t"
-      "cmpw %%bx, -0x4(%%ebp)\n\t"
-      "jle .Lrasterizer_swizzle_compute_masks_5\n\t"
-      "sarl %%cl, %%edx\n\t"
-      "addl %%ecx, %%ecx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "orl %%edx, %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_swizzle_compute_masks_5:\n\t"
-      "cmpw %%bx, -0x8(%%ebp)\n\t"
-      "jle .Lrasterizer_swizzle_compute_masks_6\n\t"
-      "sarl %%cl, %%esi\n\t"
-      "addl %%ecx, %%ecx\n\t"
-      "shll %%cl, %%esi\n\t"
-      "orl %%esi, %%eax\n\t"
-      ".Lrasterizer_swizzle_compute_masks_6:\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c108db0] "m"(b182690_c108db0), [assert] "m"(b182690_assert), [exitfn] "m"(b182690_exitfn)
-      : "memory");
+  int16_t sVar1;
+  int16_t sVar2;
+  int16_t param_1_min;
+  unsigned char bVar5;
+  unsigned short uVar3;
+  unsigned int uVar6;
+  unsigned int uVar4;
+  int upper;
+
+  sVar1 = FUN_00108db0((unsigned int)(int)param_1);
+  sVar2 = FUN_00108db0((unsigned int)(int)param_2);
+
+  /* param_1_min = min(sVar1, sVar2) */
+  param_1_min = sVar2;
+  if (sVar1 <= sVar2) {
+    param_1_min = sVar1;
+  }
+  bVar5 = (unsigned char)param_1_min;
+  uVar3 = (unsigned short)((1 << (bVar5 & 0x1f)) - 1);
+
+  if ((short)uVar3 < 0x40) {
+    uVar6 = (unsigned int)*(
+      unsigned short *)((int)0x2b07e0 + (int)(short)(param_3 & uVar3) * 2);
+    uVar4 = (unsigned int)*(
+      unsigned short *)((int)0x2b07e0 + (int)(short)(param_4 & uVar3) * 2);
+  } else {
+    upper = (int)(short)uVar3 >> 6;
+    if (upper > 0x3f) {
+      display_assert("upper_mask<=63",
+                     "c:\\halo\\SOURCE\\rasterizer\\rasterizer_swizzle.c", 0x56,
+                     1);
+      system_exit(-1);
+    }
+    uVar6 = (unsigned int)*(
+              unsigned short *)((int)0x2b07e0 +
+                                (((int)(short)param_3 >> 6) & upper) * 2)
+              << 0xc |
+            (unsigned int)*(unsigned short *)((int)0x2b07e0 +
+                                              ((int)(short)param_3 & 0x3f) * 2);
+    uVar4 = (unsigned int)*(
+              unsigned short *)((int)0x2b07e0 +
+                                (((int)(short)param_4 >> 6) & upper) * 2)
+              << 0xc |
+            (unsigned int)*(unsigned short *)((int)0x2b07e0 +
+                                              ((int)(short)param_4 & 0x3f) * 2);
+  }
+  uVar4 = uVar4 << 1;
+  if (param_1_min < sVar1) {
+    param_5[1] = uVar4;
+    *param_5 = uVar6 | ((int)(short)param_3 >> (bVar5 & 0x1f))
+                         << (bVar5 * 2 & 0x1f);
+    return;
+  }
+  if (param_1_min < sVar2) {
+    uVar4 = uVar4 | ((int)(short)param_4 >> (bVar5 & 0x1f))
+                      << (bVar5 * 2 & 0x1f);
+  }
+  *param_5 = uVar6;
+  param_5[1] = uVar4;
 }
-#else
-#error "rasterizer_swizzle_compute_masks: clang naked draft required"
-#endif
 
 
 /* rasterizer_swizzle_interleave_bits (0x1827c0) — readable C lift. */
