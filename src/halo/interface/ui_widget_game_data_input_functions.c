@@ -1594,132 +1594,48 @@ char FUN_000eec10(void *widget)
   return 1;
 }
 
-/* FUN_000eed10 (0xeed10) — XBE naked draft (batch 117). */
-#if defined(__clang__)
-static void (*const beed10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const beed10_exitfn)(int) = (void *)system_exit;
-static void *(*const beed10_tag)(int, int) = (void *)tag_get;
-static void (*const beed10_ce1500)(void) = (void *)player_ui_begin_editing_profile;
-static void (*const beed10_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
-static void (*const beed10_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
-
-__attribute__((naked, noinline))
-void FUN_000eed10(void *widget)
+/* FUN_000eed10 (0xeed10) — readable C lift. */
+char FUN_000eed10(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $0, 0xe(%%esi)\n\t"
-      "je .LFUN_000eed10_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe53\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287e10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eed10_1:\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "movl $0xffffffff, 0x31e494\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .LFUN_000eed10_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe5d\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286320\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eed10_2:\n\t"
-      "cmpl $3, 0x3e0(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "je .LFUN_000eed10_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe5e\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2862e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eed10_3:\n\t"
-      "movl 0x34(%%esi), %%esi\n\t"
-      "movw 0x3c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_000eed10_4\n\t"
-      "movzwl 0x44(%%esi), %%ecx\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jl .LFUN_000eed10_5\n\t"
-      ".LFUN_000eed10_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe67\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287dc8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eed10_5:\n\t"
-      "movswl 0x3c(%%esi), %%eax\n\t"
-      "movl 0x40(%%esi), %%ecx\n\t"
-      "movl (%%ecx,%%eax,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000eed10_7\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jns .LFUN_000eed10_6\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce1500]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000eed10_6:\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x1f\n\t"
-      "call *%[ce4500]\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000eed10_7:\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(beed10_assert), [exitfn] "m"(beed10_exitfn), [tag] "m"(beed10_tag), [ce1500] "m"(beed10_ce1500), [ce4500] "m"(beed10_ce4500), [ce5ab0] "m"(beed10_ce5ab0)
-      : "memory");
-}
-#else
-#error "FUN_000eed10: clang naked draft required"
-#endif
+  void *parent;
+  void *tag;
+  short idx;
+  int value;
 
+  if (*(short *)((char *)widget + 0xe) != 0) {
+    display_assert((const char *)0x287e10, (const char *)0x2859a4, 0xe53, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x34);
+  *(int *)0x31e494 = -1;
+  tag = tag_get(0x44654c61, *(int *)parent);
+  if (*(short *)tag != 2) {
+    display_assert((const char *)0x286320, (const char *)0x2859a4, 0xe5d, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)tag + 0x3e0) != 3) {
+    display_assert((const char *)0x2862e8, (const char *)0x2859a4, 0xe5e, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x34);
+  idx = *(short *)((char *)parent + 0x3c);
+  if (idx < 0 || (int)idx >= (int)*(unsigned short *)((char *)parent + 0x44)) {
+    display_assert((const char *)0x287dc8, (const char *)0x2859a4, 0xe67, 1);
+    system_exit(-1);
+  }
+  value = *(int *)(*(int *)((char *)parent + 0x40) + idx * 4);
+  if (value == -1) {
+    ui_play_audio_feedback_sound(4);
+    return 0;
+  }
+  if (value < 0) {
+    player_ui_begin_editing_profile(value);
+    return 1;
+  }
+  display_error_deferred(0x1f, -1, 1, 0);
+  ui_play_audio_feedback_sound(4);
+  return 0;
+}
 
 /* FUN_000eeeb0 (0xeeeb0) — readable C lift. */
 char FUN_000eeeb0(void *widget, void *player_ui, char *out_flag)
@@ -2826,136 +2742,49 @@ char FUN_000ef970(void *widget)
   return 1;
 }
 
-/* FUN_000efa80 (0xefa80) — XBE naked draft (batch 114). */
-#if defined(__clang__)
-static void *(*const befa80_tag)(int, int) = (void *)tag_get;
-static void (*const befa80_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const befa80_exitfn)(int) = (void *)system_exit;
-static void (*const befa80_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
-static void (*const befa80_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
-
-__attribute__((naked, noinline))
-void FUN_000efa80(void *widget)
+/* FUN_000efa80 (0xefa80) — readable C lift. */
+char FUN_000efa80(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, (%%eax)\n\t"
-      "jne .LFUN_000efa80_1\n\t"
-      "cmpl $3, 0x3e0(%%eax)\n\t"
-      "jge .LFUN_000efa80_2\n\t"
-      ".LFUN_000efa80_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x103d\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x288430\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000efa80_2:\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .LFUN_000efa80_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1040\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2883e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000efa80_3:\n\t"
-      "cmpl $3, 0x3e0(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "je .LFUN_000efa80_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1041\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2883ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000efa80_4:\n\t"
-      "movl 0x34(%%esi), %%esi\n\t"
-      "movw 0x3c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_000efa80_5\n\t"
-      "movzwl 0x44(%%esi), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .LFUN_000efa80_6\n\t"
-      ".LFUN_000efa80_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1049\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285fe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000efa80_6:\n\t"
-      "movswl 0x3c(%%esi), %%ecx\n\t"
-      "movl 0x40(%%esi), %%edx\n\t"
-      "movl (%%edx,%%ecx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, 0x31e494\n\t"
-      "je .LFUN_000efa80_8\n\t"
-      "testl $0x40000000, %%eax\n\t"
-      "je .LFUN_000efa80_7\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x1a\n\t"
-      "call *%[ce4500]\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000efa80_7:\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000efa80_8:\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(befa80_tag), [assert] "m"(befa80_assert), [exitfn] "m"(befa80_exitfn), [ce4500] "m"(befa80_ce4500), [ce5ab0] "m"(befa80_ce5ab0)
-      : "memory");
-}
-#else
-#error "FUN_000efa80: clang naked draft required"
-#endif
+  void *tag;
+  void *parent;
+  void *parent_tag;
+  short idx;
+  int value;
 
+  tag = tag_get(0x44654c61, *(int *)widget);
+  if (*(short *)tag != 0 || *(int *)((char *)tag + 0x3e0) < 3) {
+    display_assert((const char *)0x288430, (const char *)0x2859a4, 0x103d, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x34);
+  parent_tag = tag_get(0x44654c61, *(int *)parent);
+  if (*(short *)parent_tag != 2) {
+    display_assert((const char *)0x2883e8, (const char *)0x2859a4, 0x1040, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)parent_tag + 0x3e0) != 3) {
+    display_assert((const char *)0x2883ac, (const char *)0x2859a4, 0x1041, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x34);
+  idx = *(short *)((char *)parent + 0x3c);
+  if (idx < 0 || (int)idx >= (int)*(unsigned short *)((char *)parent + 0x44)) {
+    display_assert((const char *)0x285fe0, (const char *)0x2859a4, 0x1049, 1);
+    system_exit(-1);
+  }
+  value = *(int *)(*(int *)((char *)parent + 0x40) + idx * 4);
+  *(int *)0x31e494 = value;
+  if (value == -1) {
+    ui_play_audio_feedback_sound(4);
+    return 0;
+  }
+  if ((value & 0x40000000) != 0) {
+    display_error_deferred(0x1a, -1, 1, 0);
+    ui_play_audio_feedback_sound(4);
+    return 0;
+  }
+  return 1;
+}
 
 /* FUN_000efc60 (0xefc60) — XBE naked draft (batch 122). */
 #if defined(__clang__)
@@ -3122,112 +2951,53 @@ void FUN_000efc60(void *widget)
 #endif
 
 
-/* FUN_000efde0 (0xefde0) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void (*const befde0_c1c29c0)(void) = (void *)saved_game_file_get_useable_untitled_profile_name;
-static void (*const befde0_c1c1720)(void) = (void *)FUN_001c1720;
-static void (*const befde0_ce1500)(void) = (void *)player_ui_begin_editing_profile;
-static void *(*const befde0_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
-static wchar_t * (*const befde0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
-static bool (*const befde0_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = (void *)virtual_keyboard_set_validation;
-static void (*const befde0_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
-static void (*const befde0_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
-static void (*const befde0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void (*const befde0_ce1760)(void) = (void *)player_ui_end_editing_profile;
-
-__attribute__((naked, noinline))
-void FUN_000efde0(void *widget)
+/* FUN_000efde0 (0xefde0) — readable C lift. */
+char FUN_000efde0(void *widget, void *event)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x2(%%eax), %%si\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $-1, %%si\n\t"
-      "jne .LFUN_000efde0_1\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_000efde0_1:\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c29c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0, -0x100(%%ebp)\n\t"
-      "je .LFUN_000efde0_6\n\t"
-      "leal -0x100(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c1720]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000efde0_5\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce1500]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[ce0ea0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000efde0_4\n\t"
-      "pushl $0xb\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19dc90]\n\t"
-      "pushl $8\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%esi\n\t"
-      "movw $0, 0x16(%%esi)\n\t"
-      "call *%[cf5500]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_000efde0_3\n\t"
-      ".LFUN_000efde0_2:\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x25\n\t"
-      "call *%[ce4500]\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000efde0_3:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000efde0_4:\n\t"
-      "pushl $0x28860c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[ce1760]\n\t"
-      "jmp .LFUN_000efde0_2\n\t"
-      ".LFUN_000efde0_5:\n\t"
-      "pushl $0x2885e4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_000efde0_2\n\t"
-      ".LFUN_000efde0_6:\n\t"
-      "pushl $0x288514\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_000efde0_2\n\t"
-      :
-      : [c1c29c0] "m"(befde0_c1c29c0), [c1c1720] "m"(befde0_c1c1720), [ce1500] "m"(befde0_ce1500), [ce0ea0] "m"(befde0_ce0ea0), [c19dc90] "m"(befde0_c19dc90), [cf5500] "m"(befde0_cf5500), [ce4500] "m"(befde0_ce4500), [ce5ab0] "m"(befde0_ce5ab0), [c8f390] "m"(befde0_c8f390), [ce1760] "m"(befde0_ce1760)
-      : "memory");
-}
-#else
-#error "FUN_000efde0: clang naked draft required"
-#endif
+  wchar_t name_buf[128];
+  short index;
+  int profile_index;
+  void *profile;
+  char ok;
 
+  (void)widget;
+  index = *(short *)((char *)event + 2);
+  if (index == -1) {
+    index = 0;
+  }
+  ok = 0;
+  saved_game_file_get_useable_untitled_profile_name(name_buf);
+  if (name_buf[0] == 0) {
+    error(2, (const char *)0x288514);
+    display_error_deferred(0x25, -1, 1, 0);
+    ui_play_audio_feedback_sound(4);
+    return ok;
+  }
+  profile_index = ((int (*)(int, wchar_t *))(void *)FUN_001c1720)((int)(unsigned short)index, name_buf);
+  if (profile_index == -1) {
+    error(2, (const char *)0x2885e4);
+    display_error_deferred(0x25, -1, 1, 0);
+    ui_play_audio_feedback_sound(4);
+    return ok;
+  }
+  player_ui_begin_editing_profile(profile_index);
+  profile = player_ui_get_edit_player_profile();
+  if (profile == 0) {
+    error(2, (const char *)0x28860c);
+    player_ui_end_editing_profile();
+    display_error_deferred(0x25, -1, 1, 0);
+    ui_play_audio_feedback_sound(4);
+    return ok;
+  }
+  ustrncpy((wchar_t *)profile, name_buf, 0xb);
+  *(unsigned short *)((char *)profile + 0x16) = 0;
+  ok = (char)virtual_keyboard_set_validation((wchar_t *)profile, 0x18, 8);
+  if (!ok) {
+    display_error_deferred(0x25, -1, 1, 0);
+    ui_play_audio_feedback_sound(4);
+  }
+  return ok;
+}
 
 /* FUN_000efed0 (0xefed0) — readable C lift. */
 char FUN_000efed0(void *widget, void *player_ui)

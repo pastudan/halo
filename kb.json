@@ -27814,8 +27814,8 @@
         },
         {
           "addr": "0xeed10",
-          "decl": "void FUN_000eed10(void *widget);",
-          "ported": false
+          "decl": "char FUN_000eed10(void *widget);",
+          "ported": true
         },
         {
           "addr": "0xeeeb0",
@@ -27854,8 +27854,8 @@
         },
         {
           "addr": "0xefa80",
-          "decl": "void FUN_000efa80(void *widget);",
-          "ported": false
+          "decl": "char FUN_000efa80(void *widget);",
+          "ported": true
         },
         {
           "addr": "0xefc60",
@@ -27864,8 +27864,8 @@
         },
         {
           "addr": "0xefde0",
-          "decl": "void FUN_000efde0(void *widget);",
-          "ported": false
+          "decl": "char FUN_000efde0(void *widget, void *event);",
+          "ported": true
         },
         {
           "addr": "0xefed0",
