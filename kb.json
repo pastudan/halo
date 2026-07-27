@@ -31606,8 +31606,9 @@
       "functions": [
         {
           "addr": "0x107c30",
-          "decl": "void FUN_00107c30(void);",
-          "ported": false
+          "decl": "char FUN_00107c30(int16_t point_count, float *points, int16_t vertices_capacity, char *vertices, int16_t edges_capacity, char *edges, int16_t surfaces_capacity, char *surfaces);",
+          "ported": true,
+          "name": "FUN_00107c30"
         },
         {
           "addr": "0x107d40",
@@ -31617,8 +31618,9 @@
         },
         {
           "addr": "0x107db0",
-          "decl": "void FUN_00107db0(void);",
-          "ported": false
+          "decl": "char FUN_00107db0(int a0, int a1, int a2, int a3, int a4, int a5, int16_t count, float *planes, float *origin, float *direction, float *out_t_neg, float *out_t_pos);",
+          "ported": false,
+          "name": "FUN_00107db0"
         },
         {
           "addr": "0x107ec0",

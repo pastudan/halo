@@ -4380,7 +4380,7 @@ char FUN_0014e7d0(uint32_t collision_flags __attribute__((unused)), float *point
 /* FUN_0014e940 (0x14e940) — readable C lift from XBE leaf.
  * Pill test against global collision BSP; fills a collision-result blob. */
 char FUN_0014e940(int unused, float *origin, float *direction, float radius,
-                  int pad0, int pad1, void *result)
+                  int pad0, void *result)
 {
   float t;
   float normal[3];
@@ -4391,7 +4391,6 @@ char FUN_0014e940(int unused, float *origin, float *direction, float radius,
   unsigned int flt_max_bits;
   (void)unused;
   (void)pad0;
-  (void)pad1;
 
   res = (unsigned char *)result;
   res_f = (float *)result;

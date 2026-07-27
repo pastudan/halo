@@ -24,135 +24,47 @@ int16_t FUN_00108db0(unsigned int value)
 }
 /* --- rectangles.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00107c30 (0x107c30) — XBE naked draft (batch 248). */
-#if defined(__clang__)
-static void (*const b107c30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b107c30_exitfn)(int) = system_exit;
-static bool (*const b107c30_c106f50)(int16_t point_count, float *points, int16_t vertices_capacity, char *vertices, int16_t edges_capacity, char *edges, int16_t surfaces_capacity, char *surfaces) = FUN_00106f50;
-static void (*const b107c30_c107520)(void) = FUN_00107520;
-
-__attribute__((naked, noinline))
-void FUN_00107c30(void)
+/* FUN_00107c30 (0x107c30) — readable C lift from XBE leaf.
+ * Build convex polyhedron from point cloud, then validate each point. */
+char FUN_00107c30(int16_t point_count, float *points, int16_t vertices_capacity,
+                  char *vertices, int16_t edges_capacity, char *edges,
+                  int16_t surfaces_capacity, char *surfaces)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00107c30_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8ec\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28ba70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00107c30_1:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00107c30_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8ed\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c050\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00107c30_2:\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00107c30_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8ee\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c048\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00107c30_3:\n\t"
-      "movl 0x24(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_00107c30_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8ef\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c03c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00107c30_4:\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c106f50]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00107c30_7\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .LFUN_00107c30_6\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00107c30_5:\n\t"
-      "movl 0x20(%%ebp), %%ecx\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c107520]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00107c30_7\n\t"
-      "incl %%edi\n\t"
-      "cmpw %%si, %%di\n\t"
-      "jl .LFUN_00107c30_5\n\t"
-      ".LFUN_00107c30_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00107c30_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b107c30_assert), [exitfn] "m"(b107c30_exitfn), [c106f50] "m"(b107c30_c106f50), [c107520] "m"(b107c30_c107520)
-      : "memory");
+  int16_t i;
+  char (*validate_point)(int16_t, float *, int16_t, char *, int16_t, char *,
+                         int16_t, char *, int);
+
+  if (!points) {
+    display_assert((const char *)0x28ba70, (const char *)0x28be44, 0x8ec, 1);
+    system_exit(-1);
+  }
+  if (!vertices) {
+    display_assert((const char *)0x28c050, (const char *)0x28be44, 0x8ed, 1);
+    system_exit(-1);
+  }
+  if (!edges) {
+    display_assert((const char *)0x28c048, (const char *)0x28be44, 0x8ee, 1);
+    system_exit(-1);
+  }
+  if (!surfaces) {
+    display_assert((const char *)0x28c03c, (const char *)0x28be44, 0x8ef, 1);
+    system_exit(-1);
+  }
+  if (!FUN_00106f50(point_count, points, vertices_capacity, vertices,
+                    edges_capacity, edges, surfaces_capacity, surfaces))
+    return 0;
+  validate_point = (char (*)(int16_t, float *, int16_t, char *, int16_t, char *,
+                             int16_t, char *, int))FUN_00107520;
+  if (point_count <= 0)
+    return 1;
+  for (i = 0; i < point_count; i++) {
+    if (!validate_point(point_count, points, vertices_capacity, vertices,
+                        edges_capacity, edges, surfaces_capacity, surfaces,
+                        (int)i))
+      return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_00107c30: clang naked draft required"
-#endif
 
 
 /* FUN_00107d40 (0x107d40) — readable C lift from XBE leaf. */
@@ -183,135 +95,63 @@ char FUN_00107d40(int a0, int a1, int a2, int a3, int a4, int a5, int16_t count,
 
 
 
-/* FUN_00107db0 (0x107db0) — XBE naked draft (batch 243). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00107db0(void)
+/* FUN_00107db0 (0x107db0) — readable C lift from XBE leaf.
+ * Clip ray t-interval against a list of planes (stride 0x1c). */
+char FUN_00107db0(int a0, int a1, int a2, int a3, int a4, int a5,
+                  int16_t count, float *planes, float *origin, float *direction,
+                  float *out_t_neg, float *out_t_pos)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movw 0x20(%%ebp), %%bx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "pushl %%edi\n\t"
-      "movl $0xff7fffff, -0x4(%%ebp)\n\t"
-      "movl $0x7f7fffff, -0x8(%%ebp)\n\t"
-      "jle .LFUN_00107db0_7\n\t"
-      "movl 0x2c(%%ebp), %%edx\n\t"
-      "movl 0x28(%%ebp), %%esi\n\t"
-      "movl 0x24(%%ebp), %%edi\n\t"
-      "nop\n\t"
-      ".LFUN_00107db0_1:\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "imull $0x1c, %%eax, %%eax\n\t"
-      "addl %%edi, %%eax\n\t"
-      "cmpb $0, (%%eax)\n\t"
-      "je .LFUN_00107db0_6\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x10(%%eax)\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls (%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts 0x20(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00107db0_4\n\t"
-      "fdivs 0x20(%%ebp)\n\t"
-      "fchs\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00107db0_2\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00107db0_3\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "jmp .LFUN_00107db0_5\n\t"
-      ".LFUN_00107db0_2:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00107db0_3\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "jmp .LFUN_00107db0_5\n\t"
-      ".LFUN_00107db0_3:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "jmp .LFUN_00107db0_5\n\t"
-      ".LFUN_00107db0_4:\n\t"
-      "fcomps 0x31fb40\n\t"
-      ".LFUN_00107db0_5:\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00107db0_10\n\t"
-      ".LFUN_00107db0_6:\n\t"
-      "incl %%ecx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "jl .LFUN_00107db0_1\n\t"
-      ".LFUN_00107db0_7:\n\t"
-      "movl 0x30(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00107db0_8\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".LFUN_00107db0_8:\n\t"
-      "movl 0x34(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00107db0_9\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      ".LFUN_00107db0_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00107db0_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t i;
+  float t_neg;
+  float t_pos;
+  float *plane;
+  float numer;
+  float denom;
+  float t;
+  unsigned int bits;
+
+  (void)a0;
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  (void)a4;
+  (void)a5;
+
+  bits = 0xff7fffffu;
+  t_neg = *(float *)&bits;
+  bits = 0x7f7fffffu;
+  t_pos = *(float *)&bits;
+
+  for (i = 0; i < count; i++) {
+    plane = (float *)((char *)planes + (int)i * 0x1c);
+    if (*(unsigned char *)plane == 0)
+      continue;
+    numer = plane[3] * origin[2] + plane[2] * origin[1] + plane[1] * origin[0] -
+            plane[4];
+    denom = plane[3] * direction[2] + plane[2] * direction[1] +
+            plane[1] * direction[0];
+    if (fabsf(denom) < *(double *)0x2533d0) {
+      if (numer > *(float *)0x31fb40)
+        return 0;
+    } else {
+      t = -numer / denom;
+      if (denom > *(float *)0x2533c0) {
+        if (t_neg < t)
+          t_neg = t;
+      } else {
+        if (t_pos > t)
+          t_pos = t;
+      }
+      if (t_neg > t_pos)
+        return 0;
+    }
+  }
+  if (out_t_neg)
+    *out_t_neg = t_neg;
+  if (out_t_pos)
+    *out_t_pos = t_pos;
+  return 1;
 }
-#else
-#error "FUN_00107db0: clang naked draft required"
-#endif
 
 
 /* get_edge_vertex (0x107ec0) — XBE naked draft (batch 246). */
