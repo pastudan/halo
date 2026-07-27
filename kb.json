@@ -4755,7 +4755,7 @@
         {
           "addr": "0x7e0b0",
           "decl": "void *bitmap_2d_new(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format);",
-          "ported": true,
+          "ported": false,
           "name": "bitmap_2d_new"
         },
         {
@@ -23414,7 +23414,7 @@
         {
           "addr": "0x185830",
           "decl": "void render_camera_hack_frustum_z(void *camera, float z_near, float z_far);",
-          "ported": true,
+          "ported": false,
           "name": "render_camera_hack_frustum_z"
         },
         {
@@ -28238,13 +28238,13 @@
         {
           "addr": "0xf3740",
           "decl": "void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count);",
-          "ported": true,
+          "ported": false,
           "name": "multiplayer_game_set_text_box_for_game_ruleset"
         },
         {
           "addr": "0xf3850",
           "decl": "void multiplayer_game_set_text_box_for_teams_noteams(int *handles, int count);",
-          "ported": true,
+          "ported": false,
           "name": "multiplayer_game_set_text_box_for_teams_noteams"
         },
         {
@@ -40773,7 +40773,7 @@
         {
           "addr": "0x1486e0",
           "decl": "void FUN_001486e0(void *state, int node_index);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001486e0"
         },
         {
