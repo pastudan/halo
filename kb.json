@@ -38080,8 +38080,9 @@
         },
         {
           "addr": "0x120670",
-          "decl": "void build_damage_animation_index(void);",
-          "ported": false
+          "decl": "int build_damage_animation_index(int16_t a, int16_t b, int16_t c);",
+          "ported": true,
+          "name": "build_damage_animation_index"
         },
         {
           "addr": "0x120710",

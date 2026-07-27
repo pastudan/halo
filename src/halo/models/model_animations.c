@@ -1508,80 +1508,30 @@ char FUN_00120620(void *animation)
   return 0;
 }
 
-/* build_damage_animation_index (0x120670) — XBE naked draft (batch 264). */
-#if defined(__clang__)
-static void (*const b120670_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b120670_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void build_damage_animation_index(void)
+/* build_damage_animation_index (0x120670) — readable C lift from XBE leaf. */
+int build_damage_animation_index(int16_t a, int16_t b, int16_t c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lbuild_damage_animation_index_1\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .Lbuild_damage_animation_index_2\n\t"
-      ".Lbuild_damage_animation_index_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x37\n\t"
-      "pushl $0x290ce4\n\t"
-      "pushl $0x290d98\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_damage_animation_index_2:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lbuild_damage_animation_index_3\n\t"
-      "cmpw $4, %%bx\n\t"
-      "jl .Lbuild_damage_animation_index_4\n\t"
-      ".Lbuild_damage_animation_index_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x38\n\t"
-      "pushl $0x290ce4\n\t"
-      "pushl $0x290d48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_damage_animation_index_4:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lbuild_damage_animation_index_5\n\t"
-      "cmpw $0xb, %%si\n\t"
-      "jl .Lbuild_damage_animation_index_6\n\t"
-      ".Lbuild_damage_animation_index_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x39\n\t"
-      "pushl $0x290ce4\n\t"
-      "pushl $0x290d10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_damage_animation_index_6:\n\t"
-      "leal (%%ebx,%%edi,4), %%eax\n\t"
-      "imull $0xb, %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "addl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b120670_assert), [exitfn] "m"(b120670_exitfn)
-      : "memory");
+  if (a < 0 || a >= 4) {
+    extern char DAT_00290d98[];
+    extern char DAT_00290ce4[];
+    display_assert(DAT_00290d98, DAT_00290ce4, 0x37, 1);
+    system_exit(-1);
+  }
+  if (b < 0 || b >= 4) {
+    extern char DAT_00290d48[];
+    extern char DAT_00290ce4[];
+    display_assert(DAT_00290d48, DAT_00290ce4, 0x38, 1);
+    system_exit(-1);
+  }
+  if (c < 0 || c >= 0xb) {
+    extern char DAT_00290d10[];
+    extern char DAT_00290ce4[];
+    display_assert(DAT_00290d10, DAT_00290ce4, 0x39, 1);
+    system_exit(-1);
+  }
+  return ((int)b + (int)a * 4) * 0xb + (int)c;
 }
-#else
-#error "build_damage_animation_index: clang naked draft required"
-#endif
+
 
 
 /* FUN_00120710 (0x120710) — XBE naked draft (batch 248). */
