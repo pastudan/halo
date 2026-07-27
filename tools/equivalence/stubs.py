@@ -1018,6 +1018,8 @@ class StubManager:
         "datum_get",
         "object_get_and_verify_type",
         "tag_get",
+        "cluster_partition_object_iter_first",
+        "cluster_partition_object_iter_next",
         "real_vector3d_valid", "valid_real_point3d",
         "valid_real_normal3d_perpendicular", "valid_real_vector3d",
     ))
@@ -1468,6 +1470,14 @@ class StubManager:
                 except Exception:
                     pass
                 uc.reg_write(UC_X86_REG_EAX, result)
+                return True
+
+            if symbol_name in (
+                "cluster_partition_object_iter_first",
+                "cluster_partition_object_iter_next",
+            ):
+                # Empty partition — terminate object iteration (0 would loop).
+                uc.reg_write(UC_X86_REG_EAX, 0xFFFFFFFF)
                 return True
 
             if symbol_name == "tag_get":
