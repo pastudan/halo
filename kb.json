@@ -18526,7 +18526,7 @@
         },
         {
           "addr": "0xe1500",
-          "decl": "void player_ui_begin_editing_profile(void);",
+          "decl": "void player_ui_begin_editing_profile(int profile_index);",
           "ported": false
         },
         {
@@ -26462,7 +26462,7 @@
         {
           "addr": "0x196a60",
           "decl": "int FUN_00196a60(float *cull_bounds @<ecx>, float *bounds @<edx>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x196b10",
