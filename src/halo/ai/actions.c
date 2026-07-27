@@ -943,8 +943,9 @@ char actor_action_can_stop_guarding(int actor_handle, short min_state,
 }
 
 /* actor_action_can_stop_conversing (0x1cfa0) — readable C lift. */
-char actor_action_can_stop_conversing(int actor_handle)
+char actor_action_can_stop_conversing(int actor_handle, int flag)
 {
+  (void)flag;
   char *actor;
   int conv;
   char *rec;
@@ -3112,96 +3113,33 @@ char actor_action_handle_berserk_transition(int actor_handle, short param_2)
   return 0;
 }
 
-/* actor_action_handle_combat_transition (0x204f0) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void *(*const b204f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b204f0_c16050)(int actor_handle, short *param_2) = FUN_00016050;
-static void (*const b204f0_c1d030)(int actor_handle, int new_action_type, int param_3) = actor_action_change;
-static char (*const b204f0_c1e8a0)(int actor_handle) = actor_action_handle_combat_selection;
-static int16_t (*const b204f0_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
 
-__attribute__((naked, noinline))
-char actor_action_handle_combat_transition(int actor_handle __attribute__((unused)))
+/* actor_action_handle_combat_transition (0x204f0) — readable C lift. */
+char actor_action_handle_combat_transition(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x84, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x6a(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jge .Lactor_action_handle_combat_transition_3\n\t"
-      "cmpw %%bx, 0x312(%%esi)\n\t"
-      "je .Lactor_action_handle_combat_transition_2\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movw $3, 0x6a(%%esi)\n\t"
-      "call *%[c16050]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_combat_transition_1\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $6\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movw %%bx, 0x312(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_combat_transition_1:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e8a0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movw %%bx, 0x312(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_combat_transition_2:\n\t"
-      "cmpw $3, %%ax\n\t"
-      ".Lactor_action_handle_combat_transition_3:\n\t"
-      "jne .Lactor_action_handle_combat_transition_4\n\t"
-      "cmpw %%bx, 0x6e(%%esi)\n\t"
-      "jne .Lactor_action_handle_combat_transition_4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d6d0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lactor_action_handle_combat_transition_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b204f0_dget), [c16050] "m"(b204f0_c16050), [c1d030] "m"(b204f0_c1d030), [c1e8a0] "m"(b204f0_c1e8a0), [c1d6d0] "m"(b204f0_c1d6d0)
-      : "memory");
-}
-#else
-#error "actor_action_handle_combat_transition: clang naked draft required"
-#endif
+  char *actor;
+  char buf[0x84];
+  int16_t alert;
 
+  actor = (char *)datum_get(actor_data, actor_handle);
+  alert = *(int16_t *)(actor + 0x6a);
+  if (alert < 3) {
+    if (*(int16_t *)(actor + 0x312) != 0) {
+      *(int16_t *)(actor + 0x6a) = 3;
+      if (FUN_00016050(actor_handle, (short *)buf)) {
+        actor_action_change(actor_handle, 6, (int)buf);
+        *(int16_t *)(actor + 0x312) = 0;
+        return 1;
+      }
+      actor_action_handle_combat_selection(actor_handle);
+      *(int16_t *)(actor + 0x312) = 0;
+      return 1;
+    }
+  } else if (alert == 3 && *(int16_t *)(actor + 0x6e) == 0) {
+    actor_action_try_to_panic(actor_handle);
+  }
+  return 0;
+}
 
 /* actor_action_handle_grenade_throwing (0x205a0) — readable C lift. */
 char actor_action_handle_grenade_throwing(int actor_handle)

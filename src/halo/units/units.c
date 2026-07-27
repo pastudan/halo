@@ -9493,75 +9493,26 @@ void FUN_001a7a90(int param_1, float body_dmg, float shield_dmg)
   }
 }
 
-/* FUN_001a7ad0 (0x1a7ad0) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static int (*const b1a7ad0_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static void *(*const b1a7ad0_get)(int, int) = object_get_and_verify_type;
-static void (*const b1a7ad0_c1365d0)(int object_handle, float *body_vitality_override, float *shield_vitality_override) = FUN_001365d0;
-static int (*const b1a7ad0_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-void FUN_001a7ad0(int parent_handle __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+/* FUN_001a7ad0 (0x1a7ad0) — readable C lift.
+ * Walk children of parent; for non-bit4 units, apply vitality overrides. */
+void FUN_001a7ad0(int parent_handle, int param_2, int param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce450]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_001a7ad0_3\n\t"
-      "nop\n\t"
-      ".LFUN_001a7ad0_1:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "je .LFUN_001a7ad0_2\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movb 0xb6(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "jne .LFUN_001a7ad0_2\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1365d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001a7ad0_2:\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cce320]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_001a7ad0_1\n\t"
-      ".LFUN_001a7ad0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(b1a7ad0_cce450), [get] "m"(b1a7ad0_get), [c1365d0] "m"(b1a7ad0_c1365d0), [cce320] "m"(b1a7ad0_cce320)
-      : "memory");
+  int iter_state;
+  int child;
+  char *obj;
+  float body;
+  float shield;
+
+  child = FUN_000ce450(parent_handle, &iter_state);
+  while (child != -1) {
+    body = *(float *)&param_2;
+    shield = *(float *)&param_3;
+    obj = (char *)object_get_and_verify_type(child, -1);
+    if ((obj[0xb6] & 4) == 0)
+      FUN_001365d0(child, &body, &shield);
+    child = FUN_000ce320(parent_handle, &iter_state);
+  }
 }
-#else
-#error "FUN_001a7ad0: clang naked draft required"
-#endif
 
 /* FUN_001a7b50 (0x1a7b50) — XBE naked draft (batch 62). */
 #if defined(__clang__)

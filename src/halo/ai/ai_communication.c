@@ -266,84 +266,27 @@ void ai_communication_initialize_for_new_map(void)
 #endif
 
 
-/* ai_communication_dispose_from_old_map (0x42ca0) — readable C lift. */
-void ai_communication_dispose_from_old_map(void)
+/* ai_conversation_advance (0x43520) — readable C lift.
+ * Marks matching conversation records to advance; optional debug print. */
+void ai_conversation_advance(short param_1)
 {
-  FUN_00119550(*(void **)0x6324ec);
-}
+  data_iter_t iter;
+  char *rec;
+  void *elem;
 
-/* ai_conversation_advance (0x43520) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void (*const b43520_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b43520_c119810)(data_iter_t *iterator) = data_iterator_next;
-static scenario_t * (*const b43520_c18e380)(void) = global_scenario_get;
-static void *(*const b43520_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b43520_cff4d0)(int channel, const char *format, ...) = console_printf;
-
-__attribute__((naked, noinline))
-void ai_conversation_advance(short param_1 __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x6324ec, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lai_conversation_advance_4\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_conversation_advance_1:\n\t"
-      "cmpw %%si, 0x2(%%edi)\n\t"
-      "jne .Lai_conversation_advance_3\n\t"
-      "movb 0x5aca5f, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_conversation_advance_2\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x259aa0\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".Lai_conversation_advance_2:\n\t"
-      "movb $1, 0x9(%%edi)\n\t"
-      ".Lai_conversation_advance_3:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lai_conversation_advance_1\n\t"
-      "popl %%esi\n\t"
-      ".Lai_conversation_advance_4:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b43520_c1197b0), [c119810] "m"(b43520_c119810), [c18e380] "m"(b43520_c18e380), [elem] "m"(b43520_elem), [cff4d0] "m"(b43520_cff4d0)
-      : "memory");
+  data_iterator_new(&iter, *(data_t **)0x6324ec);
+  for (rec = (char *)data_iterator_next(&iter); rec != NULL;
+       rec = (char *)data_iterator_next(&iter)) {
+    if (*(int16_t *)(rec + 2) != param_1)
+      continue;
+    if (*(char *)0x5aca5f != 0) {
+      elem = tag_block_get_element((char *)global_scenario_get() + 0x468,
+                                  (int)param_1, 0x74);
+      console_printf(0, (const char *)0x259aa0, elem);
+    }
+    rec[9] = 1;
+  }
 }
-#else
-#error "ai_conversation_advance: clang naked draft required"
-#endif
 
 /* --- ai_communication.obj batch1 drafts (2026-07-26) --- */
 

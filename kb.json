@@ -2500,7 +2500,7 @@
         },
         {
           "addr": "0x1c0e0",
-          "decl": "char FUN_0001c0e0(int actor_handle, char param_2, char *state_data);",
+          "decl": "char FUN_0001c0e0(int actor_handle, char param_2, int state_data);",
           "ported": true,
           "name": "FUN_0001c0e0"
         },
@@ -2631,7 +2631,7 @@
         },
         {
           "addr": "0x1cfa0",
-          "decl": "char actor_action_can_stop_conversing(int actor_handle);",
+          "decl": "char actor_action_can_stop_conversing(int actor_handle, int flag);",
           "ported": true
         },
         {
@@ -2838,7 +2838,7 @@
           "addr": "0x204f0",
           "decl": "char actor_action_handle_combat_transition(int actor_handle);",
           "name": "actor_action_handle_combat_transition",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x205a0",
@@ -34262,7 +34262,7 @@
         {
           "addr": "0x2a470",
           "decl": "void actor_path_input_new(int actor_handle, char *nav_state_out);",
-          "ported": false,
+          "ported": true,
           "name": "actor_path_input_new"
         },
         {
@@ -34371,7 +34371,7 @@
         {
           "addr": "0x2d720",
           "decl": "char actor_move_to_point(int actor_handle, float *destination, int param_3, int param_4);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_to_point"
         },
         {
@@ -34389,7 +34389,7 @@
         {
           "addr": "0x2d9b0",
           "decl": "char actor_move_to_prop(int actor_handle, int encounter_handle, float distance);",
-          "ported": false,
+          "ported": true,
           "status": "ported",
           "name": "actor_move_to_prop"
         },
@@ -34807,7 +34807,7 @@
           "addr": "0x43520",
           "decl": "void ai_conversation_advance(short param_1);",
           "name": "ai_conversation_advance",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x435b0",
