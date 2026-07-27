@@ -5910,207 +5910,88 @@ post_loop:
 }
 
 
-/* object_choose_random_change_colors (0x13e1f0) — XBE naked draft (batch 116). */
-#if defined(__clang__)
-static void *(*const b13e1f0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b13e1f0_tag)(int, int) = tag_get;
-static void *(*const b13e1f0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b13e1f0_c1daf7e)(void) = FUN_001daf7e;
-static float * (*const b13e1f0_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = FUN_0007c270;
-
-__attribute__((naked, noinline))
-void object_choose_random_change_colors(int object_handle __attribute__((unused)), void *color_data __attribute__((unused)))
+/* object_choose_random_change_colors (0x13e1f0) — readable C lift (restored pre-naked). */
+void object_choose_random_change_colors(int object_handle /* @<eax> */,
+                                        void *color_data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "addl $0x164, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "leal 0x138(%%edi), %%ebx\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movl $4, -0x18(%%ebp)\n\t"
-      ".Lobject_choose_random_change_colors_1:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%esi\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "movl %%esi, (%%edx)\n\t"
-      "movl 0x4(%%eax), %%esi\n\t"
-      "movl %%esi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "cmpl (%%eax), %%ecx\n\t"
-      "jge .Lobject_choose_random_change_colors_5\n\t"
-      "pushl $0x2c\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x14(%%edi)\n\t"
-      "fmuls 0x29bbe0\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fmuls 0x29bbdc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x10(%%edi)\n\t"
-      "fmuls 0x29bbd8\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x29bbd4\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fabs\n\t"
-      "fldl 0x2573d8\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "movl 0x20(%%esi), %%eax\n\t"
-      "addl $0x20, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "jle .Lobject_choose_random_change_colors_5\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lobject_choose_random_change_colors_2:\n\t"
-      "pushl $0x1c\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "fcomps (%%ebx)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lobject_choose_random_change_colors_3\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lobject_choose_random_change_colors_2\n\t"
-      "jmp .Lobject_choose_random_change_colors_4\n\t"
-      ".Lobject_choose_random_change_colors_3:\n\t"
-      "flds 0x10(%%edi)\n\t"
-      "fabs\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x29bbd0\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fldl 0x2573d8\n\t"
-      "call *%[c1daf7e]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "leal 0x10(%%ebx), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $4, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c7c270]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lobject_choose_random_change_colors_4:\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      ".Lobject_choose_random_change_colors_5:\n\t"
-      "flds (%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lobject_choose_random_change_colors_6\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lobject_choose_random_change_colors_8\n\t"
-      ".Lobject_choose_random_change_colors_6:\n\t"
-      "flds (%%ebx)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lobject_choose_random_change_colors_7\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lobject_choose_random_change_colors_8\n\t"
-      ".Lobject_choose_random_change_colors_7:\n\t"
-      "flds (%%ebx)\n\t"
-      ".Lobject_choose_random_change_colors_8:\n\t"
-      "fstps 0x30(%%ebx)\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lobject_choose_random_change_colors_9\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lobject_choose_random_change_colors_11\n\t"
-      ".Lobject_choose_random_change_colors_9:\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lobject_choose_random_change_colors_10\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lobject_choose_random_change_colors_11\n\t"
-      ".Lobject_choose_random_change_colors_10:\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      ".Lobject_choose_random_change_colors_11:\n\t"
-      "fstps 0x34(%%ebx)\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lobject_choose_random_change_colors_12\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lobject_choose_random_change_colors_14\n\t"
-      ".Lobject_choose_random_change_colors_12:\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lobject_choose_random_change_colors_13\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lobject_choose_random_change_colors_14\n\t"
-      ".Lobject_choose_random_change_colors_13:\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      ".Lobject_choose_random_change_colors_14:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "fstps 0x38(%%ebx)\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "incl %%ecx\n\t"
-      "addl $0xc, %%esi\n\t"
-      "addl $0xc, %%ebx\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "jne .Lobject_choose_random_change_colors_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b13e1f0_get), [tag] "m"(b13e1f0_tag), [elem] "m"(b13e1f0_elem), [c1daf7e] "m"(b13e1f0_c1daf7e), [c7c270] "m"(b13e1f0_c7c270)
-      : "memory");
+  char *obj;
+  int obj_tag;
+  float *src;
+  float *dst;
+  int i;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
+  src = (float *)color_data;
+  dst = (float *)(obj + 0x138);
+
+  for (i = 0; i < 4; i = i + 1) {
+    float frac;
+    float c;
+
+    /* base RGB triple from placement data */
+    dst[0] = src[0];
+    dst[1] = src[1];
+    dst[2] = src[2];
+
+    if (i < *(int *)(obj_tag + 0x164)) {
+      char *cc_elem = (char *)tag_block_get_element(
+          (void *)(obj_tag + 0x164), i, 0x2c);
+
+      /* deterministic pseudo-random selector from object basis + slot index;
+       * the FABS is applied to the dot sum before the modulo */
+      frac = *(float *)(obj + 0x14) * *(float *)0x29bbe0 +
+             *(float *)(obj + 0xc) * *(float *)0x29bbdc +
+             *(float *)(obj + 0x10) * *(float *)0x29bbd8 +
+             (float)i * *(float *)0x29bbd4;
+      if (frac < 0.0f) {
+        frac = -frac;
+      }
+      frac = x87_fmod(frac, 1.0);
+
+      if (*(int *)(cc_elem + 0x20) > 0) {
+        int16_t j = 0;
+        do {
+          float *perm = (float *)tag_block_get_element(
+              (void *)(cc_elem + 0x20), (int)j, 0x1c);
+          if (frac <= perm[0]) {
+            float blend;
+            /* FABS applies only to obj+0x10 here, before adding index term */
+            blend = *(float *)(obj + 0x10);
+            if (blend < 0.0f) {
+              blend = -blend;
+            }
+            blend = blend + (float)i * *(float *)0x29bbd0;
+            blend = x87_fmod(blend, 1.0);
+            FUN_0007c270(dst, 1, perm + 1, perm + 4, blend);
+            break;
+          }
+          j = j + 1;
+        } while ((int)j < *(int *)(cc_elem + 0x20));
+      }
+    }
+
+    /* clamp each component to [0,1] and store in the +0x30 mirror */
+    c = *(float *)0x2533c0;
+    if (*(float *)0x2533c0 <= dst[0] && (c = *(float *)0x2533c8, dst[0] <= *(float *)0x2533c8)) {
+      c = dst[0];
+    }
+    dst[0xc] = c;
+    c = *(float *)0x2533c0;
+    if (*(float *)0x2533c0 <= dst[1] && (c = *(float *)0x2533c8, dst[1] <= *(float *)0x2533c8)) {
+      c = dst[1];
+    }
+    dst[0xd] = c;
+    c = *(float *)0x2533c0;
+    if (*(float *)0x2533c0 <= dst[2] && (c = *(float *)0x2533c8, dst[2] <= *(float *)0x2533c8)) {
+      c = dst[2];
+    }
+    dst[0xe] = c;
+
+    src = src + 3;
+    dst = dst + 3;
+  }
 }
-#else
-#error "object_choose_random_change_colors: clang naked draft required"
-#endif
 
 
 /* object_compute_change_colors (0x13e5d0) — readable C lift (restored pre-naked). */

@@ -17177,7 +17177,7 @@
         {
           "addr": "0x13e1f0",
           "decl": "void object_choose_random_change_colors(int object_handle@<eax>, void *color_data);",
-          "ported": false,
+          "ported": true,
           "name": "object_choose_random_change_colors"
         },
         {
