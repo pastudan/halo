@@ -1449,7 +1449,7 @@
         {
           "addr": "0x1d9e70",
           "decl": "float FUN_001d9e70(float base, float exponent);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d9e72",
@@ -2432,7 +2432,7 @@
         {
           "addr": "0x1daf7e",
           "decl": "void FUN_001daf7e(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1daf96",
@@ -4687,12 +4687,12 @@
         {
           "addr": "0x7cb60",
           "decl": "void *bitmap_3d_address(void *bitmap, short x, short y, short face_index, short mipmap_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x7cdf0",
           "decl": "void *bitmap_cube_map_address(void *bitmap, short x, short y, short z, short mipmap_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x7d000",
@@ -13827,7 +13827,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcf3e0",
@@ -19989,7 +19989,7 @@
         {
           "addr": "0x90170",
           "decl": "void FUN_00090170(int *out@<eax>, int a, int b);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x90180",
@@ -22772,7 +22772,7 @@
         {
           "addr": "0x111770",
           "decl": "void FUN_00111770(int state @<esi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x111910",
@@ -24961,13 +24961,13 @@
           "addr": "0x1ccbe0",
           "comment": "Compute listener distance squared for a channel/source pair.",
           "decl": "float FUN_001ccbe0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccca0",
           "comment": "Compute distance for random scale checks.",
           "decl": "float FUN_001ccca0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccd70",
@@ -27363,7 +27363,7 @@
         {
           "addr": "0xe5590",
           "decl": "void __stdcall ui_widget_filesystem_check_thread_proc(int unused);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe55e0",
@@ -30322,7 +30322,7 @@
         {
           "addr": "0x22e320",
           "decl": "void __stdcall BinkSetMemory(unsigned int size);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x230390",
@@ -30661,7 +30661,7 @@
         {
           "addr": "0x181410",
           "decl": "void FUN_00181410(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x181420",
@@ -31024,7 +31024,7 @@
         {
           "addr": "0x17cd70",
           "decl": "void FUN_0017cd70(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cd80",
@@ -31044,12 +31044,12 @@
         {
           "addr": "0x17cdb0",
           "decl": "void FUN_0017cdb0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cdc0",
           "decl": "void FUN_0017cdc0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cde0",
@@ -31064,12 +31064,12 @@
         {
           "addr": "0x17ce00",
           "decl": "void FUN_0017ce00(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ce10",
           "decl": "void FUN_0017ce10(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ce30",
@@ -31084,7 +31084,7 @@
         {
           "addr": "0x17ce50",
           "decl": "void FUN_0017ce50(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ce60",
@@ -31099,7 +31099,7 @@
         {
           "addr": "0x17ce80",
           "decl": "void FUN_0017ce80(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ce90",
@@ -31129,7 +31129,7 @@
         {
           "addr": "0x17cee0",
           "decl": "void FUN_0017cee0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cef0",
@@ -31139,7 +31139,7 @@
         {
           "addr": "0x17cf00",
           "decl": "void FUN_0017cf00(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cf10",
@@ -31165,7 +31165,7 @@
         {
           "addr": "0x17cf50",
           "decl": "void FUN_0017cf50(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017cf50"
         },
         {
@@ -31351,7 +31351,7 @@
         {
           "addr": "0x17dc70",
           "decl": "void *rasterizer_screen_effect_get_cinematic_parameters(void *effect);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17dec0",
@@ -31427,7 +31427,7 @@
         {
           "addr": "0x17eb90",
           "decl": "void FUN_0017eb90(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017eb90"
         },
         {
