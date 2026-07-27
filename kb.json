@@ -33639,6 +33639,18 @@
           "addr": "0x1d0df0",
           "decl": "bool FUN_001d0df0(const char *path, unsigned int attributes);",
           "ported": false
+        },
+        {
+          "addr": "0x1d0336",
+          "decl": "int __stdcall WaitForSingleObject(int handle, int timeout_ms);",
+          "ported": true,
+          "name": "WaitForSingleObject"
+        },
+        {
+          "addr": "0x1d0362",
+          "decl": "void __stdcall FUN_001d0362(int ms);",
+          "ported": true,
+          "name": "FUN_001d0362"
         }
       ],
       "name": "XAPILIB:xvutil.obj",
@@ -39954,21 +39966,9 @@
           "ported": false
         },
         {
-          "addr": "0x1d0336",
-          "decl": "int __stdcall WaitForSingleObject(int handle, int timeout_ms);",
-          "ported": true,
-          "name": "WaitForSingleObject"
-        },
-        {
           "addr": "0x1d0348",
           "decl": "void FUN_001d0348(void);",
           "ported": false
-        },
-        {
-          "addr": "0x1d0362",
-          "decl": "void __stdcall FUN_001d0362(int ms);",
-          "ported": false,
-          "name": "FUN_001d0362"
         },
         {
           "addr": "0x1d0370",
