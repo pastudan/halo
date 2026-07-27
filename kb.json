@@ -13207,7 +13207,7 @@
           "addr": "0xd4a90",
           "decl": "void scripted_hud_time_code_reset(void);",
           "name": "scripted_hud_time_code_reset",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd4ab0",

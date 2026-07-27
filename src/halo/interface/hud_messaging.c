@@ -622,30 +622,16 @@ void scripted_hud_time_code_start(char param_1)
 #endif
 
 
-/* scripted_hud_time_code_reset (0xd4a90) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static int (*const bd4a90_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
+/* scripted_hud_time_code_reset (0xd4a90) — readable C lift. */
 void scripted_hud_time_code_reset(void)
 {
-  __asm__ volatile(
-      "call *%[gtime]\n\t"
-      "cmpl $-1, 0x2f66e8\n\t"
-      "movl %%eax, 0x2f66e4\n\t"
-      "je .Lscripted_hud_time_code_reset_1\n\t"
-      "movl %%eax, 0x2f66e8\n\t"
-      ".Lscripted_hud_time_code_reset_1:\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(bd4a90_gtime)
-      : "memory");
+  int t;
+
+  t = game_time_get();
+  *(int *)0x2f66e4 = t;
+  if (*(int *)0x2f66e8 != -1)
+    *(int *)0x2f66e8 = t;
 }
-#else
-#error "scripted_hud_time_code_reset: clang naked draft required"
-#endif
-
-
 
 /* hud_render_timer (0xd4ab0) */
 void hud_render_timer(void)
