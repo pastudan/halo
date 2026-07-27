@@ -2279,131 +2279,50 @@ bool hs_parse_enum(int datum_index __attribute__((unused)))
 #endif
 
 
-/* FUN_000c66d0 (0xc66d0) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static void *(*const bc66d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bc66d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc66d0_exitfn)(int) = system_exit;
-static scenario_t * (*const bc66d0_c18e380)(void) = global_scenario_get;
-static int16_t (*const bc66d0_c18ea50)(void *param_1, const char *name) = FUN_0018ea50;
-static void *(*const bc66d0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const bc66d0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-bool FUN_000c66d0(int datum_index __attribute__((unused)))
+/* FUN_000c66d0 (0xc66d0) — readable C lift: resolve HS enum script name. */
+bool FUN_000c66d0(int datum_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x4(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0x2b, %%ax\n\t"
-      "jl .LFUN_000c66d0_1\n\t"
-      "cmpw $0x30, %%ax\n\t"
-      "jle .LFUN_000c66d0_2\n\t"
-      ".LFUN_000c66d0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x771\n\t"
-      "pushl $0x27bd0c\n\t"
-      "pushl $0x27c3f4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c66d0_2:\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "addl 0x46b6e8, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18e380]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18ea50]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_000c66d0_5\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl $0x24\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x204, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $-1, 0x20(%%ebx)\n\t"
-      "jne .LFUN_000c66d0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x77a\n\t"
-      "pushl $0x27bd0c\n\t"
-      "pushl $0x27c3cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c66d0_3:\n\t"
-      "movswl 0x4(%%esi), %%eax\n\t"
-      "movswl 0x26f2ca(,%%eax,2), %%edx\n\t"
-      "movl $1, %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movb 0x20(%%ebx), %%cl\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "testl %%edx, %%ebx\n\t"
-      "je .LFUN_000c66d0_4\n\t"
-      "movw %%di, 0x10(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c66d0_4:\n\t"
-      "movl 0x2f14a8(,%%eax,4), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x27c3a8\n\t"
-      "pushl $0x46b704\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl $0x46b704, 0x46b6fc\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c66d0_5:\n\t"
-      "popl %%edi\n\t"
-      "movl $0x27c384, 0x46b6fc\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "movl %%edx, 0x46b700\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bc66d0_dget), [assert] "m"(bc66d0_assert), [exitfn] "m"(bc66d0_exitfn), [c18e380] "m"(bc66d0_c18e380), [c18ea50] "m"(bc66d0_c18ea50), [elem] "m"(bc66d0_elem), [c1d90f0] "m"(bc66d0_c1d90f0)
-      : "memory");
+  char *node;
+  int16_t type;
+  int16_t enum_idx;
+  char *elem;
+  int mask;
+  int bit;
+  char ok;
+
+  ok = 0;
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, datum_index);
+  type = *(int16_t *)(node + 4);
+  if (type < 0x2b || type > 0x30) {
+    display_assert((const char *)0x27c3f4, (const char *)0x27bd0c, 0x771, 1);
+    system_exit(-1);
+  }
+  enum_idx = FUN_0018ea50(
+      global_scenario_get(),
+      (const char *)(*(int *)(node + 0xc) + *(int *)0x46b6e8));
+  if (enum_idx == -1) {
+    *(int *)0x46b6fc = 0x27c384;
+    *(int *)0x46b700 = *(int *)(node + 0xc);
+    return ok;
+  }
+  elem = (char *)tag_block_get_element(
+      (char *)global_scenario_get() + 0x204, (int)enum_idx, 0x24);
+  if (*(int16_t *)(elem + 0x20) == -1) {
+    display_assert((const char *)0x27c3cc, (const char *)0x27bd0c, 0x77a, 1);
+    system_exit(-1);
+  }
+  mask = (int)*(int16_t *)(0x26f2ca + (int)type * 2);
+  bit = 1 << (*(unsigned char *)(elem + 0x20));
+  if ((bit & mask) != 0) {
+    *(int16_t *)(node + 0x10) = enum_idx;
+    return 1;
+  }
+  crt_sprintf((char *)0x46b704, (const char *)0x27c3a8,
+              *(const char **)(0x2f14a8 + (int)type * 4));
+  *(int *)0x46b6fc = 0x46b704;
+  *(int *)0x46b700 = *(int *)(node + 0xc);
+  return 0;
 }
-#else
-#error "FUN_000c66d0: clang naked draft required"
-#endif
 
 
 /* FUN_000c6940 (0xc6940) — readable C lift. */
