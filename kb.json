@@ -34118,7 +34118,8 @@
         {
           "addr": "0xfd0b0",
           "decl": "void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y, int16_t param_3, float scale, char flag);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000fd0b0"
         },
         {
           "addr": "0xfd150",

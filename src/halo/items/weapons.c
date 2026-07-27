@@ -2321,88 +2321,7 @@ void FUN_000fcec0(int16_t trigger_index, int weapon_handle)
   FUN_000fcdd0(trigger_index, weapon_handle);
 }
 
-/* 0xfd0b0 — shot-error rotation (angle_index@ax; remaining args cdecl). */
-#if defined(__clang__)
-static void (*const FUN_000fd0b0_rot)(float *, float *, float, float) =
-    rotate_vector3d_by_sincos;
-
-__attribute__((naked, noinline))
-void FUN_000fd0b0(int16_t angle_index __attribute__((unused)),
-                  float *out_x __attribute__((unused)),
-                  float *out_y __attribute__((unused)),
-                  int16_t param_3 __attribute__((unused)),
-                  float scale __attribute__((unused)),
-                  char flag __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x18(%%ebp), %%dl\n\t"
-      "movb $1, %%cl\n\t"
-      "testb %%dl, %%cl\n\t"
-      "je 4f\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne 1f\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp 5f\n\t"
-      "1:\n\t"
-      "decl %%eax\n\t"
-      "testb %%al, %%cl\n\t"
-      "movl %%eax, 0x18(%%ebp)\n\t"
-      "je 2f\n\t"
-      "sarw $1, 0x18(%%ebp)\n\t"
-      "movswl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x18(%%ebp)\n\t"
-      "fildl 0x18(%%ebp)\n\t"
-      "jmp 5f\n\t"
-      "2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x18(%%ebp), %%ax\n\t"
-      "sarw $1, %%ax\n\t"
-      "negl %%eax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movl %%eax, 0x18(%%ebp)\n\t"
-      "movl %%ecx, 0x18(%%ebp)\n\t"
-      "fildl 0x18(%%ebp)\n\t"
-      "jmp 5f\n\t"
-      "4:\n\t"
-      "movw %%ax, %%dx\n\t"
-      "sarw $1, %%dx\n\t"
-      "testb %%al, %%cl\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "movl %%edx, 0x18(%%ebp)\n\t"
-      "fildl 0x18(%%ebp)\n\t"
-      "fsubs 0x253398\n\t"
-      "je 5f\n\t"
-      "fchs\n\t"
-      "5:\n\t"
-      "movswl 0x10(%%ebp), %%eax\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "decl %%eax\n\t"
-      "jne 6f\n\t"
-      "fld %%st(0)\n\t"
-      "subl $8, %%esp\n\t"
-      "fcos\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 8(%%ebp), %%ecx\n\t"
-      "fstps 4(%%esp)\n\t"
-      "fsin\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[rot]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "6:\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [rot] "m"(FUN_000fd0b0_rot)
-      : "memory");
-}
-#else
+/* FUN_000fd0b0 (0xfd0b0) — readable C lift. */
 void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y,
                   int16_t param_3, float scale, char flag)
 {
@@ -2435,7 +2354,6 @@ void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y,
     rotate_vector3d_by_sincos(out_x, out_y, sin_a, cos_a);
   }
 }
-#endif
 
 /* FUN_000fd150 (0xfd150) — readable C lift: reset weapon anim if not in fire states. */
 void FUN_000fd150(int weapon_handle /*@<esi>*/)
