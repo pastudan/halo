@@ -14644,7 +14644,7 @@
         {
           "addr": "0x1034b0",
           "decl": "void FUN_001034b0(int *obj);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1034e0",

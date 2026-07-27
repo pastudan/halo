@@ -4261,41 +4261,13 @@ void main_framerate_render(void)
 #endif
 
 
-/* FUN_001034b0 (0x1034b0) — XBE naked draft (batch 213). */
-#if defined(__clang__)
-static void (*const b1034b0_c117b20)(int *table, int element_size) = array_new;
-
-__attribute__((naked, noinline))
-void FUN_001034b0(int *obj __attribute__((unused)))
+/* FUN_001034b0 (0x1034b0) — readable C lift. */
+void FUN_001034b0(int *obj)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c117b20]\n\t"
-      "leal 0xc(%%esi), %%eax\n\t"
-      "pushl $0x1c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c117b20]\n\t"
-      "pushl $0x18\n\t"
-      "addl $0x18, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c117b20]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c117b20] "m"(b1034b0_c117b20)
-      : "memory");
+  array_new(obj, 0xc);
+  array_new((int *)((char *)obj + 0xc), 0x1c);
+  array_new((int *)((char *)obj + 0x18), 0x18);
 }
-#else
-#error "FUN_001034b0: clang naked draft required"
-#endif
-
 
 /* FUN_00103600 (0x103600) — XBE naked draft (batch 135). */
 #if defined(__clang__)
