@@ -10073,7 +10073,8 @@
         {
           "addr": "0x1c7160",
           "decl": "void game_sound_restore(void);",
-          "ported": false
+          "ported": true,
+          "name": "game_sound_restore"
         },
         {
           "addr": "0x1c7230",
