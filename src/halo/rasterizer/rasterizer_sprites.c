@@ -535,49 +535,17 @@ void FUN_0017d080(void)
 #endif
 
 
-/* FUN_0017d150 (0x17d150) — XBE naked draft (batch 378). */
-#if defined(__clang__)
-static void (*const b17d150_c15a7f0)(float *p0, float *p1, float *color0, float *color1) = (void *)FUN_0015a7f0;
-
-__attribute__((naked, noinline))
-void FUN_0017d150(void)
+/* FUN_0017d150 (0x17d150) — readable C lift. */
+void FUN_0017d150(float *a, float *b, float t, float *color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fadds (%%eax)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "fadds 0x4(%%eax)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "fadds 0x8(%%eax)\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "call *%[c15a7f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c15a7f0] "m"(b17d150_c15a7f0)
-      : "memory");
+  float local[3];
+
+  local[0] = a[0] + t * b[0];
+  local[1] = a[1] + t * b[1];
+  local[2] = a[2] + t * b[2];
+  FUN_0015a7f0(a, local, color, color);
 }
-#else
-#error "FUN_0017d150: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017d1a0 (0x17d1a0) — XBE naked draft (batch 334). */
@@ -1345,55 +1313,31 @@ void FUN_0017da00(int a0)
 
 
 
-/* FUN_0017da40 (0x17da40) — XBE naked draft (batch 323). */
-#if defined(__clang__)
-static int (*const b17da40_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void FUN_0017da40(int a0 __attribute__((unused)), int a1 __attribute__((unused)), float a2 __attribute__((unused)), float a3 __attribute__((unused)), float a4 __attribute__((unused)))
+/* FUN_0017da40 (0x17da40) — readable C lift. */
+void FUN_0017da40(int a0, int a1, float a2, float a3, float a4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_0017da40_1\n\t"
-      "movw 0xc(%%ebp), %%dx\n\t"
-      "movb %%cl, 0x23(%%eax)\n\t"
-      "movw %%cx, 0x24(%%eax)\n\t"
-      "movl %%ecx, 0x28(%%eax)\n\t"
-      "movl %%ecx, 0x2c(%%eax)\n\t"
-      "movl %%ecx, 0x30(%%eax)\n\t"
-      "movl %%ecx, 0x34(%%eax)\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movw %%dx, 0x2(%%eax)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x3c(%%eax)\n\t"
-      "movl %%edx, 0x40(%%eax)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fld %%st(0)\n\t"
-      "fstps 0x44(%%eax)\n\t"
-      "fadds 0x18(%%ebp)\n\t"
-      "fstps 0x48(%%eax)\n\t"
-      ".LFUN_0017da40_1:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(b17da40_gtime)
-      : "memory");
+  unsigned char *p;
+  float t;
+
+  p = *(unsigned char **)0x47e4d4;
+  if (!p)
+    return;
+  p[0x23] = 0;
+  *(unsigned short *)(p + 0x24) = 0;
+  *(unsigned int *)(p + 0x28) = 0;
+  *(unsigned int *)(p + 0x2c) = 0;
+  *(unsigned int *)(p + 0x30) = 0;
+  *(unsigned int *)(p + 0x34) = 0;
+  *(unsigned short *)(p + 0) = (unsigned short)a0;
+  *(unsigned short *)(p + 2) = (unsigned short)a1;
+  *(float *)(p + 0x3c) = a2;
+  *(float *)(p + 0x40) = a3;
+  t = (float)game_time_get() * *(float *)0x2546a4;
+  p = *(unsigned char **)0x47e4d4;
+  *(float *)(p + 0x44) = t;
+  *(float *)(p + 0x48) = t + a4;
 }
-#else
-#error "FUN_0017da40: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017dab0 (0x17dab0) — XBE naked draft (batch 318). */
