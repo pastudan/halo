@@ -1086,43 +1086,14 @@ void player_ui_end_editing_profile(void)
   (void)0;
 }
 
-/* FUN_000e1770 (0xe1770) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-static void (*const be1770_ce1000)(void) = FUN_000e1000;
-static void (*const be1770_c1c1bc0)(int, void *) = player_profile_get_from_path;
-static void (*const be1770_ce10c0)(void) = FUN_000e10c0;
-
-__attribute__((naked, noinline))
-void FUN_000e1770(int a0)
+/* FUN_000e1770 (0xe1770) — readable C lift. */
+void FUN_000e1770(int flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "movb %%al, 0x46bf0b\n\t"
-      "cmpl $-1, 0x46bf10\n\t"
-      "je .LFUN_000e1770_1\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x282b78, %%esi\n\t"
-      "call *%[ce1000]\n\t"
-      "movl 0x46bf10, %%ecx\n\t"
-      "pushl $0x46bee0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c1bc0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000e1770_1:\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[ce10c0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce1000] "m"(be1770_ce1000), [c1c1bc0] "m"(be1770_c1c1bc0), [ce10c0] "m"(be1770_ce10c0)
-      : "memory");
+  *(unsigned char *)0x46bf0b = (unsigned char)flag;
+  if (*(int *)0x46bf10 != -1) {
+    FUN_000e1000();
+    player_profile_get_from_path(*(int *)0x46bf10, (void *)0x46bee0);
+  }
+  FUN_000e10c0();
 }
-#else
-#error "FUN_000e1770: clang naked draft required"
-#endif
 
