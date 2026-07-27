@@ -35314,7 +35314,7 @@
         {
           "addr": "0x21ae0",
           "decl": "char FUN_00021ae0(int actor_handle, float range, float param3, float *encounter_pos, short *out_count);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00021ae0"
         },
         {
@@ -42438,13 +42438,13 @@
         {
           "addr": "0x61080",
           "decl": "void FUN_00061080(void *structure_bsp, unsigned char path_surface_flag, void *obstacles, int16_t disc_index, int surface_hint, float max_cost, float ray_t, unsigned char skip_ray_march, unsigned char use_cost_delta, char check_extant, void *out_result, float *step_data, float *direction);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00061080"
         },
         {
           "addr": "0x61280",
           "decl": "void path_add_steps(void *path @<esi>, int16_t seed_disc_index @<ax>, int16_t step_index);",
-          "ported": false,
+          "ported": true,
           "name": "path_add_steps"
         },
         {
