@@ -40294,7 +40294,8 @@
         {
           "addr": "0x81090",
           "decl": "void FUN_00081090(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00081090"
         },
         {
           "addr": "0x81110",

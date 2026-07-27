@@ -151,7 +151,7 @@ void byte_swap_message_header(unsigned short *header, int byte_order)
 }
 
 /* create_message (0x80ca0) — readable C lift. */
-int create_message(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size)
+int create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size)
 {
   unsigned short total;
   int buf;
@@ -1274,62 +1274,30 @@ unsigned int FUN_00080fc0(unsigned int a __attribute__((unused)), unsigned int c
 #endif
 
 
-/* FUN_00081090 (0x81090) — XBE naked draft (batch 239). */
-#if defined(__clang__)
-static void (*const b81090_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81090_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_00081090 (0x81090) — readable C lift (esi/ebx/edi register ABI). */
 void FUN_00081090(void)
 {
+  extern char DAT_00265da0[];
+  extern char DAT_00265de0[];
+  extern char DAT_00265dd8[];
+  extern char DAT_00265dd4[];
+  unsigned int count, idx, val;
+
+  __asm__ volatile("movl %%esi, %0" : "=r"(count));
+  __asm__ volatile("movl %%ebx, %0" : "=r"(idx));
+  __asm__ volatile("movl %%edi, %0" : "=r"(val));
+  if (count > 2) { display_assert(DAT_00265de0, DAT_00265da0, 0x70, 1); system_exit(-1); }
+  if (idx >= (count - 1)) { display_assert(DAT_00265dd8, DAT_00265da0, 0x71, 1); system_exit(-1); }
+  if (val >= count) { display_assert(DAT_00265dd4, DAT_00265da0, 0x72, 1); system_exit(-1); }
   __asm__ volatile(
-      "cmpl $2, %%esi\n\t"
-      "ja .LFUN_00081090_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x70\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265de0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081090_1:\n\t"
-      "leal -0x1(%%esi), %%eax\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jb .LFUN_00081090_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x71\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265dd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081090_2:\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jb .LFUN_00081090_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x72\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265dd4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081090_3:\n\t"
-      "movl %%esi, %%edx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      ".byte 0xe9, 0xbe, 0xfe, 0xff, 0xff\n\t"
+      "movl %0, %%eax\n\t"
+      "movl %1, %%ecx\n\t"
+      "movl %2, %%edx\n\t"
+      "jmp %P3"
       :
-      : [assert] "m"(b81090_assert), [exitfn] "m"(b81090_exitfn)
-      : "memory");
+      : "r"(idx), "r"(val), "r"(count), "X"(FUN_00080fc0)
+      : "eax", "ecx", "edx", "memory");
 }
-#else
-#error "FUN_00081090: clang naked draft required"
-#endif
-
-
 /* FUN_00081110 (0x81110) — readable C lift. */
 unsigned int FUN_00081110(unsigned int bit_count /* @<esi> */, unsigned int bit_offset /* @<edi> */, int unused)
 {
