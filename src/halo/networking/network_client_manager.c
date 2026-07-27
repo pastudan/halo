@@ -919,64 +919,26 @@ char network_game_client_initiate_join_game(void *client __attribute__((unused))
 #endif
 
 
-/* network_game_client_set_machine (0x124ba0) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void (*const b124ba0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b124ba0_exitfn)(int) = system_exit;
-static void * (*const b124ba0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-char network_game_client_set_machine(void *client __attribute__((unused)), void *machine __attribute__((unused)))
+/* network_game_client_set_machine (0x124ba0) — readable C lift. */
+char network_game_client_set_machine(void *client, void *machine)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Lnetwork_game_client_set_machine_1\n\t"
-      "cmpw $4, (%%esi)\n\t"
-      "jae .Lnetwork_game_client_set_machine_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lnetwork_game_client_set_machine_1\n\t"
-      "movb 0x40(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jl .Lnetwork_game_client_set_machine_1\n\t"
-      "cmpb $4, %%al\n\t"
-      "jl .Lnetwork_game_client_set_machine_2\n\t"
-      ".Lnetwork_game_client_set_machine_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e1\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2918f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_set_machine_2:\n\t"
-      "movzwl (%%esi), %%eax\n\t"
-      "imull $0x44, %%eax, %%eax\n\t"
-      "pushl $0x44\n\t"
-      "leal 0x970(%%eax,%%esi,1), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b124ba0_assert), [exitfn] "m"(b124ba0_exitfn), [c8e0b0] "m"(b124ba0_c8e0b0)
-      : "memory");
-}
-#else
-#error "network_game_client_set_machine: clang naked draft required"
-#endif
+  unsigned short idx;
+  char *dst;
 
+  if (client == 0 || *(unsigned short *)client >= 4 || machine == 0) {
+    display_assert((const char *)0x2918f8, (const char *)0x291774, 0x1e1, 1);
+    system_exit(-1);
+  }
+  if (*(signed char *)((char *)machine + 0x40) < 0 ||
+      *(signed char *)((char *)machine + 0x40) >= 4) {
+    display_assert((const char *)0x2918f8, (const char *)0x291774, 0x1e1, 1);
+    system_exit(-1);
+  }
+  idx = *(unsigned short *)client;
+  dst = (char *)client + 0x970 + (int)idx * 0x44;
+  csmemcpy(dst, machine, 0x44);
+  return 1;
+}
 
 /* network_game_client_get_machine (0x124c10) — readable C lift. */
 void *network_game_client_get_machine(void *client)

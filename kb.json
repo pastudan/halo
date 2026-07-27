@@ -15059,7 +15059,8 @@
         {
           "addr": "0x124ba0",
           "decl": "char network_game_client_set_machine(void *client, void *machine);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_set_machine"
         },
         {
           "addr": "0x124c10",
@@ -15085,7 +15086,8 @@
         {
           "addr": "0x124e20",
           "decl": "void network_game_client_game_out_of_sync(void *client);",
-          "ported": false
+          "ported": false,
+          "name": "network_game_client_game_out_of_sync"
         },
         {
           "addr": "0x124e90",
@@ -27069,7 +27071,8 @@
         {
           "addr": "0xe4370",
           "decl": "void widget_instance_set_visibility_recursive(void *widget, char visible);",
-          "ported": false
+          "ported": false,
+          "name": "widget_instance_set_visibility_recursive"
         },
         {
           "addr": "0xe43d0",
@@ -27287,7 +27290,8 @@
         {
           "addr": "0xe5ab0",
           "decl": "void ui_play_audio_feedback_sound(int16_t sound_selector);",
-          "ported": false
+          "ported": false,
+          "name": "ui_play_audio_feedback_sound"
         },
         {
           "addr": "0xe5b10",

@@ -473,6 +473,147 @@ void network_game_client_game_shutdown(void *client)
 )
 
 
+L(
+    0x124BA0,
+    "networking/network_client_manager.c",
+    "network_game_client_set_machine",
+    """
+/* network_game_client_set_machine (0x124ba0) — readable C lift. */
+char network_game_client_set_machine(void *client, void *machine)
+{
+  unsigned short idx;
+  char *dst;
+
+  if (client == 0 || *(unsigned short *)client >= 4 || machine == 0) {
+    display_assert((const char *)0x2918f8, (const char *)0x291774, 0x1e1, 1);
+    system_exit(-1);
+  }
+  if (*(signed char *)((char *)machine + 0x40) < 0 ||
+      *(signed char *)((char *)machine + 0x40) >= 4) {
+    display_assert((const char *)0x2918f8, (const char *)0x291774, 0x1e1, 1);
+    system_exit(-1);
+  }
+  idx = *(unsigned short *)client;
+  dst = (char *)client + 0x970 + (int)idx * 0x44;
+  csmemcpy(dst, machine, 0x44);
+  return 1;
+}
+""",
+    "char network_game_client_set_machine(void *client, void *machine);",
+)
+
+L(
+    0xE4370,
+    "interface/ui_widget.c",
+    "widget_instance_set_visibility_recursive",
+    """
+/* widget_instance_set_visibility_recursive (0xe4370) — readable C lift. */
+void widget_instance_set_visibility_recursive(void *widget, char visible)
+{
+  void *child;
+
+  if (widget == 0) {
+    display_assert((const char *)0x2832a8, (const char *)0x283280, 0x743, 1);
+    system_exit(-1);
+  }
+  *((char *)widget + 0x10) = visible;
+  child = *(void **)((char *)widget + 0x34);
+  while (child != 0) {
+    widget_instance_set_visibility_recursive(child, visible);
+    child = *(void **)((char *)child + 0x2c);
+  }
+}
+""",
+    "void widget_instance_set_visibility_recursive(void *widget, char visible);",
+)
+
+L(
+    0x11C4D0,
+    "networking/network_messages.c",
+    "FUN_0011c4d0",
+    """
+/* FUN_0011c4d0 (0x11c4d0) — readable C lift. */
+void FUN_0011c4d0(int cache, void *pointer)
+{
+  int *block;
+  void (*dispose_fn)(int);
+
+  if (pointer == 0) {
+    display_assert((const char *)0x267eec, (const char *)0x28f768, 0x11a, 1);
+    system_exit(-1);
+  }
+  block = (int *)((char *)pointer - 0x10);
+  FUN_0011c290(cache);
+  FUN_0011c210(cache, (int)block);
+  if ((block[1] & 2) == 0) {
+    dispose_fn = *(void (**)(int))(cache + 0x34);
+    dispose_fn(block[0]);
+    block[1] = (block[1] & ~1) | 2;
+  }
+}
+""",
+    "void FUN_0011c4d0(int cache, void *pointer);",
+)
+
+L(
+    0x124E20,
+    "networking/network_client_manager.c",
+    "network_game_client_game_out_of_sync",
+    """
+/* network_game_client_game_out_of_sync (0x124e20) — readable C lift. */
+void network_game_client_game_out_of_sync(void *client)
+{
+  short player;
+
+  if (*(unsigned char *)0x46e8b8 != 0)
+    return;
+  network_game_log((const char *)0x2919b4);
+  if (*((unsigned char *)client + 0xcac) == 0) {
+    player = local_player_get_next(-1);
+    while (player != -1) {
+      ui_widget_display_error(8, player, 1, 0);
+      player = local_player_get_next(player);
+    }
+  }
+  *((unsigned char *)client + 0xcac) = 1;
+}
+""",
+    "void network_game_client_game_out_of_sync(void *client);",
+)
+
+L(
+    0xE5AB0,
+    "interface/ui_widget.c",
+    "ui_play_audio_feedback_sound",
+    """
+/* ui_play_audio_feedback_sound (0xe5ab0) — readable C lift. */
+void ui_play_audio_feedback_sound(int16_t sound_selector)
+{
+  int sel;
+  const char *name;
+  int tag;
+
+  sel = (int)sound_selector - 1;
+  if ((unsigned)sel > 3)
+    return;
+  if (sel == 0)
+    name = (const char *)0x28380c;
+  else if (sel == 1)
+    name = (const char *)0x2837f4;
+  else if (sel == 2)
+    name = (const char *)0x2837e0;
+  else
+    name = (const char *)0x2837c4;
+  tag = tag_loaded(0x736e6421, name);
+  if (tag == -1)
+    return;
+  sound_impulse_start(tag, 1.0f);
+}
+""",
+    "void ui_play_audio_feedback_sound(int16_t sound_selector);",
+)
+
+
 def audit_naked_true() -> list[tuple[str, str, str]]:
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     bad = []
@@ -617,13 +758,11 @@ def commit_push(flips: list[str], touched: set[Path]) -> None:
 
 def main() -> int:
     order = [
-        0xE3DA0,
-        0xE5A40,
-        0xE59E0,
-        0xE4770,
-        0x126700,
-        0x126750,
-        0xBBB80,
+        0x124BA0,
+        0xE4370,
+        0x11C4D0,
+        0x124E20,
+        0xE5AB0,
     ]
     true0, _ = count_ported(json.loads(KB_PATH.read_text(encoding="utf-8")))
     print(f"start true={true0} naked_true={len(audit_naked_true())}", flush=True)
