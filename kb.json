@@ -21796,8 +21796,8 @@
         },
         {
           "addr": "0x155c20",
-          "decl": "void rasterizer_set_texture_bitmap_data(int stage, void *bitmap_data);",
-          "ported": false
+          "decl": "char rasterizer_set_texture_bitmap_data(short stage, void *bitmap_data);",
+          "ported": true
         },
         {
           "addr": "0x155cc0",

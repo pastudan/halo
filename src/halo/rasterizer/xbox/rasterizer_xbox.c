@@ -433,85 +433,26 @@ void FUN_00155c10(void *callback)
 
 
 
-/* rasterizer_set_texture_bitmap_data (0x155c20) — XBE naked draft (batch 345). */
-#if defined(__clang__)
-static void (*const b155c20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b155c20_exitfn)(int) = system_exit;
-static void (*const b155c20_c916e0)(void) = (void *)profile_texture_start;
-static void *(*const b155c20_xtex)(void *, bool, bool) = xbox_texture_cache_get_hardware_format;
-static void (*const b155c20_c91710)(void) = (void *)profile_texture_end;
-static void __stdcall (*const b155c20_c1e8700)(uint32_t stage, void *texture) = (void *)D3DDevice_SetTexture;
-static void (*const b155c20_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void rasterizer_set_texture_bitmap_data(int stage __attribute__((unused)), void *bitmap_data __attribute__((unused)))
+/* rasterizer_set_texture_bitmap_data (0x155c20) — readable C lift. */
+char rasterizer_set_texture_bitmap_data(short stage, void *bitmap_data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .Lrasterizer_set_texture_bitmap_data_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lrasterizer_set_texture_bitmap_data_2\n\t"
-      ".Lrasterizer_set_texture_bitmap_data_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x78f\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dda4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_set_texture_bitmap_data_2:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lrasterizer_set_texture_bitmap_data_3\n\t"
-      "call *%[c916e0]\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[xtex]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c91710]\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e8700]\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_set_texture_bitmap_data_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x797\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dd68\n\t"
-      "call *%[assert]\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x29dd38\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b155c20_assert), [exitfn] "m"(b155c20_exitfn), [c916e0] "m"(b155c20_c916e0), [xtex] "m"(b155c20_xtex), [c91710] "m"(b155c20_c91710), [c1e8700] "m"(b155c20_c1e8700), [c8f390] "m"(b155c20_c8f390)
-      : "memory");
+  void *hw;
+
+  if ((short)stage < 0 || (short)stage >= 4) {
+    display_assert((char *)0x29dda4, (char *)0x29dc0c, 0x78f, 1);
+    system_exit(-1);
+  }
+  if (!bitmap_data) {
+    display_assert((char *)0x29dd68, (char *)0x29dc0c, 0x797, 1);
+    error(2, (const char *)0x29dd38, (int)(short)stage);
+    return 1;
+  }
+  profile_texture_start();
+  hw = xbox_texture_cache_get_hardware_format(bitmap_data, 1, 1);
+  profile_texture_end();
+  D3DDevice_SetTexture((unsigned int)(short)stage, hw);
+  return 1;
 }
-#else
-#error "rasterizer_set_texture_bitmap_data: clang naked draft required"
-#endif
-
-
 /* FUN_00155cc0 (0x155cc0) — readable C lift. */
 int FUN_00155cc0(int a, int b)
 {
