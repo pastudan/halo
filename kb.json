@@ -24714,8 +24714,9 @@
         },
         {
           "addr": "0x1c9350",
-          "decl": "void FUN_001c9350(void);",
-          "ported": false
+          "decl": "void FUN_001c9350(int *slot@<eax>, char *suffix@<esi>);",
+          "ported": true,
+          "name": "FUN_001c9350"
         },
         {
           "addr": "0x1c9670",

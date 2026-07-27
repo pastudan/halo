@@ -610,48 +610,20 @@ int dsound_obstruction_from_obstruction(float obstruction)
   return sound_dsound_gain_to_volume(1.0f - obstruction, 0);
 }
 
-/* FUN_001c9350 (0x1c9350) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static int (*const b1c9350_c8df60)(const char *s1) = csstrlen;
-static int (*const b1c9350_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-void FUN_001c9350(void)
+/* FUN_001c9350 (0x1c9350) — readable C lift from XBE leaf. */
+void FUN_001c9350(int *slot, char *suffix)
 {
-  __asm__ volatile(
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c9350_1\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl %%eax, 0x4fdba8\n\t"
-      ".LFUN_001c9350_1:\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x4eae38\n\t"
-      "call *%[c8df60]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c8df60]\n\t"
-      "addl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $0x100, %%edi\n\t"
-      "popl %%edi\n\t"
-      "jae .LFUN_001c9350_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x4eae38\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $0x4eae38, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001c9350_2:\n\t"
-      "ret\n\t"
-      :
-      : [c8df60] "m"(b1c9350_c8df60), [c1d90f0] "m"(b1c9350_c1d90f0)
-      : "memory");
+  int total;
+  char *base;
+
+  if (slot != 0)
+    *(int *)0x4fdba8 = *slot;
+  base = (char *)0x4eae38;
+  total = csstrlen(base) + csstrlen(suffix);
+  if ((unsigned int)total < 0x100)
+    crt_sprintf(base + csstrlen(base), suffix);
 }
-#else
-#error "FUN_001c9350: clang naked draft required"
-#endif
+
 
 
 /* FUN_001c9670 (0x1c9670) — XBE naked draft (batch 256). */
