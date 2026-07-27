@@ -21822,7 +21822,7 @@
         {
           "addr": "0x156070",
           "decl": "int FUN_00156070(int a, int b, int c);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00156070"
         },
         {

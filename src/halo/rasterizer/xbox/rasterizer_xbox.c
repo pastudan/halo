@@ -959,12 +959,12 @@ void rasterizer_set_texture(int stage __attribute__((unused)), int a2 __attribut
 
 
 /* FUN_00156070 (0x156070) — readable C lift. */
-__attribute__((stdcall))
 int FUN_00156070(int a, int b, int c)
 {
-  ((void (__stdcall *)(int, int, int, int, int))D3DCubeTexture_LockRect)(a, b, c, 0, 0);
+  D3DCubeTexture_LockRect(a, b, c, 0, 0, 0);
   return 0;
 }
+
 
 /* rasterizer_set_texture_non_blocking (0x1560a0) — XBE naked draft (batch 311). */
 #if defined(__clang__)
