@@ -5131,8 +5131,8 @@
         },
         {
           "addr": "0x1bd1b0",
-          "decl": "void FUN_001bd1b0(void);",
-          "ported": false
+          "decl": "short FUN_001bd1b0(const char *name@<edi>);",
+          "ported": true
         },
         {
           "addr": "0x1bd210",
@@ -14339,7 +14339,7 @@
         },
         {
           "addr": "0x100330",
-          "decl": "void FUN_00100330(void);",
+          "decl": "void main_save_map_safe(void);",
           "ported": false
         },
         {
