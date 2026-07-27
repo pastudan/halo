@@ -14888,26 +14888,11 @@ void FUN_0017C7D0(void)
 
 
 
-/* rasterizer_environment_fog_screen_draw (0x17c8e0) — XBE naked draft (batch 397). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* rasterizer_environment_fog_screen_draw (0x17c8e0) — readable C lift (jmp thunk). */
 void rasterizer_environment_fog_screen_draw(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x17, 0x91, 0xfd, 0xff\n\t"
-      :
-      :
-      : "memory");
+  _rasterizer_window_get_fog(0);
 }
-#else
-#error "rasterizer_environment_fog_screen_draw: clang naked draft required"
-#endif
-
 
 /* rasterizer_environment_fog_screen_end (0x17c8f0) — XBE naked draft (batch 397). */
 #if defined(__clang__)
