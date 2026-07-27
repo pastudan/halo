@@ -4881,7 +4881,7 @@
         {
           "addr": "0x145580",
           "decl": "char FUN_00145580(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x145610",
@@ -5221,8 +5221,8 @@
         },
         {
           "addr": "0xa5700",
-          "decl": "void FUN_000a5700(void);",
-          "ported": false
+          "decl": "int FUN_000a5700(float *a, float *b);",
+          "ported": true
         },
         {
           "addr": "0xa57a0",
@@ -5231,7 +5231,7 @@
         },
         {
           "addr": "0xa57b0",
-          "decl": "char FUN_000a57b0(float *vec, float max_len);",
+          "decl": "short FUN_000a57b0(float *vec, float max_length);",
           "ported": true,
           "name": "FUN_000a57b0"
         },
@@ -7196,8 +7196,8 @@
         },
         {
           "addr": "0x87c80",
-          "decl": "void editor_camera_move_to_point(void);",
-          "ported": false
+          "decl": "void editor_camera_move_to_point(float *point);",
+          "ported": true
         },
         {
           "addr": "0x87d00",
@@ -17516,8 +17516,8 @@
         },
         {
           "addr": "0x9fa60",
-          "decl": "void FUN_0009fa60(void *system, void *arg);",
-          "ported": false
+          "decl": "void FUN_0009fa60(void *particle, void *arg);",
+          "ported": true
         },
         {
           "addr": "0x9fad0",
@@ -19757,7 +19757,7 @@
         {
           "addr": "0x154630",
           "decl": "char FUN_00154630(float *accum, float *coeffs, float target, float scale);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1546b0",
@@ -21826,8 +21826,8 @@
         },
         {
           "addr": "0x12000",
-          "decl": "char FUN_00012000(int actor_handle, int param_2, int param_3, int state_data);",
-          "ported": false
+          "decl": "char FUN_00012000(int actor_handle, int value, short field, void *state);",
+          "ported": true
         },
         {
           "addr": "0x12090",
@@ -31378,8 +31378,8 @@
         },
         {
           "addr": "0x108bc0",
-          "decl": "void FUN_00108bc0(void);",
-          "ported": false
+          "decl": "char FUN_00108bc0(int16_t *a, int16_t *b, int16_t *out);",
+          "ported": true
         },
         {
           "addr": "0x108c60",
@@ -40138,8 +40138,8 @@
         },
         {
           "addr": "0x96a00",
-          "decl": "void device_delete(void);",
-          "ported": false
+          "decl": "void device_delete(int object_handle);",
+          "ported": true
         },
         {
           "addr": "0x96a90",

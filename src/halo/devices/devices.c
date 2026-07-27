@@ -764,74 +764,27 @@ void create_initial_device_groups(void)
 #endif
 
 
-/* device_delete (0x96a00) — XBE naked draft (batch 275). */
-#if defined(__clang__)
-static void *(*const b96a00_get)(int, int) = object_get_and_verify_type;
-static void *(*const b96a00_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b96a00_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void device_delete(void)
+/* device_delete (0x96a00) — readable C lift from XBE leaf. */
+void device_delete(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x1a8(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Ldevice_delete_1\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x2(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "je .Ldevice_delete_1\n\t"
-      "movl 0x5aa8c8, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Ldevice_delete_1:\n\t"
-      "movw 0x1b4(%%edi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Ldevice_delete_2\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl 0x5aa8c8, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x2(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "je .Ldevice_delete_2\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Ldevice_delete_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b96a00_get), [dget] "m"(b96a00_dget), [c1196d0] "m"(b96a00_c1196d0)
-      : "memory");
-}
-#else
-#error "device_delete: clang naked draft required"
-#endif
+  char *device;
+  short index;
+  char *slot;
 
+  device = (char *)object_get_and_verify_type(object_handle, 0x380);
+  index = *(short *)(device + 0x1a8);
+  if (index != (short)0xffff) {
+    slot = (char *)datum_get(*(void **)0x5aa8c8, index);
+    if ((slot[2] & 4) != 0)
+      datum_delete(*(void **)0x5aa8c8, index);
+  }
+  index = *(short *)(device + 0x1b4);
+  if (index != (short)0xffff) {
+    slot = (char *)datum_get(*(void **)0x5aa8c8, index);
+    if ((slot[2] & 4) != 0)
+      datum_delete(*(void **)0x5aa8c8, index);
+  }
+}
 
 /* FUN_00096a90 (0x96a90) — XBE naked draft (batch 254). */
 #if defined(__clang__)

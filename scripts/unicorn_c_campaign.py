@@ -272,7 +272,8 @@ def clear_pass(res: dict, seeds: int) -> bool:
     p, f, e = res.get("passed"), res.get("failed"), res.get("errors")
     if p is None or f is None or e is None:
         return False
-    return f == 0 and e == 0 and p >= int(0.9 * seeds) and res.get("rc") == 0
+    # HARD RULE: exact Unicorn 100/0/0 (or seeds/0/0); accept timeout rc.
+    return f == 0 and e == 0 and p == int(seeds)
 
 
 def count_ported(kb: dict) -> Tuple[int, int]:

@@ -1131,63 +1131,29 @@ void particle_systems_reconnect_to_structure_bsp(void)
 #endif
 
 
-/* FUN_0009fa60 (0x9fa60) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static void *(*const b9fa60_tag)(int, int) = tag_get;
-static int (*const b9fa60_c154a50)(int flags, int physics_tag_data, int *collision_location, int object_handle, float *position, float *velocity, float *force, float *collision_normal_out, int16_t *surface_index_out, float radius, float delta_time) = FUN_00154a50;
-
-__attribute__((naked, noinline))
-void FUN_0009fa60(void *system __attribute__((unused)), void *arg __attribute__((unused)))
+/* FUN_0009fa60 (0x9fa60) — readable C lift from XBE leaf. */
+void FUN_0009fa60(void *particle, void *arg)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7063746c\n\t"
-      "call *%[tag]\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .LFUN_0009fa60_1\n\t"
-      "movl 0x44(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0009fa60_1\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal 0x2c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x20(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "addl $0x18, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x70706879\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[c154a50]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      ".LFUN_0009fa60_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b9fa60_tag), [c154a50] "m"(b9fa60_c154a50)
-      : "memory");
-}
-#else
-#error "FUN_0009fa60: clang naked draft required"
-#endif
+  char *p;
+  char *pctl;
+  int physics_tag;
+  void *phyd;
+  float delta_time;
+  union { void *p; float f; } u;
 
+  p = (char *)particle;
+  u.p = arg;
+  delta_time = u.f;
+  pctl = (char *)tag_get(0x7063746c, *(int *)(p + 8));
+  if (*(int *)(p + 0xc) != -1)
+    return;
+  physics_tag = *(int *)(pctl + 0x44);
+  if (physics_tag == -1)
+    return;
+  phyd = tag_get(0x70706879, physics_tag);
+  FUN_00154a50(0, (int)phyd, (int *)(p + 0x18), -1, (float *)(p + 0x20),
+               (float *)(p + 0x2c), 0, 0, 0, *(float *)0x2533c8, delta_time);
+}
 
 /* FUN_0009fad0 (0x9fad0) — readable C lift: copy particle velocity/position fields. */
 void FUN_0009fad0(float *src_a, int unused_b, float *dst, float *src_b)

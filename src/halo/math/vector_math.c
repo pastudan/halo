@@ -376,72 +376,28 @@ void FUN_00012110(int actor_handle)
 
 /* --- vector_math.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00012000 (0x12000) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-static void *(*const b12000_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b12000_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12000_exitfn)(int) = system_exit;
-static void *(*const b12000_memset)(void *, int, unsigned int) = csmemset;
+/* FUN_00012000 (0x12000) — readable C lift from XBE leaf. */
+extern char DAT_0025334c[];
+extern char DAT_00253358[];
 
-__attribute__((naked, noinline))
-char FUN_00012000(int actor_handle __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), int state_data __attribute__((unused)))
+char FUN_00012000(int actor_handle, int value, short field, void *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jne .LFUN_00012000_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x23\n\t"
-      "pushl $0x253358\n\t"
-      "pushl $0x25334c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00012000_1:\n\t"
-      "pushl $0x5c\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movb 0x6(%%edi), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00012000_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_00012000_3\n\t"
-      ".LFUN_00012000_2:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      ".LFUN_00012000_3:\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movw $0xffff, 0x6(%%esi)\n\t"
-      "movw %%dx, 0x8(%%esi)\n\t"
-      "movb $1, 0x4(%%esi)\n\t"
-      "movw $0, 0x2(%%esi)\n\t"
-      "movb $0, 0xa(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b12000_dget), [assert] "m"(b12000_assert), [exitfn] "m"(b12000_exitfn), [memset] "m"(b12000_memset)
-      : "memory");
+  char *actor;
+
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (state == 0) {
+    display_assert(DAT_0025334c, DAT_00253358, 0x23, 1);
+    system_exit(-1);
+  }
+  csmemset(state, 0, 0x5c);
+  *(short *)state = (short)(actor[6] ? 0 : value);
+  *(short *)((char *)state + 6) = (short)0xffff;
+  *(short *)((char *)state + 8) = field;
+  ((char *)state)[4] = 1;
+  *(short *)((char *)state + 2) = 0;
+  ((char *)state)[0xa] = 0;
+  return 1;
 }
-#else
-#error "FUN_00012000: clang naked draft required"
-#endif
 
 
 /* FUN_00012090 (0x12090) — readable C lift: actor meta flags from actr tag. */

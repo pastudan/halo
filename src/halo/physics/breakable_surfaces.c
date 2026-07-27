@@ -953,70 +953,32 @@ void FUN_00145560(int object_handle, char *placement)
   FUN_0013d870(object_handle, placement + 0x28);
 }
 
-/* FUN_00145580 (0x145580) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void *(*const b145580_get)(int, int) = object_get_and_verify_type;
-static void *(*const b145580_tag)(int, int) = tag_get;
-static int (*const b145580_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
-
-__attribute__((naked, noinline))
-char FUN_00145580(int object_handle __attribute__((unused)))
+/* FUN_00145580 (0x145580) — readable C lift from XBE leaf. */
+char FUN_00145580(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x44(%%edi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00145580_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x616e7472\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x74(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00145580_1\n\t"
-      "movl 0x44(%%edi), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[c120f20]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_00145580_1\n\t"
-      "movw %%ax, 0x80(%%esi)\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x44(%%edi), %%edx\n\t"
-      "orl $0x80, %%eax\n\t"
-      "movl %%edx, 0x7c(%%esi)\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      ".LFUN_00145580_1:\n\t"
-      "orl $0x40000, 0x4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b145580_get), [tag] "m"(b145580_tag), [c120f20] "m"(b145580_c120f20)
-      : "memory");
-}
-#else
-#error "FUN_00145580: clang naked draft required"
-#endif
+  char *obj;
+  char *obje;
+  char *antr;
+  int anim_tag;
+  short anim_index;
 
+  obj = (char *)object_get_and_verify_type(object_handle, 0x40);
+  obje = (char *)tag_get(0x6f626a65, *(int *)obj);
+  anim_tag = *(int *)(obje + 0x44);
+  if (anim_tag != -1) {
+    antr = (char *)tag_get(0x616e7472, anim_tag);
+    if (*(int *)(antr + 0x74) > 0) {
+      anim_index = (short)model_animation_choose_random(1, anim_tag, 0);
+      if (anim_index != (short)0xffff) {
+        *(short *)(obj + 0x80) = anim_index;
+        *(int *)(obj + 0x7c) = anim_tag;
+        *(int *)(obj + 4) |= 0x80;
+      }
+    }
+  }
+  *(int *)(obj + 4) |= 0x40000;
+  return 1;
+}
 
 /* FUN_00145610 (0x145610) — readable C lift. */
 char FUN_00145610(int object_handle)

@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Offset a 2D rectangle by (dx, dy) (0x108a70).
  * rect layout: {top, left, bottom, right} as int16_t[4]. */
 void rect2d_offset(int16_t *rect, int16_t dx, int16_t dy)
@@ -1510,87 +1511,38 @@ void FUN_00108a90(void)
 #endif
 
 
-/* FUN_00108bc0 (0x108bc0) — XBE naked draft (batch 259). */
-#if defined(__clang__)
-static void *(*const b108bc0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void FUN_00108bc0(void)
+/* FUN_00108bc0 (0x108bc0) — readable C lift from XBE leaf.
+ * Intersect two rectangle2d {top,left,bottom,right}; write result or zero. */
+char FUN_00108bc0(int16_t *a, int16_t *b, int16_t *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movw 0x2(%%edx), %%ax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movw 0x2(%%esi), %%cx\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movw %%ax, %%bx\n\t"
-      "jg .LFUN_00108bc0_1\n\t"
-      "movw %%cx, %%bx\n\t"
-      ".LFUN_00108bc0_1:\n\t"
-      "movw 0x6(%%edx), %%ax\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x6(%%esi), %%di\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "movw %%bx, -0x6(%%ebp)\n\t"
-      "movw %%di, %%cx\n\t"
-      "jg .LFUN_00108bc0_2\n\t"
-      "movw %%ax, %%cx\n\t"
-      ".LFUN_00108bc0_2:\n\t"
-      "movw (%%edx), %%di\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "movw %%cx, -0x2(%%ebp)\n\t"
-      "jle .LFUN_00108bc0_3\n\t"
-      "movw %%di, %%ax\n\t"
-      ".LFUN_00108bc0_3:\n\t"
-      "movw 0x4(%%edx), %%dx\n\t"
-      "movw 0x4(%%esi), %%si\n\t"
-      "cmpw %%si, %%dx\n\t"
-      "movw %%ax, -0x8(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "jle .LFUN_00108bc0_4\n\t"
-      "movw %%si, %%dx\n\t"
-      ".LFUN_00108bc0_4:\n\t"
-      "popl %%esi\n\t"
-      "cmpw %%cx, %%bx\n\t"
-      "movw %%dx, -0x4(%%ebp)\n\t"
-      "popl %%ebx\n\t"
-      "jge .LFUN_00108bc0_5\n\t"
-      "cmpw %%dx, %%ax\n\t"
-      "jge .LFUN_00108bc0_5\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00108bc0_5:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl $8\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b108bc0_memset)
-      : "memory");
-}
-#else
-#error "FUN_00108bc0: clang naked draft required"
-#endif
+  int16_t left;
+  int16_t right;
+  int16_t top;
+  int16_t bottom;
 
+  left = a[1];
+  if (left <= b[1])
+    left = b[1];
+  right = b[3];
+  if (a[3] <= b[3])
+    right = a[3];
+  top = b[0];
+  if (a[0] > b[0])
+    top = a[0];
+  bottom = a[2];
+  if (a[2] > b[2])
+    bottom = b[2];
+
+  if (left < right && top < bottom) {
+    out[0] = top;
+    out[1] = left;
+    out[2] = bottom;
+    out[3] = right;
+    return 1;
+  }
+  csmemset(out, 0, 8);
+  return 0;
+}
 
 /* FUN_00108c60 (0x108c60) — readable C lift. */
 void FUN_00108c60(int16_t *a, int16_t *b, int16_t *out)

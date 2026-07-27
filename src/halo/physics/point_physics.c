@@ -407,94 +407,26 @@ void FUN_00154540(float *accum __attribute__((unused)), float *coeffs __attribut
 #endif
 
 
-/* FUN_00154630 (0x154630) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-static void (*const b154630_c154540)(float *accum, float *coeffs, float scale) = FUN_00154540;
-
-__attribute__((naked, noinline))
-char FUN_00154630(float *accum __attribute__((unused)), float *coeffs __attribute__((unused)), float target __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_00154630 (0x154630) — readable C lift from XBE leaf.
+ * Integrate accum toward target by +/- scale; clamp and report hit. */
+char FUN_00154630(float *accum, float *coeffs, float target, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "flds (%%esi)\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00154630_3\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "fchs\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c154540]\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00154630_4\n\t"
-      ".LFUN_00154630_1:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      ".LFUN_00154630_2:\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00154630_3:\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00154630_2\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c154540]\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_00154630_1\n\t"
-      ".LFUN_00154630_4:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c154540] "m"(b154630_c154540)
-      : "memory");
+  if (*accum > target) {
+    FUN_00154540(accum, coeffs, -scale);
+    if (*accum > target)
+      return 0;
+    *accum = target;
+    return 1;
+  }
+  if (*accum < target) {
+    FUN_00154540(accum, coeffs, scale);
+    if (*accum < target)
+      return 0;
+    *accum = target;
+    return 1;
+  }
+  return 1;
 }
-#else
-#error "FUN_00154630: clang naked draft required"
-#endif
-
 
 /* FUN_001546b0 (0x1546b0) — readable C lift. */
 void FUN_001546b0(float *accum, float *rate, float *coeffs, char wrap_flag, float scale)

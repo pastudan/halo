@@ -405,83 +405,27 @@ void FUN_000a5610(void)
 #endif
 
 
-/* FUN_000a5700 (0xa5700) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000a5700(void)
+/* FUN_000a5700 (0xa5700) — readable C lift from XBE leaf. */
+int FUN_000a5700(float *a, float *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "flds 0x30(%%ecx)\n\t"
-      "fcomps 0x30(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000a5700_1\n\t"
-      "flds 0x30(%%ecx)\n\t"
-      "fcomps 0x30(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000a5700_3\n\t"
-      "flds 0x34(%%ecx)\n\t"
-      "fcomps 0x34(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000a5700_1\n\t"
-      "flds 0x34(%%ecx)\n\t"
-      "fcomps 0x34(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000a5700_3\n\t"
-      "flds 0x28(%%ecx)\n\t"
-      "fcomps 0x28(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000a5700_1\n\t"
-      "flds 0x28(%%ecx)\n\t"
-      "fcomps 0x28(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000a5700_3\n\t"
-      "flds 0x2c(%%ecx)\n\t"
-      "fcomps 0x2c(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a5700_2\n\t"
-      ".LFUN_000a5700_1:\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5700_2:\n\t"
-      "flds 0x2c(%%ecx)\n\t"
-      "fcomps 0x2c(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a5700_4\n\t"
-      ".LFUN_000a5700_3:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5700_4:\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "andl $0xffff, %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (a[12] > b[12])
+    return -1;
+  if (a[12] < b[12])
+    return 1;
+  if (a[13] > b[13])
+    return -1;
+  if (a[13] < b[13])
+    return 1;
+  if (a[10] < b[10])
+    return -1;
+  if (a[10] > b[10])
+    return 1;
+  if (a[11] < b[11])
+    return -1;
+  if (a[11] > b[11])
+    return 1;
+  return (int)(*(unsigned int *)a & 0xffff) - (int)(*(unsigned int *)b & 0xffff);
 }
-#else
-#error "FUN_000a5700: clang naked draft required"
-#endif
-
 
 /* FUN_000a57a0 (0xa57a0) — readable C lift: 1/sqrt(x). */
 float FUN_000a57a0(float x)

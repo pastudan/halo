@@ -2718,64 +2718,28 @@ void FUN_00087c00(float *camera)
   }
 }
 
-/* editor_camera_move_to_point (0x87c80) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static void (*const b87c80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b87c80_exitfn)(int) = system_exit;
-static void (*const b87c80_c10cc40)(float *out, float *angles) = angles_to_vector;
+/* editor_camera_move_to_point (0x87c80) — readable C lift from XBE leaf. */
+extern char DAT_0025bb20[];
+extern char DAT_00267120[];
 
-__attribute__((naked, noinline))
-void editor_camera_move_to_point(void)
+void editor_camera_move_to_point(float *point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Leditor_camera_move_to_point_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8b\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x25bb20\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_move_to_point_1:\n\t"
-      "movl 0x3356b0, %%eax\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10cc40]\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x254e04\n\t"
-      "movl 0x3356b0, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "fsubrs (%%esi)\n\t"
-      "fstps (%%eax)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x254e04\n\t"
-      "fsubrs 0x4(%%esi)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x254e04\n\t"
-      "fsubrs 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b87c80_assert), [exitfn] "m"(b87c80_exitfn), [c10cc40] "m"(b87c80_c10cc40)
-      : "memory");
-}
-#else
-#error "editor_camera_move_to_point: clang naked draft required"
-#endif
+  float tmp[3];
+  float *cam;
+  float scale;
 
+  if (point == 0) {
+    display_assert(DAT_0025bb20, DAT_00267120, 0x8b, 1);
+    system_exit(-1);
+  }
+  cam = *(float **)0x3356b0;
+  FUN_0010cc40(tmp, cam + 3);
+  cam = *(float **)0x3356b0;
+  scale = *(float *)0x254e04;
+  cam[0] = point[0] - tmp[0] * scale;
+  cam[1] = point[1] - tmp[1] * scale;
+  cam[2] = point[2] - tmp[2] * scale;
+}
 
 /* editor_camera_set_position_and_roll (0x87d00) — XBE naked draft (batch 118). */
 #if defined(__clang__)
