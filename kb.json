@@ -17911,7 +17911,7 @@
         {
           "addr": "0xb6e60",
           "decl": "void interpolate_scalar(float *value, float target, float max_delta);",
-          "ported": false,
+          "ported": true,
           "name": "interpolate_scalar"
         },
         {

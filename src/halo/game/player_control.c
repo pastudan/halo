@@ -166,53 +166,19 @@ char limit2d(float *vec, float max_len)
 
 
 
-/* interpolate_scalar (0xb6e60) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void interpolate_scalar(float *value __attribute__((unused)), float target __attribute__((unused)), float max_delta __attribute__((unused)))
+/* interpolate_scalar (0xb6e60) — readable C lift. */
+void interpolate_scalar(float *value, float target, float max_delta)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fsubs (%%ecx)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fchs\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Linterpolate_scalar_2\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Linterpolate_scalar_1\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fadds (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Linterpolate_scalar_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      ".Linterpolate_scalar_2:\n\t"
-      "fadds (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "interpolate_scalar: clang naked draft required"
-#endif
+  float delta;
 
+  delta = target - *value;
+  if (delta < -max_delta)
+    *value = *value + (-max_delta);
+  else if (delta > max_delta)
+    *value = *value + max_delta;
+  else
+    *value = *value + delta;
+}
 
 /* evaluate_piecewise_linear_function (0xb64c0) — XBE naked draft (batch 129). */
 #if defined(__clang__)
