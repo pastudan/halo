@@ -23838,8 +23838,9 @@
         },
         {
           "addr": "0x1c2c50",
-          "decl": "void saved_game_file_remember_player1_last_used_profile_directory(void);",
-          "ported": false
+          "decl": "void saved_game_file_remember_player1_last_used_profile_directory(const char *path);",
+          "ported": true,
+          "name": "saved_game_file_remember_player1_last_used_profile_directory"
         },
         {
           "addr": "0x1c2d20",
@@ -23848,8 +23849,9 @@
         },
         {
           "addr": "0x1c2e00",
-          "decl": "void saved_game_file_remember_last_used_multiplayer_variant_directory(void);",
-          "ported": false
+          "decl": "void saved_game_file_remember_last_used_multiplayer_variant_directory(const char *path);",
+          "ported": true,
+          "name": "saved_game_file_remember_last_used_multiplayer_variant_directory"
         },
         {
           "addr": "0x1c2ed0",
@@ -23858,8 +23860,9 @@
         },
         {
           "addr": "0x1c2fb0",
-          "decl": "void saved_game_file_remember_last_used_multiplayer_map(void);",
-          "ported": false
+          "decl": "void saved_game_file_remember_last_used_multiplayer_map(const char *path);",
+          "ported": true,
+          "name": "saved_game_file_remember_last_used_multiplayer_map"
         },
         {
           "addr": "0x1c3080",
@@ -23869,7 +23872,8 @@
         {
           "addr": "0x1c3160",
           "decl": "void saved_game_file_generate_checksum(void *buffer, unsigned short size, void *out_sig);",
-          "ported": false
+          "ported": false,
+          "name": "saved_game_file_generate_checksum"
         },
         {
           "addr": "0x1c31f0",
