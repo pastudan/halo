@@ -36855,7 +36855,7 @@
         {
           "addr": "0x53c50",
           "decl": "void FUN_00053c50(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00053c50"
         },
         {
@@ -37434,7 +37434,7 @@
         {
           "addr": "0x5b4b0",
           "decl": "void encounter_build_firing_position_owner_actor_indices(int encounter_handle, int *firing_position_owner_actor_indices);",
-          "ported": false,
+          "ported": true,
           "name": "encounter_build_firing_position_owner_actor_indices"
         },
         {
