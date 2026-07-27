@@ -7144,7 +7144,7 @@
         },
         {
           "addr": "0x87800",
-          "decl": "void FUN_00087800(void);",
+          "decl": "void FUN_00087800(float *target, int16_t flag);",
           "ported": false
         },
         {
@@ -11630,7 +11630,7 @@
         {
           "addr": "0xc3a50",
           "decl": "char hs_scenario_merge(void *dst_scenario, void *src_scenario);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc3b60",
@@ -26889,12 +26889,12 @@
         },
         {
           "addr": "0x81170",
-          "decl": "void FUN_00081170(void);",
+          "decl": "void FUN_00081170(unsigned int *a, unsigned int *b, unsigned int *c);",
           "ported": false
         },
         {
           "addr": "0x81250",
-          "decl": "void FUN_00081250(void);",
+          "decl": "void FUN_00081250(unsigned int *a, unsigned int *b, unsigned int *c, unsigned int *d);",
           "ported": false
         },
         {
