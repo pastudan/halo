@@ -218,112 +218,33 @@ void sound_cache_new(void)
 #endif
 
 
-/* sound_cache_flush (0x1be490) — XBE naked draft (batch 268). */
-#if defined(__clang__)
-static void (*const b1be490_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b1be490_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b1be490_c1bdf60)(void) = FUN_001bdf60;
-
-__attribute__((naked, noinline))
+/* sound_cache_flush (0x1be490) — readable C lift. */
 void sound_cache_flush(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x4e9368, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsound_cache_flush_3\n\t"
-      ".Lsound_cache_flush_1:\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lsound_cache_flush_2\n\t"
-      "movb 0x5(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lsound_cache_flush_2\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bdf60]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lsound_cache_flush_2:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsound_cache_flush_1\n\t"
-      ".Lsound_cache_flush_3:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b1be490_c1197b0), [c119810] "m"(b1be490_c119810), [c1bdf60] "m"(b1be490_c1bdf60)
-      : "memory");
+  data_iter_t iter;
+  void *entry;
+
+  data_iterator_new(&iter, *(data_t **)0x4e9368);
+  for (entry = data_iterator_next(&iter); entry != 0; entry = data_iterator_next(&iter)) {
+    if (*(unsigned char *)((char *)entry + 4) != 0)
+      continue;
+    if (*(unsigned char *)((char *)entry + 5) != 0)
+      continue;
+    ((void (*)(void *))FUN_001bdf60)(*(void **)((char *)entry + 8));
+  }
 }
-#else
-#error "sound_cache_flush: clang naked draft required"
-#endif
 
-
-/* sound_cache_close (0x1be4f0) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-static void (*const b1be4f0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b1be4f0_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b1be4f0_c1bdf60)(void) = FUN_001bdf60;
-static void (*const b1be4f0_c119550)(data_t *data) = data_make_invalid;
-
-__attribute__((naked, noinline))
+/* sound_cache_close (0x1be4f0) — readable C lift. */
 void sound_cache_close(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x4e9368, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsound_cache_close_2\n\t"
-      ".Lsound_cache_close_1:\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bdf60]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsound_cache_close_1\n\t"
-      ".Lsound_cache_close_2:\n\t"
-      "movl 0x4e9368, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119550]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b1be4f0_c1197b0), [c119810] "m"(b1be4f0_c119810), [c1bdf60] "m"(b1be4f0_c1bdf60), [c119550] "m"(b1be4f0_c119550)
-      : "memory");
-}
-#else
-#error "sound_cache_close: clang naked draft required"
-#endif
+  data_iter_t iter;
+  void *entry;
 
+  data_iterator_new(&iter, *(data_t **)0x4e9368);
+  for (entry = data_iterator_next(&iter); entry != 0; entry = data_iterator_next(&iter))
+    ((void (*)(void *))FUN_001bdf60)(*(void **)((char *)entry + 8));
+  data_make_invalid(*(data_t **)0x4e9368);
+}
 
 /* sound_cache_request_sound (0x1be550) — XBE naked draft (batch 249). */
 #if defined(__clang__)

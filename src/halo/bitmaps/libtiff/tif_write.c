@@ -1199,53 +1199,26 @@ void FUN_0006f040(void)
 #endif
 
 
-/* FUN_0006f0d0 (0x6f0d0) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-static void (*const b6f0d0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-
-__attribute__((naked, noinline))
-void FUN_0006f0d0(void)
+/* FUN_0006f0d0 (0x6f0d0) — readable C lift: strip/tile offset helper. */
+unsigned int FUN_0006f0d0(void *tif, unsigned int row, unsigned int sample)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl 0x48(%%ecx)\n\t"
-      "cmpw $2, 0x5e(%%ecx)\n\t"
-      "pushl %%esi\n\t"
-      "jne .LFUN_0006f0d0_2\n\t"
-      "movzwl 0x44(%%ecx), %%edx\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "cmpl %%edx, %%esi\n\t"
-      "jb .LFUN_0006f0d0_1\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2611e0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006f0d0_1:\n\t"
-      "movl 0xb4(%%ecx), %%ecx\n\t"
-      "imull %%esi, %%ecx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      ".LFUN_0006f0d0_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68a30] "m"(b6f0d0_c68a30)
-      : "memory");
+  unsigned char *p;
+  unsigned int quot;
+  unsigned int lim;
+  extern char DAT_002611e0[];
+
+  p = (unsigned char *)tif;
+  quot = row / *(unsigned int *)(p + 0x48);
+  if (*(unsigned short *)(p + 0x5e) != 2)
+    return quot;
+  lim = *(unsigned short *)(p + 0x44);
+  if (sample >= lim) {
+    FUN_00068a30(*(int *)p, DAT_002611e0, sample, lim);
+    return 0;
+  }
+  return quot + *(unsigned int *)(p + 0xb4) * sample;
 }
-#else
-#error "FUN_0006f0d0: clang naked draft required"
-#endif
+
 
 
 /* FUN_0006f120 (0x6f120) — readable C lift. */

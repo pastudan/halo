@@ -76,72 +76,26 @@ void xbox_texture_cache_return_memory(void)
   *(unsigned char *)0x4ea984 = 0;
 }
 
-/* bitmap_format_to_d3d_linear_format (0x1beba0) — XBE naked draft (batch 262). */
-#if defined(__clang__)
-static void (*const b1beba0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1beba0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int bitmap_format_to_d3d_linear_format(int16_t format __attribute__((unused)), uint16_t flags __attribute__((unused)))
+/* bitmap_format_to_d3d_linear_format (0x1beba0) — readable C lift. */
+int bitmap_format_to_d3d_linear_format(int16_t format, uint16_t flags)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .Lbitmap_format_to_d3d_linear_format_1\n\t"
-      "cmpw $0x12, %%si\n\t"
-      "jl .Lbitmap_format_to_d3d_linear_format_2\n\t"
-      ".Lbitmap_format_to_d3d_linear_format_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e1\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x264ad4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_format_to_d3d_linear_format_2:\n\t"
-      "movswl %%si, %%edi\n\t"
-      "cmpl $-1, 0x2b9618(,%%edi,4)\n\t"
-      "jne .Lbitmap_format_to_d3d_linear_format_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e2\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b9774\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_format_to_d3d_linear_format_3:\n\t"
-      "testb $0x20, 0xc(%%ebp)\n\t"
-      "je .Lbitmap_format_to_d3d_linear_format_5\n\t"
-      "cmpw $0xa, %%si\n\t"
-      "je .Lbitmap_format_to_d3d_linear_format_4\n\t"
-      "cmpw $0xb, %%si\n\t"
-      "jne .Lbitmap_format_to_d3d_linear_format_5\n\t"
-      ".Lbitmap_format_to_d3d_linear_format_4:\n\t"
-      "popl %%edi\n\t"
-      "movl $0x33, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_d3d_linear_format_5:\n\t"
-      "movl 0x2b9618(,%%edi,4), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1beba0_assert), [exitfn] "m"(b1beba0_exitfn)
-      : "memory");
-}
-#else
-#error "bitmap_format_to_d3d_linear_format: clang naked draft required"
-#endif
+  extern char DAT_00264ad4[];
+  extern char DAT_002b96d8[];
+  extern char DAT_002b9774[];
+  int *table = (int *)0x2b9618;
 
+  if (format < 0 || format >= 0x12) {
+    display_assert(DAT_00264ad4, DAT_002b96d8, 0x1e1, 1);
+    system_exit(-1);
+  }
+  if (table[format] == -1) {
+    display_assert(DAT_002b9774, DAT_002b96d8, 0x1e2, 1);
+    system_exit(-1);
+  }
+  if ((flags & 0x20) && (format == 10 || format == 11))
+    return 0x33;
+  return table[format];
+}
 
 /* FUN_001bec30 (0x1bec30)
  *

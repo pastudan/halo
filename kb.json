@@ -19884,8 +19884,8 @@
         },
         {
           "addr": "0x8f880",
-          "decl": "void profile_lapsed_frames(void);",
-          "ported": false
+          "decl": "void profile_lapsed_frames(short frames, char flag, char *str);",
+          "ported": true
         },
         {
           "addr": "0x8f8c0",
@@ -30232,12 +30232,12 @@
         {
           "addr": "0x1beb10",
           "decl": "void xbox_texture_cache_return_memory(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1beba0",
           "decl": "int bitmap_format_to_d3d_linear_format(int16_t format, uint16_t flags);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bec30",
@@ -30325,7 +30325,7 @@
         {
           "addr": "0x1bf130",
           "decl": "void texture_cache_close(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bf260",
@@ -36458,8 +36458,8 @@
         },
         {
           "addr": "0x65f90",
-          "decl": "void TIFFFreeDirectory(int file);",
-          "ported": false
+          "decl": "void TIFFFreeDirectory(void *tif);",
+          "ported": true
         },
         {
           "addr": "0x66190",
@@ -36473,8 +36473,8 @@
         },
         {
           "addr": "0x66320",
-          "decl": "void FUN_00066320(void);",
-          "ported": false
+          "decl": "void *FUN_00066320(unsigned short tag, int val);",
+          "ported": true
         },
         {
           "addr": "0x66380",
@@ -36483,8 +36483,8 @@
         },
         {
           "addr": "0x663f0",
-          "decl": "void FUN_000663f0(void);",
-          "ported": false
+          "decl": "void *FUN_000663f0(void *tif, int arg, unsigned int size@<eax>);",
+          "ported": true
         },
         {
           "addr": "0x66430",
@@ -36513,8 +36513,8 @@
         },
         {
           "addr": "0x66770",
-          "decl": "void FUN_00066770(void);",
-          "ported": false
+          "decl": "float FUN_00066770(void *tif@<eax>, void *entry@<ecx>);",
+          "ported": true
         },
         {
           "addr": "0x667d0",
@@ -36748,8 +36748,8 @@
         },
         {
           "addr": "0x6a2a0",
-          "decl": "void FUN_0006a2a0(void);",
-          "ported": false
+          "decl": "int FUN_0006a2a0(unsigned short *a, unsigned short *b@<ecx>, unsigned short *c@<edx>, int n@<eax>);",
+          "ported": true
         },
         {
           "addr": "0x6a310",
@@ -37150,8 +37150,8 @@
         },
         {
           "addr": "0x6f0d0",
-          "decl": "void FUN_0006f0d0(void);",
-          "ported": false
+          "decl": "unsigned int FUN_0006f0d0(void *tif, unsigned int row, unsigned int sample);",
+          "ported": true
         },
         {
           "addr": "0x6f120",
@@ -39897,12 +39897,12 @@
         {
           "addr": "0x1be490",
           "decl": "void sound_cache_flush(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be4f0",
           "decl": "void sound_cache_close(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be6b0",

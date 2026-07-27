@@ -47,6 +47,21 @@ static float cycles_to_msec(uint32_t lo, uint32_t hi)
 
 /* Enter a profiling section. Records the current timestamp and pushes
  * the section onto the profiling stack. */
+/* profile_lapsed_frames (0x8f880) — readable C lift. */
+void profile_lapsed_frames(short frames, char flag, char *str)
+{
+  *(short *)0x449ccc = frames;
+  if (frames > 0) {
+    *(char *)0x449cd4 = 1;
+  } else {
+    *(char *)0x449cd4 = 0;
+    if (!flag)
+      *(char *)0x449cd4 = 1;
+  }
+  if (str)
+    csstrcpy((char *)0x449cd5, str);
+}
+
 void profile_enter_private(void *section)
 {
   char *s = (char *)section;

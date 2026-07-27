@@ -505,7 +505,7 @@ int FUN_00068bd0(unsigned char *tif)
 
 
 __attribute__((naked, noinline))
-void FUN_00068c40(void)
+void FUN_00068c40(unsigned char value __attribute__((unused)), void *dest __attribute__((unused)), int count __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2924,62 +2924,25 @@ int FUN_0006a260(void *tif)
 
 
 
-/* FUN_0006a2a0 (0x6a2a0) — XBE naked draft (batch 319). */
-#if defined(__clang__)
-static void (*const b6a2a0_c6f9d0)(void) = FUN_0006f9d0;
-
-__attribute__((naked, noinline))
-void FUN_0006a2a0(void)
+/* FUN_0006a2a0 (0x6a2a0) — readable C lift: validate 16-bit sample ranges. */
+int FUN_0006a2a0(unsigned short *a, unsigned short *b, unsigned short *c, int n)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jle .LFUN_0006a2a0_2\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0006a2a0_1:\n\t"
-      "movw (%%ecx), %%di\n\t"
-      "decl %%eax\n\t"
-      "addl $2, %%ecx\n\t"
-      "cmpw $0x100, %%di\n\t"
-      "jae .LFUN_0006a2a0_3\n\t"
-      "movw (%%esi), %%di\n\t"
-      "addl $2, %%esi\n\t"
-      "cmpw $0x100, %%di\n\t"
-      "jae .LFUN_0006a2a0_3\n\t"
-      "movw (%%edx), %%di\n\t"
-      "addl $2, %%edx\n\t"
-      "cmpw $0x100, %%di\n\t"
-      "jae .LFUN_0006a2a0_3\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_0006a2a0_1\n\t"
-      ".LFUN_0006a2a0_2:\n\t"
-      "movl 0x3340dc, %%eax\n\t"
-      "pushl $0x2601f0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6f9d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl $8, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006a2a0_3:\n\t"
-      "popl %%edi\n\t"
-      "movl $0x10, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f9d0] "m"(b6a2a0_c6f9d0)
-      : "memory");
+  extern char DAT_002601f0[];
+
+  if (n > 0) {
+    while (n > 0) {
+      if (*b >= 0x100 || *a >= 0x100 || *c >= 0x100)
+        return 0x10;
+      b += 1;
+      a += 1;
+      c += 1;
+      n -= 1;
+    }
+  }
+  FUN_0006f9d0(*(void **)0x3340dc, DAT_002601f0);
+  return 8;
 }
-#else
-#error "FUN_0006a2a0: clang naked draft required"
-#endif
+
 
 
 /* FUN_0006a310 (0x6a310) — XBE naked draft (batch 363). */

@@ -1542,7 +1542,7 @@ void FUN_0006cfa0(void)
 static void (*const b6d140_c6cfa0)(void) = FUN_0006cfa0;
 
 __attribute__((naked, noinline))
-void FUN_0006d140(void)
+void FUN_0006d140(unsigned char *tif __attribute__((unused)), void *a1 __attribute__((unused)), void *a2 __attribute__((unused)), void *a3 __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1996,7 +1996,7 @@ static void *(*const b6d590_memset)(void *, int, unsigned int) = csmemset;
 static char * (*const b6d590_c8dff0)(char *destination, const char *source) = csstrcpy;
 static void (*const b6d590_c1e209e)(void) = __read;
 static void (*const b6d590_c1df419)(void) = __write;
-static void (*const b6d590_c6d500)(void) = FUN_0006d500;
+static void (*const b6d590_c6d500)(void) = (void *)FUN_0006d500;
 static void (*const b6d590_c66190)(void) = FUN_00066190;
 static void (*const b6d590_c6f1b0)(void) = (void *)FUN_0006f1b0;
 static void (*const b6d590_c6f1d0)(void) = (void *)FUN_0006f1d0;

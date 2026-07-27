@@ -696,172 +696,83 @@ void _TIFFgetfield(void)
 #endif
 
 
-/* TIFFFreeDirectory (0x65f90) — XBE naked draft (batch 385). */
-#if defined(__clang__)
-static void (*const b65f90_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
-
-__attribute__((naked, noinline))
-void TIFFFreeDirectory(int file __attribute__((unused)))
+/* TIFFFreeDirectory (0x65f90) — readable C lift. */
+void TIFFFreeDirectory(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x80(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_1\n\t"
-      "pushl $0x367\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x80(%%esi)\n\t"
-      ".LTIFFFreeDirectory_1:\n\t"
-      "movl 0x84(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_2\n\t"
-      "pushl $0x368\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x84(%%esi)\n\t"
-      ".LTIFFFreeDirectory_2:\n\t"
-      "movl 0x88(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_3\n\t"
-      "pushl $0x369\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x88(%%esi)\n\t"
-      ".LTIFFFreeDirectory_3:\n\t"
-      "movl 0x90(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_4\n\t"
-      "pushl $0x36a\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x90(%%esi)\n\t"
-      ".LTIFFFreeDirectory_4:\n\t"
-      "movl 0x94(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_5\n\t"
-      "pushl $0x36b\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x94(%%esi)\n\t"
-      ".LTIFFFreeDirectory_5:\n\t"
-      "movl 0x98(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_6\n\t"
-      "pushl $0x36c\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x98(%%esi)\n\t"
-      ".LTIFFFreeDirectory_6:\n\t"
-      "movl 0x9c(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_7\n\t"
-      "pushl $0x36d\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x9c(%%esi)\n\t"
-      ".LTIFFFreeDirectory_7:\n\t"
-      "movl 0xa0(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_8\n\t"
-      "pushl $0x36e\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0xa0(%%esi)\n\t"
-      ".LTIFFFreeDirectory_8:\n\t"
-      "movl 0xa4(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_9\n\t"
-      "pushl $0x36f\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0xa4(%%esi)\n\t"
-      ".LTIFFFreeDirectory_9:\n\t"
-      "movl 0xa8(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_10\n\t"
-      "pushl $0x370\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0xa8(%%esi)\n\t"
-      ".LTIFFFreeDirectory_10:\n\t"
-      "movl 0xac(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_11\n\t"
-      "pushl $0x371\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0xac(%%esi)\n\t"
-      ".LTIFFFreeDirectory_11:\n\t"
-      "movl 0xb0(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_12\n\t"
-      "pushl $0x372\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0xb0(%%esi)\n\t"
-      ".LTIFFFreeDirectory_12:\n\t"
-      "movl 0xbc(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_13\n\t"
-      "pushl $0x388\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0xbc(%%esi)\n\t"
-      ".LTIFFFreeDirectory_13:\n\t"
-      "movl 0xc0(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LTIFFFreeDirectory_14\n\t"
-      "pushl $0x389\n\t"
-      "pushl $0x25f5c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0xc0(%%esi)\n\t"
-      ".LTIFFFreeDirectory_14:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b65f90_c8ef70)
-      : "memory");
-}
-#else
-#error "TIFFFreeDirectory: clang naked draft required"
-#endif
+  extern char DAT_0025f5c4[];
+  void *p;
 
+  p = *(void **)((char *)tif + 0x80);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x367);
+    *(void **)((char *)tif + 0x80) = 0;
+  }
+  p = *(void **)((char *)tif + 0x84);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x368);
+    *(void **)((char *)tif + 0x84) = 0;
+  }
+  p = *(void **)((char *)tif + 0x88);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x369);
+    *(void **)((char *)tif + 0x88) = 0;
+  }
+  p = *(void **)((char *)tif + 0x90);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x36a);
+    *(void **)((char *)tif + 0x90) = 0;
+  }
+  p = *(void **)((char *)tif + 0x94);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x36b);
+    *(void **)((char *)tif + 0x94) = 0;
+  }
+  p = *(void **)((char *)tif + 0x98);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x36c);
+    *(void **)((char *)tif + 0x98) = 0;
+  }
+  p = *(void **)((char *)tif + 0x9c);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x36d);
+    *(void **)((char *)tif + 0x9c) = 0;
+  }
+  p = *(void **)((char *)tif + 0xa0);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x36e);
+    *(void **)((char *)tif + 0xa0) = 0;
+  }
+  p = *(void **)((char *)tif + 0xa4);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x36f);
+    *(void **)((char *)tif + 0xa4) = 0;
+  }
+  p = *(void **)((char *)tif + 0xa8);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x370);
+    *(void **)((char *)tif + 0xa8) = 0;
+  }
+  p = *(void **)((char *)tif + 0xac);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x371);
+    *(void **)((char *)tif + 0xac) = 0;
+  }
+  p = *(void **)((char *)tif + 0xb0);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x372);
+    *(void **)((char *)tif + 0xb0) = 0;
+  }
+  p = *(void **)((char *)tif + 0xbc);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x388);
+    *(void **)((char *)tif + 0xbc) = 0;
+  }
+  p = *(void **)((char *)tif + 0xc0);
+  if (p) {
+    debug_free(p, DAT_0025f5c4, 0x389);
+    *(void **)((char *)tif + 0xc0) = 0;
+  }
+}
 
 /* FUN_00066190 (0x66190) — XBE naked draft (batch 370). */
 #if defined(__clang__)
@@ -1052,63 +963,36 @@ void FUN_00066200(void)
 #endif
 
 
-/* FUN_00066320 (0x66320) — XBE naked draft (batch 330). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00066320(void)
+/* FUN_00066320 (0x66320) — readable C lift: find/cache TIFF directory entry. */
+void *FUN_00066320(unsigned short tag, int val)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x3340ac, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "je .LFUN_00066320_1\n\t"
-      "cmpw %%si, (%%eax)\n\t"
-      "jne .LFUN_00066320_1\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_00066320_5\n\t"
-      "cmpl 0x8(%%eax), %%edx\n\t"
-      "je .LFUN_00066320_5\n\t"
-      ".LFUN_00066320_1:\n\t"
-      "movl 0x2c9a98, %%ecx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movl $0x2c9a98, %%eax\n\t"
-      "je .LFUN_00066320_4\n\t"
-      ".LFUN_00066320_2:\n\t"
-      "cmpw %%si, %%cx\n\t"
-      "jne .LFUN_00066320_3\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_00066320_6\n\t"
-      "cmpl %%edx, 0x8(%%eax)\n\t"
-      "je .LFUN_00066320_6\n\t"
-      ".LFUN_00066320_3:\n\t"
-      "movw 0x14(%%eax), %%cx\n\t"
-      "addl $0x14, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jne .LFUN_00066320_2\n\t"
-      ".LFUN_00066320_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00066320_5:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00066320_6:\n\t"
-      "movl %%eax, 0x3340ac\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *cur;
+  unsigned char *p;
+  unsigned short key;
+
+  cur = *(unsigned char **)0x3340ac;
+  if (cur && *(unsigned short *)cur == tag) {
+    if (val == 0 || val == *(int *)(cur + 8))
+      return cur;
+  }
+  p = (unsigned char *)0x2c9a98;
+  key = *(unsigned short *)0x2c9a98;
+  if (key == 0)
+    return 0;
+  while (1) {
+    if (key == tag) {
+      if (val == 0 || *(int *)(p + 8) == val) {
+        *(unsigned char **)0x3340ac = p;
+        return p;
+      }
+    }
+    key = *(unsigned short *)(p + 0x14);
+    p += 0x14;
+    if (key == 0)
+      return 0;
+  }
 }
-#else
-#error "FUN_00066320: clang naked draft required"
-#endif
+
 
 
 /* TIFFDefaultDirectory (0x66380) — XBE naked draft (batch 374). */
@@ -1167,48 +1051,20 @@ void TIFFDefaultDirectory(void)
 #error "TIFFDefaultDirectory: clang naked draft required"
 #endif
 
-
-/* FUN_000663f0 (0x663f0) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-static void * (*const b663f0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
-static void (*const b663f0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-
-__attribute__((naked, noinline))
-void FUN_000663f0(void)
+/* FUN_000663f0 (0x663f0) — readable C lift: alloc  tag dir entry buffer. */
+void *FUN_000663f0(void *tif, int arg, unsigned int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0x25faec\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000663f0_1\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x25fae0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000663f0_1:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b663f0_c8ee60), [c68a30] "m"(b663f0_c68a30)
-      : "memory");
+  void *p;
+  extern char DAT_0025faec[];
+  extern char DAT_0025fae0[];
+
+  p = debug_malloc(size, 0, DAT_0025faec, 0x60);
+  if (!p) {
+    FUN_00068a30(*(int *)tif, DAT_0025fae0, arg);
+  }
+  return p;
 }
-#else
-#error "FUN_000663f0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00066430 (0x66430) — XBE naked draft (batch 357). */
@@ -1612,56 +1468,27 @@ void FUN_00066720(void)
 #endif
 
 
-/* FUN_00066770 (0x66770) — XBE naked draft (batch 335). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00066770(void)
+/* FUN_00066770 (0x66770) — readable C lift: extract masked TIFF sample value. */
+float FUN_00066770(void *tif, void *entry)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movzwl 0x2(%%ecx), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpw $0x4d4d, 0xc4(%%esi)\n\t"
-      "jne .LFUN_00066770_1\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xcc(%%esi), %%edi\n\t"
-      "shll $2, %%edx\n\t"
-      "movl (%%edi,%%edx,1), %%ecx\n\t"
-      "shrl %%cl, %%eax\n\t"
-      "movl 0xd0(%%esi), %%ecx\n\t"
-      "movl (%%ecx,%%edx,1), %%esi\n\t"
-      "popl %%edi\n\t"
-      "andl %%esi, %%eax\n\t"
-      "jmp .LFUN_00066770_2\n\t"
-      ".LFUN_00066770_1:\n\t"
-      "movl 0xd0(%%esi), %%eax\n\t"
-      "movl (%%eax,%%edx,4), %%eax\n\t"
-      "andl 0x8(%%ecx), %%eax\n\t"
-      ".LFUN_00066770_2:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "jge .LFUN_00066770_3\n\t"
-      "fadds 0x25fb8c\n\t"
-      ".LFUN_00066770_3:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00066770: clang naked draft required"
-#endif
+  unsigned int type;
+  unsigned int val;
+  unsigned int tmp;
 
+  type = *(unsigned short *)((char *)entry + 2);
+  if (*(unsigned short *)((char *)tif + 0xc4) == 0x4d4d) {
+    val = *(unsigned int *)((char *)entry + 8);
+    val >>= (*(unsigned int *)(*(unsigned int *)((char *)tif + 0xcc) + type * 4) & 0xff);
+    val &= *(unsigned int *)(*(unsigned int *)((char *)tif + 0xd0) + type * 4);
+  } else {
+    val = *(unsigned int *)(*(unsigned int *)((char *)tif + 0xd0) + type * 4);
+    val &= *(unsigned int *)((char *)entry + 8);
+  }
+  tmp = val;
+  if ((int)tmp < 0)
+    return (float)tmp + *(float *)0x25fb8c;
+  return (float)(int)tmp;
+}
 
 /* FUN_000667d0 (0x667d0) — XBE naked draft (batch 325). */
 #if defined(__clang__)
@@ -2430,7 +2257,7 @@ static void (*const b66e70_c1e209e)(void) = __read;
 static void (*const b66e70_c6f1b0)(void) = (void *)FUN_0006f1b0;
 static void (*const b66e70_c663f0)(void) = FUN_000663f0;
 static void (*const b66e70_c6f1d0)(void) = (void *)FUN_0006f1d0;
-static void (*const b66e70_c65f90)(int file) = TIFFFreeDirectory;
+static void (*const b66e70_c65f90)(int file) = (void *)TIFFFreeDirectory;
 static void (*const b66e70_c66190)(void) = FUN_00066190;
 static void (*const b66e70_c659f0)(int file, int field, int value) = TIFFSetField;
 static void (*const b66e70_c6f1f0)(void) = (void *)FUN_0006f1f0;
