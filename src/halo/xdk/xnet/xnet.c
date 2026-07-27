@@ -622,10 +622,11 @@ void FUN_001d8b10(void)
 
 
 /* XGetSectionSize (0x1d8b64) — readable C lift. */
-unsigned int __stdcall XGetSectionSize(void *section)
+unsigned int XGetSectionSize(void *section)
 {
   return *(unsigned int *)((char *)section + 8);
 }
+
 
 /* XNetGetEthernetLinkStatus (0x1d8b76) — XBE naked draft (batch 327). */
 #if defined(__clang__)
