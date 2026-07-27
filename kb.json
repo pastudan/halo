@@ -20799,7 +20799,8 @@
         {
           "addr": "0x16f730",
           "decl": "void FUN_0016f730(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0016f730"
         },
         {
           "addr": "0x16f880",

@@ -5092,133 +5092,54 @@ char FUN_0016f6c0(void)
 
 
 
-/* FUN_0016f730 (0x16f730) — XBE naked draft (batch 329). */
-#if defined(__clang__)
-static void (*const b16f730_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b16f730_exitfn)(int) = system_exit;
-static void (*const b16f730_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void __stdcall (*const b16f730_c1ef8c0)(uint32_t type, void *callback, uint32_t context) = (void *)D3DDevice_InsertCallback;
-
-__attribute__((naked, noinline))
+/* FUN_0016f730 (0x16f730) — readable C lift. */
 void FUN_0016f730(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .LFUN_0016f730_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc2\n\t"
-      "pushl $0x2a3ca4\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0016f730_1:\n\t"
-      "movb 0x47e460, %%al\n\t"
-      "notb %%al\n\t"
-      "andb $1, %%al\n\t"
-      "pushl %%esi\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl $3, %%esi\n\t"
-      "jne .LFUN_0016f730_2\n\t"
-      "cmpw %%si, 0x47e468\n\t"
-      "jge .LFUN_0016f730_2\n\t"
-      "pushl $0x2a3d08\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x2a3c5c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incw 0x47e468\n\t"
-      ".LFUN_0016f730_2:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x47e460, %%cl\n\t"
-      "shrl $1, %%ecx\n\t"
-      "notb %%cl\n\t"
-      "andb $1, %%cl\n\t"
-      "movb %%cl, -0x4(%%ebp)\n\t"
-      "jne .LFUN_0016f730_3\n\t"
-      "cmpw %%si, 0x47e468\n\t"
-      "jge .LFUN_0016f730_3\n\t"
-      "pushl $0x2a3cf4\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x2a3c5c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incw 0x47e468\n\t"
-      ".LFUN_0016f730_3:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x47e460, %%dl\n\t"
-      "shrl $2, %%edx\n\t"
-      "notb %%dl\n\t"
-      "andb $1, %%dl\n\t"
-      "movb %%dl, -0x4(%%ebp)\n\t"
-      "jne .LFUN_0016f730_4\n\t"
-      "cmpw %%si, 0x47e468\n\t"
-      "jge .LFUN_0016f730_4\n\t"
-      "pushl $0x2a3ce0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x2a3c5c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incw 0x47e468\n\t"
-      ".LFUN_0016f730_4:\n\t"
-      "cmpw %%si, 0x3256ba\n\t"
-      "movw %%bx, 0x47e460\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_0016f730_5\n\t"
-      "cmpb %%bl, 0x325704\n\t"
-      "je .LFUN_0016f730_7\n\t"
-      ".LFUN_0016f730_5:\n\t"
-      "movswl 0x47e450, %%eax\n\t"
-      "incl %%eax\n\t"
-      "andl $0x8000000f, %%eax\n\t"
-      "movl %%ebx, 0x47e45c\n\t"
-      "movw %%bx, 0x325184\n\t"
-      "movw $0xffff, 0x325180\n\t"
-      "movl %%ebx, 0x47e440\n\t"
-      "movl %%ebx, 0x47e444\n\t"
-      "jns .LFUN_0016f730_6\n\t"
-      "decl %%eax\n\t"
-      "orl $0xfffffff0, %%eax\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_0016f730_6:\n\t"
-      "movw %%ax, 0x47e450\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "shll $1, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x16f610\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1ef8c0]\n\t"
-      ".LFUN_0016f730_7:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b16f730_assert), [exitfn] "m"(b16f730_exitfn), [c8f390] "m"(b16f730_c8f390), [c1ef8c0] "m"(b16f730_c1ef8c0)
-      : "memory");
-}
-#else
-#error "FUN_0016f730: clang naked draft required"
-#endif
+  unsigned char flags;
+  int slot;
 
-/* void FUN_0016f880(void); cdecl, no args, no return value, no callees.
- */
-void FUN_0016f880(void)
-{
-  *(short *)0x325184 = *(short *)0x5a5bc2;
-  *(short *)0x325180 = -1;
-}
+  if (!*(int *)0x476ab0) {
+    display_assert((const char *)0x29dc40, (const char *)0x2a3ca4, 0xc2, true);
+    system_exit(-1);
+  }
 
+  flags = *(unsigned char *)0x47e460;
+  if ((flags & 1) != 0 && *(short *)0x47e468 < 3) {
+    error(2, (const char *)0x2a3c5c, -1, (const char *)0x2a3d08);
+    *(short *)0x47e468 = (short)(*(short *)0x47e468 + 1);
+  }
+
+  flags = *(unsigned char *)0x47e460;
+  if (((flags >> 1) & 1) != 0 && *(short *)0x47e468 < 3) {
+    error(2, (const char *)0x2a3c5c, -1, (const char *)0x2a3cf4);
+    *(short *)0x47e468 = (short)(*(short *)0x47e468 + 1);
+  }
+
+  flags = *(unsigned char *)0x47e460;
+  if (((flags >> 2) & 1) != 0 && *(short *)0x47e468 < 3) {
+    error(2, (const char *)0x2a3c5c, -1, (const char *)0x2a3ce0);
+    *(short *)0x47e468 = (short)(*(short *)0x47e468 + 1);
+  }
+
+  *(unsigned short *)0x47e460 = 0;
+
+  if (*(short *)0x3256ba != 3 && !*(unsigned char *)0x325704)
+    return;
+
+  slot = (int)*(short *)0x47e450 + 1;
+  slot &= 0x8000000f;
+  if (slot < 0)
+    slot = ((slot - 1) | -16) + 1;
+
+  *(int *)0x47e45c = 0;
+  *(short *)0x325184 = 0;
+  *(short *)0x325180 = (short)0xffff;
+  *(int *)0x47e440 = 0;
+  *(int *)0x47e444 = 0;
+  *(short *)0x47e450 = (short)slot;
+
+  D3DDevice_InsertCallback(0, (void *)(unsigned)0x16f610, (unsigned int)(slot << 1));
+}
 
 /* FUN_0016f8a0 (0x16f8a0) — readable C lift from XBE leaf. */
 void FUN_0016f8a0(char decrement)
