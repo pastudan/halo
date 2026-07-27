@@ -24848,13 +24848,13 @@
           "addr": "0x1ccbe0",
           "comment": "Compute listener distance squared for a channel/source pair.",
           "decl": "float FUN_001ccbe0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccca0",
           "comment": "Compute distance for random scale checks.",
           "decl": "float FUN_001ccca0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccd70",
@@ -34904,7 +34904,7 @@
         {
           "addr": "0x494e0",
           "decl": "void FUN_000494e0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x495b0",
@@ -38251,7 +38251,7 @@
         {
           "addr": "0x12b0c0",
           "decl": "bool network_game_player_is_valid(void *player, void *game);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x12b150",
