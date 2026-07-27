@@ -8797,7 +8797,7 @@
         {
           "addr": "0xb4e20",
           "decl": "void find_next_target(void);",
-          "ported": false,
+          "ported": true,
           "name": "find_next_target"
         },
         {
@@ -25896,7 +25896,7 @@
         {
           "addr": "0x1cebb0",
           "decl": "short FUN_001cebb0(int sound_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001cebb0"
         },
         {
