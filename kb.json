@@ -27619,7 +27619,7 @@
         {
           "addr": "0xe7760",
           "decl": "void render_ui_widgets_postgame(int16_t local_player_index, int16_t *bounds);",
-          "ported": false,
+          "ported": true,
           "name": "render_ui_widgets_postgame"
         },
         {
@@ -40843,7 +40843,8 @@
         {
           "addr": "0x14dc30",
           "decl": "char FUN_0014dc30(int flags, float *pos, int param_3);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0014dc30"
         },
         {
           "addr": "0x14dce0",
