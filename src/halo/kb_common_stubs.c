@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* kb object: <common> -> kb_common_stubs.c */
 
 /* --- <common> batch drafts (2026-07-26) --- */
@@ -8514,66 +8515,24 @@ void FUN_00104710(void)
 #endif
 
 
-/* FUN_00104950 (0x104950) — XBE naked draft (batch 364). */
-#if defined(__clang__)
-static void (*const b104950_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b104950_exitfn)(int) = system_exit;
-static bool (*const b104950_c103d30)(void) = (void *)FUN_00103d30;
-static int (*const b104950_c1d98ad)(void *stream, const char *format, ...) = (void *)crt_fprintf;
-static void (*const b104950_c1d9850)(void) = (void *)FUN_001d9850;
-static int (*const b104950_c1d9bd2)(void *stream) = (void *)crt_fflush;
-
-__attribute__((naked, noinline))
-void FUN_00104950(void)
+/* FUN_00104950 (0x104950) — readable C lift (error_geometry printf). */
+void FUN_00104950(const char *fmt, ...)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00104950_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29d\n\t"
-      "pushl $0x28b838\n\t"
-      "pushl $0x263510\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00104950_1:\n\t"
-      "call *%[c103d30]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00104950_2\n\t"
-      "movl 0x46e394, %%eax\n\t"
-      "pushl $0x28bc08\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d98ad]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x46e394, %%eax\n\t"
-      "leal 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9850]\n\t"
-      "movl 0x46e394, %%ecx\n\t"
-      "pushl $0x260ee4\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d98ad]\n\t"
-      "movl 0x46e394, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d9bd2]\n\t"
-      "addl $0x20, %%esp\n\t"
-      ".LFUN_00104950_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b104950_assert), [exitfn] "m"(b104950_exitfn), [c103d30] "m"(b104950_c103d30), [c1d98ad] "m"(b104950_c1d98ad), [c1d9850] "m"(b104950_c1d9850), [c1d9bd2] "m"(b104950_c1d9bd2)
-      : "memory");
+  void *stream;
+  void *va;
+  if (!fmt) {
+    display_assert((const char *)0x263510, (const char *)0x28b838, 0x29d, 1);
+    system_exit(-1);
+  }
+  if (!FUN_00103d30())
+    return;
+  stream = *(void **)0x46e394;
+  crt_fprintf(stream, (const char *)0x28bc08);
+  va = (char *)&fmt + sizeof(fmt);
+  ((void (*)(void *, const char *, void *))(void *)FUN_001d9850)(stream, fmt, va);
+  crt_fprintf(*(void **)0x46e394, (const char *)0x260ee4);
+  crt_fflush(*(void **)0x46e394);
 }
-#else
-#error "FUN_00104950: clang naked draft required"
-#endif
-
 
 /* FUN_001049d0 (0x1049d0) — XBE naked draft (batch 310). */
 #if defined(__clang__)
@@ -28753,7 +28712,7 @@ static short (*const b1b8f80_c1b0d90)(int unit_handle, char *anim_state) = FUN_0
 static void (*const b1b8f80_c1402c0)(int object_handle, const char *marker_name, short region_index, char param_4) = object_permute_region;
 static void (*const b1b8f80_c1b81d0)(int object_handle, void *unused_scratch, void *force_buffer) = FUN_001b81d0;
 static void (*const b1b8f80_c1b8570)(int object_handle, float dt, void *contact_buf, void *wheel_buf) = FUN_001b8570;
-static void (*const b1b8f80_c1b8f10)(void) = FUN_001b8f10;
+static void (*const b1b8f80_c1b8f10)(void) = (void *)FUN_001b8f10;
 static void (*const b1b8f80_pphys)(int, void *, void *, float *, float *) = FUN_00154270;
 static void (*const b1b8f80_c1b6ca0)(int vehicle_handle) = FUN_001b6ca0;
 static void (*const b1b8f80_pexit)(void *) = profile_exit_private;
@@ -29620,82 +29579,31 @@ void FUN_001bb430(void)
 #endif
 
 
-/* acquire_read_request (0x1bb5a0) — XBE naked draft (batch 344). */
-#if defined(__clang__)
-static void (*const b1bb5a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bb5a0_exitfn)(int) = system_exit;
-static void (*const b1bb5a0_c1bb430)(void) = FUN_001bb430;
-
-__attribute__((naked, noinline))
-void acquire_read_request(void)
+/* acquire_read_request (0x1bb5a0) — readable C lift. */
+void acquire_read_request(void *base, int16_t *slot)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "subl %%ebx, %%esi\n\t"
-      "subl $0xa78, %%esi\n\t"
-      "sarl $1, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .Lacquire_read_request_1\n\t"
-      "cmpw $8, %%si\n\t"
-      "jl .Lacquire_read_request_2\n\t"
-      ".Lacquire_read_request_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x652\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8580\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lacquire_read_request_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "sarl $5, %%eax\n\t"
-      "movl $1, %%edi\n\t"
-      "shll %%cl, %%edi\n\t"
-      "leal 0x998(%%ebx,%%eax,4), %%ebx\n\t"
-      "testl %%edi, (%%ebx)\n\t"
-      "jne .Lacquire_read_request_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x653\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8940\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lacquire_read_request_3:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "notl %%edi\n\t"
-      "andl %%edi, %%eax\n\t"
-      "movl %%eax, (%%ebx)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movw $0xffff, (%%eax)\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "call *%[c1bb430]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bb5a0_assert), [exitfn] "m"(b1bb5a0_exitfn), [c1bb430] "m"(b1bb5a0_c1bb430)
-      : "memory");
+  int16_t idx;
+  int word;
+  unsigned int bit;
+  unsigned int *bitmap;
+  void __attribute__((regparm(1))) (*release_fn)(void *b, int16_t *s, int i) =
+      (void __attribute__((regparm(1))) (*)(void *, int16_t *, int))(void *)FUN_001bb430;
+  idx = (int16_t)(((char *)slot - (char *)base - 0xa78) >> 1);
+  if (idx < 0 || idx >= 8) {
+    display_assert((const char *)0x2b8580, (const char *)0x2b839c, 0x652, 1);
+    system_exit(-1);
+  }
+  word = (int)idx >> 5;
+  bit = 1u << (idx & 0x1f);
+  bitmap = (unsigned int *)((char *)base + 0x998 + word * 4);
+  if ((*bitmap & bit) == 0) {
+    display_assert((const char *)0x2b8940, (const char *)0x2b839c, 0x653, 1);
+    system_exit(-1);
+  }
+  *bitmap &= ~bit;
+  *slot = (int16_t)0xffff;
+  release_fn(base, slot, (int)idx);
 }
-#else
-#error "acquire_read_request: clang naked draft required"
-#endif
-
 
 /* FUN_001bb640 (0x1bb640) — XBE naked draft (batch 322). */
 #if defined(__clang__)

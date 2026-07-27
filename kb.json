@@ -421,8 +421,9 @@
         },
         {
           "addr": "0x104950",
-          "decl": "void FUN_00104950(void);",
-          "ported": false
+          "decl": "void FUN_00104950(const char *fmt, ...);",
+          "ported": true,
+          "name": "FUN_00104950"
         },
         {
           "addr": "0x1049d0",
@@ -441,7 +442,7 @@
         },
         {
           "addr": "0x132e20",
-          "decl": "void FUN_00132e20(void);",
+          "decl": "void FUN_00132e20(int object_handle, int widget_datum, void *arg2, void *arg3);",
           "ported": true,
           "name": "FUN_00132e20"
         },
@@ -711,8 +712,9 @@
         },
         {
           "addr": "0x1bb5a0",
-          "decl": "void acquire_read_request(void);",
-          "ported": false
+          "decl": "void acquire_read_request(void *base, int16_t *slot);",
+          "ported": true,
+          "name": "acquire_read_request"
         },
         {
           "addr": "0x1bb640",
