@@ -38759,7 +38759,8 @@
         {
           "addr": "0x160940",
           "decl": "void _rasterizer_hud_begin(void);",
-          "ported": false
+          "ported": true,
+          "name": "_rasterizer_hud_begin"
         },
         {
           "addr": "0x160950",

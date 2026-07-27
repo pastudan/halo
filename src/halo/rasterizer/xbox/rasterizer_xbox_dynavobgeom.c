@@ -3008,6 +3008,12 @@ void FUN_0015f200(void)
   FUN_0016fa40(27);
 }
 
+/* _rasterizer_hud_begin (0x160940) — readable C lift (profile thunk). */
+void _rasterizer_hud_begin(void)
+{
+  FUN_0016fa40(5);
+}
+
 /* FUN_00160c20 (0x160c20) — readable C lift. */
 void FUN_00160c20(void)
 {
