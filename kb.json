@@ -30387,7 +30387,7 @@
           "addr": "0x17ff60",
           "decl": "void FUN_0017ff60(void);",
           "name": "FUN_0017ff60",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ff80",

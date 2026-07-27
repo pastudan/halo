@@ -5,32 +5,16 @@ void FUN_0017ff50(void)
 
 /* rasterizer_frame_statistics.c */
 
-/* FUN_0017ff60 (0x17ff60) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static void (*const b17ff60_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
+/* FUN_0017ff60 (0x17ff60) — readable C lift. */
+extern char DAT_002af728[];
 void FUN_0017ff60(void)
 {
-  __asm__ volatile(
-      "movl 0x47ec40, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017ff60_1\n\t"
-      "pushl $0x345\n\t"
-      "pushl $0x2af728\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0017ff60_1:\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b17ff60_c8ef70)
-      : "memory");
-}
-#else
-#error "FUN_0017ff60: clang naked draft required"
-#endif
+  void *p;
 
+  p = *(void **)0x47ec40;
+  if (p != NULL)
+    FUN_0008ef70(p, DAT_002af728, 0x345);
+}
 
 /* rasterizer_geometry.c */
 
