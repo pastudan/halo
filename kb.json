@@ -7090,7 +7090,7 @@
         {
           "addr": "0x86900",
           "decl": "void director_load_camera(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x86a50",
