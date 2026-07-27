@@ -66,8 +66,8 @@ int FUN_00180050(short param_1)
 #if defined(__clang__)
 static void (*const b1800b0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1800b0_exitfn)(int) = system_exit;
-static void (*const b1800b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static float * (*const b1800b0_c17ffc0)(float *param_1, unsigned int param_2) = FUN_0017ffc0;
+static void (*const b1800b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static float * (*const b1800b0_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
 
 __attribute__((naked, noinline))
 void FUN_001800b0(short param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), int param_4 __attribute__((unused)), int param_5 __attribute__((unused)), int param_6 __attribute__((unused)))
@@ -592,9 +592,9 @@ unsigned char FUN_001807d0(float param_1)
 #if defined(__clang__)
 static void (*const b1808f0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1808f0_exitfn)(int) = system_exit;
-static char * (*const b1808f0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static double (*const b1808f0_c1d9c2b)(double x) = floor;
-static float * (*const b1808f0_c17ffc0)(float *param_1, unsigned int param_2) = FUN_0017ffc0;
+static char * (*const b1808f0_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
+static double (*const b1808f0_c1d9c2b)(double x) = (void *)floor;
+static float * (*const b1808f0_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
 
 __attribute__((naked, noinline))
 unsigned int FUN_001808f0(float *param_1 __attribute__((unused)))
@@ -792,8 +792,8 @@ unsigned int FUN_001808f0(float *param_1 __attribute__((unused)))
 #if defined(__clang__)
 static void (*const b180b10_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b180b10_exitfn)(int) = system_exit;
-static double (*const b180b10_c1d9c2b)(double x) = floor;
-static float * (*const b180b10_c17ffc0)(float *param_1, unsigned int param_2) = FUN_0017ffc0;
+static double (*const b180b10_c1d9c2b)(double x) = (void *)floor;
+static float * (*const b180b10_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
 
 __attribute__((naked, noinline))
 unsigned int FUN_00180b10(float *param_1 __attribute__((unused)))
@@ -985,9 +985,9 @@ unsigned int FUN_00180b10(float *param_1 __attribute__((unused)))
 #if defined(__clang__)
 static void (*const b180d10_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b180d10_exitfn)(int) = system_exit;
-static void (*const b180d10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static unsigned int (*const b180d10_c180b10)(float *param_1) = FUN_00180b10;
-static short (*const b180d10_c180890)(float f) = FUN_00180890;
+static void (*const b180d10_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static unsigned int (*const b180d10_c180b10)(float *param_1) = (void *)FUN_00180b10;
+static short (*const b180d10_c180890)(float f) = (void *)FUN_00180890;
 
 __attribute__((naked, noinline))
 void FUN_00180d10(short type __attribute__((unused)), int count __attribute__((unused)), int compressed_out __attribute__((unused)), int compressed_size __attribute__((unused)), void *uncompressed __attribute__((unused)), int uncompressed_size __attribute__((unused)))
@@ -1597,28 +1597,28 @@ void FUN_00181a90(void)
 
 /* FUN_00181c20 (0x181c20) — XBE naked draft (batch 79). */
 #if defined(__clang__)
-static void (*const b181c20_c16f910)(int16_t profile) = FUN_0016f910;
-static void (*const b181c20_c17cfc0)(int param_1, int param_2) = FUN_0017cfc0;
+static void (*const b181c20_c16f910)(int16_t profile) = (void *)FUN_0016f910;
+static void (*const b181c20_c17cfc0)(int param_1, int param_2) = (void *)FUN_0017cfc0;
 static void (*const b181c20_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b181c20_exitfn)(int) = system_exit;
-static unsigned char * (*const b181c20_c181060)(void *lens_flare_params) = FUN_00181060;
-static float * (*const b181c20_c17ffc0)(float *param_1, unsigned int param_2) = FUN_0017ffc0;
-static float (*const b181c20_c17ff80)(unsigned char param_1) = FUN_0017ff80;
-static float (*const b181c20_c181420)(void *lens_flare_params, short rotation_fn) = FUN_00181420;
+static unsigned char * (*const b181c20_c181060)(void *lens_flare_params) = (void *)FUN_00181060;
+static float * (*const b181c20_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
+static float (*const b181c20_c17ff80)(unsigned char param_1) = (void *)FUN_0017ff80;
+static float (*const b181c20_c181420)(void *lens_flare_params, short rotation_fn) = (void *)FUN_00181420;
 static float (*const b181c20_norm)(float *) = normalize3d;
 static void *(*const b181c20_elem)(void *, int, int) = tag_block_get_element;
-static unsigned char (*const b181c20_c180770)(float alpha) = FUN_00180770;
-static float (*const b181c20_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
-static float * (*const b181c20_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = FUN_0007c270;
-static void (*const b181c20_c10b820)(float a, float b, float blend, float *out) = scalars_interpolate;
+static unsigned char (*const b181c20_c180770)(float alpha) = (void *)FUN_00180770;
+static float (*const b181c20_c10a5e0)(int16_t function_type, float input) = (void *)FUN_0010a5e0;
+static float * (*const b181c20_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = (void *)FUN_0007c270;
+static void (*const b181c20_c10b820)(float a, float b, float blend, float *out) = (void *)scalars_interpolate;
 static unsigned int (*const b181c20_d1c90)(float *) = FUN_000d1c90;
-static char (*const b181c20_c17cfd0)(int param_1, int param_2, short param_3) = FUN_0017cfd0;
-static void (*const b181c20_c17cfe0)(int tex_flags) = FUN_0017cfe0;
-static void (*const b181c20_c158ae0)(int mode) = FUN_00158ae0;
-static void (*const b181c20_c17d010)(float *position, float radius, float *scale2d, float angle, uint32_t color) = FUN_0017d010;
-static void (*const b181c20_c17d020)(void) = FUN_0017d020;
-static void (*const b181c20_c169fd0)(int *param_1) = FUN_00169fd0;
-static void (*const b181c20_c16fa40)(int16_t profile) = FUN_0016fa40;
+static char (*const b181c20_c17cfd0)(int param_1, int param_2, short param_3) = (void *)FUN_0017cfd0;
+static void (*const b181c20_c17cfe0)(int tex_flags) = (void *)FUN_0017cfe0;
+static void (*const b181c20_c158ae0)(int mode) = (void *)FUN_00158ae0;
+static void (*const b181c20_c17d010)(float *position, float radius, float *scale2d, float angle, uint32_t color) = (void *)FUN_0017d010;
+static void (*const b181c20_c17d020)(void) = (void *)FUN_0017d020;
+static void (*const b181c20_c169fd0)(int *param_1) = (void *)FUN_00169fd0;
+static void (*const b181c20_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
 
 __attribute__((naked, noinline))
 void FUN_00181c20(void)
@@ -2428,7 +2428,7 @@ void rasterizer_memory_pool_delete(void)
 
 /* rasterizer_swizzle_compute_masks (0x182690) — XBE naked draft (batch 85). */
 #if defined(__clang__)
-static int16_t (*const b182690_c108db0)(unsigned int value) = FUN_00108db0;
+static int16_t (*const b182690_c108db0)(unsigned int value) = (void *)FUN_00108db0;
 static void (*const b182690_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182690_exitfn)(int) = system_exit;
 
@@ -2653,19 +2653,19 @@ int FUN_00183290(void *param_1)
 
 /* FUN_00183390 (0x183390) — XBE naked draft (batch 314). */
 #if defined(__clang__)
-static int (*const b183390_c183290)(void *bitmap) = FUN_00183290;
+static int (*const b183390_c183290)(void *bitmap) = (void *)FUN_00183290;
 static void (*const b183390_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b183390_exitfn)(int) = system_exit;
-static void * (*const b183390_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b183390_c182e00)(int param_1) = FUN_00182e00;
-static int16_t (*const b183390_c183120)(void *bitmap) = FUN_00183120;
-static void * (*const b183390_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
-static int (*const b183390_c7d960)(void *bitmap, int mipmap_index) = bitmap_mipmap_get_pixel_data_size;
-static int (*const b183390_c7d9f0)(void *bitmap, int mipmap_index) = bitmap_mipmap_get_row_pitch;
-static void * (*const b183390_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void * (*const b183390_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
+static void (*const b183390_c182e00)(int param_1) = (void *)FUN_00182e00;
+static int16_t (*const b183390_c183120)(void *bitmap) = (void *)FUN_00183120;
+static void * (*const b183390_c7d000)(void *bitmap, short mipmap_index) = (void *)bitmap_mipmap_address;
+static int (*const b183390_c7d960)(void *bitmap, int mipmap_index) = (void *)bitmap_mipmap_get_pixel_data_size;
+static int (*const b183390_c7d9f0)(void *bitmap, int mipmap_index) = (void *)bitmap_mipmap_get_row_pitch;
+static void * (*const b183390_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
 static void *(*const b183390_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b183390_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-static void (*const b183390_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b183390_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
+static void (*const b183390_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 int FUN_00183390(int bitmap __attribute__((unused)))
@@ -3793,12 +3793,12 @@ unsigned char *FUN_00181060(void *lens_flare_params)
 
 /* FUN_00181180 (0x181180) — XBE naked draft (batch 333). */
 #if defined(__clang__)
-static void (*const b181180_c16f910)(int16_t profile) = FUN_0016f910;
+static void (*const b181180_c16f910)(int16_t profile) = (void *)FUN_0016f910;
 static void (*const b181180_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b181180_exitfn)(int) = system_exit;
-static unsigned char * (*const b181180_c181060)(void *lens_flare_params) = FUN_00181060;
-static void (*const b181180_c17d040)(void) = FUN_0017d040;
-static void (*const b181180_c16fa40)(int16_t profile) = FUN_0016fa40;
+static unsigned char * (*const b181180_c181060)(void *lens_flare_params) = (void *)FUN_00181060;
+static void (*const b181180_c17d040)(void) = (void *)FUN_0017d040;
+static void (*const b181180_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
 
 __attribute__((naked, noinline))
 void FUN_00181180(void)
@@ -3927,7 +3927,7 @@ void FUN_00181180(void)
 #if defined(__clang__)
 static void (*const b1812c0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1812c0_exitfn)(int) = system_exit;
-static void (*const b1812c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b1812c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_001812c0(void)
@@ -4054,7 +4054,7 @@ void FUN_001812c0(void)
 #if defined(__clang__)
 static void (*const b181420_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b181420_exitfn)(int) = system_exit;
-static float * (*const b181420_c17ffc0)(float *param_1, unsigned int param_2) = FUN_0017ffc0;
+static float * (*const b181420_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
 static void (*const b181420_cross)(float *, float *, float *) = cross_product3d;
 
 __attribute__((naked, noinline))
@@ -4307,7 +4307,7 @@ void FUN_00182610(int16_t mask_si, int16_t width, int16_t height)
 #if defined(__clang__)
 static void (*const b182840_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182840_exitfn)(int) = system_exit;
-static void (*const b182840_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
+static void (*const b182840_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_byte(void)
@@ -4406,7 +4406,7 @@ void rasterizer_xbox_bitmap_swizzle2d_byte(void)
 #if defined(__clang__)
 static void (*const b182910_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182910_exitfn)(int) = system_exit;
-static void (*const b182910_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
+static void (*const b182910_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_word(void)
@@ -4505,7 +4505,7 @@ void rasterizer_xbox_bitmap_swizzle2d_word(void)
 #if defined(__clang__)
 static void (*const b1829f0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1829f0_exitfn)(int) = system_exit;
-static void (*const b1829f0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
+static void (*const b1829f0_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_long(void)
@@ -4604,7 +4604,7 @@ void rasterizer_xbox_bitmap_swizzle2d_long(void)
 #if defined(__clang__)
 static void (*const b182ac0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182ac0_exitfn)(int) = system_exit;
-static void (*const b182ac0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
+static void (*const b182ac0_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle3d_byte(void)
@@ -4726,7 +4726,7 @@ void rasterizer_xbox_bitmap_swizzle3d_byte(void)
 #if defined(__clang__)
 static void (*const b182bd0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182bd0_exitfn)(int) = system_exit;
-static void (*const b182bd0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
+static void (*const b182bd0_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle3d_word(void)
@@ -4848,7 +4848,7 @@ void rasterizer_xbox_bitmap_swizzle3d_word(void)
 #if defined(__clang__)
 static void (*const b182cf0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182cf0_exitfn)(int) = system_exit;
-static void (*const b182cf0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
+static void (*const b182cf0_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle3d_long(void)
@@ -4970,23 +4970,23 @@ void rasterizer_xbox_bitmap_swizzle3d_long(void)
 #if defined(__clang__)
 static void (*const b182e00_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182e00_exitfn)(int) = system_exit;
-static int (*const b182e00_c7d960)(void *bitmap, int mipmap_index) = bitmap_mipmap_get_pixel_data_size;
-static void * (*const b182e00_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
-static void * (*const b182e00_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static short (*const b182e00_c7d6e0)(void *bitmap, int mipmap_index) = bitmap_mipmap_width;
-static short (*const b182e00_c7d780)(void *bitmap, short mipmap_index) = bitmap_mipmap_get_height;
-static int (*const b182e00_c7d820)(void *bitmap, short mipmap_index) = bitmap_mipmap_get_depth;
-static short (*const b182e00_c7c840)(short format) = bitmap_format_bits_per_pixel;
-static void (*const b182e00_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
-static void (*const b182e00_c1829f0)(void) = rasterizer_xbox_bitmap_swizzle2d_long;
-static void (*const b182e00_c182910)(void) = rasterizer_xbox_bitmap_swizzle2d_word;
-static void (*const b182e00_c182840)(void) = rasterizer_xbox_bitmap_swizzle2d_byte;
-static void (*const b182e00_c182cf0)(void) = rasterizer_xbox_bitmap_swizzle3d_long;
-static void (*const b182e00_c182bd0)(void) = rasterizer_xbox_bitmap_swizzle3d_word;
-static void (*const b182e00_c182ac0)(void) = rasterizer_xbox_bitmap_swizzle3d_byte;
-static void * (*const b182e00_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b182e00_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-static void (*const b182e00_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static int (*const b182e00_c7d960)(void *bitmap, int mipmap_index) = (void *)bitmap_mipmap_get_pixel_data_size;
+static void * (*const b182e00_c7d000)(void *bitmap, short mipmap_index) = (void *)bitmap_mipmap_address;
+static void * (*const b182e00_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
+static short (*const b182e00_c7d6e0)(void *bitmap, int mipmap_index) = (void *)bitmap_mipmap_width;
+static short (*const b182e00_c7d780)(void *bitmap, short mipmap_index) = (void *)bitmap_mipmap_get_height;
+static int (*const b182e00_c7d820)(void *bitmap, short mipmap_index) = (void *)bitmap_mipmap_get_depth;
+static short (*const b182e00_c7c840)(short format) = (void *)bitmap_format_bits_per_pixel;
+static void (*const b182e00_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
+static void (*const b182e00_c1829f0)(void) = (void *)rasterizer_xbox_bitmap_swizzle2d_long;
+static void (*const b182e00_c182910)(void) = (void *)rasterizer_xbox_bitmap_swizzle2d_word;
+static void (*const b182e00_c182840)(void) = (void *)rasterizer_xbox_bitmap_swizzle2d_byte;
+static void (*const b182e00_c182cf0)(void) = (void *)rasterizer_xbox_bitmap_swizzle3d_long;
+static void (*const b182e00_c182bd0)(void) = (void *)rasterizer_xbox_bitmap_swizzle3d_word;
+static void (*const b182e00_c182ac0)(void) = (void *)rasterizer_xbox_bitmap_swizzle3d_byte;
+static void * (*const b182e00_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
+static void (*const b182e00_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
+static void (*const b182e00_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_00182e00(int param_1 __attribute__((unused)))
@@ -5385,10 +5385,10 @@ int *FUN_00181020(short index)
 #if defined(__clang__)
 static void (*const b181670_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b181670_exitfn)(int) = system_exit;
-static int * (*const b181670_c181020)(short index) = FUN_00181020;
-static void * (*const b181670_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static int * (*const b181670_c181020)(short index) = (void *)FUN_00181020;
+static void * (*const b181670_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
 static void *(*const b181670_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b181670_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b181670_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_00181670(int *params __attribute__((unused)))
