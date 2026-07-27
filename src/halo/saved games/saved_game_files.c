@@ -2504,7 +2504,7 @@ char delete_enumerated_saved_game_file(int packed)
   if ((packed & 0x40000000) == 0) {
     csmemset(prefix, 0, 8);
     ascii = wide_to_ascii((const wchar_t *)*(void **)(0x32eb94 + 4 * slot), prefix, 8);
-    if (((int (*)(char *))(void *)FUN_001d3185)(ascii)) {
+    if (FUN_001d3185(ascii, (wchar_t *)(record + 0x100))) {
       error(2, (const char *)0x2bb55c);
       ok = 0;
     }

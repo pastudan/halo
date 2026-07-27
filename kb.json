@@ -504,7 +504,7 @@
         },
         {
           "addr": "0x149c60",
-          "decl": "char FUN_00149c60(int *block_ptr, void *a, void *b, float scale, float best_dist, float *result);",
+          "decl": "char FUN_00149c60(int *block_ptr, void *transformed_2c, void *transformed_20, float scale, float best_dist, float *result);",
           "ported": true,
           "name": "FUN_00149c60"
         },
