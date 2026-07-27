@@ -10079,8 +10079,8 @@
         },
         {
           "addr": "0x1c6ed0",
-          "decl": "void FUN_001c6ed0(void);",
-          "ported": false
+          "decl": "char FUN_001c6ed0(void *file_ref, int *out_size, void *out_buf);",
+          "ported": true
         },
         {
           "addr": "0x1c6fb0",

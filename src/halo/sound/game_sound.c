@@ -905,123 +905,48 @@ void FUN_001c6d90(void)
 #endif
 
 
-/* FUN_001c6ed0 (0x1c6ed0) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static bool (*const b1c6ed0_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c6ed0_c19acb0)(file_ref_t *info, int offset, int size, void *buffer) = file_read_from_position;
-static void (*const b1c6ed0_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
-static bool (*const b1c6ed0_c19a930)(file_ref_t *info) = file_close;
-
-__attribute__((naked, noinline))
-void FUN_001c6ed0(void)
+/* FUN_001c6ed0 (0x1c6ed0) — readable C lift. */
+char FUN_001c6ed0(void *file_ref, int *out_size, void *out_buf)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "movl $0xc, %%esi\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ed0_6\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ed0_5\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_001c6ed0_1:\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $4\n\t"
-      "addl $4, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ed0_3\n\t"
-      "pushl $1\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x32ec68\n\t"
-      "call *%[c118be0]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $0x64617461, %%eax\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "je .LFUN_001c6ed0_4\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_001c6ed0_2\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_001c6ed0_2:\n\t"
-      "leal 0x4(%%esi,%%eax,1), %%esi\n\t"
-      ".LFUN_001c6ed0_3:\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c6ed0_1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c6ed0_4:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "addl $4, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6ed0_5\n\t"
-      "movb $1, %%bl\n\t"
-      ".LFUN_001c6ed0_5:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001c6ed0_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19a7a0] "m"(b1c6ed0_c19a7a0), [c19acb0] "m"(b1c6ed0_c19acb0), [c118be0] "m"(b1c6ed0_c118be0), [c19a930] "m"(b1c6ed0_c19a930)
-      : "memory");
+  int offset;
+  int tag;
+  int size;
+  char ok;
+
+  ok = 0;
+  offset = 0xc;
+  if (!file_open((file_ref_t *)file_ref, 1)) {
+    return ok;
+  }
+  if (!file_read_from_position((file_ref_t *)file_ref, offset, 4, &tag)) {
+    file_close((file_ref_t *)file_ref);
+    return ok;
+  }
+  for (;;) {
+    offset += 4;
+    if (!file_read_from_position((file_ref_t *)file_ref, offset, 4, &size)) {
+      break;
+    }
+    FUN_00118be0((void *)0x32ec68, &tag, 1);
+    if (tag == 0x64617461) {
+      *out_size = size;
+      offset += 4;
+      if (file_read_from_position((file_ref_t *)file_ref, offset, size, out_buf)) {
+        ok = 1;
+      }
+      break;
+    }
+    if (size & 1) {
+      size += 1;
+    }
+    offset += size + 4;
+    if (!file_read_from_position((file_ref_t *)file_ref, offset, 4, &tag)) {
+      break;
+    }
+  }
+  file_close((file_ref_t *)file_ref);
+  return ok;
 }
-#else
-#error "FUN_001c6ed0: clang naked draft required"
-#endif
-
-
 /* FUN_001c6fb0 (0x1c6fb0) — readable C lift: expand 8-bit PCM to 16-bit in place. */
 void FUN_001c6fb0(void *header, int *count_ptr, unsigned char *buffer)
 {
