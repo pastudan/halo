@@ -2466,171 +2466,79 @@ void *FUN_0018e420(void)
   return *(void **)0x5064d8;
 }
 
-/* reference_list_remove (0x1913c0) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void *(*const b1913c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const b1913c0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1913c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1913c0_exitfn)(int) = system_exit;
-static void (*const b1913c0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void reference_list_remove(void *data __attribute__((unused)), int *head __attribute__((unused)), int value __attribute__((unused)))
+/* reference_list_remove (0x1913c0) — readable C lift from XBE leaf. */
+void reference_list_remove(void *data, int *head, int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, (%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "je .Lreference_list_remove_2\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      ".Lreference_list_remove_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .Lreference_list_remove_3\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "leal 0x8(%%edi), %%esi\n\t"
-      "jne .Lreference_list_remove_1\n\t"
-      ".Lreference_list_remove_2:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6d\n\t"
-      "pushl $0x2b25a0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2b2564\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lreference_list_remove_3:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1196d0]\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1913c0_dget), [c8d9d0] "m"(b1913c0_c8d9d0), [assert] "m"(b1913c0_assert), [exitfn] "m"(b1913c0_exitfn), [c1196d0] "m"(b1913c0_c1196d0)
-      : "memory");
+  int *link;
+  int *node;
+  int handle;
+
+  link = head;
+  if (*link != -1) {
+    while (1) {
+      handle = *link;
+      node = (int *)datum_get((data_t *)data, handle);
+      if (node[1] == value) {
+        datum_delete((data_t *)data, handle);
+        *link = node[2];
+        return;
+      }
+      if (node[2] == -1)
+        break;
+      link = &node[2];
+    }
+  }
+
+  {
+    char *msg = csprintf(
+        (char *)0x5ab100,
+        "attempt to remove invalid element %ld from reference list", value);
+    display_assert(msg, "..\\objects\\reference_lists.h", 0x6d, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "reference_list_remove: clang naked draft required"
-#endif
 
 
-/* reference_list_copy (0x191440) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static void (*const b191440_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b191440_exitfn)(int) = system_exit;
-static void (*const b191440_c1196d0)(data_t *data, int datum_handle) = datum_delete;
 
-__attribute__((naked, noinline))
-void reference_list_copy(void *result __attribute__((unused)), void *source __attribute__((unused)))
+/* reference_list_copy (0x191440) — readable C lift from XBE leaf.
+ * Copies occupied 12-byte slots from source into result; deletes stale result
+ * slots when the corresponding source slot is empty. */
+void reference_list_copy(void *result, void *source)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movw 0x22(%%edi), %%ax\n\t"
-      "cmpw 0x22(%%ebx), %%ax\n\t"
-      "je .Lreference_list_copy_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x88\n\t"
-      "pushl $0x2b25a0\n\t"
-      "pushl $0x2b25f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lreference_list_copy_1:\n\t"
-      "movw 0x20(%%edi), %%cx\n\t"
-      "cmpw 0x20(%%ebx), %%cx\n\t"
-      "je .Lreference_list_copy_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x89\n\t"
-      "pushl $0x2b25a0\n\t"
-      "pushl $0x2b25c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lreference_list_copy_2:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "movl 0x34(%%ebx), %%ebx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpw %%si, 0x20(%%edi)\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jle .Lreference_list_copy_6\n\t"
-      ".Lreference_list_copy_3:\n\t"
-      "cmpw $0, (%%ebx)\n\t"
-      "je .Lreference_list_copy_4\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "jmp .Lreference_list_copy_5\n\t"
-      ".Lreference_list_copy_4:\n\t"
-      "cmpw $0, (%%eax)\n\t"
-      "je .Lreference_list_copy_5\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lreference_list_copy_5:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "incl %%esi\n\t"
-      "addl $0xc, %%eax\n\t"
-      "addl $0xc, %%ebx\n\t"
-      "cmpw 0x20(%%edi), %%si\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jl .Lreference_list_copy_3\n\t"
-      ".Lreference_list_copy_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b191440_assert), [exitfn] "m"(b191440_exitfn), [c1196d0] "m"(b191440_c1196d0)
-      : "memory");
+  data_t *dst = (data_t *)result;
+  data_t *src = (data_t *)source;
+  int *dst_el;
+  int *src_el;
+  int16_t i;
+  int16_t max_count;
+
+  if (*(int16_t *)((char *)dst + 0x22) != *(int16_t *)((char *)src + 0x22)) {
+    display_assert("result->size==source->size",
+                   "..\\objects\\reference_lists.h", 0x88, true);
+    system_exit(-1);
+  }
+  if (*(int16_t *)((char *)dst + 0x20) != *(int16_t *)((char *)src + 0x20)) {
+    display_assert("result->maximum_count==source->maximum_count",
+                   "..\\objects\\reference_lists.h", 0x89, true);
+    system_exit(-1);
+  }
+
+  dst_el = *(int **)((char *)dst + 0x34);
+  src_el = *(int **)((char *)src + 0x34);
+  max_count = *(int16_t *)((char *)dst + 0x20);
+  for (i = 0; i < max_count; i++) {
+    if (*(int16_t *)src_el != 0) {
+      dst_el[0] = src_el[0];
+      dst_el[1] = src_el[1];
+      dst_el[2] = src_el[2];
+    } else if (*(int16_t *)dst_el != 0) {
+      datum_delete(dst, (int)i);
+    }
+    dst_el += 3;
+    src_el += 3;
+  }
 }
-#else
-#error "reference_list_copy: clang naked draft required"
-#endif
+
 
 
 /* cluster_partition_globals_new (0x191500) — readable C lift.
@@ -6844,87 +6752,34 @@ int16_t structure_find_in_cluster(uint16_t cluster_count, float *position,
  */
 #define file_location_volume_names ((char *)0x505500)
 
-/* set_file_location_volume_name (0x199360) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void (*const b199360_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b199360_exitfn)(int) = system_exit;
-static int (*const b199360_c8df60)(const char *s1) = csstrlen;
-static void * (*const b199360_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-
-__attribute__((naked, noinline))
-void set_file_location_volume_name(int16_t location __attribute__((unused)), const char *volume_name __attribute__((unused)))
+/* set_file_location_volume_name (0x199360) — readable C lift from XBE leaf. */
+void set_file_location_volume_name(int16_t location, const char *volume_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jle .Lset_file_location_volume_name_1\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl .Lset_file_location_volume_name_2\n\t"
-      ".Lset_file_location_volume_name_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4b\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3a70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lset_file_location_volume_name_2:\n\t"
-      "movswl %%si, %%esi\n\t"
-      "shll $8, %%esi\n\t"
-      "leal 0x505500(%%esi), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lset_file_location_volume_name_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4c\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3a40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lset_file_location_volume_name_3:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0xff, %%eax\n\t"
-      "jbe .Lset_file_location_volume_name_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4d\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3a10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lset_file_location_volume_name_4:\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $0, 0x5055ff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b199360_assert), [exitfn] "m"(b199360_exitfn), [c8df60] "m"(b199360_c8df60), [c8de70] "m"(b199360_c8de70)
-      : "memory");
+  char *slot;
+  int idx;
+
+  if (location <= 0 || location >= 2) {
+    display_assert("location>0 && location<NUMBER_OF_FILE_REFERENCE_LOCATIONS",
+                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4b, true);
+    system_exit(-1);
+  }
+
+  idx = (int)location << 8;
+  slot = (char *)(0x505500 + idx);
+  if (csstrlen(slot) != 0) {
+    display_assert("strlen(file_location_volume_names[location])==0",
+                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4c, true);
+    system_exit(-1);
+  }
+  if (csstrlen(volume_name) > 0xff) {
+    display_assert("strlen(volume_name)<=MAXIMUM_FILENAME_LENGTH",
+                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4d, true);
+    system_exit(-1);
+  }
+  csstrncpy(slot, volume_name, 0xff);
+  slot[0xff] = 0;
 }
-#else
-#error "set_file_location_volume_name: clang naked draft required"
-#endif
+
 
 /* --- structures.obj batch drafts (2026-07-26) --- */
 
