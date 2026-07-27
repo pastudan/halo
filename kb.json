@@ -12297,12 +12297,12 @@
         {
           "addr": "0xc95f0",
           "decl": "int FUN_000c95f0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9650",
           "decl": "char FUN_000c9650(int16_t game_flag, int list_handle, char set_flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9700",
@@ -12322,7 +12322,7 @@
         {
           "addr": "0xc9840",
           "decl": "char FUN_000c9840(int list_handle, int16_t scenario_index, float distance);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc98e0",
@@ -12862,7 +12862,7 @@
         {
           "addr": "0xce3c0",
           "decl": "void FUN_000ce3c0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce420",
@@ -15097,7 +15097,7 @@
         {
           "addr": "0x124900",
           "decl": "void FUN_00124900(void *model);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x124a10",
@@ -15139,7 +15139,7 @@
         {
           "addr": "0x124e20",
           "decl": "void network_game_client_game_out_of_sync(void *client);",
-          "ported": false,
+          "ported": true,
           "name": "network_game_client_game_out_of_sync"
         },
         {
@@ -25371,7 +25371,7 @@
         {
           "addr": "0x1cd4d0",
           "decl": "void sound_stop_impulse_by_source_and_definition(int source, int definition);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cd540",

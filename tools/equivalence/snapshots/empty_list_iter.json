@@ -1,14 +1,19 @@
 {
-  "description": "Terminate object-list iterators (ce450/ce320) immediately",
+  "description": "iters",
   "build_label": "synthetic",
   "regions": {},
   "stub_returns": {
-    "FUN_000ce450": [-1],
-    "FUN_000ce320": [-1],
-    "data_next_index": [-1],
-    "local_player_get_next": [-1],
-    "object_try_and_get_and_verify_type": [0],
-    "FUN_0018ef00": [0],
-    "FUN_001aa430": [0]
+    "data_next_index": [
+      -1
+    ],
+    "FUN_000ce450": [
+      -1
+    ],
+    "FUN_000ce320": [
+      -1
+    ],
+    "local_player_get_next": [
+      -1
+    ]
   }
 }
