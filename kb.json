@@ -20880,7 +20880,7 @@
         {
           "addr": "0x1726a0",
           "decl": "void FUN_001726a0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x172720",

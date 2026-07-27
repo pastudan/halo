@@ -7867,66 +7867,24 @@ int FUN_00172650(int a, int b, int c)
   return 0;
 }
 
-/* FUN_001726a0 (0x1726a0) — XBE naked draft (batch 356). */
-#if defined(__clang__)
-static void (*const b1726a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1726a0_exitfn)(int) = system_exit;
-static void (*const b1726a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void (*const b1726a0_c158140)(int target, int mipmap_index, uint32_t color, int do_clear, int zbuffer) = (void *)FUN_00158140;
-
-__attribute__((naked, noinline))
+/* FUN_001726a0 (0x1726a0) — readable C lift. */
 void FUN_001726a0(void)
 {
-  __asm__ volatile(
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001726a0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x233\n\t"
-      "pushl $0x2a44b0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001726a0_1:\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "jne .LFUN_001726a0_3\n\t"
-      "movb 0x3256ca, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001726a0_3\n\t"
-      "movb 0x47e4b5, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001726a0_2\n\t"
-      "pushl $0x2a44ec\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001726a0_2:\n\t"
-      "movb 0x3251fc, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001726a0_3\n\t"
-      "pushl $1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x5a5bc0, %%ax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c158140]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movb $1, 0x3251fc\n\t"
-      ".LFUN_001726a0_3:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1726a0_assert), [exitfn] "m"(b1726a0_exitfn), [c8f390] "m"(b1726a0_c8f390), [c158140] "m"(b1726a0_c158140)
-      : "memory");
+  if (!*(int *)0x476ab0) {
+    display_assert((char *)0x29dc40, (char *)0x2a44b0, 0x233, 1);
+    system_exit(-1);
+  }
+  if (*(short *)0x5a5bc0 != 0)
+    return;
+  if (!*(unsigned char *)0x3256ca)
+    return;
+  if (!*(unsigned char *)0x47e4b5)
+    error(2, (const char *)0x2a44ec);
+  if (*(unsigned char *)0x3251fc)
+    return;
+  FUN_00158140((int)*(unsigned short *)0x5a5bc0, 0, 0, 0, 1);
+  *(unsigned char *)0x3251fc = 1;
 }
-#else
-#error "FUN_001726a0: clang naked draft required"
-#endif
-
-
 /* rasterizer_window_get_fog (0x172720) — readable C lift. */
 void rasterizer_window_get_fog(void)
 {
