@@ -4786,8 +4786,8 @@
         },
         {
           "addr": "0x7e040",
-          "decl": "int bitmap_get_pixel_data_size(void *bitmap_data);",
-          "ported": false
+          "decl": "int bitmap_get_pixel_data_size(void *bitmap);",
+          "ported": true
         },
         {
           "addr": "0x7e0b0",
@@ -5452,7 +5452,7 @@
         {
           "addr": "0x936b0",
           "decl": "short FUN_000936b0(void *scenario, void *entry);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x93710",
@@ -20070,8 +20070,8 @@
         },
         {
           "addr": "0x91c70",
-          "decl": "void FUN_00091c70(void);",
-          "ported": false
+          "decl": "void FUN_00091c70(void *rec, int a1, int a2, char force);",
+          "ported": true
         },
         {
           "addr": "0x91cf0",

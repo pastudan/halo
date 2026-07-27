@@ -1776,64 +1776,23 @@ void FUN_00093e20(void)
 
 /* --- cinematics.obj orphan shells (2026-07-26) --- */
 
-/* FUN_000936b0 (0x936b0) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static void *(*const b936b0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b936b0_c1dd801)(const char *a, const char *b) = crt_stricmp;
-
-__attribute__((naked, noinline))
-short FUN_000936b0(void *scenario __attribute__((unused)), void *entry __attribute__((unused)))
+/* FUN_000936b0 (0x936b0) — readable C lift. */
+short FUN_000936b0(void *scenario, void *entry)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x36c(%%esi), %%ecx\n\t"
-      "addl $0x36c, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_000936b0_3\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_000936b0_1:\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000936b0_2\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_000936b0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000936b0_2:\n\t"
-      "movw %%di, %%ax\n\t"
-      ".LFUN_000936b0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b936b0_elem), [c1dd801] "m"(b936b0_c1dd801)
-      : "memory");
+  void *block;
+  int count;
+  short i;
+  char *elem;
+
+  block = (char *)scenario + 0x36c;
+  count = *(int *)block;
+  if (count <= 0)
+    return -1;
+  for (i = 0; i < count; i++) {
+    elem = (char *)tag_block_get_element(block, i, 0x40);
+    if (crt_stricmp(elem, (const char *)entry) == 0)
+      return i;
+  }
+  return -1;
 }
-#else
-#error "FUN_000936b0: clang naked draft required"
-#endif
 

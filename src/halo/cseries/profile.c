@@ -3149,75 +3149,34 @@ void FUN_00091c10(void *dst, void *src, const char *name, int field)
   }
 }
 
-/* FUN_00091c70 (0x91c70) — XBE naked draft (batch 261). */
-#if defined(__clang__)
-static void (*const b91c70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b91c70_exitfn)(int) = system_exit;
-static unsigned int (*const b91c70_c8e370)(void) = system_milliseconds;
-
-__attribute__((naked, noinline))
-void FUN_00091c70(void)
+/* FUN_00091c70 (0x91c70) — readable C lift. */
+void FUN_00091c70(void *rec, int a1, int a2, char force)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00091c70_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x23\n\t"
-      "pushl $0x268ae0\n\t"
-      "pushl $0x268ad8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00091c70_1:\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .LFUN_00091c70_4\n\t"
-      "movl 0x108(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00091c70_4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e370]\n\t"
-      "movl 0x10c(%%esi), %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "subl %%edx, %%eax\n\t"
-      "cmpl $0x7d, %%eax\n\t"
-      "ja .LFUN_00091c70_2\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00091c70_3\n\t"
-      ".LFUN_00091c70_2:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "imull $0x64, %%eax, %%eax\n\t"
-      "cdq\n\t"
-      "idivl 0x108(%%esi)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "leal 0x8(%%esi), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%edi, 0x10c(%%esi)\n\t"
-      ".LFUN_00091c70_3:\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_00091c70_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b91c70_assert), [exitfn] "m"(b91c70_exitfn), [c8e370] "m"(b91c70_c8e370)
-      : "memory");
-}
-#else
-#error "FUN_00091c70: clang naked draft required"
-#endif
+  extern char DAT_00268ad8[];
+  extern char DAT_00268ae0[];
+  unsigned int now;
+  int elapsed;
+  int pct;
+  void (*cb)(int, char *, int, int);
 
+  if (!rec) {
+    display_assert(DAT_00268ad8, DAT_00268ae0, 0x23, 1);
+    system_exit(-1);
+  }
+  if (*(int *)rec == 0)
+    return;
+  if (*(int *)((char *)rec + 0x108) == 0)
+    return;
+  now = system_milliseconds();
+  elapsed = (int)now - *(int *)((char *)rec + 0x10c);
+  if ((unsigned int)elapsed <= 0x7d && !force)
+    return;
+  pct = a2 * 0x64;
+  pct = pct / *(int *)((char *)rec + 0x108);
+  cb = *(void (**)(int, char *, int, int))rec;
+  cb(*(int *)((char *)rec + 4), (char *)rec + 8, a1, pct);
+  *(int *)((char *)rec + 0x10c) = (int)now;
+}
 
 /* FUN_00091cf0 (0x91cf0) — XBE naked draft (batch 251). */
 #if defined(__clang__)
