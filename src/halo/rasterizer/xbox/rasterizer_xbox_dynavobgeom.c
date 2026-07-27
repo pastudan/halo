@@ -14637,63 +14637,28 @@ void FUN_0016b180(int flag)
 
 
 
-/* FUN_0016b1c0 (0x16b1c0) — XBE naked draft (batch 364). */
-#if defined(__clang__)
-static void (*const b16b1c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b16b1c0_exitfn)(int) = system_exit;
-static void (*const b16b1c0_c165fc0)(void) = (void *)FUN_00165fc0;
-static void (*const b16b1c0_c158ae0)(int mode) = (void *)FUN_00158ae0;
-static void (*const b16b1c0_c156c30)(float near_z, float far_z) = (void *)rasterizer_set_frustum_z;
-
-__attribute__((naked, noinline))
+/* FUN_0016b1c0 (0x16b1c0) — readable C lift. */
 void FUN_0016b1c0(void)
 {
-  __asm__ volatile(
-      "movb 0x3256c4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0016b1c0_4\n\t"
-      "movl 0x47dff8, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0016b1c0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5d3\n\t"
-      "pushl $0x2a3380\n\t"
-      "pushl $0x2a33b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0016b1c0_1:\n\t"
-      "movb 0x47e004, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0016b1c0_2\n\t"
-      "call *%[c165fc0]\n\t"
-      ".LFUN_0016b1c0_2:\n\t"
-      "movl 0x47dff8, %%eax\n\t"
-      "cmpb $0, (%%eax)\n\t"
-      "jns .LFUN_0016b1c0_3\n\t"
-      "movb 0x47e005, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0016b1c0_3\n\t"
-      "pushl $2\n\t"
-      "call *%[c158ae0]\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c156c30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0016b1c0_3:\n\t"
-      "movl $0, 0x47dff8\n\t"
-      ".LFUN_0016b1c0_4:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b16b1c0_assert), [exitfn] "m"(b16b1c0_exitfn), [c165fc0] "m"(b16b1c0_c165fc0), [c158ae0] "m"(b16b1c0_c158ae0), [c156c30] "m"(b16b1c0_c156c30)
-      : "memory");
+  int *p;
+
+  if (!*(unsigned char *)0x3256c4)
+    return;
+  if (!*(int *)0x47dff8) {
+    display_assert((char *)0x2a33b8, (char *)0x2a3380, 0x5d3, 1);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x47e004)
+    FUN_00165fc0();
+  p = *(int **)0x47dff8;
+  if (*(signed char *)p < 0) {
+    if (!*(unsigned char *)0x47e005) {
+      FUN_00158ae0(2);
+      FUN_00156c30(0, 0);
+    }
+  }
+  *(int *)0x47dff8 = 0;
 }
-#else
-#error "FUN_0016b1c0: clang naked draft required"
-#endif
-
-
 /* FUN_0016b240 (0x16b240) — readable C lift. */
 void FUN_0016b240(void)
 {

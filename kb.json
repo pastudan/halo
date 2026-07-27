@@ -39210,7 +39210,7 @@
         {
           "addr": "0x16b1c0",
           "decl": "void FUN_0016b1c0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x16b240",
