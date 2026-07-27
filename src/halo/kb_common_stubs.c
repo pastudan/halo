@@ -31617,93 +31617,73 @@ void FUN_001e67e7(void)
 #endif
 
 
-/* 0x1e6805 */
+/* FUN_001e6805 (0x1e6805) — readable C lift (wcslwr). */
 wchar_t *FUN_001e6805(wchar_t *s)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  wchar_t *p;
+  if (!s) {
+    return s;
+  }
+  p = s;
+  while (*p) {
+    if (*p >= 0x41 && *p <= 0x5a) {
+      *p = (wchar_t)(*p + 0x20);
+    }
+    p++;
+  }
+  return s;
 }
-
-/* 0x1e6831 */
+/* FUN_001e6831 (0x1e6831) — readable C lift (wcsupr). */
 wchar_t *FUN_001e6831(wchar_t *s)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  wchar_t *p;
+  if (!s) {
+    return s;
+  }
+  p = s;
+  while (*p) {
+    if (*p >= 0x61 && *p <= 0x7a) {
+      *p = (wchar_t)(*p - 0x20);
+    }
+    p++;
+  }
+  return s;
 }
-
-/* FUN_001e6860 (0x1e6860) — XBE naked draft (batch 320). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001e6860(void)
+/* FUN_001e6860 (0x1e6860) — readable C lift. */
+int FUN_001e6860(const char *s1, const char *s2, unsigned int n)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "orl %%ecx, %%ecx\n\t"
-      "je .LFUN_001e6860_6\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movb $0x41, %%bh\n\t"
-      "movb $0x5a, %%bl\n\t"
-      "movb $0x20, %%dh\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_001e6860_1:\n\t"
-      "movb (%%esi), %%ah\n\t"
-      "orb %%ah, %%ah\n\t"
-      "movb (%%edi), %%al\n\t"
-      "je .LFUN_001e6860_4\n\t"
-      "orb %%al, %%al\n\t"
-      "je .LFUN_001e6860_4\n\t"
-      "incl %%esi\n\t"
-      "incl %%edi\n\t"
-      "cmpb %%bh, %%ah\n\t"
-      "jb .LFUN_001e6860_2\n\t"
-      "cmpb %%bl, %%ah\n\t"
-      "ja .LFUN_001e6860_2\n\t"
-      "addb %%dh, %%ah\n\t"
-      ".LFUN_001e6860_2:\n\t"
-      "cmpb %%bh, %%al\n\t"
-      "jb .LFUN_001e6860_3\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "ja .LFUN_001e6860_3\n\t"
-      "addb %%dh, %%al\n\t"
-      ".LFUN_001e6860_3:\n\t"
-      "cmpb %%al, %%ah\n\t"
-      "jne .LFUN_001e6860_5\n\t"
-      "decl %%ecx\n\t"
-      "jne .LFUN_001e6860_1\n\t"
-      ".LFUN_001e6860_4:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpb %%al, %%ah\n\t"
-      "je .LFUN_001e6860_6\n\t"
-      ".LFUN_001e6860_5:\n\t"
-      "movl $0xffffffff, %%ecx\n\t"
-      "jb .LFUN_001e6860_6\n\t"
-      "negl %%ecx\n\t"
-      ".LFUN_001e6860_6:\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char ah;
+  unsigned char al;
+  if (n == 0) {
+    return 0;
+  }
+  while (1) {
+    ah = (unsigned char)*s1;
+    al = (unsigned char)*s2;
+    if (ah == 0 || al == 0) {
+      break;
+    }
+    s1++;
+    s2++;
+    if (ah >= 0x41 && ah <= 0x5a) {
+      ah = (unsigned char)(ah + 0x20);
+    }
+    if (al >= 0x41 && al <= 0x5a) {
+      al = (unsigned char)(al + 0x20);
+    }
+    if (ah != al) {
+      return (ah < al) ? -1 : 1;
+    }
+    n--;
+    if (n == 0) {
+      return 0;
+    }
+  }
+  if (ah == al) {
+    return 0;
+  }
+  return (ah < al) ? -1 : 1;
 }
-#else
-#error "FUN_001e6860: clang naked draft required"
-#endif
-
-
 /* ___loctotime_t (0x1e68bb) — XBE naked draft (batch 308). */
 #if defined(__clang__)
 static void (*const b1e68bb_c1e1953)(void) = FUN_001e1953;

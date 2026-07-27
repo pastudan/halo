@@ -735,7 +735,7 @@
         },
         {
           "addr": "0x1e6860",
-          "decl": "void FUN_001e6860(void);",
+          "decl": "int FUN_001e6860(const char *s1, const char *s2, unsigned int n);",
           "ported": false
         },
         {
