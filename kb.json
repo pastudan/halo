@@ -37915,8 +37915,8 @@
         },
         {
           "addr": "0x120930",
-          "decl": "void quaternion_decompress_6byte_renormalized(void);",
-          "ported": false
+          "decl": "void quaternion_decompress_6byte_renormalized(void *compressed, float *out);",
+          "ported": true
         },
         {
           "addr": "0x120950",

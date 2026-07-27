@@ -1858,37 +1858,12 @@ void animation_set_frame_size(void)
 #endif
 
 
-/* quaternion_decompress_6byte_renormalized (0x120930) — XBE naked draft (batch 258). */
-#if defined(__clang__)
-static void (*const b120930_c120870)(void *compressed_data, float *dest) = quaternion_decompress_6byte;
-static void (*const b120930_c10ca30)(float *quaternion) = sphere_intersects_rectangle3d;
-
-__attribute__((naked, noinline))
-void quaternion_decompress_6byte_renormalized(void)
+/* quaternion_decompress_6byte_renormalized (0x120930) — readable C lift. */
+void quaternion_decompress_6byte_renormalized(void *compressed, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c120870]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c10ca30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c120870] "m"(b120930_c120870), [c10ca30] "m"(b120930_c10ca30)
-      : "memory");
+  quaternion_decompress_6byte(compressed, out);
+  sphere_intersects_rectangle3d(out);
 }
-#else
-#error "quaternion_decompress_6byte_renormalized: clang naked draft required"
-#endif
-
 
 /* quaternion_compress_8byte (0x120950) — XBE naked draft (batch 269). */
 #if defined(__clang__)
