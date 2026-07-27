@@ -12508,41 +12508,21 @@ void FUN_001688d0(void)
 #endif
 
 
-/* FUN_00168ae0 (0x168ae0) — XBE naked draft (batch 376). */
-#if defined(__clang__)
-static void (*const b168ae0_c1be9f0)(void) = (void *)texture_cache_bitmap_delete;
-static uint32_t __stdcall (*const b168ae0_c1ed930)(void *resource) = (void *)D3DResource_Release;
-
-__attribute__((naked, noinline))
-void FUN_00168ae0(void)
+/* FUN_00168ae0 (0x168ae0) — readable C lift. */
+void FUN_00168ae0(void *obj)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1be9f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00168ae0_1\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00168ae0_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, 0x28(%%esi)\n\t"
-      ".LFUN_00168ae0_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1be9f0] "m"(b168ae0_c1be9f0), [c1ed930] "m"(b168ae0_c1ed930)
-      : "memory");
+  void *p;
+
+  texture_cache_bitmap_delete(obj);
+  if (!obj)
+    return;
+  p = *(void **)((char *)obj + 0x28);
+  if (!p)
+    return;
+  D3DResource_Release(p);
+  *(void **)((char *)obj + 0x28) = 0;
 }
-#else
-#error "FUN_00168ae0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00168b10 (0x168b10) — XBE naked draft (batch 341). */
@@ -14892,43 +14872,19 @@ void FUN_0016ab00(void)
 #endif
 
 
-/* FUN_0016b180 (0x16b180) — XBE naked draft (batch 375). */
-#if defined(__clang__)
-static void (*const b16b180_c16f910)(int16_t profile) = (void *)FUN_0016f910;
-
-__attribute__((naked, noinline))
+/* FUN_0016b180 (0x16b180) — readable C lift. */
 void FUN_0016b180(int flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x3256c4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0016b180_2\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, 0x325173\n\t"
-      "movb %%al, 0x47e002\n\t"
-      "je .LFUN_0016b180_1\n\t"
-      "pushl $1\n\t"
-      "call *%[c16f910]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016b180_1:\n\t"
-      "pushl $2\n\t"
-      "call *%[c16f910]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0016b180_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c16f910] "m"(b16b180_c16f910)
-      : "memory");
+  if (!*(unsigned char *)0x3256c4)
+    return;
+  *(unsigned char *)0x325173 = 1;
+  *(unsigned char *)0x47e002 = (unsigned char)flag;
+  if (flag)
+    FUN_0016f910(1);
+  else
+    FUN_0016f910(2);
 }
-#else
-#error "FUN_0016b180: clang naked draft required"
-#endif
+
 
 
 /* FUN_0016b1c0 (0x16b1c0) — XBE naked draft (batch 364). */

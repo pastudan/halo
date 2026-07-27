@@ -39090,8 +39090,9 @@
         },
         {
           "addr": "0x168ae0",
-          "decl": "void FUN_00168ae0(void);",
-          "ported": false
+          "decl": "void FUN_00168ae0(void *obj);",
+          "ported": true,
+          "name": "FUN_00168ae0"
         },
         {
           "addr": "0x168b10",
@@ -39181,7 +39182,7 @@
         {
           "addr": "0x16b180",
           "decl": "void FUN_0016b180(int flag);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0016b180"
         },
         {
