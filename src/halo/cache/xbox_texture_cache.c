@@ -333,70 +333,30 @@ void texture_cache_idle(void)
   lruv_idle(*(void **)0x4ea980);
 }
 
-/* texture_cache_bitmap_new (0x1be960) — XBE naked draft (batch 265). */
-#if defined(__clang__)
-static void (*const b1be960_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1be960_exitfn)(int) = system_exit;
-static void *(*const b1be960_tag)(int, int) = tag_get;
-static int (*const b1be960_c7e040)(void *bitmap_data) = bitmap_get_pixel_data_size;
-
-__attribute__((naked, noinline))
-void texture_cache_bitmap_new(int tag_index __attribute__((unused)), void *bitmap __attribute__((unused)))
+/* texture_cache_bitmap_new (0x1be960) — readable C lift. */
+void texture_cache_bitmap_new(int tag_index, void *bitmap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movb 0xe(%%esi), %%al\n\t"
-      "movl $0x80, %%ebx\n\t"
-      "testb %%al, %%bl\n\t"
-      "pushl %%edi\n\t"
-      "je .Ltexture_cache_bitmap_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9d\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b96a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltexture_cache_bitmap_new_1:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "orw %%bx, 0xe(%%esi)\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x6269746d\n\t"
-      "movl $0xffffffff, 0x24(%%esi)\n\t"
-      "movl %%ebx, 0x2c(%%esi)\n\t"
-      "movl %%ebx, 0x28(%%esi)\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x38(%%eax), %%eax\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ecx, 0x18(%%esi)\n\t"
-      "call *%[c7e040]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, 0x20(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, 0x2c(%%esi)\n\t"
-      "movl %%ebx, 0x28(%%esi)\n\t"
-      "movl %%eax, 0x1c(%%esi)\n\t"
-      "movl $0xffffffff, 0x24(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1be960_assert), [exitfn] "m"(b1be960_exitfn), [tag] "m"(b1be960_tag), [c7e040] "m"(b1be960_c7e040)
-      : "memory");
-}
-#else
-#error "texture_cache_bitmap_new: clang naked draft required"
-#endif
+  char *entry = (char *)bitmap;
+  void *tag;
+  int size;
 
+  if ((entry[0xe] & 0x80) != 0) {
+    display_assert((const char *)0x2b96a8, (const char *)0x2b96d8, 0x9d, 1);
+    system_exit(-1);
+  }
+  *(unsigned short *)(entry + 0xe) |= 0x80;
+  *(int *)(entry + 0x24) = -1;
+  *(int *)(entry + 0x2c) = 0;
+  *(int *)(entry + 0x28) = 0;
+  tag = tag_get(0x6269746d, tag_index);
+  *(int *)(entry + 0x18) += *(int *)((char *)tag + 0x38);
+  size = bitmap_get_pixel_data_size(entry);
+  *(int *)(entry + 0x20) = tag_index;
+  *(int *)(entry + 0x2c) = 0;
+  *(int *)(entry + 0x28) = 0;
+  *(int *)(entry + 0x1c) = size;
+  *(int *)(entry + 0x24) = -1;
+}
 
 /* texture_cache_bitmap_delete (0x1be9f0) — readable C lift. */
 void texture_cache_bitmap_delete(void *entry)
