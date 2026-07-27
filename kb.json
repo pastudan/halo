@@ -27114,8 +27114,9 @@
         },
         {
           "addr": "0x82bd0",
-          "decl": "void FUN_00082bd0(void);",
-          "ported": false
+          "decl": "void FUN_00082bd0(void *xnaddr, uint32_t *key, uint32_t *nonce, uint16_t port, void *addr);",
+          "ported": true,
+          "name": "FUN_00082bd0"
         },
         {
           "addr": "0x82c90",
@@ -33833,6 +33834,12 @@
           "addr": "0x2235f3",
           "name": "xnet_fd_isset",
           "decl": "int __stdcall xnet_fd_isset(int fd, void *fds);",
+          "ported": false
+        },
+        {
+          "addr": "0x222e31",
+          "name": "xnet_xnaddr_to_inaddr",
+          "decl": "int __stdcall xnet_xnaddr_to_inaddr(void *xnaddr, void *key, uint32_t *in_addr);",
           "ported": false
         }
       ],

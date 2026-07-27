@@ -1545,89 +1545,29 @@ short FUN_00082a90(void)
   FUN_00081e00(key, nonce);
   return 0;
 }
-/* FUN_00082bd0 (0x82bd0) — XBE naked draft (batch 257). */
-#if defined(__clang__)
-static void (*const b82bd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82bd0_exitfn)(int) = system_exit;
-static int __stdcall (*const b82bd0_c222df7)(void *key) = FUN_00222df7;
-static void (*const b82bd0_c81e00)(uint32_t *, uint32_t *) = FUN_00081e00;
-static void b82bd0_c222e31_tgt(void) { return; }
-static void (*const b82bd0_c222e31)(void) = b82bd0_c222e31_tgt;
-
-__attribute__((naked, noinline))
-void FUN_00082bd0(void)
+/* FUN_00082bd0 (0x82bd0) — readable C lift: build transport addr from xnaddr. */
+void FUN_00082bd0(void *xnaddr, uint32_t *key, uint32_t *nonce, uint16_t port, void *addr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movb 0x335091, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00082bd0_3\n\t"
-      "movl 0x335094, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00082bd0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2664a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00082bd0_1:\n\t"
-      "decl 0x335094\n\t"
-      "jne .LFUN_00082bd0_2\n\t"
-      "pushl $0x5ab220\n\t"
-      "call *%[c222df7]\n\t"
-      ".LFUN_00082bd0_2:\n\t"
-      "movb $0, 0x335091\n\t"
-      ".LFUN_00082bd0_3:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81e00]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c222e31]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x10, %%edx\n\t"
-      "andl $0xff0000, %%ecx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "andl $0xff00, %%edx\n\t"
-      "shll $0x10, %%eax\n\t"
-      "orl %%eax, %%edx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "shrl $8, %%ecx\n\t"
-      "shll $8, %%edx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movw 0x14(%%ebp), %%cx\n\t"
-      "movw $4, 0x10(%%eax)\n\t"
-      "movw %%cx, 0x12(%%eax)\n\t"
-      "movl $0, 0x14(%%eax)\n\t"
-      "movb $1, 0x335091\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82bd0_assert), [exitfn] "m"(b82bd0_exitfn), [c222df7] "m"(b82bd0_c222df7), [c81e00] "m"(b82bd0_c81e00), [c222e31] "m"(b82bd0_c222e31)
-      : "memory");
-}
-#else
-#error "FUN_00082bd0: clang naked draft required"
-#endif
+  uint32_t ip;
 
+  if (*(uint8_t *)0x335091 != 0) {
+    assert_halt(*(int *)0x335094 > 0);
+    *(int *)0x335094 -= 1;
+    if (*(int *)0x335094 == 0)
+      FUN_00222df7((void *)0x5ab220);
+    *(uint8_t *)0x335091 = 0;
+  }
+
+  FUN_00081e00(key, nonce);
+  xnet_xnaddr_to_inaddr(xnaddr, nonce, &ip);
+  ip = (((ip & 0xff0000u) | (ip >> 16)) >> 8) |
+       (((ip & 0xff00u) | (ip << 16)) << 8);
+  *(uint32_t *)addr = ip;
+  *(uint16_t *)((char *)addr + 0x10) = 4;
+  *(uint16_t *)((char *)addr + 0x12) = port;
+  *(uint32_t *)((char *)addr + 0x14) = 0;
+  *(uint8_t *)0x335091 = 1;
+}
 
 /* FUN_00082c90 (0x82c90) — readable C lift. */
 char FUN_00082c90(void *endpoint)
