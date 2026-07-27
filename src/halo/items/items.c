@@ -1,64 +1,25 @@
-/* FUN_000f52f0 (0xf52f0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-wchar_t * FUN_000f52f0(void *widget __attribute__((unused)))
+/* FUN_000f52f0 (0xf52f0) — readable C lift. */
+wchar_t *FUN_000f52f0(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl 0x8(%%eax), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "ja .LFUN_000f52f0_5\n\t"
-      "jmp *.LFUN_000f52f0_jt(,%%eax,4)\n\t"
-      ".LFUN_000f52f0_1:\n\t"
-      "movw $0x31, 0x46cee8\n\t"
-      "movw $0, 0x46ceea\n\t"
-      "movl $0x46cee8, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f52f0_2:\n\t"
-      "movw $0x32, 0x46cee8\n\t"
-      "movw $0, 0x46ceea\n\t"
-      "movl $0x46cee8, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f52f0_3:\n\t"
-      "movw $0x33, 0x46cee8\n\t"
-      "movw $0, 0x46ceea\n\t"
-      "movl $0x46cee8, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f52f0_4:\n\t"
-      "movw $0x34, 0x46cee8\n\t"
-      "movw $0, 0x46ceea\n\t"
-      "movl $0x46cee8, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f52f0_5:\n\t"
-      "movw $0x3f, 0x46cee8\n\t"
-      "movw $0, 0x46ceea\n\t"
-      "movl $0x46cee8, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000f52f0_jt:\n\t"
-      ".long .LFUN_000f52f0_1\n\t"
-      ".long .LFUN_000f52f0_1\n\t"
-      ".long .LFUN_000f52f0_2\n\t"
-      ".long .LFUN_000f52f0_3\n\t"
-      ".long .LFUN_000f52f0_4\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  int idx;
+  wchar_t ch;
+
+  idx = *(int16_t *)((char *)widget + 8) + 1;
+  if (idx == 0 || idx == 1)
+    ch = 0x31;
+  else if (idx == 2)
+    ch = 0x32;
+  else if (idx == 3)
+    ch = 0x33;
+  else if (idx == 4)
+    ch = 0x34;
+  else
+    ch = 0x3f;
+  *(wchar_t *)0x46cee8 = ch;
+  *(wchar_t *)0x46ceea = 0;
+  return (wchar_t *)0x46cee8;
 }
-#else
-#error "FUN_000f52f0: clang naked draft required"
-#endif
+
 
 
 /* Virtual on-screen keyboard initialization (items.obj).

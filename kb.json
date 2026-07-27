@@ -3661,7 +3661,7 @@
         {
           "addr": "0x14ba0",
           "decl": "void FUN_00014ba0(int actor_handle, int *param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14c10",
@@ -4026,7 +4026,7 @@
         {
           "addr": "0x1a600",
           "decl": "void FUN_0001a600(int actor_handle, int *param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a670",

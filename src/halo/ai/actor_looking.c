@@ -1267,57 +1267,22 @@ void FUN_00014b70(int actor_handle)
   *(char *)(actor + 0xa2) = 1;
 }
 
-/* FUN_00014ba0 (0x14ba0) — XBE naked draft (batch 76). */
-#if defined(__clang__)
-static void *(*const b14ba0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_00014ba0(int actor_handle __attribute__((unused)), int *param_2 __attribute__((unused)))
+/* FUN_00014ba0 (0x14ba0) — readable C lift. */
+void FUN_00014ba0(int actor_handle, int *param_2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x9c, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0xc(%%eax)\n\t"
-      "jle .LFUN_00014ba0_1\n\t"
-      "movl 0x2ee6e0, %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl 0xc(%%edx), %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00014ba0_1:\n\t"
-      "movl 0x2ee6d4, %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "movl %%eax, 0xc(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b14ba0_dget)
-      : "memory");
+  unsigned char *actor;
+  int *src;
+  int i;
+
+  actor = (unsigned char *)datum_get(*(void **)0x6325a4, actor_handle) + 0x9c;
+  if (*(int16_t *)(actor + 0xc) > 0)
+    src = *(int **)0x2ee6e0;
+  else
+    src = *(int **)0x2ee6d4;
+  for (i = 0; i < 4; i++)
+    param_2[i] = src[i];
 }
-#else
-#error "FUN_00014ba0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00014c10 (0x14c10)
@@ -8316,58 +8281,22 @@ void FUN_0001a5d0(int actor_handle)
   *(int *)(actor + 0xac) = -1;
 }
 
-/* FUN_0001a600 (0x1a600) — XBE naked draft (batch 76). */
-#if defined(__clang__)
-static void *(*const b1a600_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_0001a600(int actor_handle __attribute__((unused)), int *param_2 __attribute__((unused)))
+/* FUN_0001a600 (0x1a600) — readable C lift. */
+void FUN_0001a600(int actor_handle, int *param_2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x9c(%%eax), %%cl\n\t"
-      "addl $0x9c, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_0001a600_1\n\t"
-      "movl 0x2ee6d8, %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl 0xc(%%edx), %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0001a600_1:\n\t"
-      "movl 0x2ee6ec, %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "movl %%eax, 0xc(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1a600_dget)
-      : "memory");
+  unsigned char *actor;
+  int *src;
+  int i;
+
+  actor = (unsigned char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (actor[0x9c] != 0)
+    src = *(int **)0x2ee6d8;
+  else
+    src = *(int **)0x2ee6ec;
+  for (i = 0; i < 4; i++)
+    param_2[i] = src[i];
 }
-#else
-#error "FUN_0001a600: clang naked draft required"
-#endif
+
 
 
 /* FUN_0001a670 (0x1a670) — XBE naked draft (batch 78). */
