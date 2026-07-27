@@ -26580,7 +26580,7 @@
         {
           "addr": "0x196e10",
           "decl": "void FUN_00196e10(uint16_t *sound_list@<edi>, void *env@<ebx>, float distance);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00196e10"
         },
         {
