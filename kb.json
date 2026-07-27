@@ -40379,8 +40379,9 @@
         },
         {
           "addr": "0x80f00",
-          "decl": "void FUN_00080f00(void);",
-          "ported": false
+          "decl": "void FUN_00080f00(unsigned int *out);",
+          "ported": true,
+          "name": "FUN_00080f00"
         },
         {
           "addr": "0x80fc0",

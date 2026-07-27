@@ -803,99 +803,38 @@ unsigned int FUN_00080eb0(unsigned int limit)
   return result;
 }
 
-/* FUN_00080f00 (0x80f00) — XBE naked draft (batch 139). */
-#if defined(__clang__)
-static void (*const b80f00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80f00_exitfn)(int) = system_exit;
-static unsigned int * (*const b80f00_c80d50)(unsigned int limit, unsigned int *num_primes) = sieve_of_eratosthenes;
-static void (*const b80f00_c81410)(void) = FUN_00081410;
-static void (*const b80f00_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-static void (*const b80f00_c800d0)(void) = (void *)FUN_000800d0;
-static void (*const b80f00_c7ff40)(void) = (void *)FUN_0007ff40;
-
-__attribute__((naked, noinline))
-void FUN_00080f00(void)
+/* FUN_00080f00 (0x80f00) — readable C lift. */
+void FUN_00080f00(unsigned int *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl %%esi, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_00080f00_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96\n\t"
-      "pushl $0x265d54\n\t"
-      "pushl $0x25f120\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00080f00_1:\n\t"
-      "movl $1, (%%ebx)\n\t"
-      "movl %%esi, 0x4(%%ebx)\n\t"
-      "movl $2, -0x14(%%ebp)\n\t"
-      "movl %%esi, -0x10(%%ebp)\n\t"
-      "movl $4, 0x8(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00080f00_2:\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xffff\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[c80d50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00080f00_3\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c81410]\n\t"
-      "movl (%%esi,%%eax,4), %%edi\n\t"
-      "pushl $0x89\n\t"
-      "pushl $0x265d54\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00080f00_3:\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "call *%[c800d0]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jne .LFUN_00080f00_2\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7ff40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80f00_assert), [exitfn] "m"(b80f00_exitfn), [c80d50] "m"(b80f00_c80d50), [c81410] "m"(b80f00_c81410), [c8ef70] "m"(b80f00_c8ef70), [c800d0] "m"(b80f00_c800d0), [c7ff40] "m"(b80f00_c7ff40)
-      : "memory");
-}
-#else
-#error "FUN_00080f00: clang naked draft required"
-#endif
+  unsigned int i;
+  unsigned int nprimes;
+  unsigned int *primes;
+  unsigned int prime;
+  unsigned int tmp[2];
+  unsigned int acc[2];
 
+  if (out == 0) {
+    display_assert((const char *)0x25f120, (const char *)0x265d54, 0x96, 1);
+    system_exit(-1);
+  }
+  out[0] = 1;
+  out[1] = 0;
+  acc[0] = 2;
+  acc[1] = 0;
+  for (i = 0; i < 4; i++) {
+    prime = 0;
+    primes = sieve_of_eratosthenes(0xffff, &nprimes);
+    if (primes != 0) {
+      unsigned int idx = FUN_00081410(0, nprimes - 1);
+      prime = primes[idx];
+      debug_free(primes, (char *)0x265d54, 0x89);
+    }
+    tmp[0] = prime;
+    tmp[1] = 0;
+    FUN_000800d0((unsigned short *)out, (unsigned short *)tmp, (unsigned short *)out);
+  }
+  FUN_0007ff40((const unsigned short *)out, (const unsigned short *)acc, (unsigned short *)out);
+}
 
 /* FUN_00080fc0 (0x80fc0) — readable C lift (eax/ecx/edx register ABI). */
 unsigned int FUN_00080fc0(unsigned int a, unsigned int c, unsigned int d)
