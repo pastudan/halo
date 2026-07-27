@@ -317,74 +317,28 @@ void actor_get_stopping_distances(int actor_handle __attribute__((unused)), floa
 #endif
 
 
-/* actor_move_animation_impulse (0x2a7e0) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void *(*const b2a7e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b2a7e0_c3ca40)(int actor_handle, char flag) = actor_set_dormant;
-static bool (*const b2a7e0_c1a9ad0)(int unit_handle) = unit_is_busy;
-
-__attribute__((naked, noinline))
-int actor_move_animation_impulse(int actor_handle __attribute__((unused)), int16_t param_2 __attribute__((unused)), int *param_3 __attribute__((unused)))
+/* actor_move_animation_impulse (0x2a7e0) — readable C lift from XBE leaf. */
+int actor_move_animation_impulse(int actor_handle, int16_t param_2, int *param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c3ca40]\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpw $-1, 0x418(%%eax)\n\t"
-      "jne .Lactor_move_animation_impulse_2\n\t"
-      "movl 0x18(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_move_animation_impulse_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a9ad0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_move_animation_impulse_2\n\t"
-      ".Lactor_move_animation_impulse_1:\n\t"
-      "movw 0xc(%%ebp), %%dx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movw %%dx, 0x418(%%edi)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x41c(%%edi)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x420(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_move_animation_impulse_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2a7e0_dget), [c3ca40] "m"(b2a7e0_c3ca40), [c1a9ad0] "m"(b2a7e0_c1a9ad0)
-      : "memory");
+  char *actor;
+  char *actor2;
+
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  actor_set_dormant(actor_handle, 0);
+  actor2 = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (*(short *)(actor2 + 0x418) != -1) {
+    return 0;
+  }
+  if (*(int *)(actor2 + 0x18) != -1 && unit_is_busy(*(int *)(actor2 + 0x18))) {
+    return 0;
+  }
+  *(short *)(actor + 0x418) = param_2;
+  *(int *)(actor + 0x41c) = param_3[0];
+  *(int *)(actor + 0x420) = param_3[1];
+  return 1;
 }
-#else
-#error "actor_move_animation_impulse: clang naked draft required"
-#endif
+
+
 
 
 /* actor_move_force_stop (0x2a860) — readable C lift from XBE leaf. */

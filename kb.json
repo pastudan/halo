@@ -27216,7 +27216,8 @@
         {
           "addr": "0xe4800",
           "decl": "void ui_widget_link_child(void *parent, void *child@<ebx>);",
-          "ported": false
+          "ported": true,
+          "name": "ui_widget_link_child"
         },
         {
           "addr": "0xe4890",
@@ -34271,7 +34272,7 @@
         {
           "addr": "0x2a7e0",
           "decl": "int actor_move_animation_impulse(int actor_handle, int16_t param_2, int *param_3);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_animation_impulse"
         },
         {

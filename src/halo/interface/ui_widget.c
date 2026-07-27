@@ -2177,79 +2177,40 @@ void display_error_abort_to_dashboard_deferred(short error_handle, char flag)
   *(char *)0x46cc6a = flag;
 }
 
-/* ui_widget_link_child (0xe4800) — XBE naked draft (batch 147). */
-#if defined(__clang__)
-static void (*const be4800_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be4800_exitfn)(int) = (void *)system_exit;
-
-__attribute__((naked, noinline))
+/* ui_widget_link_child (0xe4800) — readable C lift from XBE leaf. */
 void ui_widget_link_child(void *parent, void *child)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x34(%%eax), %%esi\n\t"
-      "movl 0x28(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lui_widget_link_child_1\n\t"
-      "movl 0x2c(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_link_child_2\n\t"
-      ".Lui_widget_link_child_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa9f\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283588\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_link_child_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_link_child_5\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lui_widget_link_child_3:\n\t"
-      "movl %%esi, %%edi\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_link_child_3\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lui_widget_link_child_5\n\t"
-      "movl 0x2c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_link_child_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xaa9\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x28356c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_link_child_4:\n\t"
-      "movl %%ebx, 0x2c(%%edi)\n\t"
-      "movl %%edi, 0x28(%%ebx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lui_widget_link_child_5:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, 0x34(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be4800_assert), [exitfn] "m"(be4800_exitfn)
-      : "memory");
+  void *iter;
+  void *last;
+
+  if (*(void **)((char *)child + 0x28) != 0 ||
+      *(void **)((char *)child + 0x2c) != 0) {
+    display_assert((const char *)0x283588, (const char *)0x283280, 0xa9f, 1);
+    system_exit(-1);
+  }
+  iter = *(void **)((char *)parent + 0x34);
+  if (iter == 0) {
+    *(void **)((char *)parent + 0x34) = child;
+    return;
+  }
+  last = 0;
+  while (iter != 0) {
+    last = iter;
+    iter = *(void **)((char *)iter + 0x2c);
+  }
+  if (last == 0) {
+    *(void **)((char *)parent + 0x34) = child;
+    return;
+  }
+  if (*(void **)((char *)last + 0x2c) != 0) {
+    display_assert((const char *)0x28356c, (const char *)0x283280, 0xaa9, 1);
+    system_exit(-1);
+  }
+  *(void **)((char *)last + 0x2c) = child;
+  *(void **)((char *)child + 0x28) = last;
 }
-#else
-#error "ui_widget_link_child: clang naked draft required"
-#endif
+
+
 
 
 /* widget_instance_get_opacity_product (0xe4960) — readable C lift. */
