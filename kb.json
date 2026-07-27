@@ -28368,7 +28368,7 @@
         {
           "addr": "0x19e8e0",
           "decl": "int ufprintf(void *stream, const wchar_t *format, ...);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19e980",
@@ -28378,7 +28378,7 @@
         {
           "addr": "0x19eaa0",
           "decl": "int usprintf(wchar_t *buffer, const wchar_t *format, ...);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19eb50",
