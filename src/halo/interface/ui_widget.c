@@ -10877,93 +10877,51 @@ void ui_widget_list_next(void *widget)
 #endif
 
 
-/* ui_widget_close_and_reload (0xe68e0) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static void (*const be68e0_ce4770)(int *head, void *record) = (void *)ui_widget_pending_load_pop;
-static void (*const be68e0_ce5620)(void *widget) = (void *)ui_widget_close;
-static void * (*const be68e0_ce84e0)(const char *name, int tag_index, int is_child, int widget_stack, int parent_tag_index, int a6, int a7) = (void *)ui_widget_load_by_name_or_tag;
-static void (*const be68e0_ce5090)(int a6, int widget, int16_t a7) = (void *)ui_widget_pending_load_apply;
-
-__attribute__((naked, noinline))
+/* ui_widget_close_and_reload (0xe68e0) — readable C lift. */
 void ui_widget_close_and_reload(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x8(%%ebx), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "sete %%cl\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "decl %%ecx\n\t"
-      "andl %%ecx, %%eax\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "leal 0x46cc30(,%%eax,4), %%edi\n\t"
-      "cmpl $0, (%%edi)\n\t"
-      "je .Lui_widget_close_and_reload_1\n\t"
-      "leal -0x10(%%ebp), %%esi\n\t"
-      "call *%[ce4770]\n\t"
-      "movl -0x6(%%ebp), %%esi\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      "jmp .Lui_widget_close_and_reload_2\n\t"
-      ".Lui_widget_close_and_reload_1:\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      ".Lui_widget_close_and_reload_2:\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "movl 0x30(%%ebx), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lui_widget_close_and_reload_4\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lui_widget_close_and_reload_3:\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x30(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lui_widget_close_and_reload_3\n\t"
-      ".Lui_widget_close_and_reload_4:\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce5620]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lui_widget_close_and_reload_5\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[ce84e0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_close_and_reload_5\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "call *%[ce5090]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lui_widget_close_and_reload_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce4770] "m"(be68e0_ce4770), [ce5620] "m"(be68e0_ce5620), [ce84e0] "m"(be68e0_ce84e0), [ce5090] "m"(be68e0_ce5090)
-      : "memory");
-}
-#else
-#error "ui_widget_close_and_reload: clang naked draft required"
-#endif
+  unsigned short controller;
+  int root_index;
+  int *head;
+  int pending[3];
+  int tag_index;
+  int widget_stack;
+  int a6;
+  short a7;
+  void *root;
+  void *loaded;
 
+  controller = *(unsigned short *)((char *)widget + 8);
+  if (controller == 0xffffu)
+    root_index = 0;
+  else
+    root_index = (int)(short)controller;
+  head = (int *)(0x46cc30 + root_index * 4);
+  widget_stack = -1;
+  if (*head != 0) {
+    ui_widget_pending_load_pop(head, pending);
+    tag_index = pending[0];
+    a6 = pending[1];
+    a7 = (short)(pending[2] & 0xffff);
+    widget_stack = (int)(short)((unsigned)pending[2] >> 16);
+  } else {
+    tag_index = -1;
+    a6 = 0;
+    a7 = 0;
+  }
+
+  root = widget;
+  while (*(void **)((char *)root + 0x30) != 0)
+    root = *(void **)((char *)root + 0x30);
+  ui_widget_close(root);
+
+  if (tag_index != -1) {
+    loaded = ui_widget_load_by_name_or_tag(
+        0, tag_index, 0, widget_stack, -1, -1, -1);
+    if (loaded != 0)
+      ui_widget_pending_load_apply(a6, (int)loaded, a7);
+  }
+}
 
 /* ui_widget_list_next_item (0xe6ab0) — XBE naked draft (batch 115). */
 #if defined(__clang__)

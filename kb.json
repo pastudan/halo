@@ -27521,7 +27521,7 @@
         {
           "addr": "0xe68e0",
           "decl": "void ui_widget_close_and_reload(void *widget /* @<eax> */);",
-          "ported": false,
+          "ported": true,
           "name": "ui_widget_close_and_reload"
         },
         {
