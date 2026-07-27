@@ -1181,17 +1181,22 @@ int64_t transport_get_key_id(void)
   return *(uint32_t *)0x5ab220;
 }
 
-/* 0x820d0 */
+/* transport_get_key (0x820d0) — readable C lift. */
 void *transport_get_key(void *dst)
 {
-  int eax = 0;
+  extern char DAT_002664a8[];
+  extern char DAT_00266458[];
+  uint32_t *out = (uint32_t *)dst;
 
-  /* test eax, eax -> jg 0x820fc */
-  display_assert((char *)0x002664a8, (char *)0x00266458, 231, 0);
-  system_exit(0);
-  return NULL;
-
-  (void)eax;
+  if (*(int *)0x335094 <= 0) {
+    display_assert(DAT_002664a8, DAT_00266458, 0xe7, 1);
+    system_exit(-1);
+  }
+  out[0] = *(uint32_t *)0x5ab210;
+  out[1] = *(uint32_t *)0x5ab214;
+  out[2] = *(uint32_t *)0x5ab218;
+  out[3] = *(uint32_t *)0x5ab21c;
+  return dst;
 }
 
 /* create_endpoint_set (0x82310) — XBE naked draft (batch 256). */

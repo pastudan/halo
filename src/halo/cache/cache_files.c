@@ -1,6 +1,9 @@
 #include <stdint.h>
 /* --- cache_files.obj batch drafts (2026-07-26) --- */
 
+/* Defined in cache_files_windows.c; missing from generated decl.h. */
+bool cache_files_precache_in_progress(void);
+
 /* scenario_tags_unload (0x1b9890) — readable C lift. */
 void scenario_tags_unload(void)
 {

@@ -1,6 +1,12 @@
 #include <stdint.h>
 /* Xbox texture cache: retrieve and block on hardware texture data.
  * Source: c:\halo\SOURCE\cache\xbox_texture_cache.c */
+
+/* Defined in memory/lruv_cache.c; missing from generated decl.h. */
+void *lruv_new(int name, int page_count, int page_size_bits,
+               int maximum_block_count, void (*delete_cb)(int),
+               int (*query_cb)(int));
+
 #ifdef HALO_RETAIL64
 #define HALO_TEXTURE_CACHE_SIZE 0x800000
 #else

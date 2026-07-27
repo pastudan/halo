@@ -17328,7 +17328,7 @@
         {
           "addr": "0x8a5f0",
           "decl": "void observer_reconnect_to_structure_bsp(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8a660",
@@ -25326,7 +25326,7 @@
         {
           "addr": "0x1ba0c0",
           "decl": "void FUN_001ba0c0(void *element);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ba140",
@@ -26807,7 +26807,7 @@
         {
           "addr": "0x820d0",
           "decl": "void *transport_get_key(void *dst);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x82310",
