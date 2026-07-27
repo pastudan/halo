@@ -8760,7 +8760,7 @@
         {
           "addr": "0xb4bf0",
           "decl": "void FUN_000b4bf0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000b4bf0"
         },
         {
@@ -17529,7 +17529,7 @@
           "addr": "0x1417c0",
           "decl": "void objects_reconnect_to_structure_bsp(void);",
           "name": "objects_reconnect_to_structure_bsp",
-          "ported": false,
+          "ported": true,
           "source": "src/halo/objects/objects.c"
         },
         {
@@ -19095,7 +19095,7 @@
         {
           "addr": "0xba970",
           "decl": "void player_control_update_for_loaded_game_state(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_control_update_for_loaded_game_state"
         },
         {
