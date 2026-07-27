@@ -14945,12 +14945,13 @@ int rasterizer_widget_submit(int mode)
 }
 
 /* 0x17c980 */
+/* rasterizer_widget_begin — readable C lift (jmp thunk). */
 void *rasterizer_widget_begin(int handle)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  FUN_0015ea70(handle);
 }
+
+
 
 /* rasterizer_widget_set_texture (0x17c990) — XBE naked draft (batch 398). */
 #if defined(__clang__)

@@ -21210,7 +21210,7 @@
         {
           "addr": "0x17c980",
           "decl": "void *rasterizer_widget_begin(int handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c990",
