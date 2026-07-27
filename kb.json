@@ -963,7 +963,7 @@
         {
           "addr": "0x1db180",
           "decl": "wchar_t *_wcscpy(wchar_t *dest, const wchar_t *src);",
-          "ported": false,
+          "ported": true,
           "name": "_wcscpy"
         },
         {
