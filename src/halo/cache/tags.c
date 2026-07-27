@@ -225,66 +225,27 @@ void FUN_001b9fa0(void)
 #endif
 
 
-/* FUN_001ba0c0 (0x1ba0c0) — XBE naked draft (batch 276). */
-#if defined(__clang__)
-static void (*const b1ba0c0_c1bce30)(void *block) = structure_bsp_header_deregister_vertex_buffers;
-static int * (*const b1ba0c0_c1b9bf0)(int tag_index) = tag_instance_resolve;
-static void (*const b1ba0c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1ba0c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001ba0c0(void *element __attribute__((unused)))
+/* FUN_001ba0c0 (0x1ba0c0) — readable C lift. */
+void FUN_001ba0c0(void *element)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4e5508, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bce30]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x1c(%%ecx), %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c1b9bf0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%esi), %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jne .LFUN_001ba0c0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xcd\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl $0x2b8188\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba0c0_1:\n\t"
-      "cmpl $0x73627370, (%%esi)\n\t"
-      "je .LFUN_001ba0c0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xce\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl $0x2b80dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba0c0_2:\n\t"
-      "movl %%edi, 0x14(%%esi)\n\t"
-      "movl %%edi, 0x4e5508\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1bce30] "m"(b1ba0c0_c1bce30), [c1b9bf0] "m"(b1ba0c0_c1b9bf0), [assert] "m"(b1ba0c0_assert), [exitfn] "m"(b1ba0c0_exitfn)
-      : "memory");
+  extern char DAT_002b8188[];
+  extern char DAT_002b7dc8[];
+  extern char DAT_002b80dc[];
+  int *inst;
+
+  structure_bsp_header_deregister_vertex_buffers(*(void **)0x4e5508);
+  inst = tag_instance_resolve(*(int *)((char *)element + 0x1c));
+  if (!inst[5]) {
+    display_assert(DAT_002b8188, DAT_002b7dc8, 0xcd, 1);
+    system_exit(-1);
+  }
+  if (inst[0] != 0x73627370) {
+    display_assert(DAT_002b80dc, DAT_002b7dc8, 0xce, 1);
+    system_exit(-1);
+  }
+  inst[5] = 0;
+  *(int *)0x4e5508 = 0;
 }
-#else
-#error "FUN_001ba0c0: clang naked draft required"
-#endif
 
 
 /* FUN_001ba250 (0x1ba250) — readable C lift. */

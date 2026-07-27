@@ -3031,62 +3031,24 @@ char observer_command_has_finished(short index)
   return 1;
 }
 
-/* observer_reconnect_to_structure_bsp (0x8a5f0) — XBE naked draft (batch 160). */
-#if defined(__clang__)
-static int (*const b8a5f0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void (*const b8a5f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b8a5f0_exitfn)(int) = system_exit;
-static void (*const b8a5f0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-
-__attribute__((naked, noinline))
+/* observer_reconnect_to_structure_bsp (0x8a5f0) — readable C lift. */
 void observer_reconnect_to_structure_bsp(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x33579c, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lobserver_reconnect_to_structure_bsp_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lobserver_reconnect_to_structure_bsp_4\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lobserver_reconnect_to_structure_bsp_2\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lobserver_reconnect_to_structure_bsp_3\n\t"
-      ".Lobserver_reconnect_to_structure_bsp_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x72\n\t"
-      "pushl $0x2673a8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lobserver_reconnect_to_structure_bsp_3:\n\t"
-      "leal -0xc(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18f180]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lobserver_reconnect_to_structure_bsp_4:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x29c, %%edi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lobserver_reconnect_to_structure_bsp_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [cba3c0] "m"(b8a5f0_cba3c0), [assert] "m"(b8a5f0_assert), [exitfn] "m"(b8a5f0_exitfn), [c18f180] "m"(b8a5f0_c18f180)
-      : "memory");
+  extern char DAT_00266fc0[];
+  extern char DAT_002673a8[];
+  int16_t i;
+  char *obs = (char *)0x33579c;
+
+  for (i = 0; i < 4; i++, obs += 0x29c) {
+    if (local_player_get_player_index(i) == -1)
+      continue;
+    if (i < 0 || i >= 4) {
+      display_assert(DAT_00266fc0, DAT_002673a8, 0x72, 1);
+      system_exit(-1);
+    }
+    scenario_location_from_point(obs, obs - 0xc);
+  }
 }
-#else
-#error "observer_reconnect_to_structure_bsp: clang naked draft required"
-#endif
 
 
 /* observer_obsolete_position (0x8aa30) — readable C lift. */
