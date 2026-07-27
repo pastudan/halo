@@ -957,7 +957,7 @@
         {
           "addr": "0x1db156",
           "decl": "wchar_t *_wcscat(wchar_t *dest, const wchar_t *src);",
-          "ported": false,
+          "ported": true,
           "name": "_wcscat"
         },
         {
