@@ -27782,8 +27782,9 @@
         },
         {
           "addr": "0xf0170",
-          "decl": "void FUN_000f0170(void *widget);",
-          "ported": false
+          "decl": "char FUN_000f0170(void *widget, void *player_ui);",
+          "ported": true,
+          "name": "FUN_000f0170"
         },
         {
           "addr": "0xf01d0",
@@ -27909,7 +27910,8 @@
         {
           "addr": "0xf2850",
           "decl": "void FUN_000f2850(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2850"
         },
         {
           "addr": "0xf28e0",
