@@ -12319,7 +12319,7 @@
         {
           "addr": "0xc9840",
           "decl": "char FUN_000c9840(int list_handle, int16_t scenario_index, float distance);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000c9840"
         },
         {
