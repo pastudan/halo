@@ -4087,7 +4087,7 @@
         },
         {
           "addr": "0x27a10",
-          "decl": "int FUN_00027a10(int actor_handle /* @<eax> */);",
+          "decl": "int FUN_00027a10(int actor_handle);",
           "ported": true
         },
         {
@@ -12494,7 +12494,7 @@
         },
         {
           "addr": "0xcaa80",
-          "decl": "char *hs_get_thread_script_name(int thread_index@<esi>);",
+          "decl": "char *hs_get_thread_script_name(int thread_index);",
           "ported": true
         },
         {
@@ -16792,7 +16792,7 @@
         },
         {
           "addr": "0x13df70",
-          "decl": "void object_postprocess_node_matrices(data_t *data, int object_handle@<ebx>);",
+          "decl": "void object_postprocess_node_matrices(data_t *data, int object_handle);",
           "ported": true
         },
         {
@@ -29656,7 +29656,7 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle@<esi>, int unused);",
+          "decl": "char *unit_get_weapon_name(int unit_handle, int unused);",
           "name": "unit_get_weapon_name",
           "ported": true,
           "obj": "units.obj"

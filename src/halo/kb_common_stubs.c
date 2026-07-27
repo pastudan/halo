@@ -32,10 +32,75 @@ void FUN_00067710(unsigned short tag /*@<ax>*/, unsigned int value /*@<ecx>*/,
   *((unsigned int *)out + 2) = masked;
 }
 
-/* FUN_00067760 — lifted to bitmaps/libtiff/tif_dirwrite.c. */
-#if 0
-#endif
+/* FUN_00067760 (0x67760) — XBE naked draft (batch 346). */
+#if defined(__clang__)
+static void (*const b67760_c1e24d2)(void) = __lseek;
+static void (*const b67760_c1df419)(void) = __write;
+static void (*const b67760_c66380)(void) = TIFFDefaultDirectory;
+static void (*const b67760_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
+__attribute__((naked, noinline))
+int FUN_00067760(void *data __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x3340b0, %%eax\n\t"
+      "movzwl 0x2(%%edi), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, 0x8(%%edi)\n\t"
+      "movswl 0x4(%%ebx), %%edx\n\t"
+      "movl 0x2ca024(,%%ecx,4), %%esi\n\t"
+      "imull 0x4(%%edi), %%esi\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1e24d2]\n\t"
+      "movl 0x8(%%edi), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "jne .LFUN_00067760_1\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movswl 0x4(%%ebx), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1df419]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl %%esi, %%eax\n\t"
+      "jne .LFUN_00067760_1\n\t"
+      "movl 0x3340b0, %%eax\n\t"
+      "incl %%esi\n\t"
+      "andl $0xfffffffe, %%esi\n\t"
+      "addl %%esi, %%eax\n\t"
+      "movl %%eax, 0x3340b0\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00067760_1:\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movw (%%edi), %%dx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c66380]\n\t"
+      "movl 0x10(%%eax), %%eax\n\t"
+      "movl (%%ebx), %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x25fe08\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1e24d2] "m"(b67760_c1e24d2), [c1df419] "m"(b67760_c1df419), [c66380] "m"(b67760_c66380), [c68a30] "m"(b67760_c68a30)
+      : "memory");
+}
+#else
+#error "FUN_00067760: clang naked draft required"
+#endif
 
 
 /* FUN_000677f0 (0x677f0) — XBE naked draft (batch 342). */
@@ -224,10 +289,74 @@ int FUN_00067960(unsigned short type /*@<ax>*/, unsigned short tag /*@<cx>*/,
   return ((int (*)(void *))FUN_00067760)(pair);
 }
 
-/* FUN_000679f0 — lifted to bitmaps/libtiff/tif_dirwrite.c. */
-#if 0
-#endif
+/* FUN_000679f0 (0x679f0) — XBE naked draft (batch 340). */
+#if defined(__clang__)
+static void (*const b679f0_c67760)(void) = FUN_00067760;
 
+__attribute__((naked, noinline))
+void FUN_000679f0(void)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%edi\n\t"
+      "movl %%edx, %%ebx\n\t"
+      "movw %%ax, (%%edi)\n\t"
+      "movl 0x3340b0, %%eax\n\t"
+      "movw $3, 0x2(%%edi)\n\t"
+      "movb 0x36(%%ebx), %%cl\n\t"
+      "movl $1, %%edx\n\t"
+      "shll %%cl, %%edx\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%edx, 0x4(%%edi)\n\t"
+      "jle .LFUN_000679f0_2\n\t"
+      ".LFUN_000679f0_1:\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl (%%ecx,%%esi,4), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c67760]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_000679f0_3\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "incl %%esi\n\t"
+      "cmpl %%eax, %%esi\n\t"
+      "jl .LFUN_000679f0_1\n\t"
+      ".LFUN_000679f0_2:\n\t"
+      "movl 0x4(%%edi), %%eax\n\t"
+      "imull 0x8(%%ebp), %%eax\n\t"
+      "movl -0x4(%%ebp), %%ecx\n\t"
+      "movl %%eax, 0x4(%%edi)\n\t"
+      "movl %%ecx, 0x8(%%edi)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_000679f0_3:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c67760] "m"(b679f0_c67760)
+      : "memory");
+}
+#else
+#error "FUN_000679f0: clang naked draft required"
+#endif
 
 
 /* FUN_00067a70 (0x67a70) — readable C lift.
@@ -293,10 +422,75 @@ int FUN_00067b40(unsigned int count /*@<eax>*/, unsigned short tag /*@<dx>*/,
   return 1;
 }
 
-/* FUN_00067b80 — lifted to bitmaps/libtiff/tif_dirwrite.c. */
-#if 0
-#endif
+/* FUN_00067b80 (0x67b80) — XBE naked draft (batch 376). */
+#if defined(__clang__)
+static void * (*const b67b80_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
+static void (*const b67b80_ftol)(void) = FUN_001d9068;
+static void (*const b67b80_c67760)(void) = (void *)FUN_00067760;
+static void (*const b67b80_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
 
+__attribute__((naked, noinline))
+void FUN_00067b80(void)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movw 0xc(%%ebp), %%dx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "pushl $0x27a\n\t"
+      "pushl $0x25fefc\n\t"
+      "movw %%cx, (%%eax)\n\t"
+      "movw %%dx, 0x2(%%eax)\n\t"
+      "movl %%edi, 0x4(%%eax)\n\t"
+      "leal (,%%edi,8), %%eax\n\t"
+      "pushl $0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "testl %%edi, %%edi\n\t"
+      "movl %%eax, %%esi\n\t"
+      "jle .LFUN_00067b80_2\n\t"
+      "leal (%%ecx), %%ecx\n\t"
+      ".LFUN_00067b80_1:\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "flds (%%ecx,%%ebx,4)\n\t"
+      "fmull 0x25feb0\n\t"
+      "faddl 0x25fea8\n\t"
+      "call *%[ftol]\n\t"
+      "movl %%eax, (%%esi,%%ebx,8)\n\t"
+      "movl $0x2710, 0x4(%%esi,%%ebx,8)\n\t"
+      "incl %%ebx\n\t"
+      "cmpl %%edi, %%ebx\n\t"
+      "jl .LFUN_00067b80_1\n\t"
+      ".LFUN_00067b80_2:\n\t"
+      "movl 0x10(%%ebp), %%edi\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c67760]\n\t"
+      "pushl $0x281\n\t"
+      "pushl $0x25fefc\n\t"
+      "pushl %%esi\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[c8ef70]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "movl %%edi, %%eax\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c8ee60] "m"(b67b80_c8ee60), [ftol] "m"(b67b80_ftol), [c67760] "m"(b67b80_c67760), [c8ef70] "m"(b67b80_c8ef70)
+      : "memory");
+}
+#else
+#error "FUN_00067b80: clang naked draft required"
+#endif
 
 
 /* FUN_00067c10 (0x67c10) — readable C lift.
@@ -673,10 +867,101 @@ void FUN_00067c50(void)
 #endif
 
 
-/* FUN_00067f70 — lifted to bitmaps/libtiff/tif_dirwrite.c. */
-#if 0
-#endif
+/* FUN_00067f70 (0x67f70) — XBE naked draft (batch 327). */
+#if defined(__clang__)
+static void (*const b67f70_c65f70)(void) = _TIFFgetfield;
+static void (*const b67f70_c67760)(void) = FUN_00067760;
 
+__attribute__((naked, noinline))
+void FUN_00067f70(void)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movzwl 0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      "movzwl 0x44(%%edi), %%ebx\n\t"
+      "leal -0x4(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "leal 0x14(%%edi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c65f70]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "jle .LFUN_00067f70_1\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "movw %%ax, %%dx\n\t"
+      "movl %%ebx, %%ecx\n\t"
+      "leal -0xc(%%ebp), %%edi\n\t"
+      "shll $0x10, %%edx\n\t"
+      "movw %%ax, %%dx\n\t"
+      "shrl $1, %%ecx\n\t"
+      "movl %%edx, %%eax\n\t"
+      "rep stosl\n\t"
+      "adcl %%ecx, %%ecx\n\t"
+      "rep stosw\n\t"
+      "movl 0x8(%%ebp), %%edi\n\t"
+      ".LFUN_00067f70_1:\n\t"
+      "cmpl $2, %%ebx\n\t"
+      "movw 0xc(%%ebp), %%ax\n\t"
+      "movw %%ax, (%%esi)\n\t"
+      "movw $3, 0x2(%%esi)\n\t"
+      "movl %%ebx, 0x4(%%esi)\n\t"
+      "jg .LFUN_00067f70_4\n\t"
+      "cmpw $0x4d4d, 0xc4(%%edi)\n\t"
+      "movzwl -0xc(%%ebp), %%eax\n\t"
+      "jne .LFUN_00067f70_2\n\t"
+      "shll $0x10, %%eax\n\t"
+      "cmpl $2, %%ebx\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "jne .LFUN_00067f70_3\n\t"
+      "movzwl -0xa(%%ebp), %%ecx\n\t"
+      "orl %%eax, %%ecx\n\t"
+      "popl %%edi\n\t"
+      "movl %%ecx, 0x8(%%esi)\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00067f70_2:\n\t"
+      "cmpl $2, %%ebx\n\t"
+      "movl %%eax, 0x8(%%esi)\n\t"
+      "jne .LFUN_00067f70_3\n\t"
+      "movzwl -0xa(%%ebp), %%edx\n\t"
+      "shll $0x10, %%edx\n\t"
+      "orl %%eax, %%edx\n\t"
+      "movl %%edx, 0x8(%%esi)\n\t"
+      ".LFUN_00067f70_3:\n\t"
+      "popl %%edi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_00067f70_4:\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "movl %%esi, %%edi\n\t"
+      "call *%[c67760]\n\t"
+      "addl $4, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c65f70] "m"(b67f70_c65f70), [c67760] "m"(b67f70_c67760)
+      : "memory");
+}
+#else
+#error "FUN_00067f70: clang naked draft required"
+#endif
 
 
 /* FUN_00068030 moved to bitmaps/libtiff/tif_dir.c (readable C lift). */
@@ -3491,9 +3776,43 @@ void FUN_000887e0(void)
 
 /* first_person_camera_new (0x88c40) — defined in camera/director.c */
 
-/* FUN_00088c80 — lifted to camera/director.c. */
-#if 0
-#endif
+
+/* FUN_00088c80 (0x88c80) — readable C lift: unit seat marker vectors. */
+void FUN_00088c80(int unit_handle, float *out_a, float *out_b)
+{
+  char *unit;
+  int parent;
+  void *obj;
+  void *tag;
+  void *elem;
+  char markers[0x6c];
+  short n;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  unit_set_seat_state(unit_handle, out_a);
+  out_b[0] = *(float *)(unit + 0x1ec);
+  out_b[1] = *(float *)(unit + 0x1f0);
+  out_b[2] = *(float *)(unit + 0x1f4);
+  parent = *(int *)(unit + 0xcc);
+  if (parent == -1)
+    return;
+  obj = object_try_and_get_and_verify_type(parent, 2);
+  if (!obj)
+    return;
+  tag = tag_get(0x76656869, *(int *)obj);
+  elem = tag_block_get_element((char *)tag + 0x2e4, (int)*(short *)(unit + 0x2a0), 0x11c);
+  if ((*(signed char *)elem) >= 0)
+    return;
+  n = object_get_markers_by_string_id(parent, (const char *)0x267238, markers, 1);
+  if (!n)
+    return;
+  out_a[0] = *(float *)(markers + 0x60);
+  out_a[1] = *(float *)(markers + 0x64);
+  out_a[2] = *(float *)(markers + 0x68);
+  out_b[0] = *(float *)(markers + 0x3c);
+  out_b[1] = *(float *)(markers + 0x40);
+  out_b[2] = *(float *)(markers + 0x44);
+}
 
 
 
@@ -5252,7 +5571,7 @@ static void *(*const bf3c80_tag)(int, int) = tag_get;
 static void (*const bf3c80_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bf3c80_exitfn)(int) = system_exit;
 static void (*const bf3c80_cf3690)(int *out_handles /* */, void *widget /* */) = FUN_000f3690;
-static void (*const bf3c80_cf3850)(int *handles, int count) = multiplayer_game_set_text_box_for_teams_noteams;
+static void (*const bf3c80_cf3850)(void *widget) = multiplayer_game_set_text_box_for_teams_noteams;
 static void * (*const bf3c80_ce3cd0)(void *widget, int index) = widget_instance_get_nth_child;
 static void * (*const bf3c80_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
 static wchar_t * (*const bf3c80_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
@@ -6680,10 +6999,97 @@ void FUN_000fe450(void)
 #endif
 
 
-/* FUN_000fe6c0 — lifted to items/weapons.c. */
-#if 0
-#endif
+/* FUN_000fe6c0 (0xfe6c0) — XBE naked draft (batch 372). */
+#if defined(__clang__)
+static void *(*const bfe6c0_get)(int, int) = object_get_and_verify_type;
+static char *(*const bfe6c0_fb320)(void *, short) = FUN_000fb320;
+static void *(*const bfe6c0_tag)(int, int) = tag_get;
+static void *(*const bfe6c0_elem)(void *, int, int) = tag_block_get_element;
+static void (*const bfe6c0_cfdc90)(void) = (void *)FUN_000fdc90;
+static void (*const bfe6c0_ftol)(void) = FUN_001d9068;
+static void (*const bfe6c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bfe6c0_exitfn)(int) = system_exit;
 
+__attribute__((naked, noinline))
+void FUN_000fe6c0(void)
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl %%ecx, %%ebx\n\t"
+      "pushl $4\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[get]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[fb320]\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x77656170\n\t"
+      "call *%[tag]\n\t"
+      "pushl $0x114\n\t"
+      "leal 0x4fc(%%eax), %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, -0x4(%%ebp)\n\t"
+      "movl (%%edi), %%eax\n\t"
+      "leal 0x1(%%esi), %%ecx\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "jge .LFUN_000fe6c0_1\n\t"
+      "leal 0x1(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[cfdc90]\n\t"
+      "addl $8, %%esp\n\t"
+      ".LFUN_000fe6c0_1:\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "flds 0xc4(%%eax)\n\t"
+      "fmuls 0x253394\n\t"
+      "call *%[ftol]\n\t"
+      "pushl $4\n\t"
+      "pushl %%ebx\n\t"
+      "movl %%eax, %%edi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%si, %%si\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "jl .LFUN_000fe6c0_2\n\t"
+      "cmpw $2, %%si\n\t"
+      "jl .LFUN_000fe6c0_3\n\t"
+      ".LFUN_000fe6c0_2:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xa11\n\t"
+      "pushl $0x28ad48\n\t"
+      "pushl $0x28ae40\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000fe6c0_3:\n\t"
+      "movswl %%si, %%eax\n\t"
+      "leal (%%eax,%%eax,8), %%ecx\n\t"
+      "leal (%%ebx,%%ecx,4), %%eax\n\t"
+      "movw %%di, 0x212(%%eax)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb $1, 0x211(%%eax)\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bfe6c0_get), [fb320] "m"(bfe6c0_fb320), [tag] "m"(bfe6c0_tag), [elem] "m"(bfe6c0_elem), [cfdc90] "m"(bfe6c0_cfdc90), [ftol] "m"(bfe6c0_ftol), [assert] "m"(bfe6c0_assert), [exitfn] "m"(bfe6c0_exitfn)
+      : "memory");
+}
+#else
+#error "FUN_000fe6c0: clang naked draft required"
+#endif
 
 
 /* FUN_000fe790 (0xfe790) — XBE naked draft (batch 372). */
@@ -9496,16 +9902,205 @@ void FUN_00133520(int object_handle __attribute__((unused)), int widget_datum __
 #endif
 
 
-/* FUN_001335e0 — lifted to objects/widgets/glow.c (Newton cubic). */
-#if 0 /* ported in glow.c */
+/* FUN_001335e0 (0x1335e0) — XBE naked draft (batch 220). */
+#if defined(__clang__)
+static void (*const b1335e0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1335e0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+float FUN_001335e0(float a __attribute__((unused)), float b __attribute__((unused)), float c __attribute__((unused)), float d __attribute__((unused)), float ta __attribute__((unused)), float tb __attribute__((unused)), float tc __attribute__((unused)), float td __attribute__((unused)), float t __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fcomps 0x18(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $1, %%ah\n\t"
+      "jne .LFUN_001335e0_1\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fcomps 0x24(%%ebp)\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jnp .LFUN_001335e0_2\n\t"
+      ".LFUN_001335e0_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0x5fa\n\t"
+      "pushl $0x25ed80\n\t"
+      "pushl $0x29aae4\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_001335e0_2:\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fsubs 0x10(%%ebp)\n\t"
+      "flds 0x24(%%ebp)\n\t"
+      "fsubs 0x20(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0x10(%%ebp)\n\t"
+      "fsubs 0xc(%%ebp)\n\t"
+      "flds 0x20(%%ebp)\n\t"
+      "fsubs 0x1c(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0xc(%%ebp)\n\t"
+      "fsubs 0x8(%%ebp)\n\t"
+      "flds 0x1c(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fstps 0xc(%%ebp)\n\t"
+      "fxch %%st(1)\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "flds 0x24(%%ebp)\n\t"
+      "fsubs 0x1c(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "fstps 0x14(%%ebp)\n\t"
+      "fsubs 0xc(%%ebp)\n\t"
+      "flds 0x20(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0x14(%%ebp)\n\t"
+      "fsub %%st(1), %%st(0)\n\t"
+      "flds 0x24(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      ".byte 0xde, 0xf9\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fsubs 0x20(%%ebp)\n\t"
+      "fmulp %%st(1)\n\t"
+      "faddp %%st(1)\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fsubs 0x1c(%%ebp)\n\t"
+      "fmulp %%st(1)\n\t"
+      "fadds 0xc(%%ebp)\n\t"
+      "flds 0x28(%%ebp)\n\t"
+      "fsubs 0x18(%%ebp)\n\t"
+      "fmulp %%st(1)\n\t"
+      "fadds 0x8(%%ebp)\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [assert] "m"(b1335e0_assert), [exitfn] "m"(b1335e0_exitfn)
+      : "memory");
+}
+#else
+#error "FUN_001335e0: clang naked draft required"
 #endif
 
 
+/* FUN_001336a0 (0x1336a0) — XBE naked draft (batch 224). */
+#if defined(__clang__)
+static float (*const b1336a0_c1335e0)(float a, float b, float c, float d, float ta, float tb, float tc, float td, float t) = FUN_001335e0;
 
-/* FUN_001336a0 — lifted to objects/widgets/glow.c (vector3 Newton). */
-#if 0 /* ported in glow.c */
+__attribute__((naked, noinline))
+void FUN_001336a0(float *out __attribute__((unused)), float *p0 __attribute__((unused)), float *p1 __attribute__((unused)), float *p2 __attribute__((unused)), float *p3 __attribute__((unused)), float t0 __attribute__((unused)), float t1 __attribute__((unused)), float t2 __attribute__((unused)), float t3 __attribute__((unused)), float time __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x20(%%ebp), %%eax\n\t"
+      "movl 0x1c(%%ebp), %%ecx\n\t"
+      "movl 0x18(%%ebp), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x24(%%ebp), %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x2c(%%ebp), %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movl 0x28(%%ebp), %%edi\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%eax\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x14(%%ebp), %%ecx\n\t"
+      "movl (%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x10(%%ebp), %%eax\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0xc(%%ebp), %%edx\n\t"
+      "movl (%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1335e0]\n\t"
+      "movl 0x8(%%ebp), %%ecx\n\t"
+      "movl 0x20(%%ebp), %%edx\n\t"
+      "fstps (%%ecx)\n\t"
+      "movl 0x1c(%%ebp), %%eax\n\t"
+      "movl 0x18(%%ebp), %%ecx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x14(%%ebp), %%eax\n\t"
+      "movl 0x4(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x10(%%ebp), %%edx\n\t"
+      "movl 0x4(%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0xc(%%ebp), %%ecx\n\t"
+      "movl 0x4(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1335e0]\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "movl 0x20(%%ebp), %%ecx\n\t"
+      "fstps 0x4(%%eax)\n\t"
+      "movl 0x1c(%%ebp), %%edx\n\t"
+      "movl 0x18(%%ebp), %%eax\n\t"
+      "addl $0x48, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x14(%%ebp), %%edx\n\t"
+      "movl 0x8(%%edx), %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "movl 0x10(%%ebp), %%ecx\n\t"
+      "movl 0x8(%%ecx), %%edx\n\t"
+      "pushl %%eax\n\t"
+      "movl 0xc(%%ebp), %%eax\n\t"
+      "movl 0x8(%%eax), %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1335e0]\n\t"
+      "movl 0x8(%%ebp), %%edx\n\t"
+      "addl $0x24, %%esp\n\t"
+      "fstps 0x8(%%edx)\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      :
+      : [c1335e0] "m"(b1336a0_c1335e0)
+      : "memory");
+}
+#else
+#error "FUN_001336a0: clang naked draft required"
 #endif
-
 
 
 /* glow_normal_particle_new (0x1337c0) — XBE naked draft (batch 314). */
@@ -23783,16 +24378,924 @@ void FUN_00196d60(float *rect, int16_t *hull)
 }
 
 
-/* FUN_00196e10 — lifted to structures/structure_visibility.c. */
-#if 0
+/* FUN_00196e10 (0x196e10) — XBE naked draft (batch 354). */
+#if defined(__clang__)
+static void (*const b196e10_xfrmpt)(float *, float *, float *) = matrix_transform_point;
+static void (*const b196e10_c189270)(char flag, float *point_a, float *point_b, void *color) = (void *)FUN_00189270;
+
+__attribute__((naked, noinline))
+void FUN_00196e10(uint16_t *sound_list __attribute__((unused)), void *env __attribute__((unused)), float distance __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x18, %%esp\n\t"
+      "movw (%%edi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "je .LFUN_00196e10_1\n\t"
+      "movswl %%ax, %%eax\n\t"
+      "movl -0x4(%%edi,%%eax,8), %%ecx\n\t"
+      "leal (%%edi,%%eax,8), %%eax\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "leal -0x18(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x18(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x5065e8\n\t"
+      "movl %%edx, -0x14(%%ebp)\n\t"
+      "movl $0xbf800000, -0x10(%%ebp)\n\t"
+      "call *%[xfrmpt]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".LFUN_00196e10_1:\n\t"
+      "pushl %%esi\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "cmpw %%si, (%%edi)\n\t"
+      "jle .LFUN_00196e10_3\n\t"
+      ".LFUN_00196e10_2:\n\t"
+      "movswl %%si, %%edx\n\t"
+      "movl 0x4(%%edi,%%edx,8), %%ecx\n\t"
+      "leal (%%edi,%%edx,8), %%eax\n\t"
+      "movl 0x8(%%eax), %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0xc(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x5065e8\n\t"
+      "movl %%edx, -0x8(%%ebp)\n\t"
+      "movl $0xbf800000, -0x4(%%ebp)\n\t"
+      "call *%[xfrmpt]\n\t"
+      "pushl %%ebx\n\t"
+      "leal -0x18(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "call *%[c189270]\n\t"
+      "movl -0xc(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "incl %%esi\n\t"
+      "cmpw (%%edi), %%si\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "movl %%edx, -0x14(%%ebp)\n\t"
+      "movl %%eax, -0x10(%%ebp)\n\t"
+      "jl .LFUN_00196e10_2\n\t"
+      ".LFUN_00196e10_3:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [xfrmpt] "m"(b196e10_xfrmpt), [c189270] "m"(b196e10_c189270)
+      : "memory");
+}
+#else
+#error "FUN_00196e10: clang naked draft required"
 #endif
 
 
+/* 0x196eb0 */
+float *FUN_00196eb0(float *parent_bounds, unsigned char *fractions, float *out_bounds)
+{
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
-/* FUN_00196eb0 — lifted to structures/structure_visibility.c. */
-#if 0
-#endif
+  scenario_get();
+  /* relift: cmp (int16_t)edi, word ptr [ebp + 0xc] -> jge 0x19711a */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* relift: cmp (int16_t)edi, word ptr [ebp + 0xc] -> jge 0x197109 */
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 36);
+  FUN_00196a60((float *)0, (float *)0);
+  /* test (int16_t)eax, (int16_t)eax -> je 0x1970f5 */
+  FUN_00196b10((float *)(uintptr_t)eax, 0, 0);
+  /* test (int16_t)eax, (int16_t)eax -> je 0x1970f5 */
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
+  /* relift: test dword ptr [edx + 0x5137d0], esi -> je 0x1970e1 */
+  /* test esi, ecx -> jne 0x1970e1 */
+  /* relift: cmp edx, dword ptr [ebx] -> jl 0x197097 */
+  /* cmp eax, ecx -> jl 0x197034 */
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  display_assert((char *)0x002b3798, (char *)0x002b36c8, 752, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1971b5 */
+  display_assert((char *)0x002b3788, (char *)0x002b36c8, 753, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1971dc */
+  display_assert((char *)0x002b3774, (char *)0x002b36c8, 754, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x197203 */
+  display_assert((char *)0x002b3768, (char *)0x002b36c8, 755, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x197217 */
+  /* relift: cmp ecx, dword ptr [edi + 0x134] -> jl 0x197237 */
+  display_assert((char *)0x002b3720, (char *)0x002b36c8, 756, 0);
+  system_exit(0);
+  /* relift: tail-call FUN_00196eb0(); */
+  /* cmp (int16_t)ebx, 2 -> je 0x197275 */
+  FUN_00196a60((float *)0, (float *)0);
+  FUN_00196b10((float *)(uintptr_t)edx, 0, 0);
+  /* cmp (int16_t)ebx, (int16_t)eax -> jle 0x197275 */
+  /* test (int16_t)ebx, (int16_t)ebx -> je 0x197300 */
+  /* cmp ebx, eax -> jge 0x197300 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  /* test edx, ecx -> je 0x1972ef */
+  /* test edx, ecx -> jne 0x1972ef */
+  /* relift: cmp word ptr [ebp + 0x2c], (int16_t)edi -> jge 0x197300 */
+  /* cmp ebx, ecx -> jl 0x197294 */
+  scenario_get();
+  /* test (char)eax, 0x41 -> jne 0x1974d8 */
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x1973ca */
+  matrix_transform_point((float *)(uintptr_t)ecx, (float *)(uintptr_t)esi, (float *)(uintptr_t)eax);
+  convex_polygon3d_clip_to_plane(eax, (float *)(uintptr_t)ecx, (void *)0x002b35c4, 256, (float *)(uintptr_t)edx, (void *)0, 0.0f, (void *)0);
+  display_assert((char *)0x002b37b0, (char *)0x002b36c8, 1157, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 0x10], 1 -> jne 0x197432 */
+  /* relift: cmp (int16_t)edi, word ptr [ebp - 4] -> je 0x1974c5 */
+  /* test (char)eax, 0x41 -> je 0x197496 */
+  display_assert((char *)0x002b37a8, (char *)0x002b36c8, 1175, 0);
+  system_exit(0);
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 64);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 96);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  FUN_00197310((void *)0x005065a4, (void *)0, (void *)0, (void *)0, 0, 0, (void *)0);
+  /* test (int16_t)esi, (int16_t)esi -> jle 0x1975d5 */
+  /* cmp (int16_t)ecx, (int16_t)esi -> jl 0x197580 */
+  FUN_001d90e0();
+  scenario_get();
+  render_frustum_get_projection_bounds((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  structure_bsp_get_cluster_sound_data((void *)(uintptr_t)esi, ecx);
+  /* relift: cmp dword ptr [eax], 0 -> je 0x19786e */
+  /* cmp eax, ebx -> jge 0x197874 */
+  /* relift: test dword ptr [ecx], edx -> je 0x197854 */
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 104);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 64);
+  FUN_00197310((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, (void *)0, (void *)(uintptr_t)edx, 0, 0, (void *)0);
+  /* test (int16_t)eax, (int16_t)eax -> jne 0x19776b */
+  FUN_00108060(eax, (void *)(uintptr_t)edx, 0, (void *)(uintptr_t)eax, 256, (void *)(uintptr_t)edx, 0x38d1b717);
+  /* cmp (int16_t)eax, 2 -> jne 0x19783d */
+  tag_get('rdhs', 0);
+  /* relift: cmp word ptr [eax + 0x24], 3 -> jne 0x1977a9 */
+  FUN_001906b0((void *)(uintptr_t)eax, 0);
+  /* test (char)eax, (char)eax -> je 0x197819 */
+  error(0, (char *)0x002b37cc);
+  /* cmp eax, ecx -> jl 0x1976f1 */
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 96);
+  /* test eax, eax -> jne 0x1978ee */
+  display_assert((char *)0x002b3788, (char *)0x002b36c8, 683, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x197915 */
+  display_assert((char *)0x002b3774, (char *)0x002b36c8, 684, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x19793c */
+  display_assert((char *)0x002b3768, (char *)0x002b36c8, 685, 0);
+  system_exit(0);
+  /* test (int16_t)edi, (int16_t)edi -> jne 0x197964 */
+  display_assert((char *)0x002b3798, (char *)0x002b36c8, 686, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
+  /* relift: tail-call FUN_00196eb0(); */
+  /* cmp (int16_t)edi, 2 -> je 0x1979cd */
+  FUN_00196a60((float *)0, (float *)0);
+  /* test (int16_t)edi, (int16_t)edi -> je 0x197af1 */
+  FUN_00196b10((float *)(uintptr_t)edx, 0, 0);
+  /* cmp (int16_t)eax, 2 -> jne 0x1979c6 */
+  /* cmp (int16_t)edi, (int16_t)eax -> jle 0x1979cd */
+  /* test (int16_t)edi, (int16_t)edi -> je 0x197af1 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 12);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)eax, 0x41 -> je 0x197a3f */
+  /* relift: cmp byte ptr [edx], 0 -> je 0x197ad4 */
+  FUN_001978a0(0, (float *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)edx, 0, (float *)0, 0.0f, (float *)0, 0, 0, 0);
+  /* cmp eax, -1 -> je 0x197ad4 */
+  FUN_00197130((float *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)edx, 0, (float *)0, 0.0f, (float *)0, 0, 0, 0, 0);
+  FUN_001d90e0();
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 104);
+  structure_bsp_get_cluster_sound_data((void *)(uintptr_t)ebx, eax);
+  /* test eax, eax -> je 0x197b5d */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x197b5d */
+  /* cmp (int16_t)eax, 0x100 -> jle 0x197b7d */
+  display_assert((char *)0x002b3864, (char *)0x002b36c8, 1006, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x5137cc], 0x80 -> jl 0x197bd6 */
+  display_assert((char *)0x002b3844, (char *)0x002b36c8, 1013, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x197be4 */
+  /* cmp (int16_t)eax, 0x200 -> jl 0x197c04 */
+  display_assert((char *)0x00269e58, (char *)0x002b36c8, 1016, 0);
+  system_exit(0);
+  rendered_cluster_get(0);
+  rendered_cluster_get(0);
+  /* relift: cmp word ptr [esi], (int16_t)eax -> je 0x197c95 */
+  display_assert((char *)0x002b3814, (char *)0x002b36c8, 1027, 0);
+  system_exit(0);
+  FUN_00196d60((float *)0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x197cbf */
+  ai_debug_highlight_cluster(edx, (void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> je 0x197ce9 */
+  FUN_00196e10((void *)0x3d4ccccd, (void *)0, 0.0f);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 64);
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x197e53 */
+  /* cmp eax, edx -> jge 0x197e53 */
+  /* relift: test dword ptr [eax + ecx], edx -> jne 0x197e53 */
+  /* relift: test dword ptr [eax + ecx], edx -> je 0x197e53 */
+  FUN_001974f0(ebx, eax, (void *)(uintptr_t)edx);
+  /* cmp (int16_t)eax, 2 -> jne 0x197db9 */
+  FUN_00197b00(edi, (void *)(uintptr_t)ecx);
+  /* test (int16_t)eax, (int16_t)eax -> jne 0x197e53 */
+  /* test (char)eax, (char)eax -> jne 0x197de5 */
+  FUN_00197570((float *)(uintptr_t)edx, 0, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x197e53 */
+  FUN_00108060(ecx, (void *)(uintptr_t)eax, 0, (void *)(uintptr_t)ecx, 256, (void *)(uintptr_t)eax, 0x38d1b717);
+  FUN_00197b00(edi, (void *)(uintptr_t)edx);
+  /* cmp (int16_t)eax, 0xffff -> jne 0x197e53 */
+  error(0, (char *)0x002b37f8);
+  FUN_00197b00(edi, (void *)(uintptr_t)esi);
+  /* cmp eax, edx -> jl 0x197d10 */
+  FUN_001d90e0();
+  scenario_get();
+  display_assert((char *)0x002b38b8, (char *)0x002b36c8, 613, 0);
+  system_exit(0);
+  /* test (int16_t)ebx, (int16_t)ebx -> je 0x197f00 */
+  /* test eax, eax -> jne 0x197f00 */
+  display_assert((char *)0x002b3888, (char *)0x002b36c8, 614, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)ecx, 0, eax);
+  /* test edi, edi -> jne 0x197f5f */
+  FUN_001978a0(0, (float *)(uintptr_t)ecx, (void *)0, (void *)0, 0, (float *)0, 0.0f, (float *)0, 0, 0, 0);
+  /* test eax, eax -> je 0x197fdb */
+  FUN_00196fd0((void *)(uintptr_t)ecx, eax, 0, 0, (float *)(uintptr_t)edi, 0, 0, (void *)(uintptr_t)eax, 0, (void *)0);
+  scenario_location_from_point((void *)(uintptr_t)edx, (void *)(uintptr_t)esi);
+  /* cmp (int16_t)eax, 0xffff -> je 0x198039 */
+  structure_find_in_cluster(eax, (float *)(uintptr_t)esi, 0.0f, 512, (void *)(uintptr_t)ecx);
+  FUN_00196fd0((void *)(uintptr_t)eax, edx, 0, 0, (float *)(uintptr_t)edi, 0, 0, (void *)(uintptr_t)edx, 0, (void *)0);
+  FUN_001978a0(0, (float *)(uintptr_t)eax, (void *)0, (void *)0, 0, (float *)0, 0.0f, (float *)0, 0, 0, 0);
+  scenario_get();
+  /* relift: cmp dword ptr [0x506784], -1 -> je 0x198179 */
+  render_frustum_get_projection_bounds((void *)0x005065a4, (void *)(uintptr_t)eax);
+  /* mem[0x004d8ed8] = eax */
+  csmemset((void *)(uintptr_t)ecx, 0, 64);
+  FUN_00197b00(eax, (void *)(uintptr_t)edx);
+  /* relift: cmp word ptr [0x5137cc], (int16_t)edi -> jle 0x198178 */
+  rendered_cluster_get(0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 104);
+  render_camera_build_clipped_frustum_bounds((void *)0x00506550, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  render_camera_build_frustum((void *)0x00506550, (float *)(uintptr_t)ecx, (float *)(uintptr_t)esi, 0);
+  /* relift: cmp (int16_t)edi, word ptr [0x5137cc] -> jl 0x198130 */
+  scenario_get();
+  /* test (char)eax, (char)eax -> je 0x1981ae */
+  profile_enter_private((void *)0x0032bd68);
+  csmemset((void *)0x0050678c, 0, ecx);
+  csmemset((void *)0x005137d0, 0, edx);
+  FUN_00198070();
+  /* test (char)eax, (char)eax -> je 0x19833c */
+  structure_bsp_get_cluster_sound_data((void *)(uintptr_t)esi, ecx);
+  csmemcpy((void *)0x0050678c, (void *)(uintptr_t)eax, 0);
+  /* cmp eax, ebx -> jle 0x19833c */
+  /* relift: test dword ptr [eax*4 + 0x50678c], edx -> je 0x19832b */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 104);
+  /* relift: cmp word ptr [0x5137cc], 0x80 -> jl 0x1982c5 */
+  display_assert((char *)0x002b3844, (char *)0x002b36c8, 280, 0);
+  system_exit(0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x1982d1 */
+  /* cmp (int16_t)ebx, 0x200 -> jl 0x1982f1 */
+  display_assert((char *)0x00269e58, (char *)0x002b36c8, 283, 0);
+  system_exit(0);
+  rendered_cluster_get(0);
+  render_frustum_get_projection_bounds((void *)0x005065a4, (void *)(uintptr_t)eax);
+  /* cmp esi, eax -> jl 0x198270 */
+  /* test (char)eax, (char)eax -> je 0x19835c */
+  profile_exit_private((void *)0x0032bd68);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 104);
+  FUN_001966b0(0);
+  /* test (char)eax, (char)eax -> jne 0x1983a8 */
+  /* test eax, eax -> jle 0x1983a1 */
+  error(0, (char *)0x002b38d0);
+  FUN_00196850(0);
+  structure_detail_objects_initialize();
+  structure_detail_objects_initialize_for_new_map();
+  structure_runtime_decals_dispose_from_old_map();
+  structure_runtime_decals_dispose();
+  /* test (char)eax, (char)eax -> je 0x198429 */
+  display_assert((char *)0x002b3924, (char *)0x002b3954, 259, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x19846c */
+  display_assert((char *)0x002b397c, (char *)0x002b3954, 270, 0);
+  system_exit(0);
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x19847d */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x19849d */
+  display_assert((char *)0x00269e58, (char *)0x002b3954, 271, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1984ec */
+  display_assert((char *)0x002b397c, (char *)0x002b3954, 286, 0);
+  system_exit(0);
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1984fd */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x19851d */
+  display_assert((char *)0x00269e58, (char *)0x002b3954, 287, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x198569 */
+  display_assert((char *)0x002b397c, (char *)0x002b3954, 304, 0);
+  system_exit(0);
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp eax, -1 -> je 0x1986ec */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 96);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp edx, ecx -> jne 0x1986ec */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  structure_bsp_find_material_for_surface((void *)(uintptr_t)edi, 0, (void *)(uintptr_t)ecx, (void *)(uintptr_t)esi);
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 32);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (int16_t)eax, (int16_t)eax -> je 0x198672 */
+  /* cmp (int16_t)eax, 1 -> jne 0x1986e9 */
+  FUN_00180500((float *)(uintptr_t)ecx, (float *)0);
+  FUN_00180500((float *)(uintptr_t)ecx, (float *)0);
+  FUN_00180500((float *)(uintptr_t)ecx, (float *)0);
+  FUN_0010d830((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> jne 0x19870d */
+  /* cmp (int16_t)eax, 0xffff -> je 0x1987f4 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 104);
+  /* test (char)ecx, (char)ecx -> je 0x198781 */
+  FUN_0018e7d0(0);
+  /* test eax, eax -> je 0x1987f9 */
+  /* cmp (int16_t)eax, 0xffff -> je 0x1987f9 */
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x1987f9 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 40);
+  /* cmp (int16_t)eax, 0xffff -> je 0x1987f9 */
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 64);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)eax, 0x41 -> jne 0x198999 */
+  FUN_0018e420();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  FUN_00099220((float *)(uintptr_t)esi);
+  FUN_00099270((float *)(uintptr_t)esi, eax);
+  FUN_00061df0((void *)0, 0, 0, (void *)0);
+  /* test eax, eax -> jle 0x19895f */
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 12);
+  FUN_00061df0((void *)(uintptr_t)eax, 0, 0, (void *)0);
+  /* cmp eax, ecx -> jl 0x198930 */
+  FUN_00106130(ecx, (void *)(uintptr_t)eax, (void *)(uintptr_t)edx, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x198999 */
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  structure_cluster_mark(edi);
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp (int16_t)ecx, (int16_t)edi -> jne 0x198a56 */
+  structure_cluster_unmarked(edi);
+  /* test (char)eax, (char)eax -> je 0x198aa7 */
+  structure_get_planar_fog((void *)(uintptr_t)eax, esi, (float *)(uintptr_t)edx, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x198aa7 */
+  FUN_001989b0(edi, (float *)(uintptr_t)edx, 0.0f, 0, (void *)(uintptr_t)ebx);
+  /* cmp eax, edx -> jl 0x198a1f */
+  /* test (char)eax, (char)eax -> je 0x198b05 */
+  display_assert((char *)0x002b3924, (char *)0x002b3954, 259, 0);
+  system_exit(0);
+  /* mem[0x004d92e4] = edx */
+  scenario_get();
+  structure_cluster_mark(esi);
+  /* relift: cmp (int16_t)ebx, word ptr [ebp + 0x20] -> jge 0x198c72 */
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp (int16_t)eax, (int16_t)edi -> jne 0x198bcb */
+  structure_cluster_unmarked(edx);
+  /* test (char)eax, (char)eax -> je 0x198c4f */
+  FUN_00110210((float *)(uintptr_t)esi, 0.0f, (float *)0, (float *)0, 0.0f, 0.0f, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x198c4f */
+  structure_cluster_mark(eax);
+  /* cmp (int16_t)esi, 0x200 -> jl 0x198c3c */
+  display_assert((char *)0x002b39ac, (char *)0x002b3954, 245, 0);
+  system_exit(0);
+  /* cmp eax, ecx -> jl 0x198b94 */
+  display_assert((char *)0x002b397c, (char *)0x002b3954, 304, 0);
+  system_exit(0);
+  display_assert((char *)0x0026856c, (char *)0x002b3954, 392, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x198d0b */
+  display_assert((char *)0x002a3e7c, (char *)0x002b3954, 393, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x198d32 */
+  display_assert((char *)0x002b39ec, (char *)0x002b3954, 394, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x198d59 */
+  display_assert((char *)0x002b39dc, (char *)0x002b3954, 395, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x198d80 */
+  display_assert((char *)0x002b39d8, (char *)0x002b3954, 396, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x198da7 */
+  display_assert((char *)0x00269cdc, (char *)0x002b3954, 397, 0);
+  system_exit(0);
+  display_assert((char *)0x00253440, (char *)0x002b3954, 406, 0);
+  system_exit(0);
+  FUN_0014df70(33, (float *)(uintptr_t)esi, (float *)(uintptr_t)ecx, 0, (void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x198ec4 */
+  scenario_get();
+  structure_render_surface_from_point_and_leaf((void *)(uintptr_t)esi, eax, 0, (void *)0, (void *)0, (void *)0, (float *)0, (float *)0);
+  /* test (char)eax, (char)eax -> je 0x198e8d */
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  /* relift: cmp word ptr [eax], -1 -> je 0x198e8d */
+  /* relift: test byte ptr [ebp - 8], 1 -> je 0x198ec4 */
+  /* relift: cmp word ptr [0x4761d8], 1 -> jg 0x198eee */
+  display_assert((char *)0x00253418, (char *)0x002b3954, 426, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x198dc0 */
+  scenario_get();
+  display_assert((char *)0x0029dc54, (char *)0x002b3954, 497, 0);
+  system_exit(0);
+  structure_get_planar_fog_definition_index((void *)(uintptr_t)ebx, eax, edi);
+  /* cmp edi, -1 -> jne 0x198faa */
+  /* cmp (int16_t)eax, 0xffff -> je 0x198f9d */
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
+  FUN_0018e7d0(0);
+  /* test eax, eax -> je 0x198f9d */
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 104);
+  tag_get(' gof', 0);
+  /* test (char)eax, (char)eax -> je 0x198fe7 */
+  /* relift: test byte ptr [eax + 3], 0x80 -> je 0x199032 */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 0);
+  FUN_001954e0((void *)0);
+  /* test (char)eax, (char)eax -> je 0x19922a */
+  /* relift: cmp word ptr [0x50674c], 1 -> jne 0x19922a */
+  /* relift: cmp dword ptr [0x506784], -1 -> je 0x19922a */
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 104);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 0);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 12);
+  tag_block_get_element((void *)(uintptr_t)ebx, 0, 12);
+  FUN_0017eb10((float *)0, (float *)0, 0);
+  FUN_0017eb10((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0);
+  FUN_0017e5b0((float *)(uintptr_t)edi, (float *)(uintptr_t)ecx, 0, 0);
+  FUN_0017e5b0((float *)(uintptr_t)ebx, (float *)(uintptr_t)ecx, 0, 0);
+  /* test eax, eax -> jne 0x19925a */
+  display_assert((char *)0x00267114, (char *)0x002b3954, 134, 0);
+  system_exit(0);
+  /* test (char)eax, 1 -> je 0x19928a */
+  display_assert((char *)0x0029d9b0, (char *)0x002b3954, 135, 0);
+  system_exit(0);
+  display_assert((char *)0x0028ede8, (char *)0x002b3954, 136, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x1992dc */
+  display_assert((char *)0x002b39fc, (char *)0x002b3954, 137, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> je 0x199359 */
+  /* test (char)eax, 0x41 -> jne 0x199347 */
+  structures_cluster_marker_begin();
+  FUN_001989b0(esi, (float *)(uintptr_t)ecx, 0.0f, 0, (void *)(uintptr_t)edi);
+  /* test (char)eax, (char)eax -> jne 0x199338 */
+  display_assert((char *)0x002b397c, (char *)0x002b3954, 304, 0);
+  system_exit(0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x199359 */
+  /* cmp (int16_t)esi, 2 -> jl 0x199392 */
+  display_assert((char *)0x002b3a70, (char *)0x002b3aac, 75, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)edi);
+  /* test eax, eax -> je 0x1993c8 */
+  display_assert((char *)0x002b3a40, (char *)0x002b3aac, 76, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)ebx);
+  /* cmp eax, 0xff -> jbe 0x1993f8 */
+  display_assert((char *)0x002b3a10, (char *)0x002b3aac, 77, 0);
+  system_exit(0);
+  csstrncpy((char *)(uintptr_t)edi, (char *)(uintptr_t)ebx, 255);
+  display_assert((char *)0x002b3b10, (char *)0x002b3aac, 91, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, -1 -> jl 0x199459 */
+  /* cmp (int16_t)edi, 2 -> jl 0x199476 */
+  display_assert((char *)0x002b3ad0, (char *)0x002b3aac, 92, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)esi, 0, 268);
+  display_assert((char *)0x0028ede8, (char *)0x002b3aac, 257, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x1994f6 */
+  display_assert((char *)0x002b3b18, (char *)0x002b3aac, 258, 0);
+  system_exit(0);
+  find_files_begin(0, (void *)(uintptr_t)eax);
+  /* test ebx, ebx -> jle 0x19952a */
+  find_files_next((void *)(uintptr_t)edi, 0);
+  /* test (char)eax, (char)eax -> je 0x19952a */
+  /* cmp esi, ebx -> jl 0x199510 */
+  file_open((void *)(uintptr_t)edi, 0);
+  /* test (char)eax, (char)eax -> je 0x1995af */
+  file_get_eof((void *)(uintptr_t)edi);
+  debug_malloc(eax, esi, (char *)0x002b3aac, 280);
+  /* test esi, esi -> je 0x1995a5 */
+  file_read((void *)(uintptr_t)edi, 0, (void *)(uintptr_t)esi);
+  /* test (char)eax, (char)eax -> jne 0x1995a5 */
+  debug_free((void *)(uintptr_t)esi, (char *)0x002b3aac, 286);
+  file_close((void *)(uintptr_t)edi);
+  /* test eax, eax -> je 0x199616 */
+  vsprintf((char *)(uintptr_t)edx, (char *)(uintptr_t)eax, (char *)(uintptr_t)ecx);
+  csstrlen((char *)(uintptr_t)ecx);
+  /* file_write(); */ ((void)0);
+  file_get_position((void *)(uintptr_t)esi);
+  /* file_set_eof(); */ ((void)0);
+  /* test esi, esi -> jne 0x19964b */
+  display_assert((char *)0x002b3b10, (char *)0x002b3aac, 508, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [esi], 0x66696c6f -> je 0x199673 */
+  display_assert((char *)0x002b3bb0, (char *)0x002b3aac, 509, 0);
+  system_exit(0);
+  /* relift: test word ptr [esi + 4], 0xfffe -> je 0x19969b */
+  display_assert((char *)0x002b3b74, (char *)0x002b3aac, 510, 0);
+  system_exit(0);
+  /* cmp (int16_t)eax, 0xffff -> jl 0x1996ab */
+  /* cmp (int16_t)eax, 2 -> jl 0x1996cb */
+  display_assert((char *)0x002b3b28, (char *)0x002b3aac, 511, 0);
+  system_exit(0);
+  file_reference_verify((void *)(uintptr_t)esi);
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)esi, 264);
+  file_reference_verify((void *)(uintptr_t)edi);
+  display_assert((char *)0x002b3c08, (char *)0x002b3aac, 137, 0);
+  system_exit(0);
+  /* relift: test byte ptr [esi + 4], 1 -> je 0x199761 */
+  display_assert((char *)0x002b3bdc, (char *)0x002b3aac, 138, 0);
+  system_exit(0);
+  path_add_directory((char *)(uintptr_t)esi, (char *)0);
+  file_reference_verify((void *)(uintptr_t)edi);
+  display_assert((char *)0x0028ede0, (char *)0x002b3aac, 151, 0);
+  system_exit(0);
+  /* relift: test byte ptr [esi + 4], 1 -> je 0x1997cd */
+  path_remove_filename((char *)(uintptr_t)eax);
+  path_add_directory((char *)(uintptr_t)ecx, (char *)(uintptr_t)ebx);
+  file_reference_verify((void *)(uintptr_t)eax);
+  file_reference_verify((void *)(uintptr_t)eax);
+  /* test edi, edi -> jne 0x199869 */
+  display_assert((char *)0x0028ede0, (char *)0x002b3aac, 185, 0);
+  system_exit(0);
+  /* relift: test word ptr [ebx + 4], 0xfff0 -> je 0x199891 */
+  display_assert((char *)0x002b3cb0, (char *)0x002b3aac, 186, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1998ab */
+  /* cmp eax, 9 -> jne 0x1998d3 */
+  display_assert((char *)0x002b3c70, (char *)0x002b3aac, 188, 0);
+  system_exit(0);
+  /* test (char)eax, 2 -> je 0x1998ff */
+  display_assert((char *)0x002b3c18, (char *)0x002b3aac, 189, 0);
+  system_exit(0);
+  path_from_file_reference(eax, (char *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
+  path_split((char *)(uintptr_t)eax, (char **)(uintptr_t)edx, (char **)(uintptr_t)ecx, (char **)(uintptr_t)eax, (char **)(uintptr_t)edx, 0);
+  path_add_directory((char *)(uintptr_t)edi, (char *)(uintptr_t)ecx);
+  /* test (char)ebx, 2 -> je 0x19996b */
+  path_add_directory((char *)(uintptr_t)edi, (char *)(uintptr_t)edx);
+  /* test (char)ebx, 4 -> je 0x19997d */
+  path_add_directory((char *)(uintptr_t)edi, (char *)(uintptr_t)eax);
+  /* test (char)ebx, 8 -> je 0x19998f */
+  path_add_extension((char *)(uintptr_t)edi, (char *)(uintptr_t)ecx);
+  file_reference_verify((void *)(uintptr_t)eax);
+  file_reference_verify((void *)(uintptr_t)ecx);
+  /* relift: cmp (int16_t)edx, word ptr [eax + 6] -> jne 0x1999de */
+  csstrcmp((char *)(uintptr_t)esi, (char *)0);
+  /* test esi, esi -> jne 0x199a18 */
+  display_assert((char *)0x002b3b10, (char *)0x002b3aac, 91, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)esi, 0, 268);
+  file_reference_add_directory((void *)(uintptr_t)esi, (char *)(uintptr_t)eax);
+  file_reference_set_name((void *)(uintptr_t)esi, (char *)(uintptr_t)ecx);
+  csmemset((void *)(uintptr_t)eax, 0, 268);
+  file_reference_add_directory((void *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
+  file_exists((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x199b05 */
+  find_files_begin(0, (void *)(uintptr_t)ecx);
+  find_files_next((void *)(uintptr_t)edx, 0);
+  /* test (char)eax, (char)eax -> je 0x199b14 */
+  file_delete((void *)(uintptr_t)eax);
+  find_files_next((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> jne 0x199ae0 */
+  FUN_0019a490((void *)(uintptr_t)edx);
+  display_assert((char *)0x002b3d7c, (char *)0x002b3aac, 369, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x199b81 */
+  display_assert((char *)0x002b3d68, (char *)0x002b3aac, 370, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [edi], 0 -> jne 0x199ba6 */
+  display_assert((char *)0x002b3d50, (char *)0x002b3aac, 371, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x199bcb */
+  display_assert((char *)0x002b3d38, (char *)0x002b3aac, 372, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 0x10], 0xff -> jl 0x199bf4 */
+  display_assert((char *)0x002b3d14, (char *)0x002b3aac, 373, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)esi);
+  /* cmp eax, 0xff -> jb 0x199c24 */
+  display_assert((char *)0x002b3ce0, (char *)0x002b3aac, 374, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, 268);
+  file_reference_set_name((void *)(uintptr_t)ecx, (char *)(uintptr_t)edi);
+  file_exists((void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x199d2c */
+  file_read_into_buffer((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* test ebx, ebx -> jne 0x199c96 */
+  file_delete((void *)(uintptr_t)edx);
+  /* relift: cmp dword ptr [ebp - 4], 0x18e70 -> je 0x199cc8 */
+  debug_free((void *)(uintptr_t)ebx, (char *)0x002b3aac, 389);
+  file_delete((void *)(uintptr_t)eax);
+  /* test ebx, ebx -> je 0x199d2c */
+  csstrcmp((char *)(uintptr_t)edi, (char *)(uintptr_t)ecx);
+  /* test eax, eax -> je 0x199cf7 */
+  /* relift: cmp byte ptr [edi], 0 -> je 0x199d19 */
+  /* cmp esi, 0xc8 -> jl 0x199cd0 */
+  csmemcpy((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, edx);
+  debug_free((void *)(uintptr_t)ebx, (char *)0x002b3aac, 416);
+  display_assert((char *)0x002b3d7c, (char *)0x002b3aac, 430, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x199da4 */
+  display_assert((char *)0x002b3d68, (char *)0x002b3aac, 431, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x199dc9 */
+  display_assert((char *)0x002b3d50, (char *)0x002b3aac, 432, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [edi], 0 -> jne 0x199dee */
+  display_assert((char *)0x002b3d38, (char *)0x002b3aac, 433, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 0x10], 0xff -> jl 0x199e17 */
+  display_assert((char *)0x002b3d14, (char *)0x002b3aac, 434, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)edi);
+  /* cmp eax, 0xff -> jb 0x199e47 */
+  display_assert((char *)0x002b3ce0, (char *)0x002b3aac, 435, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, 268);
+  file_reference_set_name((void *)(uintptr_t)ecx, (char *)(uintptr_t)esi);
+  file_exists((void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x199ee3 */
+  file_read_into_buffer((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* test edi, edi -> jne 0x199eb5 */
+  file_delete((void *)(uintptr_t)edx);
+  /* relift: cmp dword ptr [ebp - 8], 0x18e70 -> je 0x199edf */
+  debug_free((void *)(uintptr_t)edi, (char *)0x002b3aac, 450);
+  file_delete((void *)(uintptr_t)eax);
+  /* test edi, edi -> jne 0x199f16 */
+  debug_malloc(0x00018e70, 0, (char *)0x002b3aac, 461);
+  /* test edi, edi -> je 0x199fe7 */
+  csmemset((void *)(uintptr_t)edi, 0, 0x00018e70);
+  /* relift: cmp byte ptr [ebx], 0 -> je 0x199f47 */
+  csstrcmp((char *)(uintptr_t)ebx, (char *)(uintptr_t)ecx);
+  /* test eax, eax -> je 0x199f47 */
+  /* cmp esi, 0xc8 -> jl 0x199f20 */
+  csstrcpy((char *)(uintptr_t)esi, (char *)0);
+  csmemcpy((void *)(uintptr_t)esi, (void *)0, 0);
+  file_exists((void *)(uintptr_t)edx);
+  FUN_0019a490((void *)(uintptr_t)eax);
+  file_open((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x199fcd */
+  /* file_write(); */ ((void)0);
+  file_close((void *)(uintptr_t)eax);
+  debug_free((void *)(uintptr_t)edi, (char *)0x002b3aac, 492);
+  /* test (char)eax, (char)eax -> jne 0x19a007 */
+  display_assert((char *)0x00254818, (char *)0x002b3aac, 495, 0);
+  system_exit(0);
+  csmemcmp((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax, 0);
+  file_reference_verify((void *)(uintptr_t)eax);
+  /* test eax, 0xfffffffc -> je 0x19a083 */
+  display_assert((char *)0x002b3dbc, (char *)0x002b3dec, 548, 0);
+  system_exit(0);
+  /* relift: test byte ptr [ebx + 4], 1 -> je 0x19a0a9 */
+  display_assert((char *)0x002b3d90, (char *)0x002b3dec, 549, 0);
+  system_exit(0);
+  /* test (int16_t)edi, (int16_t)edi -> jl 0x19a0da */
+  /* cmp eax, -1 -> je 0x19a0d3 */
+  CloseHandle(0);
+  /* mem[0x0032cf60] = ecx */
+  csstrcpy((char *)0x0032cf68, (char *)(uintptr_t)ebx);
+  /* relift: cmp byte ptr [ebx], 0 -> je 0x19a196 */
+  csstrlen((char *)(uintptr_t)edi);
+  csstrlen((char *)(uintptr_t)ebx);
+  /* cmp eax, 0xff -> jbe 0x19a15d */
+  display_assert((char *)0x002b3e18, (char *)0x002b3dec, 672, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)edi);
+  /* cmp esi, edi -> je 0x19a175 */
+  csstrlen((char *)(uintptr_t)edi);
+  csstrncpy((char *)(uintptr_t)esi, (char *)(uintptr_t)ebx, ecx);
+  /* relift: cmp byte ptr [ebx], 0 -> je 0x19a226 */
+  csstrlen((char *)(uintptr_t)edi);
+  csstrlen((char *)(uintptr_t)ebx);
+  /* cmp eax, 0xff -> jbe 0x19a1ed */
+  display_assert((char *)0x002b3e50, (char *)0x002b3dec, 696, 0);
+  system_exit(0);
+  csstrlen((char *)(uintptr_t)edi);
+  /* cmp esi, edi -> je 0x19a205 */
+  csstrlen((char *)(uintptr_t)edi);
+  csstrncpy((char *)(uintptr_t)esi, (char *)(uintptr_t)ebx, ecx);
+  csstrlen((char *)(uintptr_t)esi);
+  /* relift: cmp word ptr [ebp + 8], 0 -> je 0x19a25d */
+  unicode_cursor_backward((char *)(uintptr_t)esi, (void *)(uintptr_t)eax);
+  /* cmp (int16_t)eax, 0x5c -> jne 0x19a243 */
+  unicode_cursor_forward((char *)(uintptr_t)esi, (void *)(uintptr_t)ecx);
+  /* cmp (int16_t)eax, 0x5c -> jne 0x19a27e */
+  csstrlen((char *)(uintptr_t)esi);
+  unicode_cursor_backward((char *)(uintptr_t)esi, (void *)(uintptr_t)eax);
+  /* cmp (int16_t)eax, 0x2e -> jne 0x19a2ff */
+  /* test (char)eax, (char)eax -> je 0x19a33b */
+  /* relift: cmp byte ptr [ecx], 0 -> jne 0x19a33b */
+  /* relift: cmp byte ptr [edx], 0 -> jne 0x19a33b */
+  /* cmp (int16_t)eax, 0x5c -> jne 0x19a33b */
+  /* test (char)eax, (char)eax -> je 0x19a327 */
+  /* relift: cmp byte ptr [eax], 0 -> jne 0x19a327 */
+  /* relift: cmp byte ptr [ecx], 0 -> jne 0x19a33b */
+  /* relift: cmp word ptr [ebp + 8], 0 -> jne 0x19a2c3 */
+  /* test (char)eax, (char)eax -> je 0x19a357 */
+  /* relift: cmp byte ptr [edx], 0 -> jne 0x19a357 */
+  /* relift: cmp dword ptr [edi], esi -> je 0x19a360 */
+  /* test edi, edi -> jne 0x19a3a3 */
+  display_assert((char *)0x002b3e90, (char *)0x002b3dec, 788, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x19a3d6 */
+  /* test (char)ecx, (char)ecx -> je 0x19a3d6 */
+  /* test (char)ecx, (char)ecx -> je 0x19a3d6 */
+  _isalpha();
+  /* test eax, eax -> je 0x19a3d6 */
+  /* relift: cmp byte ptr [esi + 1], 0x3a -> jne 0x19a3d6 */
+  /* relift: cmp byte ptr [esi + 2], 0x5c -> je 0x19a3e4 */
+  csstrcpy((char *)(uintptr_t)edi, (char *)0x002b3e8c);
+  FUN_0008dc30((char *)(uintptr_t)edi, (char *)(uintptr_t)esi);
+  file_reference_verify((void *)(uintptr_t)eax);
+  path_from_file_reference(eax, (char *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
+  file_get_full_attributes((char *)(uintptr_t)ecx);
+  /* cmp eax, -1 -> je 0x19a444 */
+  file_reference_verify((void *)(uintptr_t)eax);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)ebx);
+  path_from_file_reference(ecx, (char *)(uintptr_t)edi, (char *)(uintptr_t)eax);
+  CreateFileA((char *)(uintptr_t)edx, 0x40000000, 0, 0, 0, 128, 0);
+  /* cmp eax, -1 -> je 0x19a51d */
+  CloseHandle(0);
+  CreateDirectoryA((char *)(uintptr_t)edi, 0);
+  /* test eax, eax -> jne 0x19a50a */
+  file_reference_verify((void *)(uintptr_t)ebx);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)ebx);
+  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  /* test (char)eax, 1 -> je 0x19a5df */
+  FUN_001d0df0((char *)(uintptr_t)eax, 128);
+  /* test eax, eax -> je 0x19a5f8 */
+  DeleteFileA((char *)(uintptr_t)ecx);
+  /* test eax, eax -> je 0x19a5f8 */
+  FUN_001d347c((char *)(uintptr_t)edx);
+  /* test eax, eax -> je 0x19a5f8 */
+  file_reference_verify((void *)(uintptr_t)ebx);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)esi);
+  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  file_get_full_attributes((char *)(uintptr_t)eax);
+  /* cmp eax, -1 -> je 0x19a6a3 */
+  xapi_GetLastError();
+  /* cmp eax, 2 -> je 0x19a6c6 */
+  xapi_GetLastError();
+  /* cmp eax, 3 -> je 0x19a6c6 */
+  file_error((void *)0x002b3ed4, (char *)0);
+  file_reference_verify((void *)(uintptr_t)eax);
+  path_from_file_reference(edx, (char *)(uintptr_t)esi, (char *)(uintptr_t)ecx);
+  csstrcpy((char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  path_remove_filename((char *)(uintptr_t)edx);
+  path_add_directory((char *)(uintptr_t)eax, (char *)(uintptr_t)edi);
+  MoveFileA();
+  /* test eax, eax -> je 0x19a790 */
+  path_remove_filename((char *)(uintptr_t)esi);
+  path_add_directory((char *)(uintptr_t)esi, (char *)(uintptr_t)edi);
+  file_reference_verify((void *)(uintptr_t)eax);
+  display_assert((char *)0x002b3f8c, (char *)0x002b3dec, 308, 0);
+  system_exit(0);
+  /* test (char)ebx, 3 -> jne 0x19a82a */
+  display_assert((char *)0x002b3f48, (char *)0x002b3dec, 309, 0);
+  system_exit(0);
+  /* test (char)ebx, 4 -> je 0x19a856 */
+  display_assert((char *)0x002b3ef0, (char *)0x002b3dec, 310, 0);
+  system_exit(0);
+  path_from_file_reference(eax, (char *)(uintptr_t)edx, (char *)(uintptr_t)ecx);
+  /* test edi, edi -> je 0x19a886 */
+  CreateFileA((char *)(uintptr_t)ecx, eax, 0, 0, 0, 128, 0);
+  /* cmp eax, -1 -> je 0x19a8d9 */
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* cmp eax, -1 -> jne 0x19a91e */
+  CloseHandle(0);
+  file_reference_verify((void *)(uintptr_t)eax);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)edi);
+  CloseHandle(0);
+  /* test eax, eax -> je 0x19a967 */
+  file_reference_verify((void *)(uintptr_t)edi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)edi);
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* cmp esi, -1 -> jne 0x19a9fa */
+  file_reference_verify((void *)(uintptr_t)edi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)esi);
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* test (char)ebx, (char)ebx -> jne 0x19aa5f */
+  file_reference_verify((void *)(uintptr_t)esi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)edi);
+  GetFileSize(0, (void *)0);
+  /* cmp esi, -1 -> jne 0x19aac6 */
+  file_reference_verify((void *)(uintptr_t)edi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)esi);
+  file_set_position((void *)(uintptr_t)esi, 0);
+  /* test (char)eax, (char)eax -> je 0x19ab07 */
+  SetEndOfFile(0);
+  /* test eax, eax -> je 0x19ab07 */
+  file_reference_verify((void *)(uintptr_t)esi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)ebx);
+  display_assert((char *)0x00267900, (char *)0x002b3dec, 423, 0);
+  system_exit(0);
+  ReadFile(0, (void *)(uintptr_t)edi, ecx, (void *)(uintptr_t)eax, (void *)0);
+  /* test eax, eax -> je 0x19abbf */
+  /* relift: cmp dword ptr [ebp - 4], eax -> jne 0x19abb8 */
+  SetLastError(38);
+  file_reference_verify((void *)(uintptr_t)ebx);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)ebx);
+  display_assert((char *)0x00267900, (char *)0x002b3dec, 451, 0);
+  system_exit(0);
+  WriteFile(0, (void *)(uintptr_t)edi, ecx, (void *)(uintptr_t)eax, (void *)0);
+  /* test eax, eax -> je 0x19ac68 */
+  /* relift: cmp dword ptr [ebp - 4], eax -> jne 0x19ac68 */
+  file_reference_verify((void *)(uintptr_t)ebx);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_set_position((void *)(uintptr_t)esi, 0);
+  /* test (char)eax, (char)eax -> je 0x19ace5 */
+  file_read((void *)(uintptr_t)esi, 0, (void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> je 0x19ace5 */
+  file_set_position((void *)(uintptr_t)esi, 0);
+  /* test (char)eax, (char)eax -> je 0x19ad25 */
+  /* file_write(); */ ((void)0);
+  /* test (char)eax, (char)eax -> je 0x19ad25 */
+  file_reference_verify((void *)(uintptr_t)ebx);
+  csmemset((void *)(uintptr_t)edi, 0, 0);
+  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  FUN_001d0ee1();
+  /* test eax, eax -> je 0x19adb5 */
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)edx, 0);
+  file_reference_verify((void *)(uintptr_t)ebx);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  SetLastError(0);
+  file_reference_verify((void *)(uintptr_t)esi);
+  /* test edi, edi -> jne 0x19ae4a */
+  display_assert((char *)0x00267f68, (char *)0x002b3dec, 524, 0);
+  system_exit(0);
+  path_from_file_reference(edx, (char *)(uintptr_t)ecx, (char *)(uintptr_t)eax);
+  FUN_001d0ee1();
+  /* test eax, eax -> je 0x19ae88 */
+  file_reference_verify((void *)(uintptr_t)esi);
+  xapi_GetLastError();
+  error(0, (char *)0x002b3ea4);
+  return NULL;
 
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+}
 
 /* 0x1a4440 — refresh biped forward/up from flying, climb, limp, or default. */
 #if defined(__clang__)
