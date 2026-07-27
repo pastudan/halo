@@ -187,101 +187,52 @@ void cheat_all_powerups(void)
 }
 /* --- cheats.obj batch drafts (2026-07-26) --- */
 
-/* FUN_000a54b0 (0xa54b0) — XBE naked draft (batch 139). */
-#if defined(__clang__)
-static void (*const ba54b0_ca3e60)(void) = (void *)FUN_000a3e60;
-static bool (*const ba54b0_c18f3e0)(void *location, void *position, int16_t *out_sky_index) = FUN_0018f3e0;
-static void * (*const ba54b0_c18e3c0)(void) = global_scenario_get;
-static void *(*const ba54b0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const ba54b0_ca4200)(void) = (void *)weather_particle_system_delete;
-static void (*const ba54b0_ca40a0)(void) = (void *)weather_particle_system_new;
-static void (*const ba54b0_ca4e20)(int16_t weather_index) = weather_particle_system_render;
-
-__attribute__((naked, noinline))
+/* FUN_000a54b0 (0xa54b0) — readable C lift from XBE leaf.
+ * Cheat weather update: if cheat flags set and a weather slot is active,
+ * refresh particle system for the current sky weather tag. */
 void FUN_000a54b0(void)
 {
-  __asm__ volatile(
-      "movb 0x32574c, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000a54b0_5\n\t"
-      "movb 0x2ef7ee, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000a54b0_5\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x506548, %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_000a54b0_4\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ca3e60]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x506784, %%ax\n\t"
-      "leal 0x18(%%esi), %%edi\n\t"
-      "movw %%ax, 0x14(%%esi)\n\t"
-      "movl 0x506780, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x10(%%esi), %%eax\n\t"
-      "pushl $0x506550\n\t"
-      "pushl %%eax\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "call *%[c18f3e0]\n\t"
-      "movw (%%edi), %%di\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $-1, %%di\n\t"
-      "movb %%al, 0x1a(%%esi)\n\t"
-      "je .LFUN_000a54b0_1\n\t"
-      "movswl %%di, %%edx\n\t"
-      "pushl $0xf0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18e3c0]\n\t"
-      "addl $0x1b4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x2c(%%eax), %%ebx\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000a54b0_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .LFUN_000a54b0_3\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000a54b0_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x506548, %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca4200]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000a54b0_2:\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .LFUN_000a54b0_3\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x506548, %%cx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ca40a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000a54b0_3:\n\t"
-      "cmpl $-1, (%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "je .LFUN_000a54b0_4\n\t"
-      "movl 0x506548, %%eax\n\t"
-      "popl %%esi\n\t"
-      "jmp .LFUN_000a54b0_10000\n\t"
-      ".LFUN_000a54b0_4:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000a54b0_5:\n\t"
-      "ret\n\t"
-      ".LFUN_000a54b0_10000:\n\t"
-      "jmp *%[ca4e20]\n\t"
-      :
-      : [ca3e60] "m"(ba54b0_ca3e60), [c18f3e0] "m"(ba54b0_c18f3e0), [c18e3c0] "m"(ba54b0_c18e3c0), [elem] "m"(ba54b0_elem), [ca4200] "m"(ba54b0_ca4200), [ca40a0] "m"(ba54b0_ca40a0), [ca4e20] "m"(ba54b0_ca4e20)
-      : "memory");
+  short slot;
+  char *state;
+  short sky_index;
+  int weather_tag;
+  int cur;
+  char ok;
+
+  if (!*(unsigned char *)0x32574c)
+    return;
+  if (!*(unsigned char *)0x2ef7ee)
+    return;
+  slot = *(short *)0x506548;
+  if (slot == -1)
+    return;
+
+  state = (char *)FUN_000a3e60(slot);
+  *(short *)(state + 0x14) = *(short *)0x506784;
+  *(int *)(state + 0x10) = *(int *)0x506780;
+  sky_index = -1;
+  weather_tag = -1;
+  ok = FUN_0018f3e0((void *)(state + 0x10), (void *)0x506550, (int16_t *)(state + 0x18));
+  *(unsigned char *)(state + 0x1a) = ok;
+  sky_index = *(short *)(state + 0x18);
+  if (sky_index != -1) {
+    void *scen = global_scenario_get();
+    void *elem = tag_block_get_element((char *)scen + 0x1b4, sky_index, 0xf0);
+    weather_tag = *(int *)((char *)elem + 0x2c);
+  }
+  cur = *(int *)state;
+  if (cur != weather_tag) {
+    if (cur != -1)
+      ((void (*)(int))(void *)weather_particle_system_delete)((unsigned short)slot);
+    if (weather_tag != -1)
+      ((void (*)(int, int, float))(void *)weather_particle_system_new)(
+          (unsigned short)slot, weather_tag, 1.0f);
+  }
+  if (*(int *)state != -1)
+    weather_particle_system_render(slot);
 }
-#else
-#error "FUN_000a54b0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_000a5590 (0xa5590) — readable C lift. */

@@ -5175,7 +5175,8 @@
         {
           "addr": "0xa54b0",
           "decl": "void FUN_000a54b0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000a54b0"
         },
         {
           "addr": "0xa5590",
