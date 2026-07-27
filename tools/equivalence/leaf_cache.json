@@ -55,5 +55,10 @@
   },
   "0xa2d30": {
     "class": "non_leaf"
+  },
+  "0xe0ee0": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 50.9
   }
 }

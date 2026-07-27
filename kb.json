@@ -18501,8 +18501,8 @@
         },
         {
           "addr": "0xe0ee0",
-          "decl": "void player_ui_edit_profile_is_dirty(void);",
-          "ported": false
+          "decl": "char player_ui_edit_profile_is_dirty(void);",
+          "ported": true
         },
         {
           "addr": "0xe0fd0",

@@ -474,101 +474,50 @@ void *player_ui_get_edit_playlist_profile(void)
   return t == 1 ? (void *)0x46c03c : (void *)0;
 }
 
-/* player_ui_edit_profile_is_dirty (0xe0ee0) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static void (*const be0ee0_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be0ee0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const be0ee0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
-
-__attribute__((naked, noinline))
-void player_ui_edit_profile_is_dirty(void)
+/* player_ui_edit_profile_is_dirty (0xe0ee0) — readable C lift. */
+char player_ui_edit_profile_is_dirty(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x46c038, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lplayer_ui_edit_profile_is_dirty_5\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c29a0]\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "subl %%ebx, %%eax\n\t"
-      "je .Lplayer_ui_edit_profile_is_dirty_3\n\t"
-      "decl %%eax\n\t"
-      "je .Lplayer_ui_edit_profile_is_dirty_1\n\t"
-      "pushl $0x28298c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_edit_profile_is_dirty_1:\n\t"
-      "movl 0x46c108, %%eax\n\t"
-      "movl 0x46c0a0, %%ecx\n\t"
-      "pushl $0x68\n\t"
-      "pushl $0x46c03c\n\t"
-      "pushl $0x46c0a4\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movw %%bx, 0x46c108\n\t"
-      "movw %%bx, 0x46c0a0\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayer_ui_edit_profile_is_dirty_2\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lplayer_ui_edit_profile_is_dirty_2:\n\t"
-      "movw -0x8(%%ebp), %%ax\n\t"
-      "movw -0x4(%%ebp), %%dx\n\t"
-      "movw %%ax, 0x46c0a0\n\t"
-      "movb %%bl, %%al\n\t"
-      "movw %%dx, 0x46c108\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_edit_profile_is_dirty_3:\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x46c0be, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x46c056, %%di\n\t"
-      "pushl $0x30\n\t"
-      "pushl $0x46c03c\n\t"
-      "pushl $0x46c0a4\n\t"
-      "movw %%bx, 0x46c0be\n\t"
-      "movw %%bx, 0x46c056\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayer_ui_edit_profile_is_dirty_4\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lplayer_ui_edit_profile_is_dirty_4:\n\t"
-      "movw %%di, 0x46c056\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, 0x46c0be\n\t"
-      "popl %%esi\n\t"
-      ".Lplayer_ui_edit_profile_is_dirty_5:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c29a0] "m"(be0ee0_c1c29a0), [c8f390] "m"(be0ee0_c8f390), [c8da40] "m"(be0ee0_c8da40)
-      : "memory");
+  int handle;
+  int type;
+  char dirty;
+  int16_t save_a;
+  int16_t save_b;
+  int16_t save_c;
+  int16_t save_d;
+
+  dirty = 0;
+  handle = *(int *)0x46c038;
+  if (handle == -1) {
+    return dirty;
+  }
+  type = (int)(uint16_t)saved_game_file_get_type(handle);
+  if (type == 0) {
+    save_c = *(int16_t *)0x46c0be;
+    save_d = *(int16_t *)0x46c056;
+    *(int16_t *)0x46c0be = 0;
+    *(int16_t *)0x46c056 = 0;
+    if (csmemcmp((void *)0x46c0a4, (void *)0x46c03c, 0x30) != 0) {
+      dirty = 1;
+    }
+    *(int16_t *)0x46c056 = save_d;
+    *(int16_t *)0x46c0be = save_c;
+    return dirty;
+  }
+  if (type == 1) {
+    save_a = *(int16_t *)0x46c108;
+    save_b = *(int16_t *)0x46c0a0;
+    *(int16_t *)0x46c108 = 0;
+    *(int16_t *)0x46c0a0 = 0;
+    if (csmemcmp((void *)0x46c0a4, (void *)0x46c03c, 0x68) != 0) {
+      dirty = 1;
+    }
+    *(int16_t *)0x46c0a0 = save_b;
+    *(int16_t *)0x46c108 = save_a;
+    return dirty;
+  }
+  error(2, (const char *)0x28298c);
+  return 0;
 }
-#else
-#error "player_ui_edit_profile_is_dirty: clang naked draft required"
-#endif
-
-
 /* player_ui_activate_all_solo_levels (0xe0fd0) — readable C lift. */
 void player_ui_activate_all_solo_levels(void)
 {
