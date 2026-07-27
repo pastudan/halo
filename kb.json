@@ -35377,8 +35377,8 @@
         },
         {
           "addr": "0x4afa0",
-          "decl": "void ai_debug_change_selected_encounter(int encounter_index);",
-          "ported": false
+          "decl": "void ai_debug_change_selected_encounter(char forward);",
+          "ported": true
         },
         {
           "addr": "0x4b0f0",

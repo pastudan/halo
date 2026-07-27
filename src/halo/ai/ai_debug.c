@@ -800,149 +800,60 @@ void ai_debug_idle_look_addprop(int prop, float score)
   *(int16_t *)0x6323dc = (int16_t)(count + 1);
 }
 
-/* ai_debug_change_selected_encounter (0x4afa0) — XBE naked draft (batch 125). */
-#if defined(__clang__)
-static int (*const b4afa0_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static unsigned int (*const b4afa0_c119980)(data_t *data, int datum) = data_prev_index;
-static int (*const b4afa0_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
-static void (*const b4afa0_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b4afa0_c49220)(int encounter_idx) = ai_debug_select_encounter;
-static scenario_t * (*const b4afa0_c18e380)(void) = global_scenario_get;
-static void *(*const b4afa0_elem)(void *, int, int) = tag_block_get_element;
-static char * (*const b4afa0_c8dff0)(char *destination, const char *source) = csstrcpy;
-static int (*const b4afa0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-void ai_debug_change_selected_encounter(int encounter_index __attribute__((unused)))
+/* ai_debug_change_selected_encounter (0x4afa0) — readable C lift.
+ * Step selected encounter forward/backward and print a debug description. */
+void ai_debug_change_selected_encounter(char forward)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x200, %%esp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "je .Lai_debug_change_selected_encounter_1\n\t"
-      "movl 0x5ac9f4, %%eax\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1198f0]\n\t"
-      "jmp .Lai_debug_change_selected_encounter_2\n\t"
-      ".Lai_debug_change_selected_encounter_1:\n\t"
-      "movl 0x5ac9f4, %%edx\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119980]\n\t"
-      ".Lai_debug_change_selected_encounter_2:\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119270]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lai_debug_change_selected_encounter_3\n\t"
-      "pushl $0x25afac\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cff4d0]\n\t"
-      "pushl $-1\n\t"
-      "call *%[c49220]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_debug_change_selected_encounter_3:\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "andl $0xffff, %%edx\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x20(%%esi), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb $0x20, %%al\n\t"
-      "je .Lai_debug_change_selected_encounter_4\n\t"
-      "leal -0x200(%%ebp), %%eax\n\t"
-      "pushl $0x25af9c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lai_debug_change_selected_encounter_8\n\t"
-      ".Lai_debug_change_selected_encounter_4:\n\t"
-      "movw 0x7e(%%esi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lai_debug_change_selected_encounter_5\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl $0x253a04\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lai_debug_change_selected_encounter_6\n\t"
-      ".Lai_debug_change_selected_encounter_5:\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl $0x25acb8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lai_debug_change_selected_encounter_6:\n\t"
-      "testb $0x40, 0x20(%%esi)\n\t"
-      "movl $0x25af94, %%eax\n\t"
-      "jne .Lai_debug_change_selected_encounter_7\n\t"
-      "movl $0x25af8c, %%eax\n\t"
-      ".Lai_debug_change_selected_encounter_7:\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x200(%%ebp), %%edx\n\t"
-      "pushl $0x25af80\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lai_debug_change_selected_encounter_8:\n\t"
-      "movb 0xd(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x25af78, %%eax\n\t"
-      "jne .Lai_debug_change_selected_encounter_9\n\t"
-      "movl $0x25af6c, %%eax\n\t"
-      ".Lai_debug_change_selected_encounter_9:\n\t"
-      "movswl 0x2a(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x200(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x25af48\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c49220]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b4afa0_c1198f0), [c119980] "m"(b4afa0_c119980), [c119270] "m"(b4afa0_c119270), [cff4d0] "m"(b4afa0_cff4d0), [c49220] "m"(b4afa0_c49220), [c18e380] "m"(b4afa0_c18e380), [elem] "m"(b4afa0_elem), [c8dff0] "m"(b4afa0_c8dff0), [c1d90f0] "m"(b4afa0_c1d90f0)
-      : "memory");
+  unsigned int next;
+  void *enc;
+  char *def;
+  char name_buf[0x100];
+  char desc_buf[0x100];
+  const char *squad_str;
+  const char *active_str;
+  int16_t squad_index;
+
+  if (forward)
+    next = (unsigned int)data_next_index(*(data_t **)0x5ab270, *(int *)0x5ac9f4);
+  else
+    next = data_prev_index(*(data_t **)0x5ab270, *(int *)0x5ac9f4);
+
+  enc = (void *)datum_absolute_index_to_index(*(data_t **)0x5ab270, (int)next);
+  if (enc == NULL) {
+    console_printf(0, (const char *)0x25afac);
+    ai_debug_select_encounter(-1);
+    return;
+  }
+
+  def = (char *)tag_block_get_element(
+      (char *)global_scenario_get() + 0x42c, (int)(next & 0xffff), 0xb0);
+
+  if ((*(unsigned char *)(def + 0x20) & 0x20) != 0) {
+    csstrcpy(desc_buf, (const char *)0x25af9c);
+  } else {
+    squad_index = *(int16_t *)(def + 0x7e);
+    if (squad_index == (int16_t)0xffff)
+      csstrcpy(name_buf, (const char *)0x253a04);
+    else
+      crt_sprintf(name_buf, (const char *)0x25acb8, (int)squad_index);
+
+    if ((*(unsigned char *)(def + 0x20) & 0x40) != 0)
+      squad_str = (const char *)0x25af94;
+    else
+      squad_str = (const char *)0x25af8c;
+    crt_sprintf(desc_buf, (const char *)0x25af80, squad_str, name_buf);
+  }
+
+  if (*(unsigned char *)((char *)enc + 0xd) != 0)
+    active_str = (const char *)0x25af78;
+  else
+    active_str = (const char *)0x25af6c;
+
+  console_printf(0, (const char *)0x25af48, def, active_str, desc_buf,
+                 (int)*(int16_t *)((char *)enc + 0x2a));
+  ai_debug_select_encounter((int)next);
 }
-#else
-#error "ai_debug_change_selected_encounter: clang naked draft required"
-#endif
+
 
 
 /* ai_debug_change_selected_actor (0x4c170) — readable C lift.
