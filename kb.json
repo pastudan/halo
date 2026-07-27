@@ -12429,7 +12429,8 @@
         {
           "addr": "0xca430",
           "decl": "void FUN_000ca430(int16_t game_flag, int16_t scenario_index);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000ca430"
         },
         {
           "addr": "0xca4e0",
@@ -23419,9 +23420,10 @@
           "ported": false
         },
         {
-          "addr": "0x185f80",
+                    "addr": "0x185f80",
           "decl": "void render_frustum_get_projection_bounds(void *frustum, float *bounds);",
-          "ported": false
+          "ported": true,
+          "name": "render_frustum_get_projection_bounds"
         },
         {
           "addr": "0x186050",
@@ -23494,9 +23496,10 @@
           "ported": true
         },
         {
-          "addr": "0x187f80",
-          "decl": "void FUN_00187f80(void);",
-          "ported": false
+                    "addr": "0x187f80",
+          "decl": "float FUN_00187f80(void *flags, short mode, float *point, float *forward);",
+          "ported": false,
+          "name": "FUN_00187f80"
         },
         {
           "addr": "0x188010",
