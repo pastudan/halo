@@ -602,7 +602,7 @@ void FUN_000a5830(void)
 /* FUN_000a5920 (0xa5920) — XBE naked draft (batch 117). */
 #if defined(__clang__)
 static void (*const ba5920_c1a12e0)(int unit_handle, float *out_pos, float *out_axis, int *out_value) = biped_get_autoaim_pill;
-static short (*const ba5920_a57b0)(float *, float) = FUN_000a57b0;
+static short (*const ba5920_a57b0)(float *, float) = (void *)FUN_000a57b0;
 
 __attribute__((naked, noinline))
 void FUN_000a5920(void)
@@ -1521,7 +1521,7 @@ static void (*const ba6130_assert)(const char *, const char *, int, bool) = disp
 static void (*const ba6130_exitfn)(int) = system_exit;
 static int16_t (*const ba6130_c1a8690)(int unit_handle) = unit_get_zoom_level;
 static void (*const ba6130_ca5610)(void) = FUN_000a5610;
-static void (*const ba6130_c86b80)(void) = director_camera_deterministic;
+static void (*const ba6130_c86b80)(void) = (void *)director_camera_deterministic;
 static void (*const ba6130_ca6030)(void) = FUN_000a6030;
 static float (*const ba6130_norm)(float *) = normalize3d;
 static void *(*const ba6130_get)(int, int) = object_get_and_verify_type;

@@ -612,61 +612,23 @@ int FUN_001a6820(int unit, char flag)
   return verify_tag_reference((int *)elem);
 }
 
-/* FUN_001a6870 (0x1a6870) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void *(*const b1a6870_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1a6870_c19b120)(int *tag_ref) = verify_tag_reference;
-
-__attribute__((naked, noinline))
-int FUN_001a6870(int param_1 __attribute__((unused)), short param_2 __attribute__((unused)), char param_3 __attribute__((unused)))
+/* FUN_001a6870 (0x1a6870) — readable C lift. */
+int FUN_001a6870(char *unit_tag, short seat_index, char prefer_second)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%eax\n\t"
-      "addl $0x2e4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movb 0x10(%%ebp), %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%dl, %%dl\n\t"
-      "setne %%cl\n\t"
-      "leal 0xdc(%%eax), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "decl %%eax\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jg .LFUN_001a6870_1\n\t"
-      "movl %%ecx, %%eax\n\t"
-      ".LFUN_001a6870_1:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .LFUN_001a6870_2\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a6870_2:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19b120]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1a6870_elem), [c19b120] "m"(b1a6870_c19b120)
-      : "memory");
-}
-#else
-#error "FUN_001a6870: clang naked draft required"
-#endif
+  int *seats = (int *)(unit_tag + 0x2e4);
+  char *seat = (char *)tag_block_get_element(seats, seat_index, 0x11c);
+  int *block = (int *)(seat + 0xdc);
+  int idx = prefer_second ? 1 : 0;
+  int last = block[0] - 1;
+  void *elem;
 
+  if (idx > last)
+    idx = last;
+  if ((short)idx < 0)
+    return -1;
+  elem = tag_block_get_element(block, idx, 0x30);
+  return verify_tag_reference((int *)elem);
+}
 
 /* FUN_001a6bc0 (0x1a6bc0)
  *
@@ -16901,7 +16863,7 @@ void FUN_00122a50(int animation, float frame_pos, float blend_weight,
 
 /* FUN_00122e50 (0x122e50) — XBE naked draft (batch 48). */
 #if defined(__clang__)
-static char (*const b122e50_c120620)(int animation) = FUN_00120620;
+static char (*const b122e50_c120620)(int animation) = (void *)FUN_00120620;
 static void (*const b122e50_ftol)(void) = FUN_001d9068;
 static void (*const b122e50_c1daf7e)(void) = FUN_001daf7e;
 static char * (*const b122e50_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
@@ -19539,7 +19501,7 @@ static void *(*const b1b0d90_tag)(int, int) = tag_get;
 static void (*const b1b0d90_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b0d90_exitfn)(int) = system_exit;
 static char (*const b1b0d90_c1a86b0)(void *anim_state, int16_t target_state) = FUN_001a86b0;
-static char * (*const b1b0d90_c1ae700)(int unit_handle, int unused) = unit_get_weapon_name;
+static char * (*const b1b0d90_c1ae700)(int unit_handle, int unused) = (void *)unit_get_weapon_name;
 static const char * (*const b1b0d90_c1ab6e0)(int16_t base_seat_index) = FUN_001ab6e0;
 static char (*const b1b0d90_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
 static int16_t (*const b1b0d90_c1ab870)(void *animation_state, int animation_graph_tag_index, int unit_handle) = FUN_001ab870;
@@ -20001,7 +19963,7 @@ static void *(*const b1b1400_tag)(int, int) = tag_get;
 static bool (*const b1b1400_gerun)(void) = game_engine_running;
 static void (*const b1b1400_c120670)(void) = build_damage_animation_index;
 static int (*const b1b1400_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
-static char * (*const b1b1400_c1ae700)(int unit_handle, int unused) = unit_get_weapon_name;
+static char * (*const b1b1400_c1ae700)(int unit_handle, int unused) = (void *)unit_get_weapon_name;
 static char (*const b1b1400_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
 static char (*const b1b1400_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
 static char (*const b1b1400_c1a86b0)(void *anim_state, int16_t target_state) = FUN_001a86b0;

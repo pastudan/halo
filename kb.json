@@ -5231,7 +5231,7 @@
         },
         {
           "addr": "0xa57b0",
-          "decl": "short FUN_000a57b0(float *vec, float max_length);",
+          "decl": "char FUN_000a57b0(float *vec, float max_length);",
           "ported": false,
           "name": "FUN_000a57b0"
         },
@@ -14103,9 +14103,9 @@
         },
         {
           "addr": "0xf6820",
-          "decl": "char item_new(int object_handle);",
+          "decl": "char item_new(int item_handle);",
           "name": "item_new",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6860",
@@ -14400,7 +14400,8 @@
         {
           "addr": "0x100500",
           "decl": "void main_switch_structure_bsp(int16_t bsp_index);",
-          "ported": false
+          "ported": true,
+          "name": "main_switch_structure_bsp"
         },
         {
           "addr": "0x100560",
@@ -20365,7 +20366,7 @@
         },
         {
           "addr": "0xe1d00",
-          "decl": "void FUN_000e1d00(void);",
+          "decl": "void FUN_000e1d00(float x, float y, float z, float *out_x, float *out_y);",
           "ported": false
         },
         {
@@ -20377,7 +20378,8 @@
         {
           "addr": "0xe1f20",
           "decl": "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000e1f20"
         },
         {
           "addr": "0xe2170",
@@ -28589,9 +28591,10 @@
         },
         {
           "addr": "0x1a6870",
-          "decl": "int FUN_001a6870(int param_1, short param_2, char param_3);",
-          "ported": false,
-          "source_path": "units/units.c"
+          "decl": "int FUN_001a6870(char *unit_tag, short seat_index, char prefer_second);",
+          "ported": true,
+          "source_path": "units/units.c",
+          "name": "FUN_001a6870"
         },
         {
           "addr": "0x1a68d0",
@@ -29348,7 +29351,7 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle /* @<esi> */);",
+          "decl": "char *unit_get_weapon_name(int unit_handle, int unused);",
           "name": "unit_get_weapon_name",
           "ported": true,
           "obj": "units.obj"
@@ -37926,7 +37929,7 @@
         },
         {
           "addr": "0x120790",
-          "decl": "void animation_set_frame_size(void);",
+          "decl": "void animation_set_frame_size(char *anim);",
           "ported": false
         },
         {
@@ -39974,15 +39977,15 @@
         },
         {
           "addr": "0x80820",
-          "decl": "void tea_encrypt(unsigned int *v, unsigned int *w, int *key);",
+          "decl": "void tea_encrypt(unsigned int *v, unsigned int *w, unsigned int *key);",
           "name": "tea_encrypt",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x808b0",
-          "decl": "void tea_decrypt(unsigned int *v, unsigned int *w, int *key);",
+          "decl": "void tea_decrypt(unsigned int *v, unsigned int *w, unsigned int *key);",
           "name": "tea_decrypt",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80940",
@@ -40014,7 +40017,7 @@
         },
         {
           "addr": "0x80d30",
-          "decl": "int prime_compare(unsigned int *a, unsigned int *b);",
+          "decl": "int prime_compare(const uint32_t *a, const uint32_t *b);",
           "name": "prime_compare",
           "ported": true
         },

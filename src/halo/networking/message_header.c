@@ -129,155 +129,41 @@ void key_message_xor_keystream(int msg __attribute__((unused)), int len __attrib
 #endif
 
 
-/* tea_encrypt (0x80820) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void tea_encrypt(unsigned int *v __attribute__((unused)), unsigned int *w __attribute__((unused)), int *key __attribute__((unused)))
+/* tea_encrypt (0x80820) — readable C lift. */
+void tea_encrypt(unsigned int *v, unsigned int *w, unsigned int *key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl 0x4(%%ecx), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "movl 0x4(%%esi), %%edi\n\t"
-      "movl %%edi, 0x10(%%ebp)\n\t"
-      "movl 0x8(%%esi), %%edi\n\t"
-      "movl 0xc(%%esi), %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "movl $0x20, 0x8(%%ebp)\n\t"
-      ".Ltea_encrypt_1:\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "shrl $5, %%esi\n\t"
-      "addl %%edi, %%esi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "shll $4, %%edi\n\t"
-      "addl %%ebx, %%edi\n\t"
-      "movl -0xc(%%ebp), %%ebx\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "subl $0x61c88647, %%edx\n\t"
-      "leal (%%edx,%%ecx,1), %%edi\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "addl %%esi, %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "shrl $5, %%esi\n\t"
-      "addl %%edi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "shll $4, %%edi\n\t"
-      "addl %%ebx, %%edi\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "leal (%%edx,%%eax,1), %%edi\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "addl %%esi, %%ecx\n\t"
-      "decl 0x8(%%ebp)\n\t"
-      "jne .Ltea_encrypt_1\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int y = v[0];
+  unsigned int z = v[1];
+  unsigned int sum = 0;
+  unsigned int n = 32;
+  unsigned int k0 = key[0], k1 = key[1], k2 = key[2], k3 = key[3];
+
+  while (n--) {
+    sum -= 0x61c88647u;
+    y += ((z << 4) + k0) ^ (z + sum) ^ ((z >> 5) + k1);
+    z += ((y << 4) + k2) ^ (y + sum) ^ ((y >> 5) + k3);
+  }
+  w[0] = y;
+  w[1] = z;
 }
-#else
-#error "tea_encrypt: clang naked draft required"
-#endif
 
-
-/* tea_decrypt (0x808b0) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void tea_decrypt(unsigned int *v __attribute__((unused)), unsigned int *w __attribute__((unused)), int *key __attribute__((unused)))
+/* tea_decrypt (0x808b0) — readable C lift. */
+void tea_decrypt(unsigned int *v, unsigned int *w, unsigned int *key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "movl 0x4(%%esi), %%edi\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "movl 0x8(%%esi), %%edi\n\t"
-      "movl 0xc(%%esi), %%esi\n\t"
-      "movl $0xc6ef3720, %%edx\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "movl %%esi, 0x10(%%ebp)\n\t"
-      "movl $0x20, 0x8(%%ebp)\n\t"
-      ".Ltea_decrypt_1:\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "shrl $5, %%esi\n\t"
-      "addl %%edi, %%esi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "shll $4, %%edi\n\t"
-      "addl %%ebx, %%edi\n\t"
-      "movl -0xc(%%ebp), %%ebx\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "leal (%%edx,%%ecx,1), %%edi\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "subl %%esi, %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "shrl $5, %%esi\n\t"
-      "addl %%edi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "shll $4, %%edi\n\t"
-      "addl %%ebx, %%edi\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "leal (%%edx,%%eax,1), %%edi\n\t"
-      "xorl %%edi, %%esi\n\t"
-      "subl %%esi, %%ecx\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "addl $0x61c88647, %%edx\n\t"
-      "decl %%esi\n\t"
-      "movl %%esi, 0x8(%%ebp)\n\t"
-      "jne .Ltea_decrypt_1\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl %%eax, 0x4(%%edx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "tea_decrypt: clang naked draft required"
-#endif
+  unsigned int y = v[0];
+  unsigned int z = v[1];
+  unsigned int sum = 0xc6ef3720u;
+  unsigned int n = 32;
+  unsigned int k0 = key[0], k1 = key[1], k2 = key[2], k3 = key[3];
 
+  while (n--) {
+    z -= ((y << 4) + k2) ^ (y + sum) ^ ((y >> 5) + k3);
+    y -= ((z << 4) + k0) ^ (z + sum) ^ ((z >> 5) + k1);
+    sum += 0x61c88647u;
+  }
+  w[0] = y;
+  w[1] = z;
+}
 
 /* build_message_header (0x80b40) — XBE naked draft (batch 78). */
 #if defined(__clang__)
@@ -620,8 +506,8 @@ unsigned short * key_agreement_build_message(short type __attribute__((unused)),
 #if defined(__clang__)
 static void (*const b80940_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b80940_exitfn)(int) = system_exit;
-static void (*const b80940_c80820)(unsigned int *v, unsigned int *w, int *key) = tea_encrypt;
-static void (*const b80940_c807d0)(int msg, int len, int keystream, int key_len) = key_message_xor_keystream;
+static void (*const b80940_c80820)(unsigned int *v, unsigned int *w, int *key) = (void *)tea_encrypt;
+static void (*const b80940_c807d0)(int msg, int len, int keystream, int key_len) = (void *)key_message_xor_keystream;
 
 __attribute__((naked, noinline))
 void message_encrypt(unsigned short *msgptr __attribute__((unused)), unsigned int *key __attribute__((unused)))
@@ -738,8 +624,8 @@ void message_encrypt(unsigned short *msgptr __attribute__((unused)), unsigned in
 #if defined(__clang__)
 static void (*const b80a40_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b80a40_exitfn)(int) = system_exit;
-static void (*const b80a40_c808b0)(unsigned int *v, unsigned int *w, int *key) = tea_decrypt;
-static void (*const b80a40_c807d0)(int msg, int len, int keystream, int key_len) = key_message_xor_keystream;
+static void (*const b80a40_c808b0)(unsigned int *v, unsigned int *w, int *key) = (void *)tea_decrypt;
+static void (*const b80a40_c807d0)(int msg, int len, int keystream, int key_len) = (void *)key_message_xor_keystream;
 
 __attribute__((naked, noinline))
 void message_decrypt(unsigned short *msgptr __attribute__((unused)), unsigned int *key __attribute__((unused)))
@@ -1207,7 +1093,7 @@ unsigned short *FUN_000804e0(int buffer, unsigned short buffer_size, void *key_p
 #if defined(__clang__)
 static void (*const b805a0_c81170)(void) = FUN_00081170;
 static void (*const b805a0_c81250)(void) = FUN_00081250;
-static void (*const b805a0_c80470)(void) = FUN_00080470;
+static void (*const b805a0_c80470)(void) = (void *)FUN_00080470;
 static void (*const b805a0_c80c20)(unsigned short *header, int byte_order) = byte_swap_message_header;
 static int (*const b805a0_c82f50)(int *ep, const char *buf, int len) = send_endpoint;
 
@@ -1291,7 +1177,7 @@ static bool (*const b80620_c11aa40)(int group, void *decoded_packet, char *encod
 static void (*const b80620_c81300)(void) = FUN_00081300;
 static void (*const b80620_c81410)(void) = FUN_00081410;
 static void (*const b80620_c81250)(void) = FUN_00081250;
-static void (*const b80620_c804e0)(void) = FUN_000804e0;
+static void (*const b80620_c804e0)(void) = (void *)FUN_000804e0;
 static void (*const b80620_c80c20)(unsigned short *header, int byte_order) = byte_swap_message_header;
 static int (*const b80620_c82f50)(int *ep, const char *buf, int len) = send_endpoint;
 

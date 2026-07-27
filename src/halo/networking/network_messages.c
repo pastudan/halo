@@ -1198,7 +1198,7 @@ bool FUN_0011aa40(int group __attribute__((unused)), void *decoded_packet __attr
 #if defined(__clang__)
 static int (*const b11b2a0_c11a430)(int *state, short count, int element_size) = FUN_0011a430;
 static void * (*const b11b2a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static char * (*const b11b2a0_c11a8e0)(int *state, unsigned short max_length) = FUN_0011a8e0;
+static char * (*const b11b2a0_c11a8e0)(int *state, unsigned short max_length) = (void *)FUN_0011a8e0;
 static char * (*const b11b2a0_c8dff0)(char *destination, const char *source) = csstrcpy;
 static unsigned int (*const b11b2a0_c11a700)(int *state, int maximum_value) = FUN_0011a700;
 static void (*const b11b2a0_c11add0)(packet_definition *def, short *param_2, short *param_3, short *param_4) = compute_packet_field_sizes;
@@ -1975,7 +1975,7 @@ int FUN_0011ba00(unsigned char *key __attribute__((unused)), unsigned int key_si
 
 /* FUN_0011ba50 (0x11ba50) — XBE naked draft (batch 84). */
 #if defined(__clang__)
-static int (*const b11ba50_c11ba00)(unsigned char *key, unsigned int key_size) = FUN_0011ba00;
+static int (*const b11ba50_c11ba00)(unsigned char *key, unsigned int key_size) = (void *)FUN_0011ba00;
 static int (*const b11ba50_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
 static int (*const b11ba50_c8da40)(const void *a, const void *b, int size) = csmemcmp;
 
@@ -2213,7 +2213,7 @@ static void (*const b11bc20_assert)(const char *, const char *, int, bool) = dis
 static void (*const b11bc20_exitfn)(int) = system_exit;
 static int (*const b11bc20_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = FUN_0011ba50;
 static int (*const b11bc20_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
-static int (*const b11bc20_c11ba00)(unsigned char *key, unsigned int key_size) = FUN_0011ba00;
+static int (*const b11bc20_c11ba00)(unsigned char *key, unsigned int key_size) = (void *)FUN_0011ba00;
 static void * (*const b11bc20_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
 __attribute__((naked, noinline))

@@ -3198,59 +3198,22 @@ void main_load_core_name_at_startup(const char *name)
   *(uint8_t *)0x46da3f = 1;
 }
 
-/* main_switch_structure_bsp (0x100500) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static scenario_t * (*const b100500_c18e380)(void) = global_scenario_get;
-static void (*const b100500_cff550)(const char* format, ...) = console_warning;
-static void (*const b100500_cd0d50)(bool a1) = hud_load;
-
-__attribute__((naked, noinline))
-void main_switch_structure_bsp(int16_t bsp_index __attribute__((unused)))
+/* main_switch_structure_bsp (0x100500) — readable C lift. */
+void main_switch_structure_bsp(int16_t bsp_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[c18e380]\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lmain_switch_structure_bsp_2\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x5a4(%%eax), %%esi\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "popl %%esi\n\t"
-      "jge .Lmain_switch_structure_bsp_2\n\t"
-      "cmpw 0x326a0c, %%cx\n\t"
-      "jne .Lmain_switch_structure_bsp_1\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x28b20c\n\t"
-      "call *%[cff550]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_switch_structure_bsp_1:\n\t"
-      "pushl $1\n\t"
-      "movw %%cx, 0x46da40\n\t"
-      "call *%[cd0d50]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_switch_structure_bsp_2:\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x28b1e0\n\t"
-      "call *%[cff550]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b100500_c18e380), [cff550] "m"(b100500_cff550), [cd0d50] "m"(b100500_cd0d50)
-      : "memory");
-}
-#else
-#error "main_switch_structure_bsp: clang naked draft required"
-#endif
+  scenario_t *scenario = global_scenario_get();
 
+  if (bsp_index < 0 || (int)bsp_index >= *(int *)((char *)scenario + 0x5a4)) {
+    console_warning((const char *)0x28b1e0, (int)bsp_index);
+    return;
+  }
+  if (bsp_index == *(int16_t *)0x326a0c) {
+    console_warning((const char *)0x28b20c, (int)bsp_index);
+    return;
+  }
+  *(int16_t *)0x46da40 = bsp_index;
+  hud_load(true);
+}
 
 /* main_skip (0x100560) — readable C lift. */
 void main_skip(short level)
@@ -3445,7 +3408,7 @@ int main_get_solo_level_from_name(const char *map_name __attribute__((unused)))
 /* main_get_current_solo_level (0x100860) — readable C lift (thin wrapper). */
 int main_get_current_solo_level(void)
 {
-  return main_get_solo_level_from_name(0x46da55);
+  return main_get_solo_level_from_name((const char *)0x46da55);
 }
 
 const char *main_get_solo_level_name(int16_t index)

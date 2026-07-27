@@ -2034,7 +2034,11 @@ void FUN_0006f950(const char *module, const char *fmt, void *ap)
   if (module)
     crt_fprintf((void *)0x331070, DAT_00259f68, module);
   crt_fprintf((void *)0x331070, DAT_002612e4);
-  ((void (*)(void *, const char *, void *))(void *)FUN_001d9850)((void *)0x331070, fmt, ap);
+  {
+    void (*tiff_vfprintf)(void *, const char *, void *) =
+        (void (*)(void *, const char *, void *))(void *)FUN_001d9850;
+    tiff_vfprintf((void *)0x331070, fmt, ap);
+  }
   crt_fprintf((void *)0x331070, DAT_00260020);
 }
 
