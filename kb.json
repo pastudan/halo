@@ -20038,8 +20038,8 @@
         },
         {
           "addr": "0x90180",
-          "decl": "void FUN_00090180(void);",
-          "ported": false,
+          "decl": "void FUN_00090180(uint32_t *rec@<eax>, uint32_t lo, uint32_t hi);",
+          "ported": true,
           "name": "FUN_00090180"
         },
         {
@@ -20127,8 +20127,9 @@
         },
         {
           "addr": "0x91380",
-          "decl": "void FUN_00091380(void);",
-          "ported": false
+          "decl": "void FUN_00091380(uint32_t *rec@<ecx>);",
+          "ported": false,
+          "name": "FUN_00091380"
         },
         {
           "addr": "0x913e0",

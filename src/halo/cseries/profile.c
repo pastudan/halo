@@ -1191,46 +1191,25 @@ void FUN_00090170(int *out, int a, int b)
   out[1] = b;
 }
 
-/* FUN_00090180 (0x90180) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00090180(void)
+/* FUN_00090180 (0x90180) — readable C lift from XBE leaf.
+ * this@eax: store new timestamp (lo,hi), accumulate msec into +0x10/+0x14. */
+void FUN_00090180(uint32_t *rec, uint32_t lo, uint32_t hi)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%eax), %%esi\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "subl %%esi, %%ecx\n\t"
-      "movl 0x4(%%eax), %%esi\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "sbbl %%esi, %%edx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "popl %%esi\n\t"
-      "fmuls 0x254cb8\n\t"
-      "fildl 0x3361a0\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fld %%st(0)\n\t"
-      "fadds 0x10(%%eax)\n\t"
-      "fstps 0x10(%%eax)\n\t"
-      "fadds 0x14(%%eax)\n\t"
-      "fstps 0x14(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint32_t old_lo;
+  uint32_t old_hi;
+  int64_t delta;
+  float elapsed;
+
+  old_lo = rec[0];
+  old_hi = rec[1];
+  rec[2] = lo;
+  rec[3] = hi;
+  ((uint32_t *)&delta)[0] = lo - old_lo;
+  ((uint32_t *)&delta)[1] = hi - old_hi - (uint32_t)(lo < old_lo);
+  elapsed = (float)delta * *(float *)0x254cb8 / (float)*(int64_t *)0x3361a0;
+  *(float *)((char *)rec + 0x10) += elapsed;
+  *(float *)((char *)rec + 0x14) += elapsed;
 }
-#else
-#error "FUN_00090180: clang naked draft required"
-#endif
 
 /* compare_profile_sections (0x901d0) — XBE naked draft (batch 249). */
 #if defined(__clang__)
@@ -2864,55 +2843,29 @@ void FUN_00091350(uint32_t *out)
   out[1] = hi;
 }
 
-/* FUN_00091380 (0x91380) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00091380(void)
+/* FUN_00091380 (0x91380) — readable C lift from XBE leaf.
+ * this@ecx: RDTSC, store timestamp, accumulate msec into +0x10/+0x14. */
+void FUN_00091380(uint32_t *rec)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      ".byte 0x0f, 0x31\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "popl %%edx\n\t"
-      "popl %%eax\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "subl %%esi, %%eax\n\t"
-      "movl 0x4(%%ecx), %%esi\n\t"
-      "movl %%edx, 0xc(%%ecx)\n\t"
-      "sbbl %%esi, %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "popl %%esi\n\t"
-      "fmuls 0x254cb8\n\t"
-      "fildl 0x3361a0\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fld %%st(0)\n\t"
-      "fadds 0x10(%%ecx)\n\t"
-      "fstps 0x10(%%ecx)\n\t"
-      "fadds 0x14(%%ecx)\n\t"
-      "fstps 0x14(%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint32_t lo;
+  uint32_t hi;
+  uint32_t old_lo;
+  uint32_t old_hi;
+  uint32_t dlo;
+  uint32_t dhi;
+  float elapsed;
+
+  RDTSC(lo, hi);
+  old_lo = rec[0];
+  old_hi = rec[1];
+  rec[2] = lo;
+  rec[3] = hi;
+  dlo = lo - old_lo;
+  dhi = hi - old_hi - (uint32_t)(lo < old_lo);
+  elapsed = cycles_to_msec(dlo, dhi);
+  *(float *)((char *)rec + 0x10) += elapsed;
+  *(float *)((char *)rec + 0x14) += elapsed;
 }
-#else
-#error "FUN_00091380: clang naked draft required"
-#endif
 
 
 /* FUN_00091b70 (0x91b70) — readable C lift. */
