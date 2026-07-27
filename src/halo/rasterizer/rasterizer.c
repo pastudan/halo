@@ -15000,25 +15000,11 @@ int rasterizer_widget_draw_sprite3d(int zbuf_result)
 }
 
 /* rasterizer_widget_end (0x17c9e0) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_widget_end(int handle __attribute__((unused)))
+/* rasterizer_widget_end — readable C lift (jmp thunk). */
+void rasterizer_widget_end(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x97, 0x24, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0015ee80();
 }
-#else
-#error "rasterizer_widget_end: clang naked draft required"
-#endif
-
 
 /* rasterizer_widget_submit_occlusion_test (0x17c9f0) — XBE naked draft (batch 398). */
 #if defined(__clang__)

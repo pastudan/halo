@@ -21240,7 +21240,7 @@
         {
           "addr": "0x17c9e0",
           "decl": "void rasterizer_widget_end(int handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c9f0",
