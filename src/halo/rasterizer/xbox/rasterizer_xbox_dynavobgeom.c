@@ -1407,88 +1407,30 @@ void *FUN_0015ea70(int dynamic_triangle_buffer_index)
   (void)esi;
 }
 
-/* FUN_0015eb90 (0x15eb90) — XBE naked draft (batch 341). */
-#if defined(__clang__)
-static void (*const b15eb90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b15eb90_exitfn)(int) = system_exit;
-static void (*const b15eb90_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_0015eb90(void)
+/* FUN_0015eb90 (0x15eb90) — readable C lift. */
+void FUN_0015eb90(int idx)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015eb90_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x175\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015eb90_1:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_0015eb90_4\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jge .LFUN_0015eb90_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x179\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a07f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015eb90_2:\n\t"
-      "cmpl 0x47dbe0, %%esi\n\t"
-      "jl .LFUN_0015eb90_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17a\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a07b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015eb90_3:\n\t"
-      "movl 0x47dbe8, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015eb90_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17c\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a0194\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0015eb90_4:\n\t"
-      "pushl $0x2a14d0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_0015eb90_5:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b15eb90_assert), [exitfn] "m"(b15eb90_exitfn), [c8f390] "m"(b15eb90_c8f390)
-      : "memory");
+  if (!*(int *)0x476ab0) {
+    display_assert((char *)0x29dc40, (char *)0x2a0110, 0x175, 1);
+    system_exit(-1);
+  }
+  if (idx == -1) {
+    error(2, (const char *)0x2a14d0);
+    return;
+  }
+  if (idx < 0) {
+    display_assert((char *)0x2a07f8, (char *)0x2a0110, 0x179, 1);
+    system_exit(-1);
+  }
+  if (idx >= *(int *)0x47dbe0) {
+    display_assert((char *)0x2a07b8, (char *)0x2a0110, 0x17a, 1);
+    system_exit(-1);
+  }
+  if (!*(int *)0x47dbe8) {
+    display_assert((char *)0x2a0194, (char *)0x2a0110, 0x17c, 1);
+    system_exit(-1);
+  }
 }
-#else
-#error "FUN_0015eb90: clang naked draft required"
-#endif
-
-
 /* FUN_0015ec50 (0x15ec50) — XBE naked draft (batch 310). */
 #if defined(__clang__)
 static void (*const b15ec50_assert)(const char *, const char *, int, bool) = display_assert;

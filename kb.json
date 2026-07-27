@@ -38726,8 +38726,8 @@
         },
         {
           "addr": "0x15eb90",
-          "decl": "void FUN_0015eb90(void);",
-          "ported": false
+          "decl": "void FUN_0015eb90(int idx);",
+          "ported": true
         },
         {
           "addr": "0x15ec50",
