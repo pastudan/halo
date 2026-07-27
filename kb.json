@@ -37017,7 +37017,8 @@
         {
           "addr": "0x6a2a0",
           "decl": "int FUN_0006a2a0(unsigned short *a, unsigned short *b@<ecx>, unsigned short *c@<edx>, int n@<eax>);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_0006a2a0"
         },
         {
           "addr": "0x6a310",
@@ -38198,7 +38199,8 @@
         {
           "addr": "0x120790",
           "decl": "void animation_set_frame_size(char *anim);",
-          "ported": false
+          "ported": true,
+          "name": "animation_set_frame_size"
         },
         {
           "addr": "0x120810",
