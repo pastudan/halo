@@ -408,69 +408,30 @@ int FUN_000adf70(int tag_index __attribute__((unused)))
 #endif
 
 
-/* FUN_000ae0a0 (0xae0a0) — XBE naked draft (batch 67). */
-#if defined(__clang__)
-static void *(*const bae0a0_tag)(int, int) = tag_get;
-static int (*const bae0a0_ca96b0)(int tag_index) = game_engine_remap_vehicle;
-static int (*const bae0a0_ca9770)(int tag_index) = game_engine_remap_weapon;
-static int (*const bae0a0_cadf70)(int tag_index) = FUN_000adf70;
-
-__attribute__((naked, noinline))
-int FUN_000ae0a0(int tag_index __attribute__((unused)))
+/* FUN_000ae0a0 (0xae0a0) — readable C lift from XBE leaf. */
+int FUN_000ae0a0(int tag_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x456b60, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "je .LFUN_000ae0a0_3\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000ae0a0_3\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movw (%%eax), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .LFUN_000ae0a0_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca96b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ae0a0_1:\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .LFUN_000ae0a0_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca9770]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ae0a0_2:\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jne .LFUN_000ae0a0_3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cadf70]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ae0a0_3:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(bae0a0_tag), [ca96b0] "m"(bae0a0_ca96b0), [ca9770] "m"(bae0a0_ca9770), [cadf70] "m"(bae0a0_cadf70)
-      : "memory");
+  short object_type;
+  void *tag;
+
+  if (*(int *)0x456b60 == 0 || tag_index == -1) {
+    return tag_index;
+  }
+  tag = tag_get(0x6f626a65, tag_index);
+  object_type = *(short *)tag;
+  if (object_type == 1) {
+    return game_engine_remap_vehicle(tag_index);
+  }
+  if (object_type == 2) {
+    return game_engine_remap_weapon(tag_index);
+  }
+  if (object_type == 3) {
+    return FUN_000adf70(tag_index);
+  }
+  return tag_index;
 }
-#else
-#error "FUN_000ae0a0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_000ae110 (0xae110) — XBE naked draft (batch 60). */
@@ -4788,65 +4749,30 @@ void *object_iterator_next(void *iter)
   return NULL;
 }
 
-/* FUN_0013d8b0 (0x13d8b0) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void (*const b13d8b0_c1193f0)(data_t *data) = data_verify;
-static void * (*const b13d8b0_c13d730)(void *iter) = object_iterator_next;
-static void (*const b13d8b0_c13c680)(int param_1, int param_2) = FUN_0013c680;
-
-__attribute__((naked, noinline))
-void FUN_0013d8b0(int param_1 __attribute__((unused)))
+/* FUN_0013d8b0 (0x13d8b0) — readable C lift from XBE leaf. */
+void FUN_0013d8b0(int param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x5a8d50, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1193f0]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x86868686, -0x4(%%ebp)\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      "movb $0, -0xc(%%ebp)\n\t"
-      "movw $0, -0xa(%%ebp)\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0013d8b0_3\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".LFUN_0013d8b0_1:\n\t"
-      "cmpl %%esi, 0xa0(%%eax)\n\t"
-      "jne .LFUN_0013d8b0_2\n\t"
-      "movl %%edi, 0xa0(%%eax)\n\t"
-      ".LFUN_0013d8b0_2:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13c680]\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0013d8b0_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_0013d8b0_3:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1193f0] "m"(b13d8b0_c1193f0), [c13d730] "m"(b13d8b0_c13d730), [c13c680] "m"(b13d8b0_c13c680)
-      : "memory");
+  object_iter_t iter;
+  void *obj;
+
+  data_verify(*(data_t **)0x5a8d50);
+  iter.type_mask = -1;
+  iter.flags = 0;
+  iter.current_index = 0;
+  iter.last_handle = -1;
+  iter.cookie = 0x86868686;
+  for (obj = object_iterator_next(&iter); obj != 0;
+       obj = object_iterator_next(&iter)) {
+    if (*(int *)((char *)obj + 0xa0) == param_1) {
+      *(int *)((char *)obj + 0xa0) = -1;
+    }
+    FUN_0013c680(iter.last_handle, param_1);
+  }
 }
-#else
-#error "FUN_0013d8b0: clang naked draft required"
-#endif
+
+
+
+
 
 
 /* FUN_0013ddd0 (0x13ddd0) — XBE naked draft (batch 65). */
@@ -8540,62 +8466,29 @@ void FUN_00140750(void)
 #endif
 
 
-/* FUN_00141900 (0x141900) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void (*const b141900_c1193f0)(data_t *data) = data_verify;
-static void * (*const b141900_c13d730)(void *iter) = object_iterator_next;
-static void (*const b141900_c140bc0)(int object_handle, int delete_sibling) = object_delete_internal;
-
-__attribute__((naked, noinline))
+/* FUN_00141900 (0x141900) — readable C lift from XBE leaf. */
 void FUN_00141900(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x5a8d50, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1193f0]\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x86868686, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movb $0, -0xc(%%ebp)\n\t"
-      "movw $0, -0xa(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00141900_3\n\t"
-      "jmp .LFUN_00141900_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00141900_1:\n\t"
-      "testl $0x400000, 0x4(%%eax)\n\t"
-      "je .LFUN_00141900_2\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c140bc0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00141900_2:\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00141900_1\n\t"
-      ".LFUN_00141900_3:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1193f0] "m"(b141900_c1193f0), [c13d730] "m"(b141900_c13d730), [c140bc0] "m"(b141900_c140bc0)
-      : "memory");
+  object_iter_t iter;
+  void *obj;
+
+  data_verify(*(data_t **)0x5a8d50);
+  iter.type_mask = -1;
+  iter.flags = 0;
+  iter.current_index = 0;
+  iter.last_handle = -1;
+  iter.cookie = 0x86868686;
+  for (obj = object_iterator_next(&iter); obj != 0;
+       obj = object_iterator_next(&iter)) {
+    if ((*(int *)((char *)obj + 4) & 0x400000) != 0) {
+      object_delete_internal(iter.last_handle, 0);
+    }
+  }
 }
-#else
-#error "FUN_00141900: clang naked draft required"
-#endif
+
+
+
+
 
 
 /*

@@ -16146,8 +16146,9 @@
         {
           "addr": "0xae0a0",
           "decl": "int FUN_000ae0a0(int tag_index);",
-          "ported": false,
-          "source_path": "objects/objects.c"
+          "ported": true,
+          "source_path": "objects/objects.c",
+          "name": "FUN_000ae0a0"
         },
         {
           "addr": "0xae110",
@@ -16679,8 +16680,9 @@
         {
           "addr": "0x13d8b0",
           "decl": "void FUN_0013d8b0(int param_1);",
-          "ported": false,
-          "source_path": "objects/objects.c"
+          "ported": true,
+          "source_path": "objects/objects.c",
+          "name": "FUN_0013d8b0"
         },
         {
           "addr": "0x13d920",
@@ -17120,7 +17122,7 @@
         {
           "addr": "0x141900",
           "decl": "void FUN_00141900(void);",
-          "ported": false,
+          "ported": true,
           "source_path": "objects/objects.c",
           "name": "FUN_00141900"
         },
