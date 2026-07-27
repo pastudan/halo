@@ -496,76 +496,30 @@ int16_t FUN_000dc800(int event)
 }
 /* --- event_manager.obj batch drafts (2026-07-26) --- */
 
-/* FUN_000d98c0 (0xd98c0) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const bd98c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bd98c0_exitfn)(int) = system_exit;
-static void * (*const bd98c0_cd8bc0)(int16_t local_player_index) = FUN_000d8bc0;
-static void * (*const bd98c0_cd8c30)(int16_t local_player_index) = FUN_000d8c30;
-
-__attribute__((naked, noinline))
-void FUN_000d98c0(void)
+/* FUN_000d98c0 (0xd98c0) — readable C lift. */
+void FUN_000d98c0(int16_t local_a, int16_t local_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_000d98c0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x89\n\t"
-      "pushl $0x281eec\n\t"
-      "pushl $0x281eb8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000d98c0_1:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "cmpw $-1, %%bx\n\t"
-      "jne .LFUN_000d98c0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8a\n\t"
-      "pushl $0x281eec\n\t"
-      "pushl $0x281e98\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000d98c0_2:\n\t"
-      "call *%[cd8bc0]\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[cd8bc0]\n\t"
-      "movl %%edi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "call *%[cd8c30]\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[cd8c30]\n\t"
-      "movl %%edi, %%esi\n\t"
-      "movl $0x14, %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bd98c0_assert), [exitfn] "m"(bd98c0_exitfn), [cd8bc0] "m"(bd98c0_cd8bc0), [cd8c30] "m"(bd98c0_cd8c30)
-      : "memory");
-}
-#else
-#error "FUN_000d98c0: clang naked draft required"
-#endif
+  void *src;
+  void *dst;
+  int i;
 
+  if (local_a == (int16_t)-1) {
+    display_assert((const char *)0x281eb8, (const char *)0x281eec, 0x89, 1);
+    system_exit(-1);
+  }
+  if (local_b == (int16_t)-1) {
+    display_assert((const char *)0x281e98, (const char *)0x281eec, 0x8a, 1);
+    system_exit(-1);
+  }
+  src = FUN_000d8bc0(local_b);
+  dst = FUN_000d8bc0(local_a);
+  for (i = 0; i < 0xa; i++)
+    ((int *)dst)[i] = ((int *)src)[i];
+  src = FUN_000d8c30(local_b);
+  dst = FUN_000d8c30(local_a);
+  for (i = 0; i < 0x14; i++)
+    ((int *)dst)[i] = ((int *)src)[i];
+}
 
 /* FUN_000d9960 (0xd9960) — XBE naked draft (batch 106). */
 #if defined(__clang__)

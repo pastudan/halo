@@ -7655,7 +7655,7 @@
         {
           "addr": "0xd98c0",
           "decl": "void FUN_000d98c0(int16_t local_a, int16_t local_b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000d98c0"
         },
         {
@@ -27784,7 +27784,7 @@
         {
           "addr": "0xf0100",
           "decl": "char FUN_000f0100(void *unused_widget, void *player_ui, char *out_flag);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f0100"
         },
         {

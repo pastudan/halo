@@ -3612,68 +3612,27 @@ char FUN_000f00b0(void *widget, void *event)
   return 1;
 }
 
-/* FUN_000f0100 (0xf0100) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static void (*const bf0100_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0100_exitfn)(int) = system_exit;
-static __int16 (*const bf0100_ce07c0)(__int16 a1) = player_ui_get_single_player_local_player_controller;
-static void (*const bf0100_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
-static void (*const bf0100_ce0740)(void) = player_ui_set_single_player_local_player_controller;
-
-__attribute__((naked, noinline))
-void FUN_000f0100(void *widget)
+/* FUN_000f0100 (0xf0100) — readable C lift. */
+char FUN_000f0100(void *unused_widget, void *player_ui, char *out_flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000f0100_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11c7\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x288670\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0100_1:\n\t"
-      "movw 0x2(%%esi), %%si\n\t"
-      "pushl $0\n\t"
-      "call *%[ce07c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jne .LFUN_000f0100_2\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x12\n\t"
-      "call *%[ce8910]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, (%%eax)\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f0100_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "call *%[ce0740]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf0100_assert), [exitfn] "m"(bf0100_exitfn), [ce07c0] "m"(bf0100_ce07c0), [ce8910] "m"(bf0100_ce8910), [ce0740] "m"(bf0100_ce0740)
-      : "memory");
-}
-#else
-#error "FUN_000f0100: clang naked draft required"
-#endif
+  int16_t ctrl;
+  int16_t cur;
 
+  (void)unused_widget;
+  if (player_ui == 0) {
+    display_assert((const char *)0x288670, (const char *)0x2859a4, 0x11c7, 1);
+    system_exit(-1);
+  }
+  ctrl = *(int16_t *)((char *)player_ui + 2);
+  cur = player_ui_get_single_player_local_player_controller(0);
+  if (ctrl == cur) {
+    ui_widget_display_error(0x12, -1, 1, 0);
+    *out_flag = 1;
+    return 0;
+  }
+  player_ui_set_single_player_local_player_controller(1, ctrl);
+  return 1;
+}
 
 /* FUN_000f0170 (0xf0170) — readable C lift from XBE leaf. */
 char FUN_000f0170(void *widget, void *player_ui)
