@@ -20019,7 +20019,7 @@
         {
           "addr": "0x90650",
           "decl": "void profile_dump_to_file(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x906d0",
