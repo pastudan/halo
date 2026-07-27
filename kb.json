@@ -25573,7 +25573,7 @@
         {
           "addr": "0x1baf50",
           "decl": "void FUN_001baf50(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bafa0",

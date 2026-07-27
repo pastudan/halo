@@ -644,6 +644,11 @@
     "confidence": "weak",
     "coverage_pct": 55.0
   },
+  "0x1baf50": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 43.4
+  },
   "0x1bc280": {
     "class": "unknown",
     "confidence": "weak",

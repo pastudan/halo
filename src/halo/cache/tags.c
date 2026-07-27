@@ -1102,46 +1102,21 @@ void cache_copy_get_status(void)
 #endif
 
 
-/* FUN_001baf50 (0x1baf50) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-static int __stdcall (*const b1baf50_c1d0336)(int handle, int timeout_ms) = WaitForSingleObject;
-static bool __stdcall (*const b1baf50_c1cfeaa)(void *handle) = SetEvent;
-
-__attribute__((naked, noinline))
+/* FUN_001baf50 (0x1baf50) — readable C lift. */
 void FUN_001baf50(void)
 {
-  __asm__ volatile(
-      "movl 0x32ea98, %%eax\n\t"
-      "movl 0x954(%%eax), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d0336]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001baf50_1\n\t"
-      "movl 0x32ea98, %%edx\n\t"
-      "movl 0x950(%%edx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cfeaa]\n\t"
-      "movl 0x32ea98, %%ecx\n\t"
-      "movl 0x954(%%ecx), %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d0336]\n\t"
-      ".LFUN_001baf50_1:\n\t"
-      "movb 0x4e61d0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001baf50_2\n\t"
-      ".byte 0xe9, 0x05, 0xfd, 0xff, 0xff\n\t"
-      ".LFUN_001baf50_2:\n\t"
-      "ret\n\t"
-      :
-      : [c1d0336] "m"(b1baf50_c1d0336), [c1cfeaa] "m"(b1baf50_c1cfeaa)
-      : "memory");
-}
-#else
-#error "FUN_001baf50: clang naked draft required"
-#endif
+  char *globals;
+  int handle;
 
+  globals = *(char **)0x32ea98;
+  handle = *(int *)(globals + 0x954);
+  if (WaitForSingleObject(handle, 0) != 0) {
+    SetEvent(*(void **)(*(char **)0x32ea98 + 0x950));
+    WaitForSingleObject(*(int *)(*(char **)0x32ea98 + 0x954), -1);
+  }
+  if (*(unsigned char *)0x4e61d0)
+    FUN_001baca0();
+}
 
 /* FUN_001bafa0 (0x1bafa0) — XBE naked draft (batch 249). */
 #if defined(__clang__)
