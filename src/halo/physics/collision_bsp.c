@@ -270,105 +270,35 @@ float collision_edge_length(int bsp, int edge_index)
                (vertex_b[2] - vertex_a[2]) * (vertex_b[2] - vertex_a[2]));
 }
 
-/* collision_surface_perimeter (0x147710) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void *(*const b147710_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-float collision_surface_perimeter(int bsp __attribute__((unused)), int surface_index __attribute__((unused)))
+/* collision_surface_perimeter (0x147710) — readable C lift from XBE leaf.
+ * Sum edge lengths around a surface's winged-edge loop. */
+float collision_surface_perimeter(int bsp, int surface_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x3c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "leal 0x48(%%edi), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x54, %%edi\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%edi, 0x8(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lcollision_surface_perimeter_1:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl %%ecx, 0x14(%%esi)\n\t"
-      "sete %%bl\n\t"
-      "movzbl %%bl, %%eax\n\t"
-      "movl (%%esi,%%eax,4), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%bl, %%bl\n\t"
-      "sete %%cl\n\t"
-      "pushl $0x10\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%esi,%%ecx,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%edi)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl 0x8(%%esi,%%ecx,4), %%esi\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "addl $0x24, %%esp\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "fsubs 0x8(%%edi)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fxch %%st(2)\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(2)\n\t"
-      "fstp %%st(0)\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jne .Lcollision_surface_perimeter_1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b147710_elem)
-      : "memory");
+  int *surface;
+  int first_edge;
+  int edge;
+  float sum;
+  void *surfaces = (char *)bsp + 0x3c;
+  void *edges = (char *)bsp + 0x48;
+  void *vertices = (char *)bsp + 0x54;
+
+  surface = (int *)tag_block_get_element(surfaces, surface_index, 0xc);
+  first_edge = surface[1];
+  edge = first_edge;
+  sum = 0.0f;
+  do {
+    int *edge_el = (int *)tag_block_get_element(edges, edge, 0x18);
+    int side = (edge_el[5] == surface_index);
+    float *v0 = (float *)tag_block_get_element(vertices, edge_el[side], 0x10);
+    float *v1 = (float *)tag_block_get_element(vertices, edge_el[1 - side], 0x10);
+    float dx = v1[0] - v0[0];
+    float dy = v1[1] - v0[1];
+    float dz = v1[2] - v0[2];
+    sum += sqrtf(dx * dx + dy * dy + dz * dz);
+    edge = edge_el[2 + side];
+  } while (edge != first_edge);
+  return sum;
 }
-#else
-#error "collision_surface_perimeter: clang naked draft required"
-#endif
 
 
 /* collision_surface_area (0x1477f0) — XBE naked draft (batch 82). */
