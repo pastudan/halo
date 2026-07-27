@@ -2909,7 +2909,7 @@
         {
           "addr": "0x1dfa0",
           "decl": "char actor_action_handle_vehicle_entry(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_action_handle_vehicle_entry"
         },
         {
@@ -36357,7 +36357,7 @@
         {
           "addr": "0x4ab10",
           "decl": "void ai_debug_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "ai_debug_update"
         },
         {
