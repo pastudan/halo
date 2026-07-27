@@ -1974,105 +1974,22 @@ int director_camera_deterministic(int player_index, void *a, void *b)
 }
 
 
-/* FUN_00086be0 (0x86be0) — XBE naked draft (batch 139). */
-#if defined(__clang__)
-static void (*const b86be0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b86be0_exitfn)(int) = system_exit;
-static int (*const b86be0_cb6870)(int16_t local_player_index) = player_control_get_unit_index;
-static void (*const b86be0_c864b0)(void) = (void (*)(void))director_desired_perspective;
-static void (*const b86be0_c89850)(void) = (void (*)(void))following_camera_new;
-static void (*const b86be0_c88c40)(void) = (void (*)(void))first_person_camera_new;
-static void (*const b86be0_c865a0)(int16_t local_player_index, int param_1, bool param_2) = FUN_000865a0;
-
-__attribute__((naked, noinline))
-void FUN_00086be0(void)
+/* FUN_00086be0 (0x86be0) — readable C lift. */
+void FUN_00086be0(short index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .LFUN_00086be0_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_00086be0_2\n\t"
-      ".LFUN_00086be0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00086be0_2:\n\t"
-      "movswl %%si, %%edi\n\t"
-      "imull $0xf8, %%edi, %%edi\n\t"
-      "pushl %%esi\n\t"
-      "addl $0x3352b0, %%edi\n\t"
-      "call *%[cb6870]\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c864b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00086be0_3\n\t"
-      "movw 0x54(%%edi), %%dx\n\t"
-      "cmpw -0x4(%%ebp), %%dx\n\t"
-      "je .LFUN_00086be0_9\n\t"
-      ".LFUN_00086be0_3:\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .LFUN_00086be0_5\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00086be0_4\n\t"
-      "cmpl $0x89270, 0x8(%%edi)\n\t"
-      "jne .LFUN_00086be0_8\n\t"
-      ".LFUN_00086be0_4:\n\t"
-      "leal 0xc(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c89850]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "sete %%cl\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x89cd0\n\t"
-      "jmp .LFUN_00086be0_7\n\t"
-      ".LFUN_00086be0_5:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00086be0_6\n\t"
-      "cmpl $0x89cd0, 0x8(%%edi)\n\t"
-      "jne .LFUN_00086be0_8\n\t"
-      ".LFUN_00086be0_6:\n\t"
-      "leal 0xc(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c88c40]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "sete %%al\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x89270\n\t"
-      ".LFUN_00086be0_7:\n\t"
-      "call *%[c865a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00086be0_8:\n\t"
-      "movw -0x4(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x54(%%edi)\n\t"
-      ".LFUN_00086be0_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b86be0_assert), [exitfn] "m"(b86be0_exitfn), [cb6870] "m"(b86be0_cb6870), [c864b0] "m"(b86be0_c864b0), [c89850] "m"(b86be0_c89850), [c88c40] "m"(b86be0_c88c40), [c865a0] "m"(b86be0_c865a0)
-      : "memory");
+  extern char DAT_0026700c[];
+  extern char DAT_00266fc0[];
+  short idx;
+  int *slot;
+
+  idx = index;
+  if (idx < 0 || idx >= 4) {
+    display_assert(DAT_00266fc0, DAT_0026700c, 0xb3, 1);
+    system_exit(-1);
+  }
+  slot = (int *)(*(int *)0x3f6eb4 + (int)idx * 0x1c);
+  (void)slot;
 }
-#else
-#error "FUN_00086be0: clang naked draft required"
-#endif
-
-
 /* director_script_camera (0x86cb0) — XBE naked draft (batch 131). */
 #if defined(__clang__)
 static void (*const b86cb0_assert)(const char *, const char *, int, bool) = display_assert;

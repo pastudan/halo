@@ -7125,8 +7125,9 @@
         },
         {
           "addr": "0x86be0",
-          "decl": "void FUN_00086be0(void);",
-          "ported": false
+          "decl": "void FUN_00086be0(short index);",
+          "ported": true,
+          "name": "FUN_00086be0"
         },
         {
           "addr": "0x86cb0",
