@@ -231,36 +231,19 @@ int FUN_00068940(void *tif, int count)
   return 1;
 }
 
-/* FUN_00068970 (0x68970) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068970(void)
+/* FUN_00068970 (0x68970) — readable C lift. */
+int FUN_00068970(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0x68890, %%ecx\n\t"
-      "movl %%ecx, 0xfc(%%eax)\n\t"
-      "movl %%ecx, 0x104(%%eax)\n\t"
-      "movl %%ecx, 0x10c(%%eax)\n\t"
-      "movl $0x68780, %%ecx\n\t"
-      "movl %%ecx, 0x100(%%eax)\n\t"
-      "movl %%ecx, 0x108(%%eax)\n\t"
-      "movl %%ecx, 0x110(%%eax)\n\t"
-      "movl $0x68940, 0x118(%%eax)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(void **)((char *)tif + 0xfc) = (void *)&FUN_00068890;
+  *(void **)((char *)tif + 0x104) = (void *)&FUN_00068890;
+  *(void **)((char *)tif + 0x10c) = (void *)&FUN_00068890;
+  *(void **)((char *)tif + 0x100) = (void *)&FUN_00068780;
+  *(void **)((char *)tif + 0x108) = (void *)&FUN_00068780;
+  *(void **)((char *)tif + 0x110) = (void *)&FUN_00068780;
+  *(void **)((char *)tif + 0x118) = (void *)&FUN_00068940;
+  return 1;
 }
-#else
-#error "FUN_00068970: clang naked draft required"
-#endif
+
 
 
 /* FUN_000689c0 (0x689c0) — readable C lift. */
@@ -2915,100 +2898,45 @@ void FUN_0006a190(void)
 #endif
 
 
-/* FUN_0006a210 (0x6a210) — XBE naked draft (batch 325). */
-#if defined(__clang__)
-static void (*const b6a210_c6fe10)(void) = TIFFFlushData1;
-
-__attribute__((naked, noinline))
-void FUN_0006a210(void)
+/* FUN_0006a210 (0x6a210) — readable C lift. */
+int FUN_0006a210(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movw 0xa(%%esi), %%ax\n\t"
-      "testb $8, %%al\n\t"
-      "je .LFUN_0006a210_1\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x200, %%ecx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_0006a210_2\n\t"
-      "andl $0xfffffdff, %%eax\n\t"
-      "movw %%ax, 0xa(%%esi)\n\t"
-      "movl 0xf8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006a210_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0006a210_2\n\t"
-      ".LFUN_0006a210_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006a210_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6fe10]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6fe10] "m"(b6a210_c6fe10)
-      : "memory");
+  unsigned int flags;
+  int (*cb)(void *);
+  int (*flush1)(void *) = (int (*)(void *))TIFFFlushData1;
+
+  flags = *(unsigned short *)((char *)tif + 0xa);
+  if ((flags & 8) == 0)
+    return 0;
+  if ((flags & 0x200) != 0) {
+    flags &= ~0x200u;
+    *(unsigned short *)((char *)tif + 0xa) = (unsigned short)flags;
+    cb = *(int (**)(void *))((char *)tif + 0xf8);
+    if (cb != NULL && cb(tif) == 0)
+      return 0;
+  }
+  return flush1(tif);
 }
-#else
-#error "FUN_0006a210: clang naked draft required"
-#endif
 
 
-/* FUN_0006a260 (0x6a260) — XBE naked draft (batch 348). */
-#if defined(__clang__)
-static void (*const b6a260_c6a210)(void) = FUN_0006a210;
-static void (*const b6a260_c680a0)(void) = FUN_000680a0;
 
-__attribute__((naked, noinline))
-int FUN_0006a260(int file __attribute__((unused)))
+/* FUN_0006a260 (0x6a260) — readable C lift. */
+int FUN_0006a260(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $0, 0x6(%%esi)\n\t"
-      "je .LFUN_0006a260_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6a210]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006a260_1\n\t"
-      "testb $2, 0xa(%%esi)\n\t"
-      "je .LFUN_0006a260_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c680a0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0006a260_2\n\t"
-      ".LFUN_0006a260_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006a260_2:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6a210] "m"(b6a260_c6a210), [c680a0] "m"(b6a260_c680a0)
-      : "memory");
+  int (*pre)(void *) = (int (*)(void *))FUN_0006a210;
+  int (*post)(void *) = (int (*)(void *))FUN_000680a0;
+
+  if (*(short *)((char *)tif + 6) == 0)
+    return 1;
+  if (pre(tif) == 0)
+    return 0;
+  if ((*(unsigned char *)((char *)tif + 0xa) & 2) == 0)
+    return 1;
+  if (post(tif) == 0)
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_0006a260: clang naked draft required"
-#endif
+
 
 
 /* FUN_0006a2a0 (0x6a2a0) — XBE naked draft (batch 319). */

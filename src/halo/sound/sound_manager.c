@@ -2580,65 +2580,28 @@ void FUN_001ac0a0(int unit_handle, char flag)
     *flags &= ~0x4000u;
 }
 
-/* FUN_001AC0E0 (0x1ac0e0) — XBE naked draft (batch 287). */
-#if defined(__clang__)
-static void *(*const b1ac0e0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1ac0e0_tag)(int, int) = tag_get;
-static void *(*const b1ac0e0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int FUN_001AC0E0(int unit_handle __attribute__((unused)))
+/* FUN_001AC0E0 (0x1ac0e0) — readable C lift.
+ * Early exits use xorw ax,ax (preserve EAX high bits from prior value). */
+int FUN_001AC0E0(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "je .LFUN_001AC0E0_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x253(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb $0x1c, %%al\n\t"
-      "jne .LFUN_001AC0E0_1\n\t"
-      "movl 0x7c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x616e7472\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x80(%%esi), %%ecx\n\t"
-      "pushl $0xb4\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x74, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x22(%%eax), %%eax\n\t"
-      "movswl 0x82(%%esi), %%edx\n\t"
-      "subl %%edx, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "addl $-2, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "setle %%cl\n\t"
-      "popl %%esi\n\t"
-      "decl %%ecx\n\t"
-      "andl %%ecx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001AC0E0_1:\n\t"
-      "xorw %%ax, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1ac0e0_get), [tag] "m"(b1ac0e0_tag), [elem] "m"(b1ac0e0_elem)
-      : "memory");
+  char *unit;
+  void *antr;
+  void *elem;
+  int value;
+
+  if (unit_handle == -1)
+    return (int)((unsigned int)unit_handle & 0xffff0000u);
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  if (*(unsigned char *)(unit + 0x253) != 0x1c)
+    return (int)((unsigned int)(size_t)unit & 0xffff0000u);
+  antr = tag_get(0x616e7472, *(int *)(unit + 0x7c));
+  elem = tag_block_get_element((char *)antr + 0x74, *(short *)(unit + 0x80), 0xb4);
+  value = (int)*(short *)((char *)elem + 0x22) - (int)*(short *)(unit + 0x82) - 2;
+  if (value <= 0)
+    return 0;
+  return value;
 }
-#else
-#error "FUN_001AC0E0: clang naked draft required"
-#endif
+
 
 
 /* FUN_001ac150 (0x1ac150) — readable C lift. */
@@ -5069,74 +5032,26 @@ void FUN_001cd390(void *track_entry __attribute__((unused)), float *out __attrib
 #endif
 
 
-/* sound_stop_impulse_by_source_and_definition (0x1cd4d0) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static int (*const b1cd4d0_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const b1cd4d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1cd4d0_c1cd450)(int sound_index) = sound_stop_impulse;
-
-__attribute__((naked, noinline))
-void sound_stop_impulse_by_source_and_definition(int source __attribute__((unused)), int definition __attribute__((unused)))
+/* sound_stop_impulse_by_source_and_definition (0x1cd4d0) — readable C lift. */
+void sound_stop_impulse_by_source_and_definition(int source, int definition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4fdba4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lsound_stop_impulse_by_source_and_definition_4\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      ".Lsound_stop_impulse_by_source_and_definition_1:\n\t"
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x2(%%eax)\n\t"
-      "jne .Lsound_stop_impulse_by_source_and_definition_2\n\t"
-      "cmpl %%ebx, 0xc(%%eax)\n\t"
-      "jne .Lsound_stop_impulse_by_source_and_definition_2\n\t"
-      "cmpl %%edi, 0x8(%%eax)\n\t"
-      "je .Lsound_stop_impulse_by_source_and_definition_3\n\t"
-      ".Lsound_stop_impulse_by_source_and_definition_2:\n\t"
-      "movl 0x4fdba4, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .Lsound_stop_impulse_by_source_and_definition_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_stop_impulse_by_source_and_definition_3:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1cd450]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lsound_stop_impulse_by_source_and_definition_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b1cd4d0_c1198f0), [dget] "m"(b1cd4d0_dget), [c1cd450] "m"(b1cd4d0_c1cd450)
-      : "memory");
+  int index;
+  char *entry;
+
+  for (index = data_next_index(*(data_t **)0x4fdba4, -1); index != -1;
+       index = data_next_index(*(data_t **)0x4fdba4, index)) {
+    entry = (char *)datum_get(*(void **)0x4fdba4, index);
+    if (*(short *)(entry + 2) != 0)
+      continue;
+    if (*(int *)(entry + 0xc) != source)
+      continue;
+    if (*(int *)(entry + 8) != definition)
+      continue;
+    sound_stop_impulse(index);
+    return;
+  }
 }
-#else
-#error "sound_stop_impulse_by_source_and_definition: clang naked draft required"
-#endif
+
 
 
 /* sound_stop_all (0x1cd540) — readable C lift. */

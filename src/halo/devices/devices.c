@@ -556,94 +556,31 @@ bool device_can_change_position(int object_handle)
   return (bool)ok;
 }
 
-/* FUN_000967a0 (0x967a0) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static void *(*const b967a0_get)(int, int) = object_get_and_verify_type;
-static int (*const b967a0_c1ba210)(int tag_index) = tag_get_group_tag;
-static void (*const b967a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b967a0_exitfn)(int) = system_exit;
-static int (*const b967a0_c1c7e70)(int object_handle, int tag_index, int16_t marker, float *position, float *forward, float scale) = object_impulse_sound_new;
-static int (*const b967a0_o9ec30)(int, int, int, short, float, float, int, int) = FUN_0009ec30;
-
-__attribute__((naked, noinline))
-void FUN_000967a0(void *rec __attribute__((unused)), int object __attribute__((unused)))
+/* FUN_000967a0 (0x967a0) — readable C lift. */
+void FUN_000967a0(void *rec, int object)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .LFUN_000967a0_3\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c1ba210]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $0x65666665, %%eax\n\t"
-      "je .LFUN_000967a0_2\n\t"
-      "cmpl $0x736e6421, %%eax\n\t"
-      "je .LFUN_000967a0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f9\n\t"
-      "pushl $0x269ac4\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000967a0_1:\n\t"
-      "movl 0x31fc3c, %%eax\n\t"
-      "movl 0x31fc1c, %%ecx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c7e70]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000967a0_2:\n\t"
-      "movl 0x1ac(%%edi), %%edx\n\t"
-      "movl 0x1b8(%%edi), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[o9ec30]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000967a0_3:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b967a0_get), [c1ba210] "m"(b967a0_c1ba210), [assert] "m"(b967a0_assert), [exitfn] "m"(b967a0_exitfn), [c1c7e70] "m"(b967a0_c1c7e70), [o9ec30] "m"(b967a0_o9ec30)
-      : "memory");
+  char *device;
+  int group;
+  extern char DAT_00269ac4[];
+
+  if (object == -1)
+    return;
+  device = (char *)object_get_and_verify_type((int)rec, 0x380);
+  group = tag_get_group_tag(object);
+  if (group == 0x65666665) { /* 'effe' */
+    FUN_0009ec30(object, (int)rec, (int)rec, -1,
+                 *(float *)(device + 0x1b8), *(float *)(device + 0x1ac), 0, 0);
+    return;
+  }
+  if (group == 0x736e6421) { /* 'snd!' */
+    object_impulse_sound_new((int)rec, object, (int16_t)-1, (float *)0x31fc1c,
+                             (float *)0x31fc3c, 1.0f);
+    return;
+  }
+  display_assert((const char *)0, DAT_00269ac4, 0x2f9, 1);
+  system_exit(-1);
 }
-#else
-#error "FUN_000967a0: clang naked draft required"
-#endif
+
 
 
 /* device_effect_new (0x96850) — readable C lift. */
@@ -764,27 +701,28 @@ void create_initial_device_groups(void)
 #endif
 
 
-/* device_delete (0x96a00) — readable C lift from XBE leaf. */
+/* device_delete (0x96a00) — readable C lift. */
 void device_delete(int object_handle)
 {
   char *device;
-  short index;
-  char *slot;
+  short idx;
+  char *rec;
 
   device = (char *)object_get_and_verify_type(object_handle, 0x380);
-  index = *(short *)(device + 0x1a8);
-  if (index != (short)0xffff) {
-    slot = (char *)datum_get(*(void **)0x5aa8c8, index);
-    if ((slot[2] & 4) != 0)
-      datum_delete(*(void **)0x5aa8c8, index);
+  idx = *(short *)(device + 0x1a8);
+  if (idx != (short)0xffff) {
+    rec = (char *)datum_get(*(void **)0x5aa8c8, (int)idx);
+    if ((*(unsigned char *)(rec + 2) & 4) != 0)
+      datum_delete(*(data_t **)0x5aa8c8, (int)idx);
   }
-  index = *(short *)(device + 0x1b4);
-  if (index != (short)0xffff) {
-    slot = (char *)datum_get(*(void **)0x5aa8c8, index);
-    if ((slot[2] & 4) != 0)
-      datum_delete(*(void **)0x5aa8c8, index);
+  idx = *(short *)(device + 0x1b4);
+  if (idx != (short)0xffff) {
+    rec = (char *)datum_get(*(void **)0x5aa8c8, (int)idx);
+    if ((*(unsigned char *)(rec + 2) & 4) != 0)
+      datum_delete(*(data_t **)0x5aa8c8, (int)idx);
   }
 }
+
 
 /* FUN_00096a90 (0x96a90) — XBE naked draft (batch 254). */
 #if defined(__clang__)

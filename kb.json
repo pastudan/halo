@@ -24931,7 +24931,8 @@
         {
           "addr": "0x1ac0e0",
           "decl": "int FUN_001AC0E0(int unit_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001AC0E0"
         },
         {
           "addr": "0x1ac150",
@@ -25326,7 +25327,8 @@
         {
           "addr": "0x1ba0c0",
           "decl": "void FUN_001ba0c0(void *element);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_001ba0c0"
         },
         {
           "addr": "0x1ba140",
@@ -36565,8 +36567,9 @@
         },
         {
           "addr": "0x68970",
-          "decl": "void FUN_00068970(void);",
-          "ported": false
+          "decl": "int FUN_00068970(void *tif);",
+          "ported": false,
+          "name": "FUN_00068970"
         },
         {
           "addr": "0x689c0",
@@ -36581,7 +36584,8 @@
         {
           "addr": "0x68a30",
           "decl": "void FUN_00068a30(void *a0, void *a1, ...);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_00068a30"
         },
         {
           "addr": "0x68a50",
@@ -36667,12 +36671,14 @@
         {
           "addr": "0x69590",
           "decl": "void FUN_00069590(unsigned char *tif);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_00069590"
         },
         {
           "addr": "0x695c0",
           "decl": "void FUN_000695c0(unsigned char *tif);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_000695c0"
         },
         {
           "addr": "0x69600",
@@ -36716,13 +36722,15 @@
         },
         {
           "addr": "0x6a210",
-          "decl": "void FUN_0006a210(void);",
-          "ported": false
+          "decl": "int FUN_0006a210(void *tif);",
+          "ported": false,
+          "name": "FUN_0006a210"
         },
         {
           "addr": "0x6a260",
-          "decl": "int FUN_0006a260(int file);",
-          "ported": false
+          "decl": "int FUN_0006a260(void *tif);",
+          "ported": false,
+          "name": "FUN_0006a260"
         },
         {
           "addr": "0x6a2a0",
@@ -36889,7 +36897,8 @@
         {
           "addr": "0x6cac0",
           "decl": "void FUN_0006cac0(unsigned char *tif);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_0006cac0"
         },
         {
           "addr": "0x6cb00",
@@ -36909,7 +36918,8 @@
         {
           "addr": "0x6cda0",
           "decl": "int FUN_0006cda0(unsigned char *tif);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_0006cda0"
         },
         {
           "addr": "0x6cde0",
@@ -37019,7 +37029,8 @@
         {
           "addr": "0x6d980",
           "decl": "int FUN_0006d980(unsigned char *tif);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_0006d980"
         },
         {
           "addr": "0x6d9c0",
@@ -37299,7 +37310,8 @@
         {
           "addr": "0x70570",
           "decl": "void FUN_00070570(unsigned char *rgb@<eax>, unsigned short *out);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00070570"
         },
         {
           "addr": "0x705b0",
@@ -40124,7 +40136,8 @@
         {
           "addr": "0x967a0",
           "decl": "void FUN_000967a0(void *rec, int object);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000967a0"
         },
         {
           "addr": "0x96850",
@@ -40139,7 +40152,8 @@
         {
           "addr": "0x96a00",
           "decl": "void device_delete(int object_handle);",
-          "ported": true
+          "ported": true,
+          "name": "device_delete"
         },
         {
           "addr": "0x96a90",
