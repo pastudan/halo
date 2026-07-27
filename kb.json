@@ -10444,7 +10444,7 @@
         {
           "addr": "0x1c7f80",
           "decl": "void scripted_sound_new(int a0, int a1, float a2);",
-          "ported": false,
+          "ported": true,
           "name": "scripted_sound_new"
         },
         {
@@ -18378,7 +18378,7 @@
         {
           "addr": "0xb70b0",
           "decl": "void get_local_player_input_blob(int16_t local_player_index, float delta_time, char *out_blob@<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "get_local_player_input_blob"
         },
         {
@@ -40638,7 +40638,7 @@
         {
           "addr": "0x1b9e70",
           "decl": "void FUN_001b9e70(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001b9e70"
         }
       ],

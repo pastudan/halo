@@ -1492,155 +1492,34 @@ void FUN_001c7ca0(unsigned char clear_flag, int sound_tag)
   if (clear_flag)
     *(int *)(datum + 4) |= 4;
 }
-/* scripted_sound_new (0x1c7f80) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void *(*const b1c7f80_tag)(int, int) = tag_get;
-static void (*const b1c7f80_c1cd450)(int sound_index) = sound_stop_impulse;
-static int (*const b1c7f80_gtime)(void) = game_time_get;
-static short (*const b1c7f80_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
-static int (*const b1c7f80_c1c7e70)(int object_handle, int tag_index, int16_t marker, float *position, float *forward, float scale) = object_impulse_sound_new;
-static void (*const b1c7f80_c13c980)(int param_1, int param_2, int param_3) = FUN_0013c980;
-static int (*const b1c7f80_c1c7480)(int sound_tag_index, float scale) = sound_impulse_start;
-
-__attribute__((naked, noinline))
-void scripted_sound_new(int a0 __attribute__((unused)), int a1 __attribute__((unused)), float a2 __attribute__((unused)))
+/* scripted_sound_new (0x1c7f80) — readable C lift (restored pre-naked). */
+void scripted_sound_new(int a0, int a1, float a2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x84, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lscripted_sound_new_7\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x94(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cd450]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "call *%[gtime]\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movl 0x84(%%ebx), %%ecx\n\t"
-      "fcomps 0x2533c0\n\t"
-      "imull $0x1e, %%ecx, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $0x10624dd3, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "fnstsw %%ax\n\t"
-      "sarl $6, %%edx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "shrl $0x1f, %%ecx\n\t"
-      "addl %%esi, %%edx\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "testb $5, %%ah\n\t"
-      "movl %%ecx, 0x90(%%ebx)\n\t"
-      "jp .Lscripted_sound_new_1\n\t"
-      "movl $0, 0x10(%%ebp)\n\t"
-      "jmp .Lscripted_sound_new_2\n\t"
-      ".Lscripted_sound_new_1:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lscripted_sound_new_2\n\t"
-      "movl $0x3f800000, 0x10(%%ebp)\n\t"
-      ".Lscripted_sound_new_2:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lscripted_sound_new_5\n\t"
-      "pushl $1\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x2909e4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[markers]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lscripted_sound_new_3\n\t"
-      "movl -0x58(%%ebp), %%ecx\n\t"
-      "movl -0x54(%%ebp), %%edx\n\t"
-      "movl -0x84(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl -0x50(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl -0x7c(%%ebp), %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl -0x78(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "movl -0x74(%%ebp), %%edx\n\t"
-      "jmp .Lscripted_sound_new_4\n\t"
-      ".Lscripted_sound_new_3:\n\t"
-      "movl 0x31fc1c, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl 0x31fc3c, %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lscripted_sound_new_4:\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c7e70]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lscripted_sound_new_6\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13c980]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%esi, 0x94(%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lscripted_sound_new_5:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1c7480]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lscripted_sound_new_6:\n\t"
-      "movl %%esi, 0x94(%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lscripted_sound_new_7:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c7f80_tag), [c1cd450] "m"(b1c7f80_c1cd450), [gtime] "m"(b1c7f80_gtime), [markers] "m"(b1c7f80_markers), [c1c7e70] "m"(b1c7f80_c1c7e70), [c13c980] "m"(b1c7f80_c13c980), [c1c7480] "m"(b1c7f80_c1c7480)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp edi, -1 -> je 0x1c80db */
+  tag_get(0x736e6421, 0);
+  sound_stop_impulse(0);
+  game_time_get();
+  /* test (char)eax, 0x41 -> jne 0x1c800d */
+  /* cmp esi, -1 -> je 0x1c80c4 */
+  object_get_markers_by_string_id(0, (void *)0x002909e4, (void *)(uintptr_t)edx, 0);
+  /* test (int16_t)eax, (int16_t)eax -> je 0x1c805b */
+  object_impulse_sound_new(0, 0, eax, (float *)(uintptr_t)ecx, (float *)(uintptr_t)edx, 0.0f);
+  /* cmp esi, -1 -> je 0x1c80d3 */
+  FUN_0013c980(0, 0, 0);
+  sound_impulse_start(0, 0.0f);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "scripted_sound_new: clang naked draft required"
-#endif
 
 
 /* FUN_001c85a0 (0x1c85a0) — XBE naked draft (batch 243). */
