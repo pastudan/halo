@@ -36439,7 +36439,7 @@
         {
           "addr": "0x4c2a0",
           "decl": "void FUN_0004c2a0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004c2a0"
         },
         {
