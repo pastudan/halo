@@ -2890,89 +2890,48 @@ void FUN_00191ba0(void *base)
   tag_block_resize((char *)base + 0x10, 0);
 }
 
-/* FUN_00191bd0 (0x191bd0) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static void (*const b191bd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b191bd0_exitfn)(int) = system_exit;
-static void *(*const b191bd0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-char FUN_00191bd0(int search_value __attribute__((unused)), void **param_1 __attribute__((unused)), char *out __attribute__((unused)))
+/* 0x191bd0 - search the leaf-map node stack for a node referencing a value.
+ * (TU: c:\halo\SOURCE\structures\leaf_map.c)
+ *
+ * Register ABI (prologue at 0x191bd0): direct use of EBX with no entry moves;
+ * the only register arg is search_value@<ebx> (int). Stack args: param_1
+ * ([EBP+0x8], a pointer whose first field is the tag_block searched) and out
+ * ([EBP+0xc], char* flag). Walks the node stack from the top for each level
+ * (levels_up in [0,node_stack_count); count @ 0x4d8e90, stack @ 0x4d8a8c[count]
+ * i.e. node_stack-1). Each stacked node's low 31 bits index a 0xc-stride
+ * tag_block element; when that element's first field equals search_value it
+ * writes the node's sign bit to *out and returns 1. Returns 0 if no level
+ * matches (or the stack is empty). */
+char FUN_00191bd0(int search_value /* @<ebx> */, void **param_1, char *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x4d8e90, %%ax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorb %%cl, %%cl\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00191bd0_5\n\t"
-      ".LFUN_00191bd0_1:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_00191bd0_2\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jl .LFUN_00191bd0_3\n\t"
-      ".LFUN_00191bd0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2900\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movw 0x4d8e90, %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00191bd0_3:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl 0x4d8a8c(,%%eax,4), %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%esi, %%edx\n\t"
-      "pushl $0xc\n\t"
-      "andl $0x7fffffff, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "je .LFUN_00191bd0_4\n\t"
-      "movw 0x4d8e90, %%ax\n\t"
-      "incl %%edi\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jl .LFUN_00191bd0_1\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00191bd0_4:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl $0x80000000, %%esi\n\t"
-      "setne %%dl\n\t"
-      "popl %%edi\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00191bd0_5:\n\t"
-      "popl %%edi\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b191bd0_assert), [exitfn] "m"(b191bd0_exitfn), [elem] "m"(b191bd0_elem)
-      : "memory");
+  short count;
+  short i;
+  int node;
+  int *element;
+
+  count = *(short *)0x004d8e90;
+  i = 0;
+  if (count <= 0) {
+    return 0;
+  }
+  do {
+    if (i < 0 || i >= count) {
+      display_assert(
+          "levels_up>=0 && levels_up<leaf_map_globals.node_stack_count",
+          "c:\\halo\\SOURCE\\structures\\leaf_map.c", 0x3b, true);
+      system_exit(-1);
+    }
+    node = *(int *)(0x004d8a8c + ((int)count - (int)i) * 4);
+    element = (int *)tag_block_get_element(*param_1, node & 0x7fffffff, 0xc);
+    if (*element == search_value) {
+      *out = (char)((node & 0x80000000) != 0);
+      return 1;
+    }
+    count = *(short *)0x004d8e90;
+    i = (short)(i + 1);
+  } while (i < count);
+  return 0;
 }
-#else
-#error "FUN_00191bd0: clang naked draft required"
-#endif
 
 
 /* FUN_00191c70 (0x191c70) — readable C lift from XBE leaf. */

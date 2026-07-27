@@ -1363,121 +1363,76 @@ short FUN_0002b020(float *avoidance_ray __attribute__((unused)), float *ray_orig
 #endif
 
 
-/* FUN_0002b310 (0x2b310) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_0002b310(float *direction __attribute__((unused)), short count __attribute__((unused)), int records __attribute__((unused)), float *values __attribute__((unused)), float *out_index __attribute__((unused)), float *out_value __attribute__((unused)))
+/* 0x2b310 — actor_move_find_avoidance_sector: locate the angular sector of the
+ * query direction within a fan of direction records and linearly interpolate a
+ * fractional index plus an associated value.
+ *
+ * Register args (confirmed from caller FUN_0002bd80 @ 0x2c4c7-0x2c4cf and
+ * 0x2c765-0x2c76d):
+ *   direction @<ecx> : query direction vector (direction[0..2])
+ *   count     @<ebx> : number of records (always 8 at both call sites; used as
+ *                      a signed short — TEST BX,BX / CMP DX,BX / MOVSX)
+ * Stack args (cdecl, ADD ESP,0x10 cleanup):
+ *   records   : base of count direction records, 12-byte (float[3]) stride
+ *               (= global table 0x632780)
+ *   values    : parallel array of count floats, 4-byte stride
+ *   out_index : fractional sector index output
+ *   out_value : interpolated value output
+ * Returns 1 (AL) when a bracketing sector is found, else 0.
+ *
+ * The function walks the fan, computing for each record the 2D cross-product
+ * component (rec.y*dir.z - rec.z*dir.y) against the query direction.  When the
+ * sign of consecutive cross-products differs (product <= 0) and the dot product
+ * with the record is positive (forward hemisphere), the query lies between the
+ * previous record (prev) and the current record (i); the fractional index and
+ * value are interpolated from the two cross magnitudes.  prev starts at the
+ * wrap-around predecessor count-1.
+ *
+ * Confirmed: cross/dot loads at 0x2b32c-0x2b338 (seed), 0x2b34c-0x2b358
+ * (cross), 0x2b36c-0x2b37e (dot).  Confirmed: opposite-sign test FCOMP
+ * [0x2533c0]=0.0; TEST AH,0x41; JP at 0x2b35f-0x2b36a (enters body for product
+ * <= 0). Confirmed: dot test FCOMP [0x2533c0]; TEST AH,0x41; JZ at
+ * 0x2b380-0x2b38b (enters success for dot > 0).  Confirmed: success-block
+ * index/value interpolation FILD/FMUL/FSUBP/FDIV at 0x2b3b3-0x2b3ec. */
+char FUN_0002b310(float *direction, short count, int records, float *values,
+                  float *out_index, float *out_value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x1(%%ebx), %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal (%%edx,%%eax,4), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jle .LFUN_0002b310_3\n\t"
-      "nop\n\t"
-      ".LFUN_0002b310_1:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal (%%esi,%%eax,4), %%esi\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_0002b310_2\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%ecx)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_0002b310_4\n\t"
-      ".LFUN_0002b310_2:\n\t"
-      "movl %%edx, %%edi\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "incl %%edx\n\t"
-      "cmpw %%bx, %%dx\n\t"
-      "jl .LFUN_0002b310_1\n\t"
-      ".LFUN_0002b310_3:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0002b310_4:\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jne .LFUN_0002b310_5\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "jmp .LFUN_0002b310_6\n\t"
-      ".LFUN_0002b310_5:\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      ".LFUN_0002b310_6:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movswl %%di, %%eax\n\t"
-      ".byte 0xd8, 0xe9\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "popl %%esi\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fstps (%%ecx)\n\t"
-      "fxch %%st(1)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "fmuls (%%ecx,%%eax,4)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls (%%ecx,%%edx,4)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fstps (%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float prev_cross;
+  float cross;
+  float *rec;
+  short prev;
+  short i;
+  short denom_idx;
+
+  prev = count - 1;
+  i = 0;
+  prev_cross = *(float *)(records + prev * 0xc + 4) * direction[2] -
+               *(float *)(records + prev * 0xc + 8) * direction[1];
+  if (count > 0) {
+    do {
+      rec = (float *)(records + i * 0xc);
+      cross = rec[1] * direction[2] - rec[2] * direction[1];
+      if (prev_cross * cross <= 0.0f && 0.0f < direction[0] * rec[0] +
+                                                 rec[1] * direction[1] +
+                                                 rec[2] * direction[2]) {
+        denom_idx = i;
+        if (i == 0) {
+          denom_idx = count;
+        }
+        *out_index =
+          ((float)(int)prev * cross - (float)(int)denom_idx * prev_cross) /
+          (cross - prev_cross);
+        *out_value = (cross * values[prev] - prev_cross * values[i]) /
+                     (cross - prev_cross);
+        return 1;
+      }
+      prev = i;
+      i = i + 1;
+      prev_cross = cross;
+    } while (i < count);
+  }
+  return 0;
 }
-#else
-#error "FUN_0002b310: clang naked draft required"
-#endif
 
 
 /* actor_move_transform_avoidance_vector (0x2b400) — readable C lift from XBE leaf. */
@@ -1633,133 +1588,104 @@ void actor_move_get_avoidance_vector(int matrix __attribute__((unused)), float d
 #endif
 
 
-/* actor_move_get_avoidance_direction (0x2b5d0) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* 0x2b5d0 — actor_move_get_avoidance_direction: initialize trigonometric lookup
+ * tables.
+ *
+ * Confirmed: no arguments, no calls, writes table blocks rooted at
+ * 0x6327e0 and 0x6325c0 using constants/tables at 0x25577c..0x25581c.
+ * Confirmed: first loop runs 9 iterations (EDX=9), stride 0x1c (7 floats).
+ * Confirmed: second stage runs 2 outer iterations × 8 inner iterations,
+ * with destination stride 0x38 (14 floats) per inner iteration.
+ */
 void actor_move_get_avoidance_direction(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x6327e4, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl $9, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "jmp .Lactor_move_get_avoidance_direction_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lactor_move_get_avoidance_direction_1:\n\t"
-      "flds 0x2557cc(%%ecx)\n\t"
-      "movl 0x255778, %%esi\n\t"
-      "fsin\n\t"
-      "movl %%esi, -0x4(%%eax)\n\t"
-      "movl $0, (%%eax)\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $0x1c, %%eax\n\t"
-      "decl %%edx\n\t"
-      "flds 0x2557c8(%%ecx)\n\t"
-      "fcos\n\t"
-      "flds 0x255780\n\t"
-      "fmuls 0x2557a4(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fsin\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x25577c\n\t"
-      "fmuls 0x255780(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "fstps -0x18(%%eax)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "fstps -0x14(%%eax)\n\t"
-      "fcos\n\t"
-      "fstps -0x10(%%eax)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0xc(%%eax)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x8(%%eax)\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .Lactor_move_get_avoidance_direction_1\n\t"
-      "movl $0x6325cc, %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $2, -0x8(%%ebp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lactor_move_get_avoidance_direction_2:\n\t"
-      "flds 0x25581c(%%edi)\n\t"
-      "movl $0x2557f4, %%edx\n\t"
-      "fsin\n\t"
-      "movl $0x632788, %%eax\n\t"
-      "movl $8, %%esi\n\t"
-      "flds 0x25581c(%%edi)\n\t"
-      "fcos\n\t"
-      "flds 0x255814(%%edi)\n\t"
-      ".Lactor_move_get_avoidance_direction_3:\n\t"
-      "flds (%%edx)\n\t"
-      "movl 0x2557f0, %%ebx\n\t"
-      "fcos\n\t"
-      "movl $0, -0x8(%%eax)\n\t"
-      "movl %%ebx, -0xc(%%ecx)\n\t"
-      "addl $4, %%edx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "addl $0x38, %%ecx\n\t"
-      "decl %%esi\n\t"
-      "fstps -0x10(%%eax)\n\t"
-      "flds -0x4(%%edx)\n\t"
-      "fsin\n\t"
-      "fstps -0xc(%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls -0x14(%%eax)\n\t"
-      "fstps -0x40(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls -0x10(%%eax)\n\t"
-      "fstps -0x3c(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls -0xc(%%eax)\n\t"
-      "fstps -0x38(%%ecx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls -0x14(%%eax)\n\t"
-      "fstps -0x34(%%ecx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls -0x10(%%eax)\n\t"
-      "fstps -0x30(%%ecx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls -0xc(%%eax)\n\t"
-      "fstps -0x2c(%%ecx)\n\t"
-      "fld %%st(1)\n\t"
-      "fstps -0x34(%%ecx)\n\t"
-      "jne .Lactor_move_get_avoidance_direction_3\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "fstp %%st(0)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "addl $0x1c, %%ecx\n\t"
-      "fstp %%st(0)\n\t"
-      "addl $4, %%edi\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jne .Lactor_move_get_avoidance_direction_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  /* First-stage table: 9 rows of 7 floats, base 0x6327e0, stride 0x1c. */
+  float *p_a = (float *)0x6327e0;
+  /* Second-stage table rooted at 0x6325c0; the working outer pointer starts
+   * at 0x6325cc (entry stores reach back via p_b[-3..0] and forward p_b[1..3]).
+   * The outer pointer advances 7 floats per outer iteration; the inner pointer
+   * advances 14 floats (0x38) per inner iteration. */
+  float *outer_b = (float *)0x6325cc;
+  /* Per-column basis vectors, reset to 0x632780 at the start of each outer
+   * iteration (only 8 entries are ever live, stride 0xc). */
+  float *basis;
+  float *p_b;
+
+  const float *angle_table_9 = (const float *)0x2557cc;
+  const float *scale_table_9 = (const float *)0x2557a8;
+  const float *length_table_9 = (const float *)0x255784;
+  const float k_angle = *(const float *)0x255780;
+  const float k_length = *(const float *)0x25577c;
+  const float k_base = *(const float *)0x255778;
+
+  const float *outer_angles = (const float *)0x25581c;
+  const float *outer_scales = (const float *)0x255814;
+  const float *inner_angles;
+  const float k_inner_base = *(const float *)0x2557f0;
+
+  int i;
+  int row;
+  int col;
+  float angle, sin_angle, cos_angle, scaled_angle, sin_scaled, scaled_len;
+  float sin_outer, cos_outer, row_scale;
+  float inner, cos_inner, sin_inner;
+
+  for (i = 0; i < 9; i++) {
+    angle = angle_table_9[i];
+    sin_angle = x87_fsin(angle);
+    cos_angle = x87_fcos(angle);
+    scaled_angle = k_angle * scale_table_9[i];
+    sin_scaled = x87_fsin(scaled_angle);
+    scaled_len = k_length * length_table_9[i];
+
+    p_a[0] = k_base;
+    p_a[1] = 0.0f;
+    p_a[2] = scaled_len * cos_angle;
+    p_a[3] = scaled_len * sin_angle;
+    p_a[4] = x87_fcos(scaled_angle);
+    p_a[5] = sin_scaled * cos_angle;
+    p_a[6] = sin_scaled * sin_angle;
+    p_a += 7;
+  }
+
+  for (row = 0; row < 2; row++) {
+    sin_outer = x87_fsin(outer_angles[row]);
+    cos_outer = x87_fcos(outer_angles[row]);
+    row_scale = outer_scales[row];
+
+    basis = (float *)0x632780;
+    p_b = outer_b;
+    inner_angles = (const float *)0x2557f4;
+
+    for (col = 0; col < 8; col++) {
+      inner = inner_angles[col];
+      cos_inner = x87_fcos(inner);
+      sin_inner = x87_fsin(inner);
+
+      basis[0] = 0.0f;
+      basis[1] = cos_inner;
+      basis[2] = sin_inner;
+
+      /* table_b entry base = p_b + 3 floats:
+       *   [+0] k_inner_base
+       *   [+0x10] row_scale * basis[0..2]
+       *   [+0x1c] sin_outer * basis[0..2], with [+0x1c] then overwritten by
+       *           cos_outer (the sin_outer*basis[0] product is dead). */
+      p_b[-3] = k_inner_base;
+      p_b[-2] = row_scale * basis[0];
+      p_b[-1] = row_scale * basis[1];
+      p_b[0] = row_scale * basis[2];
+      p_b[1] = sin_outer * basis[0];
+      p_b[2] = sin_outer * basis[1];
+      p_b[3] = sin_outer * basis[2];
+      p_b[1] = cos_outer;
+
+      basis += 3;
+      p_b += 14;
+    }
+    outer_b += 7;
+  }
 }
-#else
-#error "actor_move_get_avoidance_direction: clang naked draft required"
-#endif
 
 
 /* actor_path_3d_available (0x2b720) — XBE naked draft (batch 87). */

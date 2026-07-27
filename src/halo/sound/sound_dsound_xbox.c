@@ -1239,152 +1239,46 @@ void FUN_001c9e20(void)
 #endif
 
 
-/* FUN_001ca130 (0x1ca130) — XBE naked draft (batch 248). */
-#if defined(__clang__)
-static void (*const b1ca130_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1ca130_exitfn)(int) = system_exit;
-static bool __stdcall (*const b1ca130_c20f069)(void *stream) = dsound_stream_is_active;
-static void (*const b1ca130_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* 0x1ca130 */
 void FUN_001ca130(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movw 0x4fdfc4, %%ax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jle .LFUN_001ca130_13\n\t"
-      "pushl %%esi\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_001ca130_1:\n\t"
-      "cmpw %%bx, %%di\n\t"
-      "jl .LFUN_001ca130_2\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jl .LFUN_001ca130_3\n\t"
-      ".LFUN_001ca130_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c085c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ca130_3:\n\t"
-      "cmpw $0x100, %%di\n\t"
-      "jl .LFUN_001ca130_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c083c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ca130_4:\n\t"
-      "movswl %%di, %%esi\n\t"
-      "imull $0x74, %%esi, %%esi\n\t"
-      "movb 0x4fdfce(%%esi), %%al\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "leal 0x4fdfc8(%%esi), %%esi\n\t"
-      "jne .LFUN_001ca130_6\n\t"
-      "cmpw %%bx, (%%esi)\n\t"
-      "je .LFUN_001ca130_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2c2\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c0dc8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ca130_5:\n\t"
-      "cmpb %%bl, 0x6(%%esi)\n\t"
-      "je .LFUN_001ca130_11\n\t"
-      "nop\n\t"
-      ".LFUN_001ca130_6:\n\t"
-      "cmpw %%bx, %%di\n\t"
-      "jl .LFUN_001ca130_7\n\t"
-      "cmpw 0x4fdfc4, %%di\n\t"
-      "jl .LFUN_001ca130_8\n\t"
-      ".LFUN_001ca130_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c085c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ca130_8:\n\t"
-      "cmpw $0x100, %%di\n\t"
-      "jl .LFUN_001ca130_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c083c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ca130_9:\n\t"
-      "cmpb %%bl, 0x6(%%esi)\n\t"
-      "jne .LFUN_001ca130_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4b8\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c0934\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ca130_10:\n\t"
-      "movl 0x70(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c20f069]\n\t"
-      "negl %%eax\n\t"
-      "sbbb %%al, %%al\n\t"
-      "incb %%al\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "je .LFUN_001ca130_6\n\t"
-      "movl 0x70(%%esi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *0x18(%%ecx)\n\t"
-      "movb %%bl, 0x6(%%esi)\n\t"
-      ".LFUN_001ca130_11:\n\t"
-      "cmpw %%bx, 0x8(%%esi)\n\t"
-      "je .LFUN_001ca130_12\n\t"
-      "pushl $0x2c0d80\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%bx, 0x8(%%esi)\n\t"
-      ".LFUN_001ca130_12:\n\t"
-      "movw 0x4fdfc4, %%ax\n\t"
-      "incl %%edi\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jl .LFUN_001ca130_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_001ca130_13:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1ca130_assert), [exitfn] "m"(b1ca130_exitfn), [c20f069] "m"(b1ca130_c20f069), [c8f390] "m"(b1ca130_c8f390)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp (int16_t)eax, (int16_t)ebx -> jle 0x1ca2a2 */
+  /* cmp (int16_t)edi, (int16_t)ebx -> jl 0x1ca15a */
+  /* cmp (int16_t)edi, (int16_t)eax -> jl 0x1ca177 */
+  display_assert((char *)0x002c085c, (char *)0x002c0894, 105, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, 0x100 -> jl 0x1ca19b */
+  display_assert((char *)0x002c083c, (char *)0x002c0894, 106, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi], (int16_t)ebx -> je 0x1ca1d6 */
+  display_assert((char *)0x002c0dc8, (char *)0x002c0894, 706, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi + 6], (char)ebx -> je 0x1ca278 */
+  /* cmp (int16_t)edi, (int16_t)ebx -> jl 0x1ca1ee */
+  /* relift: cmp (int16_t)edi, word ptr [0x4fdfc4] -> jl 0x1ca20b */
+  display_assert((char *)0x002c085c, (char *)0x002c0894, 105, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, 0x100 -> jl 0x1ca22f */
+  display_assert((char *)0x002c083c, (char *)0x002c0894, 106, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi + 6], (char)ebx -> jne 0x1ca254 */
+  display_assert((char *)0x002c0934, (char *)0x002c0894, 1208, 0);
+  system_exit(0);
+  dsound_stream_is_active((void *)(uintptr_t)eax);
+  /* relift: cmp word ptr [esi + 8], (int16_t)ebx -> je 0x1ca291 */
+  error(0, (char *)0x002c0d80);
+  /* cmp (int16_t)edi, (int16_t)eax -> jl 0x1ca150 */
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_001ca130: clang naked draft required"
-#endif
 
 
 /* FUN_001ca2b0 (0x1ca2b0) — XBE naked draft (batch 254). */

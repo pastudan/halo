@@ -698,451 +698,117 @@ float *player_control_get_facing_direction(int16_t local_player_index,
   return out_direction;
 }
 
-/* FUN_000b6bd0 (0xb6bd0) — XBE naked draft (batch 116). */
-#if defined(__clang__)
-static bool (*const bb6bd0_c92e60)(void) = cinematic_can_be_skipped;
-static void (*const bb6bd0_c1002e0)(void) = (void *)main_skip_cinematic;
-
-__attribute__((naked, noinline))
-void FUN_000b6bd0(char *input __attribute__((unused)))
+/* Map a local input blob (ESI) into player_control_globals action-test flags. */
+void FUN_000b6bd0(char *input)
 {
-  __asm__ volatile(
-      "movb 0x14(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000b6bd0_1\n\t"
-      "call *%[c92e60]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000b6bd0_1\n\t"
-      "call *%[c1002e0]\n\t"
-      ".LFUN_000b6bd0_1:\n\t"
-      "testb $0x40, 0x18(%%esi)\n\t"
-      "movl 0x457090, %%ecx\n\t"
-      "je .LFUN_000b6bd0_2\n\t"
-      "orl $1, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_2:\n\t"
-      "testb $2, 0x18(%%esi)\n\t"
-      "je .LFUN_000b6bd0_3\n\t"
-      "orl $2, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_3:\n\t"
-      "movb 0x14(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000b6bd0_4\n\t"
-      "orl $4, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_4:\n\t"
-      "movb 0x15(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000b6bd0_5\n\t"
-      "orl $8, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_5:\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b6bd0_6\n\t"
-      "orl $0x10, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_6:\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "testb $0x20, %%ah\n\t"
-      "je .LFUN_000b6bd0_7\n\t"
-      "orl $0x20, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_7:\n\t"
-      "testb $4, 0x1c(%%esi)\n\t"
-      "je .LFUN_000b6bd0_8\n\t"
-      "orl $0x40, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_8:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b6bd0_9\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x80, %%eax\n\t"
-      "jmp .LFUN_000b6bd0_10\n\t"
-      ".LFUN_000b6bd0_9:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b6bd0_11\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x100, %%eax\n\t"
-      ".LFUN_000b6bd0_10:\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_11:\n\t"
-      "flds 0xc(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b6bd0_12\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x200, %%eax\n\t"
-      "jmp .LFUN_000b6bd0_13\n\t"
-      ".LFUN_000b6bd0_12:\n\t"
-      "flds 0xc(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b6bd0_14\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x400, %%eax\n\t"
-      ".LFUN_000b6bd0_13:\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_14:\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b6bd0_15\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x800, %%eax\n\t"
-      "jmp .LFUN_000b6bd0_16\n\t"
-      ".LFUN_000b6bd0_15:\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b6bd0_17\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x1000, %%eax\n\t"
-      ".LFUN_000b6bd0_16:\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_17:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b6bd0_18\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x2000, %%eax\n\t"
-      "jmp .LFUN_000b6bd0_19\n\t"
-      ".LFUN_000b6bd0_18:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b6bd0_20\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "orl $0x4000, %%eax\n\t"
-      ".LFUN_000b6bd0_19:\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      ".LFUN_000b6bd0_20:\n\t"
-      "testb $1, 0x4(%%ecx)\n\t"
-      "movl $0xffffffbf, %%edx\n\t"
-      "jne .LFUN_000b6bd0_23\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_000b6bd0_24\n\t"
-      "testb $0x40, 0x18(%%esi)\n\t"
-      "je .LFUN_000b6bd0_21\n\t"
-      "orl $1, %%eax\n\t"
-      "jmp .LFUN_000b6bd0_22\n\t"
-      ".LFUN_000b6bd0_21:\n\t"
-      "andl $0xfffffffe, %%eax\n\t"
-      ".LFUN_000b6bd0_22:\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      ".LFUN_000b6bd0_23:\n\t"
-      "andl %%edx, 0x18(%%esi)\n\t"
-      ".LFUN_000b6bd0_24:\n\t"
-      "movb 0x2f0292, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb 0x4(%%ecx), %%al\n\t"
-      "jne .LFUN_000b6bd0_31\n\t"
-      "testb $4, %%al\n\t"
-      "jne .LFUN_000b6bd0_27\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "testb $4, %%al\n\t"
-      "je .LFUN_000b6bd0_28\n\t"
-      "testb $0x40, 0x18(%%esi)\n\t"
-      "je .LFUN_000b6bd0_25\n\t"
-      "orl $4, %%eax\n\t"
-      "jmp .LFUN_000b6bd0_26\n\t"
-      ".LFUN_000b6bd0_25:\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      ".LFUN_000b6bd0_26:\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      ".LFUN_000b6bd0_27:\n\t"
-      "andl %%edx, 0x18(%%esi)\n\t"
-      ".LFUN_000b6bd0_28:\n\t"
-      "testb $8, 0x4(%%ecx)\n\t"
-      "jne .LFUN_000b6bd0_30\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "testb $8, %%al\n\t"
-      "je .LFUN_000b6bd0_38\n\t"
-      "testb $1, 0x1c(%%esi)\n\t"
-      "je .LFUN_000b6bd0_29\n\t"
-      "orl $8, %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "andl $0xfffffffe, 0x1c(%%esi)\n\t"
-      "ret\n\t"
-      ".LFUN_000b6bd0_29:\n\t"
-      "andl $0xfffffff7, %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      ".LFUN_000b6bd0_30:\n\t"
-      "andl $0xfffffffe, 0x1c(%%esi)\n\t"
-      "ret\n\t"
-      ".LFUN_000b6bd0_31:\n\t"
-      "testb $4, %%al\n\t"
-      "movl $0xfffffffd, %%edx\n\t"
-      "jne .LFUN_000b6bd0_34\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "testb $4, %%al\n\t"
-      "je .LFUN_000b6bd0_35\n\t"
-      "testb $2, 0x18(%%esi)\n\t"
-      "je .LFUN_000b6bd0_32\n\t"
-      "orl $4, %%eax\n\t"
-      "jmp .LFUN_000b6bd0_33\n\t"
-      ".LFUN_000b6bd0_32:\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      ".LFUN_000b6bd0_33:\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      ".LFUN_000b6bd0_34:\n\t"
-      "andl %%edx, 0x18(%%esi)\n\t"
-      ".LFUN_000b6bd0_35:\n\t"
-      "testb $8, 0x4(%%ecx)\n\t"
-      "jne .LFUN_000b6bd0_37\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "testb $4, %%al\n\t"
-      "je .LFUN_000b6bd0_38\n\t"
-      "testb $2, 0x1c(%%esi)\n\t"
-      "je .LFUN_000b6bd0_36\n\t"
-      "orl $4, %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "andl %%edx, 0x1c(%%esi)\n\t"
-      "ret\n\t"
-      ".LFUN_000b6bd0_36:\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      ".LFUN_000b6bd0_37:\n\t"
-      "andl %%edx, 0x1c(%%esi)\n\t"
-      ".LFUN_000b6bd0_38:\n\t"
-      "ret\n\t"
-      :
-      : [c92e60] "m"(bb6bd0_c92e60), [c1002e0] "m"(bb6bd0_c1002e0)
-      : "memory");
-}
-#else
-#error "FUN_000b6bd0: clang naked draft required"
-#endif
+  int *g;
+  int flags8;
+  int input_flags;
 
+  if (input[0x14] && cinematic_can_be_skipped())
+    main_skip_cinematic();
 
-/* Forward a packed look-delta pair to a local player's desired-angle update.
- * delta points at two floats: delta[0] is the yaw (turn) delta and delta[1]
- * the pitch (look) delta -- established from the push order at the
- * player_control_update_desired_angles call site (first PUSH is the last
- * argument, so [delta+4] becomes pitch_delta and [delta+0] yaw_delta).
- * The deltas are only forwarded, never computed here.
- *
- * c:\halo\SOURCE\game\player_control.c */
-void FUN_000b8cf0(int16_t local_player_index, float *delta)
-{
-  assert_halt_at("c:\\halo\\SOURCE\\game\\player_control.c", 0x467, delta);
-  FUN_000b7f90(local_player_index, delta[0], delta[1]);
-}
+  g = (int *)player_control_globals;
+  input_flags = *(int *)(input + 0x18);
+  if (input_flags & 0x40)
+    g[0] |= 1;
+  if (input_flags & 2)
+    g[0] |= 2;
+  if (input[0x14])
+    g[0] |= 4;
+  if (input[0x15])
+    g[0] |= 8;
+  if (*(float *)(input + 8) > *(float *)0x2533c0)
+    g[0] |= 0x10;
+  if (input_flags & 0x2000)
+    g[0] |= 0x20;
+  if (input[0x1c] & 4)
+    g[0] |= 0x40;
+  if (*(float *)(input + 0x10) > *(float *)0x2533c0)
+    g[0] |= 0x80;
+  else if (*(float *)(input + 0x10) < *(float *)0x2533c0)
+    g[0] |= 0x100;
+  if (*(float *)(input + 0xc) > *(float *)0x2533c0)
+    g[0] |= 0x200;
+  else if (*(float *)(input + 0xc) < *(float *)0x2533c0)
+    g[0] |= 0x400;
+  if (*(float *)input > *(float *)0x2533c0)
+    g[0] |= 0x800;
+  else if (*(float *)input < *(float *)0x2533c0)
+    g[0] |= 0x1000;
+  if (*(float *)(input + 4) > *(float *)0x2533c0)
+    g[0] |= 0x2000;
+  else if (*(float *)(input + 4) < *(float *)0x2533c0)
+    g[0] |= 0x4000;
 
-
-/* Reserve a server-side update-queue slot for a player datum handle.
- *
- * Server-side mirror of update_client_add_player (0xb8f00): allocates a
- * datum in the update-server queue data_t at 0x4570c8 keyed by the caller's
- * player handle. NONE (-1) is fatal.
- *
- * Naming is INFERRED, not string-proven: the assert file string is
- * player_queues_new.c and the assert line (0xeb = 235) falls between
- * update_server_start (0xcf) and update_server_get_update (0x11a), i.e. the
- * exact source position mirroring update_client_add_player relative to
- * update_client_start. Shape is byte-for-byte the client sibling with the
- * server global substituted. */
-void FUN_000b8d30(int handle)
-{
-  int queue_index;
-  queue_index = data_new_datum(*(data_t **)0x4570c8, handle);
-  if (queue_index == -1) {
-    display_assert("queue_index!=NONE",
-                   "c:\\halo\\SOURCE\\game\\player_queues_new.c", 0xeb, 1);
-    system_exit(-1);
+  /* Sticky bit0 on globals+8 / clear input 0x40. */
+  if (g[1] & 1) {
+    *(int *)(input + 0x18) &= ~0x40;
+  } else if (g[2] & 1) {
+    flags8 = g[2];
+    if (*(int *)(input + 0x18) & 0x40)
+      flags8 |= 1;
+    else
+      flags8 &= ~1;
+    g[2] = flags8;
+    *(int *)(input + 0x18) &= ~0x40;
   }
-}
 
-
-/* Set action flags on a local player's control slot.
- * ORs the given flags into the player's action_flags field, and
- * optionally into the persistent_action_flags field as well. */
-void player_control_set_action_flags(int16_t local_player_index, uint16_t flags,
-                                     bool persistent)
-{
-  uint16_t *slot;
-
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  slot = (uint16_t *)((char *)player_control_globals +
-                      local_player_index * 0x40 + 0x10);
-  *(uint16_t *)((char *)slot + 8) |= flags;
-  if (persistent)
-    *(uint16_t *)((char *)slot + 0xa) |= flags;
-}
-
-/* Get the local player index for the player controlling a unit.
- * Looks up the unit's player handle (unit+0x1c8), then reads the local
- * player index (player+0x2) from the player datum. Returns NONE (0xffff)
- * if the unit has no controlling player. */
-int16_t unit_get_local_player_index(int unit_handle)
-{
-  char *unit_obj;
-  int player_handle;
-  char *player;
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-  player_handle = *(int *)(unit_obj + 0x1c8);
-  if (player_handle != NONE) {
-    player = (char *)datum_get(player_data, player_handle);
-    return *(int16_t *)(player + 0x2);
-  }
-  return (int16_t)NONE;
-}
-
-/* Clear the aim-assist weapon interaction slot for a unit's controlling player.
- * Looks up the player datum via the unit's player handle (unit+0x1c8), then
- * finds the local player index (player+0x2), retrieves the player control slot,
- * and resets the weapon interaction field (slot+0x24) to NONE. */
-void player_clear_aim_assist(int unit_handle)
-{
-  char *unit_obj;
-  int player_handle;
-  char *player;
-  int16_t local_player_index;
-  char *slot;
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-  player_handle = *(int *)(unit_obj + 0x1c8);
-  if (player_handle != NONE) {
-    player = (char *)datum_get(player_data, player_handle);
-    local_player_index = *(int16_t *)(player + 0x2);
-    if (local_player_index != NONE) {
-      slot = (char *)player_control_get_data((int16_t)local_player_index);
-      *(int16_t *)(slot + 0x24) = NONE;
+  if (!*(uint8_t *)0x2f0292) {
+    if (g[1] & 4) {
+      *(int *)(input + 0x18) &= ~0x40;
+    } else if (g[2] & 4) {
+      flags8 = g[2];
+      if (*(int *)(input + 0x18) & 0x40)
+        flags8 |= 4;
+      else
+        flags8 &= ~4;
+      g[2] = flags8;
+      *(int *)(input + 0x18) &= ~0x40;
     }
-  }
-}
-
-/* Set a player control slot's desired facing angles from a 3D direction vector.
- * Converts the direction vector to yaw+pitch via vector_to_angles (atan2-based
- * vector_to_angles), validates both angles for NaN/Inf, and normalizes yaw
- * to [0, 2*pi) by adding 2*pi if negative. */
-void player_control_set_facing(uint16_t local_player_index, float *direction)
-{
-  char *player_slot;
-  float *desired_yaw;
-
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-
-  player_slot = (char *)player_control_globals +
-                (int)(int16_t)local_player_index * 0x40 + 0x10;
-  desired_yaw = (float *)(player_slot + 0xc);
-
-  /* Convert direction vector to yaw/pitch angles */
-  vector_to_angles(desired_yaw, direction);
-
-  /* assert_valid_real on desired_angles.pitch (slot+0x10) */
-  if ((*(uint32_t *)(player_slot + 0x10) & 0x7f800000u) == 0x7f800000u) {
-    char *msg = csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
-                         "player_control->desired_angles.pitch",
-                         *(uint32_t *)(player_slot + 0x10),
-                         (double)*(float *)(player_slot + 0x10));
-    display_assert(msg, "c:\\halo\\SOURCE\\game\\player_control.c", 0xbb, 1);
-    system_exit(NONE);
-  }
-
-  /* assert_valid_real on desired_angles.yaw (slot+0xc) */
-  if ((*(uint32_t *)desired_yaw & 0x7f800000u) == 0x7f800000u) {
-    char *msg = csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
-                         "player_control->desired_angles.yaw",
-                         *(uint32_t *)desired_yaw, (double)*desired_yaw);
-    display_assert(msg, "c:\\halo\\SOURCE\\game\\player_control.c", 0xbc, 1);
-    system_exit(NONE);
-  }
-
-  /* Normalize yaw to [0, 2*pi) */
-  if (*desired_yaw < *(float *)0x2533c0)
-    *desired_yaw += *(float *)0x255a54;
-}
-
-void player_control_new_unit(uint16_t local_player_index, int player_index)
-{
-  int *slot;
-  float *facing;
-  int unit;
-
-  assert_halt(local_player_index >= 0 &&
-              local_player_index < MAXIMUM_NUMBER_OF_LOCAL_PLAYERS);
-  slot =
-    (int *)((char *)player_control_globals + local_player_index * 0x40 + 0x10);
-  csmemset(slot, 0, 0x40);
-  *slot = player_index;
-  *(int16_t *)(slot + 8) = -1;
-  *(int16_t *)((char *)slot + 0x22) = -1;
-  *(int16_t *)(slot + 9) = -1;
-  *(char *)((char *)slot + 0x26) = 0;
-  slot[10] = -1;
-  *(float *)(slot + 0xf) = 1.49f;
-  *(float *)(slot + 0xe) = -1.49f;
-  *(int16_t *)(slot + 2) = 0;
-  *(int16_t *)((char *)slot + 10) = 0;
-  if (player_index != -1) {
-    unit = (int)object_get_and_verify_type(player_index, 3);
-    facing = (float *)(slot + 3);
-    vector_to_angles(facing, (float *)(unit + 0x1d4));
-    if (*facing < *(float *)0x2533c0)
-      *facing += *(float *)0x255a54;
-    *(int16_t *)(slot + 8) = *(int16_t *)(unit + 0x2a4);
-    *(int16_t *)((char *)slot + 0x22) = (int16_t) * (char *)(unit + 0x2cd);
-    *(int16_t *)(slot + 9) = (int16_t) * (char *)(unit + 0x2d1);
-  }
-}
-
-/* Set the desired weapon index on a unit's controlling player.
- * Resolves the unit's player handle (unit+0x1c8), looks up the local player
- * index (player+0x2), retrieves the player control slot, and writes
- * seat_index into the desired weapon field (slot+0x20). */
-void player_control_set_unit_seat(int unit_handle, int seat_index)
-{
-  char *unit_obj;
-  int player_handle;
-  char *player;
-  int16_t local_player_index;
-  char *slot;
-
-  unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
-  player_handle = *(int *)(unit_obj + 0x1c8);
-  if (player_handle != NONE) {
-    player = (char *)datum_get(player_data, player_handle);
-    local_player_index = *(int16_t *)(player + 0x2);
-    if (local_player_index != NONE) {
-      slot = (char *)player_control_get_data(local_player_index);
-      *(int16_t *)(slot + 0x20) = (int16_t)seat_index;
+    if (g[1] & 8) {
+      *(int *)(input + 0x1c) &= ~1;
+      return;
     }
+    if (!(g[2] & 8))
+      return;
+    flags8 = g[2];
+    if (input[0x1c] & 1) {
+      g[2] = flags8 | 8;
+      *(int *)(input + 0x1c) &= ~1;
+      return;
+    }
+    g[2] = flags8 & ~8;
+    *(int *)(input + 0x1c) &= ~1;
+    return;
   }
-}
 
-void player_control_initialize_for_new_map(void)
-{
-  int i;
-  int iVar;
-  int scenario;
-
-  *(int *)player_control_globals = 0;
-  *((int *)player_control_globals + 1) = 0;
-  *((int *)player_control_globals + 2) = 0;
-  *((int *)player_control_globals + 3) = 0;
-  for (i = 0; (int16_t)i < 4; i++) {
-    scenario = ((int (*)(void))0x18e450)();
-    iVar = (int)tag_block_get_element((void *)(scenario + 0x110), 0, 0x80);
-    player_control_new_unit(i, -1);
-    if (*(float *)((char *)0x4570a8 + i * 4) == *(float *)0x2533c0)
-      *(int *)((char *)0x4570a8 + i * 4) = *(int *)(iVar + 0x4c);
-    if (*(float *)((char *)0x457098 + i * 4) == *(float *)0x2533c0)
-      *(int *)((char *)0x457098 + i * 4) = *(int *)(iVar + 0x50);
+  /* Alternate sticky path when 0x2f0292 is set. */
+  if (g[1] & 4) {
+    *(int *)(input + 0x18) &= ~2;
+  } else if (g[2] & 4) {
+    flags8 = g[2];
+    if (*(int *)(input + 0x18) & 2)
+      flags8 |= 4;
+    else
+      flags8 &= ~4;
+    g[2] = flags8;
+    *(int *)(input + 0x18) &= ~2;
   }
+  if (g[1] & 8) {
+    *(int *)(input + 0x1c) &= ~2;
+    return;
+  }
+  if (!(g[2] & 4))
+    return;
+  flags8 = g[2];
+  if (input[0x1c] & 2) {
+    g[2] = flags8 | 4;
+    *(int *)(input + 0x1c) &= ~2;
+    return;
+  }
+  g[2] = flags8 & ~4;
+  *(int *)(input + 0x1c) &= ~2;
 }
 
 /* get_local_player_input_blob (0xb70b0) — XBE naked draft (batch 104). */
