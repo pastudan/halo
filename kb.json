@@ -27167,8 +27167,8 @@
         },
         {
           "addr": "0xe4a80",
-          "decl": "int16_t ui_widget_find_localized_string_index(wchar_t *needle@<ebx>);",
-          "ported": false
+          "decl": "int16_t ui_widget_find_localized_string_index(const wchar_t *key /* @<ebx> */);",
+          "ported": true
         },
         {
           "addr": "0xe4ad0",

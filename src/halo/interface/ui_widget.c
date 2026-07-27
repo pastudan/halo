@@ -2499,53 +2499,21 @@ char widget_instance_parent_allows_focus(void *widget /* @<eax> */)
   }
 }
 
-/* ui_widget_find_localized_string_index (0xe4a80) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-static size_t (*const be4a80_c1db11e)(const wchar_t *str) = (void *)_wcslen;
-static int (*const be4a80_c1dc34b)(const wchar_t *s1, const wchar_t *s2, size_t count) = (void *)__wcsnicmp;
-
-__attribute__((naked, noinline))
-int16_t ui_widget_find_localized_string_index(wchar_t *needle)
+/* ui_widget_find_localized_string_index (0xe4a80) — readable C lift. */
+int16_t ui_widget_find_localized_string_index(const wchar_t *key /* @<ebx> */)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      ".Lui_widget_find_localized_string_index_1:\n\t"
-      "movswl %%si, %%edi\n\t"
-      "movl 0x31e098(,%%edi,4), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1db11e]\n\t"
-      "movl 0x31e098(,%%edi,4), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1dc34b]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_find_localized_string_index_2\n\t"
-      "incl %%esi\n\t"
-      "cmpw $0x28, %%si\n\t"
-      "jb .Lui_widget_find_localized_string_index_1\n\t"
-      ".Lui_widget_find_localized_string_index_2:\n\t"
-      "cmpw $0x28, %%si\n\t"
-      "popl %%edi\n\t"
-      "jne .Lui_widget_find_localized_string_index_3\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lui_widget_find_localized_string_index_3:\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1db11e] "m"(be4a80_c1db11e), [c1dc34b] "m"(be4a80_c1dc34b)
-      : "memory");
-}
-#else
-#error "ui_widget_find_localized_string_index: clang naked draft required"
-#endif
+  int16_t i;
+  const wchar_t *entry;
+  size_t n;
 
+  for (i = 0; i < 0x28; i++) {
+    entry = *(const wchar_t **)(0x31e098 + (int)i * 4);
+    n = _wcslen(entry);
+    if (__wcsnicmp(key, entry, n) == 0)
+      return i;
+  }
+  return -1;
+}
 
 /* FUN_000e4c70 (0xe4c70) — XBE naked draft (batch 153). */
 #if defined(__clang__)
