@@ -12060,7 +12060,8 @@
         {
           "addr": "0xc66d0",
           "decl": "bool FUN_000c66d0(int datum_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c66d0"
         },
         {
           "addr": "0xc6810",
@@ -30963,7 +30964,8 @@
         {
           "addr": "0x183120",
           "decl": "int16_t FUN_00183120(void *bitmap);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00183120"
         },
         {
           "addr": "0x183290",
