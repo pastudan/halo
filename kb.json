@@ -27664,7 +27664,7 @@
         {
           "addr": "0xea810",
           "decl": "char split_screen_game_initialize(void *widget, void *player_data);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xea900",

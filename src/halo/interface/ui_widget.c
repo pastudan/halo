@@ -2838,115 +2838,53 @@ char FUN_000ea540(void *widget)
   return 1;
 }
 
-/* split_screen_game_initialize (0xea810) — XBE naked draft (batch 134). */
-#if defined(__clang__)
-static void (*const bea810_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bea810_exitfn)(int) = (void *)system_exit;
-static int (*const bea810_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static short (*const bea810_c12a690)(void) = (void *)network_game_client_get_local_machine_index;
-static bool (*const bea810_c12ac80)(void *client) = (void *)network_player_is_valid;
-static void * (*const bea810_c12a240)(void) = (void *)network_game_client_get;
-static char (*const bea810_c125a90)(void *client, void *player) = (void *)network_game_client_update_local_player_data;
-static void (*const bea810_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* split_screen_game_initialize (0xea810) — readable C lift. */
 char split_screen_game_initialize(void *widget, void *player_data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsplit_screen_game_initialize_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x624\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286184\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsplit_screen_game_initialize_1:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12a0a0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lsplit_screen_game_initialize_5\n\t"
-      "cmpb $1, 0xc0(%%ebx)\n\t"
-      "jne .Lsplit_screen_game_initialize_5\n\t"
-      "call *%[c12a690]\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .Lsplit_screen_game_initialize_5\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal 0x242(%%ebx), %%edi\n\t"
-      ".Lsplit_screen_game_initialize_2:\n\t"
-      "leal -0x1c(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsplit_screen_game_initialize_3\n\t"
-      "movsbw (%%edi), %%cx\n\t"
-      "cmpw -0x4(%%ebp), %%cx\n\t"
-      "jne .Lsplit_screen_game_initialize_3\n\t"
-      "movsbw 0x1(%%edi), %%dx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpw 0x2(%%eax), %%dx\n\t"
-      "je .Lsplit_screen_game_initialize_4\n\t"
-      ".Lsplit_screen_game_initialize_3:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x20, %%edi\n\t"
-      "cmpl $0x10, %%esi\n\t"
-      "jl .Lsplit_screen_game_initialize_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsplit_screen_game_initialize_4:\n\t"
-      "shll $5, %%esi\n\t"
-      "leal 0x226(%%esi,%%ebx,1), %%esi\n\t"
-      "movl $8, %%ecx\n\t"
-      "leal -0x24(%%ebp), %%edi\n\t"
-      "rep movsl\n\t"
-      "movb -0x6(%%ebp), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "leal -0x24(%%ebp), %%edx\n\t"
-      "sete %%cl\n\t"
-      "pushl %%edx\n\t"
-      "movb %%cl, -0x6(%%ebp)\n\t"
-      "call *%[c12a240]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c125a90]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsplit_screen_game_initialize_5\n\t"
-      "pushl $0x286150\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lsplit_screen_game_initialize_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bea810_assert), [exitfn] "m"(bea810_exitfn), [c12a0a0] "m"(bea810_c12a0a0), [c12a690] "m"(bea810_c12a690), [c12ac80] "m"(bea810_c12ac80), [c12a240] "m"(bea810_c12a240), [c125a90] "m"(bea810_c125a90), [c8f390] "m"(bea810_c8f390)
-      : "memory");
-}
-#else
-#error "split_screen_game_initialize: clang naked draft required"
-#endif
+  void *net;
+  short local_idx;
+  int i;
+  char *slot;
+  unsigned int copy[8];
+  void *client;
 
+  (void)widget;
+  if (player_data == 0) {
+    display_assert((const char *)0x286184, (const char *)0x2859a4, 0x624, 1);
+    system_exit(-1);
+  }
+  net = (void *)FUN_0012a0a0();
+  if (net == 0 || *((unsigned char *)net + 0xc0) != 1) {
+    return 1;
+  }
+  local_idx = network_game_client_get_local_machine_index();
+  if (local_idx == (short)0xffff) {
+    return 1;
+  }
+  slot = (char *)net + 0x242;
+  for (i = 0; i < 0x10; i++) {
+    if (network_player_is_valid(slot - 0x1c)
+        && *(signed char *)slot == (signed char)local_idx
+        && *(signed char *)(slot + 1) == *(short *)((char *)player_data + 2)) {
+      break;
+    }
+    slot += 0x20;
+  }
+  if (i >= 0x10) {
+    return 1;
+  }
+  __builtin_memcpy(copy, (char *)net + 0x226 + (i * 0x20), 0x20);
+  if (*((unsigned char *)copy + 0x1e) == 0) {
+    *((unsigned char *)copy + 0x1e) = 1;
+  } else {
+    *((unsigned char *)copy + 0x1e) = 0;
+  }
+  client = network_game_client_get();
+  if (!network_game_client_update_local_player_data(client, copy)) {
+    error(2, (const char *)0x286150);
+  }
+  return 1;
+}
 
 char FUN_000eab70(void *widget)
 {
