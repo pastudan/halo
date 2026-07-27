@@ -1730,6 +1730,11 @@
     "confidence": "high",
     "coverage_pct": 79.3
   },
+  "0x80fc0": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 83.4
+  },
   "0x81090": {
     "class": "non_leaf",
     "confidence": "weak",

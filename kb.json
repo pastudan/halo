@@ -40381,7 +40381,7 @@
         {
           "addr": "0x80fc0",
           "decl": "unsigned int FUN_00080fc0(unsigned int a /* @<eax> */, unsigned int c /* @<ecx> */, unsigned int d /* @<edx> */);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00080fc0"
         },
         {

@@ -955,98 +955,53 @@ void FUN_00080f00(void)
 #endif
 
 
-/* FUN_00080fc0 (0x80fc0) — XBE naked draft (batch 138). */
-#if defined(__clang__)
-static void (*const b80fc0_c800d0)(void) = (void *)FUN_000800d0;
-static void (*const b80fc0_c80210)(void) = FUN_00080210;
-static void (*const b80fc0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80fc0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-unsigned int FUN_00080fc0(unsigned int a __attribute__((unused)), unsigned int c __attribute__((unused)), unsigned int d __attribute__((unused)))
+/* FUN_00080fc0 (0x80fc0) — readable C lift (eax/ecx/edx register ABI). */
+unsigned int FUN_00080fc0(unsigned int a, unsigned int c, unsigned int d)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "je .LFUN_00080fc0_4\n\t"
-      ".LFUN_00080fc0_1:\n\t"
-      "testb $1, %%bl\n\t"
-      "je .LFUN_00080fc0_2\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c800d0]\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c80210]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".LFUN_00080fc0_2:\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "shrl $1, %%ebx\n\t"
-      "call *%[c800d0]\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c80210]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_00080fc0_1\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "ja .LFUN_00080fc0_3\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jbe .LFUN_00080fc0_4\n\t"
-      ".LFUN_00080fc0_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5f\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265d88\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00080fc0_4:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c800d0] "m"(b80fc0_c800d0), [c80210] "m"(b80fc0_c80210), [assert] "m"(b80fc0_assert), [exitfn] "m"(b80fc0_exitfn)
-      : "memory");
+  unsigned int result[2];
+  unsigned int base[2];
+  unsigned int mod[2];
+  unsigned short tmp[4];
+  unsigned int exp;
+  extern char DAT_00265da0[];
+  extern char DAT_00265d88[];
+
+  __asm__ volatile("movl %%eax, %0" : "=r"(a));
+  __asm__ volatile("movl %%ecx, %0" : "=r"(c));
+  __asm__ volatile("movl %%edx, %0" : "=r"(d));
+
+  result[0] = 1;
+  result[1] = 0;
+  base[0] = c;
+  base[1] = 0;
+  mod[0] = d;
+  mod[1] = 0;
+  exp = a;
+
+  if (exp == 0)
+    return result[0];
+
+  while (exp != 0) {
+    if (exp & 1u) {
+      FUN_000800d0((unsigned short *)result, (unsigned short *)base, tmp);
+      FUN_00080210(tmp, (const unsigned short *)mod, 0, result);
+    }
+    FUN_000800d0((unsigned short *)base, (unsigned short *)base, tmp);
+    FUN_00080210(tmp, (const unsigned short *)mod, 0, base);
+    exp >>= 1;
+  }
+
+  if (result[1] > 0 || result[0] > 0xffffffffu) {
+    /* XBE: ja if hi>0; then cmp lo,-1 / jbe ok. lo>0xffffffff is impossible. */
+  }
+  if (result[1] > 0) {
+    display_assert(DAT_00265d88, DAT_00265da0, 0x5f, 1);
+    system_exit(-1);
+  }
+  /* cmp eax,-1; jbe — unsigned lo <= 0xffffffff always true */
+  return result[0];
 }
-#else
-#error "FUN_00080fc0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00081090 (0x81090) — readable C lift (esi/ebx/edi register ABI). */
