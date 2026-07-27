@@ -1559,115 +1559,40 @@ char FUN_000eebe0(void *widget)
   return 1;
 }
 
-/* FUN_000eec10 (0xeec10) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void *(*const beec10_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
-static void (*const beec10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const beec10_exitfn)(int) = (void *)system_exit;
-static void *(*const beec10_tag)(int, int) = (void *)tag_get;
-static unsigned short (*const beec10_c1c0ed0)(void) = (void *)FUN_001c0ed0;
-static void (*const beec10_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_000eec10(void *widget)
+/* FUN_000eec10 (0xeec10) — readable C lift. */
+char FUN_000eec10(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x38(%%eax), %%esi\n\t"
-      "call *%[ce0ea0]\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "je .LFUN_000eec10_1\n\t"
-      "cmpw $2, 0xe(%%esi)\n\t"
-      "je .LFUN_000eec10_2\n\t"
-      ".LFUN_000eec10_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe2e\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287d78\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eec10_2:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .LFUN_000eec10_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe35\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287cb0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eec10_3:\n\t"
-      "cmpl $3, 0x3e0(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "je .LFUN_000eec10_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe36\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287c74\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eec10_4:\n\t"
-      "cmpw $0, 0x3c(%%esi)\n\t"
-      "jl .LFUN_000eec10_5\n\t"
-      "call *%[c1c0ed0]\n\t"
-      "movzwl %%ax, %%edx\n\t"
-      "movswl 0x3c(%%esi), %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .LFUN_000eec10_6\n\t"
-      ".LFUN_000eec10_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe3c\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287d48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eec10_6:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_000eec10_7\n\t"
-      "movw 0x3c(%%esi), %%cx\n\t"
-      "popl %%esi\n\t"
-      "movw %%cx, 0x18(%%ebx)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000eec10_7:\n\t"
-      "pushl $0x287cf8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce0ea0] "m"(beec10_ce0ea0), [assert] "m"(beec10_assert), [exitfn] "m"(beec10_exitfn), [tag] "m"(beec10_tag), [c1c0ed0] "m"(beec10_c1c0ed0), [c8f390] "m"(beec10_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_000eec10: clang naked draft required"
-#endif
+  void *selected;
+  void *profile;
+  void *tag;
 
+  selected = *(void **)((char *)widget + 0x38);
+  profile = player_ui_get_edit_player_profile();
+  if (selected == 0 || *(short *)((char *)selected + 0xe) != 2) {
+    display_assert((const char *)0x287d78, (const char *)0x2859a4, 0xe2e, 1);
+    system_exit(-1);
+  }
+  tag = tag_get(0x44654c61, *(int *)selected);
+  if (*(short *)tag != 2) {
+    display_assert((const char *)0x287cb0, (const char *)0x2859a4, 0xe35, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)tag + 0x3e0) != 3) {
+    display_assert((const char *)0x287c74, (const char *)0x2859a4, 0xe36, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)selected + 0x3c) < 0 ||
+      (int)*(short *)((char *)selected + 0x3c) >= (int)FUN_001c0ed0()) {
+    display_assert((const char *)0x287d48, (const char *)0x2859a4, 0xe3c, 1);
+    system_exit(-1);
+  }
+  if (profile == 0) {
+    error(2, (const char *)0x287cf8);
+    return 0;
+  }
+  *(short *)((char *)profile + 0x18) = *(short *)((char *)selected + 0x3c);
+  return 1;
+}
 
 /* FUN_000eed10 (0xeed10) — XBE naked draft (batch 117). */
 #if defined(__clang__)
@@ -4121,117 +4046,55 @@ void FUN_000f0790(void *widget)
 #endif
 
 
-/* FUN_000f0aa0 (0xf0aa0) — XBE naked draft (batch 132). */
-#if defined(__clang__)
-static void *(*const bf0aa0_tag)(int, int) = (void *)tag_get;
-static void (*const bf0aa0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf0aa0_exitfn)(int) = (void *)system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_000f0aa0 (0xf0aa0) — readable C lift. */
 void FUN_000f0aa0(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x38(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0aa0_1\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0aa0_2\n\t"
-      ".LFUN_000f0aa0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12c\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288a5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0aa0_2:\n\t"
-      "cmpl $2, 0x3e0(%%edi)\n\t"
-      "je .LFUN_000f0aa0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12d\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288a24\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0aa0_3:\n\t"
-      "movl 0x48(%%esi), %%edx\n\t"
-      "movl 0x34(%%edx), %%ebx\n\t"
-      "movl 0x2c(%%ebx), %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0aa0_6\n\t"
-      "movl 0x38(%%esi), %%esi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_000f0aa0_4:\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .LFUN_000f0aa0_5\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "incl %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0aa0_4\n\t"
-      ".LFUN_000f0aa0_5:\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_000f0aa0_9\n\t"
-      ".LFUN_000f0aa0_6:\n\t"
-      "cmpw $0, 0xe(%%ebx)\n\t"
-      "je .LFUN_000f0aa0_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x138\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x2889d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0aa0_7:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpw $1, 0xe(%%ecx)\n\t"
-      "je .LFUN_000f0aa0_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x139\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288978\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0aa0_8:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movw %%di, 0x50(%%ebx)\n\t"
-      "movw %%di, 0x40(%%edx)\n\t"
-      ".LFUN_000f0aa0_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(bf0aa0_tag), [assert] "m"(bf0aa0_assert), [exitfn] "m"(bf0aa0_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_000f0aa0: clang naked draft required"
-#endif
+  void *related;
+  void *tag;
+  void *column;
+  void *text_widget;
+  void *cur;
+  void *selected;
+  int index;
 
+  related = *(void **)((char *)widget + 0x48);
+  tag = tag_get(0x44654c61, *(int *)related);
+  if (*(void **)((char *)widget + 0x38) == 0 || related == 0) {
+    display_assert((const char *)0x288a5c, (const char *)0x288938, 0x12c, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)tag + 0x3e0) != 2) {
+    display_assert((const char *)0x288a24, (const char *)0x288938, 0x12d, 1);
+    system_exit(-1);
+  }
+  column = *(void **)((char *)related + 0x34);
+  text_widget = *(void **)((char *)column + 0x2c);
+  cur = *(void **)((char *)widget + 0x34);
+  selected = *(void **)((char *)widget + 0x38);
+  index = 0;
+  if (cur != 0) {
+    while (cur != selected) {
+      cur = *(void **)((char *)cur + 0x2c);
+      index++;
+      if (cur == 0) {
+        break;
+      }
+    }
+    if ((short)index == -1) {
+      return;
+    }
+  }
+  if (*(short *)((char *)column + 0xe) != 0) {
+    display_assert((const char *)0x2889d0, (const char *)0x288938, 0x138, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)text_widget + 0xe) != 1) {
+    display_assert((const char *)0x288978, (const char *)0x288938, 0x139, 1);
+    system_exit(-1);
+  }
+  *(short *)((char *)column + 0x50) = (short)index;
+  *(short *)((char *)text_widget + 0x40) = (short)index;
+}
 
 /* FUN_000f0bb0 (0xf0bb0) — readable C lift. */
 void FUN_000f0bb0(void *widget)
@@ -4340,117 +4203,55 @@ void playlist_settings_menu_update_extended_description(void *widget)
   *(int16_t *)((char *)extra + 0x40) = idx;
 }
 
-/* FUN_000f0d90 (0xf0d90) — XBE naked draft (batch 132). */
-#if defined(__clang__)
-static void *(*const bf0d90_tag)(int, int) = (void *)tag_get;
-static void (*const bf0d90_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf0d90_exitfn)(int) = (void *)system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_000f0d90 (0xf0d90) — readable C lift. */
 void FUN_000f0d90(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x38(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0d90_1\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0d90_2\n\t"
-      ".LFUN_000f0d90_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x237\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288a5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0d90_2:\n\t"
-      "cmpl $2, 0x3e0(%%edi)\n\t"
-      "je .LFUN_000f0d90_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x238\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288ba0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0d90_3:\n\t"
-      "movl 0x48(%%esi), %%edx\n\t"
-      "movl 0x34(%%edx), %%ebx\n\t"
-      "movl 0x2c(%%ebx), %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0d90_6\n\t"
-      "movl 0x38(%%esi), %%esi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_000f0d90_4:\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .LFUN_000f0d90_5\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "incl %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0d90_4\n\t"
-      ".LFUN_000f0d90_5:\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_000f0d90_9\n\t"
-      ".LFUN_000f0d90_6:\n\t"
-      "cmpw $0, 0xe(%%ebx)\n\t"
-      "je .LFUN_000f0d90_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x243\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288b50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0d90_7:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpw $1, 0xe(%%ecx)\n\t"
-      "je .LFUN_000f0d90_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x244\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288b00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0d90_8:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movw %%di, 0x50(%%ebx)\n\t"
-      "movw %%di, 0x40(%%edx)\n\t"
-      ".LFUN_000f0d90_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(bf0d90_tag), [assert] "m"(bf0d90_assert), [exitfn] "m"(bf0d90_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_000f0d90: clang naked draft required"
-#endif
+  void *related;
+  void *tag;
+  void *column;
+  void *text_widget;
+  void *cur;
+  void *selected;
+  int index;
 
+  related = *(void **)((char *)widget + 0x48);
+  tag = tag_get(0x44654c61, *(int *)related);
+  if (*(void **)((char *)widget + 0x38) == 0 || related == 0) {
+    display_assert((const char *)0x288a5c, (const char *)0x288938, 0x237, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)tag + 0x3e0) != 2) {
+    display_assert((const char *)0x288ba0, (const char *)0x288938, 0x238, 1);
+    system_exit(-1);
+  }
+  column = *(void **)((char *)related + 0x34);
+  text_widget = *(void **)((char *)column + 0x2c);
+  cur = *(void **)((char *)widget + 0x34);
+  selected = *(void **)((char *)widget + 0x38);
+  index = 0;
+  if (cur != 0) {
+    while (cur != selected) {
+      cur = *(void **)((char *)cur + 0x2c);
+      index++;
+      if (cur == 0) {
+        break;
+      }
+    }
+    if ((short)index == -1) {
+      return;
+    }
+  }
+  if (*(short *)((char *)column + 0xe) != 0) {
+    display_assert((const char *)0x288b50, (const char *)0x288938, 0x243, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)text_widget + 0xe) != 1) {
+    display_assert((const char *)0x288b00, (const char *)0x288938, 0x244, 1);
+    system_exit(-1);
+  }
+  *(short *)((char *)column + 0x50) = (short)index;
+  *(short *)((char *)text_widget + 0x40) = (short)index;
+}
 
 /* FUN_000f0f30 (0xf0f30) — XBE naked draft (batch 105). */
 #if defined(__clang__)
