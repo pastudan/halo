@@ -19859,12 +19859,12 @@
         {
           "addr": "0x154750",
           "decl": "char FUN_00154750(float *accum, float *bounds, char wrap_flag, float target, float scale);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1547d0",
           "decl": "char FUN_001547d0(float *accum, float *rate, float *bounds, char wrap_flag, float target, float scale);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x154860",
@@ -40551,7 +40551,7 @@
         {
           "addr": "0x148370",
           "decl": "char FUN_00148370(float *origin /* @<eax> */, float *center /* @<ecx> */, float *direction /* @<edx> */, float *out_t /* @<esi> */, float radius);",
-          "ported": false,
+          "ported": true,
           "reg_args": {
             "origin": "eax",
             "center": "ecx",

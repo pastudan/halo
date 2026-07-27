@@ -989,111 +989,43 @@ int collision_surface_find_closest_point2d(int bsp __attribute__((unused)), int 
 
 
 
-/* FUN_00148370 (0x148370) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_00148370(float *origin /* */ __attribute__((unused)), float *center /* */ __attribute__((unused)), float *direction /* */ __attribute__((unused)), float *out_t /* */ __attribute__((unused)), float radius __attribute__((unused)))
+/* FUN_00148370 (0x148370) — segment vs sphere early hit test.
+ * eax=origin, ecx=center, edx=direction, esi=out_t, stack=radius. */
+__attribute__((noinline, used)) char FUN_00148370(float *origin, float *center,
+                                                  float *direction, float *out_t,
+                                                  float radius)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs (%%eax)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00148370_1\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, (%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "movb $1, %%al\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00148370_1:\n\t"
-      "fxch %%st(2)\n\t"
-      "fmuls (%%edx)\n\t"
-      "fxch %%st(2)\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      ".byte 0xde, 0xc2\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00148370_4\n\t"
-      "flds 0x8(%%edx)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "flds (%%edx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00148370_2\n\t"
-      "fsqrt\n\t"
-      "fsubrs 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xf1\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00148370_3\n\t"
-      "fstps (%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00148370_2:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00148370_3:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00148370_4:\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float dx = center[0] - origin[0];
+  float dy = center[1] - origin[1];
+  float dz = center[2] - origin[2];
+  float c_coeff = (dx * dx + dy * dy + dz * dz) - radius * radius;
+  float dot;
+  float dir_len_sq;
+  float disc;
+  float t;
+
+  if (c_coeff <= *(float *)0x2533c0) {
+    *out_t = 0.0f;
+    return 1;
+  }
+
+  dot = dx * direction[0] + dy * direction[1] + dz * direction[2];
+  if (dot <= *(float *)0x2533c0)
+    return 0;
+
+  dir_len_sq = direction[0] * direction[0] + direction[1] * direction[1] +
+               direction[2] * direction[2];
+  disc = dot * dot - dir_len_sq * c_coeff;
+  if (disc < *(float *)0x2533c0)
+    return 0;
+
+  t = (dot - sqrtf(disc)) / dir_len_sq;
+  if (t > *(float *)0x2533c8)
+    return 0;
+
+  *out_t = t;
+  return 1;
 }
-#else
-#error "FUN_00148370: clang naked draft required"
-#endif
 
 
 

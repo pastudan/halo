@@ -459,175 +459,54 @@ float FUN_001546f0(float *bounds, float from, char wrap_flag, float to)
   return *(float *)0x255e94;
 }
 
-/* FUN_00154750 (0x154750) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-static float (*const b154750_c1546f0)(float *bounds /* */, float from, char wrap_flag, float to) = (void *)FUN_001546f0;
-static void (*const b154750_c1544d0)(float *param_1, float *param_2, char param_3, float param_4) = FUN_001544d0;
-
-__attribute__((naked, noinline))
-char FUN_00154750(float *accum __attribute__((unused)), float *bounds __attribute__((unused)), char wrap_flag __attribute__((unused)), float target __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_00154750 (0x154750) — step accum toward target by signed scale; snap on hit. */
+__attribute__((noinline, used)) char FUN_00154750(float *accum, float *bounds,
+                                                  char wrap_flag, float target,
+                                                  float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "call *%[c1546f0]\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_00154750_1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1544d0]\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "call *%[c1546f0]\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00154750_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00154750_1:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c1546f0] "m"(b154750_c1546f0), [c1544d0] "m"(b154750_c1544d0)
-      : "memory");
+  float sign0;
+  float sign1;
+
+  sign0 = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign0 == *(float *)0x2533c0) {
+    *accum = target;
+    return 1;
+  }
+
+  FUN_001544d0(accum, bounds, wrap_flag, sign0 * scale);
+  sign1 = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign1 != sign0) {
+    *accum = target;
+    return 1;
+  }
+  return 0;
 }
-#else
-#error "FUN_00154750: clang naked draft required"
-#endif
 
-
-/* FUN_001547d0 (0x1547d0) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-static float (*const b1547d0_c1546f0)(float *bounds /* */, float from, char wrap_flag, float to) = (void *)FUN_001546f0;
-static void (*const b1547d0_c154540)(float *accum, float *coeffs, float scale) = FUN_00154540;
-static void (*const b1547d0_c1544d0)(float *param_1, float *param_2, char param_3, float param_4) = FUN_001544d0;
-
-__attribute__((naked, noinline))
-char FUN_001547d0(float *accum __attribute__((unused)), float *rate __attribute__((unused)), float *bounds __attribute__((unused)), char wrap_flag __attribute__((unused)), float target __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_001547d0 (0x1547d0) — rate+accum step toward target; clear rate on hit. */
+__attribute__((noinline, used)) char FUN_001547d0(float *accum, float *rate,
+                                                  float *bounds, char wrap_flag,
+                                                  float target, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1546f0]\n\t"
-      "fsts 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_001547d0_1\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fmuls 0x1c(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x8(%%esi), %%edx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c154540]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1544d0]\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1546f0]\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $0x28, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_001547d0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001547d0_1:\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%edx, (%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $0, (%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1546f0] "m"(b1547d0_c1546f0), [c154540] "m"(b1547d0_c154540), [c1544d0] "m"(b1547d0_c1544d0)
-      : "memory");
+  float sign0;
+  float sign1;
+
+  sign0 = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign0 == *(float *)0x2533c0) {
+    *accum = target;
+    *rate = 0.0f;
+    return 1;
+  }
+
+  FUN_00154540(rate, bounds + 2, sign0 * scale);
+  FUN_001544d0(accum, bounds, wrap_flag, *rate);
+  sign1 = FUN_001546f0(bounds, *accum, wrap_flag, target);
+  if (sign1 != sign0) {
+    *accum = target;
+    *rate = 0.0f;
+    return 1;
+  }
+  return 0;
 }
-#else
-#error "FUN_001547d0: clang naked draft required"
-#endif
 
 
 /* point_physics_definition_interpolate (0x1548c0) — XBE naked draft (batch 234). */
