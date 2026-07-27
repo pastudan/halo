@@ -9203,8 +9203,8 @@ void get_editable_playlist_profile_display_name(void *widget)
     display_assert(DAT_002894f4, DAT_00288938, 0xc3c, true);
     system_exit(-1);
   }
-  if (profile_get_editable_playlist_or_similar())
-    *(float *)((char *)widget + 0x24) = 1.0f;
+  if (transport_network_available())
+    *(float *)((char *)widget + 0x24) = *(float *)0x2533c8;
 }
 
 /* 0xf3690 — collect up to 3 child widget text handles for item UI sync. */
