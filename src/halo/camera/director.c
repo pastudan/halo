@@ -1,4 +1,18 @@
 #include <stdint.h>
+
+/* first_person_camera_new (0x88c40) — readable C lift from XBE leaf. */
+void first_person_camera_new(int *camera)
+{
+  extern char DAT_00266e9c[];
+  extern char DAT_0026720c[];
+
+  if (camera == 0) {
+    display_assert(DAT_00266e9c, DAT_0026720c, 0x18, true);
+    system_exit(-1);
+  }
+  *camera = 0;
+}
+
 /* Camera director — controls camera mode per local player.
  *
  * Per-player director state lives in a 0xf8-byte array of 4 entries.

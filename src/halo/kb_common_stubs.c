@@ -3995,42 +3995,7 @@ void FUN_000887e0(void)
 #endif
 
 
-/* first_person_camera_new (0x88c40) — XBE naked draft (batch 384). */
-#if defined(__clang__)
-static void (*const b88c40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b88c40_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void first_person_camera_new(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lfirst_person_camera_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18\n\t"
-      "pushl $0x26720c\n\t"
-      "pushl $0x266e9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfirst_person_camera_new_1:\n\t"
-      "movl $0, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b88c40_assert), [exitfn] "m"(b88c40_exitfn)
-      : "memory");
-}
-#else
-#error "first_person_camera_new: clang naked draft required"
-#endif
-
+/* first_person_camera_new (0x88c40) — defined in camera/director.c */
 
 /* FUN_00088c80 (0x88c80) — XBE naked draft (batch 371). */
 #if defined(__clang__)

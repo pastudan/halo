@@ -1215,68 +1215,27 @@ int create_endpoint_set(int count __attribute__((unused)))
 #endif
 
 
-/* delete_endpoint_set (0x82410) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static void (*const b82410_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82410_exitfn)(int) = system_exit;
-static void (*const b82410_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-void delete_endpoint_set(int set __attribute__((unused)))
+/* delete_endpoint_set (0x82410) — readable C lift from XBE leaf. */
+void delete_endpoint_set(void *set)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Ldelete_endpoint_set_1\n\t"
-      "movl 0x104(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Ldelete_endpoint_set_2\n\t"
-      ".Ldelete_endpoint_set_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1bb\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2665d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldelete_endpoint_set_2:\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Ldelete_endpoint_set_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1bc\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldelete_endpoint_set_3:\n\t"
-      "movl 0x104(%%esi), %%eax\n\t"
-      "pushl $0x1be\n\t"
-      "pushl $0x266458\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "pushl $0x1bf\n\t"
-      "pushl $0x266458\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "xorw %%ax, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82410_assert), [exitfn] "m"(b82410_exitfn), [c8ef70] "m"(b82410_c8ef70)
-      : "memory");
+  extern char DAT_002665d4[];
+  extern char DAT_00266458[];
+  extern char DAT_00265fe4[];
+  void *inner;
+
+  if (set == 0 || *(void **)((char *)set + 0x104) == 0) {
+    display_assert(DAT_002665d4, DAT_00266458, 0x1bb, true);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x335090 == 0) {
+    display_assert(DAT_00265fe4, DAT_00266458, 0x1bc, true);
+    system_exit(-1);
+  }
+  inner = *(void **)((char *)set + 0x104);
+  debug_free(inner, DAT_00266458, 0x1be);
+  debug_free(set, DAT_00266458, 0x1bf);
 }
-#else
-#error "delete_endpoint_set: clang naked draft required"
-#endif
+
 
 
 /* FUN_000824a0 (0x824a0) — readable C lift. */

@@ -339,11 +339,6 @@
           "ported": false
         },
         {
-          "addr": "0x88c40",
-          "decl": "void first_person_camera_new(void);",
-          "ported": false
-        },
-        {
           "addr": "0x88c80",
           "decl": "void FUN_00088c80(void);",
           "ported": false
@@ -7240,6 +7235,12 @@
           "addr": "0x88260",
           "decl": "void editor_camera_flying_update(void);",
           "ported": false
+        },
+        {
+          "addr": "0x88c40",
+          "name": "first_person_camera_new",
+          "decl": "void first_person_camera_new(int *camera);",
+          "ported": true
         }
       ],
       "name": "director.obj",
@@ -26929,8 +26930,9 @@
         },
         {
           "addr": "0x82410",
-          "decl": "void delete_endpoint_set(int set);",
-          "ported": false
+          "decl": "void delete_endpoint_set(void *set);",
+          "ported": true,
+          "name": "delete_endpoint_set"
         },
         {
           "addr": "0x824a0",
