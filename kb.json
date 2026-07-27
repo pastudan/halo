@@ -8438,8 +8438,8 @@
         },
         {
           "addr": "0xb4300",
-          "decl": "void race_engine_update(void);",
-          "ported": false
+          "decl": "int race_engine_update(int player_handle);",
+          "ported": true
         },
         {
           "addr": "0xb43b0",

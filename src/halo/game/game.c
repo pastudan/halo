@@ -1173,104 +1173,30 @@ char race_team_can_win_game(int team_handle, unsigned int bit_index)
   }
   return FUN_000b3b30(team_handle, (int)bit_index);
 }
-/* race_engine_update (0xb4300) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static char (*const bb4300_ca95a0)(void) = FUN_000a95a0;
-static void *(*const bb4300_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const bb4300_cb3c60)(int team) = FUN_000b3c60;
-static void (*const bb4300_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb4300_exitfn)(int) = system_exit;
-static int (*const bb4300_cae250)(int param_1) = FUN_000ae250;
-
-__attribute__((naked, noinline))
-void race_engine_update(void)
+/* race_engine_update (0xb4300) — readable C lift. */
+int race_engine_update(int player_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca95a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrace_engine_update_4\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[cb3c60]\n\t"
-      "movb %%al, %%bl\n\t"
-      "movl $1, %%edi\n\t"
-      "movb %%bl, -0x4(%%ebp)\n\t"
-      "call *%[cb3c60]\n\t"
-      "cmpb %%al, %%bl\n\t"
-      "movb %%al, -0x3(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "je .Lrace_engine_update_1\n\t"
-      "movl 0x20(%%esi), %%edx\n\t"
-      "movb -0x4(%%ebp,%%edx,1), %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "popl %%esi\n\t"
-      "setne %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrace_engine_update_1:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lrace_engine_update_3\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrace_engine_update_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x48d\n\t"
-      "pushl $0x26d8f4\n\t"
-      "pushl $0x26db74\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrace_engine_update_2:\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrace_engine_update_3:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cae250]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrace_engine_update_4:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cae250]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca95a0] "m"(bb4300_ca95a0), [dget] "m"(bb4300_dget), [cb3c60] "m"(bb4300_cb3c60), [assert] "m"(bb4300_assert), [exitfn] "m"(bb4300_exitfn), [cae250] "m"(bb4300_cae250)
-      : "memory");
+  char *player;
+  char present[2];
+  int team;
+
+  if (!FUN_000a95a0()) {
+    return FUN_000ae250(player_handle);
+  }
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_handle);
+  present[0] = FUN_000b3c60(0);
+  present[1] = FUN_000b3c60(1);
+  if (present[0] != present[1]) {
+    team = *(int *)(player + 0x20);
+    return present[team] != 0;
+  }
+  if (present[0]) {
+    return FUN_000ae250(player_handle);
+  }
+  display_assert((const char *)0x26db74, (const char *)0x26d8f4, 0x48d, 1);
+  system_exit(-1);
+  return -1;
 }
-#else
-#error "race_engine_update: clang naked draft required"
-#endif
-
-
 /* FUN_000b43b0 (0xb43b0) — XBE naked draft (batch 133). */
 #if defined(__clang__)
 static scenario_t * (*const bb43b0_c18e380)(void) = global_scenario_get;
