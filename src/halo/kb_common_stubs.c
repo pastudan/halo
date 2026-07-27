@@ -3776,103 +3776,44 @@ void FUN_000887e0(void)
 
 /* first_person_camera_new (0x88c40) — defined in camera/director.c */
 
-/* FUN_00088c80 (0x88c80) — XBE naked draft (batch 371). */
-#if defined(__clang__)
-static void *(*const b88c80_get)(int, int) = object_get_and_verify_type;
-static void (*const b88c80_useat)(int, float *) = unit_set_seat_state;
-static void *(*const b88c80_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void *(*const b88c80_tag)(int, int) = tag_get;
-static void *(*const b88c80_elem)(void *, int, int) = tag_block_get_element;
-static short (*const b88c80_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
 
-__attribute__((naked, noinline))
-void FUN_00088c80(void)
+/* FUN_00088c80 (0x88c80) — readable C lift: unit seat marker vectors. */
+void FUN_00088c80(int unit_handle, float *out_a, float *out_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x6c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[useat]\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "leal 0x1ec(%%esi), %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00088c80_1\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00088c80_1\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x2a0(%%esi), %%edx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movb (%%eax), %%cl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jns .LFUN_00088c80_1\n\t"
-      "movl 0xcc(%%esi), %%ecx\n\t"
-      "pushl $1\n\t"
-      "leal -0x6c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x267238\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[markers]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_00088c80_1\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%ebx)\n\t"
-      "movl -0x30(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x4(%%ebx)\n\t"
-      "movl -0x2c(%%ebp), %%eax\n\t"
-      "movl %%ecx, 0x8(%%ebx)\n\t"
-      "movl -0x28(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%edi)\n\t"
-      "movl %%eax, 0x4(%%edi)\n\t"
-      "movl %%ecx, 0x8(%%edi)\n\t"
-      ".LFUN_00088c80_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b88c80_get), [useat] "m"(b88c80_useat), [tryget] "m"(b88c80_tryget), [tag] "m"(b88c80_tag), [elem] "m"(b88c80_elem), [markers] "m"(b88c80_markers)
-      : "memory");
+  char *unit;
+  int parent;
+  void *obj;
+  void *tag;
+  void *elem;
+  char markers[0x6c];
+  short n;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  unit_set_seat_state(unit_handle, out_a);
+  out_b[0] = *(float *)(unit + 0x1ec);
+  out_b[1] = *(float *)(unit + 0x1f0);
+  out_b[2] = *(float *)(unit + 0x1f4);
+  parent = *(int *)(unit + 0xcc);
+  if (parent == -1)
+    return;
+  obj = object_try_and_get_and_verify_type(parent, 2);
+  if (!obj)
+    return;
+  tag = tag_get(0x76656869, *(int *)obj);
+  elem = tag_block_get_element((char *)tag + 0x2e4, (int)*(short *)(unit + 0x2a0), 0x11c);
+  if ((*(signed char *)elem) >= 0)
+    return;
+  n = object_get_markers_by_string_id(parent, (const char *)0x267238, markers, 1);
+  if (!n)
+    return;
+  out_a[0] = *(float *)(markers + 0x60);
+  out_a[1] = *(float *)(markers + 0x64);
+  out_a[2] = *(float *)(markers + 0x68);
+  out_b[0] = *(float *)(markers + 0x3c);
+  out_b[1] = *(float *)(markers + 0x40);
+  out_b[2] = *(float *)(markers + 0x44);
 }
-#else
-#error "FUN_00088c80: clang naked draft required"
-#endif
+
 
 
 /* first_person_camera_for_unit_and_vector (0x88d50) — XBE naked draft (batch 309). */

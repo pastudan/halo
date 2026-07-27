@@ -3808,66 +3808,31 @@ void rasterizer_draw_string(void *screen_pos, short *bounds, const void *color,
 
 /* rasterizer_transparent_geometry.c */
 
-/* rasterizer_transparent_geometry_new (0x184260) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static void * (*const b184260_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b184260_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const b184260_c174bd0)(void) = FUN_00174bd0;
 
-__attribute__((naked, noinline))
-int rasterizer_transparent_geometry_new(void)
+/* rasterizer_transparent_geometry_new (0x184260) — readable C lift. */
+char rasterizer_transparent_geometry_new(void)
 {
-  __asm__ volatile(
-      "pushl $0x29\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0\n\t"
-      "pushl $0xf000\n\t"
-      "call *%[c8ee60]\n\t"
-      "pushl $0x2b\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x300\n\t"
-      "movl %%eax, 0x4d0cec\n\t"
-      "call *%[c8ee60]\n\t"
-      "pushl $0x2e\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x1400\n\t"
-      "movl %%eax, 0x4d0cfc\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl 0x4d0cec, %%ecx\n\t"
-      "addl $0x30, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, 0x4d0cf0\n\t"
-      "movl $0, 0x4d0cf8\n\t"
-      "movl $0, 0x4d0cf4\n\t"
-      "je .Lrasterizer_transparent_geometry_new_1\n\t"
-      "movl 0x4d0cfc, %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lrasterizer_transparent_geometry_new_1\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lrasterizer_transparent_geometry_new_3\n\t"
-      ".Lrasterizer_transparent_geometry_new_1:\n\t"
-      "pushl $0x2b0c6c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_new_2:\n\t"
-      "xorb %%al, %%al\n\t"
-      "ret\n\t"
-      ".Lrasterizer_transparent_geometry_new_3:\n\t"
-      "call *%[c174bd0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_new_2\n\t"
-      "movb $1, %%al\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b184260_c8ee60), [c8f390] "m"(b184260_c8f390), [c174bd0] "m"(b184260_c174bd0)
-      : "memory");
+  void *a;
+  void *b;
+  void *c;
+
+  a = debug_malloc(0xf000, 0, (const char *)0x2b0ca8, 0x29);
+  *(void **)0x4d0cec = a;
+  b = debug_malloc(0x300, 0, (const char *)0x2b0ca8, 0x2b);
+  *(void **)0x4d0cfc = b;
+  c = debug_malloc(0x1400, 0, (const char *)0x2b0ca8, 0x2e);
+  *(void **)0x4d0cf0 = c;
+  *(int *)0x4d0cf8 = 0;
+  *(int *)0x4d0cf4 = 0;
+  if (!a || !b || !c) {
+    error(2, (const char *)0x2b0c6c);
+    return 0;
+  }
+  if (!FUN_00174bd0(0))
+    return 0;
+  return 1;
 }
-#else
-#error "rasterizer_transparent_geometry_new: clang naked draft required"
-#endif
+
 
 
 /* rasterizer_transparent_geometry_begin (0x184300) — readable C lift from XBE leaf. */

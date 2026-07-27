@@ -2546,3 +2546,14 @@ bool __stdcall dsound_stream_is_active(void *stream)
   flags &= 0x10000002u;
   return flags != 0;
 }
+
+/* dsound_stream_stop (0x20f081) — readable C lift: vtable+0x10 stop/flush. */
+void __stdcall dsound_stream_stop(void *stream)
+{
+  void *obj;
+  void **vtable;
+
+  obj = *(void **)((char *)stream + 0x24);
+  vtable = *(void ***)obj;
+  ((void (__stdcall *)(void *, int, int))vtable[4])(obj, 0, 0);
+}

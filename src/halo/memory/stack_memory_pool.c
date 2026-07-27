@@ -1516,104 +1516,40 @@ void FUN_0011fd50(void *pool)
   data_verify(*(data_t **)((char *)pool + 0x18));
 }
 
-/* FUN_0011fdb0 (0x11fdb0) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static void * (*const b11fdb0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b11fdb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11fdb0_exitfn)(int) = system_exit;
-static void *(*const b11fdb0_memset)(void *, int, unsigned int) = csmemset;
-static data_t * (*const b11fdb0_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
-static void (*const b11fdb0_c119b20)(data_t *data) = data_delete_all;
-static void (*const b11fdb0_c11fd50)(void *pool) = FUN_0011fd50;
-static void (*const b11fdb0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
-__attribute__((naked, noinline))
-void FUN_0011fdb0(void)
+/* FUN_0011fdb0 (0x11fdb0) — readable C lift: alloc stack memory pool. */
+void *FUN_0011fdb0(void *backing, short width, short height, short depth)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x1d\n\t"
-      "pushl $0x2905b0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x1c\n\t"
-      "call *%[c8ee60]\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "movw 0x10(%%ebp), %%bx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jle .LFUN_0011fdb0_1\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jg .LFUN_0011fdb0_2\n\t"
-      ".LFUN_0011fdb0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f\n\t"
-      "pushl $0x2905b0\n\t"
-      "pushl $0x2905f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011fdb0_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0011fdb0_4\n\t"
-      "pushl $0x1c\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movw 0x14(%%ebp), %%ax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0xc\n\t"
-      "movw %%di, 0x8(%%esi)\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "pushl $0x7fff\n\t"
-      "pushl $0x2905d8\n\t"
-      "movw %%bx, 0xa(%%esi)\n\t"
-      "movw %%ax, 0xc(%%esi)\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "movl %%edi, 0x10(%%esi)\n\t"
-      "movl %%edi, 0x14(%%esi)\n\t"
-      "movb $0, (%%esi)\n\t"
-      "call *%[c1194d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "movl %%eax, 0x18(%%esi)\n\t"
-      "je .LFUN_0011fdb0_3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119b20]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c11fd50]\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011fdb0_3:\n\t"
-      "pushl $0x38\n\t"
-      "pushl $0x2905b0\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0011fdb0_4:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b11fdb0_c8ee60), [assert] "m"(b11fdb0_assert), [exitfn] "m"(b11fdb0_exitfn), [memset] "m"(b11fdb0_memset), [c1194d0] "m"(b11fdb0_c1194d0), [c119b20] "m"(b11fdb0_c119b20), [c11fd50] "m"(b11fdb0_c11fd50), [c8ef70] "m"(b11fdb0_c8ef70)
-      : "memory");
+  void *pool;
+  void *data;
+
+  pool = debug_malloc(0x1c, 0, (const char *)0x2905b0, 0x1d);
+  if (width <= 0 || height <= 0) {
+    display_assert((const char *)0x2905f0, (const char *)0x2905b0, 0x1f, 1);
+    system_exit(-1);
+  }
+  if (!pool)
+    return pool;
+  csmemset(pool, 0, 0x1c);
+  *(short *)((char *)pool + 8) = width;
+  *(short *)((char *)pool + 0xa) = height;
+  *(short *)((char *)pool + 0xc) = depth;
+  *(void **)((char *)pool + 4) = backing;
+  *(int *)((char *)pool + 0x10) = 0;
+  *(int *)((char *)pool + 0x14) = 0;
+  *(char *)pool = 0;
+  data = data_new((char *)0x2905d8, 0x7fff, 0xc);
+  *(void **)((char *)pool + 0x18) = data;
+  if (!data) {
+    /* Binary frees EDI (0) here; return null pool. */
+    debug_free(0, (const char *)0x2905b0, 0x38);
+    return 0;
+  }
+  data_delete_all(data);
+  FUN_0011fd50(pool);
+  return pool;
 }
-#else
-#error "FUN_0011fdb0: clang naked draft required"
-#endif
+
 
 
 /* FUN_0011fe80 (0x11fe80) — readable C lift. */

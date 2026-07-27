@@ -840,144 +840,64 @@ void FUN_0019c960(void *callback __attribute__((unused)), void *screen_pos __att
 #endif
 
 
-/* FUN_0019ccf0 (0x19ccf0) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static void * (*const b19ccf0_c19bcc0)(int16_t style, int font_index) = FUN_0019bcc0;
-static void (*const b19ccf0_c19c5d0)(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, char *text) = FUN_0019c5d0;
-
-__attribute__((naked, noinline))
-void FUN_0019ccf0(void)
+/* FUN_0019ccf0 (0x19ccf0) — readable C lift: measure ASCII string bounds. */
+void FUN_0019ccf0(short *screen_pos, char *text, short *out_bounds, short *out_rect)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl $0x7fff, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x4d9b14, %%esi\n\t"
-      "movw %%ax, 0x4d9afc\n\t"
-      "movw %%ax, 0x4d9afe\n\t"
-      "movl $0xffff8000, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x4d9b0c, %%edi\n\t"
-      "movw %%ax, 0x4d9b00\n\t"
-      "movw %%ax, 0x4d9b02\n\t"
-      "call *%[c19bcc0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl %%eax, 0x4d9b04\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x19b3c0\n\t"
-      "call *%[c19c5d0]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movw %%cx, 0x2(%%eax)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "incl %%ecx\n\t"
-      "movw %%cx, 0x6(%%eax)\n\t"
-      "movl 0x4d9b04, %%edi\n\t"
-      "movw 0xa(%%ebp), %%cx\n\t"
-      "movw %%cx, %%dx\n\t"
-      "subw 0x4(%%edi), %%dx\n\t"
-      "popl %%edi\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "movl 0x4d9b04, %%edx\n\t"
-      "movw 0x6(%%edx), %%dx\n\t"
-      "addw %%cx, %%dx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movw %%dx, 0x4(%%eax)\n\t"
-      "movw 0x4d9afe, %%dx\n\t"
-      "movw %%dx, 0x2(%%ecx)\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "movw %%dx, (%%ecx)\n\t"
-      "movw 0x4d9b02, %%dx\n\t"
-      "movw %%dx, 0x6(%%ecx)\n\t"
-      "movw 0x4(%%eax), %%ax\n\t"
-      "movw %%ax, 0x4(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19bcc0] "m"(b19ccf0_c19bcc0), [c19c5d0] "m"(b19ccf0_c19c5d0)
-      : "memory");
+  void *font;
+  short y;
+  short measured;
+  short *pos_slot;
+
+  *(short *)0x4d9afc = 0x7fff;
+  *(short *)0x4d9afe = 0x7fff;
+  *(short *)0x4d9b00 = (short)0x8000;
+  *(short *)0x4d9b02 = (short)0x8000;
+  font = FUN_0019bcc0(*(int16_t *)0x4d9b14, *(int *)0x4d9b0c);
+  *(void **)0x4d9b04 = font;
+  pos_slot = screen_pos;
+  /* Binary passes &arg0 as color so measured width overwrites the arg slot. */
+  FUN_0019c5d0((void *)0x19b3c0, pos_slot, &pos_slot, 0, 0, text);
+  measured = (short)(uintptr_t)pos_slot;
+  out_rect[1] = measured;
+  out_rect[3] = (short)(measured + 1);
+  y = (short)((uintptr_t)pos_slot >> 16);
+  font = *(void **)0x4d9b04;
+  out_rect[0] = (short)(y - *(short *)((char *)font + 4));
+  out_rect[2] = (short)(y + *(short *)((char *)font + 6));
+  out_bounds[1] = *(short *)0x4d9afe;
+  out_bounds[0] = screen_pos[0];
+  out_bounds[3] = *(short *)0x4d9b02;
+  out_bounds[2] = out_rect[2];
 }
-#else
-#error "FUN_0019ccf0: clang naked draft required"
-#endif
 
-
-/* FUN_0019cdb0 (0x19cdb0) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static void * (*const b19cdb0_c19bcc0)(int16_t style, int font_index) = FUN_0019bcc0;
-static void (*const b19cdb0_c19c960)(void *callback, void *screen_pos, const void *color, void *clip_bounds, int flags, unsigned short *text) = FUN_0019c960;
-
-__attribute__((naked, noinline))
-void FUN_0019cdb0(short *out_rect __attribute__((unused)), void *text __attribute__((unused)), short *out_bounds __attribute__((unused)), short *in_rect __attribute__((unused)))
+/* FUN_0019cdb0 (0x19cdb0) — readable C lift: measure UTF-16 string bounds. */
+void FUN_0019cdb0(short *screen_pos, void *text, short *out_bounds, short *out_rect)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl $0x7fff, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x4d9b14, %%esi\n\t"
-      "movw %%ax, 0x4d9afc\n\t"
-      "movw %%ax, 0x4d9afe\n\t"
-      "movl $0xffff8000, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x4d9b0c, %%edi\n\t"
-      "movw %%ax, 0x4d9b00\n\t"
-      "movw %%ax, 0x4d9b02\n\t"
-      "call *%[c19bcc0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl %%eax, 0x4d9b04\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x19b3c0\n\t"
-      "call *%[c19c960]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movw %%cx, 0x2(%%eax)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "incl %%ecx\n\t"
-      "movw %%cx, 0x6(%%eax)\n\t"
-      "movl 0x4d9b04, %%edi\n\t"
-      "movw 0xa(%%ebp), %%cx\n\t"
-      "movw %%cx, %%dx\n\t"
-      "subw 0x4(%%edi), %%dx\n\t"
-      "popl %%edi\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "movl 0x4d9b04, %%edx\n\t"
-      "movw 0x6(%%edx), %%dx\n\t"
-      "addw %%cx, %%dx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movw %%dx, 0x4(%%eax)\n\t"
-      "movw 0x4d9afe, %%dx\n\t"
-      "movw %%dx, 0x2(%%ecx)\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "movw %%dx, (%%ecx)\n\t"
-      "movw 0x4d9b02, %%dx\n\t"
-      "movw %%dx, 0x6(%%ecx)\n\t"
-      "movw 0x4(%%eax), %%ax\n\t"
-      "movw %%ax, 0x4(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19bcc0] "m"(b19cdb0_c19bcc0), [c19c960] "m"(b19cdb0_c19c960)
-      : "memory");
+  void *font;
+  short y;
+  short measured;
+  short *pos_slot;
+
+  *(short *)0x4d9afc = 0x7fff;
+  *(short *)0x4d9afe = 0x7fff;
+  *(short *)0x4d9b00 = (short)0x8000;
+  *(short *)0x4d9b02 = (short)0x8000;
+  font = FUN_0019bcc0(*(int16_t *)0x4d9b14, *(int *)0x4d9b0c);
+  *(void **)0x4d9b04 = font;
+  pos_slot = screen_pos;
+  FUN_0019c960((void *)0x19b3c0, pos_slot, &pos_slot, 0, 0, text);
+  measured = (short)(uintptr_t)pos_slot;
+  out_rect[1] = measured;
+  out_rect[3] = (short)(measured + 1);
+  y = (short)((uintptr_t)pos_slot >> 16);
+  font = *(void **)0x4d9b04;
+  out_rect[0] = (short)(y - *(short *)((char *)font + 4));
+  out_rect[2] = (short)(y + *(short *)((char *)font + 6));
+  out_bounds[1] = *(short *)0x4d9afe;
+  out_bounds[0] = screen_pos[0];
+  out_bounds[3] = *(short *)0x4d9b02;
+  out_bounds[2] = out_rect[2];
 }
-#else
-#error "FUN_0019cdb0: clang naked draft required"
-#endif
 
 
 /* FUN_0019ce70 (0x19ce70) — readable C lift. */

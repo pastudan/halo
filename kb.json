@@ -339,8 +339,8 @@
         },
         {
           "addr": "0x88c80",
-          "decl": "void FUN_00088c80(void);",
-          "ported": false
+          "decl": "void FUN_00088c80(int unit_handle, float *out_a, float *out_b);",
+          "ported": true
         },
         {
           "addr": "0x88d50",
@@ -6401,8 +6401,8 @@
         },
         {
           "addr": "0x11fdb0",
-          "decl": "void FUN_0011fdb0(void);",
-          "ported": false
+          "decl": "void *FUN_0011fdb0(void *backing, short width, short height, short depth);",
+          "ported": true
         },
         {
           "addr": "0x11fe80",
@@ -24830,7 +24830,8 @@
           "addr": "0x20f069",
           "comment": "Check if a DirectSound stream is still active by testing internal kernel status bits (0x10000002). Returns true if the stream is still processing.",
           "decl": "bool __stdcall dsound_stream_is_active(void *stream);",
-          "ported": false
+          "ported": false,
+          "name": "dsound_stream_is_active"
         },
         {
           "addr": "0x1c9230",
@@ -31018,8 +31019,8 @@
         {
           "addr": "0x184260",
           "name": "rasterizer_transparent_geometry_new",
-          "decl": "int rasterizer_transparent_geometry_new(void);",
-          "ported": false
+          "decl": "char rasterizer_transparent_geometry_new(void);",
+          "ported": true
         },
         {
           "addr": "0x184300",
@@ -33581,7 +33582,7 @@
         {
           "addr": "0x1d0c02",
           "decl": "void __stdcall FUN_001d0c02(void *ptr);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001d0c02"
         },
         {
@@ -33880,13 +33881,13 @@
         },
         {
           "addr": "0x19ccf0",
-          "decl": "void FUN_0019ccf0(void);",
-          "ported": false
+          "decl": "void FUN_0019ccf0(short *screen_pos, char *text, short *out_bounds, short *out_rect);",
+          "ported": true
         },
         {
           "addr": "0x19cdb0",
           "decl": "void FUN_0019cdb0(short *out_rect, void *text, short *out_bounds, short *in_rect);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19ce70",
