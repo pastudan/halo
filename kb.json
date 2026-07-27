@@ -35904,7 +35904,7 @@
         {
           "addr": "0x53f40",
           "decl": "int16_t FUN_00053f40(float *weights, int16_t stride, int16_t count, int16_t weight_offset, int *bitvector);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00053f40"
         },
         {
