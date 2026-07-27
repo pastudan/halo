@@ -554,10 +554,10 @@ int actor_aim_jump(int actor_handle, int a2, char param_3, float param_4,
 #if defined(__clang__)
 static void (*const b2ade0_chkstk)(void) = FUN_001d90e0;
 static void *(*const b2ade0_get)(int, int) = object_get_and_verify_type;
-static int16_t (*const b2ade0_c1415f0)(int flags, unsigned int type_mask, void *cluster_info, float *position, float radius, int *out_handles, int16_t max_count) = object_find_in_radius;
+static int16_t (*const b2ade0_c1415f0)(int flags, unsigned int type_mask, void *cluster_info, float *position, float radius, int *out_handles, int16_t max_count) = (void *)object_find_in_radius;
 static void *(*const b2ade0_tag)(int, int) = tag_get;
-static void (*const b2ade0_c1aae0)(int object_handle, float *center, float *radius) = FUN_0001aae0;
-static void * (*const b2ade0_c141480)(int object_handle, void *out_matrix) = object_get_world_matrix;
+static void (*const b2ade0_c1aae0)(int object_handle, float *center, float *radius) = (void *)FUN_0001aae0;
+static void * (*const b2ade0_c141480)(int object_handle, void *out_matrix) = (void *)object_get_world_matrix;
 static void *(*const b2ade0_elem)(void *, int, int) = tag_block_get_element;
 static void *(*const b2ade0_onode)(int, short) = object_get_node_matrix;
 static void (*const b2ade0_xfrmpt)(float *, float *, float *) = matrix_transform_point;
@@ -789,8 +789,8 @@ void FUN_0002ade0(int actor_handle __attribute__((unused)))
 #if defined(__clang__)
 static void (*const b2b020_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b2b020_exitfn)(int) = system_exit;
-static char (*const b2b020_c149480)(int collision_flags, int bsp, short flags, int breakable_surfaces, int origin, int direction, float max_t, float *result) = collision_bsp_test_vector;
-static char (*const b2b020_c10d4c0)(float *p1, float p2, float p3, float *p4, float *p5, float *p6, float *p7) = FUN_0010d4c0;
+static char (*const b2b020_c149480)(int collision_flags, int bsp, short flags, int breakable_surfaces, int origin, int direction, float max_t, float *result) = (void *)collision_bsp_test_vector;
+static char (*const b2b020_c10d4c0)(float *p1, float p2, float p3, float *p4, float *p5, float *p6, float *p7) = (void *)FUN_0010d4c0;
 
 __attribute__((naked, noinline))
 short FUN_0002b020(float *avoidance_ray __attribute__((unused)), float *ray_origin __attribute__((unused)), int avoidance_data __attribute__((unused)), float *ray_direction __attribute__((unused)), float *collision_t __attribute__((unused)), char *param_3 __attribute__((unused)))
@@ -1370,7 +1370,7 @@ char actor_path_3d_available(int actor_handle, float *dest_pos, float *dist_out)
 /* FUN_0002b830 (0x2b830) — XBE naked draft (batch 81). */
 #if defined(__clang__)
 static float (*const b2b830_norm)(float *) = normalize3d;
-static char * (*const b2b830_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static char * (*const b2b830_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b2b830_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b2b830_exitfn)(int) = system_exit;
 
@@ -1614,13 +1614,13 @@ void FUN_0002b830(float *facing_basis __attribute__((unused)), char use_3d __att
 
 /* FUN_0002bab0 (0x2bab0) — XBE naked draft (batch 80). */
 #if defined(__clang__)
-static bool (*const b2bab0_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b2bab0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static bool (*const b2bab0_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b2bab0_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b2bab0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b2bab0_exitfn)(int) = system_exit;
-static void (*const b2bab0_c1a2d90)(float *forward, float *left, float *up) = biped_build_flying_axes;
+static void (*const b2bab0_c1a2d90)(float *forward, float *left, float *up) = (void *)biped_build_flying_axes;
 static float (*const b2bab0_norm)(float *) = normalize3d;
-static int (*const b2bab0_c28610)(float *v) = valid_real_normal2d;
+static int (*const b2bab0_c28610)(float *v) = (void *)valid_real_normal2d;
 
 __attribute__((naked, noinline))
 void FUN_0002bab0(char use_3d __attribute__((unused)), float *movement_direction __attribute__((unused)), float *facing_direction __attribute__((unused)), float *out __attribute__((unused)))
@@ -1880,16 +1880,16 @@ static void (*const b2bd80_assert)(const char *, const char *, int, bool) = disp
 static void (*const b2bd80_exitfn)(int) = system_exit;
 static void *(*const b2bd80_get)(int, int) = object_get_and_verify_type;
 static int (*const b2bd80_gtime)(void) = game_time_get;
-static void * (*const b2bd80_c18e3c0)(void) = scenario_get;
+static void * (*const b2bd80_c18e3c0)(void) = (void *)scenario_get;
 static void *(*const b2bd80_gbsp)(void) = global_collision_bsp_get;
-static vector3_t * (*const b2bd80_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b2bd80_c2ade0)(int actor_handle) = FUN_0002ade0;
+static vector3_t * (*const b2bd80_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
+static void (*const b2bd80_c2ade0)(int actor_handle) = (void *)FUN_0002ade0;
 static void *(*const b2bd80_memset)(void *, int, unsigned int) = csmemset;
-static short (*const b2bd80_c2b020)(float *avoidance_ray, float *ray_origin, int avoidance_data, float *ray_direction, float *collision_t, char *param_3) = FUN_0002b020;
-static char (*const b2bd80_c2b310)(float *direction, short count, int records, float *values, float *out_index, float *out_value) = FUN_0002b310;
-static void * (*const b2bd80_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b2bd80_c2b400)(int matrix, float *in_vec, float *out_vec) = actor_move_transform_avoidance_vector;
-static float (*const b2bd80_c10c510)(float *v1, float *v2) = FUN_0010c510;
+static short (*const b2bd80_c2b020)(float *avoidance_ray, float *ray_origin, int avoidance_data, float *ray_direction, float *collision_t, char *param_3) = (void *)FUN_0002b020;
+static char (*const b2bd80_c2b310)(float *direction, short count, int records, float *values, float *out_index, float *out_value) = (void *)FUN_0002b310;
+static void * (*const b2bd80_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
+static void (*const b2bd80_c2b400)(int matrix, float *in_vec, float *out_vec) = (void *)actor_move_transform_avoidance_vector;
+static float (*const b2bd80_c10c510)(float *v1, float *v2) = (void *)FUN_0010c510;
 
 __attribute__((naked, noinline))
 void FUN_0002bd80(int actor_handle __attribute__((unused)), float *facing __attribute__((unused)), float *vel_out __attribute__((unused)), float *speed_out __attribute__((unused)))
@@ -4099,20 +4099,20 @@ static void *(*const b2daa0_tag)(int, int) = tag_get;
 static float (*const b2daa0_norm)(float *) = normalize3d;
 static void (*const b2daa0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b2daa0_exitfn)(int) = system_exit;
-static void (*const b2daa0_c2bab0)(char use_3d , float *movement_direction , float *facing_direction , float *out) = FUN_0002bab0;
-static void (*const b2daa0_c2b830)(float *facing_basis , char use_3d, float *out_vector, short *out_index, float *in_vec , float *weight_vec) = FUN_0002b830;
-static bool (*const b2daa0_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b2daa0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b2daa0_c3bc90)(int actor_handle) = actor_find_pathfinding_location;
+static void (*const b2daa0_c2bab0)(char use_3d , float *movement_direction , float *facing_direction , float *out) = (void *)FUN_0002bab0;
+static void (*const b2daa0_c2b830)(float *facing_basis , char use_3d, float *out_vector, short *out_index, float *in_vec , float *weight_vec) = (void *)FUN_0002b830;
+static bool (*const b2daa0_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b2daa0_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
+static void (*const b2daa0_c3bc90)(int actor_handle) = (void *)actor_find_pathfinding_location;
 static float (*const b2daa0_mag)(float *) = magnitude3d;
 static float *(*const b2daa0_vsca)(float *, float *, float, float *) = vector3d_scale_add;
-static void * (*const b2daa0_c18e3c0)(void) = scenario_get;
-static char (*const b2daa0_c639e0)(int scenario, unsigned char bsp_idx, float *origin, int start_surface, float *target, int end_surface, char *result_buf) = FUN_000639e0;
-static float (*const b2daa0_c3bd50)(int actor_handle) = actor_destination_tolerance;
-static void (*const b2daa0_c2a610)(int actor_handle, float *param_2, float *param_3) = actor_get_stopping_distances;
-static short (*const b2daa0_cfff80)(void) = game_connection;
-static void (*const b2daa0_c1d94f0)(void) = FUN_001d94f0;
-static void (*const b2daa0_cff4d0)(int channel, const char *format, ...) = console_printf;
+static void * (*const b2daa0_c18e3c0)(void) = (void *)scenario_get;
+static char (*const b2daa0_c639e0)(int scenario, unsigned char bsp_idx, float *origin, int start_surface, float *target, int end_surface, char *result_buf) = (void *)FUN_000639e0;
+static float (*const b2daa0_c3bd50)(int actor_handle) = (void *)actor_destination_tolerance;
+static void (*const b2daa0_c2a610)(int actor_handle, float *param_2, float *param_3) = (void *)actor_get_stopping_distances;
+static short (*const b2daa0_cfff80)(void) = (void *)game_connection;
+static void (*const b2daa0_c1d94f0)(void) = (void *)FUN_001d94f0;
+static void (*const b2daa0_cff4d0)(int channel, const char *format, ...) = (void *)console_printf;
 static void (*const b2daa0_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
 
 __attribute__((naked, noinline))
