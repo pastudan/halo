@@ -31415,8 +31415,8 @@
         },
         {
           "addr": "0x17e130",
-          "decl": "void FUN_0017e130(void);",
-          "ported": false
+          "decl": "int FUN_0017e130(unsigned char *a, unsigned char *b);",
+          "ported": true
         },
         {
           "addr": "0x17e190",

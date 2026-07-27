@@ -1713,68 +1713,32 @@ void FUN_0017e040(void)
 #endif
 
 
-/* FUN_0017e130 (0x17e130) — XBE naked draft (batch 325). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017e130(void)
+/* FUN_0017e130 (0x17e130) — readable C lift. */
+int FUN_0017e130(unsigned char *a, unsigned char *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movb 0x38(%%edx), %%al\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "jne .LFUN_0017e130_3\n\t"
-      "pushl %%ebx\n\t"
-      "movb 0x38(%%esi), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "popl %%ebx\n\t"
-      "jne .LFUN_0017e130_2\n\t"
-      "flds 0x34(%%edx)\n\t"
-      "fcomps 0x34(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017e130_1\n\t"
-      "movl $1, %%ecx\n\t"
-      ".LFUN_0017e130_1:\n\t"
-      "flds 0x34(%%edx)\n\t"
-      "fcomps 0x34(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0017e130_5\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017e130_2:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0017e130_4\n\t"
-      ".LFUN_0017e130_3:\n\t"
-      "movswl 0x30(%%edx), %%ecx\n\t"
-      "negl %%ecx\n\t"
-      ".LFUN_0017e130_4:\n\t"
-      "movb 0x38(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0017e130_5\n\t"
-      "movswl 0x30(%%esi), %%eax\n\t"
-      "addl %%eax, %%ecx\n\t"
-      ".LFUN_0017e130_5:\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int ecx;
+  float fa;
+  float fb;
+
+  ecx = 0;
+  if (!a[0x38]) {
+    if (!b[0x38]) {
+      fa = *(float *)(a + 0x34);
+      fb = *(float *)(b + 0x34);
+      if (fa > fb)
+        ecx = 1;
+      if (fa < fb)
+        return -1;
+      return ecx;
+    }
+  } else {
+    ecx = -(*(short *)(a + 0x30));
+  }
+  if (b[0x38])
+    ecx += *(short *)(b + 0x30);
+  return ecx;
 }
-#else
-#error "FUN_0017e130: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017e190 (0x17e190) — XBE naked draft (batch 302). */
