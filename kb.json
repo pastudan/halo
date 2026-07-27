@@ -32540,7 +32540,7 @@
         {
           "addr": "0x77cd0",
           "decl": "void *FUN_00077cd0(void *bitmap, short mipmap_count, int param_3, int param_4);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x77e60",
