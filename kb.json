@@ -7732,7 +7732,7 @@
         {
           "addr": "0xdb250",
           "decl": "char FUN_000db250(int object_handle @<esi>);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000db250"
         },
         {
@@ -11811,7 +11811,7 @@
         {
           "addr": "0xc4580",
           "decl": "int16_t hs_tokens_enumerate(const char *prefix, uint32_t type_mask, char **tokens, int16_t max_tokens);",
-          "ported": true,
+          "ported": false,
           "name": "hs_tokens_enumerate"
         },
         {
@@ -12060,7 +12060,7 @@
         {
           "addr": "0xc66d0",
           "decl": "bool FUN_000c66d0(int datum_index);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000c66d0"
         },
         {
@@ -12146,7 +12146,7 @@
         {
           "addr": "0xc7e50",
           "decl": "char hs_macro_function_parse(int16_t function_index, int root_datum);",
-          "ported": true,
+          "ported": false,
           "name": "hs_macro_function_parse"
         },
         {
@@ -20224,7 +20224,7 @@
         {
           "addr": "0x921c0",
           "decl": "int FUN_000921c0(const char *name, int *table);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000921c0"
         },
         {
@@ -27116,7 +27116,7 @@
         {
           "addr": "0x82bd0",
           "decl": "void FUN_00082bd0(void *xnaddr, uint32_t *key, uint32_t *nonce, uint16_t port, void *addr);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00082bd0"
         },
         {
@@ -27149,7 +27149,7 @@
         {
           "addr": "0x83100",
           "decl": "char transport_server_initialize(int *endpoint, unsigned short timeout);",
-          "ported": true,
+          "ported": false,
           "name": "transport_server_initialize"
         },
         {
@@ -27196,7 +27196,7 @@
         {
           "addr": "0x843a0",
           "decl": "short FUN_000843a0(int *endpoint);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000843a0"
         },
         {
@@ -27614,7 +27614,7 @@
         {
           "addr": "0xe7760",
           "decl": "void render_ui_widgets_postgame(int16_t local_player_index, int16_t *bounds);",
-          "ported": true,
+          "ported": false,
           "name": "render_ui_widgets_postgame"
         },
         {
@@ -27782,13 +27782,13 @@
         {
           "addr": "0xeaba0",
           "decl": "char FUN_000eaba0(void *widget, void *event_data, char *out_flag);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000eaba0"
         },
         {
           "addr": "0xead60",
           "decl": "char multiplayer_level_select(void *widget, void *event_data);",
-          "ported": true,
+          "ported": false,
           "name": "multiplayer_level_select"
         },
         {
@@ -28126,7 +28126,7 @@
         {
           "addr": "0xf2720",
           "decl": "void FUN_000f2720(void *widget);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000f2720"
         },
         {
@@ -28205,7 +28205,7 @@
         {
           "addr": "0xf3400",
           "decl": "void game_options_menu_update_pic_desc(void *widget);",
-          "ported": true,
+          "ported": false,
           "name": "game_options_menu_update_pic_desc"
         },
         {
@@ -30964,7 +30964,7 @@
         {
           "addr": "0x183120",
           "decl": "int16_t FUN_00183120(void *bitmap);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00183120"
         },
         {
@@ -31658,7 +31658,7 @@
         {
           "addr": "0x107c30",
           "decl": "char FUN_00107c30(int16_t point_count, float *points, int16_t vertices_capacity, char *vertices, int16_t edges_capacity, char *edges, int16_t surfaces_capacity, char *surfaces);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00107c30"
         },
         {
@@ -34475,7 +34475,7 @@
         {
           "addr": "0x218d0",
           "decl": "char actor_combat_build_grenade_trajectory(float *origin@<eax>, float *direction@<ebx>, int16_t grenade_index, float grenade_speed, float *target_pos, float *unused_a, float *unused_b, float *aim_speed_out, float *aim_param_out, float *launch_velocity, float *out_accel);",
-          "ported": true,
+          "ported": false,
           "name": "actor_combat_build_grenade_trajectory"
         },
         {
@@ -39466,7 +39466,7 @@
           "addr": "0x1b9bf0",
           "comment": "Validate and resolve a tag index to its tag_instance record pointer. Asserts if tags not loaded or index out of range. Source: cache/cache_files.c",
           "decl": "int *tag_instance_resolve(int tag_index@<edi>);",
-          "ported": true,
+          "ported": false,
           "name": "tag_instance_resolve"
         },
         {
@@ -39494,7 +39494,7 @@
         {
           "addr": "0x1b9ce0",
           "decl": "bool cache_file_header_verify(void *header, const char *path, int report_errors);",
-          "ported": true,
+          "ported": false,
           "name": "cache_file_header_verify"
         },
         {
