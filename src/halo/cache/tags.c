@@ -847,67 +847,27 @@ void FUN_001ba930(void)
 #endif
 
 
-/* FUN_001ba9d0 (0x1ba9d0) — XBE naked draft (batch 265). */
-#if defined(__clang__)
-static void __stdcall (*const b1ba9d0_c1d371d)(void *addr, unsigned int size, unsigned int protect) = physical_memory_protect;
-
-__attribute__((naked, noinline))
-void FUN_001ba9d0(void)
+/* FUN_001ba9d0 (0x1ba9d0) — readable C lift. */
+void *FUN_001ba9d0(void *header, int16_t value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movw 0xc(%%ebp), %%bx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "nop\n\t"
-      ".LFUN_001ba9d0_1:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "cmpw %%bx, 0xa78(%%esi,%%edx,2)\n\t"
-      "jne .LFUN_001ba9d0_2\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "sarl $5, %%edx\n\t"
-      "testl %%eax, 0x998(%%esi,%%edx,4)\n\t"
-      "jne .LFUN_001ba9d0_3\n\t"
-      ".LFUN_001ba9d0_2:\n\t"
-      "incl %%edi\n\t"
-      "cmpw $8, %%di\n\t"
-      "jl .LFUN_001ba9d0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ba9d0_3:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "movl 0x964(%%esi,%%eax,4), %%ecx\n\t"
-      "pushl $2\n\t"
-      "pushl $0x20000\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0xa78(%%esi,%%eax,2), %%edi\n\t"
-      "call *%[c1d371d]\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d371d] "m"(b1ba9d0_c1d371d)
-      : "memory");
+  int i;
+  int bit;
+  int word;
+  void *addr;
+
+  for (i = 0; i < 8; i++) {
+    if (*(int16_t *)((char *)header + 0xa78 + i * 2) != value)
+      continue;
+    bit = i & 0x1f;
+    word = i >> 5;
+    if ((*(unsigned int *)((char *)header + 0x998 + word * 4) & (1u << bit)) == 0)
+      continue;
+    addr = *(void **)((char *)header + 0x964 + i * 4);
+    physical_memory_protect(addr, 0x20000u, 2u);
+    return (char *)header + 0xa78 + i * 2;
+  }
+  return 0;
 }
-#else
-#error "FUN_001ba9d0: clang naked draft required"
-#endif
-
-
 /* FUN_001baa50 (0x1baa50) — readable C lift. */
 int FUN_001baa50(char *base, int ptr)
 {

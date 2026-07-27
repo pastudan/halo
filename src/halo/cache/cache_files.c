@@ -1,37 +1,16 @@
 #include <stdint.h>
 /* --- cache_files.obj batch drafts (2026-07-26) --- */
 
-/* scenario_tags_unload (0x1b9890) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static void (*const b1b9890_c1be4f0)(void) = sound_cache_close;
-static void (*const b1b9890_c1bf130)(void) = texture_cache_close;
-static void (*const b1b9890_c1bc9c0)(void) = cache_file_close;
-static void (*const b1b9890_c1bcd10)(void *block) = tags_header_deregister_vertex_and_index_buffers;
-
-__attribute__((naked, noinline))
+/* scenario_tags_unload (0x1b9890) — readable C lift. */
 void scenario_tags_unload(void)
 {
-  __asm__ volatile(
-      "call *%[c1be4f0]\n\t"
-      "call *%[c1bf130]\n\t"
-      "call *%[c1bc9c0]\n\t"
-      "movl 0x4e5504, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bcd10]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "movb %%al, 0x4e4d00\n\t"
-      "movl %%eax, 0x5054f0\n\t"
-      "ret\n\t"
-      :
-      : [c1be4f0] "m"(b1b9890_c1be4f0), [c1bf130] "m"(b1b9890_c1bf130), [c1bc9c0] "m"(b1b9890_c1bc9c0), [c1bcd10] "m"(b1b9890_c1bcd10)
-      : "memory");
+  sound_cache_close();
+  texture_cache_close();
+  cache_file_close();
+  tags_header_deregister_vertex_and_index_buffers(*(void **)0x4e5504);
+  *(unsigned char *)0x4e4d00 = 0;
+  *(int *)0x5054f0 = 0;
 }
-#else
-#error "scenario_tags_unload: clang naked draft required"
-#endif
-
-
 /* 0x1b98c0 */
 void tag_files_close(void)
 {
@@ -49,7 +28,7 @@ static char * (*const b1b98d0_c8d9d0)(char *buffer, const char *format, ...) = c
 static int (*const b1b98d0_c8df60)(const char *s1) = csstrlen;
 static int (*const b1b98d0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
 static bool (*const b1b98d0_c1bd8e0)(char *map_name) = cache_files_precache_map_loaded;
-static bool (*const b1b98d0_c1bc6b0)(void) = cache_files_precache_in_progress;
+static bool (*const b1b98d0_c1bc6b0)(void) = (bool (*)(void))FUN_001bc6b0;
 static bool (*const b1b98d0_c1bc6c0)(char *map_name) = cache_files_precache_is_copying_map;
 static void (*const b1b98d0_c1bda30)(void) = cache_files_precache_map_end;
 static __int16 (*const b1b98d0_c1bcf00)(float *) = cache_files_precache_map_status;
@@ -98,7 +77,7 @@ static void (*const b1b98d0_c1ba930)(void) = FUN_001ba930;
 static void (*const b1b98d0_c1ba8b0)(void) = FUN_001ba8b0;
 static void (*const b1b98d0_c1bb640)(void) = FUN_001bb640;
 static void (*const b1b98d0_c1bb970)(void) = FUN_001bb970;
-static void (*const b1b98d0_c1ba9d0)(void) = FUN_001ba9d0;
+static void *(*const b1b98d0_c1ba9d0)(void *, int16_t) = FUN_001ba9d0;
 static int (*const b1b98d0_c1155e0)(int z, int flush) = FUN_001155e0;
 static void (*const b1b98d0_c1bb5a0)(void) = acquire_read_request;
 static void (*const b1b98d0_c1ba710)(void) = FUN_001ba710;
@@ -3992,7 +3971,7 @@ int FUN_001b9920(void) {
 /* cache_files_give_time_to_precache (0x1b9de0) — XBE naked draft (batch 281). */
 #if defined(__clang__)
 static bool (*const b1b9de0_c1bd8e0)(char *map_name) = cache_files_precache_map_loaded;
-static bool (*const b1b9de0_c1bc6b0)(void) = cache_files_precache_in_progress;
+static bool (*const b1b9de0_c1bc6b0)(void) = (bool (*)(void))FUN_001bc6b0;
 static bool (*const b1b9de0_c1bc6c0)(char *map_name) = cache_files_precache_is_copying_map;
 static void (*const b1b9de0_c1bda30)(void) = cache_files_precache_map_end;
 static __int16 (*const b1b9de0_c1bcf00)(float *) = cache_files_precache_map_status;

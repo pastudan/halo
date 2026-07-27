@@ -7186,8 +7186,9 @@
         },
         {
           "addr": "0x87c00",
-          "decl": "void FUN_00087c00(void);",
-          "ported": false
+          "decl": "void FUN_00087c00(float *camera);",
+          "ported": true,
+          "name": "FUN_00087c00"
         },
         {
           "addr": "0x87c80",
@@ -8372,8 +8373,9 @@
         },
         {
           "addr": "0xb40f0",
-          "decl": "void race_team_can_win_game(void);",
-          "ported": false
+          "decl": "char race_team_can_win_game(int team_handle, unsigned int bit_index);",
+          "ported": true,
+          "name": "race_team_can_win_game"
         },
         {
           "addr": "0xb4170",
@@ -23937,7 +23939,8 @@
         {
           "addr": "0x190500",
           "decl": "void wind_initialize_for_new_map(void);",
-          "ported": false
+          "ported": true,
+          "name": "wind_initialize_for_new_map"
         },
         {
           "addr": "0x190550",
@@ -25386,8 +25389,9 @@
         },
         {
           "addr": "0x1ba9d0",
-          "decl": "void FUN_001ba9d0(void);",
-          "ported": false
+          "decl": "void *FUN_001ba9d0(void *header, int16_t value);",
+          "ported": true,
+          "name": "FUN_001ba9d0"
         },
         {
           "addr": "0x1baa50",
@@ -38948,7 +38952,8 @@
         {
           "addr": "0x1b9890",
           "decl": "void scenario_tags_unload(void);",
-          "ported": false
+          "ported": true,
+          "name": "scenario_tags_unload"
         },
         {
           "addr": "0x1b98c0",

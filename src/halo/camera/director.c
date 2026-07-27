@@ -2696,7 +2696,28 @@ void editor_camera_set_mode(void)
 #endif
 
 
-/* FUN_00087c00 (0x87c00) — XBE naked draft (batch 147). */
+/* FUN_00087c00 (0x87c00) — readable C lift. */
+void FUN_00087c00(float *camera)
+{
+  float *dst;
+  float *src;
+  int i;
+
+  dst = (float *)0x3356d0;
+  for (i = 0; i < 7; i++)
+    dst[i] = camera[i];
+  if (*(unsigned char *)0x33570c != 0) {
+    src = (float *)0x3356f0;
+    for (i = 0; i < 7; i++)
+      camera[i] = src[i];
+  } else {
+    camera[0] = 0.0f;
+    camera[1] = *(float *)0x2670d8;
+    camera[2] = 0.0f;
+    vector_to_angles(camera + 3, (float *)(*(char **)0x2ee670 + 0x1c));
+  }
+}
+
 /* editor_camera_move_to_point (0x87c80) — XBE naked draft (batch 156). */
 #if defined(__clang__)
 static void (*const b87c80_assert)(const char *, const char *, int, bool) = display_assert;

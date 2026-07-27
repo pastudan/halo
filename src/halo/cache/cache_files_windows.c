@@ -1270,7 +1270,7 @@ static unsigned int __stdcall (*const b1bbb60_c1d01c4)(unsigned int milliseconds
 static void (*const b1bbb60_c1bb970)(void) = FUN_001bb970;
 static void (*const b1bbb60_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1bbb60_exitfn)(int) = system_exit;
-static void (*const b1bbb60_c1ba9d0)(void) = FUN_001ba9d0;
+static void *(*const b1bbb60_c1ba9d0)(void *, int16_t) = FUN_001ba9d0;
 static void (*const b1bbb60_c1cfb98)(void) = SwitchToThread;
 static bool __stdcall (*const b1bbb60_c1d33e6)(void *counter) = QueryPerformanceCounter;
 static int (*const b1bbb60_c1155e0)(int z, int flush) = FUN_001155e0;
@@ -1544,7 +1544,7 @@ static void (*const b1bbea0_c1bb7d0)(void) = cache_copy_initialize_read_data;
 static int (*const b1bbea0_c1155c0)(int z, char *version, int stream_size) = FUN_001155c0;
 static bool (*const b1bbea0_c1b9ce0)(void *header, const char *path, int report_errors) = cache_file_header_verify;
 static void (*const b1bbea0_c1bb8a0)(void) = FUN_001bb8a0;
-static void (*const b1bbea0_c1ba9d0)(void) = FUN_001ba9d0;
+static void *(*const b1bbea0_c1ba9d0)(void *, int16_t) = FUN_001ba9d0;
 static void (*const b1bbea0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1bbea0_exitfn)(int) = system_exit;
 static bool __stdcall (*const b1bbea0_c1cfeaa)(void *handle) = SetEvent;

@@ -1162,65 +1162,17 @@ float FUN_000b55b0(short value_type, int team)
 }
 /* --- game.obj batch drafts (2026-07-26) --- */
 
-/* race_team_can_win_game (0xb40f0) — XBE naked draft (batch 148). */
-#if defined(__clang__)
-static void *(*const bb40f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bb40f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb40f0_exitfn)(int) = system_exit;
-static char (*const bb40f0_cb3b30)(int flag_index, int param_1) = FUN_000b3b30;
-
-__attribute__((naked, noinline))
-void race_team_can_win_game(void)
+/* race_team_can_win_game (0xb40f0) — readable C lift. */
+char race_team_can_win_game(int team_handle, unsigned int bit_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x456f10, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%ecx, %%edx\n\t"
-      "jne .Lrace_team_can_win_game_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x426\n\t"
-      "pushl $0x26d8f4\n\t"
-      "pushl $0x26db24\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrace_team_can_win_game_1:\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "jmp .Lrace_team_can_win_game_10000\n\t"
-      ".Lrace_team_can_win_game_10000:\n\t"
-      "jmp *%[cb3b30]\n\t"
-      :
-      : [dget] "m"(bb40f0_dget), [assert] "m"(bb40f0_assert), [exitfn] "m"(bb40f0_exitfn), [cb3b30] "m"(bb40f0_cb3b30)
-      : "memory");
+  datum_get(*(data_t **)0x5aa6d4, team_handle);
+  if ((*(unsigned int *)0x456f10 & (1u << bit_index)) == 0) {
+    display_assert((const char *)0x26db24, (const char *)0x26d8f4, 0x426, 1);
+    system_exit(-1);
+    return 0;
+  }
+  return FUN_000b3b30(team_handle, (int)bit_index);
 }
-#else
-#error "race_team_can_win_game: clang naked draft required"
-#endif
-
-
 /* race_engine_update (0xb4300) — XBE naked draft (batch 137). */
 #if defined(__clang__)
 static char (*const bb4300_ca95a0)(void) = FUN_000a95a0;

@@ -296,46 +296,18 @@ void FUN_00190380(void)
 #endif
 
 
-/* wind_initialize_for_new_map (0x190500) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-static void * (*const b190500_c18e3c0)(void) = scenario_get;
-static void (*const b190500_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b190500_exitfn)(int) = system_exit;
-static void *(*const b190500_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* wind_initialize_for_new_map (0x190500) — readable C lift. */
 void wind_initialize_for_new_map(void)
 {
-  __asm__ volatile(
-      "call *%[c18e3c0]\n\t"
-      "movb 0x5057c0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lwind_initialize_for_new_map_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x41\n\t"
-      "pushl $0x2b22c0\n\t"
-      "pushl $0x2b22e0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lwind_initialize_for_new_map_1:\n\t"
-      "pushl $0xd0c\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5057c0\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x5057c0\n\t"
-      ".byte 0xe9, 0x35, 0xfe, 0xff, 0xff\n\t"
-      :
-      : [c18e3c0] "m"(b190500_c18e3c0), [assert] "m"(b190500_assert), [exitfn] "m"(b190500_exitfn), [memset] "m"(b190500_memset)
-      : "memory");
+  scenario_get();
+  if (*(unsigned char *)0x5057c0 != 0) {
+    display_assert((const char *)0x2b22e0, (const char *)0x2b22c0, 0x41, 1);
+    system_exit(-1);
+  }
+  csmemset((void *)0x5057c0, 0, 0xd0c);
+  *(unsigned char *)0x5057c0 = 1;
+  FUN_00190380();
 }
-#else
-#error "wind_initialize_for_new_map: clang naked draft required"
-#endif
-
-
 /* FUN_00190550 (0x190550) — XBE naked draft (batch 253). */
 #if defined(__clang__)
 static void * (*const b190550_c18e3c0)(void) = scenario_get;
