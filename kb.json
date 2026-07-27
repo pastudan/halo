@@ -18654,7 +18654,7 @@
         {
           "addr": "0xba5f0",
           "decl": "void players_set_local_player_unit(int16_t local_player_index, int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xba6b0",
@@ -30494,7 +30494,7 @@
         },
         {
           "addr": "0x1bed90",
-          "decl": "void FUN_001bed90(void);",
+          "decl": "void FUN_001bed90(int cache_handle);",
           "ported": false
         },
         {

@@ -2581,95 +2581,35 @@ void players_handle_deleted_object(int object_handle)
   }
 }
 
-/* players_set_local_player_unit (0xba5f0) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static int (*const bba5f0_cb6870)(int16_t local_player_index) = player_control_get_unit_index;
-static short (*const bba5f0_cfff80)(void) = game_connection;
-static void (*const bba5f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bba5f0_exitfn)(int) = system_exit;
-static void *(*const bba5f0_get)(int, int) = object_get_and_verify_type;
-static void (*const bba5f0_c1adf10)(int unit_handle, char param_2) = unit_set_actively_controlled;
-static int (*const bba5f0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const bba5f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bba5f0_cb6fc0)(uint16_t local_player_index, int player_index) = player_control_new_unit;
-
-__attribute__((naked, noinline))
-void players_set_local_player_unit(int16_t local_player_index __attribute__((unused)), int unit_handle __attribute__((unused)))
+/* players_set_local_player_unit (0xba5f0) — readable C lift. */
+void players_set_local_player_unit(int16_t local_player_index, int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cb6870]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lplayers_set_local_player_unit_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x420\n\t"
-      "pushl $0x26eb68\n\t"
-      "pushl $0x26ea18\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayers_set_local_player_unit_1:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lplayers_set_local_player_unit_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "movl $0xffffffff, 0x1c8(%%eax)\n\t"
-      "call *%[c1adf10]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lplayers_set_local_player_unit_2:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lplayers_set_local_player_unit_3\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[c1adf10]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%eax, 0x1c8(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      ".Lplayers_set_local_player_unit_3:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cba3c0]\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, 0x34(%%eax)\n\t"
-      "movl $0xffffffff, 0x38(%%eax)\n\t"
-      "call *%[cb6fc0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6870] "m"(bba5f0_cb6870), [cfff80] "m"(bba5f0_cfff80), [assert] "m"(bba5f0_assert), [exitfn] "m"(bba5f0_exitfn), [get] "m"(bba5f0_get), [c1adf10] "m"(bba5f0_c1adf10), [cba3c0] "m"(bba5f0_cba3c0), [dget] "m"(bba5f0_dget), [cb6fc0] "m"(bba5f0_cb6fc0)
-      : "memory");
-}
-#else
-#error "players_set_local_player_unit: clang naked draft required"
-#endif
+  int old_unit;
+  char *unit;
+  char *player;
+  int player_index;
 
+  old_unit = player_control_get_unit_index(local_player_index);
+  if (game_connection() != 0) {
+    display_assert((const char *)0x26ea18, (const char *)0x26eb68, 0x420, true);
+    system_exit(-1);
+  }
+  if (old_unit != -1) {
+    unit = (char *)object_get_and_verify_type(old_unit, 3);
+    *(int *)(unit + 0x1c8) = -1;
+    unit_set_actively_controlled(old_unit, 0);
+  }
+  if (unit_handle != -1) {
+    unit = (char *)object_get_and_verify_type(unit_handle, 3);
+    unit_set_actively_controlled(unit_handle, 1);
+    *(int *)(unit + 0x1c8) = local_player_get_player_index(local_player_index);
+  }
+  player_index = local_player_get_player_index(local_player_index);
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
+  *(int *)(player + 0x34) = unit_handle;
+  *(int *)(player + 0x38) = -1;
+  player_control_new_unit(local_player_index, unit_handle);
+}
 
 /* 0xbbbe0 — Choose the best-scoring starting location for a player.
  *
