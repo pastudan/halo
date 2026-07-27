@@ -40018,9 +40018,9 @@
         },
         {
           "addr": "0x80d30",
-          "decl": "int prime_compare(unsigned int *a, unsigned int *b);",
+          "decl": "int prime_compare(const uint32_t *a, const uint32_t *b);",
           "name": "prime_compare",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80d50",

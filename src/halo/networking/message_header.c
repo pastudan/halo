@@ -523,37 +523,18 @@ int create_message(int type __attribute__((unused)), int payload __attribute__((
 #endif
 
 
-/* prime_compare (0x80d30) — XBE naked draft (batch 78). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int prime_compare(unsigned int *a __attribute__((unused)), unsigned int *b __attribute__((unused)))
+/* prime_compare (0x80d30) — readable C lift. */
+int prime_compare(const uint32_t *a, const uint32_t *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl (%%ecx), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jbe .Lprime_compare_1\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lprime_compare_1:\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "prime_compare: clang naked draft required"
-#endif
+  uint32_t av;
+  uint32_t bv;
 
+  av = *a;
+  bv = *b;
+  if (bv > av)
+    return 1;
+  return -(int)(bv < av);
+}
 
 /* Global: pointer to key_agreement_packets group definition at 0x2ee588. */
 #define key_agreement_group ((void *)0x2ee588)
