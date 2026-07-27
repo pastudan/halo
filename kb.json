@@ -16253,7 +16253,7 @@
         {
           "addr": "0x136040",
           "decl": "void FUN_00136040(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1360a0",
@@ -16581,7 +16581,7 @@
         {
           "addr": "0x13cb30",
           "decl": "void FUN_0013cb30(void);",
-          "ported": false,
+          "ported": true,
           "source_path": "objects/objects.c"
         },
         {
@@ -17227,7 +17227,7 @@
         {
           "addr": "0x145490",
           "decl": "void FUN_00145490(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a9520",
@@ -29176,7 +29176,7 @@
         {
           "addr": "0x1ab870",
           "decl": "int16_t FUN_001ab870(void *animation_state@<ecx>, int animation_graph_tag_index@<edx>, int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ab8c0",

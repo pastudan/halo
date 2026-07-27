@@ -133,57 +133,22 @@ void FUN_00136840(int object_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00136890 (0x136890) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b136890_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void *(*const b136890_get)(int, int) = object_get_and_verify_type;
-static int (*const b136890_cba500)(int) = player_index_from_unit_index;
-
-__attribute__((naked, noinline))
-int FUN_00136890(int object_index __attribute__((unused)))
+/* FUN_00136890 (0x136890) — readable C lift. */
+int FUN_00136890(int object_index)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_00136890_2\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00136890_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00136890_3\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xcc(%%eax), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_00136890_1\n\t"
-      ".LFUN_00136890_2:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_00136890_3:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba500]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(b136890_tryget), [get] "m"(b136890_get), [cba500] "m"(b136890_cba500)
-      : "memory");
-}
-#else
-#error "FUN_00136890: clang naked draft required"
-#endif
+  int idx;
 
+  idx = object_index;
+  if (idx == -1)
+    return -1;
+  for (;;) {
+    if (object_try_and_get_and_verify_type(idx, 3) != NULL)
+      return player_index_from_unit_index(idx);
+    idx = *(int *)((char *)object_get_and_verify_type(idx, -1) + 0xcc);
+    if (idx == -1)
+      return -1;
+  }
+}
 
 /* object_can_take_damage (0x1368e0) — Clear bit 3 of object+0xb7 flags byte for
  * all children/widgets of a given parent handle.

@@ -1416,59 +1416,24 @@ void FUN_00135f90(void)
 #endif
 
 
-/* FUN_00136040 (0x136040) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void (*const b136040_c119b20)(data_t *data) = data_delete_all;
-static void (*const b136040_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b136040_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_00136040 (0x136040) — readable C lift. */
 void FUN_00136040(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90c4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119b20]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x323534, %%edi\n\t"
-      ".LFUN_00136040_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00136040_2\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_00136040_3\n\t"
-      ".LFUN_00136040_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96\n\t"
-      "pushl $0x29ae0c\n\t"
-      "pushl $0x29ade4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00136040_3:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00136040_4\n\t"
-      "call *%%eax\n\t"
-      ".LFUN_00136040_4:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x28, %%edi\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_00136040_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c119b20] "m"(b136040_c119b20), [assert] "m"(b136040_assert), [exitfn] "m"(b136040_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_00136040: clang naked draft required"
-#endif
+  int16_t i;
+  void (**fn)(void);
 
+  data_delete_all(*(data_t **)0x5a90c4);
+  fn = (void (**)(void))0x323534;
+  for (i = 0; i < 5; i++) {
+    if ((unsigned)i >= 5) {
+      display_assert((const char *)0x29ade4, (const char *)0x29ae0c, 0x96, true);
+      system_exit(-1);
+    }
+    if (*fn != NULL)
+      (*fn)();
+    fn = (void (**)(void))((char *)fn + 0x28);
+  }
+}
 
 /* FUN_001360a0 (0x1360a0) — XBE naked draft (batch 69). */
 #if defined(__clang__)
@@ -1833,77 +1798,31 @@ void FUN_001362d0(int object_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_001363d0 (0x1363d0) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static void *(*const b1363d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1363d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1363d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_001363d0(int param_1 __attribute__((unused)))
+/* FUN_001363d0 (0x1363d0) — readable C lift. */
+int FUN_001363d0(int param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_001363d0_4\n\t"
-      ".LFUN_001363d0_1:\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5a90c4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x2(%%edi), %%si\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_001363d0_2\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_001363d0_3\n\t"
-      ".LFUN_001363d0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96\n\t"
-      "pushl $0x29ae0c\n\t"
-      "pushl $0x29ade4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001363d0_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%ecx\n\t"
-      "movb 0x32352c(,%%ecx,8), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001363d0_5\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_001363d0_1\n\t"
-      ".LFUN_001363d0_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001363d0_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1363d0_dget), [assert] "m"(b1363d0_assert), [exitfn] "m"(b1363d0_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_001363d0: clang naked draft required"
-#endif
+  char *entry;
+  int16_t kind;
+  int cur;
 
+  cur = param_1;
+  if (cur == -1)
+    return 0;
+  for (;;) {
+    entry = (char *)datum_get(*(void **)0x5a90c4, cur);
+    kind = *(int16_t *)(entry + 2);
+    if (kind < 0 || kind >= 5) {
+      display_assert((const char *)0x29ade4, (const char *)0x29ae0c, 0x96, true);
+      system_exit(-1);
+    }
+    /* table stride 0x28 = 5*8: index*5*8 = (kind + kind*4)*8 */
+    if (*(char *)(0x32352c + ((int)kind * 5) * 8) != 0)
+      return 1;
+    cur = *(int *)(entry + 8);
+    if (cur == -1)
+      return 0;
+  }
+}
 
 /*
  * object_wake — disconnect a point light from the cluster partition.
@@ -3507,60 +3426,24 @@ void FUN_0013bce0(int object_handle __attribute__((unused)), float *lighting __a
 #endif
 
 
-/* FUN_0013b150 (0x13b150) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static int (*const b13b150_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const b13b150_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b13b150_c13aed0)(int object_handle) = object_move_to_limbo;
-
-__attribute__((naked, noinline))
+/* FUN_0013b150 (0x13b150) — readable C lift. */
 void FUN_0013b150(void)
 {
-  __asm__ volatile(
-      "movl 0x5a90bc, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_0013b150_3\n\t"
-      ".LFUN_0013b150_1:\n\t"
-      "movl 0x5a90bc, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2(%%eax), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "je .LFUN_0013b150_2\n\t"
-      "andl $0xfffb, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movw %%cx, 0x2(%%eax)\n\t"
-      "call *%[c13aed0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0013b150_2:\n\t"
-      "movl 0x5a90bc, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_0013b150_1\n\t"
-      ".LFUN_0013b150_3:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b13b150_c1198f0), [dget] "m"(b13b150_dget), [c13aed0] "m"(b13b150_c13aed0)
-      : "memory");
-}
-#else
-#error "FUN_0013b150: clang naked draft required"
-#endif
+  int index;
+  char *entry;
+  uint16_t flags;
 
+  index = data_next_index(*(data_t **)0x5a90bc, -1);
+  while (index != -1) {
+    entry = (char *)datum_get(*(data_t **)0x5a90bc, index);
+    flags = *(uint16_t *)(entry + 2);
+    if (flags & 4) {
+      *(uint16_t *)(entry + 2) = (uint16_t)(flags & ~4);
+      object_move_to_limbo(index);
+    }
+    index = data_next_index(*(data_t **)0x5a90bc, index);
+  }
+}
 
 /* FUN_0013c030 (0x13c030 / objects.obj) — depth-first walk of an object's child
  * hierarchy, forwarding two opaque parameters down the tree.
@@ -3663,8 +3546,6 @@ void * FUN_0013c100(int16_t object_type __attribute__((unused)))
 #else
 #error "FUN_0013c100: clang naked draft required"
 #endif
-
-
 /* FUN_0013c1b0 (0x13c1b0) — XBE naked draft (batch 66). */
 #if defined(__clang__)
 static char * (*const b13c1b0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
@@ -3730,8 +3611,6 @@ short FUN_0013c1b0(short param_1 __attribute__((unused)))
 #else
 #error "FUN_0013c1b0: clang naked draft required"
 #endif
-
-
 /*
  * FUN_0013c490 (0x13c490 / objects.obj) — run an object type's "can delete?"
  * predicate chain.
@@ -3848,8 +3727,6 @@ void * FUN_0013c250(int16_t param_1 __attribute__((unused)))
 #else
 #error "FUN_0013c250: clang naked draft required"
 #endif
-
-
 /* FUN_0013c2e0 (0x13c2e0) — XBE naked draft (batch 64). */
 #if defined(__clang__)
 static void * (*const b13c2e0_c13c100)(int16_t object_type) = FUN_0013c100;
@@ -4551,56 +4428,19 @@ int FUN_0013cab0(int param_1 __attribute__((unused)), int param_2 __attribute__(
 #endif
 
 
-/* FUN_0013cb30 (0x13cb30) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void (*const b13cb30_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
-static void * (*const b13cb30_c13d730)(void *iter) = object_iterator_next;
-static void (*const b13cb30_odel)(int) = object_delete;
-
-__attribute__((naked, noinline))
+/* FUN_0013cb30 (0x13cb30) — readable C lift. */
 void FUN_0013cb30(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl $0\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl $0x240\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d6f0]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0013cb30_3\n\t"
-      ".LFUN_0013cb30_1:\n\t"
-      "cmpw $-1, 0x6a(%%eax)\n\t"
-      "jne .LFUN_0013cb30_2\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[odel]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0013cb30_2:\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0013cb30_1\n\t"
-      ".LFUN_0013cb30_3:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c13d6f0] "m"(b13cb30_c13d6f0), [c13d730] "m"(b13cb30_c13d730), [odel] "m"(b13cb30_odel)
-      : "memory");
-}
-#else
-#error "FUN_0013cb30: clang naked draft required"
-#endif
+  char iter[0x10];
+  char *obj;
 
+  object_iterator_new(iter, 0x240, 0);
+  for (obj = (char *)object_iterator_next(iter); obj != NULL;
+       obj = (char *)object_iterator_next(iter)) {
+    if (*(int16_t *)(obj + 0x6a) == -1)
+      object_delete(*(int *)(iter + 8));
+  }
+}
 
 void FUN_0013cb80(int do_spawn)
 {
@@ -9100,203 +8940,12 @@ void FUN_00141970(int param_1)
 }
 
 
-/* FUN_00145490 (0x145490) — XBE naked draft (batch 61). */
-#if defined(__clang__)
-static void (*const b145490_c144b50)(void) = objects_garbage_collect_tick;
-static void (*const b145490_c11e840)(void *pool) = memory_pool_compact;
-
-__attribute__((naked, noinline))
+/* FUN_00145490 (0x145490) — readable C lift. */
 void FUN_00145490(void)
 {
-  __asm__ volatile(
-      "call *%[c144b50]\n\t"
-      "movl 0x46f080, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11e840]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movb $1, %%al\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      :
-      : [c144b50] "m"(b145490_c144b50), [c11e840] "m"(b145490_c11e840)
-      : "memory");
+  objects_garbage_collect_tick();
+  memory_pool_compact(*(void **)0x46f080);
 }
-#else
-#error "FUN_00145490: clang naked draft required"
-#endif
-
 
 /*
  * object_get_first_cluster (0x13fe10 / objects.obj) — begin iterating the cluster
