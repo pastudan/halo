@@ -5415,8 +5415,12 @@
         {
           "addr": "0x93050",
           "decl": "void cinematic_stop(void);",
+<<<<<<< HEAD
           "ported": true,
           "name": "cinematic_stop"
+=======
+          "ported": true
+>>>>>>> 05e359f4 (lift(track-a): UI close-stack + profile-name Unicorn-prove 4 (ported:true).)
         },
         {
           "addr": "0x930a0",
@@ -6433,9 +6437,14 @@
         },
         {
           "addr": "0x1cf97c",
+<<<<<<< HEAD
           "decl": "int UnhandledExceptionFilter(void *exception_info);",
           "ported": true,
           "name": "UnhandledExceptionFilter"
+=======
+          "decl": "void UnhandledExceptionFilter(void);",
+          "ported": true
+>>>>>>> 05e359f4 (lift(track-a): UI close-stack + profile-name Unicorn-prove 4 (ported:true).)
         },
         {
           "addr": "0x1cf999",
@@ -13821,7 +13830,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcf3e0",
@@ -20337,8 +20346,12 @@
         {
           "addr": "0xfac20",
           "decl": "float FUN_000fac20(int weapon_tag_index, float *out_field8);",
+<<<<<<< HEAD
           "ported": true,
           "name": "FUN_000fac20"
+=======
+          "ported": true
+>>>>>>> 05e359f4 (lift(track-a): UI close-stack + profile-name Unicorn-prove 4 (ported:true).)
         },
         {
           "addr": "0xface0",
@@ -22763,7 +22776,7 @@
         {
           "addr": "0x111770",
           "decl": "void FUN_00111770(int state @<esi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x111910",
@@ -23781,9 +23794,14 @@
         },
         {
           "addr": "0x1c2bf0",
+<<<<<<< HEAD
           "decl": "char saved_game_file_name_unique(wchar_t *name);",
           "ported": true,
           "name": "saved_game_file_name_unique"
+=======
+          "decl": "char saved_game_file_name_unique(void);",
+          "ported": true
+>>>>>>> 05e359f4 (lift(track-a): UI close-stack + profile-name Unicorn-prove 4 (ported:true).)
         },
         {
           "addr": "0x1c2c50",
@@ -27271,7 +27289,7 @@
         },
         {
           "addr": "0xe4980",
-          "decl": "char widget_instance_is_visible_in_parent_chain(void *widget@<eax>);",
+          "decl": "char widget_instance_is_visible_in_parent_chain(void *widget);",
           "ported": false
         },
         {
@@ -27373,7 +27391,7 @@
         {
           "addr": "0xe5910",
           "decl": "void ui_widgets_close_stack_for_player(int16_t player_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe59e0",
@@ -27970,17 +27988,17 @@
         {
           "addr": "0xf28e0",
           "decl": "void FUN_000f28e0(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2990",
           "decl": "void FUN_000f2990(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2a40",
           "decl": "void FUN_000f2a40(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2b00",

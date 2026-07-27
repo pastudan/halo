@@ -2511,80 +2511,30 @@ unsigned int modulate_pixel32_by_real_alpha(unsigned int pixel, float alpha)
 
 
 
-/* ui_widgets_close_stack_for_player (0xe5910) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void (*const be5910_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be5910_exitfn)(int) = (void *)system_exit;
-static void (*const be5910_ce5620)(void *widget) = (void *)ui_widget_close;
-static void (*const be5910_c11f620)(void *pool, void *block) = (void *)stack_memory_pool_deallocate;
-
-__attribute__((naked, noinline))
+/* ui_widgets_close_stack_for_player (0xe5910) — readable C lift. */
 void ui_widgets_close_stack_for_player(int16_t player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x8(%%ebp), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lui_widgets_close_stack_for_player_1\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .Lui_widgets_close_stack_for_player_2\n\t"
-      ".Lui_widgets_close_stack_for_player_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x482\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x2832b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widgets_close_stack_for_player_2:\n\t"
-      "movl $0x46cc30, %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lui_widgets_close_stack_for_player_3:\n\t"
-      "movl -0x10(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widgets_close_stack_for_player_5\n\t"
-      "cmpw %%di, 0x8(%%eax)\n\t"
-      "jne .Lui_widgets_close_stack_for_player_5\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce5620]\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widgets_close_stack_for_player_5\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widgets_close_stack_for_player_5\n\t"
-      ".Lui_widgets_close_stack_for_player_4:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x31e04c, %%edx\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "call *%[c11f620]\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lui_widgets_close_stack_for_player_4\n\t"
-      ".Lui_widgets_close_stack_for_player_5:\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpl $0x46cc40, %%esi\n\t"
-      "jl .Lui_widgets_close_stack_for_player_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be5910_assert), [exitfn] "m"(be5910_exitfn), [ce5620] "m"(be5910_ce5620), [c11f620] "m"(be5910_c11f620)
-      : "memory");
+  void **slot;
+  void *widget;
+  void *block;
+  if ((int16_t)player_index < 0 || (int16_t)player_index >= 4) {
+    display_assert((const char *)0x2832b0, (const char *)0x283280, 0x482, 1);
+    system_exit(-1);
+  }
+  for (slot = (void **)0x46cc30; (uintptr_t)slot < 0x46cc40; slot++) {
+    widget = *(void **)((char *)slot - 0x10);
+    if (widget == 0 || *(int16_t *)((char *)widget + 8) != (int16_t)player_index)
+      continue;
+    ui_widget_close(widget);
+    if (*slot == 0)
+      continue;
+    while (*slot != 0) {
+      block = *slot;
+      *slot = *(void **)((char *)block + 0xc);
+      stack_memory_pool_deallocate(*(void **)0x31e04c, block);
+    }
+  }
 }
-#else
-#error "ui_widgets_close_stack_for_player: clang naked draft required"
-#endif
-
 
 /* ui_widgets_pop_stack (0xe59e0) — readable C lift. */
 void ui_widgets_pop_stack(int16_t player_index)
@@ -7381,7 +7331,7 @@ static void *(*const bea570_memset)(void *, int, unsigned int) = (void *)csmemse
 static game_variant_t * (*const bea570_cadd50)(game_variant_t *variant, const char *name) = (void *)game_engine_get_variant_by_name;
 static int (*const bea570_c8da40)(const void *a, const void *b, int size) = (void *)csmemcmp;
 static int (*const bea570_c1d9dac)(void *stream) = (void *)crt_fclose;
-static void (*const bea570_ce0a60)(void *) = player_ui_set_game_variant;
+static void (*const bea570_ce0a60)(void *) = (void *)player_ui_set_game_variant;
 static void (*const bea570_c12d7f0)(void *server, void *variant) = (void *)network_game_server_change_game_variant;
 static void (*const bea570_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
