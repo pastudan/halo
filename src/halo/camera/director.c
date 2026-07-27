@@ -3289,3 +3289,41 @@ void editor_camera_flying_update(void)
 #error "editor_camera_flying_update: clang naked draft required"
 #endif
 
+
+/* FUN_00088c80 (0x88c80) — copy unit/vehicle camera point + optional marker. */
+void FUN_00088c80(int unit_handle, float *out_pos, float *out_forward)
+{
+  void *unit;
+  void *veh;
+  void *vehi_tag;
+  void *seat;
+  int16_t n;
+  float markers[0x6c / 4];
+
+  unit = object_get_and_verify_type(unit_handle, 3);
+  unit_set_seat_state(unit_handle, out_pos);
+  out_forward[0] = *(float *)((char *)unit + 0x1ec);
+  out_forward[1] = *(float *)((char *)unit + 0x1f0);
+  out_forward[2] = *(float *)((char *)unit + 0x1f4);
+  if (*(int *)((char *)unit + 0xcc) == -1)
+    return;
+  veh = object_try_and_get_and_verify_type(*(int *)((char *)unit + 0xcc), 2);
+  if (veh == 0)
+    return;
+  vehi_tag = tag_get(0x76656869, *(int *)veh);
+  seat = tag_block_get_element((char *)vehi_tag + 0x2e4,
+                               (int)*(short *)((char *)unit + 0x2a0), 0x11c);
+  if ((*(char *)seat & 0x80) == 0)
+    return;
+  n = object_get_markers_by_string_id(*(int *)((char *)unit + 0xcc),
+                                      (void *)0x267238, markers, 1);
+  if (n == 0)
+    return;
+  /* marker layout: position at +0x60.. from marker base ebp-0x6c → +0x60 = ebp-0xc */
+  out_pos[0] = markers[0x60 / 4];
+  out_pos[1] = markers[0x64 / 4];
+  out_pos[2] = markers[0x68 / 4];
+  out_forward[0] = markers[0x3c / 4];
+  out_forward[1] = markers[0x40 / 4];
+  out_forward[2] = markers[0x44 / 4];
+}

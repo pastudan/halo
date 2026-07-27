@@ -318,11 +318,6 @@
           "ported": false
         },
         {
-          "addr": "0x88c80",
-          "decl": "void FUN_00088c80(int unit_handle, float *out_a, float *out_b);",
-          "ported": true
-        },
-        {
           "addr": "0x88d50",
           "decl": "void first_person_camera_for_unit_and_vector(void *dest @<eax>, int object_handle @<ecx>, void *arg @<esi>);",
           "ported": false
@@ -7226,6 +7221,12 @@
           "name": "first_person_camera_new",
           "decl": "void first_person_camera_new(int *camera);",
           "ported": true
+        },
+        {
+          "addr": "0x88c80",
+          "decl": "void FUN_00088c80(int unit_handle, float *out_pos, float *out_forward);",
+          "ported": true,
+          "name": "FUN_00088c80"
         }
       ],
       "name": "director.obj",
