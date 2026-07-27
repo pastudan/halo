@@ -38819,7 +38819,7 @@
         {
           "addr": "0x160c20",
           "decl": "void FUN_00160c20(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x160c30",
