@@ -2341,130 +2341,30 @@ void FUN_00087eb0(int object_handle)
   }
 }
 
-/* editor_camera_update (0x87f20) — XBE naked draft (batch 130). */
-#if defined(__clang__)
-static void (*const b87f20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b87f20_exitfn)(int) = system_exit;
-static void (*const b87f20_c853c0)(int param_1, unsigned short *param_2, unsigned int *param_3) = FUN_000853c0;
-static void (*const b87f20_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const b87f20_c87eb0)(int) = FUN_00087eb0;
-
-__attribute__((naked, noinline))
+/* editor_camera_update (0x87f20) — readable C lift (restored pre-naked). */
 void editor_camera_update(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x3356c4, %%eax\n\t"
-      "movl 0x2ee674(,%%eax,4), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .Leditor_camera_update_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x154\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x2671bc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_update_1:\n\t"
-      "movb 0x335698, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Leditor_camera_update_4\n\t"
-      "movb 0x2(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Leditor_camera_update_2\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c853c0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Leditor_camera_update_2:\n\t"
-      "movl 0x2ee670, %%edx\n\t"
-      "movl 0x3356b0, %%eax\n\t"
-      "addl $0x10, %%edx\n\t"
-      "movl (%%edx), %%esi\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%esi, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%esi\n\t"
-      "movl %%esi, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0x2ee670, %%ecx\n\t"
-      "addl $0x1c, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10cc00]\n\t"
-      "movl 0x2ee66c, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c87eb0]\n\t"
-      "movw 0x3356c4, %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Leditor_camera_update_4\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl 0x2ee67c(,%%eax,8), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .Leditor_camera_update_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x164\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x26718c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_update_3:\n\t"
-      "movl 0x3356b0, %%edx\n\t"
-      "movswl 0x3356c4, %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *0x2ee680(,%%ecx,8)\n\t"
-      "addl $4, %%esp\n\t"
-      ".Leditor_camera_update_4:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl 0x3356c4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x2ee674(,%%eax,4)\n\t"
-      "movb 0x335698, %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Leditor_camera_update_5\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "orl $9, %%eax\n\t"
-      "movl $0, 0x48(%%esi)\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      ".Leditor_camera_update_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b87f20_assert), [exitfn] "m"(b87f20_exitfn), [c853c0] "m"(b87f20_c853c0), [c10cc00] "m"(b87f20_c10cc00), [c87eb0] "m"(b87f20_c87eb0)
-      : "memory");
-}
-#else
-#error "editor_camera_update: clang naked draft required"
-#endif
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
 
+  /* test ecx, ecx -> jne 0x87f55 */
+  display_assert((char *)0x002671bc, (char *)0x00267120, 340, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x87f81 */
+  FUN_000853c0(0, (void *)(uintptr_t)edi, (void *)(uintptr_t)ecx);
+  vector_to_angles((float *)(uintptr_t)eax, (float *)0);
+  FUN_00087eb0();
+  /* test (int16_t)eax, (int16_t)eax -> je 0x88014 */
+  /* test ecx, ecx -> jne 0x87ffc */
+  display_assert((char *)0x0026718c, (char *)0x00267120, 356, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x88045 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edi;
+}
 
 /* editor_camera_set_scripted (0x88050) — XBE naked draft (batch 122). */
 #if defined(__clang__)

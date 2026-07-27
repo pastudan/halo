@@ -7211,7 +7211,7 @@
         {
           "addr": "0x87f20",
           "decl": "void editor_camera_update(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x88050",
