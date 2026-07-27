@@ -7084,7 +7084,7 @@
         },
         {
           "addr": "0x864b0",
-          "decl": "void director_desired_perspective(void);",
+          "decl": "short director_desired_perspective(int unit_handle, short *out_perspective);",
           "ported": false
         },
         {
@@ -30023,8 +30023,8 @@
         },
         {
           "addr": "0xa4200",
-          "decl": "void weather_particle_system_delete(void);",
-          "ported": false
+          "decl": "void weather_particle_system_delete(short index);",
+          "ported": true
         },
         {
           "addr": "0xa4310",

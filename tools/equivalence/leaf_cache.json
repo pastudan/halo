@@ -43,6 +43,14 @@
     "confidence": "high",
     "coverage_pct": 100.0
   },
+  "0x4557f4": {
+    "confidence": "moderate",
+    "coverage_pct": 43.5
+  },
+  "0x455890": {
+    "confidence": "moderate",
+    "coverage_pct": 43.5
+  },
   "0x58c40": {
     "class": "non_leaf",
     "confidence": "moderate",
@@ -54,6 +62,9 @@
     "coverage_pct": 55.3
   },
   "0xa2d30": {
+    "class": "non_leaf"
+  },
+  "0xa4200": {
     "class": "non_leaf"
   },
   "0xe0ee0": {

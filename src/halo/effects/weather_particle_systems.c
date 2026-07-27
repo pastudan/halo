@@ -277,125 +277,45 @@ void weather_particle_system_new(void)
 #endif
 
 
-/* weather_particle_system_delete (0xa4200) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void (*const ba4200_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba4200_exitfn)(int) = system_exit;
-static void *(*const ba4200_tag)(int, int) = tag_get;
-static void *(*const ba4200_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const ba4200_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void weather_particle_system_delete(void)
+/* weather_particle_system_delete (0xa4200) — readable C lift. */
+void weather_particle_system_delete(short index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .Lweather_particle_system_delete_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lweather_particle_system_delete_2\n\t"
-      ".Lweather_particle_system_delete_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweather_particle_system_delete_2:\n\t"
-      "movswl %%si, %%edi\n\t"
-      "imull $0x9c, %%edi, %%edi\n\t"
-      "addl $0x4557f4, %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7261696e\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x24(%%eax), %%ecx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%ebx, 0x8(%%ebp)\n\t"
-      "jle .Lweather_particle_system_delete_8\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lweather_particle_system_delete_3:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x7261696e\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lweather_particle_system_delete_4\n\t"
-      "cmpl 0x24(%%eax), %%esi\n\t"
-      "jl .Lweather_particle_system_delete_5\n\t"
-      ".Lweather_particle_system_delete_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x26af84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweather_particle_system_delete_5:\n\t"
-      "shll $4, %%esi\n\t"
-      "movl 0x28(%%esi,%%edi,1), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "leal 0x1c(%%esi,%%edi,1), %%esi\n\t"
-      "je .Lweather_particle_system_delete_7\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lweather_particle_system_delete_6:\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "movl 0x5aa89c, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "movl 0x5aa89c, %%edx\n\t"
-      "movl 0x50(%%eax), %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "decw 0x8(%%esi)\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%ebx, 0xc(%%esi)\n\t"
-      "jne .Lweather_particle_system_delete_6\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      ".Lweather_particle_system_delete_7:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl 0x24(%%eax), %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%esi\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "movl %%ebx, 0x8(%%ebp)\n\t"
-      "jl .Lweather_particle_system_delete_3\n\t"
-      ".Lweather_particle_system_delete_8:\n\t"
-      "decw 0x4557f0\n\t"
-      "movl $0xffffffff, (%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba4200_assert), [exitfn] "m"(ba4200_exitfn), [tag] "m"(ba4200_tag), [dget] "m"(ba4200_dget), [c1196d0] "m"(ba4200_c1196d0)
-      : "memory");
+  char *slot;
+  void *tag;
+  int i;
+  int count;
+  char *part;
+  int handle;
+  char *datum;
+  int next;
+
+  if (index < 0 || index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26af50, 0x5b, 1);
+    system_exit(-1);
+  }
+  slot = (char *)(0x4557f4 + (int)index * 0x9c);
+  tag = tag_get(0x7261696e, *(int *)slot);
+  count = *(int *)((char *)tag + 0x24);
+  for (i = 0; i < count; i++) {
+    tag = tag_get(0x7261696e, *(int *)slot);
+    if (i < 0 || i >= *(int *)((char *)tag + 0x24)) {
+      display_assert((const char *)0x26af84, (const char *)0x26af50, 0x66, 1);
+      system_exit(-1);
+    }
+    part = slot + 0x1c + i * 0x10;
+    handle = *(int *)(part + 0xc);
+    while (handle != -1) {
+      datum = (char *)datum_get(*(data_t **)0x5aa89c, handle);
+      next = *(int *)(datum + 0x50);
+      datum_delete(*(data_t **)0x5aa89c, handle);
+      *(int16_t *)(part + 8) = (int16_t)(*(int16_t *)(part + 8) - 1);
+      handle = next;
+      *(int *)(part + 0xc) = handle;
+    }
+  }
+  *(int16_t *)0x4557f0 = (int16_t)(*(int16_t *)0x4557f0 - 1);
+  *(int *)slot = -1;
 }
-#else
-#error "weather_particle_system_delete: clang naked draft required"
-#endif
-
-
 /* FUN_000a4310 (0xa4310) — XBE naked draft (batch 111). */
 #if defined(__clang__)
 static int (*const ba4310_c119610)(data_t *data) = data_new_at_index;
