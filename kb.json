@@ -41032,7 +41032,7 @@
         {
           "addr": "0x1d77b3",
           "decl": "void FUN_001d77b3(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1d7817",

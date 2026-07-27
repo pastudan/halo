@@ -1247,76 +1247,41 @@ void FUN_001d7749(void)
 #endif
 
 
-/* FUN_001d77b3 (0x1d77b3) — XBE naked draft (batch 268). */
-#if defined(__clang__)
-static int __stdcall (*const b1d77b3_c1d8766)(int flags, const char *a, int a_len, const char *b, int b_len) = xCompareStringA;
-
-__attribute__((naked, noinline))
-void FUN_001d77b3(void)
+/* FUN_001d77b3 (0x1d77b3) — readable C lift. */
+int __stdcall FUN_001d77b3(const char *a, const char *b)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "movl 0xc(%%esp), %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl 0x14(%%esp)\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d8766]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001d77b3_6\n\t"
-      "cmpl %%eax, 0x8(%%esp)\n\t"
-      "je .LFUN_001d77b3_5\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_001d77b3_4\n\t"
-      "movl 0x8(%%esp), %%eax\n\t"
-      ".LFUN_001d77b3_1:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "movb %%dl, %%cl\n\t"
-      "cmpb (%%esi), %%dl\n\t"
-      "jne .LFUN_001d77b3_3\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_001d77b3_2\n\t"
-      "movb 0x1(%%eax), %%dl\n\t"
-      "movb %%dl, %%cl\n\t"
-      "cmpb 0x1(%%esi), %%dl\n\t"
-      "jne .LFUN_001d77b3_3\n\t"
-      "incl %%eax\n\t"
-      "incl %%eax\n\t"
-      "incl %%esi\n\t"
-      "incl %%esi\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_001d77b3_1\n\t"
-      ".LFUN_001d77b3_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_001d77b3_7\n\t"
-      ".LFUN_001d77b3_3:\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "sbbl $-1, %%eax\n\t"
-      "jmp .LFUN_001d77b3_7\n\t"
-      ".LFUN_001d77b3_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "jmp .LFUN_001d77b3_7\n\t"
-      ".LFUN_001d77b3_5:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "jmp .LFUN_001d77b3_7\n\t"
-      ".LFUN_001d77b3_6:\n\t"
-      "addl $-2, %%eax\n\t"
-      ".LFUN_001d77b3_7:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1d8766] "m"(b1d77b3_c1d8766)
-      : "memory");
+  int r;
+  const unsigned char *p;
+  const unsigned char *q;
+  unsigned char ca;
+  unsigned char cb;
+
+  r = xCompareStringA(0, a, -1, b, -1);
+  if (r != 0)
+    return r - 2;
+  if (a == 0)
+    return (b != 0) ? -1 : 0; /* neg/sbb when a==0 */
+  if (b == 0)
+    return 1;
+  p = (const unsigned char *)a;
+  q = (const unsigned char *)b;
+  for (;;) {
+    ca = p[0];
+    cb = q[0];
+    if (ca != cb)
+      return (ca < cb) ? -1 : 1;
+    if (ca == 0)
+      return 0;
+    ca = p[1];
+    cb = q[1];
+    if (ca != cb)
+      return (ca < cb) ? -1 : 1;
+    p += 2;
+    q += 2;
+    if (ca == 0)
+      return 0;
+  }
 }
-#else
-#error "FUN_001d77b3: clang naked draft required"
-#endif
-
-
 /* FUN_001d7a59 (0x1d7a59) — XBE naked draft (batch 248). */
 #if defined(__clang__)
 static void (*const b1d7a59_c1dd5c8)(void) = FUN_001dd5c8;
