@@ -670,42 +670,6 @@ typedef struct {
   char unk_0[0xb0];
 } players_globals_t;
 
-/// size=0x40 — per-local-player control slot (player_control.obj)
-typedef struct {
-  int32_t unit_index;               ///< offset=0x00 owning unit datum handle
-  int32_t field_0x04;               ///< offset=0x04
-  uint16_t action_flags;            ///< offset=0x08
-  uint16_t persistent_action_flags; ///< offset=0x0a
-  float   desired_angles_yaw;       ///< offset=0x0c
-  float   desired_angles_pitch;     ///< offset=0x10
-  float   field_0x14;               ///< offset=0x14
-  int32_t field_0x18;               ///< offset=0x18
-  float   primary_trigger;          ///< offset=0x1c
-  int16_t desired_weapon_index;     ///< offset=0x20
-  int16_t desired_grenade_index;    ///< offset=0x22
-  int16_t desired_zoom_level;       ///< offset=0x24
-  uint8_t field_0x26;               ///< offset=0x26
-  int8_t  field_0x27;               ///< offset=0x27
-  int32_t field_0x28;               ///< offset=0x28
-  uint8_t pad_0x2c[0x4];            ///< offset=0x2c
-  float   field_0x30;               ///< offset=0x30
-  uint8_t pad_0x34[0x4];            ///< offset=0x34
-  float   pitch_minimum;            ///< offset=0x38
-  float   pitch_maximum;            ///< offset=0x3c
-} player_control_t;
-cs(player_control_t, 0x40);
-co(player_control_t, unit_index,              0x00);
-co(player_control_t, action_flags,            0x08);
-co(player_control_t, persistent_action_flags, 0x0a);
-co(player_control_t, desired_angles_yaw,      0x0c);
-co(player_control_t, desired_angles_pitch,    0x10);
-co(player_control_t, primary_trigger,         0x1c);
-co(player_control_t, desired_weapon_index,    0x20);
-co(player_control_t, desired_grenade_index,   0x22);
-co(player_control_t, desired_zoom_level,      0x24);
-co(player_control_t, pitch_minimum,           0x38);
-co(player_control_t, pitch_maximum,           0x3c);
-
 /// size=0x110
 typedef struct {
   char unk_0[0x110];

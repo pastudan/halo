@@ -489,17 +489,6 @@
           "ported": false
         },
         {
-          "addr": "0x1335e0",
-          "decl": "float FUN_001335e0(float a, float b, float c, float d, float ta, float tb, float tc, float td, float t);",
-          "ported": false,
-          "name": "FUN_001335e0"
-        },
-        {
-          "addr": "0x1336a0",
-          "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
-          "ported": false
-        },
-        {
           "addr": "0x1337c0",
           "decl": "int glow_normal_particle_new(int glow_widget_ptr, short index, short count);",
           "ported": false
@@ -44031,6 +44020,18 @@
           "addr": "0x1345b0",
           "decl": "void FUN_001345b0(int glow_widget@<eax>, int object_handle);",
           "ported": true
+        },
+        {
+          "addr": "0x1335e0",
+          "decl": "float FUN_001335e0(float a, float b, float c, float d, float t0, float t1, float t2, float t3, float t);",
+          "ported": true,
+          "name": "FUN_001335e0"
+        },
+        {
+          "addr": "0x1336a0",
+          "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
+          "ported": false,
+          "name": "FUN_001336a0"
         }
       ],
       "data": []

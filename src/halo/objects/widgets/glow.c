@@ -274,3 +274,46 @@ void FUN_001345b0(int glow_widget, int object_handle)
     }
   }
 }
+
+/* FUN_001335e0 (0x1335e0) — Newton cubic interpolator (real_math.h assert).
+ * Evaluate the unique cubic through (t0,a)..(t3,d) at time t.
+ * Intermediates use 80-bit long double (x87); s0 and the second divided-
+ * difference are spilled to float32 (fstps) like the XBE. */
+float FUN_001335e0(float a, float b, float c, float d, float t0, float t1,
+                   float t2, float t3, float t)
+{
+  long double s0;
+  long double s1;
+  long double s2;
+  long double d1;
+  long double d2;
+  volatile float s0_mem;
+  volatile float d2_mem;
+
+  if (!(t >= t0 && t <= t3)) {
+    display_assert("t>= t0 && t <= t3", "c:\\halo\\SOURCE\\math\\real_math.h",
+                   0x5fa, 1);
+    system_exit(-1);
+  }
+  s2 = ((long double)d - (long double)c) / ((long double)t3 - (long double)t2);
+  s1 = ((long double)c - (long double)b) / ((long double)t2 - (long double)t1);
+  s0 = ((long double)b - (long double)a) / ((long double)t1 - (long double)t0);
+  s0_mem = (float)s0;
+  d2_mem = (float)((s2 - s1) / ((long double)t3 - (long double)t1));
+  d1 = (s1 - (long double)s0_mem) / ((long double)t2 - (long double)t0);
+  d2 = ((long double)d2_mem - d1) / ((long double)t3 - (long double)t0);
+  return (float)((((d2 * ((long double)t - (long double)t2) + d1) *
+                   ((long double)t - (long double)t1) +
+                   (long double)s0_mem) *
+                  ((long double)t - (long double)t0)) +
+                 (long double)a);
+}
+
+/* FUN_001336a0 (0x1336a0) — vector3 Newton interpolate via FUN_001335e0. */
+void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3,
+                  float t0, float t1, float t2, float t3, float time)
+{
+  out[0] = FUN_001335e0(p0[0], p1[0], p2[0], p3[0], t0, t1, t2, t3, time);
+  out[1] = FUN_001335e0(p0[1], p1[1], p2[1], p3[1], t0, t1, t2, t3, time);
+  out[2] = FUN_001335e0(p0[2], p1[2], p2[2], p3[2], t0, t1, t2, t3, time);
+}
