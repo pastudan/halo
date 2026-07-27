@@ -365,7 +365,7 @@ short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy,
     if (i < 0 || i >= disc_count || disc_count > 0x80) {
       display_assert(
           "disc_index>=0 && disc_index<obstacles->disc_count && "
-          "obstacles->disc_count<=MAX",
+          "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
           "c:\\halo\\source\\ai\\path.h", 0x18c, true);
       system_exit(-1);
     }
