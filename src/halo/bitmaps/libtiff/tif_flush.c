@@ -5130,41 +5130,21 @@ void FUN_0006b2d0(void)
 #endif
 
 
-/* TIFFFlushData (0x6b3f0) — XBE naked draft (batch 325). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* TIFFFlushData (0x6b3f0) — readable C lift. */
 void TIFFFlushData(void)
 {
-  __asm__ volatile(
-      "movl 0x3340d0, %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "fsubrs 0x253f40\n\t"
-      "fstps 0x3340c0\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs 0x4(%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%eax)\n\t"
-      "fmuls 0x3340c0\n\t"
-      "fstps 0x3340bc\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "fsubrs 0x253f40\n\t"
-      "fstps 0x3340b8\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "fmuls 0x3340bc\n\t"
-      "fstps 0x3340b4\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float *v;
+  float t;
+  float inv_y;
+  v = *(float **)0x3340d0;
+  t = *(float *)0x253f40 - (v[0] + v[0]);
+  *(float *)0x3340c0 = t;
+  inv_y = *(float *)0x2533c8 / v[1];
+  *(float *)0x3340bc = inv_y * v[0] * t;
+  t = *(float *)0x253f40 - (v[2] + v[2]);
+  *(float *)0x3340b8 = t;
+  *(float *)0x3340b4 = inv_y * v[2] * (*(float *)0x3340bc);
 }
-#else
-#error "TIFFFlushData: clang naked draft required"
-#endif
-
 
 /* FUN_0006b440 (0x6b440) — XBE naked draft (batch 299). */
 #if defined(__clang__)

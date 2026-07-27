@@ -36807,7 +36807,7 @@
         {
           "addr": "0x6b3f0",
           "decl": "void TIFFFlushData(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x6b440",
