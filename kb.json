@@ -25318,7 +25318,7 @@
         {
           "addr": "0x1cc440",
           "decl": "int FUN_001cc440(int source@<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001cc440"
         },
         {

@@ -1,0 +1,8 @@
+{
+  "description": "Terminate data_next_index loops immediately (empty table path)",
+  "build_label": "synthetic",
+  "regions": {},
+  "stub_returns": {
+    "data_next_index": [-1]
+  }
+}
