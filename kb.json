@@ -39472,7 +39472,7 @@
           "addr": "0x1b9bf0",
           "comment": "Validate and resolve a tag index to its tag_instance record pointer. Asserts if tags not loaded or index out of range. Source: cache/cache_files.c",
           "decl": "int *tag_instance_resolve(int tag_index@<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "tag_instance_resolve"
         },
         {
@@ -39500,7 +39500,7 @@
         {
           "addr": "0x1b9ce0",
           "decl": "bool cache_file_header_verify(void *header, const char *path, int report_errors);",
-          "ported": false,
+          "ported": true,
           "name": "cache_file_header_verify"
         },
         {
