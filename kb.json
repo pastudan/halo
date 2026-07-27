@@ -21111,8 +21111,8 @@
         },
         {
           "addr": "0x17be50",
-          "decl": "void FUN_0017be50(void);",
-          "ported": false
+          "decl": "int FUN_0017be50(short si_val /* @<esi> */, short di_val /* @<edi> */);",
+          "ported": true
         },
         {
           "addr": "0x17bf20",
