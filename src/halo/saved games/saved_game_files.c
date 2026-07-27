@@ -1505,100 +1505,35 @@ fail:
   error(2, (const char *)0x2ba998, (const char *)0x2ba9c4);
 }
 
-/* saved_game_file_retrieve_player1_last_used_profile_directory (0x1c2d20) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void (*const b1c2d20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c2d20_exitfn)(int) = system_exit;
-static file_ref_t * (*const b1c2d20_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c2d20_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c2d20_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-static void (*const b1c2d20_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c2d20_c19a930)(file_ref_t *info) = file_close;
-
-__attribute__((naked, noinline))
-char saved_game_file_retrieve_player1_last_used_profile_directory(void *out_path __attribute__((unused)))
+/* saved_game_file_retrieve_player1_last_used_profile_directory (0x1c2d20) — readable C lift. */
+char saved_game_file_retrieve_player1_last_used_profile_directory(char *out_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lsaved_game_file_retrieve_player1_last_used_profile_directory_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x434\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba9d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_retrieve_player1_last_used_profile_directory_1:\n\t"
-      "pushl $0\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl $0x2ba9c4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsaved_game_file_retrieve_player1_last_used_profile_directory_3\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_retrieve_player1_last_used_profile_directory_3\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x10c(%%ebp), %%edx\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19ab50]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lsaved_game_file_retrieve_player1_last_used_profile_directory_2\n\t"
-      "pushl $0x2ba9c4\n\t"
-      "pushl $0x2ba9e4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lsaved_game_file_retrieve_player1_last_used_profile_directory_2:\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $0, 0xff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsaved_game_file_retrieve_player1_last_used_profile_directory_3:\n\t"
-      "pushl $0x2ba9c4\n\t"
-      "pushl $0x2ba998\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $0, 0xff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c2d20_assert), [exitfn] "m"(b1c2d20_exitfn), [c1999f0] "m"(b1c2d20_c1999f0), [c19a7a0] "m"(b1c2d20_c19a7a0), [c19ab50] "m"(b1c2d20_c19ab50), [c8f390] "m"(b1c2d20_c8f390), [c19a930] "m"(b1c2d20_c19a930)
-      : "memory");
-}
-#else
-#error "saved_game_file_retrieve_player1_last_used_profile_directory: clang naked draft required"
-#endif
+  file_ref_t ref;
+  char ok;
 
+  ok = 0;
+  if (!out_name) {
+    display_assert((const char *)0x2ba9d4, (const char *)0x2ba8e8, 0x434, true);
+    system_exit(-1);
+  }
+
+  if (!file_reference_create_from_path(&ref, (const char *)0x2ba9c4, 0)) {
+    error(2, (const char *)0x2ba998, (const char *)0x2ba9c4);
+    out_name[0xff] = 0;
+    return 0;
+  }
+  if (!file_open(&ref, 1)) {
+    error(2, (const char *)0x2ba998, (const char *)0x2ba9c4);
+    out_name[0xff] = 0;
+    return 0;
+  }
+  ok = file_read(&ref, 0x100, out_name);
+  if (!ok)
+    error(2, (const char *)0x2ba9e4, (const char *)0x2ba9c4);
+  file_close(&ref);
+  out_name[0xff] = 0;
+  return ok;
+}
 
 /* saved_game_file_remember_last_used_multiplayer_variant_directory (0x1c2e00) — readable C lift. */
 void saved_game_file_remember_last_used_multiplayer_variant_directory(const char *path)
@@ -1622,100 +1557,35 @@ fail:
   error(2, (const char *)0x2ba998, (const char *)0x2baa00);
 }
 
-/* saved_game_file_retrieve_last_used_multiplayer_variant_directory (0x1c2ed0) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void (*const b1c2ed0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c2ed0_exitfn)(int) = system_exit;
-static file_ref_t * (*const b1c2ed0_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c2ed0_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c2ed0_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-static void (*const b1c2ed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c2ed0_c19a930)(file_ref_t *info) = file_close;
-
-__attribute__((naked, noinline))
-void saved_game_file_retrieve_last_used_multiplayer_variant_directory(void)
+/* saved_game_file_retrieve_last_used_multiplayer_variant_directory (0x1c2ed0) — readable C lift. */
+char saved_game_file_retrieve_last_used_multiplayer_variant_directory(char *out_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lsaved_game_file_retrieve_last_used_multiplayer_variant_directory_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x468\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba9d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_retrieve_last_used_multiplayer_variant_directory_1:\n\t"
-      "pushl $0\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl $0x2baa00\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsaved_game_file_retrieve_last_used_multiplayer_variant_directory_3\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_retrieve_last_used_multiplayer_variant_directory_3\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x10c(%%ebp), %%edx\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19ab50]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lsaved_game_file_retrieve_last_used_multiplayer_variant_directory_2\n\t"
-      "pushl $0x2baa00\n\t"
-      "pushl $0x2ba9e4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lsaved_game_file_retrieve_last_used_multiplayer_variant_directory_2:\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $0, 0xff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsaved_game_file_retrieve_last_used_multiplayer_variant_directory_3:\n\t"
-      "pushl $0x2baa00\n\t"
-      "pushl $0x2ba998\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $0, 0xff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c2ed0_assert), [exitfn] "m"(b1c2ed0_exitfn), [c1999f0] "m"(b1c2ed0_c1999f0), [c19a7a0] "m"(b1c2ed0_c19a7a0), [c19ab50] "m"(b1c2ed0_c19ab50), [c8f390] "m"(b1c2ed0_c8f390), [c19a930] "m"(b1c2ed0_c19a930)
-      : "memory");
-}
-#else
-#error "saved_game_file_retrieve_last_used_multiplayer_variant_directory: clang naked draft required"
-#endif
+  file_ref_t ref;
+  char ok;
 
+  ok = 0;
+  if (!out_name) {
+    display_assert((const char *)0x2ba9d4, (const char *)0x2ba8e8, 0x468, true);
+    system_exit(-1);
+  }
+
+  if (!file_reference_create_from_path(&ref, (const char *)0x2baa00, 0)) {
+    error(2, (const char *)0x2ba998, (const char *)0x2baa00);
+    out_name[0xff] = 0;
+    return 0;
+  }
+  if (!file_open(&ref, 1)) {
+    error(2, (const char *)0x2ba998, (const char *)0x2baa00);
+    out_name[0xff] = 0;
+    return 0;
+  }
+  ok = file_read(&ref, 0x100, out_name);
+  if (!ok)
+    error(2, (const char *)0x2ba9e4, (const char *)0x2baa00);
+  file_close(&ref);
+  out_name[0xff] = 0;
+  return ok;
+}
 
 /* saved_game_file_remember_last_used_multiplayer_map (0x1c2fb0) — readable C lift. */
 void saved_game_file_remember_last_used_multiplayer_map(const char *path)
@@ -1739,100 +1609,35 @@ fail:
   error(2, (const char *)0x2ba998, (const char *)0x2baa10);
 }
 
-/* saved_game_file_retrieve_last_used_multiplayer_map (0x1c3080) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void (*const b1c3080_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c3080_exitfn)(int) = system_exit;
-static file_ref_t * (*const b1c3080_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c3080_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c3080_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-static void (*const b1c3080_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c3080_c19a930)(file_ref_t *info) = file_close;
-
-__attribute__((naked, noinline))
-bool saved_game_file_retrieve_last_used_multiplayer_map(char *out_name __attribute__((unused)))
+/* saved_game_file_retrieve_last_used_multiplayer_map (0x1c3080) — readable C lift. */
+char saved_game_file_retrieve_last_used_multiplayer_map(char *out_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lsaved_game_file_retrieve_last_used_multiplayer_map_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4d1\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x274e68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_retrieve_last_used_multiplayer_map_1:\n\t"
-      "pushl $0\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl $0x2baa10\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsaved_game_file_retrieve_last_used_multiplayer_map_3\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_retrieve_last_used_multiplayer_map_3\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x10c(%%ebp), %%edx\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19ab50]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lsaved_game_file_retrieve_last_used_multiplayer_map_2\n\t"
-      "pushl $0x2baa10\n\t"
-      "pushl $0x2ba9e4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lsaved_game_file_retrieve_last_used_multiplayer_map_2:\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $0, 0xff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsaved_game_file_retrieve_last_used_multiplayer_map_3:\n\t"
-      "pushl $0x2baa10\n\t"
-      "pushl $0x2ba998\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $0, 0xff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c3080_assert), [exitfn] "m"(b1c3080_exitfn), [c1999f0] "m"(b1c3080_c1999f0), [c19a7a0] "m"(b1c3080_c19a7a0), [c19ab50] "m"(b1c3080_c19ab50), [c8f390] "m"(b1c3080_c8f390), [c19a930] "m"(b1c3080_c19a930)
-      : "memory");
-}
-#else
-#error "saved_game_file_retrieve_last_used_multiplayer_map: clang naked draft required"
-#endif
+  file_ref_t ref;
+  char ok;
 
+  ok = 0;
+  if (!out_name) {
+    display_assert((const char *)0x274e68, (const char *)0x2ba8e8, 0x4d1, true);
+    system_exit(-1);
+  }
+
+  if (!file_reference_create_from_path(&ref, (const char *)0x2baa10, 0)) {
+    error(2, (const char *)0x2ba998, (const char *)0x2baa10);
+    out_name[0xff] = 0;
+    return 0;
+  }
+  if (!file_open(&ref, 1)) {
+    error(2, (const char *)0x2ba998, (const char *)0x2baa10);
+    out_name[0xff] = 0;
+    return 0;
+  }
+  ok = file_read(&ref, 0x100, out_name);
+  if (!ok)
+    error(2, (const char *)0x2ba9e4, (const char *)0x2baa10);
+  file_close(&ref);
+  out_name[0xff] = 0;
+  return ok;
+}
 
 /* saved_game_file_generate_checksum (0x1c3160) — readable C lift. */
 void saved_game_file_generate_checksum(void *buffer, unsigned short size, void *out_sig)
