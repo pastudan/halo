@@ -12485,7 +12485,7 @@
         {
           "addr": "0xcacf0",
           "decl": "void FUN_000cacf0(int thread_index@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcada0",
