@@ -30969,7 +30969,7 @@
         {
           "addr": "0x183120",
           "decl": "int16_t FUN_00183120(void *bitmap);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00183120"
         },
         {
