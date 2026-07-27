@@ -1800,14 +1800,16 @@ void FUN_000eed10(void *widget)
 char FUN_000eeeb0(void *widget, void *player_ui, char *out_flag)
 {
   char ok;
+  char (*dirty_fn)(void) = (char (*)(void))player_ui_edit_profile_is_dirty;
+  char (*save_fn)(void) = (char (*)(void))player_ui_save_profile;
 
   ok = 0;
   if (player_ui == NULL) {
     display_assert((const char *)0x286184, (const char *)0x2859a4, 0xeaf, 1);
     system_exit(-1);
   }
-  if (player_ui_edit_profile_is_dirty()) {
-    ok = player_ui_save_profile();
+  if (dirty_fn()) {
+    ok = save_fn();
     if (ok)
       return ok;
     error(2, (const char *)0x287ef8);

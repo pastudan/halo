@@ -3711,8 +3711,8 @@
         },
         {
           "addr": "0x15900",
-          "decl": "int FUN_00015900(int actor_handle, short param_2, char *state_data);",
-          "ported": false
+          "decl": "char FUN_00015900(int actor_handle, short param_2, char *state_data);",
+          "ported": true
         },
         {
           "addr": "0x159d0",
@@ -27864,7 +27864,7 @@
         },
         {
           "addr": "0xf01d0",
-          "decl": "char player_profile_end_editing(void *widget, void *arg1, void *arg2);",
+          "decl": "void player_profile_end_editing(void *widget);",
           "ported": false
         },
         {

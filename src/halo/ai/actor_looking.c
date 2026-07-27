@@ -2347,102 +2347,39 @@ int FUN_00015880(int actor_handle, char *state_data)
 
 
 
-/* FUN_00015900 (0x15900) — XBE naked draft (batch 78). */
-#if defined(__clang__)
-static void *(*const b15900_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b15900_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b15900_exitfn)(int) = system_exit;
-static void *(*const b15900_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-int FUN_00015900(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), char *state_data __attribute__((unused)))
+/* FUN_00015900 (0x15900) — readable C lift. */
+char FUN_00015900(int actor_handle, short param_2, char *state_data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl $1, %%ebx\n\t"
-      "jne .LFUN_00015900_1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x86\n\t"
-      "pushl $0x253638\n\t"
-      "pushl $0x25334c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00015900_1:\n\t"
-      "pushl $0x44\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movb 0x160(%%edi), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00015900_3\n\t"
-      "movb 0x6(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00015900_3\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "jne .LFUN_00015900_2\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, 0xe(%%esi)\n\t"
-      "movw %%ax, 0x24(%%esi)\n\t"
-      "movl $0xffffffff, 0x3c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00015900_2:\n\t"
-      "movw %%bx, 0x24(%%esi)\n\t"
-      "movb %%bl, 0x14(%%esi)\n\t"
-      "addl $0x174, %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "leal 0x18(%%esi), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl $0xffffffff, 0x3c(%%esi)\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00015900_3:\n\t"
-      "popl %%edi\n\t"
-      "movw %%bx, 0x24(%%esi)\n\t"
-      "movl $0xffffffff, 0x3c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b15900_dget), [assert] "m"(b15900_assert), [exitfn] "m"(b15900_exitfn), [memset] "m"(b15900_memset)
-      : "memory");
+  char *actor;
+  char ok;
+
+  ok = 1;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (state_data == 0) {
+    display_assert((const char *)0x25334c, (const char *)0x253638, 0x86, 1);
+    system_exit(-1);
+  }
+  csmemset(state_data, 0, 0x44);
+  if (actor[0x160] != 0 || actor[6] != 0) {
+    *(short *)(state_data + 0x24) = 1;
+    *(int *)(state_data + 0x3c) = -1;
+    return ok;
+  }
+  *(short *)state_data = param_2;
+  if (param_2 == 0) {
+    state_data[0xe] = 1;
+    *(short *)(state_data + 0x24) = 0;
+    *(int *)(state_data + 0x3c) = -1;
+    return ok;
+  }
+  *(short *)(state_data + 0x24) = 1;
+  state_data[0x14] = 1;
+  *(int *)(state_data + 0x18) = *(int *)(actor + 0x174);
+  *(int *)(state_data + 0x1c) = *(int *)(actor + 0x178);
+  *(int *)(state_data + 0x20) = *(int *)(actor + 0x17c);
+  *(int *)(state_data + 0x3c) = -1;
+  return ok;
 }
-#else
-#error "FUN_00015900: clang naked draft required"
-#endif
-
-
 /* FUN_000159d0 (0x159d0) — XBE naked draft (batch 75). */
 #if defined(__clang__)
 static void *(*const b159d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
