@@ -20213,7 +20213,7 @@
         },
         {
           "addr": "0x921c0",
-          "decl": "void FUN_000921c0(void);",
+          "decl": "int FUN_000921c0(const char *name, int *table);",
           "ported": false,
           "name": "FUN_000921c0"
         },
@@ -26670,8 +26670,9 @@
         },
         {
           "addr": "0x131790",
-          "decl": "void FUN_00131790(void);",
-          "ported": false
+          "decl": "void FUN_00131790(float dt);",
+          "ported": false,
+          "name": "FUN_00131790"
         },
         {
           "addr": "0x131840",

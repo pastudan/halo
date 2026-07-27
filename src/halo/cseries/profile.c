@@ -3350,64 +3350,34 @@ char *FUN_00092110(int32_t addr, int32_t *symtab)
   (void)edi;
 }
 
-/* FUN_000921c0 (0x921c0) — XBE naked draft (batch 265). */
-#if defined(__clang__)
-static int (*const b921c0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-
-__attribute__((naked, noinline))
-void FUN_000921c0(void)
+/* FUN_000921c0 (0x921c0) — readable C lift from XBE leaf.
+ * Linear search profile name table; return last matching entry id or -1. */
+int FUN_000921c0(const char *name, int *table)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "movl $1, %%ebx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jle .LFUN_000921c0_3\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x10, %%edi\n\t"
-      ".LFUN_000921c0_1:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl 0x8(%%edi,%%eax,1), %%eax\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000921c0_2\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl 0x4(%%edi,%%edx,1), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_000921c0_2:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "incl %%ebx\n\t"
-      "addl $0x10, %%edi\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jl .LFUN_000921c0_1\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_000921c0_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8dcb0] "m"(b921c0_c8dcb0)
-      : "memory");
+  int count;
+  int result;
+  int i;
+  char *base;
+  int addend;
+  char *ent;
+  char *str;
+
+  count = table[0];
+  result = -1;
+  if (count <= 1)
+    return -1;
+  base = (char *)table[2];
+  addend = table[1];
+  for (i = 1; i < count; i++) {
+    ent = base + i * 0x10;
+    str = (char *)(*(int *)(ent + 8) + addend);
+    if (csstrcmp(name, str) == 0)
+      result = *(int *)(ent + 4);
+  }
+  return result;
 }
-#else
-#error "FUN_000921c0: clang naked draft required"
-#endif
+
+
 
 /* 0x922a0 */
 void __fastcall FUN_000922a0(int skip, int32_t *frames, uint32_t max, uint32_t *count)
