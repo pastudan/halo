@@ -30720,7 +30720,7 @@
           "addr": "0x184330",
           "name": "rasterizer_transparent_geometry_group_new",
           "decl": "void *rasterizer_transparent_geometry_group_new(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x184360",
