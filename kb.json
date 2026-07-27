@@ -30834,7 +30834,7 @@
         {
           "addr": "0x183820",
           "decl": "void rasterizer_text_evict_character(int **slot@<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_evict_character"
         },
         {
