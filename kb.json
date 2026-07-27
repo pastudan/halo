@@ -21853,7 +21853,7 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "void action_avoid_setup(void);",
+          "decl": "char action_avoid_setup(void * a0, void * a1);",
           "ported": true
         },
         {
@@ -36523,7 +36523,7 @@
       "functions": [
         {
           "addr": "0x68780",
-          "decl": "int FUN_00068780(void *tif, int count);",
+          "decl": "void FUN_00068780(void);",
           "ported": false
         },
         {
@@ -36817,7 +36817,7 @@
       "functions": [
         {
           "addr": "0x6c400",
-          "decl": "int FUN_0006c400(void *tif);",
+          "decl": "void FUN_0006c400(void);",
           "ported": false
         },
         {
@@ -36917,7 +36917,7 @@
         },
         {
           "addr": "0x6d2d0",
-          "decl": "int FUN_0006d2d0(void *tif);",
+          "decl": "void FUN_0006d2d0(void);",
           "ported": false
         },
         {
@@ -37029,7 +37029,7 @@
       "functions": [
         {
           "addr": "0x6e740",
-          "decl": "unsigned int FUN_0006e740(void *tif);",
+          "decl": "void FUN_0006e740(void);",
           "ported": false
         },
         {
@@ -37110,7 +37110,7 @@
         },
         {
           "addr": "0x6f150",
-          "decl": "void FUN_0006f150(unsigned char *p);",
+          "decl": "void FUN_0006f150(void);",
           "ported": false
         },
         {
@@ -37142,7 +37142,7 @@
         },
         {
           "addr": "0x6f260",
-          "decl": "int FUN_0006f260(void *tif);",
+          "decl": "void FUN_0006f260(void);",
           "ported": false
         },
         {
@@ -37162,7 +37162,7 @@
         },
         {
           "addr": "0x6f690",
-          "decl": "void *FUN_0006f690(void *handler);",
+          "decl": "void FUN_0006f690(void);",
           "ported": false
         },
         {
@@ -37177,7 +37177,7 @@
         },
         {
           "addr": "0x6f890",
-          "decl": "void FUN_0006f890(void);",
+          "decl": "unsigned int FUN_0006f890(void *tif);",
           "ported": true
         },
         {
