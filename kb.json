@@ -21016,8 +21016,8 @@
         },
         {
           "addr": "0x1792d0",
-          "decl": "void FUN_001792d0(void);",
-          "ported": false
+          "decl": "char FUN_001792d0(void);",
+          "ported": true
         },
         {
           "addr": "0x179570",
@@ -21078,7 +21078,7 @@
         },
         {
           "addr": "0x17b540",
-          "decl": "int FUN_0017b540(void);",
+          "decl": "void FUN_0017b540(int tex_flags);",
           "ported": false,
           "name": "FUN_0017b540"
         },
@@ -39141,8 +39141,8 @@
         },
         {
           "addr": "0x168fd0",
-          "decl": "void _rasterizer_dynamic_unlit_geometry_draw(void);",
-          "ported": false
+          "decl": "void _rasterizer_dynamic_unlit_geometry_draw(void *obj);",
+          "ported": true
         },
         {
           "addr": "0x169200",

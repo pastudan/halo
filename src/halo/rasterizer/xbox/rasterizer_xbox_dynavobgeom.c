@@ -9444,7 +9444,7 @@ static void (*const b166890_c8f390)(unsigned __int16 a1, const char *a2, ...) = 
 static float (*const b166890_c1d9e70)(float base, float exponent) = FUN_001d9e70;
 static void (*const b166890_xfrmpt)(float *, float *, float *) = matrix_transform_point;
 static void __stdcall (*const b166890_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
-static void (*const b166890_c1792d0)(void) = FUN_001792d0;
+static char (*const b166890_c1792d0)(void) = FUN_001792d0;
 static void __stdcall (*const b166890_c1ea650)(uint32_t count, void *rects, uint32_t flags, uint32_t color, float z, uint32_t stencil) = (void *)D3DDevice_Clear;
 static void __stdcall (*const b166890_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
 static void (*const b166890_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
@@ -13011,37 +13011,19 @@ void FUN_00168e70(void)
 #endif
 
 
-/* _rasterizer_dynamic_unlit_geometry_draw (0x168fd0) — XBE naked draft (batch 325). */
-#if defined(__clang__)
-static uint32_t __stdcall (*const b168fd0_c1ed930)(void *resource) = (void *)D3DResource_Release;
-
-__attribute__((naked, noinline))
-void _rasterizer_dynamic_unlit_geometry_draw(void)
+/* _rasterizer_dynamic_unlit_geometry_draw (0x168fd0) — readable C lift. */
+void _rasterizer_dynamic_unlit_geometry_draw(void *obj)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .L_rasterizer_dynamic_unlit_geometry_draw_1\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .L_rasterizer_dynamic_unlit_geometry_draw_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, 0xc(%%esi)\n\t"
-      ".L_rasterizer_dynamic_unlit_geometry_draw_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed930] "m"(b168fd0_c1ed930)
-      : "memory");
+  void *p;
+
+  if (!obj)
+    return;
+  p = *(void **)((char *)obj + 0xc);
+  if (!p)
+    return;
+  D3DResource_Release(p);
+  *(void **)((char *)obj + 0xc) = 0;
 }
-#else
-#error "_rasterizer_dynamic_unlit_geometry_draw: clang naked draft required"
-#endif
 
 
 /* FUN_00169200 (0x169200) — XBE naked draft (batch 308). */

@@ -2643,11 +2643,12 @@ void FUN_001cb0c0(int channel __attribute__((unused)))
 
 /* --- sound_dsound_xbox.obj orphan shells (2026-07-26) --- */
 
-/* 0x20f069 */
-bool dsound_stream_is_active(void *stream)
+/* dsound_stream_is_active (0x20f069) — readable C lift. */
+bool __stdcall dsound_stream_is_active(void *stream)
 {
-  if (stream == 0) {
-    return 0;
-  }
-  return 0;
+  unsigned int flags;
+
+  flags = *(unsigned int *)(*(char **)((char *)stream + 0x24) + 8);
+  flags &= 0x10000002u;
+  return flags != 0;
 }

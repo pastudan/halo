@@ -1688,78 +1688,28 @@ void SetRenderStateSmart(int state, int value)
 #endif
 
 
-/* SetTextureStageStateSmart (0xe2470) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const be2470_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = D3DDevice_SetTextureStageState;
-static void (__stdcall *const be2470_c1e9ae0)(uint32_t, uint32_t) = D3DDevice_SetTextureState_TexCoordIndex;
-static void __stdcall (*const be2470_c1e9c20)(uint32_t stage, uint32_t color) = D3DDevice_SetTextureState_BorderColor;
-static void (__stdcall *const be2470_c1e9c60)(uint32_t, uint32_t) = D3DDevice_SetTextureState_ColorKeyColor;
-static void (__stdcall *const be2470_c1e9bc0)(uint32_t, uint32_t, uint32_t) = D3DDevice_SetTextureState_BumpEnv;
-
-__attribute__((naked, noinline))
+/* SetTextureStageStateSmart (0xe2470) — readable C lift. */
 void SetTextureStageStateSmart(int stage, int state, int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "cmpl $0x16, %%edx\n\t"
-      "jge .LSetTextureStageStateSmart_1\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e9410]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LSetTextureStageStateSmart_1:\n\t"
-      "cmpl $0x1c, %%edx\n\t"
-      "jne .LSetTextureStageStateSmart_2\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1e9ae0]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LSetTextureStageStateSmart_2:\n\t"
-      "cmpl $0x1d, %%edx\n\t"
-      "jne .LSetTextureStageStateSmart_3\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e9c20]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LSetTextureStageStateSmart_3:\n\t"
-      "cmpl $0x1e, %%edx\n\t"
-      "jne .LSetTextureStageStateSmart_4\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e9c60]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LSetTextureStageStateSmart_4:\n\t"
-      "cmpl $0x1b, %%edx\n\t"
-      "jg .LSetTextureStageStateSmart_5\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1e9bc0]\n\t"
-      ".LSetTextureStageStateSmart_5:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1e9410] "m"(be2470_c1e9410), [c1e9ae0] "m"(be2470_c1e9ae0), [c1e9c20] "m"(be2470_c1e9c20), [c1e9c60] "m"(be2470_c1e9c60), [c1e9bc0] "m"(be2470_c1e9bc0)
-      : "memory");
+  if (state < 0x16) {
+    D3DDevice_SetTextureStageState((uint32_t)stage, (uint32_t)state, (uint32_t)value);
+    return;
+  }
+  if (state == 0x1c) {
+    D3DDevice_SetTextureState_TexCoordIndex((uint32_t)stage, (uint32_t)value);
+    return;
+  }
+  if (state == 0x1d) {
+    D3DDevice_SetTextureState_BorderColor((uint32_t)stage, (uint32_t)value);
+    return;
+  }
+  if (state == 0x1e) {
+    D3DDevice_SetTextureState_ColorKeyColor((uint32_t)stage, (uint32_t)value);
+    return;
+  }
+  if (state <= 0x1b)
+    D3DDevice_SetTextureState_BumpEnv((uint32_t)stage, (uint32_t)state, (uint32_t)value);
 }
-#else
-#error "SetTextureStageStateSmart: clang naked draft required"
-#endif
 
 
 /* FUN_000e2650 (0xe2650) — readable C lift. */
