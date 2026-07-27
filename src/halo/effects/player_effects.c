@@ -640,98 +640,70 @@ float FUN_000a2a90(float a, float t)
   return (*(float *)0x2533c8 - a) * t + a;
 }
 
-/* FUN_000a2ab0 (0xa2ab0) — XBE naked draft (batch 136). */
-#if defined(__clang__)
-static void (*const ba2ab0_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_000a2ab0(void)
+/* FUN_000a2ab0 (0xa2ab0) — readable C lift from XBE leaf.
+ * descriptor@ebx; stack: unused, effect*, intensity, scale (pre-*30). */
+void FUN_000a2ab0(int unused_player, char *effect, float intensity, float scale,
+                  void *descriptor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fmuls 0x253394\n\t"
-      "movw 0x1a(%%edx), %%ax\n\t"
-      "cmpw 0x2(%%ebx), %%ax\n\t"
-      "fstps 0x14(%%ebp)\n\t"
-      "jle .LFUN_000a2ab0_1\n\t"
-      "movswl 0xde(%%edx), %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fmuls 0x10(%%ebx)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000a2ab0_5\n\t"
-      ".LFUN_000a2ab0_1:\n\t"
-      "movswl (%%ebx), %%eax\n\t"
-      "cmpw $0, 0x2ef7e0(,%%eax,2)\n\t"
-      "je .LFUN_000a2ab0_5\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x18(%%edx), %%edi\n\t"
-      "movl $0xe, %%ecx\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "rep movsl\n\t"
-      "fmuls 0x28(%%edx)\n\t"
-      "fsts 0x28(%%edx)\n\t"
-      "call *%[ftol]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw %%ax, 0xde(%%ecx)\n\t"
-      "flds 0x24(%%ebx)\n\t"
-      "popl %%edi\n\t"
-      "flds 0x2533c8\n\t"
-      "popl %%esi\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a2ab0_2\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .LFUN_000a2ab0_4\n\t"
-      ".LFUN_000a2ab0_2:\n\t"
-      "flds 0x24(%%ebx)\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fcomps 0x20(%%ebx)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a2ab0_3\n\t"
-      "flds 0x20(%%ebx)\n\t"
-      "jmp .LFUN_000a2ab0_4\n\t"
-      ".LFUN_000a2ab0_3:\n\t"
-      "flds 0x24(%%ebx)\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".LFUN_000a2ab0_4:\n\t"
-      "movb 0xe8(%%ecx), %%al\n\t"
-      "fstps 0x3c(%%ecx)\n\t"
-      "orb $1, %%al\n\t"
-      "movb %%al, 0xe8(%%ecx)\n\t"
-      ".LFUN_000a2ab0_5:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(ba2ab0_ftol)
-      : "memory");
+  float scale30;
+  int16_t effect_pri;
+  int16_t desc_pri;
+  int16_t desc_type;
+  float timer_f;
+  float scaled_dur;
+  float desc_min;
+  float desc_max;
+  float value;
+
+  (void)unused_player;
+
+  scale30 = scale * *(float *)0x253394;
+  effect_pri = *(int16_t *)(effect + 0x1a);
+  desc_pri = *(int16_t *)((char *)descriptor + 2);
+
+  if (effect_pri > desc_pri) {
+    timer_f = (float)(int)*(int16_t *)(effect + 0xde);
+    scaled_dur = scale30 * *(float *)((char *)descriptor + 0x10);
+    if (!(scaled_dur < timer_f))
+      return;
+  }
+
+  desc_type = *(int16_t *)descriptor;
+  if (((int16_t *)0x2ef7e0)[desc_type] == 0)
+    return;
+
+  {
+    int i;
+    int *dst = (int *)(effect + 0x18);
+    int *src = (int *)descriptor;
+    for (i = 0; i < 14; i++)
+      dst[i] = src[i];
+  }
+  *(float *)(effect + 0x28) = scale30 * *(float *)(effect + 0x28);
+  {
+    float ftmp = *(float *)(effect + 0x28);
+    int ftol_result;
+    __asm__ volatile(
+        "flds %1\n\t"
+        "call %P2\n\t"
+        "movl %%eax, %0"
+        : "=m"(ftol_result)
+        : "m"(ftmp), "X"(FUN_001d9068)
+        : "eax", "edx", "ecx", "st", "cc", "memory");
+    *(int16_t *)(effect + 0xde) = (int16_t)ftol_result;
+  }
+
+  desc_min = *(float *)((char *)descriptor + 0x24);
+  desc_max = *(float *)((char *)descriptor + 0x20);
+  value = (*(float *)0x2533c8 - desc_min) * intensity + desc_min;
+  if (value < *(float *)0x2533c0)
+    value = *(float *)0x2533c0;
+  else if (!(value <= desc_max))
+    value = desc_max;
+
+  *(float *)(effect + 0x3c) = value;
+  *(uint8_t *)(effect + 0xe8) |= 1;
 }
-#else
-#error "FUN_000a2ab0: clang naked draft required"
-#endif
 
 
 /* FUN_000a2ba0 (0xa2ba0) — XBE naked draft (batch 140). */

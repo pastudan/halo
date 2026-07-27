@@ -18127,8 +18127,8 @@
         },
         {
           "addr": "0xa2ab0",
-          "decl": "void FUN_000a2ab0(void);",
-          "ported": false
+          "decl": "void FUN_000a2ab0(int unused_player, char *effect, float intensity, float scale, void *descriptor@<ebx>);",
+          "ported": true
         },
         {
           "addr": "0xa2c70",
