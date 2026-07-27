@@ -1303,30 +1303,13 @@ class StubManager:
                 dst = int.from_bytes(bytes(uc.mem_read(caller_esp + 4, 4)), "little")
                 val = int.from_bytes(bytes(uc.mem_read(caller_esp + 8, 4)), "little") & 0xFF
                 n = int.from_bytes(bytes(uc.mem_read(caller_esp + 12, 4)), "little")
+                # Cap like csmemcpy: large BSS clears (e.g. ai_debug_initialize
+                # memset 0x85b2c) and false-positive DIR32 size immediates would
+                # otherwise walk auto-map into UC_ERR_MAP (oracle crash).
+                if n > 0x8000:
+                    n = 0x8000
                 if n > 0:
                     _safe_write(dst, bytes([val] * n))
-                uc.reg_write(UC_X86_REG_EAX, dst)
-                return True
-
-            if symbol_name == "csstrncpy":
-                dst = int.from_bytes(bytes(uc.mem_read(caller_esp + 4, 4)), "little")
-                src = int.from_bytes(bytes(uc.mem_read(caller_esp + 8, 4)), "little")
-                n = int.from_bytes(bytes(uc.mem_read(caller_esp + 12, 4)), "little")
-                if n > 0:
-                    data = bytes(uc.mem_read(src, n))
-                    idx = data.find(b'\0')
-                    if idx != -1:
-                        data = data[:idx+1]
-                    uc.mem_write(dst, data)
-                uc.reg_write(UC_X86_REG_EAX, dst)
-                return True
-
-            if symbol_name in ("csmemset", "memset"):
-                dst = int.from_bytes(bytes(uc.mem_read(caller_esp + 4, 4)), "little")
-                val = int.from_bytes(bytes(uc.mem_read(caller_esp + 8, 4)), "little") & 0xFF
-                n = int.from_bytes(bytes(uc.mem_read(caller_esp + 12, 4)), "little")
-                if n > 0:
-                    uc.mem_write(dst, bytes([val] * n))
                 uc.reg_write(UC_X86_REG_EAX, dst)
                 return True
 

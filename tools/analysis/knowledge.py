@@ -327,11 +327,9 @@ __attribute__((naked)) { decl.replace(name, 'THUNK('+name+')') }
 		'NtOpenFile', 'NtQueryVolumeInformationFile', 'NtWriteFile',
 		'RtlInitAnsiString', 'XapiFormatFATVolume',
 	})
-
-	# Freestanding CRT forwards declared in src/common.h (authoritative there).
-	# Emitting HFUNC/dllexport versions from kb LIBCMT entries conflicts with
-	# those prototypes under -Werror=dll-attribute-on-redeclaration.
-	_COMMON_H_FORWARDS = frozenset({
+	# CRT symbols with authoritative freestanding prototypes in src/common.h
+	# (cdecl + cdecl compar). Emitting HFUNC from kb would conflict under -Werror.
+	_LOCAL_CDECL_IMPORTS = frozenset({
 		'qsort',
 	})
 
@@ -341,7 +339,7 @@ __attribute__((naked)) { decl.replace(name, 'THUNK('+name+')') }
 		# declares with the NTAPI/stdcall convention are authoritative there; do not
 		# re-emit kb.json void(void) placeholders for them (would conflict). Union
 		# with the cseries-local __stdcall import set.
-		_skip_names = set(self._LOCAL_STDCALL_IMPORTS) | set(self._COMMON_H_FORWARDS)
+		_skip_names = set(self._LOCAL_STDCALL_IMPORTS) | set(self._LOCAL_CDECL_IMPORTS)
 		try:
 			_krnl = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 				'..', '..', 'third_party', 'xbox', 'xboxkrnl.h')

@@ -256,6 +256,15 @@ def synthesize_relocs(
                 "movsx",
             ):
                 imm = None
+            # push imm32 is overloaded for both pointer args and size scalars
+            # (csmemset/debug_malloc). Reject .text-window immediates that are
+            # not kb function entries — those are almost always sizes
+            # (e.g. push 0x85b2c before csmemset in ai_debug_initialize).
+            # Keep .rdata/.data pushes (string literals, BSS pointers).
+            if imm is not None and insn.mnemonic == "push":
+                u = imm & 0xFFFFFFFF
+                if CODE_ADDR_LO <= u < 0x253080 and u not in by_addr:
+                    imm = None
             if imm is not None:
                 # Skip relative encodings: encoded dword must equal Capstone's
                 # absolute operand when the operand is an address-bearing imm.
