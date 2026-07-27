@@ -20022,8 +20022,8 @@
         },
         {
           "addr": "0x901d0",
-          "decl": "void compare_profile_sections(void);",
-          "ported": false
+          "decl": "int compare_profile_sections(const void *a, const void *b);",
+          "ported": true
         },
         {
           "addr": "0x902f0",

@@ -1211,152 +1211,71 @@ void FUN_00090180(uint32_t *rec, uint32_t lo, uint32_t hi)
   *(float *)((char *)rec + 0x14) += elapsed;
 }
 
-/* compare_profile_sections (0x901d0) — XBE naked draft (batch 249). */
-#if defined(__clang__)
-static void (*const b901d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b901d0_exitfn)(int) = system_exit;
-static int (*const b901d0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-
-__attribute__((naked, noinline))
-void compare_profile_sections(void)
+/* compare_profile_sections (0x901d0) — readable C lift from XBE leaf.
+ * qsort-style compare of profile section records; mode in DAT_003365b8. */
+int compare_profile_sections(const void *a, const void *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movb 0x8(%%eax), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "je .Lcompare_profile_sections_1\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movb 0x8(%%esi), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lcompare_profile_sections_4\n\t"
-      ".Lcompare_profile_sections_1:\n\t"
-      "movl (%%ecx), %%ecx\n\t"
-      "movb 0x8(%%ecx), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lcompare_profile_sections_2\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .Lcompare_profile_sections_13\n\t"
-      ".Lcompare_profile_sections_2:\n\t"
-      "movswl 0x3365b8, %%edx\n\t"
-      "subl $0, %%edx\n\t"
-      "je .Lcompare_profile_sections_14\n\t"
-      "decl %%edx\n\t"
-      "je .Lcompare_profile_sections_7\n\t"
-      "decl %%edx\n\t"
-      "je .Lcompare_profile_sections_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x34c\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x255ee8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcompare_profile_sections_3:\n\t"
-      "movl 0x20(%%eax), %%edx\n\t"
-      "movl 0x20(%%ecx), %%esi\n\t"
-      "movl 0x24(%%eax), %%eax\n\t"
-      "movl 0x24(%%ecx), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lcompare_profile_sections_13\n\t"
-      "jg .Lcompare_profile_sections_4\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jbe .Lcompare_profile_sections_5\n\t"
-      ".Lcompare_profile_sections_4:\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcompare_profile_sections_5:\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jg .Lcompare_profile_sections_6\n\t"
-      "jl .Lcompare_profile_sections_13\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jb .Lcompare_profile_sections_13\n\t"
-      ".Lcompare_profile_sections_6:\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcompare_profile_sections_7:\n\t"
-      "movl 0x5c8(%%eax), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "jne .Lcompare_profile_sections_8\n\t"
-      "fldl 0x2602c0\n\t"
-      "jmp .Lcompare_profile_sections_9\n\t"
-      ".Lcompare_profile_sections_8:\n\t"
-      "fildl 0x5e0(%%eax)\n\t"
-      "fidivl 0x8(%%ebp)\n\t"
-      ".Lcompare_profile_sections_9:\n\t"
-      "movl 0x5c8(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jne .Lcompare_profile_sections_10\n\t"
-      "fldl 0x2602c0\n\t"
-      "jmp .Lcompare_profile_sections_11\n\t"
-      ".Lcompare_profile_sections_10:\n\t"
-      "fildl 0x5e0(%%ecx)\n\t"
-      "fidivl 0x8(%%ebp)\n\t"
-      ".Lcompare_profile_sections_11:\n\t"
-      "fld %%st(1)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcompare_profile_sections_12\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%esi\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcompare_profile_sections_12:\n\t"
-      "fxch %%st(1)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcompare_profile_sections_6\n\t"
-      ".Lcompare_profile_sections_13:\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcompare_profile_sections_14:\n\t"
-      "movl (%%ecx), %%ecx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b901d0_assert), [exitfn] "m"(b901d0_exitfn), [c8dcb0] "m"(b901d0_c8dcb0)
-      : "memory");
+  unsigned char *sa;
+  unsigned char *sb;
+  unsigned char a_active;
+  unsigned char b_active;
+  int mode;
+  unsigned int a_lo;
+  unsigned int b_lo;
+  unsigned int a_hi;
+  unsigned int b_hi;
+  double da;
+  double db;
+
+  sa = *(unsigned char **)a;
+  sb = *(unsigned char **)b;
+  a_active = sa[8];
+  b_active = sb[8];
+
+  if (a_active != 0 && b_active == 0)
+    return -1;
+  if (b_active != 0 && a_active == 0)
+    return 1;
+
+  mode = (int)*(int16_t *)0x3365b8;
+  if (mode == 0)
+    return csstrcmp((const char *)sa, (const char *)sb);
+  if (mode == 2) {
+    a_lo = *(unsigned int *)(sa + 0x20);
+    b_lo = *(unsigned int *)(sb + 0x20);
+    a_hi = *(unsigned int *)(sa + 0x24);
+    b_hi = *(unsigned int *)(sb + 0x24);
+    if (a_hi < b_hi)
+      return 1;
+    if (a_hi > b_hi)
+      return -1;
+    if (a_lo > b_lo)
+      return -1;
+    if (a_lo < b_lo)
+      return 1;
+    return 0;
+  }
+  if (mode == 1) {
+    if (*(int *)(sa + 0x5c8) == 0)
+      da = *(double *)0x2602c0;
+    else
+      da = (double)*(long long *)(sa + 0x5e0) /
+           (double)*(int *)(sa + 0x5c8);
+    if (*(int *)(sb + 0x5c8) == 0)
+      db = *(double *)0x2602c0;
+    else
+      db = (double)*(long long *)(sb + 0x5e0) /
+           (double)*(int *)(sb + 0x5c8);
+    if (da > db)
+      return -1;
+    if (da < db)
+      return 1;
+    return 0;
+  }
+  display_assert((const char *)0x255ee8, (const char *)0x2683fc, 0x34c, 1);
+  system_exit(-1);
+  return 0;
 }
-#else
-#error "compare_profile_sections: clang naked draft required"
-#endif
-
-
 /* profile_dump (0x902f0) — XBE naked draft (batch 243). */
 #if defined(__clang__)
 static void (*const b902f0_assert)(const char *, const char *, int, bool) = display_assert;
