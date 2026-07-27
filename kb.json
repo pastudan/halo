@@ -12306,7 +12306,7 @@
         {
           "addr": "0xc9770",
           "decl": "char FUN_000c9770(int list_handle, int param, float distance);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc97f0",
