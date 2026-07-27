@@ -1875,7 +1875,9 @@
     "coverage_pct": 43.5
   },
   "0x59c40": {
-    "class": "non_leaf"
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 0.0
   },
   "0x59e8efeb": {
     "confidence": "moderate",

@@ -12295,111 +12295,74 @@ void FUN_00053650(void)
   csmemset((void *)0x5abaac, 0, 0xee0);
 }
 
-/* FUN_00053680 (0x53680) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void (*const b53680_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b53680_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_00053680 (0x53680) — readable C lift.
+ * Advance 28 AI profile ring-buffer slots at 0x5abab8 (stride 0x88). */
 void FUN_00053680(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x2c8e9c, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x5abab8, %%esi\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      ".LFUN_00053680_1:\n\t"
-      "cmpw %%di, -0x4(%%ebx)\n\t"
-      "je .LFUN_00053680_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8c\n\t"
-      "pushl $0x25c0ac\n\t"
-      "pushl $0x25c08c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00053680_2:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00053680_3\n\t"
-      "call *%%eax\n\t"
-      "movw %%ax, -0xc(%%esi)\n\t"
-      ".LFUN_00053680_3:\n\t"
-      "movw -0xc(%%esi), %%ax\n\t"
-      "movw %%ax, -0xa(%%esi)\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movw $0, -0xc(%%esi)\n\t"
-      "jl .LFUN_00053680_4\n\t"
-      "cmpw $0x3c, %%ax\n\t"
-      "jl .LFUN_00053680_5\n\t"
-      ".LFUN_00053680_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x97\n\t"
-      "pushl $0x25c0ac\n\t"
-      "pushl $0x25c030\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00053680_5:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "cmpw 0x2(%%esi), %%ax\n\t"
-      "jge .LFUN_00053680_6\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movswl 0x4(%%esi,%%ecx,2), %%edx\n\t"
-      "subl %%edx, -0x4(%%esi)\n\t"
-      ".LFUN_00053680_6:\n\t"
-      "movw -0xa(%%esi), %%cx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movw %%cx, 0x4(%%esi,%%eax,2)\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "movw 0x2(%%esi), %%cx\n\t"
-      "incw %%ax\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "jg .LFUN_00053680_7\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      ".LFUN_00053680_7:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "fildl -0x4(%%esi)\n\t"
-      "cdq\n\t"
-      "movl $0x3c, %%ebx\n\t"
-      "idivl %%ebx\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "movw %%cx, 0x2(%%esi)\n\t"
-      "incl %%edi\n\t"
-      "addl $8, %%ebx\n\t"
-      "addl $0x88, %%esi\n\t"
-      "cmpw $0x1c, %%di\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movw %%dx, -0x88(%%esi)\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "fidivl -0x8(%%ebp)\n\t"
-      "fstps -0x90(%%esi)\n\t"
-      "jl .LFUN_00053680_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b53680_assert), [exitfn] "m"(b53680_exitfn)
-      : "memory");
+  int i;
+  char *entry;
+  char *slot;
+  int (*cb)(void);
+  int16_t last;
+  int16_t count;
+  int16_t kept;
+  int16_t ring_max;
+  int total;
+  int quot;
+  int rem;
+
+  entry = (char *)0x2c8e9c;
+  slot = (char *)0x5abab8;
+
+  for (i = 0; i < 0x1c; i++) {
+    if (*(int16_t *)(entry - 4) != (int16_t)i) {
+      display_assert((const char *)0x25c08c, (const char *)0x25c0ac, 0x8c,
+                     true);
+      system_exit(-1);
+    }
+
+    cb = *(int (**)(void))entry;
+    if (cb != NULL)
+      *(int16_t *)(slot - 0xc) = (int16_t)cb();
+
+    last = *(int16_t *)(slot - 0xc);
+    *(int16_t *)(slot - 0xa) = last;
+    count = *(int16_t *)slot;
+    *(int16_t *)(slot - 0xc) = 0;
+    if (count < 0 || count >= 0x3c) {
+      display_assert((const char *)0x25c030, (const char *)0x25c0ac, 0x97,
+                     true);
+      system_exit(-1);
+    }
+
+    ring_max = *(int16_t *)(slot + 2);
+    if (count < ring_max) {
+      total = *(int *)(slot - 4);
+      total -= (int)*(int16_t *)(slot + 4 + count * 2);
+      *(int *)(slot - 4) = total;
+    }
+
+    *(int16_t *)(slot + 4 + count * 2) = *(int16_t *)(slot - 0xa);
+    count = (int16_t)(count + 1);
+    *(int16_t *)slot = count;
+    kept = ring_max;
+    if (kept <= count)
+      kept = count;
+    *(int16_t *)(slot + 2) = kept;
+
+    total = *(int *)(slot - 4);
+    quot = total / 0x3c;
+    rem = total % 0x3c;
+    (void)quot;
+
+    entry += 8;
+    slot += 0x88;
+
+    *(int16_t *)(slot - 0x88) = (int16_t)rem;
+    *(float *)(slot - 0x90) = (float)total / (float)(int)kept;
+  }
 }
-#else
-#error "FUN_00053680: clang naked draft required"
-#endif
+
 
 
 

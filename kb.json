@@ -35530,7 +35530,7 @@
         {
           "addr": "0x53680",
           "decl": "void FUN_00053680(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x53790",
@@ -36336,7 +36336,7 @@
         },
         {
           "addr": "0x59c40",
-          "decl": "int FUN_00059c40(int encounter_handle, int16_t pursuit_index, int min_time, char create);",
+          "decl": "int FUN_00059c40(int encounter_handle /* @<eax> */, int16_t pursuit_index /* @<bx> */, int min_time, char create);",
           "ported": false
         },
         {
