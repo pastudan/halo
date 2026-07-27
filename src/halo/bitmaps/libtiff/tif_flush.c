@@ -1690,39 +1690,17 @@ void FUN_00069590(void)
 #endif
 
 
-/* FUN_000695c0 (0x695c0) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-static void (*const b695c0_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
-
-__attribute__((naked, noinline))
-void FUN_000695c0(void)
+/* FUN_000695c0 (0x695c0) — readable C lift. */
+void FUN_000695c0(unsigned char *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x120(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000695c0_1\n\t"
-      "pushl $0x435\n\t"
-      "pushl $0x260058\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0, 0x120(%%esi)\n\t"
-      ".LFUN_000695c0_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b695c0_c8ef70)
-      : "memory");
+  extern char DAT_00260058[];
+  void *p;
+  p = *(void **)(tif + 0x120);
+  if (p) {
+    debug_free(p, DAT_00260058, 0x435);
+    *(void **)(tif + 0x120) = 0;
+  }
 }
-#else
-#error "FUN_000695c0: clang naked draft required"
-#endif
-
 
 /* FUN_00069600 (0x69600) — XBE naked draft (batch 315). */
 #if defined(__clang__)
