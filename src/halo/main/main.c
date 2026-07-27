@@ -2884,65 +2884,30 @@ void FUN_00103de0(char *source)
   }
 }
 
-/* ui_widget_display_deferred_errors (0xe8db0) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static bool (*const be8db0_c930a0)(void) = cinematic_in_progress;
-static void (*const be8db0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be8db0_exitfn)(int) = system_exit;
-static void (*const be8db0_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
 
-__attribute__((naked, noinline))
+/* ui_widget_display_deferred_errors (0xe8db0) — readable C lift. */
 void ui_widget_display_deferred_errors(void)
 {
-  __asm__ volatile(
-      "call *%[c930a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lui_widget_display_deferred_errors_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x93f\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x284750\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_display_deferred_errors_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x46cc6c, %%esi\n\t"
-      ".Lui_widget_display_deferred_errors_2:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lui_widget_display_deferred_errors_3\n\t"
-      "cmpw $0x28, %%ax\n\t"
-      "jge .Lui_widget_display_deferred_errors_3\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x3(%%esi), %%cl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x2(%%esi), %%dl\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce8910]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lui_widget_display_deferred_errors_3:\n\t"
-      "movw $0xffff, (%%esi)\n\t"
-      "incl %%edi\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .Lui_widget_display_deferred_errors_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c930a0] "m"(be8db0_c930a0), [assert] "m"(be8db0_assert), [exitfn] "m"(be8db0_exitfn), [ce8910] "m"(be8db0_ce8910)
-      : "memory");
+  extern char DAT_00283280[];
+  extern char DAT_00284750[];
+  int i;
+  int16_t *slot;
+  if (cinematic_in_progress()) {
+    display_assert(DAT_00284750, DAT_00283280, 0x93f, true);
+    system_exit(-1);
+  }
+  slot = (int16_t *)0x46cc6c;
+  for (i = 0; i < 4; i++) {
+    int16_t handle = slot[0];
+    if (handle >= 0 && handle < 0x28) {
+      char pause_game = *(char *)((char *)slot + 3);
+      char is_modal = *(char *)((char *)slot + 2);
+      ui_widget_display_error(handle, (int16_t)i, is_modal, pause_game);
+    }
+    slot[0] = (int16_t)0xffff;
+    slot = (int16_t *)((char *)slot + 4);
+  }
 }
-#else
-#error "ui_widget_display_deferred_errors: clang naked draft required"
-#endif
 
 /* --- main.obj batch1 drafts (2026-07-26) --- */
 

@@ -4979,7 +4979,7 @@
         {
           "addr": "0x1bc620",
           "decl": "void FUN_001bc620(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bc6a0",
@@ -14213,7 +14213,7 @@
           "addr": "0xe8db0",
           "decl": "void FUN_000e8db0(int16_t difficulty);",
           "name": "ui_widget_display_deferred_errors",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe8e20",
@@ -30236,7 +30236,7 @@
         {
           "addr": "0x1beb10",
           "decl": "void xbox_texture_cache_return_memory(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1beba0",
@@ -30329,7 +30329,7 @@
         {
           "addr": "0x1bf130",
           "decl": "void texture_cache_close(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bf260",

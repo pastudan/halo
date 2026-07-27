@@ -59,50 +59,22 @@ void *xbox_texture_cache_steal_memory(unsigned int size)
   return base + HALO_TEXTURE_CACHE_STEAL_GUARD_SIZE;
 }
 
-/* xbox_texture_cache_return_memory (0x1beb10) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static void (*const b1beb10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1beb10_exitfn)(int) = system_exit;
-static void (*const b1beb10_c11db00)(void *cache, int new_page_count) = lruv_resize;
-static void * (*const b1beb10_c1bdd60)(void) = FUN_001bdd60;
-static void __stdcall (*const b1beb10_c1d371d)(void *addr, unsigned int size, unsigned int protect) = physical_memory_protect;
 
-__attribute__((naked, noinline))
+/* xbox_texture_cache_return_memory (0x1beb10) — readable C lift. */
 void xbox_texture_cache_return_memory(void)
 {
-  __asm__ volatile(
-      "movb 0x4ea984, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lxbox_texture_cache_return_memory_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x159\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b9748\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lxbox_texture_cache_return_memory_1:\n\t"
-      "movl 0x4ea980, %%eax\n\t"
-      "pushl $0x580\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11db00]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $0x404\n\t"
-      "pushl $0x1600000\n\t"
-      "call *%[c1bdd60]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d371d]\n\t"
-      "movb $0, 0x4ea984\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1beb10_assert), [exitfn] "m"(b1beb10_exitfn), [c11db00] "m"(b1beb10_c11db00), [c1bdd60] "m"(b1beb10_c1bdd60), [c1d371d] "m"(b1beb10_c1d371d)
-      : "memory");
+  extern char DAT_002b96d8[];
+  extern char DAT_002b9748[];
+  void *addr;
+  if (!*(unsigned char *)0x4ea984) {
+    display_assert(DAT_002b9748, DAT_002b96d8, 0x159, true);
+    system_exit(-1);
+  }
+  lruv_resize(*(void **)0x4ea980, 0x580);
+  addr = FUN_001bdd60();
+  physical_memory_protect(addr, 0x1600000u, 0x404u);
+  *(unsigned char *)0x4ea984 = 0;
 }
-#else
-#error "xbox_texture_cache_return_memory: clang naked draft required"
-#endif
-
 
 /* bitmap_format_to_d3d_linear_format (0x1beba0) — XBE naked draft (batch 262). */
 #if defined(__clang__)
@@ -751,49 +723,21 @@ void texture_cache_new(void)
 #endif
 
 
-/* texture_cache_close (0x1bf130) — XBE naked draft (batch 279). */
-#if defined(__clang__)
-static void (*const b1bf130_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bf130_exitfn)(int) = system_exit;
-static void (*const b1bf130_c1e6fb0)(void) = D3DDevice_KickPushBuffer;
-static void (*const b1bf130_c1e8a00)(void) = D3DDevice_IsBusy;
-static void (*const b1bf130_c11ddc0)(void *cache) = lruv_cache_dispose_all;
-static void (*const b1bf130_c119550)(data_t *data) = data_make_invalid;
 
-__attribute__((naked, noinline))
+/* texture_cache_close (0x1bf130) — readable C lift. */
 void texture_cache_close(void)
 {
-  __asm__ volatile(
-      "movb 0x4ea984, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Ltexture_cache_close_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b9704\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltexture_cache_close_1:\n\t"
-      "call *%[c1e6fb0]\n\t"
-      "call *%[c1e8a00]\n\t"
-      "movl 0x4ea980, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11ddc0]\n\t"
-      "movl 0x4ea978, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119550]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bf130_assert), [exitfn] "m"(b1bf130_exitfn), [c1e6fb0] "m"(b1bf130_c1e6fb0), [c1e8a00] "m"(b1bf130_c1e8a00), [c11ddc0] "m"(b1bf130_c11ddc0), [c119550] "m"(b1bf130_c119550)
-      : "memory");
+  extern char DAT_002b96d8[];
+  extern char DAT_002b9704[];
+  if (*(unsigned char *)0x4ea984) {
+    display_assert(DAT_002b9704, DAT_002b96d8, 0x85, true);
+    system_exit(-1);
+  }
+  D3DDevice_KickPushBuffer();
+  D3DDevice_IsBusy();
+  lruv_cache_dispose_all(*(void **)0x4ea980);
+  data_make_invalid(*(data_t **)0x4ea978);
 }
-#else
-#error "texture_cache_close: clang naked draft required"
-#endif
-
 
 /* texture_cache_debug_render (0x1bf260) — XBE naked draft (batch 244). */
 #if defined(__clang__)
