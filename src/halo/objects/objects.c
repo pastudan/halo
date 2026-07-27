@@ -6113,188 +6113,71 @@ void object_choose_random_change_colors(int object_handle __attribute__((unused)
 #endif
 
 
-/* object_compute_change_colors (0x13e5d0) — XBE naked draft (batch 119). */
-#if defined(__clang__)
-static void *(*const b13e5d0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b13e5d0_tag)(int, int) = tag_get;
-static void *(*const b13e5d0_elem)(void *, int, int) = tag_block_get_element;
-static float * (*const b13e5d0_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = FUN_0007c270;
-
-__attribute__((naked, noinline))
-void object_compute_change_colors(int object_handle __attribute__((unused)))
+/* object_compute_change_colors (0x13e5d0) — readable C lift (restored pre-naked). */
+void object_compute_change_colors(int object_handle /* @<eax> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x24(%%eax), %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb $1, %%cl\n\t"
-      "je .Lobject_compute_change_colors_19\n\t"
-      "movl 0x164(%%eax), %%ecx\n\t"
-      "addl $0x164, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jle .Lobject_compute_change_colors_18\n\t"
-      "pushl %%edi\n\t"
-      "jmp .Lobject_compute_change_colors_2\n\t"
-      ".Lobject_compute_change_colors_1:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "nop\n\t"
-      ".Lobject_compute_change_colors_2:\n\t"
-      "pushl $0x2c\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lobject_compute_change_colors_5\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jl .Lobject_compute_change_colors_3\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "flds 0xd0(%%ebx,%%edx,4)\n\t"
-      "jmp .Lobject_compute_change_colors_4\n\t"
-      ".Lobject_compute_change_colors_3:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "flds 0xd0(%%ebx,%%eax,4)\n\t"
-      ".Lobject_compute_change_colors_4:\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "leal 0x14(%%edi), %%edx\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x8(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x5a(%%esi,%%esi,2), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal (%%ebx,%%edx,4), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7c270]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lobject_compute_change_colors_5:\n\t"
-      "movw (%%edi), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "je .Lobject_compute_change_colors_8\n\t"
-      "cmpw $5, %%di\n\t"
-      "jl .Lobject_compute_change_colors_6\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "flds 0xd0(%%ebx,%%ecx,4)\n\t"
-      "jmp .Lobject_compute_change_colors_7\n\t"
-      ".Lobject_compute_change_colors_6:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "flds 0xd0(%%ebx,%%edx,4)\n\t"
-      ".Lobject_compute_change_colors_7:\n\t"
-      "fld %%st(0)\n\t"
-      "leal 0x5a(%%esi,%%esi,2), %%eax\n\t"
-      "fmuls (%%ebx,%%eax,4)\n\t"
-      "leal (%%ebx,%%eax,4), %%eax\n\t"
-      "leal (%%esi,%%esi,2), %%ecx\n\t"
-      "fstps (%%eax)\n\t"
-      "leal (%%ebx,%%ecx,4), %%eax\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x16c(%%eax)\n\t"
-      "fstps 0x16c(%%eax)\n\t"
-      "fmuls 0x170(%%eax)\n\t"
-      "fstps 0x170(%%eax)\n\t"
-      ".Lobject_compute_change_colors_8:\n\t"
-      "leal 0x5a(%%esi,%%esi,2), %%edx\n\t"
-      "flds (%%ebx,%%edx,4)\n\t"
-      "leal (%%ebx,%%edx,4), %%ecx\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lobject_compute_change_colors_9\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lobject_compute_change_colors_11\n\t"
-      ".Lobject_compute_change_colors_9:\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lobject_compute_change_colors_10\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lobject_compute_change_colors_11\n\t"
-      ".Lobject_compute_change_colors_10:\n\t"
-      "flds (%%ecx)\n\t"
-      ".Lobject_compute_change_colors_11:\n\t"
-      "fstps (%%ecx)\n\t"
-      "leal (%%esi,%%esi,2), %%eax\n\t"
-      "flds 0x16c(%%ebx,%%eax,4)\n\t"
-      "leal (%%ebx,%%eax,4), %%ecx\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lobject_compute_change_colors_12\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lobject_compute_change_colors_14\n\t"
-      ".Lobject_compute_change_colors_12:\n\t"
-      "flds 0x16c(%%ecx)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lobject_compute_change_colors_13\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lobject_compute_change_colors_14\n\t"
-      ".Lobject_compute_change_colors_13:\n\t"
-      "flds 0x16c(%%ecx)\n\t"
-      ".Lobject_compute_change_colors_14:\n\t"
-      "fstps 0x16c(%%ecx)\n\t"
-      "flds 0x170(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lobject_compute_change_colors_15\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lobject_compute_change_colors_17\n\t"
-      ".Lobject_compute_change_colors_15:\n\t"
-      "flds 0x170(%%ecx)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lobject_compute_change_colors_16\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lobject_compute_change_colors_17\n\t"
-      ".Lobject_compute_change_colors_16:\n\t"
-      "flds 0x170(%%ecx)\n\t"
-      ".Lobject_compute_change_colors_17:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "fstps 0x170(%%ecx)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "cmpl (%%ecx), %%esi\n\t"
-      "jl .Lobject_compute_change_colors_1\n\t"
-      "popl %%edi\n\t"
-      ".Lobject_compute_change_colors_18:\n\t"
-      "popl %%esi\n\t"
-      ".Lobject_compute_change_colors_19:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b13e5d0_get), [tag] "m"(b13e5d0_tag), [elem] "m"(b13e5d0_elem), [c7c270] "m"(b13e5d0_c7c270)
-      : "memory");
+  char *obj;
+  int obj_tag;
+  int16_t i;
+  int16_t counter;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  obj_tag = (int)tag_get(0x6f626a65, *(int *)obj);
+  if ((*(unsigned char *)(obj_tag + 0x24) & 1) == 0) {
+    return;
+  }
+
+  i = 0;
+  counter = 0;
+  if (*(int *)(obj_tag + 0x164) <= 0) {
+    return;
+  }
+  do {
+    char *entry = (char *)tag_block_get_element(
+        (void *)(obj_tag + 0x164), (int)i, 0x2c);
+    float *slot = (float *)(obj + 0x168 + (int)i * 0xc);
+    int16_t blend_fn;
+    int16_t scale_fn;
+    float c;
+
+    /* blend-function: blend the entry RGB pair into the slot */
+    blend_fn = *(int16_t *)(entry + 0x2);
+    if (blend_fn != 0) {
+      float fn_val = *(float *)(obj + 0xd0 + (int)blend_fn * 4);
+      FUN_0007c270(slot, *(int *)(entry + 0x4),
+                   (float *)(entry + 0x8), (float *)(entry + 0x14), fn_val);
+    }
+
+    /* scale-function: multiply all three components by the function value */
+    scale_fn = *(int16_t *)entry;
+    if (scale_fn != 0) {
+      float fn_val = *(float *)(obj + 0xd0 + (int)scale_fn * 4);
+      slot[0] = fn_val * slot[0];
+      slot[1] = fn_val * slot[1];
+      slot[2] = fn_val * slot[2];
+    }
+
+    /* clamp each component to [0,1] in place */
+    c = *(float *)0x2533c0;
+    if (*(float *)0x2533c0 <= slot[0] && (c = *(float *)0x2533c8, slot[0] <= *(float *)0x2533c8)) {
+      c = slot[0];
+    }
+    slot[0] = c;
+    c = *(float *)0x2533c0;
+    if (*(float *)0x2533c0 <= slot[1] && (c = *(float *)0x2533c8, slot[1] <= *(float *)0x2533c8)) {
+      c = slot[1];
+    }
+    slot[1] = c;
+    c = *(float *)0x2533c0;
+    if (*(float *)0x2533c0 <= slot[2] && (c = *(float *)0x2533c8, slot[2] <= *(float *)0x2533c8)) {
+      c = slot[2];
+    }
+    slot[2] = c;
+
+    counter = counter + 1;
+    i = counter;
+  } while ((int)i < *(int *)(obj_tag + 0x164));
 }
-#else
-#error "object_compute_change_colors: clang naked draft required"
-#endif
 
 
 /* 0x140ad0 / objects.obj — Choose random region permutations for an object's

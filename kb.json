@@ -17204,7 +17204,7 @@
         {
           "addr": "0x13e5d0",
           "decl": "void object_compute_change_colors(int object_handle@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "object_compute_change_colors"
         },
         {
@@ -22644,7 +22644,7 @@
         {
           "addr": "0x1ada0",
           "decl": "void FUN_0001ada0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0001ada0"
         },
         {
