@@ -3372,91 +3372,37 @@ void FUN_000efde0(void *widget)
 #endif
 
 
-/* FUN_000efed0 (0xefed0) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static void * (*const befed0_c12a240)(void) = (void *)network_game_client_get;
-static void * (*const befed0_c1257a0)(void *client) = (void *)network_game_client_get_machine_index;
-static uint16_t (*const befed0_c124c40)(void *client) = (void *)FUN_00124c40;
-static bool (*const befed0_c12ac80)(void *client) = (void *)network_player_is_valid;
-static char (*const befed0_c125b90)(void *client, short request_type) = (void *)FUN_00125b90;
-static void (*const befed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_000efed0(void *widget)
+/* FUN_000efed0 (0xefed0) — readable C lift. */
+char FUN_000efed0(void *widget, void *player_ui)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12a240]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_000efed0_4\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1257a0]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c124c40]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "addl $0x242, %%esi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_000efed0_1:\n\t"
-      "leal -0x1c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000efed0_2\n\t"
-      "movsbw (%%esi), %%cx\n\t"
-      "cmpw -0x4(%%ebp), %%cx\n\t"
-      "jne .LFUN_000efed0_2\n\t"
-      "movsbw 0x1(%%esi), %%dx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpw 0x2(%%eax), %%dx\n\t"
-      "je .LFUN_000efed0_3\n\t"
-      ".LFUN_000efed0_2:\n\t"
-      "incl %%edi\n\t"
-      "addl $0x20, %%esi\n\t"
-      "cmpl $0x10, %%edi\n\t"
-      "jl .LFUN_000efed0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000efed0_3:\n\t"
-      "pushl $1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c125b90]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000efed0_4\n\t"
-      "pushl $0x288638\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000efed0_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12a240] "m"(befed0_c12a240), [c1257a0] "m"(befed0_c1257a0), [c124c40] "m"(befed0_c124c40), [c12ac80] "m"(befed0_c12ac80), [c125b90] "m"(befed0_c125b90), [c8f390] "m"(befed0_c8f390)
-      : "memory");
+  void *client;
+  void *machine;
+  int local_player;
+  char *slot;
+  int i;
+  char ok;
+
+  (void)widget;
+  client = network_game_client_get();
+  if (!client)
+    return 1;
+  machine = network_game_client_get_machine_index(client);
+  local_player = FUN_00124c40(client);
+  slot = (char *)machine + 0x242;
+  for (i = 0; i < 0x10; i++) {
+    if (network_player_is_valid(slot - 0x1c)) {
+      if ((short)*(signed char *)slot == (short)local_player &&
+          (short)*(signed char *)(slot + 1) == *(short *)((char *)player_ui + 2)) {
+        ok = FUN_00125b90(client, 1);
+        if (!ok)
+          error(2, (const char *)0x288638);
+        return 1;
+      }
+    }
+    slot += 0x20;
+  }
+  return 1;
 }
-#else
-#error "FUN_000efed0: clang naked draft required"
-#endif
 
 
 /* FUN_000eff70 (0xeff70) — XBE naked draft (batch 123). */
