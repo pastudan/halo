@@ -7749,7 +7749,8 @@
         {
           "addr": "0xdb330",
           "decl": "void render_blip(void);",
-          "ported": false
+          "ported": true,
+          "name": "render_blip"
         },
         {
           "addr": "0xdb4c0",

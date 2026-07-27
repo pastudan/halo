@@ -1822,7 +1822,7 @@
   },
   "0x2d0": {
     "confidence": "moderate",
-    "coverage_pct": 30.5
+    "coverage_pct": 34.3
   },
   "0x2d720": {
     "class": "non_leaf"
@@ -2656,6 +2656,9 @@
     "class": "non_leaf"
   },
   "0xdade0": {
+    "class": "non_leaf"
+  },
+  "0xdb330": {
     "class": "non_leaf"
   },
   "0xdc000": {
