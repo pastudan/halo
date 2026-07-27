@@ -23825,8 +23825,9 @@
         },
         {
           "addr": "0x1c2890",
-          "decl": "void saved_game_file_close(void);",
-          "ported": false
+          "decl": "char saved_game_file_close(void *info, int packed);",
+          "ported": true,
+          "name": "saved_game_file_close"
         },
         {
           "addr": "0x1c29a0",

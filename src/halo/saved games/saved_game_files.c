@@ -1243,122 +1243,41 @@ void playlist_profile_get_display_name(int profile_index, game_variant_t *varian
 
 
 
-/* saved_game_file_close (0x1c2890) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-static void (*const b1c2890_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c2890_exitfn)(int) = system_exit;
-static bool (*const b1c2890_c19a930)(file_ref_t *info) = file_close;
-
-__attribute__((naked, noinline))
-void saved_game_file_close(void)
+/* saved_game_file_close (0x1c2890) — readable C lift. */
+char saved_game_file_close(void *info, int packed)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movzbl %%ah, %%edi\n\t"
-      "sarl $0x10, %%eax\n\t"
-      "andl $0xfff, %%eax\n\t"
-      "andl $0xf, %%esi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "je .Lsaved_game_file_close_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x25b\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba8c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_close_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsaved_game_file_close_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x25e\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba8b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_close_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .Lsaved_game_file_close_3\n\t"
-      "cmpl $2, %%esi\n\t"
-      "jl .Lsaved_game_file_close_4\n\t"
-      ".Lsaved_game_file_close_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x25f\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_close_4:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jl .Lsaved_game_file_close_5\n\t"
-      "cmpl $9, %%edi\n\t"
-      "jl .Lsaved_game_file_close_6\n\t"
-      ".Lsaved_game_file_close_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x260\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba838\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_close_6:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jl .Lsaved_game_file_close_7\n\t"
-      "cmpl $0x64, %%ebx\n\t"
-      "jl .Lsaved_game_file_close_8\n\t"
-      ".Lsaved_game_file_close_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x261\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba7e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_close_8:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_close_9\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lsaved_game_file_close_9\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsaved_game_file_close_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c2890_assert), [exitfn] "m"(b1c2890_exitfn), [c19a930] "m"(b1c2890_c19a930)
-      : "memory");
-}
-#else
-#error "saved_game_file_close: clang naked draft required"
-#endif
+  int slot;
+  int idx;
+  int kind;
 
+  kind = packed & 0xf;
+  slot = (packed >> 8) & 0xff;
+  idx = (packed >> 16) & 0xfff;
+
+  if (slot != 0) {
+    display_assert((const char *)0x2ba8c0, (const char *)0x2ba8e8, 0x25b, true);
+    system_exit(-1);
+  }
+  if (!info) {
+    display_assert((const char *)0x2ba8b0, (const char *)0x2ba8e8, 0x25e, true);
+    system_exit(-1);
+  }
+  if (kind < 0 || kind >= 2) {
+    display_assert((const char *)0x2ba878, (const char *)0x2ba8e8, 0x25f, true);
+    system_exit(-1);
+  }
+  if (slot < 0 || slot >= 9) {
+    display_assert((const char *)0x2ba838, (const char *)0x2ba8e8, 0x260, true);
+    system_exit(-1);
+  }
+  if (idx < 0 || idx >= 0x64) {
+    display_assert((const char *)0x2ba7e8, (const char *)0x2ba8e8, 0x261, true);
+    system_exit(-1);
+  }
+  if (file_close(info) && slot == 0)
+    return 1;
+  return 0;
+}
 
 /* saved_game_file_get_type (0x1c29a0) — readable C lift. */
 int saved_game_file_get_type(int handle)
