@@ -1133,59 +1133,25 @@ void FUN_00067f70(void)
 #endif
 
 
-/* FUN_00068030 (0x68030) — XBE naked draft (batch 320). */
-#if defined(__clang__)
-static void (*const b68030_c65f70)(void) = _TIFFgetfield;
-
-__attribute__((naked, noinline))
-void FUN_00068030(void)
+/* FUN_00068030 (0x68030) — readable C lift: TIFF SHORT field pack (MM/II). */
+int FUN_00068030(void *tif /* @<ebx> */, void *out /* @<esi> */,
+                 unsigned short tag /* @<di> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x2(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "movzwl %%di, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x14(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c65f70]\n\t"
-      "movzwl -0x4(%%ebp), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movw %%di, (%%esi)\n\t"
-      "movw $3, 0x2(%%esi)\n\t"
-      "movl $2, 0x4(%%esi)\n\t"
-      "cmpw $0x4d4d, 0xc4(%%ebx)\n\t"
-      "jne .LFUN_00068030_1\n\t"
-      "movzwl -0x2(%%ebp), %%edx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00068030_1:\n\t"
-      "movzwl -0x2(%%ebp), %%eax\n\t"
-      "shll $0x10, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c65f70] "m"(b68030_c65f70)
-      : "memory");
+  unsigned short lo;
+  unsigned short hi;
+  unsigned int packed;
+
+  _TIFFgetfield((char *)tif + 0x14, (unsigned int)tag, &lo, &hi);
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = 3;
+  *((unsigned int *)((char *)out + 4)) = 2;
+  if (*((unsigned short *)((char *)tif + 0xc4)) == 0x4d4d)
+    packed = ((unsigned int)lo << 16) | (unsigned int)hi;
+  else
+    packed = ((unsigned int)hi << 16) | (unsigned int)lo;
+  *((unsigned int *)((char *)out + 8)) = packed;
+  return 1;
 }
-#else
-#error "FUN_00068030: clang naked draft required"
-#endif
-
-
 /* FUN_000680a0 (0x680a0) — XBE naked draft (batch 306). */
 #if defined(__clang__)
 static void (*const b680a0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
@@ -18597,7 +18563,7 @@ static void __stdcall (*const b157940_c1ed400)(unsigned int reg, unsigned int co
 static bool (*const b157940_c11d4f0)(void *cache) = (void *)lruv_cache_has_query_cb;
 static void *(*const b157940_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b157940_c9a160)(int decal_index) = (void *)decal_delete;
-static void (*const b157940_c11d4a0)(void *cache, void (*delete_cb)(int), int (*query_cb)(int)) = (void *)lruv_cache_set_callbacks;
+static void (*const b157940_c11d4a0)(void *cache, void (*delete_cb)(int), int (*query_cb)(int)) = (void *)0x11d4a0;
 static void (*const b157940_c98e70)(bool full_reset) = (void *)decals_update_for_new_map;
 static void (*const b157940_c11ddc0)(void *cache) = (void *)lruv_cache_dispose_all;
 static void (*const b157940_c11d8d0)(void *cache) = (void *)lruv_idle;

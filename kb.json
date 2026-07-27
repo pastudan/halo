@@ -291,7 +291,7 @@
         {
           "addr": "0x68030",
           "decl": "int FUN_00068030(void *tif@<ebx>, void *out@<esi>, unsigned short tag@<di>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00068030"
         },
         {
@@ -23735,8 +23735,9 @@
         },
         {
           "addr": "0x1c1cc0",
-          "decl": "void FUN_001c1cc0(void);",
-          "ported": false
+          "decl": "void FUN_001c1cc0(int16_t local_player_index);",
+          "ported": false,
+          "name": "FUN_001c1cc0"
         },
         {
           "addr": "0x1c1da0",
@@ -23824,8 +23825,9 @@
         },
         {
           "addr": "0x1c2890",
-          "decl": "void saved_game_file_close(void);",
-          "ported": true
+          "decl": "char saved_game_file_close(void *info, int packed);",
+          "ported": true,
+          "name": "saved_game_file_close"
         },
         {
           "addr": "0x1c29a0",
@@ -23873,7 +23875,7 @@
         },
         {
           "addr": "0x1c2d20",
-          "decl": "char saved_game_file_retrieve_player1_last_used_profile_directory(char *out_name);",
+          "decl": "char saved_game_file_retrieve_player1_last_used_profile_directory(void *out_path);",
           "ported": true,
           "name": "saved_game_file_retrieve_player1_last_used_profile_directory"
         },
@@ -23885,7 +23887,7 @@
         },
         {
           "addr": "0x1c2ed0",
-          "decl": "char saved_game_file_retrieve_last_used_multiplayer_variant_directory(char *out_name);",
+          "decl": "char saved_game_file_retrieve_last_used_multiplayer_variant_directory(void *out_path);",
           "ported": true,
           "name": "saved_game_file_retrieve_last_used_multiplayer_variant_directory"
         },
@@ -23897,7 +23899,7 @@
         },
         {
           "addr": "0x1c3080",
-          "decl": "char saved_game_file_retrieve_last_used_multiplayer_map(char *out_name);",
+          "decl": "bool saved_game_file_retrieve_last_used_multiplayer_map(char *out_name);",
           "ported": true,
           "name": "saved_game_file_retrieve_last_used_multiplayer_map"
         },
@@ -36763,8 +36765,9 @@
         },
         {
           "addr": "0x65f70",
-          "decl": "void _TIFFgetfield(void);",
-          "ported": false
+          "decl": "void _TIFFgetfield(void *tif, unsigned int tag, unsigned short *a, unsigned short *b);",
+          "ported": false,
+          "name": "_TIFFgetfield"
         },
         {
           "addr": "0x65f90",
