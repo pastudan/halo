@@ -6320,7 +6320,7 @@
         {
           "addr": "0x11f140",
           "decl": "void FUN_0011f140(void *pool@<ecx>, void *block_hdr@<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0011f140"
         },
         {
