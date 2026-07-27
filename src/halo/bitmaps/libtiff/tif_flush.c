@@ -1650,45 +1650,16 @@ void FUN_00069520(void)
 #endif
 
 
-/* FUN_00069590 (0x69590) — XBE naked draft (batch 354). */
-#if defined(__clang__)
-static void (*const b69590_c693b0)(void) = (void *)FUN_000693b0;
-static void (*const b69590_c69520)(void) = (void *)FUN_00069520;
-
-__attribute__((naked, noinline))
-void FUN_00069590(void)
+/* FUN_00069590 (0x69590) — readable C lift. */
+void FUN_00069590(unsigned char *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testb $1, 0x9(%%esi)\n\t"
-      "jne .LFUN_00069590_2\n\t"
-      "pushl %%edi\n\t"
-      "movl $6, %%edi\n\t"
-      ".LFUN_00069590_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c693b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "decl %%edi\n\t"
-      "jne .LFUN_00069590_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c69520]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_00069590_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c693b0] "m"(b69590_c693b0), [c69520] "m"(b69590_c69520)
-      : "memory");
+  int i;
+  if (*(unsigned char *)(tif + 9) & 1)
+    return;
+  for (i = 0; i < 6; i++)
+    ((void (*)(void *))FUN_000693b0)(tif);
+  ((void (*)(void *))FUN_00069520)(tif);
 }
-#else
-#error "FUN_00069590: clang naked draft required"
-#endif
-
 
 /* FUN_000695c0 (0x695c0) — readable C lift. */
 void FUN_000695c0(unsigned char *tif)
