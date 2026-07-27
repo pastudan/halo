@@ -415,22 +415,64 @@ wchar_t *ustrupr(wchar_t *s)
   return FUN_001e6831(s);
 }
 
-/* 0x19e1a0 */
+/* ustrnlwr (0x19e1a0) — readable C lift. */
 wchar_t *ustrnlwr(wchar_t *s, size_t count)
 {
-  assert_halt(s);
-  unicode_assert_count(count);
-  return FUN_001dc27c(s, count);
+  extern char DAT_0027b838[];
+  extern char DAT_002b45b4[];
+  extern char DAT_002b4858[];
+  extern char DAT_002b492c[];
+  wchar_t *p;
+  if (!s) {
+    display_assert(DAT_0027b838, DAT_002b45b4, 0x19f, 1);
+    system_exit(-1);
+  }
+  if (_wcslen(s) >= 0x8000) {
+    display_assert(DAT_002b4858, DAT_002b45b4, 0x1a0, 1);
+    system_exit(-1);
+  }
+  if (count >= 0x8000) {
+    display_assert(DAT_002b492c, DAT_002b45b4, 0x1a1, 1);
+    system_exit(-1);
+  }
+  p = s;
+  if (*p != 0) {
+    do {
+      *p = (wchar_t)FUN_001dc27c((unsigned short)*p);
+      p++;
+    } while (*p != 0);
+  }
+  return s;
 }
-
-/* 0x19e250 */
+/* ustrnupr (0x19e250) — readable C lift. */
 wchar_t *ustrnupr(wchar_t *s, size_t count)
 {
-  assert_halt(s);
-  unicode_assert_count(count);
-  return FUN_001da8e3(s, count);
+  extern char DAT_0027b838[];
+  extern char DAT_002b45b4[];
+  extern char DAT_002b4858[];
+  extern char DAT_002b492c[];
+  wchar_t *p;
+  if (!s) {
+    display_assert(DAT_0027b838, DAT_002b45b4, 0x1b3, 1);
+    system_exit(-1);
+  }
+  if (_wcslen(s) >= 0x8000) {
+    display_assert(DAT_002b4858, DAT_002b45b4, 0x1b4, 1);
+    system_exit(-1);
+  }
+  if (count >= 0x8000) {
+    display_assert(DAT_002b492c, DAT_002b45b4, 0x1b5, 1);
+    system_exit(-1);
+  }
+  p = s;
+  if (*p != 0) {
+    do {
+      *p = (wchar_t)FUN_001da8e3((unsigned short)*p);
+      p++;
+    } while (*p != 0);
+  }
+  return s;
 }
-
 /* ustrcasecmp (0x19e300) — readable C lift. */
 int ustrcasecmp(const wchar_t *s1, const wchar_t *s2)
 {

@@ -984,7 +984,7 @@ static char * (*const b199d40_c8dff0)(char *destination, const char *source) = c
 static void * (*const b199d40_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static bool (*const b199d40_c19a490)(file_ref_t *info) = FUN_0019a490;
 static bool (*const b199d40_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static void (*const b199d40_c19ac00)(void) = file_write;
+static bool (*const b199d40_c19ac00)(file_ref_t *info, void *buffer, int size) = file_write;
 static bool (*const b199d40_c19a930)(file_ref_t *info) = file_close;
 
 __attribute__((naked, noinline))
@@ -1367,7 +1367,9 @@ static void (*const b19ac00_c8f390)(unsigned __int16 a1, const char *a2, ...) = 
 static void __stdcall (*const b19ac00_c1d2268)(unsigned int error) = SetLastError;
 
 __attribute__((naked, noinline))
-void file_write(void)
+bool file_write(file_ref_t *info __attribute__((unused)),
+                void *buffer __attribute__((unused)),
+                int size __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1449,10 +1451,13 @@ void file_write(void)
 /* file_write_to_position (0x19acf0) — XBE naked draft (batch 273). */
 #if defined(__clang__)
 static bool (*const b19acf0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b19acf0_c19ac00)(void) = file_write;
+static bool (*const b19acf0_c19ac00)(file_ref_t *info, void *buffer, int size) = file_write;
 
 __attribute__((naked, noinline))
-void file_write_to_position(void)
+bool file_write_to_position(file_ref_t *info __attribute__((unused)),
+                            int offset __attribute__((unused)),
+                            void *buffer __attribute__((unused)),
+                            int size __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1696,73 +1701,30 @@ void file_get_size(void)
 
 /* --- files.obj batch drafts (2026-07-26) --- */
 
-/* file_reference_create (0x199420) — XBE naked draft (batch 268). */
-#if defined(__clang__)
-static void (*const b199420_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b199420_exitfn)(int) = system_exit;
-static void *(*const b199420_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void file_reference_create(void)
+/* file_reference_create (0x199420) — readable C lift. */
+void *file_reference_create(void *ref, int16_t location)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lfile_reference_create_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3b10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfile_reference_create_1:\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "cmpw $-1, %%di\n\t"
-      "jl .Lfile_reference_create_2\n\t"
-      "cmpw $2, %%di\n\t"
-      "jl .Lfile_reference_create_3\n\t"
-      ".Lfile_reference_create_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5c\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3ad0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfile_reference_create_3:\n\t"
-      "pushl $0x10c\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw %%di, 0x6(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movl $0x66696c6f, (%%esi)\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b199420_assert), [exitfn] "m"(b199420_exitfn), [memset] "m"(b199420_memset)
-      : "memory");
+  extern char DAT_002b3b10[];
+  extern char DAT_002b3aac[];
+  extern char DAT_002b3ad0[];
+  if (!ref) {
+    display_assert(DAT_002b3b10, DAT_002b3aac, 0x5b, 1);
+    system_exit(-1);
+  }
+  if (location < -1 || location >= 2) {
+    display_assert(DAT_002b3ad0, DAT_002b3aac, 0x5c, 1);
+    system_exit(-1);
+  }
+  csmemset(ref, 0, 0x10c);
+  *(int16_t *)((char *)ref + 6) = location;
+  *(uint32_t *)ref = 0x66696c6f;
+  return ref;
 }
-#else
-#error "file_reference_create: clang naked draft required"
-#endif
-
-
 /* file_printf (0x1995c0) — XBE naked draft (batch 258). */
 #if defined(__clang__)
 static int (*const b1995c0_c1da209)(char *buffer, const char *format, char *arglist) = vsprintf;
 static int (*const b1995c0_c8df60)(const char *s1) = csstrlen;
-static void (*const b1995c0_c19ac00)(void) = file_write;
+static bool (*const b1995c0_c19ac00)(file_ref_t *info, void *buffer, int size) = file_write;
 static int (*const b1995c0_c19a9a0)(file_ref_t *info) = file_get_position;
 static void (*const b1995c0_c19aad0)(void) = file_set_eof;
 

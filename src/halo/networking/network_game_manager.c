@@ -271,83 +271,33 @@ bool network_game_add_machine(void *game, void *machine)
   return true;
 }
 
-/* network_game_update_machine (0x12a9f0) — XBE naked draft (batch 146). */
-#if defined(__clang__)
-static void (*const b12a9f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12a9f0_exitfn)(int) = system_exit;
-static void * (*const b12a9f0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-bool network_game_update_machine(void *game __attribute__((unused)), void *machine __attribute__((unused)))
+/* network_game_update_machine (0x12a9f0) — readable C lift. */
+bool network_game_update_machine(void *game, void *machine)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lnetwork_game_update_machine_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lnetwork_game_update_machine_1\n\t"
-      "movb 0x40(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jl .Lnetwork_game_update_machine_1\n\t"
-      "cmpb $4, %%al\n\t"
-      "jl .Lnetwork_game_update_machine_2\n\t"
-      ".Lnetwork_game_update_machine_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x81\n\t"
-      "pushl $0x295874\n\t"
-      "pushl $0x2958a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_update_machine_2:\n\t"
-      "movb 0x40(%%esi), %%dl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal 0x154(%%edi), %%ecx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lnetwork_game_update_machine_3:\n\t"
-      "cmpb %%dl, (%%ecx)\n\t"
-      "je .Lnetwork_game_update_machine_4\n\t"
-      "incl %%eax\n\t"
-      "addl $0x44, %%ecx\n\t"
-      "cmpl $4, %%eax\n\t"
-      "jl .Lnetwork_game_update_machine_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_update_machine_4:\n\t"
-      "imull $0x44, %%eax, %%eax\n\t"
-      "pushl $0x44\n\t"
-      "leal 0x114(%%eax,%%edi,1), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b12a9f0_assert), [exitfn] "m"(b12a9f0_exitfn), [c8e0b0] "m"(b12a9f0_c8e0b0)
-      : "memory");
+  extern char DAT_002958a8[];
+  extern char DAT_00295874[];
+  char *g;
+  char *m;
+  signed char idx;
+  int i;
+  char *slot;
+  g = (char *)game;
+  m = (char *)machine;
+  if (!g || !m || (signed char)m[0x40] < 0 || (signed char)m[0x40] >= 4) {
+    display_assert(DAT_002958a8, DAT_00295874, 0x81, 1);
+    system_exit(-1);
+  }
+  idx = m[0x40];
+  slot = g + 0x154;
+  for (i = 0; i < 4; i++) {
+    if (slot[0] == idx) {
+      csmemcpy(g + 0x114 + i * 0x44, m, 0x44);
+      return 1;
+    }
+    slot += 0x44;
+  }
+  return 0;
 }
-#else
-#error "network_game_update_machine: clang naked draft required"
-#endif
-
-
 void network_game_end_and_load_ui(void *game)
 {
   char *g = (char *)game;

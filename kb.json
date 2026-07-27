@@ -855,8 +855,9 @@
         },
         {
           "addr": "0x1dbed0",
-          "decl": "void _memchr(void);",
-          "ported": false
+          "decl": "void *_memchr(const void *s, int c, size_t n);",
+          "ported": false,
+          "name": "_memchr"
         },
         {
           "addr": "0x1dbf75",
@@ -915,8 +916,9 @@
         },
         {
           "addr": "0x1dc27c",
-          "decl": "wchar_t *FUN_001dc27c(wchar_t *s, size_t count);",
-          "ported": false
+          "decl": "unsigned short FUN_001dc27c(unsigned short c);",
+          "ported": false,
+          "name": "FUN_001dc27c"
         },
         {
           "addr": "0x1dc2c3",
@@ -971,13 +973,15 @@
         },
         {
           "addr": "0x1db156",
-          "decl": "void _wcscat(void);",
-          "ported": false
+          "decl": "wchar_t *_wcscat(wchar_t *dest, const wchar_t *src);",
+          "ported": false,
+          "name": "_wcscat"
         },
         {
           "addr": "0x1db180",
-          "decl": "void _wcscpy(void);",
-          "ported": false
+          "decl": "wchar_t *_wcscpy(wchar_t *dest, const wchar_t *src);",
+          "ported": false,
+          "name": "_wcscpy"
         },
         {
           "addr": "0x1db19c",
@@ -7871,8 +7875,9 @@
         },
         {
           "addr": "0x199420",
-          "decl": "void file_reference_create(void);",
-          "ported": false
+          "decl": "void *file_reference_create(void *ref, int16_t location);",
+          "ported": true,
+          "name": "file_reference_create"
         },
         {
           "addr": "0x1995c0",
@@ -8019,8 +8024,9 @@
         },
         {
           "addr": "0x19ac00",
-          "decl": "void file_write(void);",
-          "ported": false
+          "decl": "bool file_write(file_ref_t *info, void *buffer, int size);",
+          "ported": false,
+          "name": "file_write"
         },
         {
           "addr": "0x19acb0",
@@ -28056,12 +28062,14 @@
         {
           "addr": "0x19e1a0",
           "decl": "wchar_t *ustrnlwr(wchar_t *s, size_t count);",
-          "ported": false
+          "ported": true,
+          "name": "ustrnlwr"
         },
         {
           "addr": "0x19e250",
           "decl": "wchar_t *ustrnupr(wchar_t *s, size_t count);",
-          "ported": false
+          "ported": true,
+          "name": "ustrnupr"
         },
         {
           "addr": "0x19e300",
@@ -30766,7 +30774,8 @@
         {
           "addr": "0x19b5d0",
           "decl": "void draw_string_set_indents(int16_t width, int16_t height);",
-          "ported": true
+          "ported": true,
+          "name": "draw_string_set_indents"
         },
         {
           "addr": "0x19b640",
@@ -31683,8 +31692,9 @@
         },
         {
           "addr": "0x1da8e3",
-          "decl": "wchar_t *FUN_001da8e3(wchar_t *s, size_t count);",
-          "ported": true
+          "decl": "unsigned short FUN_001da8e3(unsigned short c);",
+          "ported": true,
+          "name": "FUN_001da8e3"
         }
       ],
       "name": "LIBCMT:strtok.obj",
@@ -33554,38 +33564,45 @@
         },
         {
           "addr": "0x19d480",
-          "decl": "void umemchr(void);",
-          "ported": false
+          "decl": "void *umemchr(void *buf, int value, size_t count);",
+          "ported": true,
+          "name": "umemchr"
         },
         {
           "addr": "0x19d4f0",
-          "decl": "void umemcpy(void);",
-          "ported": false
+          "decl": "void *umemcpy(void *dest, const void *src, size_t count);",
+          "ported": true,
+          "name": "umemcpy"
         },
         {
           "addr": "0x19d590",
-          "decl": "void umemcmp(void);",
-          "ported": false
+          "decl": "int umemcmp(const void *a, const void *b, size_t count);",
+          "ported": true,
+          "name": "umemcmp"
         },
         {
           "addr": "0x19d600",
-          "decl": "void umemmove(void);",
-          "ported": false
+          "decl": "void *umemmove(void *dest, const void *src, size_t count);",
+          "ported": true,
+          "name": "umemmove"
         },
         {
           "addr": "0x19d670",
-          "decl": "void umemset(void);",
-          "ported": false
+          "decl": "void *umemset(void *buf, int value, size_t count);",
+          "ported": false,
+          "name": "umemset"
         },
         {
           "addr": "0x19d6e0",
-          "decl": "void align_to_character(void);",
-          "ported": false
+          "decl": "wchar_t *align_to_character(wchar_t *dest, const wchar_t *src);",
+          "ported": true,
+          "name": "align_to_character"
         },
         {
           "addr": "0x19d760",
-          "decl": "void ustrcat(void);",
-          "ported": false
+          "decl": "wchar_t *ustrcat(wchar_t *dest, const wchar_t *src);",
+          "ported": true,
+          "name": "ustrcat"
         }
       ],
       "name": "international_strings.obj",
@@ -38173,7 +38190,8 @@
         {
           "addr": "0x12a9f0",
           "decl": "bool network_game_update_machine(void *game, void *machine);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_update_machine"
         },
         {
           "addr": "0x12aa80",
@@ -43550,7 +43568,7 @@
   "0x1ab70": {
     "addr": "0x1ab70",
     "decl": "void FUN_0001ab70(int actor_handle);",
-    "ported": null
+    "ported": true
   },
   "0x1abd0": {
     "addr": "0x1abd0",
@@ -43705,7 +43723,7 @@
     "name": "FUN_000302b0",
     "decl": "void FUN_000302b0(int actor_handle);",
     "obj": "actor_perception.obj",
-    "ported": false
+    "ported": true
   },
   "0x46f10": {
     "name": "FUN_00046f10",
