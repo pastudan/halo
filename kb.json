@@ -27798,8 +27798,8 @@
         },
         {
           "addr": "0xeea10",
-          "decl": "char playlist_profile_initialize_name(void *widget, void *player_data, char *done_flag);",
-          "ported": false,
+          "decl": "char playlist_profile_initialize_name(void *widget, void *arg1, char *out_flag);",
+          "ported": true,
           "name": "playlist_profile_initialize_name"
         },
         {

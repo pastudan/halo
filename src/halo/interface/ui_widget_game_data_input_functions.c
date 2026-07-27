@@ -1324,99 +1324,36 @@ void FUN_000ee810(void *widget)
 #endif
 
 
-/* playlist_profile_initialize_name (0xeea10) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static void (*const beea10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const beea10_exitfn)(int) = (void *)system_exit;
-static void (*const beea10_ce0ee0)(void) = (void *)player_ui_edit_profile_is_dirty;
-static char (*const beea10_ce0d80)(void) = (void *)player_ui_edit_profile_is_default_profile;
-static void (*const beea10_ce0dd0)(void) = (void *)player_ui_edit_profile_name_is_dirty;
-static void (*const beea10_ce0e40)(void) = (void *)player_ui_prompt_user_to_rename_edit_profile;
-static void (*const beea10_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void (*const beea10_ce15b0)(void) = (void *)player_ui_save_profile;
-static void (*const beea10_ce1760)(void) = (void *)player_ui_end_editing_profile;
-static void * (*const beea10_ce4310)(void *widget) = (void *)ui_widget_get_last_child;
-static void (*const beea10_ce5620)(void *widget) = (void *)ui_widget_close;
-
-__attribute__((naked, noinline))
-void playlist_profile_initialize_name(void *widget)
+/* playlist_profile_initialize_name (0xeea10) — readable C lift. */
+char playlist_profile_initialize_name(void *widget, void *arg1, char *out_flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lplaylist_profile_initialize_name_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdb6\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286184\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_initialize_name_1:\n\t"
-      "call *%[ce0ee0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_initialize_name_3\n\t"
-      "call *%[ce0d80]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_initialize_name_2\n\t"
-      "call *%[ce0dd0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplaylist_profile_initialize_name_2\n\t"
-      "call *%[ce0e40]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplaylist_profile_initialize_name_4\n\t"
-      "pushl $0x287c24\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_initialize_name_2:\n\t"
-      "call *%[ce15b0]\n\t"
-      "movb %%al, %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lplaylist_profile_initialize_name_4\n\t"
-      "pushl $0x287bec\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_initialize_name_3:\n\t"
-      "pushl $0x287bb0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "call *%[ce1760]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce4310]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce5620]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, (%%ecx)\n\t"
-      ".Lplaylist_profile_initialize_name_4:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(beea10_assert), [exitfn] "m"(beea10_exitfn), [ce0ee0] "m"(beea10_ce0ee0), [ce0d80] "m"(beea10_ce0d80), [ce0dd0] "m"(beea10_ce0dd0), [ce0e40] "m"(beea10_ce0e40), [c8f390] "m"(beea10_c8f390), [ce15b0] "m"(beea10_ce15b0), [ce1760] "m"(beea10_ce1760), [ce4310] "m"(beea10_ce4310), [ce5620] "m"(beea10_ce5620)
-      : "memory");
-}
-#else
-#error "playlist_profile_initialize_name: clang naked draft required"
-#endif
+  char ok;
+  char (*save_profile)(void) = (char (*)(void))player_ui_save_profile;
 
+  ok = 0;
+  if (arg1 == 0) {
+    display_assert((const char *)0x286184, (const char *)0x2859a4, 0xdb6, 1);
+    system_exit(-1);
+  }
+  if (player_ui_edit_profile_is_dirty()) {
+    if (!player_ui_edit_profile_is_default_profile() || player_ui_edit_profile_name_is_dirty()) {
+      ok = save_profile();
+      if (!ok) {
+        error(2, (const char *)0x287bec);
+        return ok;
+      }
+    } else if (!player_ui_prompt_user_to_rename_edit_profile()) {
+      error(2, (const char *)0x287c24);
+      return 0;
+    }
+  } else {
+    error(2, (const char *)0x287bb0);
+    player_ui_end_editing_profile();
+    ui_widget_close(ui_widget_get_last_child(widget));
+    *out_flag = 1;
+  }
+  return ok;
+}
 
 /* playlist_profile_initialize_ctf_rules (0xeead0) — XBE naked draft (batch 128). */
 #if defined(__clang__)
