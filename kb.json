@@ -21807,7 +21807,7 @@
         },
         {
           "addr": "0x155cf0",
-          "decl": "void rasterizer_set_texture_direct(int stage, int bitmap_tag_index, int frame_index);",
+          "decl": "char rasterizer_set_texture_direct(short stage, int bitmap_tag_index, short frame_index);",
           "ported": true,
           "name": "rasterizer_set_texture_direct"
         },
@@ -21839,7 +21839,7 @@
         },
         {
           "addr": "0x156440",
-          "decl": "void rasterizer_set_vertex_shader(void);",
+          "decl": "void rasterizer_set_vertex_shader(short shader_index);",
           "ported": true,
           "name": "rasterizer_set_vertex_shader"
         },
@@ -38952,7 +38952,7 @@
         },
         {
           "addr": "0x163fe0",
-          "decl": "void FUN_00163fe0(void);",
+          "decl": "void FUN_00163fe0(void *bitmap);",
           "ported": true
         },
         {
@@ -38967,7 +38967,7 @@
         },
         {
           "addr": "0x164590",
-          "decl": "void FUN_00164590(void);",
+          "decl": "void FUN_00164590(void *bitmap);",
           "ported": true
         },
         {
@@ -39023,7 +39023,7 @@
         },
         {
           "addr": "0x165de0",
-          "decl": "void FUN_00165de0(void);",
+          "decl": "void FUN_00165de0(short index, float scale, float *out);",
           "ported": true
         },
         {
