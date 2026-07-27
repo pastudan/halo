@@ -40912,8 +40912,9 @@
         },
         {
           "addr": "0x60330",
-          "decl": "char FUN_00060330(void *path, const char *debug_context);",
-          "ported": false
+          "decl": "char FUN_00060330(void *path@<eax>, const char *debug_context);",
+          "ported": true,
+          "name": "FUN_00060330"
         },
         {
           "addr": "0x604e0",

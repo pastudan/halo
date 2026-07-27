@@ -2752,189 +2752,60 @@ static __attribute__((unused)) void path_assert_heap_index(void *path, int16_t h
   (void)line_kind;
 }
 
-/* FUN_00060330 (0x60330) — XBE naked draft (batch 223). */
-#if defined(__clang__)
-static void (*const b60330_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b60330_exitfn)(int) = system_exit;
-static void (*const b60330_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b60330_c60260)(unsigned short channel, void *path) = FUN_00060260;
-
-__attribute__((naked, noinline))
-char FUN_00060330(void *path __attribute__((unused)), const char *debug_context __attribute__((unused)))
+/* FUN_00060330 (0x60330) — readable C lift.
+ * path@eax; stack: debug_context. Validates path heap cost order. */
+char FUN_00060330(void *path, const char *debug_context)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl $1, %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "cmpw %%si, 0x1430(%%ebx)\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jg .LFUN_00060330_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00060330_1:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      ".LFUN_00060330_2:\n\t"
-      "testw %%si, %%si\n\t"
-      "jg .LFUN_00060330_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x39\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25eaa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060330_3:\n\t"
-      "movswl %%si, %%edi\n\t"
-      "leal -0x1(%%edi), %%esi\n\t"
-      "sarl $1, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00060330_4\n\t"
-      "movw 0x1430(%%ebx), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00060330_4\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00060330_5\n\t"
-      ".LFUN_00060330_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x31\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25ea40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060330_5:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movw 0x1432(%%ebx,%%eax,2), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00060330_6\n\t"
-      "movw 0x2c(%%ebx), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00060330_6\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00060330_7\n\t"
-      ".LFUN_00060330_6:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x28\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25e9b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060330_7:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%ecx\n\t"
-      "flds (%%ebx,%%ecx,8)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jl .LFUN_00060330_8\n\t"
-      "movw 0x1430(%%ebx), %%ax\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "jge .LFUN_00060330_8\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00060330_9\n\t"
-      ".LFUN_00060330_8:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x31\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25ea40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060330_9:\n\t"
-      "movw 0x1432(%%ebx,%%edi,2), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00060330_10\n\t"
-      "movw 0x2c(%%ebx), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00060330_10\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00060330_11\n\t"
-      ".LFUN_00060330_10:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x28\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25e9b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060330_11:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%edx\n\t"
-      "flds (%%ebx,%%edx,8)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00060330_12\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw 0x1430(%%ebx), %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .LFUN_00060330_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00060330_12:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25eaec\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl $0x25eac4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl $3\n\t"
-      "call *%[c60260]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b60330_assert), [exitfn] "m"(b60330_exitfn), [c8f390] "m"(b60330_c8f390), [c60260] "m"(b60330_c60260)
-      : "memory");
-}
-#else
-#error "FUN_00060330: clang naked draft required"
-#endif
+  char *p;
+  int16_t i;
+  int16_t parent;
+  int16_t node;
+  int16_t count;
+  float parent_cost;
+  float node_cost;
 
+  p = (char *)path;
+  count = *(int16_t *)(p + 0x1430);
+  if (count <= 1)
+    return 1;
+
+  for (i = 1; i < count; i++) {
+    if (i <= 0) {
+      display_assert((const char *)0x25eaa4, (const char *)0x25ea14, 0x39, 1);
+      system_exit(-1);
+    }
+    parent = (int16_t)(((int)i - 1) >> 1);
+    if (parent < 0 || parent >= count || count > 0x80) {
+      display_assert((const char *)0x25ea40, (const char *)0x25ea14, 0x31, 1);
+      system_exit(-1);
+    }
+    node = *(int16_t *)(p + 0x1432 + (int)parent * 2);
+    if (node < 0 || node >= *(int16_t *)(p + 0x2c) || *(int16_t *)(p + 0x2c) > 0x80) {
+      display_assert((const char *)0x25e9b0, (const char *)0x25ea14, 0x28, 1);
+      system_exit(-1);
+    }
+    parent_cost = *(float *)(p + ((int)node + 2) * 40);
+
+    if (i < 0 || i >= count || count > 0x80) {
+      display_assert((const char *)0x25ea40, (const char *)0x25ea14, 0x31, 1);
+      system_exit(-1);
+    }
+    node = *(int16_t *)(p + 0x1432 + (int)i * 2);
+    if (node < 0 || node >= *(int16_t *)(p + 0x2c) || *(int16_t *)(p + 0x2c) > 0x80) {
+      display_assert((const char *)0x25e9b0, (const char *)0x25ea14, 0x28, 1);
+      system_exit(-1);
+    }
+    node_cost = *(float *)(p + ((int)node + 2) * 40);
+
+    if (node_cost < parent_cost) {
+      error(2, (const char *)0x25eaec, debug_context);
+      error(2, (const char *)0x25eac4);
+      FUN_00060260(3, p);
+      return 0;
+    }
+  }
+  return 1;
+}
 
 /* FUN_000604e0 (0x604e0) — XBE naked draft (batch 220). */
 #if defined(__clang__)
