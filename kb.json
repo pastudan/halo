@@ -40429,7 +40429,7 @@
         {
           "addr": "0x147990",
           "decl": "float *collision_surface_project_point2d(void *bsp, int surface_index, int projection, int sign, float *point, float *out_point);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1479e0",
