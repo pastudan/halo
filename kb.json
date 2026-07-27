@@ -29580,7 +29580,7 @@
           "addr": "0x1acb70",
           "decl": "void unit_adjust_plan_overlap(void *plan_a@<ecx>, void *plan_b@<eax>, int dummy, float delta_time);",
           "name": "unit_adjust_plan_overlap",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1acd70",

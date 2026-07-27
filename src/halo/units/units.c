@@ -13907,205 +13907,129 @@ void FUN_001abd90(int unit_handle __attribute__((unused)))
 #endif
 
 
-/* unit_adjust_plan_overlap (0x1acb70) — XBE naked draft (batch 55). */
-#if defined(__clang__)
-static void (*const b1acb70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1acb70_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void unit_adjust_plan_overlap(void *plan_a_ptr __attribute__((unused)), void *plan_b_ptr __attribute__((unused)), int dummy __attribute__((unused)), float delta_time __attribute__((unused)))
+/* unit_adjust_plan_overlap (0x1acb70) — readable C lift (restored pre-naked). */
+void unit_adjust_plan_overlap(void *plan_a_ptr, void *plan_b_ptr, int dummy,
+                              float delta_time)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpb $0, (%%ecx)\n\t"
-      "jne .Lunit_adjust_plan_overlap_11\n\t"
-      "cmpb $0, (%%esi)\n\t"
-      "jne .Lunit_adjust_plan_overlap_11\n\t"
-      "flds 0x1c(%%ecx)\n\t"
-      "fadds 0x14(%%ecx)\n\t"
-      "fadds 0x10(%%ecx)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fadds 0x14(%%esi)\n\t"
-      "fadds 0x10(%%esi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x10(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lunit_adjust_plan_overlap_1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lunit_adjust_plan_overlap_1\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "jmp .Lunit_adjust_plan_overlap_2\n\t"
-      ".Lunit_adjust_plan_overlap_1:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lunit_adjust_plan_overlap_11\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lunit_adjust_plan_overlap_11\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      ".Lunit_adjust_plan_overlap_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "je .Lunit_adjust_plan_overlap_11\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lunit_adjust_plan_overlap_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8ae\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b70ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lunit_adjust_plan_overlap_3:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fadds 0x14(%%esi)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "fabs\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fchs\n\t"
-      "fmulp %%st(1)\n\t"
-      "fxch %%st(1)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fmuls 0x2533d8\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .Lunit_adjust_plan_overlap_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8c4\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6fa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lunit_adjust_plan_overlap_4:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fsqrt\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x1c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lunit_adjust_plan_overlap_5\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "jmp .Lunit_adjust_plan_overlap_6\n\t"
-      ".Lunit_adjust_plan_overlap_5:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      ".Lunit_adjust_plan_overlap_6:\n\t"
-      "fld %%st(1)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lunit_adjust_plan_overlap_8\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x1c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lunit_adjust_plan_overlap_7\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "jmp .Lunit_adjust_plan_overlap_8\n\t"
-      ".Lunit_adjust_plan_overlap_7:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      ".Lunit_adjust_plan_overlap_8:\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lunit_adjust_plan_overlap_10\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fsub %%st(1), %%st(0)\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fsub %%st(2), %%st(0)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "fld %%st(1)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lunit_adjust_plan_overlap_9\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .Lunit_adjust_plan_overlap_11\n\t"
-      ".Lunit_adjust_plan_overlap_9:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8d8\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b7070\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lunit_adjust_plan_overlap_10:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lunit_adjust_plan_overlap_11:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b1acb70_assert), [exitfn] "m"(b1acb70_exitfn)
-      : "memory");
-}
-#else
-#error "unit_adjust_plan_overlap: clang naked draft required"
-#endif
+  char *plan_a;
+  char *plan_b;
+  char *adjust_plan;
+  float total_a;
+  float total_b;
+  float t_extension;
+  float t_factor;
+  float disc;
+  float adj_amount;
+  float min_t;
+  float accel_t;
+  float decel_t;
+  float v_peak;
 
+  plan_a = (char *)plan_a_ptr;
+  plan_b = (char *)plan_b_ptr;
+
+  /* Both plans must be active (byte 0 == 0) */
+  if (*plan_a != 0 || *plan_b != 0) {
+    return;
+  }
+
+  /* Compute total time for each plan: decel_t + vel_t + accel_t */
+  total_a = *(float *)(plan_a + 0x1c) + *(float *)(plan_a + 0x14) +
+            *(float *)(plan_a + 0x10);
+  total_b = *(float *)(plan_b + 0x1c) + *(float *)(plan_b + 0x14) +
+            *(float *)(plan_b + 0x10);
+
+  /* Determine which plan to adjust */
+  if (*(float *)(plan_a + 0x10) > 0.0f && total_b > total_a) {
+    /* plan_a has priority — adjust plan_b using plan_a's extension */
+    t_extension = total_b - total_a;
+    adjust_plan = plan_a;
+  } else if (*(float *)(plan_b + 0x10) > 0.0f && total_a > total_b) {
+    /* plan_b has priority — adjust plan_a using plan_b's extension */
+    t_extension = total_a - total_b;
+    adjust_plan = plan_b;
+  } else {
+    return;
+  }
+
+  if (adjust_plan == NULL) {
+    return;
+  }
+
+  /* Assert t_extension > 0 */
+  if (t_extension <= 0.0f) {
+    display_assert("t_extension > 0",
+                   "c:\\halo\\SOURCE\\units\\units.c", 0x8ae, true);
+    system_exit(-1);
+  }
+
+  /* Solve quadratic for adjustment amount */
+  t_factor = (t_extension + *(float *)(adjust_plan + 0x14)) * delta_time;
+
+  {
+    float abs_vpeak;
+    abs_vpeak = *(float *)(adjust_plan + 0x10) *
+                    *(float *)(adjust_plan + 0x0c) +
+                *(float *)(adjust_plan + 0x08);
+    if (abs_vpeak < 0.0f) {
+      abs_vpeak = -abs_vpeak;
+    }
+    disc = t_factor * t_factor -
+           (-t_extension) * abs_vpeak * delta_time * 4.0f;
+  }
+
+  /* Assert discriminant >= 0 */
+  if (disc < 0.0f) {
+    display_assert("disc >= 0", "c:\\halo\\SOURCE\\units\\units.c", 0x8c4,
+                   true);
+    system_exit(-1);
+  }
+
+  /* Quadratic formula: (-b + sqrt(disc)) / (2*a) */
+  adj_amount = (sqrtf(disc) - t_factor) / (delta_time + delta_time);
+
+  /* Clamp to min(accel_t, decel_t) */
+  if (*(float *)(adjust_plan + 0x10) <= *(float *)(adjust_plan + 0x1c)) {
+    min_t = *(float *)(adjust_plan + 0x10);
+  } else {
+    min_t = *(float *)(adjust_plan + 0x1c);
+  }
+
+  if (adj_amount > min_t) {
+    if (*(float *)(adjust_plan + 0x10) <= *(float *)(adjust_plan + 0x1c)) {
+      adj_amount = *(float *)(adjust_plan + 0x10);
+    } else {
+      adj_amount = *(float *)(adjust_plan + 0x1c);
+    }
+  }
+
+  /* Apply adjustment if positive */
+  if (adj_amount <= 0.0f) {
+    return;
+  }
+
+  accel_t = *(float *)(adjust_plan + 0x10) - adj_amount;
+  *(float *)(adjust_plan + 0x10) = accel_t;
+
+  v_peak = accel_t * *(float *)(adjust_plan + 0x0c) +
+           *(float *)(adjust_plan + 0x08);
+
+  decel_t = *(float *)(adjust_plan + 0x1c) - adj_amount;
+  *(float *)(adjust_plan + 0x1c) = decel_t;
+
+  *(float *)(adjust_plan + 0x14) =
+      ((v_peak + v_peak + adj_amount * *(float *)(adjust_plan + 0x0c)) *
+       adj_amount) / v_peak;
+
+  /* Assert both times remain non-negative */
+  if (accel_t < 0.0f || decel_t < 0.0f) {
+    display_assert(
+        "(adjust_plan->accel_t >= 0) && (adjust_plan->decel_t >= 0)",
+        "c:\\halo\\SOURCE\\units\\units.c", 0x8d8, true);
+    system_exit(-1);
+    return;
+  }
+}
 
 /* unit_update_running_blind (0x1af340) — XBE naked draft (batch 52). */
 #if defined(__clang__)
