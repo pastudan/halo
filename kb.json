@@ -20894,7 +20894,7 @@
         {
           "addr": "0x173ae0",
           "decl": "void FUN_00173ae0(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x173af0",
@@ -24955,13 +24955,13 @@
           "addr": "0x1ccbe0",
           "comment": "Compute listener distance squared for a channel/source pair.",
           "decl": "float FUN_001ccbe0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccca0",
           "comment": "Compute distance for random scale checks.",
           "decl": "float FUN_001ccca0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccd70",
@@ -30655,7 +30655,7 @@
         {
           "addr": "0x181410",
           "decl": "void FUN_00181410(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x181420",
@@ -34073,7 +34073,7 @@
         {
           "addr": "0xfd0b0",
           "decl": "void FUN_000fd0b0(int16_t angle_index, float *out_x, float *out_y, int16_t param_3, float scale, char flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfd150",
