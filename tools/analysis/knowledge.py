@@ -328,13 +328,20 @@ __attribute__((naked)) { decl.replace(name, 'THUNK('+name+')') }
 		'RtlInitAnsiString', 'XapiFormatFATVolume',
 	})
 
+	# Freestanding CRT forwards declared in src/common.h (authoritative there).
+	# Emitting HFUNC/dllexport versions from kb LIBCMT entries conflicts with
+	# those prototypes under -Werror=dll-attribute-on-redeclaration.
+	_COMMON_H_FORWARDS = frozenset({
+		'qsort',
+	})
+
 	def build_header(self, path: str):
 		log.info('Generating header...')
 		# Functions the Xbox kernel header (third_party/xbox/xboxkrnl.h) already
 		# declares with the NTAPI/stdcall convention are authoritative there; do not
 		# re-emit kb.json void(void) placeholders for them (would conflict). Union
 		# with the cseries-local __stdcall import set.
-		_skip_names = set(self._LOCAL_STDCALL_IMPORTS)
+		_skip_names = set(self._LOCAL_STDCALL_IMPORTS) | set(self._COMMON_H_FORWARDS)
 		try:
 			_krnl = os.path.join(os.path.dirname(os.path.abspath(__file__)),
 				'..', '..', 'third_party', 'xbox', 'xboxkrnl.h')
