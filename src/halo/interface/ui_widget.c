@@ -5797,146 +5797,72 @@ void FUN_000e73c0(void *widget, int16_t *bounds, float opacity_scale, char param
 #endif
 
 
-/* render_ui_widgets_postgame (0xe7760) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static char (*const be7760_cf5640)(void) = (void *)FUN_000f5640;
-static __int16 (*const be7760_cba4b0)(void) = (void *)local_player_count;
-static void (*const be7760_ce73c0)(void *widget, int16_t *bounds, float opacity_scale, char param_4, char visible) = (void *)FUN_000e73c0;
-
-__attribute__((naked, noinline))
+/* render_ui_widgets_postgame (0xe7760) — readable C lift. */
 void render_ui_widgets_postgame(int16_t local_player_index, int16_t *bounds)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x48, %%esp\n\t"
-      "movl $0xf0, %%eax\n\t"
-      "movl $0x140, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movw %%bx, -0x48(%%ebp)\n\t"
-      "movw %%bx, -0x46(%%ebp)\n\t"
-      "movw %%bx, -0x44(%%ebp)\n\t"
-      "movw %%bx, -0x42(%%ebp)\n\t"
-      "movw %%bx, -0x40(%%ebp)\n\t"
-      "movw %%bx, -0x3e(%%ebp)\n\t"
-      "movw %%bx, -0x3c(%%ebp)\n\t"
-      "movw %%bx, -0x3a(%%ebp)\n\t"
-      "movw %%bx, -0x38(%%ebp)\n\t"
-      "movw %%bx, -0x36(%%ebp)\n\t"
-      "movw %%bx, -0x34(%%ebp)\n\t"
-      "movw %%ax, -0x32(%%ebp)\n\t"
-      "movw %%bx, -0x30(%%ebp)\n\t"
-      "movw %%bx, -0x2e(%%ebp)\n\t"
-      "movw %%bx, -0x2c(%%ebp)\n\t"
-      "movw %%bx, -0x2a(%%ebp)\n\t"
-      "movw %%bx, -0x28(%%ebp)\n\t"
-      "movw %%bx, -0x26(%%ebp)\n\t"
-      "movw %%bx, -0x24(%%ebp)\n\t"
-      "movw %%ax, -0x22(%%ebp)\n\t"
-      "movw %%cx, -0x20(%%ebp)\n\t"
-      "movw %%ax, -0x1e(%%ebp)\n\t"
-      "movw %%bx, -0x1c(%%ebp)\n\t"
-      "movw %%bx, -0x1a(%%ebp)\n\t"
-      "movw %%bx, -0x18(%%ebp)\n\t"
-      "movw %%bx, -0x16(%%ebp)\n\t"
-      "movw %%cx, -0x14(%%ebp)\n\t"
-      "movw %%bx, -0x12(%%ebp)\n\t"
-      "movw %%bx, -0x10(%%ebp)\n\t"
-      "movw %%ax, -0xe(%%ebp)\n\t"
-      "movw %%cx, -0xc(%%ebp)\n\t"
-      "movw %%ax, -0xa(%%ebp)\n\t"
-      "call *%[cf5640]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrender_ui_widgets_postgame_9\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jge .Lrender_ui_widgets_postgame_1\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "jmp .Lrender_ui_widgets_postgame_3\n\t"
-      ".Lrender_ui_widgets_postgame_1:\n\t"
-      "cmpw $3, %%ax\n\t"
-      "movl $3, 0x8(%%ebp)\n\t"
-      "jg .Lrender_ui_widgets_postgame_2\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      ".Lrender_ui_widgets_postgame_2:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      ".Lrender_ui_widgets_postgame_3:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lrender_ui_widgets_postgame_4:\n\t"
-      "movl 0x46cc20(,%%edi,4), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lrender_ui_widgets_postgame_8\n\t"
-      "cmpb $1, 0x11(%%eax)\n\t"
-      "je .Lrender_ui_widgets_postgame_7\n\t"
-      "cmpb $1, 0x15(%%eax)\n\t"
-      "movw 0x8(%%eax), %%ax\n\t"
-      "jne .Lrender_ui_widgets_postgame_5\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "je .Lrender_ui_widgets_postgame_7\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lrender_ui_widgets_postgame_7\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .Lrender_ui_widgets_postgame_7\n\t"
-      "cmpb %%bl, 0x46cc88\n\t"
-      "je .Lrender_ui_widgets_postgame_8\n\t"
-      "jmp .Lrender_ui_widgets_postgame_7\n\t"
-      ".Lrender_ui_widgets_postgame_5:\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lrender_ui_widgets_postgame_6\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "je .Lrender_ui_widgets_postgame_7\n\t"
-      ".Lrender_ui_widgets_postgame_6:\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "jne .Lrender_ui_widgets_postgame_8\n\t"
-      ".Lrender_ui_widgets_postgame_7:\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "movw 0x4(%%esi), %%cx\n\t"
-      "subw 0x2(%%esi), %%ax\n\t"
-      "subw (%%esi), %%cx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "movw %%bx, -0x6(%%ebp)\n\t"
-      "movw %%bx, -0x8(%%ebp)\n\t"
-      "movw %%ax, -0x2(%%ebp)\n\t"
-      "movw %%cx, -0x4(%%ebp)\n\t"
-      "call *%[cba4b0]\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "leal (%%eax,%%edx,4), %%ecx\n\t"
-      "movl -0x58(%%ebp,%%ecx,4), %%edx\n\t"
-      "movl 0x46cc20(,%%edi,4), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce73c0]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_ui_widgets_postgame_8:\n\t"
-      "incl %%edi\n\t"
-      "cmpl $4, %%edi\n\t"
-      "jl .Lrender_ui_widgets_postgame_4\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".Lrender_ui_widgets_postgame_9:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cf5640] "m"(be7760_cf5640), [cba4b0] "m"(be7760_cba4b0), [ce73c0] "m"(be7760_ce73c0)
-      : "memory");
-}
-#else
-#error "render_ui_widgets_postgame: clang naked draft required"
-#endif
+  /* Stack image: dword slot 0 == ebp-0x58; slot 4 == ebp-0x48 (first inited word). */
+  int32_t slots[0x58 / 4];
+  int16_t *w;
+  int16_t player;
+  int16_t i;
+  void *widget;
+  int16_t widget_player;
+  int16_t nlocal;
+  int16_t local_bounds[4];
+  float opacity;
+  int idx;
 
+  for (i = 0; i < (int16_t)(sizeof(slots) / 4); i++)
+    slots[i] = 0;
+  w = (int16_t *)(slots + 4);
+  w[0x16 / 2] = 0xf0;
+  w[0x26 / 2] = 0xf0;
+  w[0x28 / 2] = 0x140;
+  w[0x2a / 2] = 0xf0;
+  w[0x34 / 2] = 0x140;
+  w[0x3a / 2] = 0xf0;
+  w[0x3c / 2] = 0x140;
+  w[0x3e / 2] = 0xf0;
+
+  if (FUN_000f5640())
+    return;
+
+  player = local_player_index;
+  if (player < 0)
+    player = 0;
+  else if (player > 3)
+    player = 3;
+
+  for (i = 0; i < 4; i++) {
+    widget = *(void **)(0x46cc20 + (int)i * 4);
+    if (widget == 0)
+      continue;
+    if (*(uint8_t *)((char *)widget + 0x11) == 1)
+      goto render;
+    widget_player = *(int16_t *)((char *)widget + 8);
+    if (*(uint8_t *)((char *)widget + 0x15) == 1) {
+      if (widget_player == player || widget_player == (int16_t)0xffff ||
+          player == (int16_t)-1 || *(uint8_t *)0x46cc88 != 0)
+        goto render;
+      continue;
+    }
+    if (widget_player == (int16_t)0xffff) {
+      if (i == 0)
+        goto render;
+    }
+    if (widget_player != player)
+      continue;
+  render:
+    local_bounds[0] = 0;
+    local_bounds[1] = 0;
+    local_bounds[2] = (int16_t)(bounds[2] - bounds[0]);
+    local_bounds[3] = (int16_t)(bounds[3] - bounds[1]);
+    nlocal = local_player_count();
+    idx = (int)player + (int)nlocal * 4;
+    opacity = *(float *)&slots[idx];
+    FUN_000e73c0(widget, local_bounds, opacity, 1, 0);
+  }
+}
 
 /* FUN_000e98c0 (0xe98c0) — XBE naked draft (batch 120). */
 #if defined(__clang__)
