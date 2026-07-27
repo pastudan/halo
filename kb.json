@@ -7677,7 +7677,8 @@
         {
           "addr": "0xd9f20",
           "decl": "void render_weapon_hud(void);",
-          "ported": false
+          "ported": true,
+          "name": "render_weapon_hud"
         },
         {
           "addr": "0xda980",
