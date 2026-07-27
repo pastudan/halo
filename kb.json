@@ -21260,7 +21260,7 @@
         {
           "addr": "0x17ca20",
           "decl": "void rasterizer_hud_motion_sensor_blip_draw(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ca30",

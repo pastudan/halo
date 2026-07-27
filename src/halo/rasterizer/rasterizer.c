@@ -15097,26 +15097,11 @@ void rasterizer_hud_motion_sensor_blip_begin(void)
 #endif
 
 
-/* rasterizer_hud_motion_sensor_blip_draw (0x17ca20) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* rasterizer_hud_motion_sensor_blip_draw (0x17ca20) — readable C lift (jmp thunk). */
 void rasterizer_hud_motion_sensor_blip_draw(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xc7, 0xde, 0xfd, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0015a8f0(0, 0, 0, 0, 0, 0);
 }
-#else
-#error "rasterizer_hud_motion_sensor_blip_draw: clang naked draft required"
-#endif
-
 
 /* rasterizer_hud_motion_sensor_blip_end (0x17ca30) — readable C lift (jmp thunk). */
 void rasterizer_hud_motion_sensor_blip_end(void)
