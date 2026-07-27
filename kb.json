@@ -30057,8 +30057,8 @@
         },
         {
           "addr": "0xa48c0",
-          "decl": "void FUN_000a48c0(float *out, float scale);",
-          "ported": false
+          "decl": "void FUN_000a48c0(float *mat@<ecx>, float scale);",
+          "ported": true
         },
         {
           "addr": "0xa4a00",

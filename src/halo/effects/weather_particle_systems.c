@@ -801,89 +801,28 @@ void FUN_000a4610(void)
 #endif
 
 
-/* FUN_000a48c0 (0xa48c0) — XBE naked draft (batch 130). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000a48c0(float *out __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_000a48c0 (0xa48c0) — readable C lift.
+ * mat@<ecx>, scale cdecl. Fill mat from globals + scaled offset vector. */
+void FUN_000a48c0(float *mat, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x50655c\n\t"
-      "leal 0x40(%%ecx), %%eax\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "movl %%eax, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x50655c, %%esi\n\t"
-      "fadds 0x506550\n\t"
-      "flds 0x506560\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fadds 0x506554\n\t"
-      "flds 0x506564\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fadds 0x506558\n\t"
-      "movl %%esi, (%%edx)\n\t"
-      "movl 0x506560, %%esi\n\t"
-      "movl %%esi, 0x4(%%edx)\n\t"
-      "movl 0x506564, %%esi\n\t"
-      "movl %%esi, 0x8(%%edx)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "fxch %%st(1)\n\t"
-      "popl %%esi\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls (%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "movl 0x50661c, %%edx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x506620, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x506624, %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0x506628, %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "movl 0x50662c, %%edx\n\t"
-      "leal 0x10(%%ecx), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x506630, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x506634, %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0x506638, %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "movl 0x50663c, %%edx\n\t"
-      "leal 0x20(%%ecx), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x506640, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x506644, %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0x506648, %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "movl 0x50664c, %%eax\n\t"
-      "addl $0x30, %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x506650, %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x506654, %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl 0x506658, %%edx\n\t"
-      "movl %%edx, 0xc(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_000a48c0: clang naked draft required"
-#endif
+  float *v;
+  float a, b, c;
+  float *src;
+  int i;
 
+  v = mat + 16; /* +0x40 */
+  v[0] = *(float *)0x50655c;
+  v[1] = *(float *)0x506560;
+  v[2] = *(float *)0x506564;
+  a = v[0] * scale + *(float *)0x506550;
+  b = v[1] * scale + *(float *)0x506554;
+  c = v[2] * scale + *(float *)0x506558;
+  v[3] = a * v[0] + b * v[1] + c * v[2];
+
+  src = (float *)0x50661c;
+  for (i = 0; i < 16; i++)
+    mat[i] = src[i];
+}
 
 /* FUN_000a4a00 (0xa4a00) — readable C lift. */
 int16_t FUN_000a4a00(int16_t *out_buf, float radius)
@@ -1286,7 +1225,7 @@ static void * (*const ba4e20_c18e3c0)(void) = scenario_get;
 static void (*const ba4e20_ca4be0)(int16_t weather_index) = FUN_000a4be0;
 static void *(*const ba4e20_elem)(void *, int, int) = tag_block_get_element;
 static int (*const ba4e20_ca4a00)(void *out_buf, int particle_handle) = (void *)FUN_000a4a00;
-static void (*const ba4e20_ca48c0)(float *out, float scale) = FUN_000a48c0;
+static void (*const ba4e20_ca48c0)(float *out, float scale) = (void *)FUN_000a48c0;
 static void (*const ba4e20_ca4000)(float *dst, float *src, float scale) = (void *)FUN_000a4000;
 static short (*const ba4e20_c1867f0)(void *param_1, int param_2, int param_3) = render_frustum_cube_visible;
 static void (*const ba4e20_c18d2c0)(uint32_t *param_1, int16_t param_2, uint32_t param_3, int param_4, uint32_t param_5) = FUN_0018d2c0;
