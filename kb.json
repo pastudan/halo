@@ -16681,8 +16681,9 @@
         {
           "addr": "0x13db60",
           "decl": "void FUN_0013db60(short *param_1);",
-          "ported": false,
-          "source_path": "objects/objects.c"
+          "ported": true,
+          "source_path": "objects/objects.c",
+          "name": "FUN_0013db60"
         },
         {
           "addr": "0x13dbe0",

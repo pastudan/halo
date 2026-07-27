@@ -6057,65 +6057,33 @@ done:
 }
 
 
-/* FUN_0013db60 (0x13db60) — XBE naked draft (batch 67). */
-#if defined(__clang__)
-static void *(*const b13db60_memset)(void *, int, unsigned int) = csmemset;
-static int (*const b13db60_c11e3c0)(void *pool) = memory_pool_get_contiguous_free_size;
-
-__attribute__((naked, noinline))
-void FUN_0013db60(short *param_1 __attribute__((unused)))
+/* FUN_0013db60 (0x13db60) — readable C lift from XBE leaf.
+ * Count live/local objects and store a free-pool pressure float. */
+void FUN_0013db60(short *param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $8\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x5a8d50, %%edx\n\t"
-      "movl 0x34(%%edx), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw %%cx, 0x2e(%%edx)\n\t"
-      "jle .LFUN_0013db60_3\n\t"
-      "movb $1, %%dl\n\t"
-      "pushl %%edi\n\t"
-      ".LFUN_0013db60_1:\n\t"
-      "cmpw $0, (%%eax)\n\t"
-      "je .LFUN_0013db60_2\n\t"
-      "incw (%%esi)\n\t"
-      "testb %%dl, 0x2(%%eax)\n\t"
-      "je .LFUN_0013db60_2\n\t"
-      "incw 0x2(%%esi)\n\t"
-      ".LFUN_0013db60_2:\n\t"
-      "movl 0x5a8d50, %%edi\n\t"
-      "incl %%ecx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "cmpw 0x2e(%%edi), %%cx\n\t"
-      "jl .LFUN_0013db60_1\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_0013db60_3:\n\t"
-      "movl 0x46f080, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11e3c0]\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "addl $4, %%esp\n\t"
-      "fmuls 0x29ba04\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b13db60_memset), [c11e3c0] "m"(b13db60_c11e3c0)
-      : "memory");
+  unsigned char *table;
+  unsigned char *entry;
+  short i;
+  short count;
+  int free_size;
+
+  csmemset(param_1, 0, 8);
+  table = *(unsigned char **)0x5a8d50;
+  entry = *(unsigned char **)(table + 0x34);
+  count = *(short *)(table + 0x2e);
+  for (i = 0; i < count; i++) {
+    if (*(short *)entry != 0) {
+      param_1[0] = (short)(param_1[0] + 1);
+      if (entry[2] & 1)
+        param_1[1] = (short)(param_1[1] + 1);
+    }
+    entry += 0xc;
+  }
+  free_size = memory_pool_get_contiguous_free_size(*(void **)0x46f080);
+  *(float *)(param_1 + 2) =
+      *(float *)0x2533c8 - *(float *)0x29ba04 * (float)free_size;
 }
-#else
-#error "FUN_0013db60: clang naked draft required"
-#endif
+
 
 
 void garbage_collect_now(void)
