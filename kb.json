@@ -772,7 +772,8 @@
         {
           "addr": "0x1dc061",
           "decl": "wchar_t *_wcsncpy(wchar_t *dest, const wchar_t *src, size_t count);",
-          "ported": false
+          "ported": true,
+          "name": "_wcsncpy"
         },
         {
           "addr": "0x1dbc1e",
@@ -818,7 +819,8 @@
         {
           "addr": "0x1dbfa7",
           "decl": "int FUN_001dbfa7(const wchar_t *s1, const wchar_t *s2);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001dbfa7"
         },
         {
           "addr": "0x1dbfac",
@@ -828,7 +830,8 @@
         {
           "addr": "0x1dbfef",
           "decl": "wchar_t *_wcsncat(wchar_t *dest, const wchar_t *src, size_t count);",
-          "ported": false
+          "ported": true,
+          "name": "_wcsncat"
         },
         {
           "addr": "0x1dc02c",
@@ -838,37 +841,43 @@
         {
           "addr": "0x1dc09e",
           "decl": "wchar_t *_wcspbrk(const wchar_t *s, const wchar_t *accept);",
-          "ported": false
+          "ported": true,
+          "name": "_wcspbrk"
         },
         {
           "addr": "0x1dc0de",
           "decl": "wchar_t *_wcsrchr(const wchar_t *s, wchar_t c);",
-          "ported": false
+          "ported": true,
+          "name": "_wcsrchr"
         },
         {
           "addr": "0x1dc10e",
           "decl": "size_t _wcsspn(const wchar_t *s, const wchar_t *accept);",
-          "ported": false
+          "ported": true,
+          "name": "_wcsspn"
         },
         {
           "addr": "0x1dc154",
           "decl": "wchar_t *_wcsstr(const wchar_t *haystack, const wchar_t *needle);",
-          "ported": false
+          "ported": true,
+          "name": "_wcsstr"
         },
         {
           "addr": "0x1dc1b2",
           "decl": "wchar_t *_wcstok(wchar_t *s, const wchar_t *delim);",
-          "ported": false
+          "ported": true,
+          "name": "_wcstok"
         },
         {
           "addr": "0x1dc257",
           "decl": "size_t FUN_001dc257(wchar_t *dest, const wchar_t *src, size_t count);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001dc257"
         },
         {
           "addr": "0x1dc27c",
           "decl": "unsigned short FUN_001dc27c(unsigned short c);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001dc27c"
         },
         {
@@ -2577,7 +2586,7 @@
           "addr": "0x1ccc0",
           "decl": "char actor_action_allow_cover_seeking(int actor_handle, char param_2);",
           "name": "actor_action_allow_cover_seeking",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/ai/actions.c"
         },
         {
@@ -2701,7 +2710,7 @@
         {
           "addr": "0x1dd40",
           "decl": "char actor_action_handle_panic_transition(int actor_handle, short param_2, char param_3, short param_4);",
-          "ported": false,
+          "ported": true,
           "name": "actor_action_handle_panic_transition"
         },
         {
@@ -2760,7 +2769,7 @@
           "addr": "0x1fa60",
           "decl": "char actor_action_try_to_throw_grenade(int actor_handle, char flag);",
           "name": "actor_action_try_to_throw_grenade",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1fb80",
@@ -2789,7 +2798,7 @@
           "addr": "0x20280",
           "decl": "int actor_pursuit_find_nearby_actors(int actor_handle, char flag);",
           "name": "actor_pursuit_find_nearby_actors",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x20470",
@@ -3544,7 +3553,7 @@
           "addr": "0x14360",
           "decl": "char actor_update_prop_desire(int actor_handle);",
           "name": "actor_update_prop_desire",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14460",
@@ -13947,7 +13956,7 @@
           "addr": "0xdfdc0",
           "decl": "void interface_draw_splitscreen_dividers(void);",
           "name": "interface_draw_splitscreen_dividers",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdff00",
