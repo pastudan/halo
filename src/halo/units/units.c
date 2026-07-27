@@ -3617,7 +3617,6 @@ char FUN_001aa430(int unit_handle __attribute__((unused)), float *point __attrib
 #error "FUN_001aa430: clang naked draft required"
 #endif
 
-
 /* any_unit_is_dangerous (0x1aa3c0)
  *
  * Iterates all unit objects (type_mask=3: bipeds + vehicles) and returns true
@@ -9606,7 +9605,6 @@ void FUN_001a7ad0(int parent_handle __attribute__((unused)), int param_2 __attri
 #else
 #error "FUN_001a7ad0: clang naked draft required"
 #endif
-
 
 /* FUN_001a7b50 (0x1a7b50) — XBE naked draft (batch 62). */
 #if defined(__clang__)

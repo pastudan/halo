@@ -950,77 +950,28 @@ void item_detonate(int item_handle)
   }
 }
 
-/* FUN_000f6b80 (0xf6b80) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static void *(*const bf6b80_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_000f6b80(int item_handle __attribute__((unused)))
+/* FUN_000f6b80 (0xf6b80) — readable C lift. */
+void FUN_000f6b80(int item_handle)
 {
-  __asm__ volatile(
-      "pushl $0x1c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "flds 0x44(%%ecx)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x40(%%ecx)\n\t"
-      "flds 0x3c(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000f6b80_2\n\t"
-      "movl 0x1a4(%%ecx), %%edx\n\t"
-      "movb 0x4(%%ecx), %%al\n\t"
-      "orl $4, %%edx\n\t"
-      "testb $0x20, %%al\n\t"
-      "movl %%edx, 0x1a4(%%ecx)\n\t"
-      "jne .LFUN_000f6b80_1\n\t"
-      "flds 0x2533c8\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x3c(%%ecx)\n\t"
-      "fstps 0x1c8(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x40(%%ecx)\n\t"
-      "fstps 0x1cc(%%ecx)\n\t"
-      "fmuls 0x44(%%ecx)\n\t"
-      "fstps 0x1d0(%%ecx)\n\t"
-      ".LFUN_000f6b80_1:\n\t"
-      "fld %%st(0)\n\t"
-      "fsin\n\t"
-      "fstps 0x1d4(%%ecx)\n\t"
-      "fcos\n\t"
-      "fstps 0x1d8(%%ecx)\n\t"
-      "ret\n\t"
-      ".LFUN_000f6b80_2:\n\t"
-      "movl 0x1a4(%%ecx), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      "movl %%eax, 0x1a4(%%ecx)\n\t"
-      "movl $0, 0x1d4(%%ecx)\n\t"
-      "movl $0x3f800000, 0x1d8(%%ecx)\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bf6b80_get)
-      : "memory");
+  char *item = (char *)object_get_and_verify_type(item_handle, 0x1c);
+  float x = *(float *)(item + 0x3c), y = *(float *)(item + 0x40), z = *(float *)(item + 0x44);
+  float mag = __builtin_sqrtf(x * x + y * y + z * z);
+  if (mag == 0.0f) {
+    *(int *)(item + 0x1a4) &= ~4;
+    *(int *)(item + 0x1d4) = 0;
+    *(int *)(item + 0x1d8) = 0x3f800000;
+    return;
+  }
+  *(int *)(item + 0x1a4) |= 4;
+  if ((*(uint8_t *)(item + 4) & 0x20) == 0) {
+    float inv = 1.0f / mag;
+    *(float *)(item + 0x1c8) = inv * x;
+    *(float *)(item + 0x1cc) = inv * y;
+    *(float *)(item + 0x1d0) = inv * z;
+  }
+  *(float *)(item + 0x1d4) = __builtin_sinf(mag);
+  *(float *)(item + 0x1d8) = __builtin_cosf(mag);
 }
-#else
-#error "FUN_000f6b80: clang naked draft required"
-#endif
-
 
 /* valid_real_vector3d_axes3 (0xf6c40)
  *

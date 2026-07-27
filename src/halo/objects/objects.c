@@ -2043,12 +2043,10 @@ char FUN_00139990(int handle)
     system_exit(-1);
   }
   if (*(int *)((char *)datum + 0xc) != *(int *)0x5a8d64) {
-    *(int *)((char *)datum + 0xc) = *(int *)0x5a8d64;
-    return 1;
+    *(int *)((char *)datum + 0xc) = *(int *)0x5a8d64;    return 1;
   }
   return 0;
 }
-
 
 
 
@@ -5124,7 +5122,23 @@ void FUN_0013dc10(short camera_point_index)
 }
 
 
-
+  if (camera_point_index == (short)0xffff) {
+    *(int16_t *)(globals + 0x90) = 0;
+    return;
+  }
+  point = (char *)tag_block_get_element(
+      (void *)((char *)global_scenario_get() + 0x4f0), (int)camera_point_index, 0x68);
+  scenario_location_from_point(location, point + 0x28);
+  if (location[2] == -1) {
+    error(2, (const char *)0x29ba08, point + 4);
+    globals = *(char **)0x46f084;
+    *(int16_t *)(globals + 0x90) = 0;
+    return;
+  }
+  globals = *(char **)0x46f084;
+  *(int16_t *)(globals + 0x90) = 2;
+  *(int16_t *)(globals + 0x94) = location[2];
+}
 
 /*
  * FUN_0013dcc0 (0x13dcc0 / objects.obj) — object_pvs_get_cluster_index:

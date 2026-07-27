@@ -272,78 +272,26 @@ void FUN_001369e0(int object_handle, int effect_tag_index)
                0); /* dup-args-ok: confirmed PUSH EAX,EAX */
 }
 
-/* FUN_00136a00 (0x136a00) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static void *(*const b136a00_get)(int, int) = object_get_and_verify_type;
-static void *(*const b136a00_tag)(int, int) = tag_get;
-static void *(*const b136a00_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void FUN_00136a00(int object_handle __attribute__((unused)), char param_1 __attribute__((unused)))
+/* FUN_00136a00 (0x136a00) — readable C lift. */
+void FUN_00136a00(int object_handle, char param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x7c(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x636f6c6c\n\t"
-      "call *%[tag]\n\t"
-      "leal 0x240(%%eax), %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jle .LFUN_00136a00_3\n\t"
-      ".LFUN_00136a00_1:\n\t"
-      "pushl $0x54\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movb 0x20(%%eax), %%cl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb $0x10, %%cl\n\t"
-      "je .LFUN_00136a00_2\n\t"
-      "cmpl $1, 0x48(%%eax)\n\t"
-      "jle .LFUN_00136a00_2\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%al\n\t"
-      "movb %%al, 0x130(%%esi,%%ebx,1)\n\t"
-      ".LFUN_00136a00_2:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "cmpl (%%edi), %%esi\n\t"
-      "jl .LFUN_00136a00_1\n\t"
-      ".LFUN_00136a00_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b136a00_get), [tag] "m"(b136a00_tag), [elem] "m"(b136a00_elem)
-      : "memory");
-}
-#else
-#error "FUN_00136a00: clang naked draft required"
-#endif
+  char *obj;
+  void *obj_tag;
+  void *coll_tag;
+  int *block;
+  int i;
+  char *elem;
 
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  obj_tag = tag_get(0x6f626a65, *(int *)obj);
+  coll_tag = tag_get(0x636f6c6c, *(int *)((char *)obj_tag + 0x7c));
+  block = (int *)((char *)coll_tag + 0x240);
+  for (i = 0; i < block[0]; i++) {
+    elem = (char *)tag_block_get_element(block, i, 0x54);
+    if ((*(uint8_t *)(elem + 0x20) & 0x10) && *(int *)(elem + 0x48) > 1)
+      obj[0x130 + i] = (param_1 == 0);
+  }
+}
 
 /* object_get_actual_body_vitality (0x136a80) — Compute scaled body vitality for
  * an object.

@@ -216,53 +216,15 @@ void projectile_export_function_values(int projectile_handle)
   } while (counter != 0);
 }
 
-/* FUN_000f7fa0 (0xf7fa0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_000f7fa0(void *tag __attribute__((unused)), float range_begin __attribute__((unused)), float range_end __attribute__((unused)))
+/* FUN_000f7fa0 (0xf7fa0) — readable C lift. */
+float FUN_000f7fa0(void *tag, float range_begin, float range_end)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "flds 0x2533c0\n\t"
-      "flds 0x1e4(%%ecx)\n\t"
-      "fcomps 0x1e8(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000f7fa0_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000f7fa0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x1e4(%%ecx)\n\t"
-      "flds 0x1e8(%%ecx)\n\t"
-      "fld %%st(1)\n\t"
-      "fmulp %%st(2)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      ".byte 0xde, 0xea\n\t" /* fsubp %st(2) — gas emits fsubrp for one-op form */
-      "flds 0xc(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t" /* fadd %st(0), %st(0) (DC C0; gas prefers D8 C0) */
-      ".byte 0xde, 0xfa\n\t" /* fdivp %st(2) */
-      "fstp %%st(0)\n\t"
-      ".LFUN_000f7fa0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float span = range_end - range_begin;
+  float a = *(float *)((char *)tag + 0x1e4);
+  float b = *(float *)((char *)tag + 0x1e8);
+  if (a == b || span == 0.0f) return 0.0f;
+  return (a * b - a * a) / (span + span);
 }
-#else
-#error "FUN_000f7fa0: clang naked draft required"
-#endif
-
 
 /* Arm a projectile and detach it from its parent object.
  * Asserts that the projectile has a valid parent (parent_object_index != NONE
@@ -675,72 +637,26 @@ char projectile_aim(int projectile_tag, int param_2, int param_3, void *param_4,
   return result;
 }
 
-/* FUN_000f8590 (0xf8590) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static void *(*const bf8590_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_000f8590(int projectile_handle __attribute__((unused)))
+/* FUN_000f8590 (0xf8590) — readable C lift. */
+void FUN_000f8590(int projectile_handle)
 {
-  __asm__ volatile(
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "flds 0x44(%%ecx)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x40(%%ecx)\n\t"
-      "flds 0x3c(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "movl 0x1dc(%%ecx), %%eax\n\t"
-      "jnp .LFUN_000f8590_1\n\t"
-      "flds 0x2533c8\n\t"
-      "orl $1, %%eax\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "movl %%eax, 0x1dc(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x3c(%%ecx)\n\t"
-      "fstps 0x214(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x40(%%ecx)\n\t"
-      "fstps 0x218(%%ecx)\n\t"
-      "fmuls 0x44(%%ecx)\n\t"
-      "fstps 0x21c(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fsin\n\t"
-      "fstps 0x220(%%ecx)\n\t"
-      "fcos\n\t"
-      "fstps 0x224(%%ecx)\n\t"
-      "ret\n\t"
-      ".LFUN_000f8590_1:\n\t"
-      "andl $0xfffffffe, %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%eax, 0x1dc(%%ecx)\n\t"
-      "movl $0, 0x220(%%ecx)\n\t"
-      "movl $0x3f800000, 0x224(%%ecx)\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bf8590_get)
-      : "memory");
+  char *proj = (char *)object_get_and_verify_type(projectile_handle, 0x20);
+  float x = *(float *)(proj + 0x3c), y = *(float *)(proj + 0x40), z = *(float *)(proj + 0x44);
+  float mag = __builtin_sqrtf(x * x + y * y + z * z);
+  if (mag == 0.0f) {
+    *(int *)(proj + 0x1dc) &= ~1;
+    *(int *)(proj + 0x220) = 0;
+    *(int *)(proj + 0x224) = 0x3f800000;
+    return;
+  }
+  *(int *)(proj + 0x1dc) |= 1;
+  float inv = 1.0f / mag;
+  *(float *)(proj + 0x214) = inv * x;
+  *(float *)(proj + 0x218) = inv * y;
+  *(float *)(proj + 0x21c) = inv * z;
+  *(float *)(proj + 0x220) = __builtin_sinf(mag);
+  *(float *)(proj + 0x224) = __builtin_cosf(mag);
 }
-#else
-#error "FUN_000f8590: clang naked draft required"
-#endif
-
 
 /* FUN_000f8640 (0xf8640) — XBE naked draft (batch 64). */
 #if defined(__clang__)
