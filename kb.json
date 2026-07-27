@@ -34666,7 +34666,7 @@
         {
           "addr": "0x2b310",
           "decl": "char FUN_0002b310(float *direction, short count, int records, float *values, float *out_index, float *out_value);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002b310"
         },
         {
