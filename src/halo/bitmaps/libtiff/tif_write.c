@@ -5919,33 +5919,11 @@ void FUN_00071af0(void)
 #endif
 
 
-/* FUN_00071ca0 (0x71ca0) — XBE naked draft (batch 361). */
-#if defined(__clang__)
-static void (*const b71ca0_c70b70)(void) = (void *)FUN_00070b70;
-
-__attribute__((naked, noinline))
-void FUN_00071ca0(void)
+/* FUN_00071ca0 (0x71ca0) — readable C lift. */
+int FUN_00071ca0(void *a0, void *a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c70b70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c70b70] "m"(b71ca0_c70b70)
-      : "memory");
+  return ((int (*)(void *, void *, int))FUN_00070b70)(a0, a1, 0);
 }
-#else
-#error "FUN_00071ca0: clang naked draft required"
-#endif
-
 
 /* TIFFWriteRawTile (0x71cc0) — XBE naked draft (batch 313). */
 #if defined(__clang__)

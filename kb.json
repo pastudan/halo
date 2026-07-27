@@ -37337,8 +37337,8 @@
         },
         {
           "addr": "0x71ca0",
-          "decl": "void FUN_00071ca0(void);",
-          "ported": false
+          "decl": "int FUN_00071ca0(void *a0, void *a1);",
+          "ported": true
         },
         {
           "addr": "0x71cc0",
