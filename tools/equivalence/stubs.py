@@ -361,16 +361,20 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
         rdata_map = {}
 
     def _snapshot_identity_addr(sym_name):
-        if not snapshot_regions:
-            return None
         m = _re.match(r'(?:DAT|PTR|PTR_DAT|FLOAT)_([0-9a-fA-F]{4,})$',
                       sym_name)
         if not m:
             return None
         orig = int(m.group(1), 16)
-        for base, data in snapshot_regions.items():
-            if base <= orig < base + len(data):
-                return orig
+        if snapshot_regions:
+            for base, data in snapshot_regions.items():
+                if base <= orig < base + len(data):
+                    return orig
+        # map_globals maps [GLOBALS_BASE, GLOBALS_BASE+GLOBALS_SIZE). Identity-
+        # relocate DAT_ in that window so absolute loop bounds (e.g. slot <
+        # 0x5aa45c) match the relocated base pointer.
+        if GLOBALS_BASE <= orig < GLOBALS_BASE + GLOBALS_SIZE:
+            return orig
         return None
 
     def _canon_sym(sym_name: str) -> str:

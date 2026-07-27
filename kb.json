@@ -28238,7 +28238,7 @@
         {
           "addr": "0xf3740",
           "decl": "void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count);",
-          "ported": false,
+          "ported": true,
           "name": "multiplayer_game_set_text_box_for_game_ruleset"
         },
         {

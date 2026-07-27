@@ -215,7 +215,10 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
         for sv in z3_seeds:
             if len(all_seeds) >= num_seeds:
                 break
-            if safe_mode:
+            # Always sanitize size-like ints from Z3 — unconstrained branch
+            # seeds often set count=INT_MAX and burn the insn budget.
+            if safe_mode or any(_is_size_like_param(p.name) and not p.is_pointer
+                                for p in params):
                 all_seeds.append(_sanitize_seed_vec(params, sv))
             else:
                 all_seeds.append(sv)
@@ -244,14 +247,20 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
             elif p.is_double:
                 vec.append(float(float_corners[ci % len(float_corners)]))
             else:
-                if safe_mode and _is_size_like_param(p.name):
+                # Always clamp size-like ints (count/len/...). INT_MAX corners
+                # make bounded table walkers burn the insn budget under
+                # --allow-stubs (safe_mode off) and block 100/0/0.
+                if _is_size_like_param(p.name):
                     vec.append(SAFE_SIZE_CORNERS[ci % len(SAFE_SIZE_CORNERS)])
                 else:
                     vec.append(int_corners[ci % len(int_corners)])
         if safe_mode:
             all_seeds.append(_sanitize_seed_vec(params, vec))
         else:
-            all_seeds.append(vec)
+            all_seeds.append(_sanitize_seed_vec(params, vec)
+                             if any(_is_size_like_param(p.name) and not p.is_pointer
+                                    for p in params)
+                             else vec)
         if len(all_seeds) >= num_seeds:
             break
 
@@ -284,7 +293,7 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
                     rv = rng.uniform(-1e15, 1e15)
                 vec.append(rv)
             else:
-                if safe_mode and _is_size_like_param(p.name):
+                if _is_size_like_param(p.name):
                     vec.append(rng.randint(0, 128))
                 elif safe_mode:
                     vec.append(rng.randint(-128, 255))
@@ -293,7 +302,10 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
         if safe_mode:
             all_seeds.append(_sanitize_seed_vec(params, vec))
         else:
-            all_seeds.append(vec)
+            all_seeds.append(_sanitize_seed_vec(params, vec)
+                             if any(_is_size_like_param(p.name) and not p.is_pointer
+                                    for p in params)
+                             else vec)
         ri += 1
 
     return all_seeds[:num_seeds]
