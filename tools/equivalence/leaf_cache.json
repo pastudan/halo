@@ -1788,7 +1788,7 @@
   },
   "0x8": {
     "confidence": "weak",
-    "coverage_pct": 55.8
+    "coverage_pct": 34.7
   },
   "0x80070": {
     "class": "non_leaf",
@@ -2085,6 +2085,9 @@
     "class": "non_leaf"
   },
   "0xc8e00": {
+    "class": "non_leaf"
+  },
+  "0xc8f40": {
     "class": "non_leaf"
   },
   "0xc9770": {

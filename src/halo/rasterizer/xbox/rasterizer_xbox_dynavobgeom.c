@@ -11419,73 +11419,71 @@ int FUN_00168ca0(void *obj, int *out, int addend)
   return 0;
 }
 
-/* FUN_00168cd0 (0x168cd0) — readable C lift: create/fill dynamic VB. */
-unsigned char FUN_00168cd0(void *out, short type, int count, void *src, int nbytes)
+/* FUN_00168cd0 (0x168cd0) — readable C lift: create dynamic vertex buffer. */
+unsigned char FUN_00168cd0(void *obj, short type, int count, void *src, int nbytes)
 {
   short stride;
-  int need;
   unsigned char ok;
-  void *vb;
   int hr;
+  void *vb;
   void *locked;
 
   stride = (short)FUN_00180050(type);
-  if (!out) {
+  if (!obj) {
     display_assert((const char *)0x2a19cc, (const char *)0x2a2b58, 0x18, 1);
     system_exit(-1);
   }
-  need = (int)stride * count;
-  if (need != nbytes && src) {
+  if ((int)stride * count != nbytes && src) {
     display_assert((const char *)0x2a2b2c, (const char *)0x2a2b58, 0x19, 1);
     system_exit(-1);
   }
-  ok = count != 0;
-  vb = 0;
+  ok = 1;
+  if (count == 0)
+    ok = 0;
   if (!*(int *)0x476ab0) {
     ok = 0;
   } else if (ok) {
-    hr = ((int (__stdcall *)(unsigned int, unsigned int, unsigned int, unsigned int, void **))(
-        void *)D3DDevice_CreateVertexBuffer)((unsigned int)nbytes, 8, 0, 1, &vb);
+    vb = 0;
+    hr = D3DDevice_CreateVertexBuffer((unsigned)nbytes, 8, 0, 1, &vb);
     if (hr < 0) {
       ok = 0;
       FUN_00167ff0(hr, (const char *)0x2a2a90);
     } else {
       ok = 1;
     }
-    if (!vb)
+    if (!vb) {
       ok = 0;
-    else if (!ok)
       vb = 0;
-  }
-  if (!src) {
-    if (!ok) {
-      csmemset(out, 0, 0x14);
-      error(2, (const char *)0x2a2a54);
+    } else if (!ok) {
+      vb = 0;
     }
-    return ok;
-  }
-  if (!ok) {
-    csmemset(out, 0, 0x14);
+    if (src) {
+      if (!ok)
+        goto fail;
+      locked = 0;
+      *(short *)0x325652 = 2;
+      D3DVertexBuffer_Lock((int)vb, 0, nbytes, (int)&locked, 0);
+      *(short *)0x325652 = 0;
+      if (!locked) {
+        ok = 0;
+        locked = 0;
+        goto fail;
+      }
+      csmemcpy(locked, src, (unsigned)nbytes);
+      *(short *)obj = type;
+      *(int *)((char *)obj + 4) = count;
+      *(int *)((char *)obj + 8) = 0;
+      *(void **)((char *)obj + 0xc) = src;
+      *(void **)((char *)obj + 0x10) = vb;
+      return 1;
+    }
+    if (ok)
+      return ok;
+  fail:
+    csmemset(obj, 0, 0x14);
     error(2, (const char *)0x2a2a54);
-    return ok;
   }
-  *(short *)0x325652 = 2;
-  locked = 0;
-  ((void (__stdcall *)(void *, unsigned int, unsigned int, void **, unsigned int))(void *)D3DVertexBuffer_Lock)(
-      vb, 0, (unsigned int)nbytes, &locked, 0);
-  *(short *)0x325652 = 0;
-  if (!locked) {
-    csmemset(out, 0, 0x14);
-    error(2, (const char *)0x2a2a54);
-    return 0;
-  }
-  csmemcpy(locked, src, (unsigned int)nbytes);
-  *(int *)((char *)out + 4) = count;
-  *(int *)((char *)out + 8) = 0;
-  *(void **)((char *)out + 0xc) = src;
-  *(short *)out = type;
-  *(void **)((char *)out + 0x10) = vb;
-  return 1;
+  return ok;
 }
 
 /* FUN_00168e40 (0x168e40) — readable C lift. */

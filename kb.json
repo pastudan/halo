@@ -12252,7 +12252,7 @@
         {
           "addr": "0xc8f40",
           "decl": "char FUN_000c8f40(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9050",
@@ -39245,7 +39245,7 @@
         },
         {
           "addr": "0x168cd0",
-          "decl": "unsigned char FUN_00168cd0(void *out, short type, int count, void *src, int nbytes);",
+          "decl": "unsigned char FUN_00168cd0(void *obj, short type, int count, void *src, int nbytes);",
           "ported": true
         },
         {
