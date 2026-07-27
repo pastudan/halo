@@ -103,7 +103,7 @@ static uint8_t (*const b1929a0_c99270)(float *plane, uint32_t basis) = FUN_00099
 static void (*const b1929a0_c992d0)(float *point_2d, float *plane, int16_t projection, uint8_t sign, float *out_point) = project_point2d;
 
 __attribute__((naked, noinline))
-void FUN_001929a0(void)
+void FUN_001929a0(int unused_a __attribute__((unused)), short *type_a __attribute__((unused)), short *type_b __attribute__((unused)), char lit __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
