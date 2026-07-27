@@ -15245,8 +15245,9 @@
         },
         {
           "addr": "0x1271a0",
-          "decl": "void FUN_001271a0(void *client, void *source, int rejection_code);",
-          "ported": false
+          "decl": "void FUN_001271a0(void *client, void *source_address, unsigned short rejection_code);",
+          "ported": true,
+          "name": "FUN_001271a0"
         },
         {
           "addr": "0x127260",
@@ -23867,7 +23868,7 @@
         },
         {
           "addr": "0x1c3160",
-          "decl": "void saved_game_file_generate_checksum(void);",
+          "decl": "void saved_game_file_generate_checksum(void *buffer, unsigned short size, void *out_sig);",
           "ported": false
         },
         {
@@ -40122,8 +40123,8 @@
         },
         {
           "addr": "0x81c80",
-          "decl": "const char *FUN_00081c80(int error_code);",
-          "ported": false
+          "decl": "const char *FUN_00081c80(int16_t error_code);",
+          "ported": true
         },
         {
           "addr": "0x81e00",

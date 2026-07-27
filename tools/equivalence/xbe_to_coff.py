@@ -280,11 +280,43 @@ def synthesize_relocs(
                 and insn.operands[0].type == CS_OP_IMM
             ):
                 continue
-            sym = resolve_symbol_name(val & 0xFFFFFFFF, by_addr, code_hi)
+            tgt = val & 0xFFFFFFFF
             site = off + byte_off
+            # In-function absolutes (switch jump-table base / local ptr) → LAB_*.
+            if addr <= tgt < end:
+                label_offs.add(tgt - addr)
+                sym = f"LAB_{tgt:08x}"
+            else:
+                sym = resolve_symbol_name(tgt, by_addr, code_hi)
             relocs.append(RelocSite(site, IMAGE_REL_I386_DIR32, sym))
             out[site : site + 4] = b"\x00\x00\x00\x00"
             seen_off.add(byte_off)
+
+    # Switch jump-table payloads: `jmp dword ptr [reg*4 + table]` where table
+    # holds absolute in-function VAs. Capstone does not emit imm relocs for the
+    # table body — fix them up so Unicorn does not FETCH_UNMAPPED.
+    table_bases: list[int] = []
+    for insn in md.disasm(code, addr):
+        if insn.mnemonic != "jmp" or "dword ptr" not in insn.op_str or "*4" not in insn.op_str:
+            continue
+        if insn.disp_offset and insn.disp_offset + 4 <= len(insn.bytes):
+            tab = struct.unpack_from("<I", insn.bytes, insn.disp_offset)[0]
+            if addr <= tab < end:
+                table_bases.append(tab)
+    reloc_offs = {r.offset for r in relocs}
+    for tab in table_bases:
+        i = tab - addr
+        while i + 4 <= len(out):
+            if i in reloc_offs:
+                break
+            val = struct.unpack_from("<I", out, i)[0]
+            if not (addr <= val < end):
+                break
+            label_offs.add(val - addr)
+            relocs.append(RelocSite(i, IMAGE_REL_I386_DIR32, f"LAB_{val:08x}"))
+            out[i : i + 4] = b"\x00\x00\x00\x00"
+            reloc_offs.add(i)
+            i += 4
 
     relocs.sort(key=lambda r: r.offset)
     labels = sorted((o, f"LAB_{addr + o:08x}") for o in label_offs)
@@ -356,11 +388,14 @@ def build_coff(result: SynthResult, out_name: str) -> bytes:
         IMAGE_SYM_CLASS_EXTERNAL,
     )
 
-    for off, lab in result.labels:
-        _append_symbol(symtab, string_table, lab, off, 1, 0, IMAGE_SYM_CLASS_STATIC)
-
-    # External reloc symbols (unique, first-seen order)
+    # Local LAB_* first so jump-table DIR32 relocs bind here (not externals).
     sym_index: dict[str, int] = {}
+    for off, lab in result.labels:
+        sym_index[lab] = _append_symbol(
+            symtab, string_table, lab, off, 1, 0, IMAGE_SYM_CLASS_STATIC
+        )
+
+    # External reloc symbols (unique); skip names already defined locally.
     for r in relocs:
         if r.symbol in sym_index:
             continue

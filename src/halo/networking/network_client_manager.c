@@ -3483,209 +3483,27 @@ void *FUN_00126fe0(void)
   return (void *)0x5a95a0;
 }
 
-/* FUN_001271a0 (0x1271a0) — XBE naked draft (batch 146). */
-#if defined(__clang__)
-static void (*const b1271a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1271a0_exitfn)(int) = system_exit;
-static void (*const b1271a0_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b1271a0_c1267c0)(void *client, char flag) = FUN_001267c0;
-
-__attribute__((naked, noinline))
-void FUN_001271a0(void *client __attribute__((unused)), void *source __attribute__((unused)), int rejection_code __attribute__((unused)))
+/* FUN_001271a0 (0x1271a0) — readable C lift: log join rejection + close. */
+void FUN_001271a0(void *client, void *source_address, unsigned short rejection_code)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl $0x25b724, %%esi\n\t"
-      "je .LFUN_001271a0_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001271a0_2\n\t"
-      ".LFUN_001271a0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x35a\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291a3c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001271a0_2:\n\t"
-      "movzwl 0x10(%%ebp), %%eax\n\t"
-      "cmpl $6, %%eax\n\t"
-      "movw $0, 0xca6(%%edi)\n\t"
-      "ja .LFUN_001271a0_10\n\t"
-      "jmp *.LFUN_001271a0_jt(,%%eax,4)\n\t"
-      ".LFUN_001271a0_3:\n\t"
-      "movl $0x2933d8, %%esi\n\t"
-      "jmp .LFUN_001271a0_10\n\t"
-      ".LFUN_001271a0_4:\n\t"
-      "movl $0x2933b8, %%esi\n\t"
-      "jmp .LFUN_001271a0_10\n\t"
-      ".LFUN_001271a0_5:\n\t"
-      "movl $0x293398, %%esi\n\t"
-      "jmp .LFUN_001271a0_10\n\t"
-      ".LFUN_001271a0_6:\n\t"
-      "movl $0x293378, %%esi\n\t"
-      "jmp .LFUN_001271a0_10\n\t"
-      ".LFUN_001271a0_7:\n\t"
-      "movl $0x293358, %%esi\n\t"
-      "jmp .LFUN_001271a0_10\n\t"
-      ".LFUN_001271a0_8:\n\t"
-      "movl $0x293338, %%esi\n\t"
-      "jmp .LFUN_001271a0_10\n\t"
-      ".LFUN_001271a0_9:\n\t"
-      "movl $0x293314, %%esi\n\t"
-      ".LFUN_001271a0_10:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2932f0\n\t"
-      "call *%[c12b650]\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1267c0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_001271a0_jt:\n\t"
-      ".long .LFUN_001271a0_3\n\t"
-      ".long .LFUN_001271a0_4\n\t"
-      ".long .LFUN_001271a0_5\n\t"
-      ".long .LFUN_001271a0_6\n\t"
-      ".long .LFUN_001271a0_7\n\t"
-      ".long .LFUN_001271a0_8\n\t"
-      ".long .LFUN_001271a0_9\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b1271a0_assert), [exitfn] "m"(b1271a0_exitfn), [c12b650] "m"(b1271a0_c12b650), [c1267c0] "m"(b1271a0_c1267c0)
-      : "memory");
-}
-#else
-#error "FUN_001271a0: clang naked draft required"
-#endif
-
-
-/* FUN_00127260 (0x127260) — readable C lift. */
-bool FUN_00127260(void *client, void *message_data, int message_size)
-{
-  int size_left;
-  short field_size;
-  short field_count;
-  char value[0x11c];
-  bool ok;
-
-  if (network_game_client_get_state(client, 0) != 0) {
-    network_game_log((const char *)0x2933f8);
-    return 1;
+  const char *reason;
+  if (client == 0 || source_address == 0) {
+    display_assert((const char *)0x291a3c, (const char *)0x291774, 0x35a, 1);
+    system_exit(-1);
   }
-  size_left = message_size - 2;
-  field_size = 2;
-  field_count = 1;
-  ok = FUN_0012bce0(
-      (int)value,
-      (int)((char *)message_data + 2),
-      (short *)&size_left,
-      &field_size,
-      &field_count,
-      1);
-  if (!ok) {
-    network_game_log((const char *)0x293440);
-    return 1;
+  *(unsigned short *)((char *)client + 0xca6) = 0;
+  switch (rejection_code) {
+  case 0: reason = (const char *)0x2933d8; break;
+  case 1: reason = (const char *)0x2933b8; break;
+  case 2: reason = (const char *)0x293398; break;
+  case 3: reason = (const char *)0x293378; break;
+  case 4: reason = (const char *)0x293358; break;
+  case 5: reason = (const char *)0x293338; break;
+  case 6: reason = (const char *)0x293314; break;
+  default: reason = (const char *)0x25b724; break;
   }
-  if (!FUN_00081fa0(value, 8))
-    return 1;
-  network_game_client_new_advertised_game(client, value);
-  return 1;
-}
-
-
-
-/* FUN_00127310 (0x127310) — readable C lift. */
-char FUN_00127310(void *client, void *message, int message_size, void *source_address)
-{
-  int size_left;
-  short field_size;
-  short field_count;
-  int value;
-  char ok;
-
-  if (network_game_client_get_state(client, (void *)0) != 0) {
-    network_game_log((const char *)0x293478);
-    return 1;
-  }
-  size_left = message_size - 2;
-  field_size = 3;
-  field_count = 1;
-  ok = FUN_0012bce0(
-      (int)&value,
-      (int)((char *)message + 2),
-      (short *)&size_left,
-      &field_size,
-      &field_count,
-      1);
-  if (ok) {
-    network_game_client_ponged(client, source_address, value);
-    return 1;
-  }
-  network_game_log((const char *)0x2934b8);
-  return 1;
-}
-
-/* FUN_001273a0 (0x1273a0) — readable C lift. */
-char FUN_001273a0(void *client, void *source_address, void *message, int message_size)
-{
-  int size_left;
-  short field_size;
-  short field_count;
-  char value[8];
-  bool ok;
-
-  if (!FUN_00124d50(client, source_address) || network_game_client_get_state(client, (void *)0) != 1) {
-    network_game_log((const char *)0x2934e8);
-    return 0;
-  }
-  size_left = message_size - 2;
-  field_size = 4;
-  field_count = 1;
-  ok = FUN_0012bce0((int)value, (int)((char *)message + 2), (short *)&size_left, &field_size, &field_count, 2);
-  if (ok) {
-    network_game_client_accepted_into_game(client, source_address, value);
-    return 1;
-  }
-  network_game_log((const char *)0x293548);
-  return 0;
-}
-
-/* FUN_00127440 (0x127440) — readable C lift. */
-char FUN_00127440(void *client, void *source_address, void *message, int message_size)
-{
-  int size_left;
-  short field_size;
-  short field_count;
-  int value;
-  bool ok;
-
-  if (!FUN_00124d50(client, source_address) || network_game_client_get_state(client, (void *)0) != 1) {
-    network_game_log((const char *)0x293588);
-    return 0;
-  }
-  size_left = message_size - 2;
-  field_size = 5;
-  field_count = 1;
-  ok = FUN_0012bce0((int)&value, (int)((char *)message + 2), (short *)&size_left, &field_size, &field_count, 2);
-  if (ok) {
-    FUN_001271a0(client, source_address, value);
-    return 1;
-  }
-  network_game_log((const char *)0x2935e8);
-  return 0;
+  network_game_log((const char *)0x2932f0, (int)rejection_code, reason);
+  FUN_001267c0(client, 1);
 }
 
 /* FUN_001274E0 (0x1274e0) — XBE naked draft (batch 127). */

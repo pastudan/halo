@@ -311,12 +311,18 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
                        return_slots: bool = False,
                        rdata_map: dict = None,
                        snapshot_regions: dict = None,
-                       preset_slots: dict = None):
+                       preset_slots: dict = None,
+                       local_symbol_values: dict = None,
+                       local_code_base: int = None):
     """Rewrite DIR32 relocations to point into the globals memory region.
 
     Each unique external DIR32 symbol gets a 256-byte slot in the globals
     region (enough for most scalar/struct globals).  Section-relative
     relocations (.text, .rdata prefixed) are left untouched.
+
+    local_symbol_values + local_code_base: in-function LAB_* (switch jump
+    tables) are patched to local_code_base + offset instead of being skipped
+    as zeros (which caused UC_ERR_FETCH_UNMAPPED on jmp [reg*4+table]).
 
     preset_slots: optional {symbol_name: slot_addr} to reuse (e.g. oracle DAT_
     slots for a candidate's `_DAT_` / `DAT_` of the same XBE address).  When
@@ -389,6 +395,18 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
                 and not is_rdata_ref):
             continue
         if sym in defined_symbols and not is_rdata_ref:
+            # Switch jump-table / local LAB_* DIR32 → code VA.
+            if (
+                local_symbol_values
+                and local_code_base is not None
+                and sym in local_symbol_values
+            ):
+                off = r.virtual_address
+                if off + 4 <= len(patched):
+                    # symbol_values are section offsets; code slice starts at
+                    # section_offset for this function.
+                    abs_off = local_symbol_values[sym]
+                    struct.pack_into("<I", patched, off, local_code_base + abs_off)
             continue
 
         if not is_rdata_ref:

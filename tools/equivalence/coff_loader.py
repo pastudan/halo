@@ -75,6 +75,7 @@ class FunctionSlice:
     code: bytes             # raw machine code bytes
     relocs: list[CoffReloc] # relocations that fall inside this function
     defined_symbols: set = field(default_factory=set)  # symbols defined in this .obj
+    symbol_values: dict = field(default_factory=dict)  # {name: offset within .text section}
     section_offset: int = 0  # offset of this function within its section
     rdata_map: dict = field(default_factory=dict)  # {symbol_name: bytes} for .rdata refs
     rdata_relocs: dict = field(default_factory=dict)  # {symbol_name: [CoffReloc]} relative to rdata_map bytes
@@ -277,6 +278,11 @@ def extract_function(obj_path: str, func_name: str) -> FunctionSlice:
     ]
 
     defined = {s.name for s in symbols if s.section_num > 0}
+    symbol_values = {
+        s.name: s.value
+        for s in symbols
+        if s.section_num == target_sym.section_num
+    }
 
     text_sec_idx = target_sym.section_num - 1
     rdata_map = {}
@@ -314,6 +320,7 @@ def extract_function(obj_path: str, func_name: str) -> FunctionSlice:
         code=code,
         relocs=func_relocs,
         defined_symbols=defined,
+        symbol_values=symbol_values,
         section_offset=func_offset,
         rdata_map=rdata_map,
         rdata_relocs=rdata_relocs,

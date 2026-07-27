@@ -58,23 +58,23 @@ const char *transport_address_to_string(void *addr)
   (void)esi;
 }
 
-/* 0x81c80 */
-const char *FUN_00081c80(int error_code)
+/* FUN_00081c80 (0x81c80) — readable C lift: transport error_code → string. */
+const char *FUN_00081c80(int16_t error_code)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-
-  /* cmp eax, 0x17 -> ja 0x81d42 */
-  /* test esi, esi -> jne 0x81de1 */
-  display_assert((char *)0x00266450, (char *)0x00266458, 57, 0);
-  system_exit(0);
-  /* cmp eax, ecx -> jle 0x81df6 */
-  return NULL;
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
+  static const char *const k_msgs[0x18] = {
+      (const char *)0x26611c, (const char *)0x266144, (const char *)0x266170,
+      (const char *)0x26618c, (const char *)0x2661b0, (const char *)0x2661d8,
+      (const char *)0x2661f8, (const char *)0x266218, (const char *)0x266238,
+      (const char *)0x26625c, (const char *)0x26627c, (const char *)0x26629c,
+      (const char *)0x2662bc, (const char *)0x2662dc, (const char *)0x2662f8,
+      (const char *)0x266318, (const char *)0x26633c, (const char *)0x266364,
+      (const char *)0x26638c, (const char *)0x2663b0, (const char *)0x2663d8,
+      (const char *)0x2663fc, (const char *)0x26641c, (const char *)0x266438,
+  };
+  unsigned int idx = (unsigned int)(error_code + 0x17);
+  if (idx > 0x17u)
+    return (const char *)0x266100;
+  return k_msgs[idx];
 }
 
 /* FUN_00081e00 (0x81e00) — readable C lift. */

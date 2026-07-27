@@ -1756,10 +1756,22 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
             oracle_slice, orc_rdata, oracle_text is not None)
         lft_rdata = getattr(lifted_slice, 'rdata_map', {})
         lft_rdata = _relocate_rdata_text_refs(lifted_slice, lft_rdata, False)
+        # Local LAB_* DIR32 (switch jump tables): code VA = map_base + section off.
+        orc_map_base = CODE_BASE if oracle_text is not None else CODE_BASE
+        # When only the function slice is mapped at CODE_BASE, subtract section_offset
+        # so LAB section values land inside the loaded slice.
+        orc_lab_base = (
+            CODE_BASE
+            if oracle_text is not None
+            else (CODE_BASE - oracle_slice.section_offset)
+        )
+        lft_lab_base = CODE_BASE - lifted_slice.section_offset
         oracle_code_patched, orc_data_slots, orc_rdata_seeds = patch_dir32_relocs(
             oracle_slice.code, oracle_slice.relocs, orc_defined,
             return_slots=True, rdata_map=orc_rdata,
-            snapshot_regions=snapshot_overrides)
+            snapshot_regions=snapshot_overrides,
+            local_symbol_values=getattr(oracle_slice, "symbol_values", None),
+            local_code_base=orc_lab_base)
         oracle_code_patched = bytes(oracle_code_patched)
         # Reuse oracle DAT_/PTR_ slot addresses for the candidate so
         # address-of-global stores (`*out = DAT_x`) compare equal.  New
@@ -1770,7 +1782,9 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
             globals_base=lft_globals_base,
             return_slots=True, rdata_map=lft_rdata,
             snapshot_regions=snapshot_overrides,
-            preset_slots=orc_data_slots)
+            preset_slots=orc_data_slots,
+            local_symbol_values=getattr(lifted_slice, "symbol_values", None),
+            local_code_base=lft_lab_base)
         lifted_code_patched = bytes(lifted_code_patched)
 
         globals_seeds = _build_globals_seeds(orc_data_slots, lft_data_slots,
