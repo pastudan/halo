@@ -31183,7 +31183,7 @@
         {
           "addr": "0x17cf60",
           "decl": "void FUN_0017cf60(uint32_t source, uint32_t param, int arg3, int arg4, uint32_t handle, int subcount2, float *origin, uint32_t widget_flags);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cf70",
@@ -38706,8 +38706,9 @@
         },
         {
           "addr": "0x15f630",
-          "decl": "void FUN_0015f630(void);",
-          "ported": false
+          "decl": "void FUN_0015f630(uint32_t source, uint32_t param, int arg3, int arg4, uint32_t handle, int subcount2, float *origin, uint32_t widget_flags);",
+          "ported": false,
+          "name": "FUN_0015f630"
         },
         {
           "addr": "0x15f8e0",
