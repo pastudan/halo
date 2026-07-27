@@ -4061,7 +4061,7 @@
         {
           "addr": "0x24ca0",
           "decl": "char FUN_00024ca0(int actor_handle, short param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x24cf0",
@@ -4127,8 +4127,8 @@
         },
         {
           "addr": "0x27a10",
-          "decl": "int FUN_00027a10(int actor_handle /* @<eax> */);",
-          "ported": false
+          "decl": "int FUN_00027a10(int actor_handle);",
+          "ported": true
         },
         {
           "addr": "0x27a60",
@@ -17198,7 +17198,7 @@
           "addr": "0x144ae0",
           "decl": "void objects_scripting_attach(int param_1, int param_2, int param_3, int param_4);",
           "name": "objects_scripting_attach",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x144b30",
@@ -28584,7 +28584,7 @@
         {
           "addr": "0x1a6820",
           "decl": "int FUN_001a6820(int param_1, char param_2);",
-          "ported": false,
+          "ported": true,
           "source_path": "units/units.c"
         },
         {

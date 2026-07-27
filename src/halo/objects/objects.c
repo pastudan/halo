@@ -20143,54 +20143,22 @@ float FUN_001397f0(float a, float b)
   return *(float *)0x2533c8 - ((b * b) / (a * a));
 }
 
-/* objects_scripting_attach (0x144ae0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b144ae0_get)(int, int) = object_get_and_verify_type;
-static void (*const b144ae0_c144860)(int parent_handle, void *marker_name, int child_handle, void *child_marker_name) = object_attach_to_marker;
-
-__attribute__((naked, noinline))
-void objects_scripting_attach(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), int param_4 __attribute__((unused)))
+/* objects_scripting_attach (0x144ae0) — readable C lift. */
+void objects_scripting_attach(int parent_handle, int parent_marker, int child_handle,
+                              int child_marker)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lobjects_scripting_attach_2\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lobjects_scripting_attach_1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xcc(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .Lobjects_scripting_attach_1\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c144860]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lobjects_scripting_attach_1:\n\t"
-      "popl %%esi\n\t"
-      ".Lobjects_scripting_attach_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b144ae0_get), [c144860] "m"(b144ae0_c144860)
-      : "memory");
-}
-#else
-#error "objects_scripting_attach: clang naked draft required"
-#endif
+  void *child;
 
+  if (parent_handle == -1)
+    return;
+  if (child_handle == -1)
+    return;
+  child = object_get_and_verify_type(child_handle, -1);
+  if (*(int *)((char *)child + 0xcc) != -1)
+    return;
+  object_attach_to_marker(parent_handle, (void *)parent_marker, child_handle,
+                          (void *)child_marker);
+}
 
 /* FUN_0013c080 (0x13c080) — XBE naked draft (batch 66). */
 #if defined(__clang__)

@@ -593,54 +593,24 @@ int16_t FUN_001a67e0(const char *name)
   return -1;
 }
 
-/* FUN_001a6820 (0x1a6820) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b1a6820_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1a6820_c19b120)(int *tag_ref) = verify_tag_reference;
-
-__attribute__((naked, noinline))
-int FUN_001a6820(int param_1 __attribute__((unused)), char param_2 __attribute__((unused)))
+/* FUN_001a6820 (0x1a6820) — readable C lift. */
+int FUN_001a6820(int unit, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x2a8(%%edx), %%eax\n\t"
-      "setne %%cl\n\t"
-      "addl $0x2a8, %%edx\n\t"
-      "decl %%eax\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jg .LFUN_001a6820_1\n\t"
-      "movl %%ecx, %%eax\n\t"
-      ".LFUN_001a6820_1:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .LFUN_001a6820_2\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a6820_2:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19b120]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1a6820_elem), [c19b120] "m"(b1a6820_c19b120)
-      : "memory");
-}
-#else
-#error "FUN_001a6820: clang naked draft required"
-#endif
+  int *block;
+  int index;
+  int limit;
+  void *elem;
 
+  block = (int *)((char *)unit + 0x2a8);
+  index = flag ? 1 : 0;
+  limit = *block - 1;
+  if (index > limit)
+    index = limit;
+  if (index < 0)
+    return -1;
+  elem = tag_block_get_element(block, index, 0x30);
+  return verify_tag_reference((int *)elem);
+}
 
 /* FUN_001a6870 (0x1a6870) — XBE naked draft (batch 68). */
 #if defined(__clang__)
@@ -11167,7 +11137,7 @@ void unit_drop_weapons_on_death(int unit_handle __attribute__((unused)))
 
 /* unit_get_weapon_name (0x1ae700) — readable C lift. */
 extern char DAT_002b6e68[];
-char *unit_get_weapon_name(int unit_handle /* @<esi> */)
+char *unit_get_weapon_name(int unit_handle /* @<esi> */, int unused __attribute__((unused)))
 {
   char *unit;
   int weapon_handle;

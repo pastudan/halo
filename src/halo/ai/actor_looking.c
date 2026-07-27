@@ -8940,58 +8940,21 @@ void FUN_0001ac00(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00024ca0 (0x24ca0) — XBE naked draft (batch 76). */
-#if defined(__clang__)
-static void *(*const b24ca0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-char FUN_00024ca0(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)))
+/* FUN_00024ca0 (0x24ca0) — readable C lift. */
+char FUN_00024ca0(int actor_handle, short param_2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movw 0xc(%%ebp), %%si\n\t"
-      "movl %%eax, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_00024ca0_3\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "jmp .LFUN_00024ca0_1\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00024ca0_1:\n\t"
-      "movswl %%cx, %%edi\n\t"
-      "cmpw 0x3ca(%%edx,%%edi,4), %%si\n\t"
-      "je .LFUN_00024ca0_2\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jl .LFUN_00024ca0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00024ca0_2:\n\t"
-      "movb $1, %%al\n\t"
-      ".LFUN_00024ca0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b24ca0_dget)
-      : "memory");
-}
-#else
-#error "FUN_00024ca0: clang naked draft required"
-#endif
+  char *actor;
+  int i;
 
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (param_2 == -1)
+    return 0;
+  for (i = 0; i < 4; i++) {
+    if (param_2 == *(short *)(actor + 0x3ca + i * 4))
+      return 1;
+  }
+  return 0;
+}
 
 /* FUN_00024cf0 (0x24cf0) — XBE naked draft (batch 69). */
 #if defined(__clang__)
@@ -9627,7 +9590,7 @@ void FUN_00025340(int actor_handle, void *ctx, unsigned short count,
           }
           /* @<esi> = position element base (original 0x254ed LEA ESI,[EDI-8]);
            * 24000 accumulates score into [esi+0x38] = pos+0x30. */
-          FUN_00024000(ctx, score, 3, pos - 8);
+          FUN_00024000(NULL, score, 3, pos - 8, ctx);
         }
       }
     }
@@ -9722,9 +9685,8 @@ void FUN_00025510(int actor_handle, void *ctx, unsigned short count,
                   bonus = *(float *)0x2533c8;
               }
               /* @<esi> = position element base (original 0x2576b). */
-              FUN_00024000(ctx,
-                           (*(float *)0x2533c8 - bonus) * *(float *)0x253f78,
-                           10, pos - 8);
+              FUN_00024000(NULL, (*(float *)0x2533c8 - bonus) * *(float *)0x253f78,
+                           10, pos - 8, ctx);
             } else {
               *(char *)(pos + 0x28) = 0;
             }
@@ -10051,7 +10013,7 @@ static float (*const b25c10_c10cd40)(float *p1, float *p2, float *p3) = FUN_0010
 static int *(*const b25c10_gseed)(void) = get_global_random_seed_address;
 static int16_t (*const b25c10_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
 static char (*const b25c10_c25970)(void *state, int actor_handle, char *actor) = FUN_00025970;
-static void (*const b25c10_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = FUN_00091ef0;
+static void (*const b25c10_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = (void *)FUN_00091ef0;
 static char (*const b25c10_c24900)(int actor_handle, void *query_buf) = FUN_00024900;
 static short (*const b25c10_cfff80)(void) = game_connection;
 static void (*const b25c10_c257a0)(int actor_handle, void *state, char *actor) = FUN_000257a0;
@@ -12085,7 +12047,7 @@ static char * (*const b27410_c211f0)(int actor_handle) = actor_combat_get_firing
 static void (*const b27410_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b27410_exitfn)(int) = system_exit;
 static char * (*const b27410_c210f0)(int actor_handle) = FUN_000210f0;
-static void (*const b27410_c24000)(void *ctx, float score, int type, void *position) = FUN_00024000;
+static void (*const b27410_c24000)(void *ctx, float score, int type, void *position) = (void *)FUN_00024000;
 static char * (*const b27410_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 
 __attribute__((naked, noinline))
@@ -12680,49 +12642,22 @@ float FUN_000278e0(int actor_handle __attribute__((unused)), int prop_handle __a
 #endif
 
 
-/* FUN_00027a10 (0x27a10) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void *(*const b27a10_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b27a10_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-int FUN_00027a10(int actor_handle /* */ __attribute__((unused)))
+/* FUN_00027a10 (0x27a10) — readable C lift. */
+int FUN_00027a10(int actor_handle)
 {
-  __asm__ volatile(
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x58(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x3fc(%%esi), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $2, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_00027a10_2\n\t"
-      "jle .LFUN_00027a10_1\n\t"
-      "cmpl $4, %%ecx\n\t"
-      "jg .LFUN_00027a10_1\n\t"
-      "addl $0x10c, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00027a10_1:\n\t"
-      "addl $0xdc, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00027a10_2:\n\t"
-      "addl $0xf4, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b27a10_dget), [tag] "m"(b27a10_tag)
-      : "memory");
-}
-#else
-#error "FUN_00027a10: clang naked draft required"
-#endif
+  char *actor;
+  char *tag;
+  int type;
 
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  tag = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
+  type = *(short *)(actor + 0x3fc);
+  if (type == 2)
+    return (int)(tag + 0xf4);
+  if (type > 2 && type <= 4)
+    return (int)(tag + 0x10c);
+  return (int)(tag + 0xdc);
+}
 
 /* FUN_00027a60 (0x27a60) — XBE naked draft (batch 75). */
 #if defined(__clang__)
