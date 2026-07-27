@@ -478,51 +478,15 @@ char FUN_00042f40(int a, int b, int actor)
   return actor_is_fighting(actor);
 }
 
-/* FUN_00042f60 (0x42f60) — XBE naked draft (batch 180). */
-#if defined(__clang__)
-static char (*const b42f60_c42d80)(int actor, int unit, int prop) = FUN_00042d80;
-static char (*const b42f60_c3b150)(int actor_handle) = actor_is_fighting;
-
-__attribute__((naked, noinline))
-char FUN_00042f60(int actor __attribute__((unused)), int unit __attribute__((unused)), int prop __attribute__((unused)))
+/* FUN_00042f60 (0x42f60) — readable C lift. */
+char FUN_00042f60(int actor, int unit, int prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c42d80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00042f60_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c3b150]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, %%al\n\t"
-      "jne .LFUN_00042f60_2\n\t"
-      ".LFUN_00042f60_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".LFUN_00042f60_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c42d80] "m"(b42f60_c42d80), [c3b150] "m"(b42f60_c3b150)
-      : "memory");
+  if (!FUN_00042d80(actor, unit, prop))
+    return 0;
+  if (!actor_is_fighting(prop))
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_00042f60: clang naked draft required"
-#endif
-
 
 /* FUN_00042fa0 (0x42fa0) — readable C lift. */
 char FUN_00042fa0(int actor, int unit, int prop)
