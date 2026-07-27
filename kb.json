@@ -30521,7 +30521,7 @@
         },
         {
           "addr": "0x1bef80",
-          "decl": "void FUN_001bef80(float *out_a@<eax>, float *out_c@<ecx>, float *uv@<edx>);",
+          "decl": "void FUN_001bef80(void);",
           "ported": true
         },
         {
@@ -35021,7 +35021,8 @@
         {
           "addr": "0x46b60",
           "decl": "char FUN_00046b60(int16_t conversation_index, char allow_finish);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00046b60"
         },
         {
           "addr": "0x46cb0",

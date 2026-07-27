@@ -5688,157 +5688,60 @@ void FUN_00046530(int unit_handle __attribute__((unused)), uint16_t priority __a
 #endif
 
 
-/* FUN_00046b60 (0x46b60) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static scenario_t * (*const b46b60_c18e380)(void) = global_scenario_get;
-static int (*const b46b60_c43740)(int16_t conversation_index, char allow_finish) = FUN_00043740;
-static void *(*const b46b60_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b46b60_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b46b60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static char (*const b46b60_c45a10)(int conversation_handle, char *flag_out) = ai_conversation_begin;
-static void (*const b46b60_c435b0)(int handle, char param_b, char param_c) = (void *)ai_conversation_finish;
-
-__attribute__((naked, noinline))
-char FUN_00046b60(int16_t conversation_index __attribute__((unused)), char allow_finish __attribute__((unused)))
+/* FUN_00046b60 (0x46b60) — readable C lift. */
+char FUN_00046b60(int16_t conversation_index, char allow_finish)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .LFUN_00046b60_7\n\t"
-      "movl 0x468(%%eax), %%edx\n\t"
-      "movswl %%cx, %%esi\n\t"
-      "cmpl %%edx, %%esi\n\t"
-      "jge .LFUN_00046b60_7\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c43740]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movb 0x5aca5f, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00046b60_1\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25a3b8\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_00046b60_1:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .LFUN_00046b60_2\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0x25a360\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00046b60_2:\n\t"
-      "leal 0xb(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movb $0, 0xb(%%ebp)\n\t"
-      "call *%[c45a10]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00046b60_4\n\t"
-      "movb 0x5aca5f, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00046b60_3\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25a344\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_00046b60_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00046b60_4:\n\t"
-      "movb 0xb(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb 0x5aca5f, %%al\n\t"
-      "je .LFUN_00046b60_5\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00046b60_3\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25a308\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00046b60_5:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00046b60_6\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25a2c0\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_00046b60_6:\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c435b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00046b60_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b46b60_c18e380), [c43740] "m"(b46b60_c43740), [elem] "m"(b46b60_elem), [cff4d0] "m"(b46b60_cff4d0), [c8f390] "m"(b46b60_c8f390), [c45a10] "m"(b46b60_c45a10), [c435b0] "m"(b46b60_c435b0)
-      : "memory");
-}
-#else
-#error "FUN_00046b60: clang naked draft required"
-#endif
+  char *scenario;
+  int handle;
+  char began;
+  char flag;
 
+  scenario = (char *)global_scenario_get();
+  if (conversation_index < 0 ||
+      (int)conversation_index >= *(int *)(scenario + 0x468))
+    return 0;
+
+  handle = FUN_00043740(conversation_index, allow_finish);
+  if (*(char *)0x5aca5f) {
+    console_printf(
+        0,
+        (const char *)0x25a3b8,
+        tag_block_get_element(scenario + 0x468, (int)conversation_index, 0x74));
+  }
+  if (handle == -1) {
+    error(2, (const char *)0x25a360, 0x80);
+    return 0;
+  }
+
+  flag = 0;
+  began = ai_conversation_begin(handle, &flag);
+  if (began) {
+    if (*(char *)0x5aca5f) {
+      console_printf(
+          0,
+          (const char *)0x25a344,
+          tag_block_get_element(scenario + 0x468, (int)conversation_index, 0x74));
+    }
+    return 1;
+  }
+  if (flag) {
+    if (*(char *)0x5aca5f) {
+      console_printf(
+          0,
+          (const char *)0x25a308,
+          tag_block_get_element(scenario + 0x468, (int)conversation_index, 0x74));
+    }
+    return 1;
+  }
+  if (*(char *)0x5aca5f) {
+    console_printf(
+        0,
+        (const char *)0x25a2c0,
+        tag_block_get_element(scenario + 0x468, (int)conversation_index, 0x74));
+  }
+  ai_conversation_finish(handle, 1, 0);
+  return 0;
+}
 
 /* ai_conversation_update (0x46cb0) — XBE naked draft (batch 113). */
 #if defined(__clang__)
