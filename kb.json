@@ -15235,13 +15235,15 @@
         },
         {
           "addr": "0x1273a0",
-          "decl": "char FUN_001273a0(void *client /* @<esi> */, void *source_address /* @<edi> */, void *message, int message_size);",
-          "ported": false
+          "decl": "char FUN_001273a0(void *client@<esi>, void *source_address@<edi>, void *message, int message_size);",
+          "ported": true,
+          "name": "FUN_001273a0"
         },
         {
           "addr": "0x127440",
-          "decl": "char FUN_00127440(void *client /* @<esi> */, void *source_address /* @<edi> */, void *message, int message_size);",
-          "ported": false
+          "decl": "char FUN_00127440(void *client@<esi>, void *source_address@<edi>, void *message, int message_size);",
+          "ported": true,
+          "name": "FUN_00127440"
         },
         {
           "addr": "0x1274e0",
@@ -15931,8 +15933,9 @@
         },
         {
           "addr": "0x12f0d0",
-          "decl": "bool FUN_0012f0d0(int server @<esi>, int machine, void *message_data, int message_size);",
-          "ported": false
+          "decl": "bool FUN_0012f0d0(int server@<esi>, int machine, void *message_data, int message_size);",
+          "ported": true,
+          "name": "FUN_0012f0d0"
         },
         {
           "addr": "0x12f170",
@@ -15948,8 +15951,9 @@
         },
         {
           "addr": "0x12f290",
-          "decl": "bool FUN_0012f290(int server @<esi>, int machine, void *message_data, int message_size);",
-          "ported": false
+          "decl": "bool FUN_0012f290(int server@<esi>, int machine, void *message_data, int message_size);",
+          "ported": true,
+          "name": "FUN_0012f290"
         },
         {
           "addr": "0x12f330",
@@ -40114,7 +40118,7 @@
         },
         {
           "addr": "0x80ca0",
-          "decl": "int create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size);",
+          "decl": "int create_message(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size);",
           "name": "create_message",
           "ported": false
         },
