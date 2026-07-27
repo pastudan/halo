@@ -13821,7 +13821,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcf3e0",
@@ -15476,7 +15476,7 @@
           "addr": "0x11bb70",
           "decl": "int FUN_0011bb70(short *table, void *key);",
           "name": "FUN_0011bb70",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11bc20",
@@ -22763,7 +22763,7 @@
         {
           "addr": "0x111770",
           "decl": "void FUN_00111770(int state @<esi>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x111910",
@@ -27899,17 +27899,17 @@
         {
           "addr": "0xf0bb0",
           "decl": "void FUN_000f0bb0(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf0c60",
           "decl": "void FUN_000f0c60(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf0d10",
           "decl": "void playlist_settings_menu_update_extended_description(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf0d90",
@@ -27944,7 +27944,7 @@
         {
           "addr": "0xf24b0",
           "decl": "void mutliplayer_settings_select_list_update_displayed_items(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2560",

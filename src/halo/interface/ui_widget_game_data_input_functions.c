@@ -46,10 +46,10 @@ void ui_widget_game_data_build_version(int widget)
 
 /* FUN_000edcd0 (0xedcd0) — XBE naked draft (batch 110). */
 #if defined(__clang__)
-static void *(*const bedcd0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static void (*const bedcd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bedcd0_exitfn)(int) = system_exit;
-static void (*const bedcd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const bedcd0_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
+static void (*const bedcd0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bedcd0_exitfn)(int) = (void *)system_exit;
+static void (*const bedcd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000edcd0(void *widget)
@@ -323,11 +323,11 @@ void FUN_000edcd0(void *widget)
 
 /* FUN_000edfb0 (0xedfb0) — XBE naked draft (batch 106). */
 #if defined(__clang__)
-static void *(*const bedfb0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static void (*const bedfb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bedfb0_exitfn)(int) = system_exit;
-static void (*const bedfb0_ftol)(void) = FUN_001d9068;
-static void (*const bedfb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const bedfb0_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
+static void (*const bedfb0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bedfb0_exitfn)(int) = (void *)system_exit;
+static void (*const bedfb0_ftol)(void) = (void *)FUN_001d9068;
+static void (*const bedfb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000edfb0(void *widget)
@@ -818,10 +818,10 @@ void FUN_000edfb0(void *widget)
 
 /* FUN_000ee500 (0xee500) — XBE naked draft (batch 110). */
 #if defined(__clang__)
-static void *(*const bee500_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static void (*const bee500_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bee500_exitfn)(int) = system_exit;
-static void (*const bee500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const bee500_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
+static void (*const bee500_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bee500_exitfn)(int) = (void *)system_exit;
+static void (*const bee500_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000ee500(void *widget)
@@ -1120,10 +1120,10 @@ void FUN_000ee500(void *widget)
 
 /* FUN_000ee810 (0xee810) — XBE naked draft (batch 116). */
 #if defined(__clang__)
-static void *(*const bee810_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static void (*const bee810_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bee810_exitfn)(int) = system_exit;
-static void (*const bee810_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const bee810_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
+static void (*const bee810_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bee810_exitfn)(int) = (void *)system_exit;
+static void (*const bee810_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000ee810(void *widget)
@@ -1326,17 +1326,17 @@ void FUN_000ee810(void *widget)
 
 /* playlist_profile_initialize_name (0xeea10) — XBE naked draft (batch 142). */
 #if defined(__clang__)
-static void (*const beea10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const beea10_exitfn)(int) = system_exit;
-static void (*const beea10_ce0ee0)(void) = player_ui_edit_profile_is_dirty;
-static char (*const beea10_ce0d80)(void) = player_ui_edit_profile_is_default_profile;
-static void (*const beea10_ce0dd0)(void) = player_ui_edit_profile_name_is_dirty;
-static void (*const beea10_ce0e40)(void) = player_ui_prompt_user_to_rename_edit_profile;
-static void (*const beea10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const beea10_ce15b0)(void) = player_ui_save_profile;
-static void (*const beea10_ce1760)(void) = player_ui_end_editing_profile;
-static void * (*const beea10_ce4310)(void *widget) = ui_widget_get_last_child;
-static void (*const beea10_ce5620)(void *widget) = ui_widget_close;
+static void (*const beea10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const beea10_exitfn)(int) = (void *)system_exit;
+static void (*const beea10_ce0ee0)(void) = (void *)player_ui_edit_profile_is_dirty;
+static char (*const beea10_ce0d80)(void) = (void *)player_ui_edit_profile_is_default_profile;
+static void (*const beea10_ce0dd0)(void) = (void *)player_ui_edit_profile_name_is_dirty;
+static void (*const beea10_ce0e40)(void) = (void *)player_ui_prompt_user_to_rename_edit_profile;
+static void (*const beea10_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const beea10_ce15b0)(void) = (void *)player_ui_save_profile;
+static void (*const beea10_ce1760)(void) = (void *)player_ui_end_editing_profile;
+static void * (*const beea10_ce4310)(void *widget) = (void *)ui_widget_get_last_child;
+static void (*const beea10_ce5620)(void *widget) = (void *)ui_widget_close;
 
 __attribute__((naked, noinline))
 void playlist_profile_initialize_name(void *widget)
@@ -1420,13 +1420,13 @@ void playlist_profile_initialize_name(void *widget)
 
 /* playlist_profile_initialize_ctf_rules (0xeead0) — XBE naked draft (batch 128). */
 #if defined(__clang__)
-static unsigned short (*const beead0_c1c0ed0)(void) = FUN_001c0ed0;
-static void *(*const beead0_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void *(*const beead0_tag)(int, int) = tag_get;
-static void (*const beead0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const beead0_exitfn)(int) = system_exit;
-static void * (*const beead0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static void (*const beead0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static unsigned short (*const beead0_c1c0ed0)(void) = (void *)FUN_001c0ed0;
+static void *(*const beead0_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static void *(*const beead0_tag)(int, int) = (void *)tag_get;
+static void (*const beead0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const beead0_exitfn)(int) = (void *)system_exit;
+static void * (*const beead0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static void (*const beead0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void playlist_profile_initialize_ctf_rules(void *widget)
@@ -1561,12 +1561,12 @@ char FUN_000eebe0(void *widget)
 
 /* FUN_000eec10 (0xeec10) — XBE naked draft (batch 133). */
 #if defined(__clang__)
-static void *(*const beec10_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void (*const beec10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const beec10_exitfn)(int) = system_exit;
-static void *(*const beec10_tag)(int, int) = tag_get;
-static unsigned short (*const beec10_c1c0ed0)(void) = FUN_001c0ed0;
-static void (*const beec10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const beec10_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static void (*const beec10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const beec10_exitfn)(int) = (void *)system_exit;
+static void *(*const beec10_tag)(int, int) = (void *)tag_get;
+static unsigned short (*const beec10_c1c0ed0)(void) = (void *)FUN_001c0ed0;
+static void (*const beec10_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000eec10(void *widget)
@@ -1671,12 +1671,12 @@ void FUN_000eec10(void *widget)
 
 /* FUN_000eed10 (0xeed10) — XBE naked draft (batch 117). */
 #if defined(__clang__)
-static void (*const beed10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const beed10_exitfn)(int) = system_exit;
-static void *(*const beed10_tag)(int, int) = tag_get;
-static void (*const beed10_ce1500)(void) = player_ui_begin_editing_profile;
-static void (*const beed10_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = display_error_deferred;
-static void (*const beed10_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
+static void (*const beed10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const beed10_exitfn)(int) = (void *)system_exit;
+static void *(*const beed10_tag)(int, int) = (void *)tag_get;
+static void (*const beed10_ce1500)(void) = (void *)player_ui_begin_editing_profile;
+static void (*const beed10_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
+static void (*const beed10_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
 void FUN_000eed10(void *widget)
@@ -1798,14 +1798,14 @@ void FUN_000eed10(void *widget)
 
 /* FUN_000eeeb0 (0xeeeb0) — XBE naked draft (batch 154). */
 #if defined(__clang__)
-static void (*const beeeb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const beeeb0_exitfn)(int) = system_exit;
-static void (*const beeeb0_ce0ee0)(void) = player_ui_edit_profile_is_dirty;
-static void (*const beeeb0_ce15b0)(void) = player_ui_save_profile;
-static void (*const beeeb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const beeeb0_ce1760)(void) = player_ui_end_editing_profile;
-static void * (*const beeeb0_ce4310)(void *widget) = ui_widget_get_last_child;
-static void (*const beeeb0_ce5620)(void *widget) = ui_widget_close;
+static void (*const beeeb0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const beeeb0_exitfn)(int) = (void *)system_exit;
+static void (*const beeeb0_ce0ee0)(void) = (void *)player_ui_edit_profile_is_dirty;
+static void (*const beeeb0_ce15b0)(void) = (void *)player_ui_save_profile;
+static void (*const beeeb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const beeeb0_ce1760)(void) = (void *)player_ui_end_editing_profile;
+static void * (*const beeeb0_ce4310)(void *widget) = (void *)ui_widget_get_last_child;
+static void (*const beeeb0_ce5620)(void *widget) = (void *)ui_widget_close;
 
 __attribute__((naked, noinline))
 void FUN_000eeeb0(void *widget)
@@ -1867,10 +1867,10 @@ void FUN_000eeeb0(void *widget)
 
 /* FUN_000eef30 (0xeef30) — XBE naked draft (batch 117). */
 #if defined(__clang__)
-static void *(*const beef30_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void (*const beef30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const beef30_exitfn)(int) = system_exit;
-static void (*const beef30_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const beef30_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static void (*const beef30_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const beef30_exitfn)(int) = (void *)system_exit;
+static void (*const beef30_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000eef30(void *widget)
@@ -2072,10 +2072,10 @@ void FUN_000eef30(void *widget)
 
 /* FUN_000ef110 (0xef110) — XBE naked draft (batch 111). */
 #if defined(__clang__)
-static void *(*const bef110_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void (*const bef110_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bef110_exitfn)(int) = system_exit;
-static void (*const bef110_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const bef110_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static void (*const bef110_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bef110_exitfn)(int) = (void *)system_exit;
+static void (*const bef110_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000ef110(void *widget)
@@ -2355,10 +2355,10 @@ void FUN_000ef110(void *widget)
 
 /* FUN_000ef3f0 (0xef3f0) — XBE naked draft (batch 117). */
 #if defined(__clang__)
-static void *(*const bef3f0_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void (*const bef3f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bef3f0_exitfn)(int) = system_exit;
-static void (*const bef3f0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const bef3f0_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static void (*const bef3f0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bef3f0_exitfn)(int) = (void *)system_exit;
+static void (*const bef3f0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000ef3f0(void *widget)
@@ -2558,10 +2558,10 @@ void FUN_000ef3f0(void *widget)
 
 /* playlist_profile_initialize_racing_rules (0xef5c0) — XBE naked draft (batch 109). */
 #if defined(__clang__)
-static void *(*const bef5c0_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void (*const bef5c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bef5c0_exitfn)(int) = system_exit;
-static void (*const bef5c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void *(*const bef5c0_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static void (*const bef5c0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bef5c0_exitfn)(int) = (void *)system_exit;
+static void (*const bef5c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void playlist_profile_initialize_racing_rules(void *widget)
@@ -2906,10 +2906,10 @@ char FUN_000ef900(void *unused, void *player_slot)
 
 /* FUN_000ef970 (0xef970) — XBE naked draft (batch 133). */
 #if defined(__clang__)
-static void *(*const bef970_tag)(int, int) = tag_get;
-static void (*const bef970_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bef970_exitfn)(int) = system_exit;
-static void (*const bef970_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
+static void *(*const bef970_tag)(int, int) = (void *)tag_get;
+static void (*const bef970_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bef970_exitfn)(int) = (void *)system_exit;
+static void (*const bef970_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
 void FUN_000ef970(void *widget)
@@ -3015,11 +3015,11 @@ void FUN_000ef970(void *widget)
 
 /* FUN_000efa80 (0xefa80) — XBE naked draft (batch 114). */
 #if defined(__clang__)
-static void *(*const befa80_tag)(int, int) = tag_get;
-static void (*const befa80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const befa80_exitfn)(int) = system_exit;
-static void (*const befa80_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = display_error_deferred;
-static void (*const befa80_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
+static void *(*const befa80_tag)(int, int) = (void *)tag_get;
+static void (*const befa80_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const befa80_exitfn)(int) = (void *)system_exit;
+static void (*const befa80_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
+static void (*const befa80_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
 void FUN_000efa80(void *widget)
@@ -3146,22 +3146,22 @@ void FUN_000efa80(void *widget)
 
 /* FUN_000efc60 (0xefc60) — XBE naked draft (batch 122). */
 #if defined(__clang__)
-static void (*const befc60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const befc60_exitfn)(int) = system_exit;
-static void (*const befc60_c1c29c0)(void) = saved_game_file_get_useable_untitled_profile_name;
-static void (*const befc60_c1c1e20)(void) = FUN_001c1e20;
-static void (*const befc60_ce1500)(void) = player_ui_begin_editing_profile;
-static void *(*const befc60_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static game_variant_t * (*const befc60_caa190)(game_variant_t *out) = game_engine_slayer_default;
-static void * (*const befc60_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static wchar_t * (*const befc60_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static bool (*const befc60_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = virtual_keyboard_set_validation;
-static void (*const befc60_c1c4da0)(void) = FUN_001c4da0;
-static void (*const befc60_c1c2e00)(void) = saved_game_file_remember_last_used_multiplayer_variant_directory;
-static void (*const befc60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const befc60_ce1760)(void) = player_ui_end_editing_profile;
-static void (*const befc60_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = display_error_deferred;
-static void (*const befc60_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
+static void (*const befc60_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const befc60_exitfn)(int) = (void *)system_exit;
+static void (*const befc60_c1c29c0)(void) = (void *)saved_game_file_get_useable_untitled_profile_name;
+static void (*const befc60_c1c1e20)(void) = (void *)FUN_001c1e20;
+static void (*const befc60_ce1500)(void) = (void *)player_ui_begin_editing_profile;
+static void *(*const befc60_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
+static game_variant_t * (*const befc60_caa190)(game_variant_t *out) = (void *)game_engine_slayer_default;
+static void * (*const befc60_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
+static wchar_t * (*const befc60_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
+static bool (*const befc60_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = (void *)virtual_keyboard_set_validation;
+static void (*const befc60_c1c4da0)(void) = (void *)FUN_001c4da0;
+static void (*const befc60_c1c2e00)(void) = (void *)saved_game_file_remember_last_used_multiplayer_variant_directory;
+static void (*const befc60_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const befc60_ce1760)(void) = (void *)player_ui_end_editing_profile;
+static void (*const befc60_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
+static void (*const befc60_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
 void FUN_000efc60(void *widget)
@@ -3311,16 +3311,16 @@ void FUN_000efc60(void *widget)
 
 /* FUN_000efde0 (0xefde0) — XBE naked draft (batch 135). */
 #if defined(__clang__)
-static void (*const befde0_c1c29c0)(void) = saved_game_file_get_useable_untitled_profile_name;
-static void (*const befde0_c1c1720)(void) = FUN_001c1720;
-static void (*const befde0_ce1500)(void) = player_ui_begin_editing_profile;
-static void *(*const befde0_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static wchar_t * (*const befde0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static bool (*const befde0_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = virtual_keyboard_set_validation;
-static void (*const befde0_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = display_error_deferred;
-static void (*const befde0_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
-static void (*const befde0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const befde0_ce1760)(void) = player_ui_end_editing_profile;
+static void (*const befde0_c1c29c0)(void) = (void *)saved_game_file_get_useable_untitled_profile_name;
+static void (*const befde0_c1c1720)(void) = (void *)FUN_001c1720;
+static void (*const befde0_ce1500)(void) = (void *)player_ui_begin_editing_profile;
+static void *(*const befde0_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static wchar_t * (*const befde0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
+static bool (*const befde0_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = (void *)virtual_keyboard_set_validation;
+static void (*const befde0_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
+static void (*const befde0_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
+static void (*const befde0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const befde0_ce1760)(void) = (void *)player_ui_end_editing_profile;
 
 __attribute__((naked, noinline))
 void FUN_000efde0(void *widget)
@@ -3418,12 +3418,12 @@ void FUN_000efde0(void *widget)
 
 /* FUN_000efed0 (0xefed0) — XBE naked draft (batch 142). */
 #if defined(__clang__)
-static void * (*const befed0_c12a240)(void) = network_game_client_get;
-static void * (*const befed0_c1257a0)(void *client) = network_game_client_get_machine_index;
-static uint16_t (*const befed0_c124c40)(void *client) = FUN_00124c40;
-static bool (*const befed0_c12ac80)(void *client) = network_player_is_valid;
-static char (*const befed0_c125b90)(void *client, short request_type) = FUN_00125b90;
-static void (*const befed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void * (*const befed0_c12a240)(void) = (void *)network_game_client_get;
+static void * (*const befed0_c1257a0)(void *client) = (void *)network_game_client_get_machine_index;
+static uint16_t (*const befed0_c124c40)(void *client) = (void *)FUN_00124c40;
+static bool (*const befed0_c12ac80)(void *client) = (void *)network_player_is_valid;
+static char (*const befed0_c125b90)(void *client, short request_type) = (void *)FUN_00125b90;
+static void (*const befed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000efed0(void *widget)
@@ -3505,12 +3505,12 @@ void FUN_000efed0(void *widget)
 
 /* FUN_000eff70 (0xeff70) — XBE naked draft (batch 123). */
 #if defined(__clang__)
-static void * (*const beff70_c12a240)(void) = network_game_client_get;
-static void * (*const beff70_c1257a0)(void *client) = network_game_client_get_machine_index;
-static uint16_t (*const beff70_c124c40)(void *client) = FUN_00124c40;
-static bool (*const beff70_c12ac80)(void *client) = network_player_is_valid;
-static char (*const beff70_c125b90)(void *client, short request_type) = FUN_00125b90;
-static void (*const beff70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void * (*const beff70_c12a240)(void) = (void *)network_game_client_get;
+static void * (*const beff70_c1257a0)(void *client) = (void *)network_game_client_get_machine_index;
+static uint16_t (*const beff70_c124c40)(void *client) = (void *)FUN_00124c40;
+static bool (*const beff70_c12ac80)(void *client) = (void *)network_player_is_valid;
+static char (*const beff70_c125b90)(void *client, short request_type) = (void *)FUN_00125b90;
+static void (*const beff70_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000eff70(void *widget)
@@ -3656,12 +3656,12 @@ char FUN_000f0170(void *widget, void *player_ui)
 
 /* player_profile_end_editing (0xf01d0) — XBE naked draft (batch 149). */
 #if defined(__clang__)
-static void (*const bf01d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf01d0_exitfn)(int) = system_exit;
-static void * (*const bf01d0_c12a240)(void) = network_game_client_get;
-static int16_t (*const bf01d0_c124a30)(void *server, void *out_param) = network_game_client_get_state;
-static char (*const bf01d0_ce9d40)(void) = FUN_000E9D40;
-static void (*const bf01d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf01d0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf01d0_exitfn)(int) = (void *)system_exit;
+static void * (*const bf01d0_c12a240)(void) = (void *)network_game_client_get;
+static int16_t (*const bf01d0_c124a30)(void *server, void *out_param) = (void *)network_game_client_get_state;
+static char (*const bf01d0_ce9d40)(void) = (void *)FUN_000E9D40;
+static void (*const bf01d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void player_profile_end_editing(void *widget)
@@ -3729,22 +3729,22 @@ void player_profile_end_editing(void *widget)
 
 /* player_profile_save_changes (0xf0250) — XBE naked draft (batch 120). */
 #if defined(__clang__)
-static void * (*const bf0250_c12a240)(void) = network_game_client_get;
-static int16_t (*const bf0250_c124a30)(void *server, void *out_param) = network_game_client_get_state;
-static void * (*const bf0250_c1257a0)(void *client) = network_game_client_get_machine_index;
-static short (*const bf0250_c12a690)(void) = network_game_client_get_local_machine_index;
-static bool (*const bf0250_c12ac80)(void *client) = network_player_is_valid;
-static void (*const bf0250_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0250_exitfn)(int) = system_exit;
-static char (*const bf0250_c1263a0)(void *client, void *record) = network_game_client_request_remove_player;
-static void (*const bf0250_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const bf0250_ce08e0)(int16_t) = player_ui_clear_multiplayer_autojoin_for_local_player;
-static void * (*const bf0250_c12a1d0)(void) = network_game_server_get;
-static bool (*const bf0250_c12a160)(void) = network_game_accept_remote_connections;
-static void (*const bf0250_c12d690)(void *server, char flag) = network_game_server_pause_countdown;
+static void * (*const bf0250_c12a240)(void) = (void *)network_game_client_get;
+static int16_t (*const bf0250_c124a30)(void *server, void *out_param) = (void *)network_game_client_get_state;
+static void * (*const bf0250_c1257a0)(void *client) = (void *)network_game_client_get_machine_index;
+static short (*const bf0250_c12a690)(void) = (void *)network_game_client_get_local_machine_index;
+static bool (*const bf0250_c12ac80)(void *client) = (void *)network_player_is_valid;
+static void (*const bf0250_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf0250_exitfn)(int) = (void *)system_exit;
+static char (*const bf0250_c1263a0)(void *client, void *record) = (void *)network_game_client_request_remove_player;
+static void (*const bf0250_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const bf0250_ce08e0)(int16_t) = (void *)player_ui_clear_multiplayer_autojoin_for_local_player;
+static void * (*const bf0250_c12a1d0)(void) = (void *)network_game_server_get;
+static bool (*const bf0250_c12a160)(void) = (void *)network_game_accept_remote_connections;
+static void (*const bf0250_c12d690)(void *server, char flag) = (void *)network_game_server_pause_countdown;
 static void (*const bf0250_ce0930)(void) = (void *)player_ui_autojoin_players_to_next_multiplayer_game;
-static void (*const bf0250_c12a2a0)(void) = dispose_global_network_game_server;
-static void (*const bf0250_c12a1e0)(void) = dispose_global_network_game_client;
+static void (*const bf0250_c12a2a0)(void) = (void *)dispose_global_network_game_server;
+static void (*const bf0250_c12a1e0)(void) = (void *)dispose_global_network_game_client;
 
 __attribute__((naked, noinline))
 void player_profile_save_changes(void *widget)
@@ -3933,12 +3933,12 @@ void FUN_000F03D0(void *widget)
 
 /* player_profile_initialize_advanced_controller_settings (0xf0430) — XBE naked draft (batch 153). */
 #if defined(__clang__)
-static void (*const bf0430_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0430_exitfn)(int) = system_exit;
-static void (*const bf0430_c1c29c0)(void) = saved_game_file_get_useable_untitled_profile_name;
-static wchar_t * (*const bf0430_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static bool (*const bf0430_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = virtual_keyboard_set_validation;
-static void (*const bf0430_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf0430_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf0430_exitfn)(int) = (void *)system_exit;
+static void (*const bf0430_c1c29c0)(void) = (void *)saved_game_file_get_useable_untitled_profile_name;
+static wchar_t * (*const bf0430_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
+static bool (*const bf0430_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = (void *)virtual_keyboard_set_validation;
+static void (*const bf0430_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void player_profile_initialize_advanced_controller_settings(void *widget)
@@ -3999,19 +3999,19 @@ void player_profile_initialize_advanced_controller_settings(void *widget)
 
 /* FUN_000f04c0 (0xf04c0) — XBE naked draft (batch 126). */
 #if defined(__clang__)
-static char (*const bf04c0_cf5650)(void) = FUN_000f5650;
-static void (*const bf04c0_ce0740)(void) = player_ui_set_single_player_local_player_controller;
-static void (*const bf04c0_c1c1720)(void) = FUN_001c1720;
-static void (*const bf04c0_c1c29c0)(void) = saved_game_file_get_useable_untitled_profile_name;
-static wchar_t * (*const bf04c0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static void (*const bf04c0_c1c18f0)(void) = player_profile_new;
-static void (*const bf04c0_ce1490)(void) = player_ui_set_active_player_profile;
-static void (*const bf04c0_cfffa0)(const char *name) = main_set_map_name;
-static void (*const bf04c0_c100000)(void) = main_defer_map_map_change;
-static void (*const bf04c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const bf04c0_c100620)(void) = main_goto_main_menu;
-static void (*const bf04c0_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = display_error_deferred;
-static void (*const bf04c0_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
+static char (*const bf04c0_cf5650)(void) = (void *)FUN_000f5650;
+static void (*const bf04c0_ce0740)(void) = (void *)player_ui_set_single_player_local_player_controller;
+static void (*const bf04c0_c1c1720)(void) = (void *)FUN_001c1720;
+static void (*const bf04c0_c1c29c0)(void) = (void *)saved_game_file_get_useable_untitled_profile_name;
+static wchar_t * (*const bf04c0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
+static void (*const bf04c0_c1c18f0)(void) = (void *)player_profile_new;
+static void (*const bf04c0_ce1490)(void) = (void *)player_ui_set_active_player_profile;
+static void (*const bf04c0_cfffa0)(const char *name) = (void *)main_set_map_name;
+static void (*const bf04c0_c100000)(void) = (void *)main_defer_map_map_change;
+static void (*const bf04c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const bf04c0_c100620)(void) = (void *)main_goto_main_menu;
+static void (*const bf04c0_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
+static void (*const bf04c0_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
 
 __attribute__((naked, noinline))
 void FUN_000f04c0(void *widget)
@@ -4148,11 +4148,11 @@ char FUN_000f0620(void *widget)
 
 /* FUN_000f0640 (0xf0640) — XBE naked draft (batch 133). */
 #if defined(__clang__)
-static void (*const bf0640_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0640_exitfn)(int) = system_exit;
-static const char * (*const bf0640_c100040)(void) = main_get_map_name;
-static int (*const bf0640_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static void * (*const bf0640_ce3cd0)(void *widget, int index) = widget_instance_get_nth_child;
+static void (*const bf0640_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf0640_exitfn)(int) = (void *)system_exit;
+static const char * (*const bf0640_c100040)(void) = (void *)main_get_map_name;
+static int (*const bf0640_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
+static void * (*const bf0640_ce3cd0)(void *widget, int index) = (void *)widget_instance_get_nth_child;
 
 __attribute__((naked, noinline))
 void FUN_000f0640(void *widget)
@@ -4256,18 +4256,18 @@ char FUN_000f0740(void *widget)
 
 /* FUN_000f0790 (0xf0790) — XBE naked draft (batch 113). */
 #if defined(__clang__)
-static void *(*const bf0790_memset)(void *, int, unsigned int) = csmemset;
-static char (*const bf0790_ce98c0)(void *widget) = FUN_000e98c0;
+static void *(*const bf0790_memset)(void *, int, unsigned int) = (void *)csmemset;
+static char (*const bf0790_ce98c0)(void *widget) = (void *)FUN_000e98c0;
 static void (*const bf0790_ce09e0)(void) = (void *)player_ui_get_active_player_profile_index;
-static int (*const bf0790_c1bf920)(char *header, int16_t *flags, int param_3) = game_state_test_persistent_storage;
-static void (*const bf0790_ce0980)(void) = player_ui_get_active_player_profile;
-static void (*const bf0790_c1c0f70)(void *profile, short *out_level, short *out_difficulty) = player_profile_save_last_level_played;
-static void *(*const bf0790_tag)(int, int) = tag_get;
-static void (*const bf0790_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0790_exitfn)(int) = system_exit;
-static int16_t (*const bf0790_ce0a10)(int16_t) = player_ui_get_last_single_player_level_played;
-static int (*const bf0790_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static void (*const bf0790_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = display_error_deferred;
+static int (*const bf0790_c1bf920)(char *header, int16_t *flags, int param_3) = (void *)game_state_test_persistent_storage;
+static void (*const bf0790_ce0980)(void) = (void *)player_ui_get_active_player_profile;
+static void (*const bf0790_c1c0f70)(void *profile, short *out_level, short *out_difficulty) = (void *)player_profile_save_last_level_played;
+static void *(*const bf0790_tag)(int, int) = (void *)tag_get;
+static void (*const bf0790_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf0790_exitfn)(int) = (void *)system_exit;
+static int16_t (*const bf0790_ce0a10)(int16_t) = (void *)player_ui_get_last_single_player_level_played;
+static int (*const bf0790_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
+static void (*const bf0790_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
 
 __attribute__((naked, noinline))
 void FUN_000f0790(void *widget)
@@ -4504,9 +4504,9 @@ void FUN_000f0790(void *widget)
 
 /* FUN_000f0aa0 (0xf0aa0) — XBE naked draft (batch 132). */
 #if defined(__clang__)
-static void *(*const bf0aa0_tag)(int, int) = tag_get;
-static void (*const bf0aa0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0aa0_exitfn)(int) = system_exit;
+static void *(*const bf0aa0_tag)(int, int) = (void *)tag_get;
+static void (*const bf0aa0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf0aa0_exitfn)(int) = (void *)system_exit;
 
 __attribute__((naked, noinline))
 void FUN_000f0aa0(void *widget)
@@ -4614,256 +4614,118 @@ void FUN_000f0aa0(void *widget)
 #endif
 
 
-/* FUN_000f0bb0 (0xf0bb0) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static void (*const bf0bb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0bb0_exitfn)(int) = system_exit;
-static void *(*const bf0bb0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
+/* FUN_000f0bb0 (0xf0bb0) — readable C lift. */
 void FUN_000f0bb0(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000f0bb0_1\n\t"
-      "movl 0x38(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0bb0_1\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0bb0_2\n\t"
-      ".LFUN_000f0bb0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14d\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288a5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0bb0_2:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0bb0_5\n\t"
-      "movl 0x38(%%edi), %%ecx\n\t"
-      ".LFUN_000f0bb0_3:\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_000f0bb0_4\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0bb0_3\n\t"
-      ".LFUN_000f0bb0_4:\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_000f0bb0_7\n\t"
-      ".LFUN_000f0bb0_5:\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $2, %%ecx\n\t"
-      "je .LFUN_000f0bb0_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15b\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288aa0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0bb0_6:\n\t"
-      "movl 0x48(%%edi), %%edx\n\t"
-      "movl 0x34(%%edx), %%eax\n\t"
-      "movw %%si, 0x40(%%eax)\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "movw %%si, 0x50(%%eax)\n\t"
-      ".LFUN_000f0bb0_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf0bb0_assert), [exitfn] "m"(bf0bb0_exitfn), [tag] "m"(bf0bb0_tag)
-      : "memory");
+  void *child;
+  void *focused;
+  void *tag;
+  void *extra;
+  int16_t idx;
+  if (widget == 0 || *(void **)((char *)widget + 0x38) == 0
+      || *(void **)((char *)widget + 0x48) == 0) {
+    display_assert((const char *)0x288a5c, (const char *)0x288938, 0x14d, 1);
+    system_exit(-1);
+  }
+  child = *(void **)((char *)widget + 0x34);
+  idx = 0;
+  if (child != 0) {
+    focused = *(void **)((char *)widget + 0x38);
+    while (child != focused) {
+      child = *(void **)((char *)child + 0x2c);
+      idx++;
+      if (child == 0)
+        break;
+    }
+    if (idx == (int16_t)-1)
+      return;
+  }
+  tag = tag_get(0x44654c61, *(int *)*(void **)((char *)widget + 0x48));
+  if (*(int *)((char *)tag + 0x3e0) != 2) {
+    display_assert((const char *)0x288aa0, (const char *)0x288938, 0x15b, 1);
+    system_exit(-1);
+  }
+  extra = *(void **)((char *)(*(void **)((char *)widget + 0x48)) + 0x34);
+  *(int16_t *)((char *)extra + 0x40) = idx;
+  extra = *(void **)((char *)extra + 0x2c);
+  *(int16_t *)((char *)extra + 0x50) = idx;
 }
-#else
-#error "FUN_000f0bb0: clang naked draft required"
-#endif
 
-
-/* FUN_000f0c60 (0xf0c60) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static void (*const bf0c60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0c60_exitfn)(int) = system_exit;
-static void *(*const bf0c60_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
+/* FUN_000f0c60 (0xf0c60) — readable C lift. */
 void FUN_000f0c60(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000f0c60_1\n\t"
-      "movl 0x38(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0c60_1\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0c60_2\n\t"
-      ".LFUN_000f0c60_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x173\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288a5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0c60_2:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f0c60_5\n\t"
-      "movl 0x38(%%edi), %%ecx\n\t"
-      ".LFUN_000f0c60_3:\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_000f0c60_4\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0c60_3\n\t"
-      ".LFUN_000f0c60_4:\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_000f0c60_7\n\t"
-      ".LFUN_000f0c60_5:\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $2, %%ecx\n\t"
-      "je .LFUN_000f0c60_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x181\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288aa0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0c60_6:\n\t"
-      "movl 0x48(%%edi), %%edx\n\t"
-      "movl 0x34(%%edx), %%eax\n\t"
-      "movw %%si, 0x40(%%eax)\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "movw %%si, 0x50(%%eax)\n\t"
-      ".LFUN_000f0c60_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf0c60_assert), [exitfn] "m"(bf0c60_exitfn), [tag] "m"(bf0c60_tag)
-      : "memory");
+  void *child;
+  void *focused;
+  void *tag;
+  void *extra;
+  int16_t idx;
+  if (widget == 0 || *(void **)((char *)widget + 0x38) == 0
+      || *(void **)((char *)widget + 0x48) == 0) {
+    display_assert((const char *)0x288a5c, (const char *)0x288938, 0x173, 1);
+    system_exit(-1);
+  }
+  child = *(void **)((char *)widget + 0x34);
+  idx = 0;
+  if (child != 0) {
+    focused = *(void **)((char *)widget + 0x38);
+    while (child != focused) {
+      child = *(void **)((char *)child + 0x2c);
+      idx++;
+      if (child == 0)
+        break;
+    }
+    if (idx == (int16_t)-1)
+      return;
+  }
+  tag = tag_get(0x44654c61, *(int *)*(void **)((char *)widget + 0x48));
+  if (*(int *)((char *)tag + 0x3e0) != 2) {
+    display_assert((const char *)0x288aa0, (const char *)0x288938, 0x181, 1);
+    system_exit(-1);
+  }
+  extra = *(void **)((char *)(*(void **)((char *)widget + 0x48)) + 0x34);
+  *(int16_t *)((char *)extra + 0x40) = idx;
+  extra = *(void **)((char *)extra + 0x2c);
+  *(int16_t *)((char *)extra + 0x50) = idx;
 }
-#else
-#error "FUN_000f0c60: clang naked draft required"
-#endif
 
-
-/* playlist_settings_menu_update_extended_description (0xf0d10) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const bf0d10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0d10_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* playlist_settings_menu_update_extended_description (0xf0d10) — readable C lift. */
 void playlist_settings_menu_update_extended_description(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lplaylist_settings_menu_update_extended_description_1\n\t"
-      "movl 0x38(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplaylist_settings_menu_update_extended_description_1\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplaylist_settings_menu_update_extended_description_1\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplaylist_settings_menu_update_extended_description_1\n\t"
-      "movl 0x2c(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .Lplaylist_settings_menu_update_extended_description_2\n\t"
-      ".Lplaylist_settings_menu_update_extended_description_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a6\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288a5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_settings_menu_update_extended_description_2:\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplaylist_settings_menu_update_extended_description_5\n\t"
-      "movl 0x38(%%esi), %%edx\n\t"
-      ".Lplaylist_settings_menu_update_extended_description_3:\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .Lplaylist_settings_menu_update_extended_description_4\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "incl %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lplaylist_settings_menu_update_extended_description_3\n\t"
-      ".Lplaylist_settings_menu_update_extended_description_4:\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .Lplaylist_settings_menu_update_extended_description_6\n\t"
-      ".Lplaylist_settings_menu_update_extended_description_5:\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "movl 0x34(%%eax), %%edx\n\t"
-      "movw %%cx, 0x50(%%edx)\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "movl 0x34(%%eax), %%edx\n\t"
-      "movl 0x2c(%%edx), %%eax\n\t"
-      "movw %%cx, 0x40(%%eax)\n\t"
-      ".Lplaylist_settings_menu_update_extended_description_6:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf0d10_assert), [exitfn] "m"(bf0d10_exitfn)
-      : "memory");
+  void *child;
+  void *focused;
+  void *extra;
+  int16_t idx;
+  if (widget == 0 || *(void **)((char *)widget + 0x38) == 0
+      || *(void **)((char *)widget + 0x48) == 0
+      || *(void **)((char *)(*(void **)((char *)widget + 0x48)) + 0x34) == 0
+      || *(void **)((char *)(*(void **)((char *)(*(void **)((char *)widget + 0x48)) + 0x34)) + 0x2c) == 0) {
+    display_assert((const char *)0x288a5c, (const char *)0x288938, 0x1a6, 1);
+    system_exit(-1);
+  }
+  child = *(void **)((char *)widget + 0x34);
+  idx = 0;
+  if (child != 0) {
+    focused = *(void **)((char *)widget + 0x38);
+    while (child != focused) {
+      child = *(void **)((char *)child + 0x2c);
+      idx++;
+      if (child == 0)
+        break;
+    }
+    if (idx == (int16_t)-1)
+      return;
+  }
+  extra = *(void **)((char *)(*(void **)((char *)widget + 0x48)) + 0x34);
+  *(int16_t *)((char *)extra + 0x50) = idx;
+  extra = *(void **)((char *)extra + 0x2c);
+  *(int16_t *)((char *)extra + 0x40) = idx;
 }
-#else
-#error "playlist_settings_menu_update_extended_description: clang naked draft required"
-#endif
-
 
 /* FUN_000f0d90 (0xf0d90) — XBE naked draft (batch 132). */
 #if defined(__clang__)
-static void *(*const bf0d90_tag)(int, int) = tag_get;
-static void (*const bf0d90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0d90_exitfn)(int) = system_exit;
+static void *(*const bf0d90_tag)(int, int) = (void *)tag_get;
+static void (*const bf0d90_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf0d90_exitfn)(int) = (void *)system_exit;
 
 __attribute__((naked, noinline))
 void FUN_000f0d90(void *widget)
@@ -4973,20 +4835,20 @@ void FUN_000f0d90(void *widget)
 
 /* FUN_000f0f30 (0xf0f30) — XBE naked draft (batch 105). */
 #if defined(__clang__)
-static void * (*const bf0f30_c12a240)(void) = network_game_client_get;
-static void *(*const bf0f30_memset)(void *, int, unsigned int) = csmemset;
-static void *(*const bf0f30_tag)(int, int) = tag_get;
-static void * (*const bf0f30_c124c80)(void *client) = FUN_00124c80;
-static void (*const bf0f30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf0f30_exitfn)(int) = system_exit;
-static char (*const bf0f30_c125cb0)(void *game) = network_game_client_advertised_game_is_valid;
-static void * (*const bf0f30_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static wchar_t * (*const bf0f30_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static int (*const bf0f30_c1b9930)(int group_tag, const char *name, ...) = tag_loaded;
-static int (*const bf0f30_c19d420)(int param_1, int param_2) = FUN_0019d420;
-static void (*const bf0f30_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = unicode_sprintf;
-static unsigned int (*const bf0f30_c8e370)(void) = system_milliseconds;
-static char * (*const bf0f30_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
+static void * (*const bf0f30_c12a240)(void) = (void *)network_game_client_get;
+static void *(*const bf0f30_memset)(void *, int, unsigned int) = (void *)csmemset;
+static void *(*const bf0f30_tag)(int, int) = (void *)tag_get;
+static void * (*const bf0f30_c124c80)(void *client) = (void *)FUN_00124c80;
+static void (*const bf0f30_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf0f30_exitfn)(int) = (void *)system_exit;
+static char (*const bf0f30_c125cb0)(void *game) = (void *)network_game_client_advertised_game_is_valid;
+static void * (*const bf0f30_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static wchar_t * (*const bf0f30_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
+static int (*const bf0f30_c1b9930)(int group_tag, const char *name, ...) = (void *)tag_loaded;
+static int (*const bf0f30_c19d420)(int param_1, int param_2) = (void *)FUN_0019d420;
+static void (*const bf0f30_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = (void *)unicode_sprintf;
+static unsigned int (*const bf0f30_c8e370)(void) = (void *)system_milliseconds;
+static char * (*const bf0f30_c1d9690)(const char *haystack, const char *needle) = (void *)crt_strstr;
 
 __attribute__((naked, noinline))
 void FUN_000f0f30(void *widget)
@@ -5668,22 +5530,22 @@ void FUN_000f0f30(void *widget)
 
 /* FUN_000f1710 (0xf1710) — update network pregame/status item widget texts and visibility. */
 #if defined(__clang__)
-static int (*const f1710_n2a0a0)(void) = FUN_0012a0a0;
-static void *(*const f1710_tag)(int, int) = tag_get;
-static void (*const f1710_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const f1710_exitfn)(int) = system_exit;
-static void *(*const f1710_ngcli)(void) = network_game_client_get;
-static unsigned short (*const f1710_n24c40)(void *) = FUN_00124c40;
-static void *(*const f1710_uirealloc)(int, unsigned short, const char *, unsigned int) = ui_widget_realloc;
-static short (*const f1710_n24d00)(void *) = FUN_00124d00;
-static void *(*const f1710_ngsrv)(void) = network_game_server_get;
-static wchar_t *(*const f1710_xucpy)(wchar_t *, wchar_t *, unsigned int) = ustrncpy;
-static void (*const f1710_usprintf)(wchar_t *, int, const wchar_t *, ...) = unicode_sprintf;
-static void *(*const f1710_ngmach)(void *) = network_game_client_get_machine;
-static void *(*const f1710_memset)(void *, int, unsigned int) = csmemset;
-static bool (*const f1710_npval)(void *) = network_player_is_valid;
-static int (*const f1710_xulen)(const unsigned short *) = ustrlen;
-static void (*const f1710_wvis)(void *, char) = widget_instance_set_visibility_recursive;
+static int (*const f1710_n2a0a0)(void) = (void *)FUN_0012a0a0;
+static void *(*const f1710_tag)(int, int) = (void *)tag_get;
+static void (*const f1710_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const f1710_exitfn)(int) = (void *)system_exit;
+static void *(*const f1710_ngcli)(void) = (void *)network_game_client_get;
+static unsigned short (*const f1710_n24c40)(void *) = (void *)FUN_00124c40;
+static void *(*const f1710_uirealloc)(int, unsigned short, const char *, unsigned int) = (void *)ui_widget_realloc;
+static short (*const f1710_n24d00)(void *) = (void *)FUN_00124d00;
+static void *(*const f1710_ngsrv)(void) = (void *)network_game_server_get;
+static wchar_t *(*const f1710_xucpy)(wchar_t *, wchar_t *, unsigned int) = (void *)ustrncpy;
+static void (*const f1710_usprintf)(wchar_t *, int, const wchar_t *, ...) = (void *)unicode_sprintf;
+static void *(*const f1710_ngmach)(void *) = (void *)network_game_client_get_machine;
+static void *(*const f1710_memset)(void *, int, unsigned int) = (void *)csmemset;
+static bool (*const f1710_npval)(void *) = (void *)network_player_is_valid;
+static int (*const f1710_xulen)(const unsigned short *) = (void *)ustrlen;
+static void (*const f1710_wvis)(void *, char) = (void *)widget_instance_set_visibility_recursive;
 
 __attribute__((naked, noinline))
 void FUN_000f1710(void *widget)
@@ -6374,21 +6236,21 @@ void FUN_000f1710(void *widget)
 
 /* network_pregame_status_screen_update (0xf1ed0) — XBE naked draft (batch 106). */
 #if defined(__clang__)
-static int (*const bf1ed0_c12a0a0)(void) = FUN_0012a0a0;
-static void *(*const bf1ed0_tag)(int, int) = tag_get;
-static void (*const bf1ed0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf1ed0_exitfn)(int) = system_exit;
-static void * (*const bf1ed0_c12a240)(void) = network_game_client_get;
-static uint16_t (*const bf1ed0_c124c40)(void *client) = FUN_00124c40;
-static void * (*const bf1ed0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static int16_t (*const bf1ed0_c124d00)(void *client) = FUN_00124d00;
-static wchar_t * (*const bf1ed0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static void (*const bf1ed0_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = unicode_sprintf;
-static void * (*const bf1ed0_c124c10)(void *client) = network_game_client_get_machine;
-static void *(*const bf1ed0_memset)(void *, int, unsigned int) = csmemset;
-static bool (*const bf1ed0_c12ac80)(void *client) = network_player_is_valid;
-static int (*const bf1ed0_c19d8c0)(const unsigned short *s) = ustrlen;
-static void (*const bf1ed0_ce4370)(void *widget, char visible) = widget_instance_set_visibility_recursive;
+static int (*const bf1ed0_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void *(*const bf1ed0_tag)(int, int) = (void *)tag_get;
+static void (*const bf1ed0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf1ed0_exitfn)(int) = (void *)system_exit;
+static void * (*const bf1ed0_c12a240)(void) = (void *)network_game_client_get;
+static uint16_t (*const bf1ed0_c124c40)(void *client) = (void *)FUN_00124c40;
+static void * (*const bf1ed0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static int16_t (*const bf1ed0_c124d00)(void *client) = (void *)FUN_00124d00;
+static wchar_t * (*const bf1ed0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
+static void (*const bf1ed0_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = (void *)unicode_sprintf;
+static void * (*const bf1ed0_c124c10)(void *client) = (void *)network_game_client_get_machine;
+static void *(*const bf1ed0_memset)(void *, int, unsigned int) = (void *)csmemset;
+static bool (*const bf1ed0_c12ac80)(void *client) = (void *)network_player_is_valid;
+static int (*const bf1ed0_c19d8c0)(const unsigned short *s) = (void *)ustrlen;
+static void (*const bf1ed0_ce4370)(void *widget, char visible) = (void *)widget_instance_set_visibility_recursive;
 
 __attribute__((naked, noinline))
 void network_pregame_status_screen_update(void *widget)
@@ -6817,16 +6679,16 @@ void network_pregame_status_screen_update(void *widget)
 
 /* FUN_000f2390 (0xf2390) — XBE naked draft (batch 129). */
 #if defined(__clang__)
-static void * (*const bf2390_c12a240)(void) = network_game_client_get;
-static int16_t (*const bf2390_c124a30)(void *server, void *out_param) = network_game_client_get_state;
-static int (*const bf2390_c12a0a0)(void) = FUN_0012a0a0;
-static void (*const bf2390_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2390_exitfn)(int) = system_exit;
-static uint8_t (*const bf2390_ce0890)(int16_t) = player_ui_local_player_wants_to_play_multiplayer;
-static bool (*const bf2390_c12ac80)(void *client) = network_player_is_valid;
-static bool (*const bf2390_c12a0d0)(void *player) = network_game_player_is_local;
-static char (*const bf2390_c1258a0)(void *client, int16_t local_player_index) = network_game_client_add_player;
-static void (*const bf2390_c12b650)(const char *fmt, ...) = network_game_log;
+static void * (*const bf2390_c12a240)(void) = (void *)network_game_client_get;
+static int16_t (*const bf2390_c124a30)(void *server, void *out_param) = (void *)network_game_client_get_state;
+static int (*const bf2390_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void (*const bf2390_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2390_exitfn)(int) = (void *)system_exit;
+static uint8_t (*const bf2390_ce0890)(int16_t) = (void *)player_ui_local_player_wants_to_play_multiplayer;
+static bool (*const bf2390_c12ac80)(void *client) = (void *)network_player_is_valid;
+static bool (*const bf2390_c12a0d0)(void *player) = (void *)network_game_player_is_local;
+static char (*const bf2390_c1258a0)(void *client, int16_t local_player_index) = (void *)network_game_client_add_player;
+static void (*const bf2390_c12b650)(const char *fmt, ...) = (void *)network_game_log;
 
 __attribute__((naked, noinline))
 void FUN_000f2390(void *widget)
@@ -6945,97 +6807,48 @@ void FUN_000f2390(void *widget)
 #endif
 
 
-/* mutliplayer_settings_select_list_update_displayed_items (0xf24b0) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static void (*const bf24b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf24b0_exitfn)(int) = system_exit;
-static void *(*const bf24b0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
+/* mutliplayer_settings_select_list_update_displayed_items (0xf24b0) — readable C lift. */
 void mutliplayer_settings_select_list_update_displayed_items(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lmutliplayer_settings_select_list_update_displayed_items_1\n\t"
-      "movl 0x38(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmutliplayer_settings_select_list_update_displayed_items_1\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lmutliplayer_settings_select_list_update_displayed_items_2\n\t"
-      ".Lmutliplayer_settings_select_list_update_displayed_items_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x836\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288a5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmutliplayer_settings_select_list_update_displayed_items_2:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmutliplayer_settings_select_list_update_displayed_items_5\n\t"
-      "movl 0x38(%%edi), %%ecx\n\t"
-      ".Lmutliplayer_settings_select_list_update_displayed_items_3:\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lmutliplayer_settings_select_list_update_displayed_items_4\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lmutliplayer_settings_select_list_update_displayed_items_3\n\t"
-      ".Lmutliplayer_settings_select_list_update_displayed_items_4:\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lmutliplayer_settings_select_list_update_displayed_items_7\n\t"
-      ".Lmutliplayer_settings_select_list_update_displayed_items_5:\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $2, %%ecx\n\t"
-      "je .Lmutliplayer_settings_select_list_update_displayed_items_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x844\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288f68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmutliplayer_settings_select_list_update_displayed_items_6:\n\t"
-      "movl 0x48(%%edi), %%edx\n\t"
-      "movl 0x34(%%edx), %%eax\n\t"
-      "movw %%si, 0x40(%%eax)\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "movw %%si, 0x50(%%eax)\n\t"
-      ".Lmutliplayer_settings_select_list_update_displayed_items_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf24b0_assert), [exitfn] "m"(bf24b0_exitfn), [tag] "m"(bf24b0_tag)
-      : "memory");
+  void *child;
+  void *focused;
+  void *tag;
+  void *extra;
+  int16_t idx;
+  if (widget == 0 || *(void **)((char *)widget + 0x38) == 0
+      || *(void **)((char *)widget + 0x48) == 0) {
+    display_assert((const char *)0x288a5c, (const char *)0x288938, 0x836, 1);
+    system_exit(-1);
+  }
+  child = *(void **)((char *)widget + 0x34);
+  idx = 0;
+  if (child != 0) {
+    focused = *(void **)((char *)widget + 0x38);
+    while (child != focused) {
+      child = *(void **)((char *)child + 0x2c);
+      idx++;
+      if (child == 0)
+        break;
+    }
+    if (idx == (int16_t)-1)
+      return;
+  }
+  tag = tag_get(0x44654c61, *(int *)*(void **)((char *)widget + 0x48));
+  if (*(int *)((char *)tag + 0x3e0) != 2) {
+    display_assert((const char *)0x288aa0, (const char *)0x288938, 0x844, 1);
+    system_exit(-1);
+  }
+  extra = *(void **)((char *)(*(void **)((char *)widget + 0x48)) + 0x34);
+  *(int16_t *)((char *)extra + 0x40) = idx;
+  extra = *(void **)((char *)extra + 0x2c);
+  *(int16_t *)((char *)extra + 0x50) = idx;
 }
-#else
-#error "mutliplayer_settings_select_list_update_displayed_items: clang naked draft required"
-#endif
-
 
 /* FUN_000f2560 (0xf2560) — XBE naked draft (batch 126). */
 #if defined(__clang__)
-static void (*const bf2560_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2560_exitfn)(int) = system_exit;
-static void *(*const bf2560_tag)(int, int) = tag_get;
+static void (*const bf2560_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2560_exitfn)(int) = (void *)system_exit;
+static void *(*const bf2560_tag)(int, int) = (void *)tag_get;
 
 __attribute__((naked, noinline))
 void FUN_000f2560(void *widget)
@@ -7168,12 +6981,12 @@ void FUN_000f2560(void *widget)
 
 /* FUN_000f2690 (0xf2690) — XBE naked draft (batch 147). */
 #if defined(__clang__)
-static int (*const bf2690_cd4fb0)(void) = hud_messaging_get_objective;
-static int (*const bf2690_c19d8c0)(const unsigned short *s) = ustrlen;
-static void (*const bf2690_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2690_exitfn)(int) = system_exit;
-static void * (*const bf2690_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static wchar_t * (*const bf2690_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
+static int (*const bf2690_cd4fb0)(void) = (void *)hud_messaging_get_objective;
+static int (*const bf2690_c19d8c0)(const unsigned short *s) = (void *)ustrlen;
+static void (*const bf2690_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2690_exitfn)(int) = (void *)system_exit;
+static void * (*const bf2690_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static wchar_t * (*const bf2690_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
 
 __attribute__((naked, noinline))
 void FUN_000f2690(void *widget)
@@ -7247,9 +7060,9 @@ void FUN_000f2690(void *widget)
 
 /* FUN_000f2720 (0xf2720) — XBE naked draft (batch 126). */
 #if defined(__clang__)
-static void (*const bf2720_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2720_exitfn)(int) = system_exit;
-static void *(*const bf2720_tag)(int, int) = tag_get;
+static void (*const bf2720_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2720_exitfn)(int) = (void *)system_exit;
+static void *(*const bf2720_tag)(int, int) = (void *)tag_get;
 
 __attribute__((naked, noinline))
 void FUN_000f2720(void *widget)
@@ -7412,11 +7225,11 @@ void FUN_000f2850(void *widget)
 
 /* FUN_000f28e0 (0xf28e0) — XBE naked draft (batch 145). */
 #if defined(__clang__)
-static void (*const bf28e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf28e0_exitfn)(int) = system_exit;
-static void (*const bf28e0_ce0980)(void) = player_ui_get_active_player_profile;
-static void * (*const bf28e0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static wchar_t * (*const bf28e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
+static void (*const bf28e0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf28e0_exitfn)(int) = (void *)system_exit;
+static void (*const bf28e0_ce0980)(void) = (void *)player_ui_get_active_player_profile;
+static void * (*const bf28e0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static wchar_t * (*const bf28e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
 
 __attribute__((naked, noinline))
 void FUN_000f28e0(void *widget)
@@ -7493,11 +7306,11 @@ void FUN_000f28e0(void *widget)
 
 /* FUN_000f2990 (0xf2990) — XBE naked draft (batch 147). */
 #if defined(__clang__)
-static void (*const bf2990_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2990_exitfn)(int) = system_exit;
-static void *(*const bf2990_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void * (*const bf2990_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static wchar_t * (*const bf2990_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
+static void (*const bf2990_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2990_exitfn)(int) = (void *)system_exit;
+static void *(*const bf2990_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
+static void * (*const bf2990_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static wchar_t * (*const bf2990_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
 
 __attribute__((naked, noinline))
 void FUN_000f2990(void *widget)
@@ -7571,12 +7384,12 @@ void FUN_000f2990(void *widget)
 
 /* FUN_000f2a40 (0xf2a40) — XBE naked draft (batch 142). */
 #if defined(__clang__)
-static void (*const bf2a40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2a40_exitfn)(int) = system_exit;
-static void *(*const bf2a40_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static void * (*const bf2a40_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static wchar_t * (*const bf2a40_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static void (*const bf2a40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf2a40_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2a40_exitfn)(int) = (void *)system_exit;
+static void *(*const bf2a40_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
+static void * (*const bf2a40_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static wchar_t * (*const bf2a40_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
+static void (*const bf2a40_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000f2a40(void *widget)
@@ -7659,10 +7472,10 @@ void FUN_000f2a40(void *widget)
 
 /* FUN_000f2b00 (0xf2b00) — XBE naked draft (batch 145). */
 #if defined(__clang__)
-static void (*const bf2b00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2b00_exitfn)(int) = system_exit;
-static void (*const bf2b00_ce0980)(void) = player_ui_get_active_player_profile;
-static unsigned short (*const bf2b00_c1c0ed0)(void) = FUN_001c0ed0;
+static void (*const bf2b00_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2b00_exitfn)(int) = (void *)system_exit;
+static void (*const bf2b00_ce0980)(void) = (void *)player_ui_get_active_player_profile;
+static unsigned short (*const bf2b00_c1c0ed0)(void) = (void *)FUN_001c0ed0;
 
 __attribute__((naked, noinline))
 void FUN_000f2b00(void *widget)
@@ -7739,11 +7552,11 @@ void FUN_000f2b00(void *widget)
 
 /* FUN_000f2b90 (0xf2b90) — XBE naked draft (batch 116). */
 #if defined(__clang__)
-static void (*const bf2b90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2b90_exitfn)(int) = system_exit;
-static int (*const bf2b90_c12a0a0)(void) = FUN_0012a0a0;
-static char * (*const bf2b90_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
-static void (*const bf2b90_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf2b90_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2b90_exitfn)(int) = (void *)system_exit;
+static int (*const bf2b90_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static char * (*const bf2b90_c1d9690)(const char *haystack, const char *needle) = (void *)crt_strstr;
+static void (*const bf2b90_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000f2b90(void *widget)
@@ -7945,10 +7758,10 @@ void FUN_000f2b90(void *widget)
 
 /* FUN_000f2d50 (0xf2d50) — XBE naked draft (batch 129). */
 #if defined(__clang__)
-static void (*const bf2d50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2d50_exitfn)(int) = system_exit;
-static int (*const bf2d50_c12a0a0)(void) = FUN_0012a0a0;
-static void (*const bf2d50_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf2d50_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2d50_exitfn)(int) = (void *)system_exit;
+static int (*const bf2d50_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void (*const bf2d50_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000f2d50(void *widget)
@@ -8095,12 +7908,12 @@ void FUN_000f2e60(void *widget)
 
 /* FUN_000f2ed0 (0xf2ed0) — XBE naked draft (batch 148). */
 #if defined(__clang__)
-static void (*const bf2ed0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2ed0_exitfn)(int) = system_exit;
-static int (*const bf2ed0_c12a0a0)(void) = FUN_0012a0a0;
-static void * (*const bf2ed0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static void (*const bf2ed0_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = unicode_sprintf;
-static void (*const bf2ed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf2ed0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2ed0_exitfn)(int) = (void *)system_exit;
+static int (*const bf2ed0_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void * (*const bf2ed0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static void (*const bf2ed0_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = (void *)unicode_sprintf;
+static void (*const bf2ed0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000f2ed0(void *widget)
@@ -8170,10 +7983,10 @@ void FUN_000f2ed0(void *widget)
 
 /* FUN_000f2f60 (0xf2f60) — XBE naked draft (batch 145). */
 #if defined(__clang__)
-static void (*const bf2f60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2f60_exitfn)(int) = system_exit;
-static int (*const bf2f60_c12a0a0)(void) = FUN_0012a0a0;
-static void (*const bf2f60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf2f60_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf2f60_exitfn)(int) = (void *)system_exit;
+static int (*const bf2f60_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void (*const bf2f60_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000f2f60(void *widget)
@@ -8259,11 +8072,11 @@ void FUN_000f2f60(void *widget)
 
 /* solo_game_objective_text (0xf3010) — XBE naked draft (batch 116). */
 #if defined(__clang__)
-static void (*const bf3010_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3010_exitfn)(int) = system_exit;
-static int (*const bf3010_c12a0a0)(void) = FUN_0012a0a0;
-static char * (*const bf3010_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
-static void (*const bf3010_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf3010_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf3010_exitfn)(int) = (void *)system_exit;
+static int (*const bf3010_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static char * (*const bf3010_c1d9690)(const char *haystack, const char *needle) = (void *)crt_strstr;
+static void (*const bf3010_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void solo_game_objective_text(void *widget)
@@ -8465,10 +8278,10 @@ void solo_game_objective_text(void *widget)
 
 /* color_picker_get_string (0xf31d0) — XBE naked draft (batch 144). */
 #if defined(__clang__)
-static void (*const bf31d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf31d0_exitfn)(int) = system_exit;
-static int (*const bf31d0_c12a0a0)(void) = FUN_0012a0a0;
-static void (*const bf31d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf31d0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf31d0_exitfn)(int) = (void *)system_exit;
+static int (*const bf31d0_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void (*const bf31d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void color_picker_get_string(void *widget)
@@ -8554,12 +8367,12 @@ void color_picker_get_string(void *widget)
 
 /* FUN_000f3280 (0xf3280) — XBE naked draft (batch 148). */
 #if defined(__clang__)
-static void (*const bf3280_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3280_exitfn)(int) = system_exit;
-static int (*const bf3280_c12a0a0)(void) = FUN_0012a0a0;
-static void * (*const bf3280_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = ui_widget_realloc;
-static void (*const bf3280_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = unicode_sprintf;
-static void (*const bf3280_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf3280_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf3280_exitfn)(int) = (void *)system_exit;
+static int (*const bf3280_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void * (*const bf3280_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
+static void (*const bf3280_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = (void *)unicode_sprintf;
+static void (*const bf3280_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000f3280(void *widget)
@@ -8629,10 +8442,10 @@ void FUN_000f3280(void *widget)
 
 /* FUN_000f3320 (0xf3320) — XBE naked draft (batch 145). */
 #if defined(__clang__)
-static void (*const bf3320_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3320_exitfn)(int) = system_exit;
-static void *(*const bf3320_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static void (*const bf3320_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf3320_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf3320_exitfn)(int) = (void *)system_exit;
+static void *(*const bf3320_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
+static void (*const bf3320_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void FUN_000f3320(void *widget)
@@ -8718,14 +8531,14 @@ void FUN_000f3320(void *widget)
 
 /* game_options_menu_update_pic_desc (0xf3400) — XBE naked draft (batch 124). */
 #if defined(__clang__)
-static int (*const bf3400_c12a0a0)(void) = FUN_0012a0a0;
-static void * (*const bf3400_c12a1d0)(void) = network_game_server_get;
-static void (*const bf3400_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3400_exitfn)(int) = system_exit;
-static bool (*const bf3400_c12a170)(void) = network_game_is_splitscreen_local;
-static void * (*const bf3400_c12a240)(void) = network_game_client_get;
-static int16_t (*const bf3400_c124d00)(void *client) = FUN_00124d00;
-static bool (*const bf3400_c12ac80)(void *client) = network_player_is_valid;
+static int (*const bf3400_c12a0a0)(void) = (void *)FUN_0012a0a0;
+static void * (*const bf3400_c12a1d0)(void) = (void *)network_game_server_get;
+static void (*const bf3400_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf3400_exitfn)(int) = (void *)system_exit;
+static bool (*const bf3400_c12a170)(void) = (void *)network_game_is_splitscreen_local;
+static void * (*const bf3400_c12a240)(void) = (void *)network_game_client_get;
+static int16_t (*const bf3400_c124d00)(void *client) = (void *)FUN_00124d00;
+static bool (*const bf3400_c12ac80)(void *client) = (void *)network_player_is_valid;
 
 __attribute__((naked, noinline))
 void game_options_menu_update_pic_desc(void *widget)
@@ -8889,10 +8702,10 @@ void mp_level_select_list_update_displayed_items(void *widget)
 
 /* get_editable_player_profile_display_name (0xf3590) — XBE naked draft (batch 147). */
 #if defined(__clang__)
-static void (*const bf3590_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3590_exitfn)(int) = system_exit;
-static const char * (*const bf3590_c100040)(void) = main_get_map_name;
-static int (*const bf3590_c1dd801)(const char *a, const char *b) = crt_stricmp;
+static void (*const bf3590_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf3590_exitfn)(int) = (void *)system_exit;
+static const char * (*const bf3590_c100040)(void) = (void *)main_get_map_name;
+static int (*const bf3590_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
 
 __attribute__((naked, noinline))
 void get_editable_player_profile_display_name(void *widget)
@@ -9074,10 +8887,10 @@ void FUN_000f3690(int *out_handles /*  */, void *widget /*  */)
 
 /* multiplayer_game_set_text_box_for_game_ruleset (0xf3740) — XBE naked draft (batch 129). */
 #if defined(__clang__)
-static void (*const bf3740_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3740_exitfn)(int) = system_exit;
-static void (*const bf3740_c1c18f0)(void) = player_profile_new;
-static void (*const bf3740_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf3740_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf3740_exitfn)(int) = (void *)system_exit;
+static void (*const bf3740_c1c18f0)(void) = (void *)player_profile_new;
+static void (*const bf3740_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count)
@@ -9201,10 +9014,10 @@ void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count)
 
 /* multiplayer_game_set_text_box_for_teams_noteams (0xf3850) — XBE naked draft (batch 129). */
 #if defined(__clang__)
-static void (*const bf3850_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3850_exitfn)(int) = system_exit;
-static char (*const bf3850_c1c26f0)(int, void *) = playlist_profile_delete;
-static void (*const bf3850_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const bf3850_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf3850_exitfn)(int) = (void *)system_exit;
+static char (*const bf3850_c1c26f0)(int, void *) = (void *)playlist_profile_delete;
+static void (*const bf3850_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 void multiplayer_game_set_text_box_for_teams_noteams(void *widget)
@@ -9343,13 +9156,13 @@ int FUN_000f3960(int *a, int *b)
 
 /* FUN_000f39c0 (0xf39c0) — XBE naked draft (batch 113). */
 #if defined(__clang__)
-static void (*const bf39c0_ce0980)(void) = player_ui_get_active_player_profile;
-static void (*const bf39c0_c1c0f70)(void *profile, short *out_level, short *out_difficulty) = player_profile_save_last_level_played;
-static void *(*const bf39c0_tag)(int, int) = tag_get;
-static void (*const bf39c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf39c0_exitfn)(int) = system_exit;
-static void (*const bf39c0_cf3690)(int *out_handles /* */, void *widget /* */) = FUN_000f3690;
-static void * (*const bf39c0_ce3cd0)(void *widget, int index) = widget_instance_get_nth_child;
+static void (*const bf39c0_ce0980)(void) = (void *)player_ui_get_active_player_profile;
+static void (*const bf39c0_c1c0f70)(void *profile, short *out_level, short *out_difficulty) = (void *)player_profile_save_last_level_played;
+static void *(*const bf39c0_tag)(int, int) = (void *)tag_get;
+static void (*const bf39c0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const bf39c0_exitfn)(int) = (void *)system_exit;
+static void (*const bf39c0_cf3690)(int *out_handles /* */, void *widget /* */) = (void *)FUN_000f3690;
+static void * (*const bf39c0_ce3cd0)(void *widget, int index) = (void *)widget_instance_get_nth_child;
 
 __attribute__((naked, noinline))
 void FUN_000f39c0(void *widget)

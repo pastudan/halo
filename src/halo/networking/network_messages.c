@@ -97,9 +97,9 @@ void FUN_0011a2d0(int *state, void *buffer, int buffer_size)
 
 /* FUN_0011a340 (0x11a340) — XBE naked draft (batch 86). */
 #if defined(__clang__)
-static void (*const b11a340_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a340_exitfn)(int) = system_exit;
-static void (*const b11a340_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
+static void (*const b11a340_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11a340_exitfn)(int) = (void *)system_exit;
+static void (*const b11a340_c118be0)(void *definition, void *data, int count) = (void *)FUN_00118be0;
 
 __attribute__((naked, noinline))
 int FUN_0011a340(int *state __attribute__((unused)), short count __attribute__((unused)), void *bs_definition __attribute__((unused)))
@@ -205,9 +205,9 @@ int FUN_0011a340(int *state __attribute__((unused)), short count __attribute__((
 
 /* FUN_0011a430 (0x11a430) — XBE naked draft (batch 86). */
 #if defined(__clang__)
-static void (*const b11a430_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a430_exitfn)(int) = system_exit;
-static void (*const b11a430_c118620)(void *data, int count, int element_size) = FUN_00118620;
+static void (*const b11a430_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11a430_exitfn)(int) = (void *)system_exit;
+static void (*const b11a430_c118620)(void *data, int count, int element_size) = (void *)FUN_00118620;
 
 __attribute__((naked, noinline))
 int FUN_0011a430(int *state __attribute__((unused)), short count __attribute__((unused)), int element_size __attribute__((unused)))
@@ -454,13 +454,13 @@ unsigned int FUN_0011a700(int *state, int maximum_value)
 
 /* FUN_0011a770 (0x11a770) — XBE naked draft (batch 84). */
 #if defined(__clang__)
-static void (*const b11a770_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a770_exitfn)(int) = system_exit;
-static unsigned char (*const b11a770_c11a560)(int *state) = FUN_0011a560;
-static short (*const b11a770_c11a5d0)(int *state) = FUN_0011a5d0;
-static int (*const b11a770_c11a650)(int *state) = FUN_0011a650;
-static int64_t (*const b11a770_c11a6d0)(int *state) = FUN_0011a6d0;
-static int (*const b11a770_c11a340)(int *state, short count, void *bs_definition) = FUN_0011a340;
+static void (*const b11a770_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11a770_exitfn)(int) = (void *)system_exit;
+static unsigned char (*const b11a770_c11a560)(int *state) = (void *)FUN_0011a560;
+static short (*const b11a770_c11a5d0)(int *state) = (void *)FUN_0011a5d0;
+static int (*const b11a770_c11a650)(int *state) = (void *)FUN_0011a650;
+static int64_t (*const b11a770_c11a6d0)(int *state) = (void *)FUN_0011a6d0;
+static int (*const b11a770_c11a340)(int *state, short count, void *bs_definition) = (void *)FUN_0011a340;
 
 __attribute__((naked, noinline))
 void * FUN_0011a770(int *state __attribute__((unused)), int element_size_type __attribute__((unused)), unsigned int *element_count_ref __attribute__((unused)), int maximum_element_count __attribute__((unused)), void *bs_definition __attribute__((unused)))
@@ -737,10 +737,10 @@ void verify_packet_definition(packet_definition *def)
 
 /* FUN_0011aa40 (0x11aa40) — XBE naked draft (batch 84). */
 #if defined(__clang__)
-static void (*const b11aa40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11aa40_exitfn)(int) = system_exit;
-static void (*const b11aa40_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
-static bool (*const b11aa40_c11b750)(int definition, int encoded_packet, short encoded_packet_size, int decoded_packet, unsigned short *version_out, short *bytes_consumed_out) = FUN_0011b750;
+static void (*const b11aa40_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11aa40_exitfn)(int) = (void *)system_exit;
+static void (*const b11aa40_c118be0)(void *definition, void *data, int count) = (void *)FUN_00118be0;
+static bool (*const b11aa40_c11b750)(int definition, int encoded_packet, short encoded_packet_size, int decoded_packet, unsigned short *version_out, short *bytes_consumed_out) = (void *)FUN_0011b750;
 
 __attribute__((naked, noinline))
 bool FUN_0011aa40(int group __attribute__((unused)), void *decoded_packet __attribute__((unused)), char *encoded_packet __attribute__((unused)), short *encoded_packet_size __attribute__((unused)), short *packet_type __attribute__((unused)), short *packet_version __attribute__((unused)), short expected_packet_class __attribute__((unused)))
@@ -896,14 +896,14 @@ bool FUN_0011aa40(int group __attribute__((unused)), void *decoded_packet __attr
 
 /* FUN_0011b2a0 (0x11b2a0) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static int (*const b11b2a0_c11a430)(int *state, short count, int element_size) = FUN_0011a430;
-static void * (*const b11b2a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static int (*const b11b2a0_c11a430)(int *state, short count, int element_size) = (void *)FUN_0011a430;
+static void * (*const b11b2a0_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
 static char * (*const b11b2a0_c11a8e0)(int *state, unsigned short max_length) = (void *)FUN_0011a8e0;
-static char * (*const b11b2a0_c8dff0)(char *destination, const char *source) = csstrcpy;
+static char * (*const b11b2a0_c8dff0)(char *destination, const char *source) = (void *)csstrcpy;
 static unsigned int (*const b11b2a0_c11a700)(int *state, int maximum_value) = (void *)FUN_0011a700;
-static void (*const b11b2a0_c11add0)(packet_definition *def, short *param_2, short *param_3, short *param_4) = compute_packet_field_sizes;
-static void (*const b11b2a0_c11b2a0)(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out) = FUN_0011b2a0;
-static void *(*const b11b2a0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b11b2a0_c11add0)(packet_definition *def, short *param_2, short *param_3, short *param_4) = (void *)compute_packet_field_sizes;
+static void (*const b11b2a0_c11b2a0)(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out) = (void *)FUN_0011b2a0;
+static void *(*const b11b2a0_memset)(void *, int, unsigned int) = (void *)csmemset;
 
 __attribute__((naked, noinline))
 void FUN_0011b2a0(int definition __attribute__((unused)), int *decode_state __attribute__((unused)), unsigned short version __attribute__((unused)), unsigned short *output __attribute__((unused)), short *decoded_size_out __attribute__((unused)), short *field_defs __attribute__((unused)), short *field_count_out __attribute__((unused)))
@@ -1186,12 +1186,12 @@ void FUN_0011b2a0(int definition __attribute__((unused)), int *decode_state __at
 
 /* FUN_0011b650 (0x11b650) — XBE naked draft (batch 85). */
 #if defined(__clang__)
-static void (*const b11b650_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11b650_exitfn)(int) = system_exit;
-static void (*const b11b650_c11b540)(packet_definition *def) = verify_packet_definition;
-static void (*const b11b650_c119c50)(int *state, int buf, int buf_size) = FUN_00119c50;
-static int (*const b11b650_c119cc0)(int *param_1, int param_2, short param_3, int param_4) = FUN_00119cc0;
-static void (*const b11b650_c11afa0)(int param_1, int *param_2, short param_3, void *param_4, short param_5, int param_6, short *param_7) = _data_packet_encode;
+static void (*const b11b650_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11b650_exitfn)(int) = (void *)system_exit;
+static void (*const b11b650_c11b540)(packet_definition *def) = (void *)verify_packet_definition;
+static void (*const b11b650_c119c50)(int *state, int buf, int buf_size) = (void *)FUN_00119c50;
+static int (*const b11b650_c119cc0)(int *param_1, int param_2, short param_3, int param_4) = (void *)FUN_00119cc0;
+static void (*const b11b650_c11afa0)(int param_1, int *param_2, short param_3, void *param_4, short param_5, int param_6, short *param_7) = (void *)_data_packet_encode;
 
 __attribute__((naked, noinline))
 bool FUN_0011b650(int definition __attribute__((unused)), short version __attribute__((unused)), void *data __attribute__((unused)), char *buffer __attribute__((unused)), short *buffer_size_out __attribute__((unused)), short maximum_buffer_size __attribute__((unused)))
@@ -1305,12 +1305,12 @@ bool FUN_0011b650(int definition __attribute__((unused)), short version __attrib
 
 /* FUN_0011b750 (0x11b750) — XBE naked draft (batch 85). */
 #if defined(__clang__)
-static void (*const b11b750_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11b750_exitfn)(int) = system_exit;
-static void (*const b11b750_c11b540)(packet_definition *def) = verify_packet_definition;
-static void (*const b11b750_c11a2d0)(int *state, void *buffer, int buffer_size) = FUN_0011a2d0;
-static unsigned char (*const b11b750_c11a560)(int *state) = FUN_0011a560;
-static void (*const b11b750_c11b2a0)(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out) = FUN_0011b2a0;
+static void (*const b11b750_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11b750_exitfn)(int) = (void *)system_exit;
+static void (*const b11b750_c11b540)(packet_definition *def) = (void *)verify_packet_definition;
+static void (*const b11b750_c11a2d0)(int *state, void *buffer, int buffer_size) = (void *)FUN_0011a2d0;
+static unsigned char (*const b11b750_c11a560)(int *state) = (void *)FUN_0011a560;
+static void (*const b11b750_c11b2a0)(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out) = (void *)FUN_0011b2a0;
 
 __attribute__((naked, noinline))
 bool FUN_0011b750(int definition __attribute__((unused)), int encoded_packet __attribute__((unused)), short encoded_packet_size __attribute__((unused)), int decoded_packet __attribute__((unused)), unsigned short *version_out __attribute__((unused)), short *bytes_consumed_out __attribute__((unused)))
@@ -1434,9 +1434,9 @@ bool FUN_0011b750(int definition __attribute__((unused)), int encoded_packet __a
 
 /* hashtable_new (0x11b850) — XBE naked draft (batch 87). */
 #if defined(__clang__)
-static void (*const b11b850_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11b850_exitfn)(int) = system_exit;
-static void (*const b11b850_c117b20)(int *table, int element_size) = array_new;
+static void (*const b11b850_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11b850_exitfn)(int) = (void *)system_exit;
+static void (*const b11b850_c117b20)(int *table, int element_size) = (void *)array_new;
 
 __attribute__((naked, noinline))
 void hashtable_new(void *table __attribute__((unused)), short key_size __attribute__((unused)), short element_size __attribute__((unused)), float load_factor __attribute__((unused)), int param_5 __attribute__((unused)), int param_6 __attribute__((unused)))
@@ -1619,8 +1619,8 @@ int FUN_0011ba00(unsigned char *key, unsigned int key_size)
 /* FUN_0011ba50 (0x11ba50) — XBE naked draft (batch 84). */
 #if defined(__clang__)
 static int (*const b11ba50_c11ba00)(unsigned char *key, unsigned int key_size) = (void *)FUN_0011ba00;
-static int (*const b11ba50_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
-static int (*const b11ba50_c8da40)(const void *a, const void *b, int size) = csmemcmp;
+static int (*const b11ba50_c117ee0)(int *array, int index, int element_size) = (void *)FUN_00117ee0;
+static int (*const b11ba50_c8da40)(const void *a, const void *b, int size) = (void *)csmemcmp;
 
 __attribute__((naked, noinline))
 int FUN_0011ba50(short *table __attribute__((unused)), void *key __attribute__((unused)), unsigned short *slot_index_out __attribute__((unused)))
@@ -1761,103 +1761,47 @@ int FUN_0011ba50(short *table __attribute__((unused)), void *key __attribute__((
 #endif
 
 
-/* FUN_0011bb70 (0x11bb70) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void (*const b11bb70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11bb70_exitfn)(int) = system_exit;
-static int (*const b11bb70_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = FUN_0011ba50;
-static int (*const b11bb70_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
-
-__attribute__((naked, noinline))
-int FUN_0011bb70(short *table __attribute__((unused)), void *key __attribute__((unused)))
+/* FUN_0011bb70 (0x11bb70) — readable C lift. */
+int FUN_0011bb70(short *table, void *key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0011bb70_1\n\t"
-      "cmpw %%di, (%%esi)\n\t"
-      "jle .LFUN_0011bb70_1\n\t"
-      "cmpw %%di, 0x2(%%esi)\n\t"
-      "jle .LFUN_0011bb70_1\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0011bb70_1\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_0011bb70_1\n\t"
-      "movw 0x6(%%esi), %%cx\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .LFUN_0011bb70_2\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "cmpl 0x20(%%esi), %%eax\n\t"
-      "je .LFUN_0011bb70_2\n\t"
-      ".LFUN_0011bb70_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4d\n\t"
-      "pushl $0x28f678\n\t"
-      "pushl $0x28f69c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011bb70_2:\n\t"
-      "cmpw $0, 0x4(%%esi)\n\t"
-      "je .LFUN_0011bb70_3\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal 0xa(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c11ba50]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0011bb70_3\n\t"
-      "movswl 0x2(%%esi), %%eax\n\t"
-      "movswl 0xa(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x1c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c117ee0]\n\t"
-      "movswl (%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011bb70_3:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11bb70_assert), [exitfn] "m"(b11bb70_exitfn), [c11ba50] "m"(b11bb70_c11ba50), [c117ee0] "m"(b11bb70_c117ee0)
-      : "memory");
+  unsigned short slot;
+  float load;
+  unsigned short bits;
+  int bad;
+  int *elem;
+  bad = 0;
+  if (table == 0)
+    bad = 1;
+  else if (table[0] <= 0 || table[1] <= 0)
+    bad = 1;
+  else {
+    load = *(float *)((char *)table + 8);
+    if (!(load > *(float *)0x2533c0 && load <= *(float *)0x2533c8))
+      bad = 1;
+    bits = *(unsigned short *)((char *)table + 6);
+    if (bits != (unsigned short)-1 && (1 << (bits & 31)) != *(int *)((char *)table + 0x20))
+      bad = 1;
+  }
+  if (bad) {
+    display_assert((const char *)0x28f69c, (const char *)0x28f678, 0x4d, 1);
+    system_exit(-1);
+  }
+  if (table[2] == 0)
+    return 0;
+  if (!FUN_0011ba50(table, key, &slot))
+    return 0;
+  elem = (int *)FUN_00117ee0((int *)((char *)table + 0x1c), (int)(short)slot, (int)table[1]);
+  return (int)((char *)elem + (int)table[0]);
 }
-#else
-#error "FUN_0011bb70: clang naked draft required"
-#endif
-
 
 /* FUN_0011bc20 (0x11bc20) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static void (*const b11bc20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11bc20_exitfn)(int) = system_exit;
-static int (*const b11bc20_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = FUN_0011ba50;
-static int (*const b11bc20_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
+static void (*const b11bc20_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11bc20_exitfn)(int) = (void *)system_exit;
+static int (*const b11bc20_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = (void *)FUN_0011ba50;
+static int (*const b11bc20_c117ee0)(int *array, int index, int element_size) = (void *)FUN_00117ee0;
 static int (*const b11bc20_c11ba00)(unsigned char *key, unsigned int key_size) = (void *)FUN_0011ba00;
-static void * (*const b11bc20_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static void * (*const b11bc20_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
 
 __attribute__((naked, noinline))
 void FUN_0011bc20(short *table __attribute__((unused)), void *key __attribute__((unused)))
@@ -2062,11 +2006,11 @@ void FUN_0011bc20(short *table __attribute__((unused)), void *key __attribute__(
 
 /* FUN_0011be10 (0x11be10) — XBE naked draft (batch 89). */
 #if defined(__clang__)
-static int (*const b11be10_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = FUN_0011ba50;
-static void (*const b11be10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11be10_exitfn)(int) = system_exit;
-static int (*const b11be10_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
-static void * (*const b11be10_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
+static int (*const b11be10_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = (void *)FUN_0011ba50;
+static void (*const b11be10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11be10_exitfn)(int) = (void *)system_exit;
+static int (*const b11be10_c117ee0)(int *array, int index, int element_size) = (void *)FUN_00117ee0;
+static void * (*const b11be10_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
 
 __attribute__((naked, noinline))
 int FUN_0011be10(short *table __attribute__((unused)), void *key __attribute__((unused)))
@@ -2149,17 +2093,17 @@ int FUN_0011be10(short *table __attribute__((unused)), void *key __attribute__((
 
 /* FUN_0011beb0 (0x11beb0) — XBE naked draft (batch 81). */
 #if defined(__clang__)
-static void (*const b11beb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11beb0_exitfn)(int) = system_exit;
-static void * (*const b11beb0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b11beb0_c117b20)(int *table, int element_size) = array_new;
-static int (*const b11beb0_c117b90)(int *array, int new_count) = array_resize;
-static void *(*const b11beb0_memset)(void *, int, unsigned int) = csmemset;
-static int (*const b11beb0_c117ee0)(int *array, int index, int element_size) = FUN_00117ee0;
-static int (*const b11beb0_c11be10)(short *table, void *key) = FUN_0011be10;
-static void * (*const b11beb0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b11beb0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-static void (*const b11beb0_c117cf0)(int *table) = FUN_00117cf0;
+static void (*const b11beb0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11beb0_exitfn)(int) = (void *)system_exit;
+static void * (*const b11beb0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
+static void (*const b11beb0_c117b20)(int *table, int element_size) = (void *)array_new;
+static int (*const b11beb0_c117b90)(int *array, int new_count) = (void *)array_resize;
+static void *(*const b11beb0_memset)(void *, int, unsigned int) = (void *)csmemset;
+static int (*const b11beb0_c117ee0)(int *array, int index, int element_size) = (void *)FUN_00117ee0;
+static int (*const b11beb0_c11be10)(short *table, void *key) = (void *)FUN_0011be10;
+static void * (*const b11beb0_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
+static void (*const b11beb0_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
+static void (*const b11beb0_c117cf0)(int *table) = (void *)FUN_00117cf0;
 
 __attribute__((naked, noinline))
 int FUN_0011beb0(short *table __attribute__((unused)), short growth_bits __attribute__((unused)))
@@ -2385,10 +2329,10 @@ int FUN_0011beb0(short *table __attribute__((unused)), short growth_bits __attri
 
 /* FUN_0011c0f0 (0x11c0f0) — XBE naked draft (batch 88). */
 #if defined(__clang__)
-static void (*const b11c0f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11c0f0_exitfn)(int) = system_exit;
-static int (*const b11c0f0_c11beb0)(short *table, short growth_bits) = FUN_0011beb0;
-static int (*const b11c0f0_c11be10)(short *table, void *key) = FUN_0011be10;
+static void (*const b11c0f0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11c0f0_exitfn)(int) = (void *)system_exit;
+static int (*const b11c0f0_c11beb0)(short *table, short growth_bits) = (void *)FUN_0011beb0;
+static int (*const b11c0f0_c11be10)(short *table, void *key) = (void *)FUN_0011be10;
 
 __attribute__((naked, noinline))
 int FUN_0011c0f0(short *table __attribute__((unused)), void *key __attribute__((unused)))
@@ -2589,13 +2533,13 @@ void FUN_0011c290(int cache)
 
 /* FUN_0011c310 (0x11c310) — XBE naked draft (batch 85). */
 #if defined(__clang__)
-static void * (*const b11c310_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b11c310_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11c310_exitfn)(int) = system_exit;
-static void *(*const b11c310_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b11c310_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-static void (*const b11c310_c11c290)(int cache) = FUN_0011c290;
-static void (*const b11c310_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+static void * (*const b11c310_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
+static void (*const b11c310_assert)(const char *, const char *, int, bool) = (void *)display_assert;
+static void (*const b11c310_exitfn)(int) = (void *)system_exit;
+static void *(*const b11c310_memset)(void *, int, unsigned int) = (void *)csmemset;
+static void * (*const b11c310_c8de70)(char *destination, const char *source, size_t size) = (void *)csstrncpy;
+static void (*const b11c310_c11c290)(int cache) = (void *)FUN_0011c290;
+static void (*const b11c310_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
 
 __attribute__((naked, noinline))
 int FUN_0011c310(const char *name __attribute__((unused)), int size __attribute__((unused)), void (*lock_proc)(void * __attribute__((unused)), int), void (*unlock_proc)(void *) __attribute__((unused)), void *base_address __attribute__((unused)))
