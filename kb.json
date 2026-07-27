@@ -28070,7 +28070,7 @@
         {
           "addr": "0xf04c0",
           "decl": "void FUN_000f04c0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f04c0"
         },
         {
