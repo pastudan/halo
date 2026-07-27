@@ -4489,7 +4489,7 @@ static void (*const b798e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = e
 static void (*const b798e0_c7c8f0)(void *) = bitmap_delete;
 
 __attribute__((naked, noinline))
-void FUN_000798e0(void)
+void FUN_000798e0(void *source_bitmap, void *destination_bitmap, short destination_mipmap_index, int unused)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -4767,7 +4767,7 @@ static void (*const b79bb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = e
 static void (*const b79bb0_c7c8f0)(void *) = bitmap_delete;
 
 __attribute__((naked, noinline))
-void FUN_00079bb0(void)
+void FUN_00079bb0(void *source_bitmap, void *destination_bitmap, short destination_mipmap_index, int unused)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
