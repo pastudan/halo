@@ -36094,7 +36094,7 @@
         {
           "addr": "0x58c40",
           "decl": "void FUN_00058c40(int encounter_handle, int actor_handle, int seat_list);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x58fa0",
