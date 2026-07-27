@@ -584,368 +584,59 @@ void *FUN_00076ff0(int tag_index, short bitmap_index)
   return uVar2;
 }
 
-/* FUN_00077040 (0x77040) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void (*const b77040_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b77040_exitfn)(int) = system_exit;
-static void *(*const b77040_tag)(int, int) = tag_get;
-static void *(*const b77040_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void * FUN_00077040(int tag_index __attribute__((unused)), short sequence_index __attribute__((unused)), short frame_index __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_00077040_8\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_00077040_1\n\t"
-      "cmpw %%ax, 0x10(%%ebp)\n\t"
-      "jge .LFUN_00077040_2\n\t"
-      ".LFUN_00077040_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a6\n\t"
-      "pushl $0x263f08\n\t"
-      "pushl $0x263ee4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00077040_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x6269746d\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_00077040_7\n\t"
-      "movl 0x54(%%ebx), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "leal 0x54(%%ebx), %%ecx\n\t"
-      "jle .LFUN_00077040_5\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%esi\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movw 0x22(%%ecx), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00077040_3\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movswl 0x10(%%ebp), %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%esi\n\t"
-      "addw 0x20(%%ecx), %%dx\n\t"
-      "jmp .LFUN_00077040_4\n\t"
-      ".LFUN_00077040_3:\n\t"
-      "leal 0x34(%%ecx), %%eax\n\t"
-      "cmpl $0, (%%eax)\n\t"
-      "je .LFUN_00077040_5\n\t"
-      "movswl 0x10(%%ebp), %%ecx\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw (%%eax), %%dx\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00077040_4:\n\t"
-      "cmpw $-1, %%dx\n\t"
-      "jne .LFUN_00077040_6\n\t"
-      ".LFUN_00077040_5:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      ".LFUN_00077040_6:\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jl .LFUN_00077040_7\n\t"
-      "movswl %%dx, %%ecx\n\t"
-      "movl 0x60(%%ebx), %%edx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "leal 0x60(%%ebx), %%eax\n\t"
-      "jge .LFUN_00077040_7\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00077040_7:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00077040_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b77040_assert), [exitfn] "m"(b77040_exitfn), [tag] "m"(b77040_tag), [elem] "m"(b77040_elem)
-      : "memory");
-}
-#else
-#error "FUN_00077040: clang naked draft required"
-#endif
-
-
 /*
- * FUN_00077120 -- bitmap_group_add_bitmap: validate and add a new bitmap entry
- * to a bitmap group tag.
+ * FUN_00077040 -- bitmap_group_get_bitmap: resolve sequence/frame index pair
+ * to a bitmap data element in a 'bitm' tag.
  *
- * Validates dimensions (power-of-two, cube-map squareness) and format flags,
- * builds a 0x30-byte bitmap_data struct on the stack, resizes the group's
- * bitmaps block and pixel_data tag_data to hold the new entry, copies the
- * struct into the new slot, sets the base address, and zeroes the pixel data
- * region. Returns the new bitmap index (0-based) on success, -1 on failure.
+ * Walks the tag's sequence block to find the correct bitmap index, handling
+ * direct-bitmap sequences (frame_count >= 1) and sprite sequences. Falls back
+ * to frame_index if the resolved bitmap index is -1.
  *
- * Flags bitmask (at +0x0e): bit 0 = power-of-two, bit 1 = compressed format
- * (14..16), bit 2 = format 17.
- *
- * Disassembly: struct fields initialized in MSVC store order (depth, flags=0,
- * reg_point_y=0, reg_point_x=0, mipmap_count, then fourcc/type/width/height/
- * format). Flags OR'd at byte level (OR byte ptr). Non-POT guard uses TEST
- * byte,1 / JNZ skip / CMP DX,4 / JZ skip / error pattern.
- *
- * Source file: c:\halo\SOURCE\bitmaps\bitmap_group.c (~line 0x2d7)
+ * Source TU: bitmap_group.c (assert strings confirm)
  */
-short FUN_00077120(void *group, short type, short width, short height,
-                   short depth, short format, short mipmap_count)
+void *FUN_00077040(int tag_index, short sequence_index, short frame_index)
 {
-  char new_bitmap[0x30];
-  short group_type;
-  int old_count;
-  int new_element;
-  int pixel_size;
-  char ok;
-  short i;
-  int cur;
-  int prev;
-  int prev_size;
-  int space;
-  int cur_size;
-  int last_end;
+  int tag;
+  int sequence;
+  short bitmap_idx;
 
-  last_end = 0;
-
-  if (group == NULL) {
-    display_assert("group", "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x2db,
-                   1);
+  if (tag_index == -1)
+    goto cleanup_null;
+  if (sequence_index < 0 || frame_index < 0) {
+    display_assert("sequence_index>=0 && frame_index>=0",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x2a6, 1);
     system_exit(-1);
   }
-
-  *(short *)(new_bitmap + 0x0a) = depth;
-  *(short *)(new_bitmap + 0x0e) = 0;
-  *(short *)(new_bitmap + 0x12) = 0;
-  *(short *)(new_bitmap + 0x10) = 0;
-  *(short *)(new_bitmap + 0x14) = mipmap_count;
-  *(int *)(new_bitmap + 0x18) = 0;
-  *(int *)(new_bitmap + 0x28) = 0;
-  *(int *)(new_bitmap + 0x2c) = 0;
-
-  group_type = *(short *)group;
-
-  *(int *)(new_bitmap + 0x00) = 0x6269746d;
-  *(short *)(new_bitmap + 0x04) = type;
-  *(short *)(new_bitmap + 0x06) = width;
-  *(short *)(new_bitmap + 0x08) = height;
-  *(short *)(new_bitmap + 0x0c) = format;
-
-  if (group_type == 4) {
-    *(short *)(new_bitmap + 0x0e) = 0x10;
-  } else {
-    if ((type & (type - 1)) != 0 || (width & (width - 1)) != 0 ||
-        (height & (height - 1)) != 0) {
-      crt_fprintf((void *)0x331050,
-                  "skipping bitmap with non-power-of-two dimensions "
-                  "(#%dx#%d#%d)\r\n",
-                  (int)type, (int)width, (int)height);
-      crt_fflush((void *)0x331050);
-      return (short)-1;
+  tag = (int)tag_get(0x6269746d, tag_index);
+  if (tag == 0)
+    goto cleanup_null;
+  if (*(int *)(tag + 0x54) > 0) {
+    sequence = (int)tag_block_get_element(
+      (int *)(tag + 0x54), (int)sequence_index % *(int *)(tag + 0x54), 0x40);
+    if (*(short *)(sequence + 0x22) > 0) {
+      bitmap_idx =
+        (short)((int)frame_index % (int)*(short *)(sequence + 0x22)) +
+        *(short *)(sequence + 0x20);
+      goto done;
     }
-    if (group_type == 2 && type != width) {
-      crt_fprintf((void *)0x331050,
-                  "skipping cube map with non-square faces (#%dx#%d)\r\n",
-                  (int)type, (int)width);
-      crt_fflush((void *)0x331050);
-      return (short)-1;
-    }
-    *(short *)(new_bitmap + 0x0e) = 1;
+    if (*(int *)(sequence + 0x34) == 0)
+      goto fallback;
+    bitmap_idx = *(short *)tag_block_get_element((int *)(sequence + 0x34),
+                                                 (int)frame_index, 0x20);
+  done:
+    if (bitmap_idx != -1)
+      goto ret_check;
   }
-
-  if (format >= 0xe && format <= 0x10) {
-    *(unsigned char *)(new_bitmap + 0x0e) |= 2;
-  }
-  if (format == 0x11) {
-    *(unsigned char *)(new_bitmap + 0x0e) |= 4;
-  }
-
-  if (group_type == 2 && type != width) {
-    crt_fprintf((void *)0x331050,
-                "skipping cube map with non-square faces (#%dx#%d)\r\n",
-                (int)type, (int)width);
-    crt_fflush((void *)0x331050);
-    return (short)-1;
-  }
-
-  if ((*(unsigned char *)(new_bitmap + 0x0e) & 1) != 0)
-    goto after_pow2_guard;
-  if (group_type != 4) {
-    crt_fprintf((void *)0x331050,
-                "skipping bitmap with non power-of-two dimensions "
-                "(#%dx#%d)\r\n",
-                (int)type, (int)width);
-    crt_fflush((void *)0x331050);
-    return (short)-1;
-  }
-
-after_pow2_guard:
-  pixel_size = bitmap_get_pixel_data_size(new_bitmap + 4);
-
-  old_count = *(int *)((char *)group + 0x60);
-
-  ok = tag_block_resize((char *)group + 0x60, old_count + 1);
-  if (ok) {
-    ok = tag_data_resize((char *)group + 0x30,
-                         *(int *)((char *)group + 0x30) + pixel_size);
-  }
-  if (ok) {
-    prev = 0;
-    last_end = 0;
-    i = 0;
-    if (*(int *)((char *)group + 0x60) > 0) {
-      do {
-        cur = (int)tag_block_get_element((char *)group + 0x60, (int)i, 0x30);
-        if (*(int *)((char *)cur + 0x2c) != 0) {
-          if (*(int *)((char *)cur + 0x28) != 0) {
-            display_assert("!bitmap->hardware_format",
-                           "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x34d,
-                           1);
-            system_exit(-1);
-          }
-          *(int *)((char *)cur + 0x2c) =
-            *(int *)((char *)cur + 0x18) + *(int *)((char *)group + 0x1e);
-          if ((unsigned int)*(int *)((char *)cur + 0x2c) <
-              (unsigned int)*(int *)((char *)group + 0x1e)) {
-            display_assert(
-              "(byte*)bitmap->base_address>=(byte*)group->pixel_data.address",
-              "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x352, 1);
-            system_exit(-1);
-          }
-          cur_size = bitmap_get_pixel_data_size((void *)cur);
-          if ((unsigned int)(*(int *)((char *)group + 0x30) +
-                             *(int *)((char *)group + 0x1e)) <
-              (unsigned int)(cur_size + *(int *)((char *)cur + 0x2c))) {
-            display_assert(
-              "(byte*)bitmap->base_address + bitmap_get_pixel_data_size(bitmap)"
-              " <= (byte*)group->pixel_data.address + group->pixel_data.size",
-              "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x354, 1);
-            system_exit(-1);
-          }
-          if (prev != 0) {
-            prev_size = bitmap_get_pixel_data_size((void *)prev);
-            space =
-              *(int *)((char *)cur + 0x18) - *(int *)((char *)prev + 0x18);
-            if (space - prev_size < 0) {
-              display_assert("space_between>=0",
-                             "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x35b,
-                             1);
-              system_exit(-1);
-            }
-            if (space != prev_size) {
-              error(2, "### WARNING bitmap group pixel data isn't tight");
-            }
-          }
-          last_end = bitmap_get_pixel_data_size((void *)cur) +
-                     *(int *)((char *)cur + 0x18);
-          prev = cur;
-        }
-        i = (short)(i + 1);
-      } while ((int)i < *(int *)((char *)group + 0x60));
-    }
-
-    new_element =
-      (int)tag_block_get_element((char *)group + 0x60, old_count, 0x30);
-    if (new_element == 0) {
-      display_assert("new_bitmap", "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c",
-                     0x371, 1);
-      system_exit(-1);
-    }
-
-    csmemcpy((void *)new_element, new_bitmap, 0x30);
-    *(int *)(new_element + 0x18) = last_end;
-    *(int *)(new_element + 0x2c) = *(int *)((char *)group + 0x1e) + last_end;
-    csmemset((void *)(*(int *)((char *)group + 0x1e) + last_end), 0,
-             pixel_size);
-
-    return (short)old_count;
-  }
-
-  error(2, "### ERROR failed to add bitmap to group (tag resize failed)");
-  tag_block_resize((char *)group + 0x60, old_count);
-  return (short)-1;
-}
-
-/*
- * FUN_00077510 -- bitmap_fill: fill all pixels of a bitmap with a dword value.
- *
- * Gets the pixel base address via bitmap_2d_address(0,0,0), gets the pixel
- * count, then fills that many dwords with the given color. The original uses
- * REP STOSD.
- */
-void FUN_00077510(void *bitmap, int fill_color)
-{
-  int *pixels;
-  int count;
-  int i;
-
-  pixels = (int *)bitmap_2d_address(bitmap, 0, 0, 0);
-  count = bitmap_get_pixel_count(bitmap);
-  if (count > 0) {
-    for (i = 0; i < count; i++) {
-      pixels[i] = fill_color;
-    }
-  }
-}
-
-/*
- * FUN_00077540 -- bitmap_alpha_to_rgb: spread alpha byte to all 4 channels.
- *
- * For each pixel, reads byte [+3] (alpha), builds 0xAAAAAAAA by shifting
- * and OR-ing, then stores back as the full pixel. Converts an alpha-only
- * bitmap into a grayscale ARGB bitmap.
- */
-void FUN_00077540(void *bitmap)
-{
-  unsigned int *pixels;
-  int count;
-  unsigned char alpha;
-  unsigned int expanded;
-
-  pixels = (unsigned int *)bitmap_2d_address(bitmap, 0, 0, 0);
-  count = bitmap_get_pixel_count(bitmap);
-  if (count > 0) {
-    do {
-      alpha = ((unsigned char *)pixels)[3];
-      expanded = alpha;
-      expanded = (expanded << 8) | alpha;
-      expanded = (expanded << 8) | alpha;
-      expanded = (expanded << 8) | alpha;
-      *pixels = expanded;
-      pixels++;
-      count--;
-    } while (count != 0);
-  }
+fallback:
+  bitmap_idx = frame_index;
+ret_check:
+  if (bitmap_idx < 0)
+    goto cleanup_null;
+  if ((int)bitmap_idx >= *(int *)(tag + 0x60))
+    goto cleanup_null;
+  return tag_block_get_element((int *)(tag + 0x60), (int)bitmap_idx, 0x30);
+cleanup_null:
+  return NULL;
 }
 
 /* FUN_00077590 (0x77590) — clone a bitmap: allocates a new bitmap of the same

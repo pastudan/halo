@@ -12966,7 +12966,7 @@
           "addr": "0xd0c80",
           "name": "hud_set_element_digital",
           "decl": "void hud_set_element_digital(float value, const void *draw_ptr);",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/interface/hud.c"
         },
         {
@@ -15971,7 +15971,7 @@
           "addr": "0x12e1d0",
           "decl": "void network_game_server_stalled_on_client(void *server, bool stalled);",
           "name": "network_game_server_stalled_on_client",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/networking/network_server_manager.c"
         },
         {
@@ -16943,7 +16943,7 @@
         {
           "addr": "0x13f120",
           "decl": "int find_objects_from_point_vector(int param_1, int param_2, int param_3, int param_4, int param_5, int param_6);",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/objects/objects.c",
           "name": "find_objects_from_point_vector"
         },
@@ -25885,20 +25885,20 @@
         {
           "addr": "0x624b0",
           "decl": "char FUN_000624b0(void *obstacles, short skip_index, float *pt0, float *vec_a, float radius_base, float max_distance, char check_extant, void *result);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000624b0"
         },
         {
           "addr": "0x625a0",
           "decl": "void FUN_000625a0(void *obstacles, short disc_index, float *point, float base_value, float *out_b, float *out_a, float *out_scalar);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000625a0"
         },
         {
           "addr": "0x62680",
           "decl": "void FUN_00062680(int16_t *partition, uint32_t arg2, int16_t index, uint32_t *out_mask);",
           "name": "FUN_00062680",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x628b0",
@@ -25979,7 +25979,7 @@
         {
           "addr": "0x105830",
           "decl": "void calculate_vertex(short subdivision_index@<eax>, short subdivision_count@<ecx>, short parent2@<edx>, short parent1@<ebx>, void *sphere@<edi>, short new_vertex);",
-          "ported": false,
+          "ported": true,
           "name": "calculate_vertex"
         },
         {
@@ -25998,7 +25998,7 @@
           "addr": "0x105d20",
           "decl": "int16_t convex_hull2d_reduce(int16_t vertex_count, float *vertices, int16_t *out_indices);",
           "name": "convex_hull2d_reduce",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x106030",
@@ -26169,7 +26169,7 @@
           "addr": "0x191cb0",
           "decl": "void leaf_map_mark_portal_designators(void *structure, uint32_t portal_index);",
           "name": "leaf_map_mark_portal_designators",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x191d80",
@@ -26258,25 +26258,25 @@
         {
           "addr": "0x195550",
           "decl": "void FUN_00195550(short surface_count, int *out_indices, unsigned int *mask, int out_surfaces);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00195550"
         },
         {
           "addr": "0x195650",
           "decl": "void FUN_00195650(void *out@<eax>, int *indices@<ecx>, int16_t count@<edx>);",
           "name": "FUN_00195650",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1956d0",
           "decl": "int FUN_001956d0(void *param_1, void *param_2, int16_t count@<esi>);",
           "name": "FUN_001956d0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x195790",
           "decl": "void FUN_00195790(int *surface_material_offsets@<eax>, unsigned short surface_count, int lightmap_pass_index, void *material_begin_cb, void *surface_draw_cb, void *pass_end_cb, int param_7);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00195790"
         },
         {
@@ -26388,13 +26388,13 @@
         {
           "addr": "0x197130",
           "decl": "int FUN_00197130(float *bounds, void *param_2, int *param_3, int count, float *center, float radius, float *cull_bounds, int param_8, int param_9, int intersection, int leaf@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00197130"
         },
         {
           "addr": "0x197310",
           "decl": "short FUN_00197310(void *verts@<eax>, void *plane@<ecx>, void *ref@<edx>, void *arg1, int16_t count, int sign, short *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00197310"
         },
         {
@@ -32719,7 +32719,7 @@
           "addr": "0x77040",
           "decl": "void *FUN_00077040(int tag_index, short sequence_index, short frame_index);",
           "name": "FUN_00077040",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x77120",
@@ -34665,7 +34665,7 @@
         {
           "addr": "0x2ade0",
           "decl": "void FUN_0002ade0(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002ade0"
         },
         {
@@ -34701,7 +34701,7 @@
         {
           "addr": "0x2bab0",
           "decl": "void FUN_0002bab0(char use_3d , float *movement_direction , float *facing_direction , float *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002bab0"
         },
         {
@@ -41036,7 +41036,7 @@
           "decl": "char FUN_0005ef80(unsigned int *path_buf @<edi>);",
           "name": "FUN_0005ef80",
           "source_path": "src/halo/ai/path.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5f1d0",
@@ -41049,7 +41049,7 @@
           "decl": "int16_t build_path_edges_for_surface(void *scenario, int surface_index, char *out_edges);",
           "name": "build_path_edges_for_surface",
           "source_path": "src/halo/ai/path.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5f3c0",

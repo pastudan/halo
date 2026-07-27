@@ -2003,278 +2003,111 @@ bool FUN_0012e090(void *server, void *player_data)
   return result;
 }
 
-/* network_game_server_stalled_on_client (0x12e1d0) — XBE naked draft (batch 83). */
-#if defined(__clang__)
-static void (*const b12e1d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12e1d0_exitfn)(int) = system_exit;
-static unsigned int (*const b12e1d0_c8e370)(void) = system_milliseconds;
-static char * (*const b12e1d0_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
-static void (*const b12e1d0_c12b650)(const char *fmt, ...) = network_game_log;
-static bool (*const b12e1d0_c12df50)(void *server, void *machine) = FUN_0012df50;
-
-__attribute__((naked, noinline))
-void network_game_server_stalled_on_client(void *server __attribute__((unused)), bool stalled __attribute__((unused)))
+/* Manage stalled-client timeout detection and reset (0x12e1d0).
+ * If stalled==false, clears all 4 slot timestamps (reset mode).
+ * If stalled==true, finds the slot with the oldest (minimum) timestamp
+ * that is in an active state (short at +0x448/0x458/0x468/0x478 in [0,3]),
+ * then either stamps it on first entry or forcibly removes the client if
+ * it has been stalled >1999 ms. After handling, clears timestamps for all
+ * other slots. The 4 machine slots live at server+0x43c with stride 0x10;
+ * fields per slot: +0x0=machine handle, +0x4=?, +0x8=timestamp, +0xc=state. */
+void network_game_server_stalled_on_client(void *server, bool stalled)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_game_server_stalled_on_client_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x59e\n\t"
-      "pushl $0x296bf0\n\t"
-      "pushl $0x296c34\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_server_stalled_on_client_1:\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_server_stalled_on_client_12\n\t"
-      "movw 0x448(%%esi), %%cx\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "orl %%eax, %%ebx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lnetwork_game_server_stalled_on_client_2\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jge .Lnetwork_game_server_stalled_on_client_2\n\t"
-      "movl 0x440(%%esi), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jae .Lnetwork_game_server_stalled_on_client_2\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      ".Lnetwork_game_server_stalled_on_client_2:\n\t"
-      "movw 0x458(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lnetwork_game_server_stalled_on_client_3\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jge .Lnetwork_game_server_stalled_on_client_3\n\t"
-      "movl 0x450(%%esi), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jae .Lnetwork_game_server_stalled_on_client_3\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl $1, %%ebx\n\t"
-      ".Lnetwork_game_server_stalled_on_client_3:\n\t"
-      "movw 0x468(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lnetwork_game_server_stalled_on_client_4\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jge .Lnetwork_game_server_stalled_on_client_4\n\t"
-      "movl 0x460(%%esi), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jae .Lnetwork_game_server_stalled_on_client_4\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl $2, %%ebx\n\t"
-      ".Lnetwork_game_server_stalled_on_client_4:\n\t"
-      "movw 0x478(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lnetwork_game_server_stalled_on_client_5\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jge .Lnetwork_game_server_stalled_on_client_5\n\t"
-      "cmpl %%eax, 0x470(%%esi)\n\t"
-      "jae .Lnetwork_game_server_stalled_on_client_5\n\t"
-      "movl $3, %%ebx\n\t"
-      ".Lnetwork_game_server_stalled_on_client_5:\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "jne .Lnetwork_game_server_stalled_on_client_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b1\n\t"
-      "pushl $0x296bf0\n\t"
-      "pushl $0x298350\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_server_stalled_on_client_6:\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%eax,%%esi,1), %%edi\n\t"
-      "movl 0x444(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_game_server_stalled_on_client_8\n\t"
-      "call *%[c8e370]\n\t"
-      "subl 0x444(%%edi), %%eax\n\t"
-      "cmpl $0x7d0, %%eax\n\t"
-      "jb .Lnetwork_game_server_stalled_on_client_9\n\t"
-      "movswl 0x448(%%edi), %%edx\n\t"
-      "imull $0x44, %%edx, %%edx\n\t"
-      "pushl $0x20\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x11c(%%edx,%%esi,1), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19f3a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "jne .Lnetwork_game_server_stalled_on_client_7\n\t"
-      "movl $0x298340, %%eax\n\t"
-      ".Lnetwork_game_server_stalled_on_client_7:\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x298304\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $0x43c, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12df50]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lnetwork_game_server_stalled_on_client_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5c1\n\t"
-      "pushl $0x296bf0\n\t"
-      "pushl $0x2982fc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lnetwork_game_server_stalled_on_client_9\n\t"
-      ".Lnetwork_game_server_stalled_on_client_8:\n\t"
-      "call *%[c8e370]\n\t"
-      "movl %%eax, 0x444(%%edi)\n\t"
-      ".Lnetwork_game_server_stalled_on_client_9:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal 0x444(%%esi), %%ecx\n\t"
-      "popl %%edi\n\t"
-      ".Lnetwork_game_server_stalled_on_client_10:\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lnetwork_game_server_stalled_on_client_11\n\t"
-      "movl $0, (%%ecx)\n\t"
-      ".Lnetwork_game_server_stalled_on_client_11:\n\t"
-      "incl %%eax\n\t"
-      "addl $0x10, %%ecx\n\t"
-      "cmpl $4, %%eax\n\t"
-      "jl .Lnetwork_game_server_stalled_on_client_10\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_server_stalled_on_client_12:\n\t"
-      "leal 0x444(%%esi), %%eax\n\t"
-      "movl $4, %%ecx\n\t"
-      ".Lnetwork_game_server_stalled_on_client_13:\n\t"
-      "movl $0, (%%eax)\n\t"
-      "addl $0x10, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lnetwork_game_server_stalled_on_client_13\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b12e1d0_assert), [exitfn] "m"(b12e1d0_exitfn), [c8e370] "m"(b12e1d0_c8e370), [c19f3a0] "m"(b12e1d0_c19f3a0), [c12b650] "m"(b12e1d0_c12b650), [c12df50] "m"(b12e1d0_c12df50)
-      : "memory");
-}
-#else
-#error "network_game_server_stalled_on_client: clang naked draft required"
-#endif
-
-
-/* Update the pre-game countdown state machine (0x12e3a0).
- * Drives the server-side countdown timer based on param_2 (countdown event
- * type: 0=increment, 1=clamp-and-latch, 2=cancel, 3=reset).
- * If the server is already in the waiting-for-clients path (0x494==0),
- * starts or validates a timer and transitions 0x494 to 1 when conditions are
- * met.  If in the active countdown path (0x494==1), advances or cancels the
- * timer based on the event type.  Returns early if the server is NULL or not
- * in pregame state. */
-void network_game_server_update_countdown(void *server, short param_2)
-{
-  char cVar1;
+  char local_24[32];
+  int s;
   unsigned int uVar2;
-  short *psVar3;
-  int iVar4;
-  short sVar5;
-  int *puVar6;
-  int param_1;
+  int iVar3;
+  char *pcVar4;
+  unsigned int uVar5;
+  int iVar6;
+  unsigned int *puVar7;
+  int iVar8;
 
-  param_1 = (int)server;
+  s = (int)server;
 
-  if ((param_1 == 0) || (*(short *)(param_1 + 4) != 0)) {
-    display_assert(
-      "server && server->state == _network_game_server_state_pregame",
-      "c:\\halo\\SOURCE\\networking\\network_server_manager.c", 0x66e, 1);
+  if (s == 0) {
+    display_assert("server",
+                   "c:\\halo\\SOURCE\\networking\\network_server_manager.c",
+                   0x59e, 1);
     system_exit(-1);
   }
-  if ((*(unsigned char *)(param_1 + 0x495) == '\0') &&
-      ((cVar1 = server_ok_to_countdown((void *)param_1),
-        cVar1 != '\0' || (param_2 == 2)))) {
-    if (*(unsigned char *)(param_1 + 0x494) == '\x01') {
-      if (*(unsigned char *)(param_1 + 0x496) == '\0') {
-        switch (param_2) {
-        case 0:
-          *(unsigned char *)(param_1 + 0x496) = 1;
-          countdown_timer_increment((int *)(param_1 + 0x488), 5000, 30999);
-          return;
-        case 1:
-          *(unsigned char *)(param_1 + 0x496) = 1;
-          puVar6 = (int *)(param_1 + 0x488);
-          iVar4 = countdown_timer_get_time_remaining((void *)puVar6);
-          if (iVar4 > 999) {
-            countdown_timer_decrement(puVar6, 5000);
-            iVar4 = countdown_timer_get_time_remaining((void *)puVar6);
-            if (iVar4 < 999) {
-              uVar2 = system_milliseconds();
-              *puVar6 = 999;
-              *(unsigned int *)(param_1 + 0x48c) = uVar2;
-              return;
-            }
-          }
-          break;
-        case 2:
-          *(unsigned char *)(param_1 + 0x494) = 0;
-          *(unsigned char *)(param_1 + 0x496) = 1;
-          return;
-        case 3:
-          *(unsigned char *)(param_1 + 0x496) = 1;
-          uVar2 = system_milliseconds();
-          *(int *)(param_1 + 0x488) = 0;
-          *(unsigned int *)(param_1 + 0x48c) = uVar2;
-          return;
-        }
-      }
-    } else {
-      system_milliseconds();
-      if (param_2 == 3) {
-        uVar2 = system_milliseconds();
-        *(int *)(param_1 + 0x488) = 0;
-        *(unsigned int *)(param_1 + 0x48c) = uVar2;
-        *(unsigned char *)(param_1 + 0x496) = 0;
-        *(unsigned char *)(param_1 + 0x494) = 1;
-        return;
-      }
-      cVar1 = network_game_accept_remote_connections();
-      if (cVar1 != '\0') {
-        sVar5 = 0;
-        psVar3 = (short *)(param_1 + 0x448);
-        iVar4 = 4;
-        do {
-          if ((*(int *)((char *)psVar3 - 12) != 0) && (*psVar3 != -1)) {
-            sVar5 = sVar5 + 1;
-          }
-          psVar3 = psVar3 + 8;
-          iVar4 = iVar4 + -1;
-        } while (iVar4 != 0);
-        if (sVar5 < 2) {
-          return;
-        }
-      }
-      cVar1 = network_game_is_splitscreen_local();
-      *(unsigned char *)(param_1 + 0x494) = 1;
-      countdown_timer_set_time_remaining((int *)(param_1 + 0x488),
-                                         (cVar1 != '\0') ? 10711 : 30999);
-      *(int *)(param_1 + 0x490) = 0;
-      *(unsigned char *)(param_1 + 0x496) = 0;
+
+  if (stalled != '\0') {
+    uVar2 = 0xffffffff;
+    iVar8 = -1;
+
+    if ((*(short *)(s + 0x448) >= 0) && (*(short *)(s + 0x448) < 4) &&
+        (*(unsigned int *)(s + 0x440) != 0xffffffff)) {
+      iVar8 = 0;
+      uVar2 = *(unsigned int *)(s + 0x440);
     }
+    if ((*(short *)(s + 0x458) >= 0) && (*(short *)(s + 0x458) < 4) &&
+        (*(unsigned int *)(s + 0x450) < uVar2)) {
+      iVar8 = 1;
+      uVar2 = *(unsigned int *)(s + 0x450);
+    }
+    if ((*(short *)(s + 0x468) >= 0) && (*(short *)(s + 0x468) < 4) &&
+        (*(unsigned int *)(s + 0x460) < uVar2)) {
+      iVar8 = 2;
+      uVar2 = *(unsigned int *)(s + 0x460);
+    }
+    if ((*(short *)(s + 0x478) >= 0) && (*(short *)(s + 0x478) < 4) &&
+        (*(unsigned int *)(s + 0x470) < uVar2)) {
+      iVar8 = 3;
+    }
+
+    if (iVar8 == -1) {
+      display_assert("culprit != NONE",
+                     "c:\\halo\\SOURCE\\networking\\network_server_manager.c",
+                     0x5b1, 1);
+      system_exit(-1);
+    }
+
+    iVar6 = iVar8 * 0x10 + s;
+    if (*(int *)(iVar6 + 0x444) == 0) {
+      uVar5 = system_milliseconds();
+      *(unsigned int *)(iVar6 + 0x444) = uVar5;
+    } else {
+      iVar3 = (int)system_milliseconds();
+      if ((unsigned int)(iVar3 - *(int *)(iVar6 + 0x444)) > 1999) {
+        iVar3 = (int)wide_to_ascii(
+          (const wchar_t *)(*(short *)(iVar6 + 0x448) * 0x44 + 0x11c + s),
+          local_24, 0x20);
+        pcVar4 = local_24;
+        if (iVar3 == 0) {
+          pcVar4 = "<unknown name>";
+        }
+        network_game_log(
+          "forcibly removing client system \'%s\' due to timeout in-game",
+          pcVar4);
+        if (FUN_0012df50((void *)s, (void *)(iVar6 + 0x43c)) == '\0') {
+          display_assert(
+            "removed", "c:\\halo\\SOURCE\\networking\\network_server_manager.c",
+            0x5c1, 1);
+          system_exit(-1);
+        }
+      }
+    }
+
+    iVar6 = 0;
+    puVar7 = (unsigned int *)(s + 0x444);
+    do {
+      if (iVar6 != iVar8) {
+        *puVar7 = 0;
+      }
+      iVar6 = iVar6 + 1;
+      puVar7 = puVar7 + 4;
+    } while (iVar6 < 4);
+    return;
   }
-  return;
+
+  puVar7 = (unsigned int *)(s + 0x444);
+  iVar8 = 4;
+  do {
+    *puVar7 = 0;
+    puVar7 = puVar7 + 4;
+    iVar8 = iVar8 + -1;
+  } while (iVar8 != 0);
 }
 
 /* FUN_0012e580 (0x12e580) — XBE naked draft (batch 118). */

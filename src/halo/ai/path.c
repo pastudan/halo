@@ -1052,217 +1052,98 @@ char path_state_approach_point(void *path_state __attribute__((unused)), float *
 #endif
 
 
-/* FUN_0005ef80 (0x5ef80) — XBE naked draft (batch 81). */
-#if defined(__clang__)
-static void *(*const b5ef80_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b5ef80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5ef80_exitfn)(int) = system_exit;
-static void (*const b5ef80_ftol)(void) = FUN_001d9068;
-static void (*const b5ef80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b5ef80_c5e680)(void *path, int16_t heap_node, int16_t heap_cost) = path_heap_insert;
-
-__attribute__((naked, noinline))
-char FUN_0005ef80(unsigned int *path_buf __attribute__((unused)))
+/* 0x5ef80 — allocate the initial path-search node and heap-insert it. */
+char FUN_0005ef80(unsigned int *path_buf)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x20(%%edi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0005ef80_3\n\t"
-      "flds 0x1c(%%edi)\n\t"
-      "fcomps 0x25ddb8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0005ef80_3\n\t"
-      "movl 0x64(%%edi), %%eax\n\t"
-      "pushl $0x60\n\t"
-      "addl $0xb0, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x20(%%edi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jl .LFUN_0005ef80_1\n\t"
-      "cmpl 0x3c(%%eax), %%ecx\n\t"
-      "jl .LFUN_0005ef80_2\n\t"
-      ".LFUN_0005ef80_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2b1\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e4c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0005ef80_2:\n\t"
-      "movb 0x4c(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0005ef80_4\n\t"
-      "flds 0x50(%%edi)\n\t"
-      "fsubs 0x14(%%edi)\n\t"
-      "flds 0x54(%%edi)\n\t"
-      "fsubs 0x18(%%edi)\n\t"
-      "flds 0x58(%%edi)\n\t"
-      "fsubs 0x1c(%%edi)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x253f34\n\t"
-      "call *%[ftol]\n\t"
-      "cmpl $0x7fff, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jl .LFUN_0005ef80_5\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "pushl $0x40a99966\n\t"
-      "pushl $0x60000000\n\t"
-      "subl $0x38, %%esp\n\t"
-      "fstpl 0x30(%%esp)\n\t"
-      "flds 0x58(%%edi)\n\t"
-      "fstpl 0x28(%%esp)\n\t"
-      "flds 0x54(%%edi)\n\t"
-      "fstpl 0x20(%%esp)\n\t"
-      "flds 0x50(%%edi)\n\t"
-      "fstpl 0x18(%%esp)\n\t"
-      "flds 0x1c(%%edi)\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x18(%%edi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds 0x14(%%edi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x25e448\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x48, %%esp\n\t"
-      ".LFUN_0005ef80_3:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005ef80_4:\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      ".LFUN_0005ef80_5:\n\t"
-      "cmpw $0, 0x80(%%edi)\n\t"
-      "je .LFUN_0005ef80_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2cc\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e42c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0005ef80_6:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movw 0x80(%%edi), %%bx\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "imull $0x44, %%edx, %%edx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "leal 0x84(%%edx,%%edi,1), %%esi\n\t"
-      "leal 0x1(%%ebx), %%ecx\n\t"
-      "movw %%cx, 0x80(%%edi)\n\t"
-      "movw %%ax, 0x2(%%esi)\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movl 0x20(%%edi), %%eax\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      "leal 0x14(%%edi), %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "leal 0xc(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movw -0x8(%%ebp), %%dx\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl $0x60\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, 0x18(%%esi)\n\t"
-      "movl %%eax, 0x20(%%esi)\n\t"
-      "movl %%eax, 0x24(%%esi)\n\t"
-      "movw %%ax, 0x2e(%%esi)\n\t"
-      "movl $0x7f7fffff, 0x1c(%%esi)\n\t"
-      "movl %%ecx, 0x28(%%esi)\n\t"
-      "movw %%dx, 0x2c(%%esi)\n\t"
-      "movw $0xffff, 0x32(%%esi)\n\t"
-      "movl 0x64(%%edi), %%eax\n\t"
-      "addl $0xb0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jl .LFUN_0005ef80_7\n\t"
-      "cmpl 0x3c(%%eax), %%ecx\n\t"
-      "jl .LFUN_0005ef80_8\n\t"
-      ".LFUN_0005ef80_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e3\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e3d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0005ef80_8:\n\t"
-      "movb 0x4c(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0005ef80_9\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%edi), %%eax\n\t"
-      "leal 0x74(%%edi), %%edx\n\t"
-      "movl %%ecx, 0x6c(%%edi)\n\t"
-      "movl 0x18(%%edi), %%ecx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x1c(%%edi), %%eax\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movw %%bx, 0x68(%%edi)\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl %%ecx, 0x70(%%edi)\n\t"
-      ".LFUN_0005ef80_9:\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "andl $0x1ff, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "shll $4, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "movw %%bx, 0x1208a(%%edx,%%edi,1)\n\t"
-      "call *%[c5e680]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b5ef80_elem), [assert] "m"(b5ef80_assert), [exitfn] "m"(b5ef80_exitfn), [ftol] "m"(b5ef80_ftol), [c8f390] "m"(b5ef80_c8f390), [c5e680] "m"(b5ef80_c5e680)
-      : "memory");
+  char *path;
+  int focus_surface;
+  int16_t node_index;
+  int16_t estimated_cost;
+  char *node;
+  unsigned int hash_slot;
+  void *scenario;
+  void *bsp;
+  float dist_sq;
+  float dist;
+  int cost_i;
+
+  path = (char *)path_buf;
+  focus_surface = *(int *)(path + 0x20);
+  if (focus_surface == -1)
+    return 0;
+
+  if (*(float *)(path + 0x1c) >= -1000.0f)
+    return 0;
+
+  scenario = *(void **)(path + 0x64);
+  bsp = tag_block_get_element((char *)scenario + 0xb0, 0, 0x60);
+  if (focus_surface < 0 ||
+      focus_surface >= *(int *)((char *)bsp + 0x3c)) {
+    display_assert("current_surface>=0 && "
+                   "current_surface<scenario->structure_bsp.surface_count",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x2b1, 1);
+    system_exit(-1);
+  }
+
+  cost_i = 0;
+  estimated_cost = 0;
+  if (*(char *)(path + 0x4c) != 0) {
+    float dx;
+    float dy;
+    float dz;
+
+    dx = *(float *)(path + 0x50) - *(float *)(path + 0x14);
+    dy = *(float *)(path + 0x54) - *(float *)(path + 0x18);
+    dz = *(float *)(path + 0x58) - *(float *)(path + 0x1c);
+    dist_sq = dx * dx + dy * dy + dz * dz;
+    dist = sqrtf(dist_sq);
+    cost_i = (int)(dist * *(float *)0x253f34);
+    if (cost_i >= 0x7fff) {
+      error(2, (char *)0x0025e448);
+      return 0;
+    }
+    estimated_cost = (int16_t)cost_i;
+  }
+
+  if (*(int16_t *)(path + 0x80) == 0) {
+    display_assert("state->node_count>0", "c:\\halo\\SOURCE\\ai\\path.c", 0x2cc,
+                   1);
+    system_exit(-1);
+  }
+
+  node_index = *(int16_t *)(path + 0x80);
+  node = path + node_index * 0x44 + 0x84;
+  *(int16_t *)(path + 0x80) = node_index + 1;
+
+  *(int16_t *)(node + 2) = -1;
+  *(int *)(node + 4) = -1;
+  *(int *)(node + 8) = focus_surface;
+  *(int *)(node + 0xc) = *(int *)(path + 0x14);
+  *(int *)(node + 0x10) = *(int *)(path + 0x18);
+  *(int *)(node + 0x14) = *(int *)(path + 0x1c);
+  *(int *)(node + 0x18) = 0;
+  *(int *)(node + 0x20) = 0;
+  *(int *)(node + 0x24) = 0;
+  *(int *)(node + 0x1c) = 0x7f7fffff;
+  *(int16_t *)(node + 0x2e) = 0;
+  *(int16_t *)(node + 0x32) = -1;
+  *(int *)(node + 0x28) = cost_i;
+  *(int16_t *)(node + 0x2c) = estimated_cost;
+
+  if (*(char *)(path + 0x4c) != 0) {
+    *(int *)(path + 0x6c) = cost_i;
+    *(int16_t *)(path + 0x68) = node_index;
+    *(float *)(path + 0x74) = *(float *)(path + 0x14);
+    *(float *)(path + 0x78) = *(float *)(path + 0x18);
+    *(float *)(path + 0x7c) = *(float *)(path + 0x1c);
+    *(int *)(path + 0x70) = cost_i;
+  }
+
+  hash_slot = (unsigned int)(focus_surface & 0x1ff) << 4;
+  *(int16_t *)(path + hash_slot + 0x1208a) = node_index;
+  path_heap_insert(path, node_index, estimated_cost);
+  return 1;
 }
-#else
-#error "FUN_0005ef80: clang naked draft required"
-#endif
 
 
 /* FUN_0005f1d0 (0x5f1d0) — readable C lift. */
@@ -1286,165 +1167,89 @@ float FUN_0005f1d0(void *base, float *dst, float *src, int surface_index)
 }
 
 
-/* build_path_edges_for_surface (0x5f240) — XBE naked draft (batch 83). */
-#if defined(__clang__)
-static void *(*const b5f240_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b5f240_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5f240_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int16_t build_path_edges_for_surface(void *scenario __attribute__((unused)), int surface_index __attribute__((unused)), char *out_edges __attribute__((unused)))
+/* 0x5f240 — enumerate BSP surface edges into a path-search buffer. */
+int16_t build_path_edges_for_surface(void *scenario, int surface_index,
+                                     char *out_edges)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "movl 0x1e8(%%eax), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x60\n\t"
-      "addl $0xb0, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jl .Lbuild_path_edges_for_surface_1\n\t"
-      "cmpl 0x3c(%%esi), %%edi\n\t"
-      "jl .Lbuild_path_edges_for_surface_2\n\t"
-      ".Lbuild_path_edges_for_surface_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5d8\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e584\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_path_edges_for_surface_2:\n\t"
-      "pushl $0xc\n\t"
-      "leal 0x3c(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%eax), %%edi\n\t"
-      "leal 0x48(%%esi), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x54, %%esi\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "jmp .Lbuild_path_edges_for_surface_4\n\t"
-      ".Lbuild_path_edges_for_surface_3:\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lbuild_path_edges_for_surface_4:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x14(%%edi), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "sete %%al\n\t"
-      "movswl %%bx, %%esi\n\t"
-      "shll $5, %%esi\n\t"
-      "addl %%edx, %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "incl %%ebx\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%dl\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "movl 0x10(%%edi,%%edx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "je .Lbuild_path_edges_for_surface_6\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .Lbuild_path_edges_for_surface_5\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "cmpl (%%ecx), %%eax\n\t"
-      "jl .Lbuild_path_edges_for_surface_6\n\t"
-      ".Lbuild_path_edges_for_surface_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5ee\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e528\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_path_edges_for_surface_6:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "movb (%%eax,%%edx,1), %%cl\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movb %%cl, 0x4(%%esi)\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "leal 0x8(%%esi), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fsubs (%%ebx)\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fstps 0x18(%%esi)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpw $0x40, %%ax\n\t"
-      "fsubs 0x8(%%ebx)\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      "je .Lbuild_path_edges_for_surface_7\n\t"
-      "movzbl -0x1(%%ebp), %%edx\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "movl 0x8(%%edi,%%edx,4), %%edi\n\t"
-      "cmpl 0x4(%%eax), %%edi\n\t"
-      "jne .Lbuild_path_edges_for_surface_3\n\t"
-      "movw -0x8(%%ebp), %%ax\n\t"
-      ".Lbuild_path_edges_for_surface_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b5f240_elem), [assert] "m"(b5f240_assert), [exitfn] "m"(b5f240_exitfn)
-      : "memory");
+  char *sc;
+  char *bsp;
+  char *surfaces_block;
+  char *surface;
+  char *surfaces_count_ptr;
+  char *edges_block;
+  char *vertices_block;
+  char *sector_map;
+  int edge_link;
+  int16_t out_count;
+  char matched;
+  int adj_slot;
+
+  sc = (char *)scenario;
+  bsp = tag_block_get_element(sc + 0xb0, 0, 0x60);
+  if (surface_index < 0 || surface_index >= *(int *)(bsp + 0x3c)) {
+    display_assert("surface_index>=0 && surface_index<bsp->surfaces.count",
+                   "c:\\halo\\SOURCE\\ai\\path.c", 0x5d8, 1);
+    system_exit(-1);
+  }
+
+  surfaces_block = tag_block_get_element(bsp + 0x3c, 0, 0xc);
+  surface = tag_block_get_element(surfaces_block, surface_index, 0x18);
+  surfaces_count_ptr = bsp + 0x3c;
+  edges_block = bsp + 0x48;
+  vertices_block = bsp + 0x54;
+  sector_map = *(char **)(sc + 0x1e8);
+
+  edge_link = *(int *)(surface + 4);
+  out_count = 0;
+
+  for (;;) {
+    char *edge_desc;
+    char *out;
+    int adj_surface;
+    float *vert_a;
+    float *vert_b;
+
+    edge_desc = tag_block_get_element(edges_block, edge_link, 0x18);
+    matched = (char)(surface_index == *(int *)(edge_desc + 0x14));
+    adj_slot = matched ? 0 : 1;
+
+    out = out_edges + (int)out_count * 0x20;
+    adj_surface = *(int *)(edge_desc + adj_slot * 4 + 0x10);
+    *(int *)out = adj_surface;
+
+    if (adj_surface != -1) {
+      if (adj_surface < 0 || adj_surface >= *(int *)surfaces_count_ptr) {
+        display_assert(
+            "adjacent_surface_index>=0 && "
+            "adjacent_surface_index<bsp->surfaces.count",
+            "c:\\halo\\SOURCE\\ai\\path.c", 0x5ee, 1);
+        system_exit(-1);
+      }
+      *(char *)(out + 4) = sector_map[adj_surface];
+    } else {
+      *(char *)(out + 4) = 0;
+    }
+
+    vert_a = tag_block_get_element(vertices_block, *(int *)edge_desc, 0x10);
+    vert_b = tag_block_get_element(vertices_block, *(int *)(edge_desc + 4), 0x10);
+    *(float *)(out + 8) = vert_a[0];
+    *(float *)(out + 0xc) = vert_a[1];
+    *(float *)(out + 0x10) = vert_a[2];
+    *(float *)(out + 0x14) = vert_b[0] - vert_a[0];
+    *(float *)(out + 0x18) = vert_b[1] - vert_a[1];
+    *(float *)(out + 0x1c) = vert_b[2] - vert_a[2];
+
+    out_count++;
+    if (out_count >= 0x40)
+      break;
+
+    edge_link = *(int *)(edge_desc + adj_slot * 4 + 8);
+    if (edge_link == *(int *)(surface + 4))
+      break;
+  }
+
+  return out_count;
 }
-#else
-#error "build_path_edges_for_surface: clang naked draft required"
-#endif
 
 
 /* closest_point_to_attractor (0x5f3c0) — readable C lift (ai campaign). */

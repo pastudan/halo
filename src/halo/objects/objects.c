@@ -5786,383 +5786,127 @@ int FUN_0013f080(int param_1 __attribute__((unused)), char (*param_2)(int __attr
 #endif
 
 
-/* find_objects_from_point_vector (0x13f120) — XBE naked draft (batch 60). */
-#if defined(__clang__)
-static int (*const b13f120_c18e720)(int point) = FUN_0018e720;
-static void * (*const b13f120_c18e3c0)(void) = global_scenario_get;
-static void *(*const b13f120_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b13f120_c13eb70)(void) = object_reset_markers;
-static uint32_t * (*const b13f120_c193550)(void *bsp, int16_t cluster_index) = structure_bsp_get_cluster_sound_data;
-static int (*const b13f120_c191a50)(void *partition, int *state, int16_t cluster_idx) = cluster_partition_iter_first;
-static void *(*const b13f120_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const b13f120_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b13f120_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b13f120_exitfn)(int) = system_exit;
-static int (*const b13f120_c13f080)(int param_1, char (*param_2)(int, int), int param_3, int param_4, int param_5, int *param_6) = FUN_0013f080;
-static int (*const b13f120_c191660)(void *partition, int *state) = cluster_partition_iter_next;
-
-__attribute__((naked, noinline))
-int find_objects_from_point_vector(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), int param_4 __attribute__((unused)), int param_5 __attribute__((unused)), int param_6 __attribute__((unused)))
+/* find_objects_from_point_vector / objects.obj -- find objects visible from a
+ * point by iterating BSP cluster bitmask words. */
+int find_objects_from_point_vector(int param_1, int param_2, int param_3,
+                                   int param_4, int param_5, int param_6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "call *%[c18e720]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lfind_objects_from_point_vector_14\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e720]\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e3c0]\n\t"
-      "addl $0xe0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x8(%%eax), %%si\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lfind_objects_from_point_vector_14\n\t"
-      "call *%[c13eb70]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c193550]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%esi, -0x1c(%%ebp)\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x134(%%eax), %%eax\n\t"
-      "addl $0x1f, %%eax\n\t"
-      "sarl $5, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "jle .Lfind_objects_from_point_vector_12\n\t"
-      "movl %%esi, -0x18(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      ".Lfind_objects_from_point_vector_1:\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .Lfind_objects_from_point_vector_11\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "shll $5, %%esi\n\t"
-      "movswl %%si, %%ebx\n\t"
-      "leal 0x20(%%ebx), %%edi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "cmpl 0x134(%%eax), %%edi\n\t"
-      "jle .Lfind_objects_from_point_vector_2\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movw 0x134(%%eax), %%ax\n\t"
-      "movw %%ax, -0x4(%%ebp)\n\t"
-      "jmp .Lfind_objects_from_point_vector_3\n\t"
-      ".Lfind_objects_from_point_vector_2:\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      ".Lfind_objects_from_point_vector_3:\n\t"
-      "cmpw -0x4(%%ebp), %%si\n\t"
-      "movl %%esi, %%edi\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "jge .Lfind_objects_from_point_vector_10\n\t"
-      "jmp .Lfind_objects_from_point_vector_4\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lfind_objects_from_point_vector_4:\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "sarl $5, %%eax\n\t"
-      "testl %%edx, (%%ecx,%%eax,4)\n\t"
-      "je .Lfind_objects_from_point_vector_9\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x5a8d40\n\t"
-      "call *%[c191a50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lfind_objects_from_point_vector_9\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lfind_objects_from_point_vector_5:\n\t"
-      "movl 0x5a8d50, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "movswl 0x64(%%edi), %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jne .Lfind_objects_from_point_vector_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69a\n\t"
-      "pushl $0x29b91c\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x29b940\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfind_objects_from_point_vector_6:\n\t"
-      "movl 0x46f084, %%eax\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lfind_objects_from_point_vector_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdd7\n\t"
-      "pushl $0x29b91c\n\t"
-      "pushl $0x29bc30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfind_objects_from_point_vector_7:\n\t"
-      "movl 0x5a8d28, %%eax\n\t"
-      "cmpl %%eax, 0x8(%%edi)\n\t"
-      "je .Lfind_objects_from_point_vector_8\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c13f080]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      ".Lfind_objects_from_point_vector_8:\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x5a8d40\n\t"
-      "call *%[c191660]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .Lfind_objects_from_point_vector_5\n\t"
-      "movl -0xc(%%ebp), %%edi\n\t"
-      ".Lfind_objects_from_point_vector_9:\n\t"
-      "incl %%edi\n\t"
-      "incl %%ebx\n\t"
-      "cmpw -0x4(%%ebp), %%di\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "jl .Lfind_objects_from_point_vector_4\n\t"
-      ".Lfind_objects_from_point_vector_10:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      ".Lfind_objects_from_point_vector_11:\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "movl -0x18(%%ebp), %%esi\n\t"
-      "incl %%ecx\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl %%esi, -0x18(%%ebp)\n\t"
-      "jl .Lfind_objects_from_point_vector_1\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lfind_objects_from_point_vector_12:\n\t"
-      "movl 0x46f084, %%ecx\n\t"
-      "movb 0x1(%%ecx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lfind_objects_from_point_vector_13\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdba\n\t"
-      "pushl $0x29b91c\n\t"
-      "pushl $0x29bc30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfind_objects_from_point_vector_13:\n\t"
-      "movl 0x46f084, %%edx\n\t"
-      "movb $0, 0x1(%%edx)\n\t"
-      ".Lfind_objects_from_point_vector_14:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e720] "m"(b13f120_c18e720), [c18e3c0] "m"(b13f120_c18e3c0), [elem] "m"(b13f120_elem), [c13eb70] "m"(b13f120_c13eb70), [c193550] "m"(b13f120_c193550), [c191a50] "m"(b13f120_c191a50), [dget] "m"(b13f120_dget), [c8d9d0] "m"(b13f120_c8d9d0), [assert] "m"(b13f120_assert), [exitfn] "m"(b13f120_exitfn), [c13f080] "m"(b13f120_c13f080), [c191660] "m"(b13f120_c191660)
-      : "memory");
-}
-#else
-#error "find_objects_from_point_vector: clang naked draft required"
-#endif
+  int result;
+  int bsp_check;
+  int bsp_ref_index;
+  void *bsp_ref_element;
+  short bsp_index;
+  int *cluster_data;
+  int *cluster_ptr;
+  int num_words;
+  int outer_idx;
+  int base_cluster;
+  int abs_cluster;
+  int cluster_end;
+  int obj_handle;
+  int obj_datum;
+  int *obj_body;
+  int type_val;
+  int type_mask;
+  int iter_state[2];
 
+  result = 0;
+  bsp_check = FUN_0018e720(param_1);
+  if (bsp_check == -1)
+    return 0;
 
-int sort_dumps(int param_1, int param_2)
-{
-  if (*(int *)(param_1 + 8) < *(int *)(param_2 + 8)) {
-    return 1;
-  }
-  return (*(int *)(param_1 + 8) <= *(int *)(param_2 + 8)) - 1;
-}
+  bsp_ref_index = FUN_0018e720(param_1) & 0x7fffffff;
+  bsp_ref_element = tag_block_get_element(
+      (void *)((char *)scenario_get() + 0xe0), bsp_ref_index, 0x10);
+  bsp_index = *(short *)((char *)bsp_ref_element + 8);
+  if (bsp_index == -1)
+    return 0;
 
-/* 0x13f3b0 / objects.obj — Accumulate statistics about one object into a
- * dump record. Reads the object header (via datum_get on 0x5a8d50) and
- * object data (via object_get_and_verify_type), and updates various
- * counters in the stats structure.
- * object_handle in EBX, stats pointer in ESI (register args).
- * Confirmed: PUSH EBX to datum_get and object_get_and_verify_type.
- * Confirmed: ESI+0x6 = max_size, ESI+0x8 = total_size, ESI+0xc = count,
- *   ESI+0xe = header_flag_count, ESI+0x10 = obj_flag_10000,
- *   ESI+0x12 = obj_flag_b6_4, ESI+0x14 = orphaned_count,
- *   ESI+0x16 = obj_flag_20. */
-void object_add_to_dump(int object_handle /* @<ebx> */,
-                        void *stats /* @<esi> */)
-{
-  char *hdr;
-  char *obj;
-  int parent_handle;
-  char *parent_obj;
-  int16_t hdr_size;
-  char *st = (char *)stats;
+  object_reset_markers();
+  cluster_data = (int *)structure_bsp_get_cluster_sound_data(
+      scenario_get(), bsp_index);
+  cluster_ptr = cluster_data;
 
-  hdr = (char *)datum_get(*(data_t **)0x5a8d50, object_handle);
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  { void *bsp_data = scenario_get();
+  num_words = (*(int *)((char *)bsp_data + 0x134) + 0x1f) >> 5; }
+  outer_idx = 0;
+  if ((short)num_words <= 0)
+    goto post_loop;
 
-  hdr_size = *(int16_t *)(hdr + 0x6);
-  if (hdr_size > *(int16_t *)(st + 0x6)) {
-    *(int16_t *)(st + 0x6) = hdr_size;
-  }
-  /* permuter 20260721 (+2.0pp raw): byte-total updated before count, and an
-   * empty !st branch below — both reshape scheduling, value-identical. */
-  *(int *)(st + 0x8) = *(int *)(st + 0x8) + (int)hdr_size;
-  *(int16_t *)(st + 0xc) = *(int16_t *)(st + 0xc) + 1;
+  while (1) {
+    if (*cluster_ptr != 0) {
+      int cur_cluster;
+      base_cluster = outer_idx << 5;
+      abs_cluster = (short)base_cluster;
+      cluster_end = abs_cluster + 0x20;
 
-  if ((*(unsigned char *)(hdr + 0x2) & 1) != 0) {
-    *(int16_t *)(st + 0xe) = *(int16_t *)(st + 0xe) + 1;
-  }
-  if ((*(unsigned int *)(obj + 0x4) & 0x10000) != 0) {
-    *(int16_t *)(st + 0x10) = *(int16_t *)(st + 0x10) + 1;
-  }
-  if ((*(unsigned char *)(obj + 0xb6) & 4) != 0) {
-    *(int16_t *)(st + 0x12) = *(int16_t *)(st + 0x12) + 1;
-  }
-  if ((*(unsigned char *)(obj + 0x4) & 0x20) != 0) {
-    *(int16_t *)(st + 0x16) = *(int16_t *)(st + 0x16) + 1;
-    if (!st) {
-    }
-  }
+      { void *sc = scenario_get();
+      if (cluster_end > *(int *)((char *)sc + 0x134)) {
+        void *sc2 = scenario_get();
+        cluster_end = (int)*(short *)((char *)sc2 + 0x134);
+      } }
 
-  parent_handle = object_get_root_parent(object_handle);
-  parent_obj = (char *)object_get_and_verify_type(parent_handle, -1);
-  if ((*(unsigned int *)(parent_obj + 0x4) & 0x200000) != 0 ||
-      *(int16_t *)(parent_obj + 0x4c) == -1) {
-    *(int16_t *)(st + 0x14) = *(int16_t *)(st + 0x14) + 1;
-  }
-}
+      cur_cluster = base_cluster;
+      if ((short)base_cluster < (short)cluster_end) {
+        do {
+          if ((cluster_data[abs_cluster >> 5] &
+               (1 << (abs_cluster & 0x1f))) != 0) {
+            obj_handle = cluster_partition_iter_first(
+                (void *)0x5a8d40, (int *)iter_state, (short)cur_cluster);
+            while (obj_handle != -1) {
+              obj_datum =
+                  (int)datum_get(*(data_t **)0x5a8d50, obj_handle);
+              obj_body = *(int **)(obj_datum + 8);
 
+              type_val = (int)*(short *)((char *)obj_body + 0x64);
+              type_mask = 1 << (type_val & 0x1f);
+              if (type_mask == 0) {
+                csprintf((char *)0x5ab100,
+                    "got an object type we didn't expect "
+                    "(expected one of 0x%08x but got #%d).",
+                    -1, type_val);
+                display_assert((char *)0x5ab100,
+                    "c:\\halo\\SOURCE\\objects\\objects.c", 0x69a, 1);
+                system_exit(-1);
+              }
 
-/* 0x13f440 / objects.obj — Write one dump stats record to a file.
- * Formats the stats structure into a single line with counts/sizes.
- * stats pointer in ESI (register arg), file pointer as stack param.
- * Confirmed: fprintf format string at 0x29bcf4.
- * Confirmed: reads stats fields for count, active, orphaned, total_size etc. */
-void object_dump_write(void *stats /* @<esi> */, void *file)
-{
-  char *pcVar1;
-  int *st = (int *)stats;
+              if (*(char *)(*(int *)0x46f084 + 1) == '\0') {
+                display_assert(
+                    "object_globals->object_marker_initialized",
+                    "c:\\halo\\SOURCE\\objects\\objects.c", 0xdd7, 1);
+                system_exit(-1);
+              }
 
-  pcVar1 = "unknown";
-  if (st[0] != -1) {
-    pcVar1 = (char *)tag_get_name(st[0]);
-  } else if ((int16_t)st[1] != -1) {
-    pcVar1 = (char *)FUN_0013c250((int16_t)st[1]);
-  }
-  crt_fprintf(
-    file, "% 6d (% 6d) [% 7d/% 7d/% 7d/% 7d] % 7d % 7d %s\r\n",
-    (int)*(int16_t *)((char *)st + 0xc), (int)*(int16_t *)((char *)st + 0xe),
-    (int)*(int16_t *)((char *)st + 0x10), (int)*(int16_t *)((char *)st + 0x12),
-    (int)*(int16_t *)((char *)st + 0x14), (int)*(int16_t *)((char *)st + 0x16),
-    (int)*(int16_t *)((char *)st + 0x6), st[2], pcVar1);
-}
+              if (*(int *)((char *)obj_body + 8) != *(int *)0x5a8d28) {
+                *(int *)((char *)obj_body + 8) = *(int *)0x5a8d28;
+                result = FUN_0013f080(obj_handle, (char (*)(int, int))param_3, param_4,
+                                      result, param_5, (int *)param_6);
+              }
 
-
-/* 0x140a00 / objects.obj — Select random region permutations for an object
- * matching a given variant number. For each region in the model, finds
- * available permutations matching the variant, picks one randomly, and
- * stores its index in the object's region permutation array at obj+0x130.
- * Returns 1 if all regions had at least one valid permutation; 0 if any
- * region had no available permutations matching the variant.
- * object_handle in EAX (register arg).
- * Confirmed: PUSH -1; PUSH EAX; CALL object_get_and_verify_type.
- * Confirmed: tag_block at model_tag+0xc4, element size 0x4c.
- * Confirmed: calls object_find_region_permutations_available_with_variant.
- * Confirmed: if count==0, tries variant=0 as fallback.
- * Confirmed: random_range(get_global_random_seed_address(), 0, count). */
-char object_select_random_region_permutations_by_variant(
-  int object_handle /* @<eax> */, void *model_tag, int16_t variant)
-{
-  char *obj;
-  int16_t region_count;
-  char all_ok;
-  int16_t i;
-  char *model = (char *)model_tag;
-  int16_t avail_buf[32];
-
-  obj = (char *)object_get_and_verify_type(object_handle, -1);
-  region_count = 0;
-  all_ok = 1;
-  i = 0;
-  if (*(int *)(model + 0xc4) > 0) {
-    /* permuter 20260721 (+1.1pp raw): loop body indexes via region_count
-     * (i kept in sync) — pure register-role swap, value-identical. */
-    region_count = i;
-    do {
-      int16_t count;
-      char *region;
-
-      region = (char *)tag_block_get_element((void *)(model + 0xc4),
-                                             (int)region_count, 0x4c);
-      count = object_find_region_permutations_available_with_variant(
-        region, variant, avail_buf);
-      if (count == 0 &&
-          (variant == -1 ||
-           (count = object_find_region_permutations_available_with_variant(
-              region, 0, avail_buf),
-            count == 0))) {
-        *(unsigned char *)(obj + 0x130 + (int)region_count) = 0;
-        all_ok = 0;
-      } else {
-        int16_t chosen;
-        if (count == 1) {
-          chosen = 0;
-        } else {
-          int *seed = get_global_random_seed_address();
-          chosen = random_range((unsigned int *)seed, 0, count);
-        }
-        *(unsigned char *)(obj + 0x130 + (int)region_count) =
-          (unsigned char)*(unsigned char *)((char *)avail_buf + chosen * 2);
+              obj_handle = cluster_partition_iter_next(
+                  (void *)0x5a8d40, (int *)iter_state);
+            }
+          }
+          cur_cluster++;
+          abs_cluster++;
+        } while ((short)cur_cluster < (short)cluster_end);
       }
-      region_count = region_count + 1;
-      i = region_count;
-    } while ((int)region_count < *(int *)(model + 0xc4));
+    }
+
+    outer_idx++;
+    cluster_ptr++;
+    if ((short)outer_idx >= (short)num_words)
+      break;
   }
-  return all_ok;
+
+post_loop:
+  if (*(char *)(*(int *)0x46f084 + 1) == '\0') {
+    display_assert("object_globals->object_marker_initialized",
+                   "c:\\halo\\SOURCE\\objects\\objects.c", 0xdba, 1);
+    system_exit(-1);
+  }
+  *(char *)(*(int *)0x46f084 + 1) = 0;
+  return result;
 }
 
 
