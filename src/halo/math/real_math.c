@@ -6801,84 +6801,44 @@ int FUN_00113910(void *file)
 typedef void *(*zlib_zalloc_fn)(void *, int, int);
 typedef void  (*zlib_zfree_fn)(void *, void *);
 
-/* FUN_00113930 (0x113930) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void (*const b113930_c114f60)(int c, int z) = FUN_00114f60;
-static int (*const b113930_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
-
-__attribute__((naked, noinline))
-void FUN_00113930(int s __attribute__((unused)), int param_2 __attribute__((unused)), int last __attribute__((unused)))
+/* FUN_00113930 (0x113930) — readable C lift.
+ * zlib-style stream/state teardown helper. */
+void FUN_00113930(int s, int z, int last)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_00113930_1\n\t"
-      "movl 0x3c(%%esi), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".LFUN_00113930_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .LFUN_00113930_2\n\t"
-      "cmpl $5, %%eax\n\t"
-      "jne .LFUN_00113930_3\n\t"
-      ".LFUN_00113930_2:\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "movl 0x28(%%edi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *0x24(%%edi)\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00113930_3:\n\t"
-      "cmpl $6, (%%esi)\n\t"
-      "jne .LFUN_00113930_4\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c114f60]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00113930_4:\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "movl %%eax, 0x34(%%esi)\n\t"
-      "movl %%eax, 0x30(%%esi)\n\t"
-      "movl 0x38(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0, (%%esi)\n\t"
-      "movl $0, 0x1c(%%esi)\n\t"
-      "movl $0, 0x20(%%esi)\n\t"
-      "je .LFUN_00113930_5\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%%eax\n\t"
-      "movl %%eax, 0x3c(%%esi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, 0x30(%%edi)\n\t"
-      ".LFUN_00113930_5:\n\t"
-      "movl 0x320e30, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "jle .LFUN_00113930_6\n\t"
-      "pushl $0x28d45c\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00113930_6:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c114f60] "m"(b113930_c114f60), [c1d98ad] "m"(b113930_c1d98ad)
-      : "memory");
+  char *state;
+  char *strm;
+  void (*zfree_fn)(int opaque, int ptr);
+  int (*zalloc_fn)(int, int, int);
+  int tmp;
+
+  state = (char *)s;
+  strm = (char *)z;
+  if (last != 0)
+    *(int *)last = *(int *)(state + 0x3c);
+
+  if (*(int *)state == 4 || *(int *)state == 5) {
+    zfree_fn = *(void (**)(int, int))(strm + 0x24);
+    zfree_fn(*(int *)(strm + 0x28), *(int *)(state + 0xc));
+  }
+  if (*(int *)state == 6)
+    FUN_00114f60(*(int *)(state + 4), z);
+
+  tmp = *(int *)(state + 0x28);
+  *(int *)(state + 0x34) = tmp;
+  *(int *)(state + 0x30) = tmp;
+  zalloc_fn = *(int (**)(int, int, int))(state + 0x38);
+  *(int *)state = 0;
+  *(int *)(state + 0x1c) = 0;
+  *(int *)(state + 0x20) = 0;
+  if (zalloc_fn != 0) {
+    tmp = zalloc_fn(0, 0, 0);
+    *(int *)(state + 0x3c) = tmp;
+    *(int *)(strm + 0x30) = tmp;
+  }
+  if (*(int *)0x320e30 > 0)
+    crt_fprintf((void *)0x331070, (const char *)0x28d45c);
 }
-#else
-#error "FUN_00113930: clang naked draft required"
-#endif
+
 
 
 /* FUN_001139d0 (0x1139d0) — XBE naked draft (batch 77). */

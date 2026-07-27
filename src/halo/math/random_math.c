@@ -1083,153 +1083,57 @@ void FUN_0010c920(float *v1, float *v2, float t, float *out)
 }
 /* --- random_math.obj batch drafts (2026-07-26) --- */
 
-/* FUN_0010c3c0 (0x10c3c0) — XBE naked draft (batch 247). */
-#if defined(__clang__)
-static void (*const b10c3c0_c1d94f0)(void) = FUN_001d94f0;
-
-__attribute__((naked, noinline))
-void FUN_0010c3c0(void)
+/* FUN_0010c3c0 (0x10c3c0) — readable C lift.
+ * Signed 2D angle between unit-ish vectors a and b: acos(clamp(dot)) with
+ * sign from 2D cross product. */
+float FUN_0010c3c0(float *a, float *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "flds (%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "fmuls (%%edi)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcoms 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0010c3c0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0xbf800000, 0x8(%%ebp)\n\t"
-      "jmp .LFUN_0010c3c0_3\n\t"
-      ".LFUN_0010c3c0_1:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0010c3c0_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, 0x8(%%ebp)\n\t"
-      "jmp .LFUN_0010c3c0_3\n\t"
-      ".LFUN_0010c3c0_2:\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      ".LFUN_0010c3c0_3:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "call *%[c1d94f0]\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls (%%esi)\n\t"
-      "flds (%%edi)\n\t"
-      "popl %%edi\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0010c3c0_4\n\t"
-      "fchs\n\t"
-      ".LFUN_0010c3c0_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d94f0] "m"(b10c3c0_c1d94f0)
-      : "memory");
+  float dot;
+  float angle;
+  float cross;
+
+  dot = a[0] * b[0] + a[1] * b[1];
+  if (dot < *(float *)0x255e94)
+    dot = -1.0f;
+  else if (dot > *(float *)0x2533c8)
+    dot = 1.0f;
+  angle = FUN_001d94f0(dot);
+  cross = b[1] * a[0] - b[0] * a[1];
+  if (cross < *(float *)0x2533c0)
+    angle = -angle;
+  return angle;
 }
-#else
-#error "FUN_0010c3c0: clang naked draft required"
-#endif
 
 
-/* FUN_0010c440 (0x10c440) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void (*const b10c440_c1d94f0)(void) = FUN_001d94f0;
 
-__attribute__((naked, noinline))
-float FUN_0010c440(float *param_1 __attribute__((unused)), float *param_2 __attribute__((unused)))
+/* FUN_0010c440 (0x10c440) — readable C lift.
+ * 2D angle between vectors via double-angle identity (see FUN_0010c510). */
+float FUN_0010c440(float *a, float *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "flds 0x2533c0\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "flds (%%ecx)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "flds (%%edx)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      "fld %%st(5)\n\t"
-      ".byte 0xd8, 0xce\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_0010c440_4\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%edx)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts 0x8(%%ebp)\n\t"
-      "fdivs 0xc(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fsubs 0x2533c8\n\t"
-      "fcoms 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0010c440_1\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0xbf800000, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_0010c440_3\n\t"
-      ".LFUN_0010c440_1:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0010c440_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_0010c440_3\n\t"
-      ".LFUN_0010c440_2:\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      ".LFUN_0010c440_3:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "call *%[c1d94f0]\n\t"
-      "fmuls 0x253398\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0010c440_4\n\t"
-      "fsubrs 0x256980\n\t"
-      ".LFUN_0010c440_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d94f0] "m"(b10c440_c1d94f0)
-      : "memory");
+  float product;
+  float dot;
+  float cos2theta;
+  float half_angle;
+
+  product = (a[0] * a[0] + a[1] * a[1]) * (b[0] * b[0] + b[1] * b[1]);
+  if (product == 0.0f)
+    return 0.0f;
+
+  dot = a[0] * b[0] + a[1] * b[1];
+  {
+    volatile float dot_mem = dot;
+    volatile float prod_mem = product;
+    cos2theta = 2.0f * (dot_mem / prod_mem) * dot_mem - *(float *)0x2533c8;
+  }
+  if (cos2theta < *(float *)0x255e94)
+    cos2theta = -1.0f;
+  else if (cos2theta > *(float *)0x2533c8)
+    cos2theta = 1.0f;
+
+  half_angle = FUN_001d94f0(cos2theta) * *(float *)0x253398;
+  if (dot < *(float *)0x2533c0)
+    half_angle = *(float *)0x256980 - half_angle;
+  return half_angle;
 }
-#else
-#error "FUN_0010c440: clang naked draft required"
-#endif
+
 

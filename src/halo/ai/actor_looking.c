@@ -3849,7 +3849,7 @@ void FUN_000169a0(int actor_handle __attribute__((unused)), int unit_handle __at
 
 /* actor_look_secondary_stop (0x16bd0) — readable C lift from XBE leaf. */
 void actor_look_secondary_stop(int param_1, int param_2, int param_3, char *param_4,
-                               int param_5, char *param_6)
+                               void *param_5, char *param_6)
 {
   (void)param_1;
   (void)param_2;
@@ -3866,7 +3866,7 @@ void actor_look_secondary_stop(int param_1, int param_2, int param_3, char *para
     param_4[4] = (char)(param_4[4] & ~1);
   }
   if (param_5 != 0) {
-    csmemset((void *)param_5, 0, 0x58);
+    csmemset(param_5, 0, 0x58);
     *(short *)((char *)param_5 + 2) = (short)0xffff;
   }
 }
@@ -7545,23 +7545,24 @@ void FUN_0001a050(int actor_handle)
   *(short *)(actor + 0x3fc) = 0;
 }
 
-/* FUN_0001a080 (0x1a080) — readable C lift from XBE leaf. */
+/* FUN_0001a080 (0x1a080) — readable C lift from XBE leaf.
+ * Success/fail only write AL; high EAX bits keep csmemset's return (dest). */
 int FUN_0001a080(int actor_handle, char param_2, char *state_data)
 {
   char *actor;
+  unsigned int ret;
 
   actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
   if (state_data == 0) {
     display_assert((const char *)0x25334c, (const char *)0x253dd4, 0x22, 1);
     system_exit(-1);
   }
-  csmemset(state_data, 0, 0x34);
-  if (actor[0x160] != 0 || actor[6] != 0) {
-    return 0;
-  }
+  ret = (unsigned int)csmemset(state_data, 0, 0x34);
+  if (actor[0x160] != 0 || actor[6] != 0)
+    return (int)(ret & ~0xffu);
   *(short *)(state_data + 8) = 0;
   state_data[3] = param_2;
-  return 1;
+  return (int)((ret & ~0xffu) | 1u);
 }
 
 
