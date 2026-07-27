@@ -1,107 +1,36 @@
 /* --- data_packet_groups.obj batch drafts (2026-07-26) --- */
 
-/* data_packet_group_append_packet_header (0x11abb0) — XBE naked draft (batch 134). */
-#if defined(__clang__)
-static void (*const b11abb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11abb0_exitfn)(int) = system_exit;
-static void (*const b11abb0_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
-
-__attribute__((naked, noinline))
-void data_packet_group_append_packet_header(void)
+/* data_packet_group_append_packet_header (0x11abb0) — readable C lift. */
+char data_packet_group_append_packet_header(void *group, unsigned char *buf_base,
+                                           short *offset_ptr, short type_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movswl (%%edi), %%esi\n\t"
-      "addl %%eax, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0, 0x10(%%ebp)\n\t"
-      "jne .Ldata_packet_group_append_packet_header_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xac\n\t"
-      "pushl $0x28f1f0\n\t"
-      "pushl $0x28f318\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldata_packet_group_append_packet_header_1:\n\t"
-      "cmpw $0, (%%edi)\n\t"
-      "jge .Ldata_packet_group_append_packet_header_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xad\n\t"
-      "pushl $0x28f1f0\n\t"
-      "pushl $0x28f3c4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldata_packet_group_append_packet_header_2:\n\t"
-      "movw 0x14(%%ebp), %%bx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Ldata_packet_group_append_packet_header_3\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpw 0x4(%%eax), %%bx\n\t"
-      "jl .Ldata_packet_group_append_packet_header_4\n\t"
-      ".Ldata_packet_group_append_packet_header_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xae\n\t"
-      "pushl $0x28f1f0\n\t"
-      "pushl $0x28f380\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldata_packet_group_append_packet_header_4:\n\t"
-      "movswl (%%edi), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0xc(%%edx), %%eax\n\t"
-      "incl %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jae .Ldata_packet_group_append_packet_header_5\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x3220c0\n\t"
-      "movb %%bl, (%%esi)\n\t"
-      "call *%[c118be0]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incw (%%edi)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "sete %%cl\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x46e804\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldata_packet_group_append_packet_header_5:\n\t"
-      "movl $0x28f350, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "sete %%cl\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x46e804\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11abb0_assert), [exitfn] "m"(b11abb0_exitfn), [c118be0] "m"(b11abb0_c118be0)
-      : "memory");
-}
-#else
-#error "data_packet_group_append_packet_header: clang naked draft required"
-#endif
+  unsigned char *pos;
+  unsigned int limit;
 
+  pos = buf_base + *offset_ptr;
+  if (buf_base == 0) {
+    display_assert((const char *)0x28f318, (const char *)0x28f1f0, 0xac, 1);
+    system_exit(-1);
+  }
+  if (*offset_ptr < 0) {
+    display_assert((const char *)0x28f3c4, (const char *)0x28f1f0, 0xad, 1);
+    system_exit(-1);
+  }
+  if (type_index < 0 || type_index >= *(short *)((char *)group + 4)) {
+    display_assert((const char *)0x28f380, (const char *)0x28f1f0, 0xae, 1);
+    system_exit(-1);
+  }
+  limit = *(unsigned int *)((char *)group + 0xc);
+  if ((unsigned int)((int)*offset_ptr + 1) >= limit) {
+    *(unsigned int *)0x46e804 = 0x28f350u;
+    return 0;
+  }
+  *pos = (unsigned char)type_index;
+  FUN_00118be0((void *)0x3220c0, pos, 1);
+  (*offset_ptr)++;
+  *(unsigned int *)0x46e804 = 0;
+  return 1;
+}
 
 /* encode_packet_group (0x11aca0) — XBE naked draft (batch 127). */
 #if defined(__clang__)

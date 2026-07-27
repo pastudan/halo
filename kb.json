@@ -40416,8 +40416,9 @@
         },
         {
           "addr": "0x11abb0",
-          "decl": "void data_packet_group_append_packet_header(void);",
-          "ported": false
+          "decl": "char data_packet_group_append_packet_header(void *group, unsigned char *buf_base, short *offset_ptr, short type_index);",
+          "ported": true,
+          "name": "data_packet_group_append_packet_header"
         },
         {
           "addr": "0x11add0",
