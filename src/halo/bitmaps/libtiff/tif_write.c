@@ -2215,38 +2215,15 @@ void *FUN_0006f9b0(void *handler)
   return prev;
 }
 
-/* FUN_0006f9d0 (0x6f9d0) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f9d0(void)
+/* FUN_0006f9d0 (0x6f9d0) — readable C lift. */
+void FUN_0006f9d0(void *a0, void *a1, ...)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x2ecfac, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006f9d0_1\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0006f9d0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  void *cb = *(void **)0x2ecfac;
+  if (cb) {
+    /* variadic forwarded as third pointer-to-args in asm; approximate via stack */
+    ((void (*)(void *, void *, void *))cb)(a0, a1, (void *)((char *)&a1 + 4));
+  }
 }
-#else
-#error "FUN_0006f9d0: clang naked draft required"
-#endif
-
 
 /* FUN_0006f9f0 (0x6f9f0) — XBE naked draft (batch 341). */
 #if defined(__clang__)

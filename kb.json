@@ -37202,8 +37202,8 @@
         },
         {
           "addr": "0x6f9d0",
-          "decl": "void FUN_0006f9d0(void);",
-          "ported": false
+          "decl": "void FUN_0006f9d0(void *a0, void *a1, ...);",
+          "ported": true
         },
         {
           "addr": "0x6f9f0",
