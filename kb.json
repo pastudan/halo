@@ -4551,7 +4551,7 @@
         {
           "addr": "0x40150",
           "decl": "void ai_handle_allegiance_broken_notification(int16_t team_a, int16_t team_b, char print_message);",
-          "ported": false,
+          "ported": true,
           "name": "ai_handle_allegiance_broken_notification"
         },
         {
@@ -37498,7 +37498,7 @@
         {
           "addr": "0x5c680",
           "decl": "void FUN_0005c680(int encounter_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0005c680"
         },
         {
