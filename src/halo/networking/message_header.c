@@ -217,241 +217,69 @@ unsigned short *key_agreement_build_message(short type, void *data, int buffer, 
   return msg;
 }
 
-/* message_encrypt (0x80940) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void (*const b80940_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80940_exitfn)(int) = system_exit;
-static void (*const b80940_c80820)(unsigned int *v, unsigned int *w, int *key) = (void *)tea_encrypt;
-static void (*const b80940_c807d0)(unsigned char *msg, int len, unsigned char *keystream, int key_len) = key_message_xor_keystream;
-
-__attribute__((naked, noinline))
-void message_encrypt(unsigned short *msgptr __attribute__((unused)), unsigned int *key __attribute__((unused)))
+/* message_encrypt (0x80940) — readable C lift. */
+void message_encrypt(unsigned short *msgptr, unsigned int *key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Lmessage_encrypt_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lmessage_encrypt_2\n\t"
-      ".Lmessage_encrypt_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f\n\t"
-      "pushl $0x265c2c\n\t"
-      "pushl $0x265c1c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmessage_encrypt_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movb %%al, %%bl\n\t"
-      "shrw $4, %%ax\n\t"
-      "andl $3, %%ebx\n\t"
-      "testb $1, %%bl\n\t"
-      "jne .Lmessage_encrypt_7\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "subb $2, %%al\n\t"
-      "subl $2, %%ecx\n\t"
-      "shrl $3, %%ecx\n\t"
-      "addl $2, %%esi\n\t"
-      "andl $7, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "je .Lmessage_encrypt_4\n\t"
-      "movzwl %%cx, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "nop\n\t"
-      ".Lmessage_encrypt_3:\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c80820]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $8, %%esi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .Lmessage_encrypt_3\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      ".Lmessage_encrypt_4:\n\t"
-      "testw %%dx, %%dx\n\t"
-      "je .Lmessage_encrypt_5\n\t"
-      "pushl $8\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c807d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lmessage_encrypt_5:\n\t"
-      "orl $1, %%ebx\n\t"
-      "cmpw $3, %%bx\n\t"
-      "jbe .Lmessage_encrypt_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4c\n\t"
-      "pushl $0x265c2c\n\t"
-      "pushl $0x265bec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmessage_encrypt_6:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "andl $0xfffc, %%ecx\n\t"
-      "orl %%ebx, %%ecx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".Lmessage_encrypt_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80940_assert), [exitfn] "m"(b80940_exitfn), [c80820] "m"(b80940_c80820), [c807d0] "m"(b80940_c807d0)
-      : "memory");
+  unsigned int flags, n, rem, blocks, local_key[4], i;
+  unsigned char *p;
+  if (msgptr == 0 || key == 0) {
+    display_assert((const char *)0x265c1c, (const char *)0x265c2c, 0x1f, 1);
+    system_exit(-1);
+  }
+  flags = (unsigned int)(*msgptr) & 3u;
+  n = (unsigned int)(*msgptr) >> 4;
+  if ((flags & 1u) != 0) return;
+  rem = n - 2u;
+  blocks = (unsigned short)(rem >> 3);
+  rem &= 7u;
+  p = (unsigned char *)msgptr + 2;
+  local_key[0] = key[0]; local_key[1] = key[1];
+  local_key[2] = key[0]; local_key[3] = key[1];
+  for (i = 0; i < blocks; i++) {
+    tea_encrypt((unsigned int *)p, (unsigned int *)p, local_key);
+    p += 8;
+  }
+  if ((unsigned short)rem != 0)
+    key_message_xor_keystream(p, (int)(short)rem, (unsigned char *)key, 8);
+  flags |= 1u;
+  if ((unsigned short)flags > 3) {
+    display_assert((const char *)0x265bec, (const char *)0x265c2c, 0x4c, 1);
+    system_exit(-1);
+  }
+  *msgptr = (unsigned short)(((unsigned int)(*msgptr) & 0xfffcu) | flags);
 }
-#else
-#error "message_encrypt: clang naked draft required"
-#endif
 
-
-/* message_decrypt (0x80a40) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void (*const b80a40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80a40_exitfn)(int) = system_exit;
-static void (*const b80a40_c808b0)(unsigned int *v, unsigned int *w, int *key) = (void *)tea_decrypt;
-static void (*const b80a40_c807d0)(unsigned char *msg, int len, unsigned char *keystream, int key_len) = key_message_xor_keystream;
-
-__attribute__((naked, noinline))
-void message_decrypt(unsigned short *msgptr __attribute__((unused)), unsigned int *key __attribute__((unused)))
+/* message_decrypt (0x80a40) — readable C lift. */
+void message_decrypt(unsigned short *msgptr, unsigned int *key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Lmessage_decrypt_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lmessage_decrypt_2\n\t"
-      ".Lmessage_decrypt_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x58\n\t"
-      "pushl $0x265c2c\n\t"
-      "pushl $0x265c1c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmessage_decrypt_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movb %%al, %%bl\n\t"
-      "shrw $4, %%ax\n\t"
-      "andl $3, %%ebx\n\t"
-      "testb $1, %%bl\n\t"
-      "je .Lmessage_decrypt_7\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "subb $2, %%al\n\t"
-      "subl $2, %%ecx\n\t"
-      "shrl $3, %%ecx\n\t"
-      "addl $2, %%esi\n\t"
-      "andl $7, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "je .Lmessage_decrypt_4\n\t"
-      "movzwl %%cx, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "nop\n\t"
-      ".Lmessage_decrypt_3:\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c808b0]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $8, %%esi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .Lmessage_decrypt_3\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      ".Lmessage_decrypt_4:\n\t"
-      "testw %%dx, %%dx\n\t"
-      "je .Lmessage_decrypt_5\n\t"
-      "pushl $8\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c807d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lmessage_decrypt_5:\n\t"
-      "andl $0xfffe, %%ebx\n\t"
-      "cmpw $3, %%bx\n\t"
-      "jbe .Lmessage_decrypt_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x83\n\t"
-      "pushl $0x265c2c\n\t"
-      "pushl $0x265bec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmessage_decrypt_6:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "andl $0xfffc, %%ecx\n\t"
-      "orl %%ebx, %%ecx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".Lmessage_decrypt_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80a40_assert), [exitfn] "m"(b80a40_exitfn), [c808b0] "m"(b80a40_c808b0), [c807d0] "m"(b80a40_c807d0)
-      : "memory");
+  unsigned int flags, n, rem, blocks, local_key[4], i;
+  unsigned char *p;
+  if (msgptr == 0 || key == 0) {
+    display_assert((const char *)0x265c1c, (const char *)0x265c2c, 0x58, 1);
+    system_exit(-1);
+  }
+  flags = (unsigned int)(*msgptr) & 3u;
+  n = (unsigned int)(*msgptr) >> 4;
+  if ((flags & 1u) == 0) return;
+  rem = n - 2u;
+  blocks = (unsigned short)(rem >> 3);
+  rem &= 7u;
+  p = (unsigned char *)msgptr + 2;
+  local_key[0] = key[0]; local_key[1] = key[1];
+  local_key[2] = key[0]; local_key[3] = key[1];
+  for (i = 0; i < blocks; i++) {
+    tea_decrypt((unsigned int *)p, (unsigned int *)p, local_key);
+    p += 8;
+  }
+  if ((unsigned short)rem != 0)
+    key_message_xor_keystream(p, (int)(short)rem, (unsigned char *)key, 8);
+  flags &= 0xfffeu;
+  if ((unsigned short)flags > 3) {
+    display_assert((const char *)0x265bec, (const char *)0x265c2c, 0x83, 1);
+    system_exit(-1);
+  }
+  *msgptr = (unsigned short)(((unsigned int)(*msgptr) & 0xfffcu) | flags);
 }
-#else
-#error "message_decrypt: clang naked draft required"
-#endif
-
 
 /* sieve_of_eratosthenes (0x80d50) — XBE naked draft (batch 77). */
 #if defined(__clang__)
@@ -630,7 +458,7 @@ unsigned int * sieve_of_eratosthenes(unsigned int limit __attribute__((unused)),
 static void (*const b80210_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b80210_exitfn)(int) = system_exit;
 static void (*const b80210_c7ffe0)(void) = FUN_0007ffe0;
-static void (*const b80210_c7ff40)(void) = FUN_0007ff40;
+static void (*const b80210_c7ff40)(void) = (void *)FUN_0007ff40;
 
 __attribute__((naked, noinline))
 void FUN_00080210(void)
@@ -1093,8 +921,8 @@ static void (*const b80f00_exitfn)(int) = system_exit;
 static unsigned int * (*const b80f00_c80d50)(unsigned int limit, unsigned int *num_primes) = sieve_of_eratosthenes;
 static void (*const b80f00_c81410)(void) = FUN_00081410;
 static void (*const b80f00_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-static void (*const b80f00_c800d0)(void) = FUN_000800d0;
-static void (*const b80f00_c7ff40)(void) = FUN_0007ff40;
+static void (*const b80f00_c800d0)(void) = (void *)FUN_000800d0;
+static void (*const b80f00_c7ff40)(void) = (void *)FUN_0007ff40;
 
 __attribute__((naked, noinline))
 void FUN_00080f00(void)
@@ -1182,7 +1010,7 @@ void FUN_00080f00(void)
 
 /* FUN_00080fc0 (0x80fc0) — XBE naked draft (batch 138). */
 #if defined(__clang__)
-static void (*const b80fc0_c800d0)(void) = FUN_000800d0;
+static void (*const b80fc0_c800d0)(void) = (void *)FUN_000800d0;
 static void (*const b80fc0_c80210)(void) = FUN_00080210;
 static void (*const b80fc0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b80fc0_exitfn)(int) = system_exit;

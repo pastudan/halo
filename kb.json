@@ -40309,7 +40309,7 @@
         {
           "addr": "0x80a40",
           "decl": "void message_decrypt(unsigned short *msgptr, unsigned int *key);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80b40",
