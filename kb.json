@@ -15377,7 +15377,7 @@
           "addr": "0x11a340",
           "decl": "int FUN_0011a340(int *state, short count, void *bs_definition);",
           "name": "FUN_0011a340",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a430",

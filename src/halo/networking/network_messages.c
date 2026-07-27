@@ -95,112 +95,45 @@ void FUN_0011a2d0(int *state, void *buffer, int buffer_size)
 
 
 
-/* FUN_0011a340 (0x11a340) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void (*const b11a340_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const b11a340_exitfn)(int) = (void *)system_exit;
-static void (*const b11a340_c118be0)(void *definition, void *data, int count) = (void *)FUN_00118be0;
-
-__attribute__((naked, noinline))
-int FUN_0011a340(int *state __attribute__((unused)), short count __attribute__((unused)), void *bs_definition __attribute__((unused)))
+/* FUN_0011a340 (0x11a340) — readable C lift.
+ *
+ * Byte-swap `count` structures described by bs_definition into the encode
+ * state's buffer when they fit; otherwise set the overflow flag and return 0.
+ */
+int FUN_0011a340(int *state, short count, void *bs_definition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_0011a340_1\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .LFUN_0011a340_1\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0011a340_1\n\t"
-      "cmpl 0x8(%%esi), %%eax\n\t"
-      "jle .LFUN_0011a340_2\n\t"
-      ".LFUN_0011a340_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xde\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f058\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a340_2:\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jge .LFUN_0011a340_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdf\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f044\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a340_3:\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_0011a340_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe0\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28ef80\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a340_4:\n\t"
-      "movw 0x4(%%ebx), %%ax\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "imulw %%di, %%ax\n\t"
-      "movl 0x8(%%esi), %%edi\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "leal (%%ebx,%%ecx,1), %%edx\n\t"
-      "cmpl %%edi, %%edx\n\t"
-      "jg .LFUN_0011a340_6\n\t"
-      "movb 0xc(%%esi), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "jne .LFUN_0011a340_6\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "addl %%ecx, %%edi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0011a340_5\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c118be0]\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      ".LFUN_0011a340_5:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a340_6:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, 0xc(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11a340_assert), [exitfn] "m"(b11a340_exitfn), [c118be0] "m"(b11a340_c118be0)
-      : "memory");
+  int offset;
+  int bytes;
+  int dest;
+
+  if (state == NULL || state[0] == 0 || state[1] < 0 || state[1] > state[2]) {
+    display_assert((const char *)0x28f058, (const char *)0x28eef8, 0xde, true);
+    system_exit(-1);
+  }
+  if (count < 0) {
+    display_assert((const char *)0x28f044, (const char *)0x28eef8, 0xdf, true);
+    system_exit(-1);
+  }
+  if (bs_definition == NULL) {
+    display_assert((const char *)0x28ef80, (const char *)0x28eef8, 0xe0, true);
+    system_exit(-1);
+  }
+
+  offset = state[1];
+  /* Original uses 16-bit IMULW; truncate then sign-extend. */
+  bytes = (int)(int16_t)(*(int16_t *)((char *)bs_definition + 4) * count);
+  if (offset + bytes > state[2] || *((char *)state + 0xc) != 0) {
+    *((char *)state + 0xc) = 1;
+    return 0;
+  }
+
+  dest = state[0] + offset;
+  if ((int16_t)bytes != 0) {
+    FUN_00118be0(bs_definition, (void *)(uintptr_t)dest, count);
+    state[1] = offset + bytes;
+  }
+  return dest;
 }
-#else
-#error "FUN_0011a340: clang naked draft required"
-#endif
 
 
 /* FUN_0011a430 (0x11a430) — XBE naked draft (batch 86). */
@@ -2403,131 +2336,58 @@ void FUN_0011c290(int cache)
     FUN_0011c210(cache, *(int *)((char *)cache + 0x2c));
 }
 
-/* FUN_0011c310 (0x11c310) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static void * (*const b11c310_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
-static void (*const b11c310_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const b11c310_exitfn)(int) = (void *)system_exit;
-static void *(*const b11c310_memset)(void *, int, unsigned int) = (void *)csmemset;
-static void * (*const b11c310_c8de70)(char *destination, const char *source, size_t size) = (void *)csstrncpy;
-static void (*const b11c310_c11c290)(int cache) = (void *)FUN_0011c290;
-static void (*const b11c310_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
-
-__attribute__((naked, noinline))
-int FUN_0011c310(const char *name __attribute__((unused)), int size __attribute__((unused)), void (*lock_proc)(void * __attribute__((unused)), int), void (*unlock_proc)(void *) __attribute__((unused)), void *base_address __attribute__((unused)))
+/* FUN_0011c310 (0x11c310) — readable C lift.
+ *
+ * Allocate and initialise an lra_cache header. Optional lock/unlock default to
+ * FUN_0011c1d0/FUN_0011c1e0; optional base_address is allocated when NULL.
+ */
+int FUN_0011c310(const char *name, int size, void (*lock_proc)(void *, int),
+                 void (*unlock_proc)(void *), void *base_address)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x56\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jge .LFUN_0011c310_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x58\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl $0x267a80\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011c310_1:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0011c310_2\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0011c310_3\n\t"
-      ".LFUN_0011c310_2:\n\t"
-      "movl $0x11c1d0, 0x10(%%ebp)\n\t"
-      "movl $0x11c1e0, 0x14(%%ebp)\n\t"
-      ".LFUN_0011c310_3:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0011c310_6\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movb $0, 0xf(%%ebp)\n\t"
-      "jne .LFUN_0011c310_4\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movb $1, 0xf(%%ebp)\n\t"
-      "je .LFUN_0011c310_7\n\t"
-      ".LFUN_0011c310_4:\n\t"
-      "testb $3, %%bl\n\t"
-      "je .LFUN_0011c310_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6b\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl $0x28f7bc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011c310_5:\n\t"
-      "pushl $0x3c\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x1f\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8de70]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movb 0xf(%%ebp), %%cl\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x30(%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movb $0, 0x1f(%%esi)\n\t"
-      "movl %%edi, 0x20(%%esi)\n\t"
-      "movl %%ebx, 0x24(%%esi)\n\t"
-      "movl $0, 0x2c(%%esi)\n\t"
-      "movl $0x6c726163, 0x38(%%esi)\n\t"
-      "movb %%cl, 0x28(%%esi)\n\t"
-      "movl %%edx, 0x34(%%esi)\n\t"
-      "call *%[c11c290]\n\t"
-      ".LFUN_0011c310_6:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011c310_7:\n\t"
-      "pushl $0x7e\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b11c310_c8ee60), [assert] "m"(b11c310_assert), [exitfn] "m"(b11c310_exitfn), [memset] "m"(b11c310_memset), [c8de70] "m"(b11c310_c8de70), [c11c290] "m"(b11c310_c11c290), [c8ef70] "m"(b11c310_c8ef70)
-      : "memory");
+  char *cache;
+  void *base;
+  char owns_buffer;
+
+  cache = (char *)debug_malloc(0x3c, false, (const char *)0x28f768, 0x56);
+  if (size < 0) {
+    display_assert((const char *)0x267a80, (const char *)0x28f768, 0x58, true);
+    system_exit(-1);
+  }
+  if (lock_proc == NULL || unlock_proc == NULL) {
+    lock_proc = (void (*)(void *, int))0x11c1d0;
+    unlock_proc = (void (*)(void *))0x11c1e0;
+  }
+  if (cache == NULL)
+    return 0;
+
+  base = base_address;
+  owns_buffer = 0;
+  if (base == NULL) {
+    base = debug_malloc((uint32_t)size, false, (const char *)0x28f768, 0x66);
+    owns_buffer = 1;
+    if (base == NULL) {
+      debug_free(cache, (const char *)0x28f768, 0x7e);
+      return 0;
+    }
+  }
+  if (((uintptr_t)base & 3) != 0) {
+    display_assert((const char *)0x28f7bc, (const char *)0x28f768, 0x6b, true);
+    system_exit(-1);
+  }
+
+  csmemset(cache, 0, 0x3c);
+  csstrncpy(cache, name, 0x1f);
+  cache[0x1f] = 0;
+  *(int *)(cache + 0x20) = size;
+  *(void **)(cache + 0x24) = base;
+  cache[0x28] = owns_buffer;
+  *(int *)(cache + 0x2c) = 0;
+  *(void (**)(void *, int))(cache + 0x30) = lock_proc;
+  *(void (**)(void *))(cache + 0x34) = unlock_proc;
+  *(int *)(cache + 0x38) = 0x6c726163;
+  FUN_0011c290((int)cache);
+  return (int)cache;
 }
-#else
-#error "FUN_0011c310: clang naked draft required"
-#endif
 
 
 /* FUN_0011c430 (0x11c430) — readable C lift. */
