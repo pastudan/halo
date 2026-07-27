@@ -6416,8 +6416,8 @@
         },
         {
           "addr": "0x1cf840",
-          "decl": "void FUN_001cf840(void);",
-          "ported": false
+          "decl": "char FUN_001cf840(int object_handle);",
+          "ported": true
         },
         {
           "addr": "0x1cf900",

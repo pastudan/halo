@@ -31,35 +31,15 @@ int *d3d_find_flipcount(void)
 }
 /* --- d3d_intimacy.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001cf840 (0x1cf840) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void *(*const b1cf840_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_001cf840(void)
+/* FUN_001cf840 (0x1cf840) — readable C lift. */
+char FUN_001cf840(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x800\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0x40000, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1cf840_get)
-      : "memory");
-}
-#else
-#error "FUN_001cf840: clang naked draft required"
-#endif
+  char *obj;
 
+  obj = (char *)object_get_and_verify_type(object_handle, 0x800);
+  *(uint32_t *)(obj + 4) |= 0x40000u;
+  return 1;
+}
 
 /* 0x1cf900 */
 int __stdcall CloseHandle(int handle)
