@@ -8520,31 +8520,17 @@ void FUN_00165a00(void)
 }
 
 
-/* FUN_00165a10 (0x165a10) — XBE naked draft (batch 325). */
-#if defined(__clang__)
-static void (*const b165a10_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
+/* FUN_00165a10 (0x165a10) — readable C lift. */
 void FUN_00165a10(void)
 {
-  __asm__ volatile(
-      "movl 0x47df00, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00165a10_1\n\t"
-      "pushl $0x117\n\t"
-      "pushl $0x2a1cc8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00165a10_1:\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b165a10_c8ef70)
-      : "memory");
+  void *p;
+
+  p = *(void **)0x47df00;
+  if (!p)
+    return;
+  debug_free(p, (const char *)0x2a1cc8, 0x117);
 }
-#else
-#error "FUN_00165a10: clang naked draft required"
-#endif
+
 
 
 /* FUN_00165cb0 (0x165cb0) — XBE naked draft (batch 331). */
@@ -15086,37 +15072,17 @@ void FUN_0016b1c0(void)
 #endif
 
 
-/* FUN_0016b240 (0x16b240) — XBE naked draft (batch 385). */
-#if defined(__clang__)
-static void (*const b16b240_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
-
-__attribute__((naked, noinline))
+/* FUN_0016b240 (0x16b240) — readable C lift. */
 void FUN_0016b240(void)
 {
-  __asm__ volatile(
-      "movb 0x3256c4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0016b240_2\n\t"
-      "movb 0x47e002, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0016b240_1\n\t"
-      "pushl $1\n\t"
-      "call *%[c16fa40]\n\t"
-      "addl $4, %%esp\n\t"
-      "ret\n\t"
-      ".LFUN_0016b240_1:\n\t"
-      "pushl $2\n\t"
-      "call *%[c16fa40]\n\t"
-      "popl %%ecx\n\t"
-      ".LFUN_0016b240_2:\n\t"
-      "ret\n\t"
-      :
-      : [c16fa40] "m"(b16b240_c16fa40)
-      : "memory");
+  if (!*(unsigned char *)0x3256c4)
+    return;
+  if (*(unsigned char *)0x47e002)
+    FUN_0016fa40(1);
+  else
+    FUN_0016fa40(2);
 }
-#else
-#error "FUN_0016b240: clang naked draft required"
-#endif
+
 
 
 /* FUN_0016b270 (0x16b270) — readable C lift. */
