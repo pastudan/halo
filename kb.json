@@ -15068,7 +15068,8 @@
         {
           "addr": "0x124aa0",
           "decl": "char network_game_client_initiate_join_game(void *client, void *game, void *join_token, void *address);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_initiate_join_game"
         },
         {
           "addr": "0x124ba0",
@@ -15267,8 +15268,9 @@
         },
         {
           "addr": "0x127610",
-          "decl": "char FUN_00127610(void *client /* @<esi> */, void *source_address /* @<eax> */, void *message, int message_size);",
-          "ported": false
+          "decl": "char FUN_00127610(void *client@<esi>, void *source_address@<eax>, void *message, int message_size);",
+          "ported": true,
+          "name": "FUN_00127610"
         },
         {
           "addr": "0x127710",
