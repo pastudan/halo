@@ -2482,7 +2482,7 @@ static void * (*const b7ece0_c7d000)(void *bitmap, short mipmap_index) = bitmap_
 static void * (*const b7ece0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
 __attribute__((naked, noinline))
-void bitmap_cube_map_face_insert(void *bitmap_2d __attribute__((unused)), void *bitmap_cube __attribute__((unused)), int mipmap __attribute__((unused)), int face __attribute__((unused)))
+void bitmap_cube_map_face_insert(void)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3491,43 +3491,9 @@ void FUN_000887e0(void)
 
 /* first_person_camera_new (0x88c40) — defined in camera/director.c */
 
-
-/* FUN_00088c80 (0x88c80) — readable C lift: unit seat marker vectors. */
-void FUN_00088c80(int unit_handle, float *out_a, float *out_b)
-{
-  char *unit;
-  int parent;
-  void *obj;
-  void *tag;
-  void *elem;
-  char markers[0x6c];
-  short n;
-
-  unit = (char *)object_get_and_verify_type(unit_handle, 3);
-  unit_set_seat_state(unit_handle, out_a);
-  out_b[0] = *(float *)(unit + 0x1ec);
-  out_b[1] = *(float *)(unit + 0x1f0);
-  out_b[2] = *(float *)(unit + 0x1f4);
-  parent = *(int *)(unit + 0xcc);
-  if (parent == -1)
-    return;
-  obj = object_try_and_get_and_verify_type(parent, 2);
-  if (!obj)
-    return;
-  tag = tag_get(0x76656869, *(int *)obj);
-  elem = tag_block_get_element((char *)tag + 0x2e4, (int)*(short *)(unit + 0x2a0), 0x11c);
-  if ((*(signed char *)elem) >= 0)
-    return;
-  n = object_get_markers_by_string_id(parent, (const char *)0x267238, markers, 1);
-  if (!n)
-    return;
-  out_a[0] = *(float *)(markers + 0x60);
-  out_a[1] = *(float *)(markers + 0x64);
-  out_a[2] = *(float *)(markers + 0x68);
-  out_b[0] = *(float *)(markers + 0x3c);
-  out_b[1] = *(float *)(markers + 0x40);
-  out_b[2] = *(float *)(markers + 0x44);
-}
+/* FUN_00088c80 — lifted to camera/director.c. */
+#if 0
+#endif
 
 
 
@@ -6714,97 +6680,10 @@ void FUN_000fe450(void)
 #endif
 
 
-/* FUN_000fe6c0 (0xfe6c0) — XBE naked draft (batch 372). */
-#if defined(__clang__)
-static void *(*const bfe6c0_get)(int, int) = object_get_and_verify_type;
-static char *(*const bfe6c0_fb320)(void *, short) = FUN_000fb320;
-static void *(*const bfe6c0_tag)(int, int) = tag_get;
-static void *(*const bfe6c0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bfe6c0_cfdc90)(void) = (void *)FUN_000fdc90;
-static void (*const bfe6c0_ftol)(void) = FUN_001d9068;
-static void (*const bfe6c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bfe6c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000fe6c0(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%ebx\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[fb320]\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "pushl $0x114\n\t"
-      "leal 0x4fc(%%eax), %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "leal 0x1(%%esi), %%ecx\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jge .LFUN_000fe6c0_1\n\t"
-      "leal 0x1(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cfdc90]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000fe6c0_1:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "flds 0xc4(%%eax)\n\t"
-      "fmuls 0x253394\n\t"
-      "call *%[ftol]\n\t"
-      "pushl $4\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "jl .LFUN_000fe6c0_2\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl .LFUN_000fe6c0_3\n\t"
-      ".LFUN_000fe6c0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa11\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28ae40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000fe6c0_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,8), %%ecx\n\t"
-      "leal (%%ebx,%%ecx,4), %%eax\n\t"
-      "movw %%di, 0x212(%%eax)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, 0x211(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfe6c0_get), [fb320] "m"(bfe6c0_fb320), [tag] "m"(bfe6c0_tag), [elem] "m"(bfe6c0_elem), [cfdc90] "m"(bfe6c0_cfdc90), [ftol] "m"(bfe6c0_ftol), [assert] "m"(bfe6c0_assert), [exitfn] "m"(bfe6c0_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_000fe6c0: clang naked draft required"
+/* FUN_000fe6c0 — lifted to items/weapons.c. */
+#if 0
 #endif
+
 
 
 /* FUN_000fe790 (0xfe790) — XBE naked draft (batch 372). */

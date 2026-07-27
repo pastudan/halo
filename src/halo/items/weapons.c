@@ -2607,3 +2607,33 @@ void FUN_000fd570(int weapon_handle, int16_t trigger_index)
 
 
 
+
+/* FUN_000fe6c0 (0xfe6c0) — start weapon trigger recovery timer.
+ * ABI: trigger_index@<eax>, weapon@<ecx>. */
+void FUN_000fe6c0(short trigger_index /*@<eax>*/, int weapon /*@<ecx>*/)
+{
+  void *obj;
+  void *weap_tag;
+  void *block;
+  void *trig;
+  int ticks;
+  char *slot;
+
+  obj = object_get_and_verify_type(weapon, 4);
+  FUN_000fb320(obj, trigger_index);
+  weap_tag = tag_get(0x77656170, *(int *)obj);
+  block = (char *)weap_tag + 0x4fc;
+  trig = tag_block_get_element(block, (int)trigger_index, 0x114);
+  if ((int)trigger_index + 1 < *(int *)block)
+    ((void (*)(int, int))FUN_000fdc90)(weapon, (int)trigger_index + 1);
+  ticks = (int)(*(float *)((char *)trig + 0xc4) * *(float *)0x253394);
+  obj = object_get_and_verify_type(weapon, 4);
+  if (!((int)trigger_index >= 0 && (int)trigger_index < 2)) {
+    display_assert("trigger_index>=0 && trigger_index<MAXIMUM_NUMBER_OF_TRIGGERS_PER_WEAPON",
+                   "c:\\halo\\SOURCE\\items\\weapons.c", 0xa11, 1);
+    system_exit(-1);
+  }
+  slot = (char *)obj + ((int)trigger_index * 9) * 4;
+  *(short *)(slot + 0x212) = (short)ticks;
+  *(char *)(slot + 0x211) = 1;
+}

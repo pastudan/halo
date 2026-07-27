@@ -375,11 +375,6 @@
           "ported": false
         },
         {
-          "addr": "0xfe6c0",
-          "decl": "void FUN_000fe6c0(void);",
-          "ported": false
-        },
-        {
           "addr": "0xfe790",
           "decl": "void FUN_000fe790(void);",
           "ported": false
@@ -34298,6 +34293,12 @@
           "addr": "0xfd570",
           "decl": "void FUN_000fd570(int weapon_handle, int16_t trigger_index);",
           "ported": true
+        },
+        {
+          "addr": "0xfe6c0",
+          "decl": "void FUN_000fe6c0(short trigger_index@<eax>, int weapon@<ecx>);",
+          "ported": true,
+          "name": "FUN_000fe6c0"
         }
       ],
       "name": "weapons.obj",
