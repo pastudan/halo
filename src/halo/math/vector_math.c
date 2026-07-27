@@ -1240,54 +1240,29 @@ void action_avoid_perform(void)
 #endif
 
 
-/* FUN_000129f0 (0x129f0) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static void *(*const b129f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_000129f0(void)
+/* FUN_000129f0 (0x129f0) — readable C lift. */
+void FUN_000129f0(int datum_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl $5, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpw %%cx, 0x268(%%eax)\n\t"
-      "jl .LFUN_000129f0_3\n\t"
-      "movb $1, 0x454(%%eax)\n\t"
-      "movw $7, 0x3e8(%%eax)\n\t"
-      ".LFUN_000129f0_1:\n\t"
-      "movw $2, 0x3ec(%%eax)\n\t"
-      ".LFUN_000129f0_2:\n\t"
-      "movb 0x358(%%eax), %%cl\n\t"
-      "movw $4, 0x3fc(%%eax)\n\t"
-      "movb %%cl, 0x426(%%eax)\n\t"
-      "movb %%dl, 0x427(%%eax)\n\t"
-      "movb %%dl, 0x428(%%eax)\n\t"
-      "movb %%dl, 0x424(%%eax)\n\t"
-      "movb %%dl, 0x425(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000129f0_3:\n\t"
-      "cmpw %%dx, 0x280(%%eax)\n\t"
-      "movw %%cx, 0x3e8(%%eax)\n\t"
-      "jle .LFUN_000129f0_1\n\t"
-      "movw %%cx, 0x3ec(%%eax)\n\t"
-      "jmp .LFUN_000129f0_2\n\t"
-      :
-      : [dget] "m"(b129f0_dget)
-      : "memory");
+  char *obj;
+  obj = (char *)datum_get(*(void **)0x6325a4, datum_index);
+  if (*(short *)(obj + 0x268) >= 5) {
+    *(unsigned char *)(obj + 0x454) = 1;
+    *(short *)(obj + 0x3e8) = 7;
+    *(short *)(obj + 0x3ec) = 2;
+  } else {
+    *(short *)(obj + 0x3e8) = 5;
+    if (*(short *)(obj + 0x280) > 0)
+      *(short *)(obj + 0x3ec) = 5;
+    else
+      *(short *)(obj + 0x3ec) = 2;
+  }
+  *(short *)(obj + 0x3fc) = 4;
+  *(unsigned char *)(obj + 0x426) = *(unsigned char *)(obj + 0x358);
+  *(unsigned char *)(obj + 0x427) = 0;
+  *(unsigned char *)(obj + 0x428) = 0;
+  *(unsigned char *)(obj + 0x424) = 0;
+  *(unsigned char *)(obj + 0x425) = 0;
 }
-#else
-#error "FUN_000129f0: clang naked draft required"
-#endif
-
 
 /* FUN_00012ad0 (0x12ad0) — XBE naked draft (batch 77). */
 #if defined(__clang__)

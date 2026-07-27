@@ -21871,8 +21871,8 @@
         },
         {
           "addr": "0x129f0",
-          "decl": "void FUN_000129f0(void);",
-          "ported": false
+          "decl": "void FUN_000129f0(int datum_index);",
+          "ported": true
         },
         {
           "addr": "0x12a80",
