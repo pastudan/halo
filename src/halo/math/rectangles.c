@@ -107,6 +107,7 @@ char FUN_00107db0(int a0, int a1, int a2, int a3, int a4, int a5,
   float *plane;
   float numer;
   float denom;
+  float abs_denom;
   float t;
   unsigned int bits;
 
@@ -130,7 +131,10 @@ char FUN_00107db0(int a0, int a1, int a2, int a3, int a4, int a5,
             plane[4];
     denom = plane[3] * direction[2] + plane[2] * direction[1] +
             plane[1] * direction[0];
-    if (fabsf(denom) < *(double *)0x2533d0) {
+    abs_denom = denom;
+    if (abs_denom < *(float *)0x2533c0)
+      abs_denom = -abs_denom;
+    if ((double)abs_denom < *(double *)0x2533d0) {
       if (numer > *(float *)0x31fb40)
         return 0;
     } else {
