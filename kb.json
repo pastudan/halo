@@ -18471,7 +18471,7 @@
         {
           "addr": "0xe0cd0",
           "decl": "void player_ui_fast_setup_network_server(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe0d80",

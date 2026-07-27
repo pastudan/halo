@@ -325,85 +325,33 @@ int player_ui_get_player1_last_used_profile_index(void)
   return *(int *)0x30f02c;
 }
 
-/* player_ui_fast_setup_network_server (0xe0cd0) — XBE naked draft (batch 240). */
-#if defined(__clang__)
-static void (*const be0cd0_ce58c0)(void) = ui_widgets_close_all;
-static void (*const be0cd0_c12a1e0)(void) = dispose_global_network_game_client;
-static void (*const be0cd0_c12a2a0)(void) = dispose_global_network_game_server;
-static void (*const be0cd0_cfff70)(short param) = set_game_connection;
-static void (*const be0cd0_c100010)(const char *name) = main_set_multiplayer_map_name;
-static void * (*const be0cd0_ce84e0)(const char *name, int tag_index, int is_child, int widget_stack, int parent_tag_index, int a6, int a7) = ui_widget_load_by_name_or_tag;
-static void (*const be0cd0_cae750)(void) = game_engine_playlist_initialize;
-static void (*const be0cd0_c12a150)(char accept) = network_game_set_accept_remote_connections;
-static bool (*const be0cd0_c12a890)(void) = FUN_0012a890;
-static bool (*const be0cd0_c12a250)(void) = FUN_0012a250;
-static void (*const be0cd0_ca8a70)(void) = game_engine_playlist_begin;
-static void (*const be0cd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const be0cd0_c100620)(void) = main_goto_main_menu;
-
-__attribute__((naked, noinline))
+/* player_ui_fast_setup_network_server (0xe0cd0) — readable C lift. */
 void player_ui_fast_setup_network_server(void)
 {
-  __asm__ volatile(
-      "call *%[ce58c0]\n\t"
-      "call *%[c12a1e0]\n\t"
-      "call *%[c12a2a0]\n\t"
-      "pushl $0\n\t"
-      "call *%[cfff70]\n\t"
-      "pushl $0x25386f\n\t"
-      "call *%[c100010]\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x2828e0\n\t"
-      "movb $0, 0x46c034\n\t"
-      "call *%[ce84e0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayer_ui_fast_setup_network_server_2\n\t"
-      "call *%[cae750]\n\t"
-      "pushl $1\n\t"
-      "call *%[c12a150]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c12a890]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_ui_fast_setup_network_server_1\n\t"
-      "call *%[c12a250]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_ui_fast_setup_network_server_1\n\t"
-      "call *%[ca8a70]\n\t"
-      "pushl $2\n\t"
-      "call *%[cfff70]\n\t"
-      "addl $4, %%esp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_fast_setup_network_server_1:\n\t"
-      "call *%[c12a1e0]\n\t"
-      "call *%[c12a2a0]\n\t"
-      "pushl $0\n\t"
-      "call *%[c12a150]\n\t"
-      "pushl $0x2828ac\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp *%[c100620]\n\t"
-      ".Lplayer_ui_fast_setup_network_server_2:\n\t"
-      "pushl $0x282840\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp *%[c100620]\n\t"
-      :
-      : [ce58c0] "m"(be0cd0_ce58c0), [c12a1e0] "m"(be0cd0_c12a1e0), [c12a2a0] "m"(be0cd0_c12a2a0), [cfff70] "m"(be0cd0_cfff70), [c100010] "m"(be0cd0_c100010), [ce84e0] "m"(be0cd0_ce84e0), [cae750] "m"(be0cd0_cae750), [c12a150] "m"(be0cd0_c12a150), [c12a890] "m"(be0cd0_c12a890), [c12a250] "m"(be0cd0_c12a250), [ca8a70] "m"(be0cd0_ca8a70), [c8f390] "m"(be0cd0_c8f390), [c100620] "m"(be0cd0_c100620)
-      : "memory");
+  void *widget;
+
+  ui_widgets_close_all();
+  dispose_global_network_game_client();
+  dispose_global_network_game_server();
+  set_game_connection(0);
+  main_set_multiplayer_map_name((const char *)0x25386f);
+  *(char *)0x46c034 = 0;
+  widget = ui_widget_load_by_name_or_tag(
+      (const char *)0x2828e0, -1, 0, -1, -1, -1, -1);
+  if (widget == 0) {
+    return;
+  }
+  game_engine_playlist_initialize();
+  network_game_set_accept_remote_connections(1);
+  if (!FUN_0012a890()) {
+    return;
+  }
+  if (!FUN_0012a250()) {
+    return;
+  }
+  game_engine_playlist_begin();
+  set_game_connection(2);
 }
-#else
-#error "player_ui_fast_setup_network_server: clang naked draft required"
-#endif
-
-
 /* player_ui_edit_profile_is_default_profile (0xe0d80) — readable C lift. */
 char player_ui_edit_profile_is_default_profile(void)
 {
