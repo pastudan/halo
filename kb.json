@@ -27781,7 +27781,7 @@
         {
           "addr": "0xeeeb0",
           "decl": "char FUN_000eeeb0(void *widget, void *player_ui, char *out_flag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xeef30",

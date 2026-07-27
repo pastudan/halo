@@ -1796,73 +1796,29 @@ void FUN_000eed10(void *widget)
 #endif
 
 
-/* FUN_000eeeb0 (0xeeeb0) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static void (*const beeeb0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const beeeb0_exitfn)(int) = (void *)system_exit;
-static void (*const beeeb0_ce0ee0)(void) = (void *)player_ui_edit_profile_is_dirty;
-static void (*const beeeb0_ce15b0)(void) = (void *)player_ui_save_profile;
-static void (*const beeeb0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void (*const beeeb0_ce1760)(void) = (void *)player_ui_end_editing_profile;
-static void * (*const beeeb0_ce4310)(void *widget) = (void *)ui_widget_get_last_child;
-static void (*const beeeb0_ce5620)(void *widget) = (void *)ui_widget_close;
-
-__attribute__((naked, noinline))
-void FUN_000eeeb0(void *widget)
+/* FUN_000eeeb0 (0xeeeb0) — readable C lift. */
+char FUN_000eeeb0(void *widget, void *player_ui, char *out_flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000eeeb0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeaf\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286184\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eeeb0_1:\n\t"
-      "call *%[ce0ee0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000eeeb0_2\n\t"
-      "call *%[ce15b0]\n\t"
-      "movb %%al, %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_000eeeb0_4\n\t"
-      "pushl $0x287ef8\n\t"
-      "jmp .LFUN_000eeeb0_3\n\t"
-      ".LFUN_000eeeb0_2:\n\t"
-      "pushl $0x287ebc\n\t"
-      ".LFUN_000eeeb0_3:\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[ce1760]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce4310]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce5620]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, (%%ecx)\n\t"
-      ".LFUN_000eeeb0_4:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(beeeb0_assert), [exitfn] "m"(beeeb0_exitfn), [ce0ee0] "m"(beeeb0_ce0ee0), [ce15b0] "m"(beeeb0_ce15b0), [c8f390] "m"(beeeb0_c8f390), [ce1760] "m"(beeeb0_ce1760), [ce4310] "m"(beeeb0_ce4310), [ce5620] "m"(beeeb0_ce5620)
-      : "memory");
+  char ok;
+
+  ok = 0;
+  if (player_ui == NULL) {
+    display_assert((const char *)0x286184, (const char *)0x2859a4, 0xeaf, 1);
+    system_exit(-1);
+  }
+  if (player_ui_edit_profile_is_dirty()) {
+    ok = player_ui_save_profile();
+    if (ok)
+      return ok;
+    error(2, (const char *)0x287ef8);
+  } else {
+    error(2, (const char *)0x287ebc);
+  }
+  player_ui_end_editing_profile();
+  ui_widget_close(ui_widget_get_last_child(widget));
+  *out_flag = 1;
+  return ok;
 }
-#else
-#error "FUN_000eeeb0: clang naked draft required"
-#endif
 
 
 /* FUN_000eef30 (0xeef30) — XBE naked draft (batch 117). */
