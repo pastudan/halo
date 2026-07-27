@@ -5039,7 +5039,7 @@ static void (*const b79e70_c71400)(void) = FUN_00071400;
 static void * (*const b79e70_c7c940)(void *bitmap, short x, short y, short mipmap_index) = bitmap_2d_address;
 
 __attribute__((naked, noinline))
-void FUN_00079e70(void)
+void FUN_00079e70(void *source_bitmap __attribute__((unused)), void *destination_bitmap __attribute__((unused)), short source_mipmap_index __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5375,7 +5375,7 @@ static void (*const b7a1e0_c7c8f0)(void *) = bitmap_delete;
 static void (*const b7a1e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_0007a1e0(void)
+void FUN_0007a1e0(void *source_bitmap __attribute__((unused)), void *destination_bitmap __attribute__((unused)), short source_mipmap_index __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5646,13 +5646,13 @@ static void (*const b7a4a0_assert)(const char *, const char *, int, bool) = disp
 static void (*const b7a4a0_exitfn)(int) = system_exit;
 static void * (*const b7a4a0_c7e0b0)(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format) = bitmap_2d_new;
 static void (*const b7a4a0_c7ea60)(void) = FUN_0007ea60;
-static void (*const b7a4a0_c79e70)(void) = FUN_00079e70;
-static void (*const b7a4a0_c7ece0)(void) = bitmap_cube_map_face_insert;
+static void (*const b7a4a0_c79e70)(void *, void *, short) = FUN_00079e70;
+static void (*const b7a4a0_c7ece0)(void *, void *, int, int) = bitmap_cube_map_face_insert;
 static void (*const b7a4a0_c7c8f0)(void *) = bitmap_delete;
 static void (*const b7a4a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void bitmap_2d_uncompress_from_mipmap(void)
+void bitmap_2d_uncompress_from_mipmap(void *source_bitmap __attribute__((unused)), void *destination_bitmap __attribute__((unused)), short source_mipmap_index __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

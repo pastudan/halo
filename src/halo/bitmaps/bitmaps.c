@@ -890,220 +890,97 @@ void bitmap_compress_to_mipmap(void *source_bitmap, void *destination_bitmap,
 }
 
 
-/* bitmap_3d_compress_to_mipmap (0x7c070) — XBE naked draft (batch 245). */
-#if defined(__clang__)
-static bool (*const b7c070_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b7c070_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7c070_exitfn)(int) = system_exit;
-static void (*const b7c070_c7a4a0)(void) = bitmap_2d_uncompress_from_mipmap;
-static void (*const b7c070_c7a1e0)(void) = FUN_0007a1e0;
-static void (*const b7c070_c79e70)(void) = FUN_00079e70;
-
-__attribute__((naked, noinline))
-void bitmap_3d_compress_to_mipmap(void)
+/* bitmap_3d_compress_to_mipmap (0x7c070) — uncompress-from-mipmap dispatcher.
+ *
+ * Despite the kb name, XBE validates a compressed source mip and expands into
+ * destination, dispatching by source type:
+ *   0 -> FUN_00079e70
+ *   1 -> FUN_0007a1e0
+ *   2 -> bitmap_2d_uncompress_from_mipmap
+ * Source: c:\halo\SOURCE\bitmaps\bitmap_utilities.c, lines 0x746-0x75b.
+ */
+void bitmap_3d_compress_to_mipmap(void *source_bitmap, void *destination_bitmap,
+                                  short source_mipmap_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_3d_compress_to_mipmap_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x746\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261b44\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_1:\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lbitmap_3d_compress_to_mipmap_2\n\t"
-      "cmpw 0x14(%%esi), %%bx\n\t"
-      "jle .Lbitmap_3d_compress_to_mipmap_3\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x747\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261ac8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%esi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .Lbitmap_3d_compress_to_mipmap_4\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_3d_compress_to_mipmap_5\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_4:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_5:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movswl 0x4(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lbitmap_3d_compress_to_mipmap_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x748\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264770\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_6:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .Lbitmap_3d_compress_to_mipmap_7\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_3d_compress_to_mipmap_8\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_7:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_8:\n\t"
-      "movswl 0x6(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lbitmap_3d_compress_to_mipmap_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x749\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264720\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_9:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x8(%%esi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .Lbitmap_3d_compress_to_mipmap_10\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_3d_compress_to_mipmap_11\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_10:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_11:\n\t"
-      "movswl 0x8(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lbitmap_3d_compress_to_mipmap_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x74a\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2646d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_12:\n\t"
-      "testb $2, 0xe(%%esi)\n\t"
-      "jne .Lbitmap_3d_compress_to_mipmap_13\n\t"
-      "pushl $1\n\t"
-      "pushl $0x74b\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264694\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_13:\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_3d_compress_to_mipmap_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x74d\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261c58\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_14:\n\t"
-      "movswl 0xa(%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lbitmap_3d_compress_to_mipmap_17\n\t"
-      "decl %%eax\n\t"
-      "je .Lbitmap_3d_compress_to_mipmap_16\n\t"
-      "decl %%eax\n\t"
-      "je .Lbitmap_3d_compress_to_mipmap_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0x75b\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261d30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_15:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7a4a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_16:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7a1e0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_3d_compress_to_mipmap_17:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c79e70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b7c070_c7d470), [assert] "m"(b7c070_assert), [exitfn] "m"(b7c070_exitfn), [c7a4a0] "m"(b7c070_c7a4a0), [c7a1e0] "m"(b7c070_c7a1e0), [c79e70] "m"(b7c070_c79e70)
-      : "memory");
+  short type;
+  unsigned short tmp;
+  int value;
+
+  if (!bitmap_verify(source_bitmap, 0)) {
+    display_assert("bitmap_verify(source_bitmap, FALSE)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x746, 1);
+    system_exit(-1);
+  }
+  if (source_mipmap_index < 0 ||
+      source_mipmap_index > *(short *)((char *)source_bitmap + 0x14)) {
+    display_assert("source_mipmap_index>=0 && source_mipmap_index<=source_bitmap->mipmap_count",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x747, 1);
+    system_exit(-1);
+  }
+
+  tmp = *(unsigned short *)((char *)source_bitmap + 4);
+  if ((short)(tmp >> source_mipmap_index) < 1)
+    value = 1;
+  else
+    value = (int)(short)tmp >> source_mipmap_index;
+  if (value != (int)*(short *)((char *)destination_bitmap + 4)) {
+    display_assert("MAX(1, source_bitmap->width >>source_mipmap_index)==destination_bitmap->width",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x748, 1);
+    system_exit(-1);
+  }
+
+  tmp = *(unsigned short *)((char *)source_bitmap + 6);
+  if ((short)(tmp >> source_mipmap_index) < 1)
+    value = 1;
+  else
+    value = (int)(short)tmp >> source_mipmap_index;
+  if (value != (int)*(short *)((char *)destination_bitmap + 6)) {
+    display_assert("MAX(1, source_bitmap->height>>source_mipmap_index)==destination_bitmap->height",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x749, 1);
+    system_exit(-1);
+  }
+
+  tmp = *(unsigned short *)((char *)source_bitmap + 8);
+  if ((short)(tmp >> source_mipmap_index) < 1)
+    value = 1;
+  else
+    value = (int)(short)tmp >> source_mipmap_index;
+  if (value != (int)*(short *)((char *)destination_bitmap + 8)) {
+    display_assert("MAX(1, source_bitmap->depth >>source_mipmap_index)==destination_bitmap->depth",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x74a, 1);
+    system_exit(-1);
+  }
+
+  if ((*(unsigned char *)((char *)source_bitmap + 0xe) & 2) == 0) {
+    display_assert("TEST_FLAG(source_bitmap->flags, _bitmap_compressed_bit)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x74b, 1);
+    system_exit(-1);
+  }
+
+  if (!bitmap_verify(destination_bitmap, 1)) {
+    display_assert("bitmap_verify(destination_bitmap, TRUE)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x74d, 1);
+    system_exit(-1);
+  }
+
+  type = *(short *)((char *)source_bitmap + 0xa);
+  if (type == 0) {
+    FUN_00079e70(source_bitmap, destination_bitmap, source_mipmap_index);
+    return;
+  }
+  if (type == 1) {
+    FUN_0007a1e0(source_bitmap, destination_bitmap, source_mipmap_index);
+    return;
+  }
+  if (type == 2) {
+    bitmap_2d_uncompress_from_mipmap(source_bitmap, destination_bitmap,
+                                     source_mipmap_index);
+    return;
+  }
+  display_assert("### ERROR unsupported bitmap type",
+                 "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x75b, 1);
+  system_exit(-1);
 }
-#else
-#error "bitmap_3d_compress_to_mipmap: clang naked draft required"
-#endif
 
 
 /* FUN_0007c490 (0x7c490) — XBE naked draft (batch 263). */
