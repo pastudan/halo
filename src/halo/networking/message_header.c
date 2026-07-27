@@ -1579,57 +1579,21 @@ void FUN_00080620(void)
 #endif
 
 
-/* FUN_00080eb0 (0x80eb0) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static unsigned int * (*const b80eb0_c80d50)(unsigned int limit, unsigned int *num_primes) = sieve_of_eratosthenes;
-static void (*const b80eb0_c81410)(void) = FUN_00081410;
-static void (*const b80eb0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-void FUN_00080eb0(void)
+/* FUN_00080eb0 (0x80eb0) — readable C lift. */
+unsigned int FUN_00080eb0(unsigned int limit)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[c80d50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00080eb0_1\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "decl %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c81410]\n\t"
-      "movl (%%esi,%%eax,4), %%edi\n\t"
-      "pushl $0x89\n\t"
-      "pushl $0x265d54\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00080eb0_1:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c80d50] "m"(b80eb0_c80d50), [c81410] "m"(b80eb0_c81410), [c8ef70] "m"(b80eb0_c8ef70)
-      : "memory");
+  extern char DAT_00265d54[];
+  unsigned int num_primes = 0;
+  unsigned int *primes;
+  unsigned int result = 0;
+  primes = sieve_of_eratosthenes(limit, &num_primes);
+  if (primes) {
+    unsigned int idx = ((unsigned int (*)(unsigned int, unsigned int))FUN_00081410)(0, num_primes - 1);
+    result = primes[idx];
+    debug_free(primes, DAT_00265d54, 0x89);
+  }
+  return result;
 }
-#else
-#error "FUN_00080eb0: clang naked draft required"
-#endif
-
 
 /* FUN_00080f00 (0x80f00) — XBE naked draft (batch 139). */
 #if defined(__clang__)

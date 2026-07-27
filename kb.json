@@ -33550,7 +33550,7 @@
         },
         {
           "addr": "0x19d480",
-          "decl": "void *umemchr(const void *s, int c, unsigned int n);",
+          "decl": "void umemchr(void);",
           "ported": false
         },
         {
@@ -33570,7 +33570,7 @@
         },
         {
           "addr": "0x19d670",
-          "decl": "void *umemset(void *dst, int val, unsigned int n);",
+          "decl": "void umemset(void);",
           "ported": false
         },
         {
@@ -39970,8 +39970,8 @@
         },
         {
           "addr": "0x80eb0",
-          "decl": "void FUN_00080eb0(void);",
-          "ported": false
+          "decl": "unsigned int FUN_00080eb0(unsigned int limit);",
+          "ported": true
         },
         {
           "addr": "0x80f00",
