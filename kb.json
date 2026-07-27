@@ -21737,7 +21737,7 @@
         },
         {
           "addr": "0x155880",
-          "decl": "int FUN_00155880(int stage@<eax>, int sub_index@<ecx>, int unused, unsigned int *result);",
+          "decl": "int FUN_00155880(int a, int b, int unused, int *out);",
           "ported": true
         },
         {
@@ -21807,8 +21807,9 @@
         },
         {
           "addr": "0x155cf0",
-          "decl": "void rasterizer_set_texture_direct(int stage, int bitmap_tag_index, int frame_index);",
-          "ported": false
+          "decl": "char rasterizer_set_texture_direct(short stage, int bitmap_tag_index, short frame_index);",
+          "ported": true,
+          "name": "rasterizer_set_texture_direct"
         },
         {
           "addr": "0x155da0",
@@ -21838,8 +21839,9 @@
         },
         {
           "addr": "0x156440",
-          "decl": "void rasterizer_set_vertex_shader(void);",
-          "ported": false
+          "decl": "void rasterizer_set_vertex_shader(short shader_index);",
+          "ported": true,
+          "name": "rasterizer_set_vertex_shader"
         },
         {
           "addr": "0x156510",
