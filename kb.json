@@ -234,11 +234,6 @@
           "ported": true
         },
         {
-          "addr": "0x67760",
-          "decl": "int FUN_00067760(void *data);",
-          "ported": false
-        },
-        {
           "addr": "0x677f0",
           "decl": "void FUN_000677f0(void);",
           "ported": false
@@ -248,11 +243,6 @@
           "decl": "int FUN_00067960(unsigned short type@<ax>, unsigned short tag@<cx>, void *out@<edx>, void *ctx, float value);",
           "ported": true,
           "name": "FUN_00067960"
-        },
-        {
-          "addr": "0x679f0",
-          "decl": "void FUN_000679f0(void);",
-          "ported": false
         },
         {
           "addr": "0x67a70",
@@ -44032,6 +44022,25 @@
           "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
           "ported": true,
           "name": "FUN_001336a0"
+        }
+      ],
+      "data": []
+    },
+    {
+      "name": "tif_dirwrite.obj",
+      "source": "bitmaps/libtiff/tif_dirwrite.c",
+      "functions": [
+        {
+          "addr": "0x67760",
+          "decl": "int FUN_00067760(void *out@<edi>, void *typeinfo@<ebx>, void *data);",
+          "ported": true,
+          "name": "FUN_00067760"
+        },
+        {
+          "addr": "0x679f0",
+          "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
+          "ported": false,
+          "name": "FUN_000679f0"
         }
       ],
       "data": []
