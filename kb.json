@@ -4754,17 +4754,20 @@
         {
           "addr": "0x7e0b0",
           "decl": "void *bitmap_2d_new(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format);",
-          "ported": false
+          "ported": true,
+          "name": "bitmap_2d_new"
         },
         {
           "addr": "0x7e230",
           "decl": "void *bitmap_3d_new(unsigned short width, unsigned short height, unsigned short depth, unsigned short mipmap_count, unsigned short format);",
-          "ported": false
+          "ported": true,
+          "name": "bitmap_3d_new"
         },
         {
           "addr": "0x7e3f0",
           "decl": "void *bitmap_cube_map_new(unsigned short width, unsigned short mipmap_count, unsigned short format);",
-          "ported": false
+          "ported": true,
+          "name": "bitmap_cube_map_new"
         },
         {
           "addr": "0x7e560",
