@@ -14099,7 +14099,7 @@
         {
           "addr": "0xf67f0",
           "decl": "void FUN_000f67f0(int equipment_tag_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6820",
@@ -16308,7 +16308,7 @@
         {
           "addr": "0x1398b0",
           "decl": "void FUN_001398b0(int *param_1, int param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1398d0",
@@ -16478,7 +16478,7 @@
         {
           "addr": "0x13c400",
           "decl": "void FUN_0013c400(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x13c430",
@@ -16633,7 +16633,7 @@
         {
           "addr": "0x13d680",
           "decl": "void *object_get_and_verify_type(int datum_handle, int type_mask);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x13d6f0",
@@ -20179,7 +20179,7 @@
         {
           "addr": "0xf7e40",
           "decl": "void FUN_000f7e40(int projectile_handle@<eax>, int16_t state@<si>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf7e60",
@@ -28853,7 +28853,7 @@
         {
           "addr": "0x1a9200",
           "decl": "void unit_get_head_position(int object_handle, float *out_position);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a9240",
@@ -33656,7 +33656,7 @@
         {
           "addr": "0xfaeb0",
           "decl": "void weapon_set_integrated_light_power(int weapon_handle, int light_power);",
-          "ported": false,
+          "ported": true,
           "source_path": "halo/items/weapons.c"
         },
         {
@@ -39334,7 +39334,7 @@
         {
           "addr": "0x138f10",
           "decl": "float FUN_00138f10(float base, float a, float b, float t1, float t2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x138f30",
