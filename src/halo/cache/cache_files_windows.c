@@ -996,96 +996,34 @@ void cache_copy_initialize_read_data(void)
 #endif
 
 
-/* FUN_001bb8a0 (0x1bb8a0) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void (*const b1bb8a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bb8a0_exitfn)(int) = system_exit;
-static void (*const b1bb8a0_c1bb430)(void) = FUN_001bb430;
-
-__attribute__((naked, noinline))
-void FUN_001bb8a0(void)
+/* FUN_001bb8a0 (0x1bb8a0) — readable C lift. */
+void FUN_001bb8a0(void *obj)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "addl $0xa78, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_001bb8a0_2\n\t"
-      ".LFUN_001bb8a0_1:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".LFUN_001bb8a0_2:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "sarl $5, %%eax\n\t"
-      "movl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "leal 0x994(%%edx,%%eax,4), %%esi\n\t"
-      "testl %%ebx, (%%esi)\n\t"
-      "je .LFUN_001bb8a0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x416\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bb8a0_3:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_001bb8a0_4\n\t"
-      "cmpw $8, %%di\n\t"
-      "jl .LFUN_001bb8a0_5\n\t"
-      ".LFUN_001bb8a0_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x619\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8580\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bb8a0_5:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "call *%[c1bb430]\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "orl %%ebx, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "incl %%edi\n\t"
-      "incl %%edx\n\t"
-      "addl $2, %%ecx\n\t"
-      "cmpw $8, %%di\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jl .LFUN_001bb8a0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bb8a0_assert), [exitfn] "m"(b1bb8a0_exitfn), [c1bb430] "m"(b1bb8a0_c1bb430)
-      : "memory");
-}
-#else
-#error "FUN_001bb8a0: clang naked draft required"
-#endif
+  int idx = 0;
+  short slot = 0;
+  unsigned int bit;
+  unsigned int *word;
+  unsigned char *ptr;
 
+  ptr = (unsigned char *)obj + 0xa78;
+  while (slot < 8) {
+    bit = 1u << (idx & 0x1f);
+    word = (unsigned int *)((unsigned char *)obj + 0x994 + ((idx >> 5) * 4));
+    if ((*word & bit) != 0) {
+      display_assert((const char *)0x2b8878, (const char *)0x2b839c, 0x416, 1);
+      system_exit(-1);
+    }
+    if (slot < 0 || slot >= 8) {
+      display_assert((const char *)0x2b8580, (const char *)0x2b839c, 0x619, 1);
+      system_exit(-1);
+    }
+    FUN_001bb430(obj, ptr, slot);
+    *word |= bit;
+    slot++;
+    idx++;
+    ptr += 2;
+  }
+}
 
 /* FUN_001bb970 (0x1bb970) — XBE naked draft (batch 247). */
 #if defined(__clang__)

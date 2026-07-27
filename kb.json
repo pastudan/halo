@@ -4937,8 +4937,9 @@
         },
         {
           "addr": "0x1bb8a0",
-          "decl": "void FUN_001bb8a0(void);",
-          "ported": false
+          "decl": "void FUN_001bb8a0(void *obj);",
+          "ported": true,
+          "name": "FUN_001bb8a0"
         },
         {
           "addr": "0x1bb970",
