@@ -3807,106 +3807,45 @@ int FUN_001cbc20(float t)
   return result;
 }
 
-/* FUN_001cbc40 (0x1cbc40) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static void *(*const b1cbc40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1cbc40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1cbc40_exitfn)(int) = system_exit;
-static void *(*const b1cbc40_tag)(int, int) = tag_get;
-static void * (*const b1cbc40_c1c88c0)(short class_index) = sound_class_get_definition;
-
-__attribute__((naked, noinline))
-char FUN_001cbc40(int sound_handle __attribute__((unused)))
+/* FUN_001cbc40 (0x1cbc40) — readable C lift: validate/update sound source (ebx=handle). */
+char FUN_001cbc40(int sound_handle)
 {
-  __asm__ volatile(
-      "movl 0x4fdba4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x8c(%%esi), %%di\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_001cbc40_3\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_001cbc40_1\n\t"
-      "cmpw 0x4eb0b4, %%di\n\t"
-      "jl .LFUN_001cbc40_2\n\t"
-      ".LFUN_001cbc40_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x428\n\t"
-      "pushl $0x2c12cc\n\t"
-      "pushl $0x2c1294\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001cbc40_2:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%ecx\n\t"
-      "cmpl %%ebx, 0x4fc3a0(,%%ecx,8)\n\t"
-      "je .LFUN_001cbc40_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x59f\n\t"
-      "pushl $0x2c12cc\n\t"
-      "pushl $0x2c1360\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001cbc40_3:\n\t"
-      "testb $1, 0x4(%%esi)\n\t"
-      "jne .LFUN_001cbc40_4\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001cbc40_4\n\t"
-      "movl 0x84(%%esi), %%edx\n\t"
-      "cmpl 0x4eaf4c, %%edx\n\t"
-      "jge .LFUN_001cbc40_4\n\t"
-      "leal 0x14(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "leal 0x54(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001cbc40_4\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "jne .LFUN_001cbc40_5\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x4(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c88c0]\n\t"
-      "movb 0x8(%%eax), %%cl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_001cbc40_5\n\t"
-      "movl $0, 0x10(%%esi)\n\t"
-      ".LFUN_001cbc40_4:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_001cbc40_5:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1cbc40_dget), [assert] "m"(b1cbc40_assert), [exitfn] "m"(b1cbc40_exitfn), [tag] "m"(b1cbc40_tag), [c1c88c0] "m"(b1cbc40_c1c88c0)
-      : "memory");
-}
-#else
-#error "FUN_001cbc40: clang naked draft required"
-#endif
+  char *datum;
+  short ch;
+  char *cls;
+  char (*update_fn)(int, void *, void *);
 
+  __asm__ volatile("movl %%ebx, %0" : "=r"(sound_handle));
+  datum = (char *)datum_get(*(data_t **)0x4fdba4, sound_handle);
+  ch = *(short *)(datum + 0x8c);
+  if (ch != -1) {
+    if (ch < 0 || ch >= *(short *)0x4eb0b4) {
+      display_assert((const char *)0x2c1294, (const char *)0x2c12cc, 0x428, 1);
+      system_exit(-1);
+    }
+    if (*(int *)(0x4fc3a0 + 24 * (int)ch) != sound_handle) {
+      display_assert((const char *)0x2c1360, (const char *)0x2c12cc, 0x59f, 1);
+      system_exit(-1);
+    }
+  }
+  if ((*(unsigned char *)(datum + 4) & 1) != 0)
+    return 1;
+  update_fn = *(char (**)(int, void *, void *))(datum + 0x10);
+  if (!update_fn)
+    return 1;
+  if (*(int *)(datum + 0x84) >= *(int *)0x4eaf4c)
+    return 1;
+  if (update_fn(*(int *)(datum + 0xc), datum + 0x54, datum + 0x14))
+    return 1;
+  if (*(short *)(datum + 2) != 0)
+    return 0;
+  cls = (char *)sound_class_get_definition(
+      (short)*(short *)((char *)tag_get(*(int *)(datum + 8), 0x736e6421) + 4));
+  if (*(unsigned char *)(cls + 8) != 0)
+    return 0;
+  *(int *)(datum + 0x10) = 0;
+  return 1;
+}
 
 /* FUN_001cc1c0 (0x1cc1c0) — readable C lift. */
 char FUN_001cc1c0(int looping_handle, int unused, void *out)

@@ -15172,7 +15172,8 @@
         {
           "addr": "0x125510",
           "decl": "char network_game_client_add_player_to_game(void *client, void *message);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_add_player_to_game"
         },
         {
           "addr": "0x125610",
@@ -25305,8 +25306,9 @@
         },
         {
           "addr": "0x1cbc40",
-          "decl": "char FUN_001cbc40(int sound_handle@<ebx>);",
-          "ported": false
+          "decl": "char FUN_001cbc40(int sound_handle /* @<ebx> */);",
+          "ported": true,
+          "name": "FUN_001cbc40"
         },
         {
           "addr": "0x1cc1c0",
@@ -26669,8 +26671,9 @@
         },
         {
           "addr": "0x131700",
-          "decl": "void FUN_00131700(void);",
-          "ported": false
+          "decl": "void FUN_00131700(int object_handle, int antenna_handle);",
+          "ported": true,
+          "name": "FUN_00131700"
         },
         {
           "addr": "0x131790",

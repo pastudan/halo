@@ -1605,119 +1605,49 @@ char network_game_client_handle_game_update(void *client __attribute__((unused))
 #endif
 
 
-/* network_game_client_add_player_to_game (0x125510) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void (*const b125510_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b125510_exitfn)(int) = system_exit;
-static bool (*const b125510_c12ac80)(void *client) = network_player_is_valid;
-static bool (*const b125510_c12ad60)(void *game, void *player) = network_game_add_player;
-static bool (*const b125510_c12b040)(void *player) = network_game_spawn_player;
-static int (*const b125510_c125180)(int stripped_index) = unstrip_player_index;
-static int (*const b125510_cba410)(unsigned __int16 a1, int a2) = local_player_set_player_index;
-static void (*const b125510_cb8f00)(int handle) = update_client_add_player;
-static void * (*const b125510_c12a1d0)(void) = network_game_server_get;
-static void (*const b125510_cb8d30)(int handle) = FUN_000b8d30;
-static void (*const b125510_c12b650)(const char *fmt, ...) = network_game_log;
-
-__attribute__((naked, noinline))
-char network_game_client_add_player_to_game(void *client __attribute__((unused)), void *message __attribute__((unused)))
+/* network_game_client_add_player_to_game (0x125510) — readable C lift. */
+char network_game_client_add_player_to_game(void *client, void *message)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lnetwork_game_client_add_player_to_game_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_game_client_add_player_to_game_2\n\t"
-      ".Lnetwork_game_client_add_player_to_game_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x462\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291f58\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_add_player_to_game_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_client_add_player_to_game_5\n\t"
-      "leal 0x85c(%%edi), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ad60]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lnetwork_game_client_add_player_to_game_5\n\t"
-      "cmpw $3, 0xca6(%%edi)\n\t"
-      "jne .Lnetwork_game_client_add_player_to_game_4\n\t"
-      "movswl 0xa80(%%edi), %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "leal 0xa62(%%ecx,%%edi,1), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12b040]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lnetwork_game_client_add_player_to_game_5\n\t"
-      "movsbl 0x1f(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c125180]\n\t"
-      "movsbl 0x1c(%%esi), %%ecx\n\t"
-      "movzwl (%%edi), %%edx\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jne .Lnetwork_game_client_add_player_to_game_3\n\t"
-      "pushl %%eax\n\t"
-      "movsbw 0x1d(%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cba410]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lnetwork_game_client_add_player_to_game_3:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cb8f00]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c12a1d0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_game_client_add_player_to_game_4\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cb8d30]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lnetwork_game_client_add_player_to_game_4:\n\t"
-      "movsbl 0x1d(%%esi), %%edx\n\t"
-      "movsbl 0x1c(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x291f1c\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lnetwork_game_client_add_player_to_game_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b125510_assert), [exitfn] "m"(b125510_exitfn), [c12ac80] "m"(b125510_c12ac80), [c12ad60] "m"(b125510_c12ad60), [c12b040] "m"(b125510_c12b040), [c125180] "m"(b125510_c125180), [cba410] "m"(b125510_cba410), [cb8f00] "m"(b125510_cb8f00), [c12a1d0] "m"(b125510_c12a1d0), [cb8d30] "m"(b125510_cb8d30), [c12b650] "m"(b125510_c12b650)
-      : "memory");
-}
-#else
-#error "network_game_client_add_player_to_game: clang naked draft required"
-#endif
+  char ok;
+  char *player_slot;
+  int stripped;
+  int unstripped;
 
+  ok = 0;
+  if (!client || !message) {
+    display_assert((const char *)0x291f58, (const char *)0x291774, 0x462, 1);
+    system_exit(-1);
+  }
+  if (!network_player_is_valid(message))
+    return 0;
+  ok = network_game_add_player((char *)client + 0x85c, message);
+  if (!ok)
+    return 0;
+  if (*(short *)((char *)client + 0xca6) == 3) {
+    player_slot = (char *)client + 0xa62 +
+                  ((int)*(short *)((char *)client + 0xa80) << 5);
+    ok = network_game_spawn_player(player_slot);
+    if (!ok)
+      return 0;
+    unstripped = unstrip_player_index((int)*(signed char *)(player_slot + 0x1f));
+    if ((int)*(signed char *)(player_slot + 0x1c) ==
+        (int)*(unsigned short *)client) {
+      local_player_set_player_index((unsigned short)*(signed char *)(player_slot + 0x1d),
+                                    unstripped);
+    }
+    update_client_add_player(unstripped);
+    if (network_game_server_get())
+      FUN_000b8d30(unstripped);
+    network_game_log((const char *)0x291f1c,
+                     (int)*(signed char *)(player_slot + 0x1c),
+                     (int)*(signed char *)(player_slot + 0x1d));
+  } else {
+    network_game_log((const char *)0x291f1c,
+                     (int)*(signed char *)((char *)message + 0x1c),
+                     (int)*(signed char *)((char *)message + 0x1d));
+  }
+  return ok;
+}
 
 /* network_game_client_switch_to_pregame (0x125660) — readable C lift. */
 char network_game_client_switch_to_pregame(void *client)
