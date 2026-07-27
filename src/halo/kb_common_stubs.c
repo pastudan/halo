@@ -26017,81 +26017,36 @@ void FUN_001a4440(int unit_handle)
 #endif
 
 
-/* FUN_001a4990 (0x1a4990) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-static void *(*const b1a4990_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a4990_tag)(int, int) = tag_get;
-static vector3_t * (*const b1a4990_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b1a4990_c1a25e0)(int unit_handle) = FUN_001a25e0;
-static void (*const b1a4990_c1a4440)(int unit_handle) = FUN_001a4440;
-
-__attribute__((naked, noinline))
-char FUN_001a4990(int unit_handle __attribute__((unused)))
+/* FUN_001a4990 (0x1a4990) — readable C lift. */
+char FUN_001a4990(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x32513c, %%edx\n\t"
-      "leal 0x46c(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl 0x325140, %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x325144, %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0x325148, %%eax\n\t"
-      "movl %%eax, 0xc(%%ecx)\n\t"
-      "leal 0x438(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movb $0x7f, 0x45c(%%esi)\n\t"
-      "movl %%ebx, 0x430(%%esi)\n\t"
-      "movl %%ebx, 0x434(%%esi)\n\t"
-      "call *%[c1412f0]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%ebx, 0x448(%%esi)\n\t"
-      "movl %%ebx, 0x444(%%esi)\n\t"
-      "movl %%ebx, 0x44c(%%esi)\n\t"
-      "movb 0x2f4(%%edx), %%al\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb $0x40, %%al\n\t"
-      "je .LFUN_001a4990_1\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1a25e0]\n\t"
-      ".LFUN_001a4990_1:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a4440]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, 0x42c(%%esi)\n\t"
-      "movb $0, 0x42b(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a4990_get), [tag] "m"(b1a4990_tag), [c1412f0] "m"(b1a4990_c1412f0), [c1a25e0] "m"(b1a4990_c1a25e0), [c1a4440] "m"(b1a4990_c1a4440)
-      : "memory");
+  void *biped;
+  void *tag;
+  char *quat;
+  void __attribute__((regparm(1))) (*init_fn)(int) =
+      (void __attribute__((regparm(1))) (*)(int))(void *)FUN_001a25e0;
+
+  biped = object_get_and_verify_type(unit_handle, 1);
+  tag = tag_get(0x62697064, *(int *)biped);
+  quat = (char *)biped + 0x46c;
+  *(int *)(quat + 0) = *(int *)0x32513c;
+  *(int *)(quat + 4) = *(int *)0x325140;
+  *(int *)(quat + 8) = *(int *)0x325144;
+  *(int *)(quat + 0xc) = *(int *)0x325148;
+  *(unsigned char *)((char *)biped + 0x45c) = 0x7f;
+  *(int *)((char *)biped + 0x430) = -1;
+  *(int *)((char *)biped + 0x434) = -1;
+  object_get_world_position(unit_handle, (vector3_t *)((char *)biped + 0x438));
+  *(int *)((char *)biped + 0x448) = -1;
+  *(int *)((char *)biped + 0x444) = -1;
+  *(int *)((char *)biped + 0x44c) = -1;
+  if ((*(unsigned char *)((char *)tag + 0x2f4) & 0x40) != 0)
+    init_fn(unit_handle);
+  FUN_001a4440(unit_handle);
+  *(int *)((char *)biped + 0x42c) = -1;
+  *(unsigned char *)((char *)biped + 0x42b) = 0;
+  return 1;
 }
-#else
-#error "FUN_001a4990: clang naked draft required"
-#endif
 
 
 /* FUN_001a4a50 moved to units/bipeds.c */
