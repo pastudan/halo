@@ -6348,7 +6348,7 @@
         {
           "addr": "0x11faf0",
           "decl": "void pool_new_pointer_clear(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11fd10",

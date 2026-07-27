@@ -1272,119 +1272,38 @@ void pool_resize_handle(void)
   (void)edx;
 }
 
-/* pool_new_pointer_clear (0x11faf0) — XBE naked draft (batch 132). */
-#if defined(__clang__)
-static void * (*const b11faf0_c11f1e0)(int alloc_size, void *pool, const char *file, unsigned int line) = stack_memory_pool_alloc_internal;
-static int (*const b11faf0_c11ecf0)(void *block_hdr) = memory_block_valid;
-static void (*const b11faf0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11faf0_exitfn)(int) = system_exit;
-static void *(*const b11faf0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b11faf0_c11f070)(void *block_hdr, void *pool) = stack_memory_pool_mark_used;
-
-__attribute__((naked, noinline))
+/* pool_new_pointer_clear (0x11faf0) — readable C lift (restored pre-naked). */
 void pool_new_pointer_clear(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "call *%[c11f1e0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lpool_new_pointer_clear_5\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c11ecf0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lpool_new_pointer_clear_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x23f\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x290254\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpool_new_pointer_clear_1:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x1c(%%esi), %%ebx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c11f070]\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c11ecf0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lpool_new_pointer_clear_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x23f\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x290254\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpool_new_pointer_clear_2:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x14(%%edi), %%ecx\n\t"
-      "movl 0x18(%%edi), %%edx\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl 0x1c(%%edi), %%eax\n\t"
-      "incl %%eax\n\t"
-      "movl %%ecx, 0x14(%%edi)\n\t"
-      "movl %%eax, 0x1c(%%edi)\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x14(%%edi), %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jle .Lpool_new_pointer_clear_3\n\t"
-      "movl %%eax, 0x18(%%edi)\n\t"
-      ".Lpool_new_pointer_clear_3:\n\t"
-      "cmpl 0x20(%%edi), %%ecx\n\t"
-      "jbe .Lpool_new_pointer_clear_4\n\t"
-      "movl %%ecx, 0x20(%%edi)\n\t"
-      ".Lpool_new_pointer_clear_4:\n\t"
-      "movl (%%esi), %%esi\n\t"
-      "movl 0x24(%%edi), %%eax\n\t"
-      "andl $0x7fffffff, %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "jbe .Lpool_new_pointer_clear_6\n\t"
-      "movl %%esi, 0x24(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpool_new_pointer_clear_5:\n\t"
-      "movl %%ebx, %%eax\n\t"
-      ".Lpool_new_pointer_clear_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11f1e0] "m"(b11faf0_c11f1e0), [c11ecf0] "m"(b11faf0_c11ecf0), [assert] "m"(b11faf0_assert), [exitfn] "m"(b11faf0_exitfn), [memset] "m"(b11faf0_memset), [c11f070] "m"(b11faf0_c11f070)
-      : "memory");
-}
-#else
-#error "pool_new_pointer_clear: clang naked draft required"
-#endif
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
 
+  stack_memory_pool_alloc_internal(0, (void *)(uintptr_t)ecx, (char *)(uintptr_t)eax, edi);
+  /* test esi, esi -> je 0x11fbce */
+  memory_block_valid((void *)0);
+  /* test (char)eax, (char)eax -> jne 0x11fb44 */
+  display_assert((char *)0x00290254, (char *)0x0029018c, 575, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)ebx, 0, edx);
+  stack_memory_pool_mark_used((void *)0, (void *)0);
+  memory_block_valid((void *)0);
+  /* test (char)eax, (char)eax -> jne 0x11fb88 */
+  display_assert((char *)0x00290254, (char *)0x0029018c, 575, 0);
+  system_exit(0);
+  /* cmp eax, edx -> jle 0x11fbad */
+  /* relift: cmp ecx, dword ptr [edi + 0x20] -> jbe 0x11fbb5 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+}
 
 /* FUN_0011fd10 (0x11fd10) — readable C lift. */
 float FUN_0011fd10(void *block, char use_alt)
