@@ -13,7 +13,7 @@ void FUN_0017ff60(void)
 
   p = *(void **)0x47ec40;
   if (p != NULL)
-    FUN_0008ef70(p, DAT_002af728, 0x345);
+    debug_free(p, DAT_002af728, 0x345);
 }
 
 /* rasterizer_geometry.c */
@@ -2396,7 +2396,7 @@ int rasterizer_memory_pool_copy(int data, int size)
     display_assert(DAT_002b07dc, DAT_002b077c, 0x42, true);
     system_exit(-1);
   }
-  return rasterizer_memory_pool_alloc(data, size);
+  return (int)(uintptr_t)rasterizer_memory_pool_alloc((void *)(uintptr_t)data, size);
 }
 
 
@@ -4603,7 +4603,7 @@ void FUN_00182610(int16_t mask_si, int16_t width, int16_t height)
 #if defined(__clang__)
 static void (*const b182840_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182840_exitfn)(int) = system_exit;
-static void (*const b182840_c182610)(void) = FUN_00182610;
+static void (*const b182840_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_byte(void)
@@ -4702,7 +4702,7 @@ void rasterizer_xbox_bitmap_swizzle2d_byte(void)
 #if defined(__clang__)
 static void (*const b182910_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182910_exitfn)(int) = system_exit;
-static void (*const b182910_c182610)(void) = FUN_00182610;
+static void (*const b182910_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_word(void)
@@ -4801,7 +4801,7 @@ void rasterizer_xbox_bitmap_swizzle2d_word(void)
 #if defined(__clang__)
 static void (*const b1829f0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1829f0_exitfn)(int) = system_exit;
-static void (*const b1829f0_c182610)(void) = FUN_00182610;
+static void (*const b1829f0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle2d_long(void)
@@ -4900,7 +4900,7 @@ void rasterizer_xbox_bitmap_swizzle2d_long(void)
 #if defined(__clang__)
 static void (*const b182ac0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182ac0_exitfn)(int) = system_exit;
-static void (*const b182ac0_c182610)(void) = FUN_00182610;
+static void (*const b182ac0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle3d_byte(void)
@@ -5022,7 +5022,7 @@ void rasterizer_xbox_bitmap_swizzle3d_byte(void)
 #if defined(__clang__)
 static void (*const b182bd0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182bd0_exitfn)(int) = system_exit;
-static void (*const b182bd0_c182610)(void) = FUN_00182610;
+static void (*const b182bd0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle3d_word(void)
@@ -5144,7 +5144,7 @@ void rasterizer_xbox_bitmap_swizzle3d_word(void)
 #if defined(__clang__)
 static void (*const b182cf0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b182cf0_exitfn)(int) = system_exit;
-static void (*const b182cf0_c182610)(void) = FUN_00182610;
+static void (*const b182cf0_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
 
 __attribute__((naked, noinline))
 void rasterizer_xbox_bitmap_swizzle3d_long(void)
@@ -5273,7 +5273,7 @@ static short (*const b182e00_c7d6e0)(void *bitmap, int mipmap_index) = bitmap_mi
 static short (*const b182e00_c7d780)(void *bitmap, short mipmap_index) = bitmap_mipmap_get_height;
 static int (*const b182e00_c7d820)(void *bitmap, short mipmap_index) = bitmap_mipmap_get_depth;
 static short (*const b182e00_c7c840)(short format) = bitmap_format_bits_per_pixel;
-static void (*const b182e00_c182610)(void) = FUN_00182610;
+static void (*const b182e00_c182610)(int16_t, int16_t, int16_t) = FUN_00182610;
 static void (*const b182e00_c1829f0)(void) = rasterizer_xbox_bitmap_swizzle2d_long;
 static void (*const b182e00_c182910)(void) = rasterizer_xbox_bitmap_swizzle2d_word;
 static void (*const b182e00_c182840)(void) = rasterizer_xbox_bitmap_swizzle2d_byte;
@@ -5611,180 +5611,51 @@ void FUN_00182e00(int param_1 __attribute__((unused)))
 #endif
 
 
-/* FUN_00183120 (0x183120) — XBE naked draft (batch 323). */
-#if defined(__clang__)
-static bool (*const b183120_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b183120_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b183120_exitfn)(int) = system_exit;
-static int16_t (*const b183120_c108db0)(unsigned int value) = FUN_00108db0;
-
-__attribute__((naked, noinline))
-int16_t FUN_00183120(void *bitmap __attribute__((unused)))
+/* FUN_00183120 (0x183120) — readable C lift: bitmap mip dimension helper. */
+int16_t FUN_00183120(void *bitmap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00183120_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1cb\n\t"
-      "pushl $0x2b087c\n\t"
-      "pushl $0x264da0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00183120_1:\n\t"
-      "movw 0xe(%%esi), %%ax\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_00183120_13\n\t"
-      "testb $0x10, %%al\n\t"
-      "jne .LFUN_00183120_13\n\t"
-      "testb $2, %%al\n\t"
-      "je .LFUN_00183120_6\n\t"
-      "movswl 0x6(%%esi), %%eax\n\t"
-      "movswl 0x8(%%esi), %%edi\n\t"
-      "cdq\n\t"
-      "andl $3, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "sarl $2, %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "movl %%ecx, %%ebx\n\t"
-      "jg .LFUN_00183120_2\n\t"
-      "movl %%edi, %%ebx\n\t"
-      ".LFUN_00183120_2:\n\t"
-      "movswl 0x4(%%esi), %%eax\n\t"
-      "cdq\n\t"
-      "andl $3, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "sarl $2, %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jg .LFUN_00183120_3\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "jg .LFUN_00183120_3\n\t"
-      "movl %%edi, %%eax\n\t"
-      ".LFUN_00183120_3:\n\t"
-      "movw 0x14(%%esi), %%di\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c108db0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jle .LFUN_00183120_13\n\t"
-      "movswl 0x6(%%esi), %%eax\n\t"
-      "movswl 0x8(%%esi), %%edi\n\t"
-      "cdq\n\t"
-      "andl $3, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "sarl $2, %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "movl %%ecx, %%ebx\n\t"
-      "jg .LFUN_00183120_4\n\t"
-      "movl %%edi, %%ebx\n\t"
-      ".LFUN_00183120_4:\n\t"
-      "movswl 0x4(%%esi), %%eax\n\t"
-      "cdq\n\t"
-      "andl $3, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "sarl $2, %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jg .LFUN_00183120_5\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "jg .LFUN_00183120_5\n\t"
-      "movl %%edi, %%eax\n\t"
-      ".LFUN_00183120_5:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c108db0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00183120_6:\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "movw 0x8(%%esi), %%cx\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movswl %%ax, %%edi\n\t"
-      "jg .LFUN_00183120_7\n\t"
-      "movswl %%cx, %%edi\n\t"
-      ".LFUN_00183120_7:\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "cmpl %%edi, %%edx\n\t"
-      "jle .LFUN_00183120_8\n\t"
-      "movl %%edx, %%eax\n\t"
-      "jmp .LFUN_00183120_9\n\t"
-      ".LFUN_00183120_8:\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jg .LFUN_00183120_9\n\t"
-      "movswl %%cx, %%eax\n\t"
-      ".LFUN_00183120_9:\n\t"
-      "movw 0x14(%%esi), %%di\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c108db0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jle .LFUN_00183120_13\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "movw 0x8(%%esi), %%cx\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movswl %%ax, %%edi\n\t"
-      "jg .LFUN_00183120_10\n\t"
-      "movswl %%cx, %%edi\n\t"
-      ".LFUN_00183120_10:\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "cmpl %%edi, %%edx\n\t"
-      "jle .LFUN_00183120_11\n\t"
-      "movl %%edx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c108db0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00183120_11:\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jg .LFUN_00183120_12\n\t"
-      "movswl %%cx, %%eax\n\t"
-      ".LFUN_00183120_12:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c108db0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00183120_13:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b183120_c7d470), [assert] "m"(b183120_assert), [exitfn] "m"(b183120_exitfn), [c108db0] "m"(b183120_c108db0)
-      : "memory");
+  unsigned short flags;
+  int width;
+  int height;
+  int depth;
+  int dim;
+  int h4;
+  int w4;
+  int16_t stored;
+  int16_t computed;
+
+  if (!bitmap_verify(bitmap, 0)) {
+    display_assert((const char *)0x264da0, (const char *)0x2b087c, 0x1cb, 1);
+    system_exit(-1);
+  }
+  flags = *(unsigned short *)((char *)bitmap + 0xe);
+  if ((flags & 1) == 0 || (flags & 0x10) != 0)
+    return 0;
+  width = (int)*(short *)((char *)bitmap + 4);
+  height = (int)*(short *)((char *)bitmap + 6);
+  depth = (int)*(short *)((char *)bitmap + 8);
+  stored = *(int16_t *)((char *)bitmap + 0x14);
+  if ((flags & 2) != 0) {
+    h4 = height / 4;
+    w4 = width / 4;
+    dim = h4;
+    if (dim < depth)
+      dim = depth;
+    if (w4 > dim)
+      dim = w4;
+  } else {
+    dim = height;
+    if (dim < depth)
+      dim = depth;
+    if (width > dim)
+      dim = width;
+  }
+  computed = FUN_00108db0((unsigned int)dim);
+  if (stored <= computed)
+    return 0;
+  return FUN_00108db0((unsigned int)dim);
 }
-#else
-#error "FUN_00183120: clang naked draft required"
-#endif
+
 
 /* --- rasterizer_text.obj orphan shells (2026-07-26) --- */
 
