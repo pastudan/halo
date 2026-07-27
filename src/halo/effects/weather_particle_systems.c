@@ -66,76 +66,23 @@ void *FUN_000a3ea0(void *particle, int16_t type_index)
 }
 
 
-/* FUN_000a4000 (0xa4000) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const ba4000_c1daf7e)(void) = FUN_001daf7e;
-
-__attribute__((naked, noinline))
-void FUN_000a4000(float *dst __attribute__((unused)), float *src __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_000a4000 (0xa4000) — readable C lift.
+ * Oracle: dst@<edi>, src@<esi>, scale cdecl. fmod via FUN_001daf7e. */
+void FUN_000a4000(float *dst, float *src, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a4000_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_000a4000_2\n\t"
-      ".LFUN_000a4000_1:\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      ".LFUN_000a4000_2:\n\t"
-      "flds (%%esi)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstps (%%edi)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a4000_3\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_000a4000_4\n\t"
-      ".LFUN_000a4000_3:\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      ".LFUN_000a4000_4:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstps 0x4(%%edi)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a4000_5\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_000a4000_6\n\t"
-      ".LFUN_000a4000_5:\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      ".LFUN_000a4000_6:\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstps 0x8(%%edi)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1daf7e] "m"(ba4000_c1daf7e)
-      : "memory");
-}
-#else
-#error "FUN_000a4000: clang naked draft required"
-#endif
+  int i;
+  float local;
+  float v;
 
+  for (i = 0; i < 3; i++) {
+    v = src[i];
+    if (!(v >= 0.0f))
+      local = scale;
+    else
+      local = 0.0f;
+    dst[i] = __builtin_fmodf(v, scale) + local;
+  }
+}
 
 /* weather_particle_system_new (0xa40a0) — XBE naked draft (batch 125). */
 #if defined(__clang__)
@@ -322,7 +269,7 @@ static int (*const ba4310_c119610)(data_t *data) = data_new_at_index;
 static void (*const ba4310_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const ba4310_exitfn)(int) = system_exit;
 static void *(*const ba4310_tag)(int, int) = tag_get;
-static void (*const ba4310_ca3ea0)(void) = FUN_000a3ea0;
+static void (*const ba4310_ca3ea0)(void) = (void *)FUN_000a3ea0;
 static void *(*const ba4310_elem)(void *, int, int) = tag_block_get_element;
 static void *(*const ba4310_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static unsigned int *(*const ba4310_lseed)(void) = random_math_get_local_seed_address;
@@ -607,7 +554,7 @@ static unsigned int *(*const ba4610_lseed)(void) = random_math_get_local_seed_ad
 static float (*const ba4610_rrange)(int *, float, float) = random_real_range;
 static void (*const ba4610_c10b380)(unsigned int *seed, float *out) = random_seed_get_direction3d;
 static int (*const ba4610_c154a50)(int flags, int physics_tag_data, int *collision_location, int object_handle, float *position, float *velocity, float *force, float *collision_normal_out, int16_t *surface_index_out, float radius, float delta_time) = FUN_00154a50;
-static void (*const ba4610_ca4000)(float *dst, float *src, float scale) = FUN_000a4000;
+static void (*const ba4610_ca4000)(float *dst, float *src, float scale) = (void *)FUN_000a4000;
 
 __attribute__((naked, noinline))
 void FUN_000a4610(void)
@@ -1033,7 +980,7 @@ static void (*const ba4ab0_assert)(const char *, const char *, int, bool) = disp
 static void (*const ba4ab0_exitfn)(int) = system_exit;
 static void *(*const ba4ab0_tag)(int, int) = tag_get;
 static void (*const ba4ab0_ftol)(void) = FUN_001d9068;
-static void (*const ba4ab0_ca4310)(void) = FUN_000a4310;
+static void (*const ba4ab0_ca4310)(void) = (void *)FUN_000a4310;
 static void *(*const ba4ab0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const ba4ab0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
 
@@ -1167,10 +1114,10 @@ static void (*const ba4be0_assert)(const char *, const char *, int, bool) = disp
 static void (*const ba4be0_exitfn)(int) = system_exit;
 static void *(*const ba4be0_tag)(int, int) = tag_get;
 static void *(*const ba4be0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const ba4be0_ca4ab0)(void) = FUN_000a4ab0;
+static void (*const ba4be0_ca4ab0)(void) = (void *)FUN_000a4ab0;
 static void *(*const ba4be0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const ba4be0_c1daf7e)(void) = FUN_001daf7e;
-static void (*const ba4be0_ca4610)(void) = FUN_000a4610;
+static void (*const ba4be0_c1daf7e)(void) = (void *)FUN_001daf7e;
+static void (*const ba4be0_ca4610)(void) = (void *)FUN_000a4610;
 
 __attribute__((naked, noinline))
 void FUN_000a4be0(int16_t weather_index __attribute__((unused)))
@@ -1394,7 +1341,7 @@ static void (*const ba4e20_ca4be0)(int16_t weather_index) = FUN_000a4be0;
 static void *(*const ba4e20_elem)(void *, int, int) = tag_block_get_element;
 static int (*const ba4e20_ca4a00)(void *out_buf, int particle_handle) = FUN_000a4a00;
 static void (*const ba4e20_ca48c0)(float *out, float scale) = FUN_000a48c0;
-static void (*const ba4e20_ca4000)(float *dst, float *src, float scale) = FUN_000a4000;
+static void (*const ba4e20_ca4000)(float *dst, float *src, float scale) = (void *)FUN_000a4000;
 static short (*const ba4e20_c1867f0)(void *param_1, int param_2, int param_3) = render_frustum_cube_visible;
 static void (*const ba4e20_c18d2c0)(uint32_t *param_1, int16_t param_2, uint32_t param_3, int param_4, uint32_t param_5) = FUN_0018d2c0;
 static void *(*const ba4e20_dget)(void *, int) = (void *(*)(void *, int))datum_get;

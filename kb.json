@@ -30015,8 +30015,8 @@
         },
         {
           "addr": "0xa4000",
-          "decl": "void FUN_000a4000(float *dst, float *src, float scale);",
-          "ported": false
+          "decl": "void FUN_000a4000(float *dst@<edi>, float *src@<esi>, float scale);",
+          "ported": true
         },
         {
           "addr": "0xa40a0",
@@ -30050,7 +30050,7 @@
         },
         {
           "addr": "0xa4a00",
-          "decl": "int FUN_000a4a00(void *out_buf, int particle_handle);",
+          "decl": "int16_t FUN_000a4a00(int16_t *out_buf, float radius);",
           "ported": false
         },
         {

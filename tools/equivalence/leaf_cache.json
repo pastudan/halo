@@ -75,6 +75,11 @@
   "0xa2d30": {
     "class": "non_leaf"
   },
+  "0xa4000": {
+    "class": "non_leaf",
+    "confidence": "high",
+    "coverage_pct": 100.0
+  },
   "0xa4200": {
     "class": "non_leaf"
   },
