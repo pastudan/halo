@@ -31422,7 +31422,7 @@
         {
           "addr": "0x17e040",
           "decl": "void FUN_0017e040(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017e040"
         },
         {

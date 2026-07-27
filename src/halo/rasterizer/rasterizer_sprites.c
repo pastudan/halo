@@ -1636,81 +1636,36 @@ void FUN_0017e030(void)
   (void)0;
 }
 
-/* FUN_0017e040 (0x17e040) — XBE naked draft (batch 337). */
-#if defined(__clang__)
-static void (*const b17e040_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17e040_exitfn)(int) = system_exit;
-static void (*const b17e040_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
+/* FUN_0017e040 (0x17e040) — readable C lift. */
 void FUN_0017e040(void)
 {
-  __asm__ volatile(
-      "movb 0x47e4d8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0017e040_4\n\t"
-      "movl 0x47e4dc, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017e040_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x89\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0x2af524\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017e040_1:\n\t"
-      "movl 0x47e4e4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017e040_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8a\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0x2af50c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017e040_2:\n\t"
-      "movl 0x47e4ec, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017e040_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8b\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0x2af4e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017e040_3:\n\t"
-      "movl 0x47e4dc, %%eax\n\t"
-      "pushl $0x8d\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "movl 0x47e4e4, %%ecx\n\t"
-      "pushl $0x8e\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8ef70]\n\t"
-      "movl 0x47e4ec, %%edx\n\t"
-      "pushl $0x8f\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "movb $0, 0x47e4d8\n\t"
-      ".LFUN_0017e040_4:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17e040_assert), [exitfn] "m"(b17e040_exitfn), [c8ef70] "m"(b17e040_c8ef70)
-      : "memory");
+  void *a;
+  void *b;
+  void *c;
+
+  if (!*(unsigned char *)0x47e4d8)
+    return;
+  a = *(void **)0x47e4dc;
+  if (!a) {
+    display_assert((const char *)0x2af524, (const char *)0x2af4b8, 0x89, 1);
+    system_exit(-1);
+  }
+  b = *(void **)0x47e4e4;
+  if (!b) {
+    display_assert((const char *)0x2af50c, (const char *)0x2af4b8, 0x8a, 1);
+    system_exit(-1);
+  }
+  c = *(void **)0x47e4ec;
+  if (!c) {
+    display_assert((const char *)0x2af4e8, (const char *)0x2af4b8, 0x8b, 1);
+    system_exit(-1);
+  }
+  debug_free(*(void **)0x47e4dc, (const char *)0x2af4b8, 0x8d);
+  debug_free(*(void **)0x47e4e4, (const char *)0x2af4b8, 0x8e);
+  debug_free(*(void **)0x47e4ec, (const char *)0x2af4b8, 0x8f);
+  *(unsigned char *)0x47e4d8 = 0;
 }
-#else
-#error "FUN_0017e040: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017e130 (0x17e130) — readable C lift. */
