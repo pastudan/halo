@@ -16337,7 +16337,8 @@
           "addr": "0x139990",
           "decl": "char FUN_00139990(int handle);",
           "ported": true,
-          "name": "FUN_00139990"        },
+          "name": "FUN_00139990"
+        },
         {
           "decl": "void FUN_00139a30(int param_1);",
           "addr": "0x139a30",
@@ -16713,7 +16714,8 @@
           "decl": "void FUN_0013dc10(short camera_point_index);",
           "ported": true,
           "source_path": "objects/objects.c",
-          "name": "FUN_0013dc10"        },
+          "name": "FUN_0013dc10"
+        },
         {
           "addr": "0x13dcb0",
           "decl": "void FUN_0013dcb0(void);",
@@ -23636,8 +23638,9 @@
         },
         {
           "addr": "0x1c22e0",
-          "decl": "void playlist_profile_create_default_profiles_on_disk(void);",
-          "ported": false
+          "decl": "void playlist_profile_create_default_profiles_on_disk(int profile_index);",
+          "ported": false,
+          "name": "playlist_profile_create_default_profiles_on_disk"
         },
         {
           "addr": "0x1c2550",
@@ -23652,8 +23655,9 @@
         },
         {
           "addr": "0x1c26f0",
-          "decl": "void playlist_profile_delete(void);",
-          "ported": false
+          "decl": "char playlist_profile_delete(int profile_index, void *variant);",
+          "ported": false,
+          "name": "playlist_profile_delete"
         },
         {
           "addr": "0x1c2750",

@@ -901,7 +901,7 @@ static void (*const b1c22e0_c1c4600)(void) = (void (*)(void))saved_game_file_get
 static wchar_t * (*const b1c22e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
-void playlist_profile_create_default_profiles_on_disk(void)
+void playlist_profile_create_default_profiles_on_disk(int profile_index __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1287,63 +1287,30 @@ void FUN_001c26b0(int a0, int a1, int a2)
   FUN_001c53f0(a0, 1, a1, a2, 1);
 }
 
-/* playlist_profile_delete (0x1c26f0) — XBE naked draft (batch 270). */
-#if defined(__clang__)
-static void (*const b1c26f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c26f0_exitfn)(int) = system_exit;
-static void (*const b1c26f0_caa120)(int game_variant_type, int param_2, int param_3) = game_engine_playlist_next;
-static void (*const b1c26f0_c1c22e0)(void) = playlist_profile_create_default_profiles_on_disk;
-
-__attribute__((naked, noinline))
-void playlist_profile_delete(void)
+/* playlist_profile_delete (0x1c26f0) — readable C lift from XBE leaf. */
+char playlist_profile_delete(int profile_index, void *variant)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplaylist_profile_delete_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd9\n\t"
-      "pushl $0x2ba59c\n\t"
-      "pushl $0x282808\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_delete_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lplaylist_profile_delete_2\n\t"
-      "pushl $4\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[caa120]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_delete_2:\n\t"
-      "pushl %%eax\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "call *%[c1c22e0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c26f0_assert), [exitfn] "m"(b1c26f0_exitfn), [caa120] "m"(b1c26f0_caa120), [c1c22e0] "m"(b1c26f0_c1c22e0)
-      : "memory");
+  extern char DAT_00282808[];
+  extern char DAT_002ba59c[];
+
+  if (variant == 0) {
+    display_assert(DAT_00282808, DAT_002ba59c, 0xd9, true);
+    system_exit(-1);
+  }
+  if (profile_index == -1) {
+    game_engine_playlist_next(0, 0, 4);
+    return 0;
+  }
+  {
+    char (*create)(int) =
+        (char (*)(int))playlist_profile_create_default_profiles_on_disk;
+    return create(profile_index);
+  }
 }
-#else
-#error "playlist_profile_delete: clang naked draft required"
-#endif
+
+
+
+
 
 
 /* playlist_profile_read (0x1c2750) — XBE naked draft (batch 262). */
