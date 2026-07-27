@@ -13325,7 +13325,7 @@
           "addr": "0xd5fb0",
           "decl": "void hud_nav_points_initialize(void);",
           "name": "hud_nav_points_initialize",
-          "ported": false
+          "ported": true
         },
         {
           "decl": "void hud_messaging_initialize_for_new_map(void);",

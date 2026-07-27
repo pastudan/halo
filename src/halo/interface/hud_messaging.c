@@ -2286,42 +2286,21 @@ int hud_get_nav_point_data(short param_1)
 #endif
 
 
-/* hud_nav_points_initialize (0xd5fb0) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-static void * (*const bd5fb0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-static void (*const bd5fb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bd5fb0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* hud_nav_points_initialize (0xd5fb0) — readable C lift. */
+extern char DAT_00281db8[];
+extern char DAT_00281d8c[];
+extern char DAT_00281d30[];
 void hud_nav_points_initialize(void)
 {
-  __asm__ volatile(
-      "pushl $0xc0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x281db8\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x46bd1c\n\t"
-      "jne .Lhud_nav_points_initialize_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a\n\t"
-      "pushl $0x281d8c\n\t"
-      "pushl $0x281d30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhud_nav_points_initialize_1:\n\t"
-      "ret\n\t"
-      :
-      : [c1bfbf0] "m"(bd5fb0_c1bfbf0), [assert] "m"(bd5fb0_assert), [exitfn] "m"(bd5fb0_exitfn)
-      : "memory");
-}
-#else
-#error "hud_nav_points_initialize: clang naked draft required"
-#endif
+  void *p;
 
+  p = game_state_malloc(DAT_00281db8, NULL, 0xc0);
+  *(void **)0x46bd1c = p;
+  if (p == NULL) {
+    display_assert(DAT_00281d30, DAT_00281d8c, 0x6a, true);
+    system_exit(-1);
+  }
+}
 
 /* hud_messaging_initialize_for_new_map (0xd5ff0) — readable C lift. */
 void hud_messaging_initialize_for_new_map(void)
