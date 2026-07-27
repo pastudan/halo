@@ -1170,7 +1170,7 @@ int FUN_0015e7d0(void *obj, int *out, int addend)
 #if defined(__clang__)
 static void (*const b15e800_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b15e800_exitfn)(int) = system_exit;
-static void (*const b15e800_c1eef80)(void) = D3DDevice_CreateIndexBuffer;
+static void (*const b15e800_c1eef80)(void) = (void *)D3DDevice_CreateIndexBuffer;
 static void (*const b15e800_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void (*const b15e800_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static int (*const b15e800_c180050)(short param_1) = FUN_00180050;
@@ -1893,7 +1893,7 @@ void FUN_0015f1f0(void)
 
 
 /* FUN_0015f540 (0x15f540) — readable C lift. */
-void FUN_0015f540(int arg1 __attribute__((unused)), int arg2 __attribute__((unused)), uint32_t handle __attribute__((unused)), int subcount2 __attribute__((unused)))
+void FUN_0015f540(void)
 {
   display_assert((const char *)0x2a1704, (const char *)0x2a16c4, 0xff, 1);
   system_exit(-1);
@@ -1903,18 +1903,11 @@ void FUN_0015f540(int arg1 __attribute__((unused)), int arg2 __attribute__((unus
 
 
 /* FUN_0015f5e0 (0x15f5e0) — readable C lift. */
-void FUN_0015f5e0(void)
+int FUN_0015f5e0(int a, int b, int c)
 {
-  int a, b, c;
-  void (*f)(int, int, int) = (void (*)(int, int, int))(void *)D3DDevice_SetVertexData2f;
-  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
-  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
-  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
-  f(a, b, c);
+  D3DDevice_SetVertexData2f(a, b, c);
+  return 0;
 }
-
-
-
 
 /* FUN_0015f630 (0x15f630) — XBE naked draft (batch 308). */
 #if defined(__clang__)
@@ -12636,32 +12629,16 @@ void FUN_00168b10(void *bitmap __attribute__((unused)))
 
 
 /* FUN_00168bc0 (0x168bc0) — readable C lift. */
-void FUN_00168bc0(void)
+int FUN_00168bc0(int a, int b, int c)
 {
-  int a, b, c;
-  int (*f)(int, int, int, int, int) = (int (*)(int, int, int, int, int))(void *)D3DDevice_CreateVertexBuffer;
-  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
-  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
-  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
-  f(a, b, c, 0, 0);
+  return D3DDevice_CreateVertexBuffer(a, b, c, 0, 0);
 }
-
-
-
 
 /* FUN_00168be0 (0x168be0) — readable C lift. */
-void FUN_00168be0(void)
+int FUN_00168be0(int a, int b, int c)
 {
-  int a, b, c;
-  int (*f)(int, int, int, int, int) = (int (*)(int, int, int, int, int))(void *)D3DDevice_CreateIndexBuffer;
-  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
-  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
-  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
-  f(a, b, c, 0, 0);
+  return D3DDevice_CreateIndexBuffer(a, b, c, 0, 0);
 }
-
-
-
 
 /* FUN_00168c40 (0x168c40) — XBE naked draft (batch 359). */
 #if defined(__clang__)
@@ -12882,11 +12859,10 @@ void FUN_00168cd0(int a0, float a1, float a2, float a3)
 
 
 /* FUN_00168e40 (0x168e40) — readable C lift. */
-void FUN_00168e40(void)
+void FUN_00168e40(void *obj)
 {
-  void *obj;
   void *p;
-  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(obj));
+
   if (!obj)
     return;
   p = *(void **)((char *)obj + 0x10);
@@ -12896,15 +12872,13 @@ void FUN_00168e40(void)
   *(void **)((char *)obj + 0x10) = 0;
 }
 
-
-
 /* FUN_00168e70 (0x168e70) — XBE naked draft (batch 317). */
 #if defined(__clang__)
 static void (*const b168e70_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b168e70_exitfn)(int) = system_exit;
 static void *(*const b168e70_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b168e70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b168e70_c1eef80)(void) = D3DDevice_CreateIndexBuffer;
+static void (*const b168e70_c1eef80)(void) = (void *)D3DDevice_CreateIndexBuffer;
 static void (*const b168e70_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void * (*const b168e70_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
@@ -13242,18 +13216,11 @@ void FUN_00169200(void)
 
 
 /* FUN_00169650 (0x169650) — readable C lift. */
-void FUN_00169650(void)
+int FUN_00169650(int a, int b, int c)
 {
-  int a, b, c;
-  void (*f)(int, int, int) = (void (*)(int, int, int))(void *)D3DDevice_SetVertexData2f;
-  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
-  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
-  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
-  f(a, b, c);
+  D3DDevice_SetVertexData2f(a, b, c);
+  return 0;
 }
-
-
-
 
 /* FUN_00169670 (0x169670) — XBE naked draft (batch 372). */
 #if defined(__clang__)
