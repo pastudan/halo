@@ -19981,7 +19981,7 @@
         {
           "addr": "0x90170",
           "decl": "void FUN_00090170(int *out@<eax>, int a, int b);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x90180",
@@ -20130,7 +20130,7 @@
         {
           "addr": "0x91b70",
           "decl": "void FUN_00091b70(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x91ba0",
@@ -21213,7 +21213,7 @@
         {
           "addr": "0x17c9d0",
           "decl": "int rasterizer_widget_draw_sprite3d(int zbuf_result);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17c9e0",
@@ -31146,7 +31146,7 @@
         {
           "addr": "0x17cf50",
           "decl": "void FUN_0017cf50(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0017cf50"
         },
         {
@@ -31157,7 +31157,7 @@
         {
           "addr": "0x17cf70",
           "decl": "void FUN_0017cf70(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0017cf70"
         },
         {
@@ -31168,7 +31168,7 @@
         {
           "addr": "0x17cf90",
           "decl": "void FUN_0017cf90(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0017cf90"
         },
         {
@@ -31199,7 +31199,7 @@
         {
           "addr": "0x17cff0",
           "decl": "void FUN_0017cff0(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0017cff0"
         },
         {
@@ -31408,7 +31408,7 @@
         {
           "addr": "0x17eb90",
           "decl": "void FUN_0017eb90(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0017eb90"
         },
         {
