@@ -23504,7 +23504,7 @@
         {
           "addr": "0x186d40",
           "decl": "void render_camera_debug_frustum(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x186ef0",
