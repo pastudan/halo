@@ -4374,67 +4374,27 @@ int FUN_00016e70(int actor_handle, short param_2, char *param_3)
   return 0;
 }
 
-/* FUN_00016ff0 (0x16ff0) — XBE naked draft (batch 75). */
-#if defined(__clang__)
-static void *(*const b16ff0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static scenario_t * (*const b16ff0_c18e380)(void) = global_scenario_get;
-static void (*const b16ff0_c16d40)(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5) = actor_look_compute_prop_interest;
-static void (*const b16ff0_c1d030)(int actor_handle, int new_action_type, int param_3) = actor_action_change;
-
-__attribute__((naked, noinline))
-void FUN_00016ff0(int actor_handle __attribute__((unused)))
+/* FUN_00016ff0 (0x16ff0) — readable C lift from XBE leaf. */
+void FUN_00016ff0(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x9c, %%esi\n\t"
-      "call *%[c18e380]\n\t"
-      "movw (%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .LFUN_00016ff0_1\n\t"
-      "movl 0x438(%%eax), %%edx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jge .LFUN_00016ff0_1\n\t"
-      "pushl $0\n\t"
-      "pushl $0x16c40\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c16d40]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00016ff0_1:\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movw $0xffff, (%%esi)\n\t"
-      "movb $1, 0x5(%%esi)\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b16ff0_dget), [c18e380] "m"(b16ff0_c18e380), [c16d40] "m"(b16ff0_c16d40), [c1d030] "m"(b16ff0_c1d030)
-      : "memory");
+  void *actor;
+  short *look_state;
+  scenario_t *scenario;
+
+  actor = datum_get(*(void **)0x6325a4, actor_handle);
+  look_state = (short *)((char *)actor + 0x9c);
+  scenario = global_scenario_get();
+  if (*look_state >= 0 && (int)*look_state < *(int *)((char *)scenario + 0x438)) {
+    actor_look_compute_prop_interest(actor_handle, 0, look_state,
+                                     (void (*)(void))0x16c40, 0);
+    return;
+  }
+  *look_state = (short)0xffff;
+  *((unsigned char *)look_state + 5) = 1;
+  actor_action_change(actor_handle, 0, 0);
 }
-#else
-#error "FUN_00016ff0: clang naked draft required"
-#endif
+
+
 
 
 /* actor_clear_aim_target (0x17060) — readable C lift. */

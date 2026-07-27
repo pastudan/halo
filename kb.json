@@ -464,18 +464,8 @@
           "ported": false
         },
         {
-          "addr": "0x1330f0",
-          "decl": "void FUN_001330f0(int glow_widget@<eax>, int particle_ptr@<esi>);",
-          "ported": false
-        },
-        {
           "addr": "0x133170",
           "decl": "void FUN_00133170(void);",
-          "ported": false
-        },
-        {
-          "addr": "0x1331d0",
-          "decl": "void FUN_001331d0(int glow_widget@<eax>, int particle_ptr@<ecx>);",
           "ported": false
         },
         {
@@ -3850,7 +3840,8 @@
         {
           "addr": "0x16ff0",
           "decl": "void FUN_00016ff0(int actor_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00016ff0"
         },
         {
           "addr": "0x17060",
@@ -17253,6 +17244,18 @@
           "addr": "0x1a9520",
           "decl": "void FUN_001a9520(int object_handle, float *out_position);",
           "ported": true
+        },
+        {
+          "addr": "0x1330f0",
+          "decl": "void FUN_001330f0(int glow_widget@<eax>, int particle_ptr@<esi>);",
+          "ported": true,
+          "name": "FUN_001330f0"
+        },
+        {
+          "addr": "0x1331d0",
+          "decl": "void FUN_001331d0(int glow_widget@<eax>, int particle_ptr@<ecx>);",
+          "ported": true,
+          "name": "FUN_001331d0"
         }
       ],
       "name": "objects.obj",
@@ -27795,7 +27798,8 @@
         {
           "addr": "0xf03d0",
           "decl": "void FUN_000F03D0(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000F03D0"
         },
         {
           "addr": "0xf0430",
@@ -27940,7 +27944,8 @@
         {
           "addr": "0xf2e60",
           "decl": "void FUN_000f2e60(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2e60"
         },
         {
           "addr": "0xf2ed0",

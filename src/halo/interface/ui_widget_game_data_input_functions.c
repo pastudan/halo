@@ -3986,53 +3986,24 @@ void player_profile_save_changes(void *widget)
 #endif
 
 
-/* FUN_000F03D0 (0xf03d0) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static void *(*const bf03d0_ce0ea0)(void) = player_ui_get_edit_player_profile;
-static void *(*const bf03d0_ce0ec0)(void) = player_ui_get_edit_playlist_profile;
-static void * (*const bf03d0_ce4310)(void *widget) = ui_widget_get_last_child;
-static void (*const bf03d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_000F03D0 (0xf03d0) — readable C lift from XBE leaf. */
 void FUN_000F03D0(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "call *%[ce0ea0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000F03D0_1\n\t"
-      "call *%[ce0ec0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000F03D0_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce4310]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x28878c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl $1, 0x1c(%%esi)\n\t"
-      "movb %%al, 0x10(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000F03D0_1:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce0ea0] "m"(bf03d0_ce0ea0), [ce0ec0] "m"(bf03d0_ce0ec0), [ce4310] "m"(bf03d0_ce4310), [c8f390] "m"(bf03d0_c8f390)
-      : "memory");
+  void *child;
+
+  if (player_ui_get_edit_player_profile() != 0) {
+    return;
+  }
+  if (player_ui_get_edit_playlist_profile() != 0) {
+    return;
+  }
+  child = ui_widget_get_last_child(widget);
+  error(2, (const char *)0x28878c, *(int *)((char *)child + 4));
+  *(int *)((char *)child + 0x1c) = 1;
+  *(unsigned char *)((char *)child + 0x10) = 0;
 }
-#else
-#error "FUN_000F03D0: clang naked draft required"
-#endif
+
+
 
 
 /* player_profile_initialize_advanced_controller_settings (0xf0430) — XBE naked draft (batch 153). */
@@ -8211,59 +8182,26 @@ void FUN_000f2d50(void *widget)
 #endif
 
 
-/* FUN_000f2e60 (0xf2e60) — XBE naked draft (batch 160). */
-#if defined(__clang__)
-static void (*const bf2e60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf2e60_exitfn)(int) = system_exit;
-static int (*const bf2e60_c12a0a0)(void) = FUN_0012a0a0;
-static void (*const bf2e60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_000f2e60 (0xf2e60) — readable C lift from XBE leaf. */
 void FUN_000f2e60(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $1, 0xe(%%esi)\n\t"
-      "je .LFUN_000f2e60_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xaaa\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x28932c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2e60_1:\n\t"
-      "call *%[c12a0a0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2e60_2\n\t"
-      "movb 0xc0(%%eax), %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpb $1, %%dl\n\t"
-      "setne %%cl\n\t"
-      "addl $0xc, %%ecx\n\t"
-      "movw %%cx, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2e60_2:\n\t"
-      "pushl $0x28931c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf2e60_assert), [exitfn] "m"(bf2e60_exitfn), [c12a0a0] "m"(bf2e60_c12a0a0), [c8f390] "m"(bf2e60_c8f390)
-      : "memory");
+  void *state;
+  int value;
+
+  if (*(short *)((char *)widget + 0xe) != 1) {
+    display_assert((const char *)0x28932c, (const char *)0x288938, 0xaaa, 1);
+    system_exit(-1);
+  }
+  state = (void *)FUN_0012a0a0();
+  if (state == 0) {
+    error(2, (const char *)0x28931c);
+    return;
+  }
+  value = (*(unsigned char *)((char *)state + 0xc0) != 1) ? 0xd : 0xc;
+  *(short *)((char *)widget + 0x40) = (short)value;
 }
-#else
-#error "FUN_000f2e60: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_000f2ed0 (0xf2ed0) — XBE naked draft (batch 148). */

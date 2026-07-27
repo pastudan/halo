@@ -19546,139 +19546,68 @@ void FUN_00133300(int glow_widget __attribute__((unused)), int particle_ptr __at
 
 #if defined(__i386__) && defined(__GNUC__)
 #endif
-/* FUN_001330f0 (0x1330f0) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static void *(*const b1330f0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_001330f0(int glow_widget __attribute__((unused)), int particle_ptr __attribute__((unused)))
+/* FUN_001330f0 (0x1330f0) — readable C lift from XBE leaf. */
+void FUN_001330f0(int glow_widget, int particle_ptr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x224(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x676c7721\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x28(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $8, %%cl\n\t"
-      "je .LFUN_001330f0_3\n\t"
-      "movswl 0x50(%%esi), %%edx\n\t"
-      "movswl 0x52(%%esi), %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fidivl -0x4(%%ebp)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fsts 0x58(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001330f0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "fstps 0x58(%%esi)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001330f0_1:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001330f0_2\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".LFUN_001330f0_2:\n\t"
-      "fstps 0x58(%%esi)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001330f0_3:\n\t"
-      "movl $0x3f800000, 0x58(%%esi)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1330f0_tag)
-      : "memory");
+  void *glow_tag;
+  float t;
+  float one = *(float *)0x2533c8;
+  float zero = *(float *)0x2533c0;
+  int a, b;
+
+  glow_tag = tag_get(0x676c7721, *(int *)((char *)glow_widget + 0x224));
+  if ((*(unsigned char *)((char *)glow_tag + 0x28) & 8) == 0) {
+    *(int *)((char *)particle_ptr + 0x58) = 0x3f800000;
+    return;
+  }
+  a = *(short *)((char *)particle_ptr + 0x50);
+  b = *(short *)((char *)particle_ptr + 0x52);
+  t = one - ((float)a / (float)b);
+  if (t < zero) {
+    t = zero;
+  } else if (t > one) {
+    t = one;
+  }
+  *(float *)((char *)particle_ptr + 0x58) = t;
 }
-#else
-#error "FUN_001330f0: clang naked draft required"
-#endif
+
+
 
 
 #if defined(__i386__) && defined(__GNUC__)
 #endif
-/* FUN_001331d0 (0x1331d0) — XBE naked draft (batch 148). */
-#if defined(__clang__)
-static void *(*const b1331d0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_001331d0(int glow_widget __attribute__((unused)), int particle_ptr __attribute__((unused)))
+/* FUN_001331d0 (0x1331d0) — readable C lift from XBE leaf. */
+void FUN_001331d0(int glow_widget, int particle_ptr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "movl 0x224(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x676c7721\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x28(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $0x20, %%cl\n\t"
-      "je .LFUN_001331d0_2\n\t"
-      "movswl 0x50(%%esi), %%edx\n\t"
-      "movswl 0x52(%%esi), %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fidivl -0x4(%%ebp)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "flds 0x2533c0\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001331d0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      ".LFUN_001331d0_1:\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x38(%%esi)\n\t"
-      "fstps 0x44(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x3c(%%esi)\n\t"
-      "fstps 0x48(%%esi)\n\t"
-      "fmuls 0x40(%%esi)\n\t"
-      "fstps 0x4c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001331d0_2:\n\t"
-      "leal 0x38(%%esi), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "addl $0x44, %%esi\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1331d0_tag)
-      : "memory");
+  void *glow_tag;
+  float t;
+  float one = *(float *)0x2533c8;
+  float zero = *(float *)0x2533c0;
+  int a, b;
+  float *src;
+  float *dst;
+
+  glow_tag = tag_get(0x676c7721, *(int *)((char *)glow_widget + 0x224));
+  if ((*(unsigned char *)((char *)glow_tag + 0x28) & 0x20) == 0) {
+    src = (float *)((char *)particle_ptr + 0x38);
+    dst = (float *)((char *)particle_ptr + 0x44);
+    dst[0] = src[0];
+    dst[1] = src[1];
+    dst[2] = src[2];
+    return;
+  }
+  a = *(short *)((char *)particle_ptr + 0x50);
+  b = *(short *)((char *)particle_ptr + 0x52);
+  t = one - ((float)a / (float)b);
+  if (t < zero) {
+    t = zero;
+  }
+  *(float *)((char *)particle_ptr + 0x44) = t * *(float *)((char *)particle_ptr + 0x38);
+  *(float *)((char *)particle_ptr + 0x48) = t * *(float *)((char *)particle_ptr + 0x3c);
+  *(float *)((char *)particle_ptr + 0x4c) = t * *(float *)((char *)particle_ptr + 0x40);
 }
-#else
-#error "FUN_001331d0: clang naked draft required"
-#endif
+
+
 
 
 /* 0x1345b0 — Tick glow widget particles and spawn trailing particles. */
