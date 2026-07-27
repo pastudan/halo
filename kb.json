@@ -290,8 +290,9 @@
         },
         {
           "addr": "0x68030",
-          "decl": "void FUN_00068030(void);",
-          "ported": false
+          "decl": "int FUN_00068030(void *tif@<ebx>, void *out@<esi>, unsigned short tag@<di>);",
+          "ported": false,
+          "name": "FUN_00068030"
         },
         {
           "addr": "0x680a0",
@@ -20457,8 +20458,9 @@
         },
         {
           "addr": "0xe19c0",
-          "decl": "void FUN_000e19c0(float *m);",
-          "ported": false
+          "decl": "int __stdcall tgaLoad(int a, int b, int c, int d, int e);",
+          "ported": false,
+          "name": "tgaLoad"
         },
         {
           "addr": "0xe1a10",
@@ -21934,7 +21936,8 @@
         {
           "addr": "0x12f10",
           "decl": "float magnitude3d(float *v);",
-          "ported": false
+          "ported": true,
+          "name": "magnitude3d"
         },
         {
           "addr": "0x28610",
@@ -27122,8 +27125,9 @@
         },
         {
           "addr": "0x83bd0",
-          "decl": "short FUN_00083bd0(int endpoint, int flag);",
-          "ported": false
+          "decl": "short FUN_00083bd0(int *endpoint, int blocking);",
+          "ported": false,
+          "name": "FUN_00083bd0"
         },
         {
           "addr": "0x83e20",
@@ -27412,7 +27416,7 @@
         },
         {
           "addr": "0xe5090",
-          "decl": "void ui_widget_pending_load_apply(int a6@<eax>, int widget, int16_t a7);",
+          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, int widget, int16_t a7);",
           "ported": false
         },
         {
@@ -27516,8 +27520,9 @@
         },
         {
           "addr": "0xe68e0",
-          "decl": "void ui_widget_close_and_reload(void *widget@<eax>);",
-          "ported": false
+          "decl": "void ui_widget_close_and_reload(void *widget /* @<eax> */);",
+          "ported": false,
+          "name": "ui_widget_close_and_reload"
         },
         {
           "addr": "0xe6980",
@@ -43793,8 +43798,9 @@
         },
         {
           "addr": "0x00223be7",
-          "decl": "void ioctlsocket(void);",
-          "ported": false
+          "decl": "int __stdcall ioctlsocket(int s, int cmd, int *argp);",
+          "ported": false,
+          "name": "ioctlsocket"
         },
         {
           "addr": "0x002240c3",
