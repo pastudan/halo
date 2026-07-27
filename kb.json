@@ -15352,7 +15352,7 @@
           "addr": "0x11a230",
           "decl": "bool FUN_0011a230(int *state, const char *source, short max_length);",
           "name": "FUN_0011a230",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a2d0",
@@ -15376,19 +15376,19 @@
           "addr": "0x11a560",
           "decl": "unsigned char FUN_0011a560(int *state);",
           "name": "FUN_0011a560",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a5d0",
           "decl": "short FUN_0011a5d0(int *state);",
           "name": "FUN_0011a5d0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a650",
           "decl": "int FUN_0011a650(int *state);",
           "name": "FUN_0011a650",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a6d0",

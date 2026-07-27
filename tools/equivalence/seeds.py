@@ -226,10 +226,14 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
         vec = []
         for p in params:
             if p.is_pointer:
-                # Fill with floats from corner set at index ci (cycling)
+                # Struct-shaped scratch often reinterprets early words as
+                # nested pointers (e.g. decode state[0]=buffer). Chaotic
+                # float bit-patterns (0xDEADBEEF) become wild code fetches
+                # under Unicorn — keep pointer fills on the safe pool.
+                ptr_corners = SAFE_FLOAT_CORNERS
                 blob = b""
                 for fi in range(64):
-                    fc = float_corners[(ci + fi) % len(float_corners)]
+                    fc = ptr_corners[(ci + fi) % len(ptr_corners)]
                     try:
                         blob += struct.pack('<f', fc)
                     except (struct.error, OverflowError):
@@ -258,10 +262,8 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
         for p in params:
             if p.is_pointer:
                 slot_rng = random.Random(base_seed ^ (ri * 0xABCD + 7))
-                if safe_mode:
-                    floats = [slot_rng.uniform(-100.0, 100.0) for _ in range(64)]
-                else:
-                    floats = _random_floats(slot_rng, 64)
+                # Always safe floats for pointer scratch (see corner path).
+                floats = [slot_rng.uniform(-100.0, 100.0) for _ in range(64)]
                 blob = b""
                 for fv in floats:
                     try:

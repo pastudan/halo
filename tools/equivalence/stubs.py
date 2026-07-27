@@ -1222,7 +1222,15 @@ class StubManager:
                 uc.reg_write(UC_X86_REG_EAX, 0)
                 return True
 
-            if symbol_name in ("system_exit", "halt_and_catch_fire"):
+            # Lifted clang objs decorate as _system_exit; combined_stub_map
+            # keeps the lifted spelling and would skip emu_stop if we only
+            # matched the undecorated oracle name — assert fallthrough then
+            # ORACLE-CRASHes (dead fetch) and blocks 100/0/0 on thin leaves.
+            if symbol_name.lstrip("_") in (
+                "system_exit",
+                "halt_and_catch_fire",
+                "fun_001029a0",
+            ):
                 uc.emu_stop()
                 return True
 
