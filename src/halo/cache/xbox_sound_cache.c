@@ -146,77 +146,33 @@ void FUN_001bdf60(void)
 #endif
 
 
-/* sound_cache_new (0x1be3e0) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static data_t * (*const b1be3e0_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
-static void (*const b1be3e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1be3e0_exitfn)(int) = system_exit;
-static void * (*const b1be3e0_c11dd60)(int name, int page_count, int page_size_bits, int maximum_block_count, void (*delete_cb)(int), int (*query_cb)(int)) = lruv_new;
-static int (*const b1be3e0_c1bdd70)(void) = FUN_001bdd70;
-
-__attribute__((naked, noinline))
+/* sound_cache_new (0x1be3e0) — readable C lift. */
 void sound_cache_new(void)
 {
-  __asm__ volatile(
-      "pushl $0xc\n\t"
-      "pushl $0x200\n\t"
-      "pushl $0x2b957c\n\t"
-      "call *%[c1194d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4e9368\n\t"
-      "jne .Lsound_cache_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x45\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b9554\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_new_1:\n\t"
-      "pushl $0x1be170\n\t"
-      "pushl $0x1be1b0\n\t"
-      "pushl $0x200\n\t"
-      "pushl $0xc\n\t"
-      "pushl $0x400\n\t"
-      "pushl $0x2b9540\n\t"
-      "call *%[c11dd60]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4e9370\n\t"
-      "jne .Lsound_cache_new_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x49\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b9520\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_new_2:\n\t"
-      "call *%[c1bdd70]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4e936c\n\t"
-      "jne .Lsound_cache_new_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4c\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b94f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_new_3:\n\t"
-      "ret\n\t"
-      :
-      : [c1194d0] "m"(b1be3e0_c1194d0), [assert] "m"(b1be3e0_assert), [exitfn] "m"(b1be3e0_exitfn), [c11dd60] "m"(b1be3e0_c11dd60), [c1bdd70] "m"(b1be3e0_c1bdd70)
-      : "memory");
-}
-#else
-#error "sound_cache_new: clang naked draft required"
-#endif
+  void *data;
+  void *lruv;
+  int mem;
 
+  data = data_new((char *)0x2b957c, 0x200, 0xc);
+  *(void **)0x4e9368 = data;
+  if (data == NULL) {
+    display_assert((const char *)0x2b9554, (const char *)0x2b9288, 0x45, 1);
+    system_exit(-1);
+  }
+  lruv = lruv_new((int)0x2b9540, 0x400, 0xc, 0x200,
+                  (void (*)(int))FUN_001be1b0, (int (*)(int))FUN_001be170);
+  *(void **)0x4e9370 = lruv;
+  if (lruv == NULL) {
+    display_assert((const char *)0x2b9520, (const char *)0x2b9288, 0x49, 1);
+    system_exit(-1);
+  }
+  mem = FUN_001bdd70();
+  *(int *)0x4e936c = mem;
+  if (mem == 0) {
+    display_assert((const char *)0x2b94f8, (const char *)0x2b9288, 0x4c, 1);
+    system_exit(-1);
+  }
+}
 
 /* sound_cache_flush (0x1be490) — readable C lift. */
 void sound_cache_flush(void)

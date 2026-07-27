@@ -40116,7 +40116,7 @@
         {
           "addr": "0x1be3e0",
           "decl": "void sound_cache_new(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1be490",
