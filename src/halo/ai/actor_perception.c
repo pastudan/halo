@@ -3436,429 +3436,84 @@ void prop_position_refresh(int actor_handle __attribute__((unused)), int prop_ha
 #endif
 
 
-/* FUN_00032170 (0x32170) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void *(*const b32170_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b32170_get)(int, int) = object_get_and_verify_type;
-static void *(*const b32170_tag)(int, int) = tag_get;
-static vector3_t * (*const b32170_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b32170_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = (void *)actor_perception_find_sense_position;
-static void *(*const b32170_memset)(void *, int, unsigned int) = csmemset;
-static bool (*const b32170_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
-
-__attribute__((naked, noinline))
-char FUN_00032170(float *sense_pos_out __attribute__((unused)), int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), char flag __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x4c, %%esp\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x158(%%esi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .LFUN_00032170_5\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl $2\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x2f0(%%eax), %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jns .LFUN_00032170_4\n\t"
-      "flds 0x20(%%ebx)\n\t"
-      "flds 0x1c(%%ebx)\n\t"
-      "flds 0x18(%%ebx)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x25620c\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_00032170_4\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1412f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00032170_1\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "leal -0x4c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-1\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c31a90]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "leal -0x4c(%%ebp), %%edi\n\t"
-      ".LFUN_00032170_1:\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "fsubs 0xc(%%edi)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fsubs 0x10(%%edi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs 0x14(%%edi)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fadds 0x253f34\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00032170_4\n\t"
-      "movw 0x280(%%esi), %%ax\n\t"
-      "cmpw $3, %%ax\n\t"
-      "leal 0x280(%%esi), %%edi\n\t"
-      "jl .LFUN_00032170_2\n\t"
-      "jne .LFUN_00032170_4\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "cmpl %%ecx, 0x28c(%%esi)\n\t"
-      "je .LFUN_00032170_4\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2d4(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00032170_4\n\t"
-      ".LFUN_00032170_2:\n\t"
-      "pushl $0x6c\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x28c(%%esi)\n\t"
-      "movw $3, (%%edi)\n\t"
-      "movl 0x2d4(%%ebx), %%eax\n\t"
-      "movl %%eax, 0x290(%%esi)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x294(%%esi)\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "leal 0x298(%%esi), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "leal 0x2a4(%%esi), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x1c(%%ebx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl 0x20(%%ebx), %%eax\n\t"
-      "movb 0x10(%%ebp), %%cl\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl 0x290(%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movw $0x14, 0x284(%%esi)\n\t"
-      "movb %%cl, 0x286(%%esi)\n\t"
-      "movw $0, 0x282(%%esi)\n\t"
-      "je .LFUN_00032170_3\n\t"
-      "movl 0x2d4(%%ebx), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x68(%%eax), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x3e(%%esi), %%cx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ca7a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00032170_3\n\t"
-      "movw $1, 0x282(%%esi)\n\t"
-      ".LFUN_00032170_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00032170_4:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".LFUN_00032170_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b32170_dget), [get] "m"(b32170_get), [tag] "m"(b32170_tag), [c1412f0] "m"(b32170_c1412f0), [c31a90] "m"(b32170_c31a90), [memset] "m"(b32170_memset), [ca7a30] "m"(b32170_ca7a30)
-      : "memory");
-}
-#else
-#error "FUN_00032170: clang naked draft required"
-#endif
-
-
-/* 0x32380 — refresh actor danger-zone perception from tracked object. */
-void actor_perception_refresh_danger_zone(int actor_handle)
+/* 0x32170 — register a vehicle danger zone on an actor. */
+char FUN_00032170(float *sense_pos_out, int actor_handle, int unit_handle,
+                  char flag)
 {
   char *actor;
-  char *unit;
+  char *vehicle;
   char *vehicle_def;
-  char *encounter;
-  char *parent_unit;
-  char sense_block[0x58];
-  float danger_pos[3];
-  float sense_pos[3];
+  char sense_block[0x4c];
+  char *sense_pos;
+  float world_pos[3];
   float delta[3];
-  char perceived;
-  char self_flag;
-  int16_t danger_type;
-  int16_t los_result;
-  int16_t vis;
-  int16_t aud;
-  char player_present;
-  int prop_handle;
-  int skip_los;
-  int16_t stimulus[1];
+  float dist;
+  float vel_sq;
 
   actor = (char *)datum_get(actor_data, actor_handle);
-  if (*(int16_t *)(actor + 0x280) <= 0)
-    return;
+  if (*(int *)(actor + 0x158) != -1)
+    return 0;
 
-  unit = (char *)object_try_and_get_and_verify_type(*(int *)(actor + 0x28c), -1);
-  if (unit == 0) {
-    *(int16_t *)(actor + 0x280) = 0;
-    return;
+  vehicle = (char *)object_get_and_verify_type(unit_handle, 2);
+  vehicle_def = (char *)tag_get('ihev', *(int *)vehicle);
+  if (*(char *)(vehicle_def + 0x2f0) >= 0)
+    return 0;
+
+  vel_sq = *(float *)(vehicle + 0x18) * *(float *)(vehicle + 0x18) +
+           *(float *)(vehicle + 0x1c) * *(float *)(vehicle + 0x1c) +
+           *(float *)(vehicle + 0x20) * *(float *)(vehicle + 0x20);
+  if (vel_sq > *(float *)0x25620c)
+    return 0;
+
+  object_get_world_position(unit_handle, (vector3_t *)world_pos);
+  if (sense_pos_out == 0) {
+    actor_perception_find_sense_position(actor_handle, world_pos, -1,
+                                         sense_block);
+    sense_pos = sense_block;
+  } else {
+    sense_pos = (char *)sense_pos_out;
   }
 
-  danger_type = *(int16_t *)(actor + 0x280);
-  if (danger_type != 1 && danger_type != 2 && danger_type != 3) {
-    display_assert("actor->danger.type==1 || actor->danger.type==2 || "
-                   "actor->danger.type==3",
-                   "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xc9b, 1);
-    system_exit(-1);
+  delta[0] = world_pos[0] - *(float *)(sense_pos + 0xc);
+  delta[1] = world_pos[1] - *(float *)(sense_pos + 0x10);
+  delta[2] = world_pos[2] - *(float *)(sense_pos + 0x14);
+  dist = sqrtf(delta[0] * delta[0] + delta[1] * delta[1] +
+               delta[2] * delta[2]);
+
+  if (dist > *(float *)(vehicle_def + 4) + *(float *)0x253f34)
+    return 0;
+
+  if (*(int16_t *)(actor + 0x280) >= 3) {
+    if (*(int16_t *)(actor + 0x280) != 3)
+      return 0;
+    if (*(int *)(actor + 0x28c) == unit_handle &&
+        dist <= *(float *)(actor + 0x2d4))
+      return 0;
   }
 
-  object_get_world_position(*(int *)(actor + 0x28c), (vector3_t *)danger_pos);
-  actor_perception_find_sense_position(actor_handle, danger_pos, -1, sense_block);
-  sense_pos[0] = *(float *)(sense_block + 0xc);
-  sense_pos[1] = *(float *)(sense_block + 0x10);
-  sense_pos[2] = *(float *)(sense_block + 0x14);
+  csmemset(actor + 0x280, 0, 0x6c);
+  *(int *)(actor + 0x28c) = unit_handle;
+  *(int16_t *)(actor + 0x280) = 3;
+  *(int *)(actor + 0x290) = *(int *)(vehicle + 0x2d4);
+  *(int *)(actor + 0x294) = *(int *)(vehicle_def + 4);
+  *(float *)(actor + 0x298) = world_pos[0];
+  *(float *)(actor + 0x29c) = world_pos[1];
+  *(float *)(actor + 0x2a0) = world_pos[2];
+  *(float *)(actor + 0x2a4) = *(float *)(vehicle + 0x18);
+  *(float *)(actor + 0x2a8) = *(float *)(vehicle + 0x1c);
+  *(float *)(actor + 0x2ac) = *(float *)(vehicle + 0x20);
+  *(int16_t *)(actor + 0x284) = 0x14;
+  *(char *)(actor + 0x286) = flag;
+  *(int16_t *)(actor + 0x282) = 0;
 
-  *(int *)(actor + 0x2bc) = *(int *)(unit + 0x18);
-  *(int *)(actor + 0x2c0) = *(int *)(unit + 0x1c);
-  *(int *)(actor + 0x2c4) = *(int *)(unit + 0x20);
-
-  delta[0] = danger_pos[0] - sense_pos[0];
-  delta[1] = danger_pos[1] - sense_pos[1];
-  delta[2] = danger_pos[2] - sense_pos[2];
-  *(float *)(actor + 0x2d4) = sqrtf(delta[0] * delta[0] + delta[1] * delta[1] +
-                                     delta[2] * delta[2]);
-
-  *(float *)(actor + 0x2c8) =
-      *(float *)(unit + 0x18) * *(float *)0x2548f8 + danger_pos[0];
-  *(float *)(actor + 0x2cc) =
-      *(float *)(unit + 0x1c) * *(float *)0x2548f8 + danger_pos[1];
-  *(float *)(actor + 0x2d0) =
-      *(float *)(unit + 0x20) * *(float *)0x2548f8 + danger_pos[2];
-
-  *(float *)(actor + 0x2dc) =
-      (*(float *)(actor + 0x2c8) + danger_pos[0]) * *(float *)0x253398;
-  *(float *)(actor + 0x2e0) =
-      (*(float *)(actor + 0x2cc) + danger_pos[1]) * *(float *)0x253398;
-  *(float *)(actor + 0x2e4) =
-      (*(float *)(actor + 0x2d0) + danger_pos[2]) * *(float *)0x253398;
-
-  delta[0] = danger_pos[0] - *(float *)(actor + 0x2dc);
-  delta[1] = danger_pos[1] - *(float *)(actor + 0x2e0);
-  delta[2] = danger_pos[2] - *(float *)(actor + 0x2e4);
-  *(float *)(actor + 0x2d8) =
-      sqrtf(delta[0] * delta[0] + delta[1] * delta[1] +
-            delta[2] * delta[2]) +
-      *(float *)(actor + 0x294);
-
-  perceived = 0;
-  self_flag = 0;
-
-  if (danger_type == 3) {
-    vehicle_def = (char *)tag_get('ihev', *(int *)unit);
-    if (FUN_00012170((float *)(unit + 0x18)) <= *(float *)0x256240 &&
-        *(float *)(actor + 0x2d4) <=
-            *(float *)(vehicle_def + 4) + *(float *)0x253f34) {
-      if (*(char *)(actor + 0x286) == 0) {
-        if (*(int *)(unit + 0x2d4) != -1) {
-          prop_handle = prop_get_active_by_unit_index(
-              actor_handle, *(int *)(unit + 0x2d4));
-          if (prop_handle != -1) {
-            char *prop = (char *)datum_get(prop_data, prop_handle);
-            if (*(int16_t *)(prop + 0x30) >= 2)
-              perceived = 1;
-          }
-        } else {
-          if (*(int *)(actor + 0x34) == -1)
-            encounter = 0;
-          else
-            encounter = (char *)datum_get(*(void **)0x5ab270,
-                                          *(int *)(actor + 0x34));
-          player_present = 0;
-          if (encounter == 0 || *(char *)(encounter + 0x40) != 0 ||
-              *(int16_t *)(actor + 0x6a) == 1)
-            player_present = 1;
-
-          if (*(int *)(unit + 0xcc) != -1) {
-            int parent_handle =
-                object_get_root_parent(*(int *)(actor + 0x28c));
-            parent_unit =
-                (char *)object_get_and_verify_type(parent_handle, -1);
-          } else
-            parent_unit = unit;
-
-          skip_los = *(int *)(actor + 0x158) != -1;
-          los_result = (int16_t)ai_test_line_of_sight(
-              sense_pos, 0, danger_pos, 0,
-              *(int16_t *)(parent_unit + 0x4c), 0, *(int *)(actor + 0x28c),
-              skip_los);
-
-          if (!player_present) {
-            vis = actor_visibility_at_point(
-                actor_handle, (float *)sense_block, danger_pos, 0, los_result,
-                1, 0, FUN_0002f380(actor_handle, -1));
-            if (vis >= 2)
-              perceived = 1;
-          } else {
-            aud = actor_audibility_at_point(
-                actor_handle, sense_block, danger_pos, parent_unit + 0x48,
-                *(int16_t *)(vehicle_def + 0x182), 0x3f800000, 0);
-            if (aud >= 2)
-              perceived = 1;
-          }
-        }
-      } else {
-        perceived = *(char *)(actor + 0x286);
-      }
-    } else {
-      *(int16_t *)(actor + 0x280) = 0;
-      goto finish;
-    }
-  } else if (danger_type == 2) {
-    if (*(int *)(actor + 0x18) != -1 &&
-        *(int *)(unit + 0xcc) == *(int *)(actor + 0x18))
-      self_flag = 1;
-
-    if (*(int16_t *)(unit + 0x64) != 5) {
-      display_assert("unit->type==5",
-                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0xcb9, 1);
-      system_exit(-1);
-    }
-
-    if (*(float *)(unit + 0x1f0) < *(float *)0x2533c0 &&
-        *(float *)(unit + 0x1f4) < *(float *)0x2533c0) {
-      float t = (*(float *)0x2533c8 - *(float *)(unit + 0x1f0)) /
-                *(float *)(unit + 0x1f4);
-      *(int16_t *)(actor + 0x2e8) = (int16_t)t;
-    } else {
-      *(int16_t *)(actor + 0x2e8) = -1;
-    }
-
-    if (*(char *)(actor + 0x286) == 0 && self_flag == 0) {
-      if (*(int *)(actor + 0x34) == -1)
-        encounter = 0;
-      else
-        encounter = (char *)datum_get(*(void **)0x5ab270,
-                                      *(int *)(actor + 0x34));
-      if (*(int16_t *)(actor + 0x6a) == 1 ||
-          (encounter != 0 && *(char *)(encounter + 0x40) == 0)) {
-        char *projectile_tag =
-            (char *)tag_get('jorp', *(int *)unit);
-        if (*(float *)(actor + 0x2d4) <= *(float *)(projectile_tag + 0x19c)) {
-          int16_t volume = *(int16_t *)(unit + 0x4c);
-          if (*(int *)(unit + 0xcc) != -1) {
-            int parent_handle =
-                object_get_root_parent(*(int *)(actor + 0x28c));
-            parent_unit = (char *)object_get_and_verify_type(parent_handle, -1);
-            volume = *(int16_t *)(parent_unit + 0x4c);
-          }
-          skip_los = *(int *)(actor + 0x158) != -1;
-          los_result = (int16_t)ai_test_line_of_sight(
-              sense_pos, 0, danger_pos, 0, volume, 0, *(int *)(actor + 0x28c),
-              skip_los);
-          vis = actor_visibility_at_point(
-              actor_handle, (float *)sense_block, danger_pos, 0, los_result, 1,
-              0, FUN_0002f380(actor_handle, -1));
-          if (vis >= 2)
-            perceived = 1;
-        }
-      }
-    } else {
-      perceived = *(char *)(actor + 0x286);
-    }
-  } else if (danger_type == 1) {
-    if (*(char *)(actor + 0x286) != 0) {
-      perceived = *(char *)(actor + 0x286);
-    } else {
-      prop_handle = prop_get_active_by_unit_index(actor_handle,
-                                                  *(int *)(actor + 0x28c));
-      if (prop_handle != -1) {
-        char *prop = (char *)datum_get(prop_data, prop_handle);
-        if (*(int16_t *)(prop + 0x30) >= 2)
-          perceived = 1;
-      }
-    }
-
-    {
-      int16_t anim_state;
-      int frames = unit_get_animation_frames_remaining(*(int *)(actor + 0x28c),
-                                                       &anim_state);
-      if (anim_state == 0x19)
-        *(int16_t *)(actor + 0x2e8) = (int16_t)frames;
-      else
-        *(int16_t *)(actor + 0x2e8) = -1;
-    }
+  if (*(int *)(actor + 0x290) != -1) {
+    char *parent =
+        (char *)object_get_and_verify_type(*(int *)(vehicle + 0x2d4), 3);
+    if (!game_allegiance_get_team_is_friendly(*(int16_t *)(actor + 0x3e),
+                                              *(int16_t *)(parent + 0x68)))
+      *(int16_t *)(actor + 0x282) = 1;
   }
-
-  if (perceived != 0 && *(char *)(actor + 0x286) == 0) {
-    stimulus[0] = 5;
-    FUN_00027a60(actor_handle, 12, 1, stimulus);
-  }
-
-finish:
-  *(char *)(actor + 0x286) = perceived;
-  *(char *)(actor + 0x28a) = self_flag;
+  return 1;
 }
 /* actor_expected_acknowledgement (0x32940) — readable C lift. */
 char actor_expected_acknowledgement(int actor_handle, int prop_handle)

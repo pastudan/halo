@@ -34934,7 +34934,7 @@
           "decl": "char FUN_00032170(float *sense_pos_out, int actor_handle, int unit_handle, char flag);",
           "name": "FUN_00032170",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32380",
