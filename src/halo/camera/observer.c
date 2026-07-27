@@ -1995,98 +1995,35 @@ void FUN_00089930(float value)
   ((void (*)(float))(void *)FUN_001da0cc)(value);
 }
 
-/* FUN_00089940 (0x89940) — XBE naked draft (batch 136). */
-#if defined(__clang__)
-static void (*const b89940_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b89940_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-float FUN_00089940(float a __attribute__((unused)), float b __attribute__((unused)), float c __attribute__((unused)), float d __attribute__((unused)), float t0 __attribute__((unused)), float t1 __attribute__((unused)), float t2 __attribute__((unused)))
+/* FUN_00089940 (0x89940) — readable C lift from XBE leaf.
+ * Scalar interpolant over samples (a,b,c,d) with segment times (t0,t1,t2).
+ * Requires t1 > 0 and t0 <= t2 <= t0 + 3*t1. */
+float FUN_00089940(float a, float b, float c, float d, float t0, float t1, float t2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00089940_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5e4\n\t"
-      "pushl $0x25ed80\n\t"
-      "pushl $0x2672f4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00089940_1:\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "fcomps 0x18(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00089940_2\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      "fmuls 0x254644\n\t"
-      "fadds 0x18(%%ebp)\n\t"
-      "fcomps 0x20(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_00089940_3\n\t"
-      ".LFUN_00089940_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5e5\n\t"
-      "pushl $0x25ed80\n\t"
-      "pushl $0x2672d8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00089940_3:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fsubs 0x10(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fstps 0x14(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fsubrs 0x20(%%ebp)\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      ".byte 0xd8, 0xe3\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      "fmuls 0x254644\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      ".byte 0xde, 0xc2\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fadds 0x1c(%%ebp)\n\t"
-      "fsubrs 0x20(%%ebp)\n\t"
-      ".byte 0xde, 0xca\n\t"
-      "fxch %%st(1)\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fadds 0xc(%%ebp)\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "fsubs 0x18(%%ebp)\n\t"
-      "fdivs 0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "fstp %%st(1)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b89940_assert), [exitfn] "m"(b89940_exitfn)
-      : "memory");
+  float ba;
+  float cb;
+  float q;
+  float e14;
+  float p;
+  float mid;
+
+  if (!(t1 > *(float *)0x2533c0)) {
+    display_assert((const char *)0x2672f4, (const char *)0x25ed80, 0x5e4, true);
+    system_exit(-1);
+  }
+  if (t2 < t0 || t0 + *(float *)0x254644 * t1 < t2) {
+    display_assert((const char *)0x2672d8, (const char *)0x25ed80, 0x5e5, true);
+    system_exit(-1);
+  }
+
+  ba = b - a;
+  cb = c - b;
+  e14 = (d - c) - cb;
+  q = cb - ba;
+  p = (e14 - q) * (t2 - (t0 + t1 + t1)) / (*(float *)0x254644 * t1);
+  mid = (q + p) * (t2 - (t0 + t1)) / (t1 + t1) + ba;
+  return a + mid * ((t2 - t0) / t1);
 }
-#else
-#error "FUN_00089940: clang naked draft required"
-#endif
 
 
 /* FUN_00089a20 (0x89a20) — readable C lift: component-wise FUN_00089940. */

@@ -17343,7 +17343,8 @@
         {
           "addr": "0x89940",
           "decl": "float FUN_00089940(float a, float b, float c, float d, float t0, float t1, float t2);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00089940"
         },
         {
           "addr": "0x89a20",
