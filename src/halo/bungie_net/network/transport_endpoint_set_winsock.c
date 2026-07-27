@@ -1619,81 +1619,30 @@ int FUN_00082a30(int endpoint_set)
   return *(uint32_t *)((char *)endpoint_set + 0x10c) + 1;
 }
 
-/* FUN_00082a90 (0x82a90) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static void (*const b82a90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82a90_exitfn)(int) = system_exit;
-static int __stdcall (*const b82a90_c222df7)(void *key) = FUN_00222df7;
-static void b82a90_c222da0_tgt(void) { return; }
-static void (*const b82a90_c222da0)(void) = b82a90_c222da0_tgt;
-static void (*const b82a90_c81e00)(uint32_t *, uint32_t *) = FUN_00081e00;
-
-__attribute__((naked, noinline))
-void FUN_00082a90(void)
+/* FUN_00082a90 (0x82a90) — readable C lift. */
+short FUN_00082a90(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movb 0x335091, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00082a90_3\n\t"
-      "movl 0x335094, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00082a90_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2664a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00082a90_1:\n\t"
-      "decl 0x335094\n\t"
-      "jne .LFUN_00082a90_2\n\t"
-      "pushl $0x5ab220\n\t"
-      "call *%[c222df7]\n\t"
-      ".LFUN_00082a90_2:\n\t"
-      "movb $0, 0x335091\n\t"
-      ".LFUN_00082a90_3:\n\t"
-      "movl 0x335094, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00082a90_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x79\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2665f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00082a90_4:\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, 0x5ab204\n\t"
-      "call *%[c222da0]\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81e00]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorw %%ax, %%ax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82a90_assert), [exitfn] "m"(b82a90_exitfn), [c222df7] "m"(b82a90_c222df7), [c222da0] "m"(b82a90_c222da0), [c81e00] "m"(b82a90_c81e00)
-      : "memory");
+  uint32_t key[2];
+  uint32_t nonce[4];
+
+  if (*(unsigned char *)0x335091 != 0) {
+    if (*(int *)0x335094 <= 0) {
+      display_assert((const char *)0x2664a8, (const char *)0x266458, 0x66, 1);
+      system_exit(-1);
+    }
+    if (--*(int *)0x335094 == 0)
+      ((int (__stdcall *)(void *))0x222df7)((void *)0x5ab220);
+    *(unsigned char *)0x335091 = 0;
+  }
+  if (*(int *)0x335094 != 0) {
+    display_assert((const char *)0x2665f8, (const char *)0x266458, 0x79, 1);
+    system_exit(-1);
+  }
+  *(unsigned char *)0x5ab204 = 1;
+  ((void (__stdcall *)(uint32_t *, uint32_t *))0x222da0)(key, nonce);
+  FUN_00081e00(key, nonce);
+  return 0;
 }
-#else
-#error "FUN_00082a90: clang naked draft required"
-#endif
-
-
 /* FUN_00082bd0 (0x82bd0) — XBE naked draft (batch 257). */
 #if defined(__clang__)
 static void (*const b82bd0_assert)(const char *, const char *, int, bool) = display_assert;
