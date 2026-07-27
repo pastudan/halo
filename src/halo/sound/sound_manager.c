@@ -2748,90 +2748,37 @@ static float __attribute__((unused)) sound_listener_distance(int channel_index, 
   return xbox_sqrtf(sound_listener_distance_sq(channel_index, source));
 }
 
-/* FUN_001be1b0 (0x1be1b0) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static void *(*const b1be1b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static const char * (*const b1be1b0_c1ba1f0)(int tag_index) = tag_get_name;
-static char * (*const b1be1b0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1be1b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1be1b0_exitfn)(int) = system_exit;
-static void (*const b1be1b0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void FUN_001be1b0(int cache_handle __attribute__((unused)))
+/* FUN_001be1b0 (0x1be1b0) — readable C lift. */
+void FUN_001be1b0(int cache_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4e9368, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x4(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001be1b0_1\n\t"
-      "movb 0x5(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001be1b0_2\n\t"
-      ".LFUN_001be1b0_1:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl 0x3c(%%eax), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $0x141\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b93e0\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001be1b0_2:\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "cmpl %%edi, 0x2c(%%edx)\n\t"
-      "je .LFUN_001be1b0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x144\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b93a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001be1b0_3:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl $0xffffffff, 0x2c(%%eax)\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "movl $0, 0x30(%%ecx)\n\t"
-      "movl 0x4e9368, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1be1b0_dget), [c1ba1f0] "m"(b1be1b0_c1ba1f0), [c8d9d0] "m"(b1be1b0_c8d9d0), [assert] "m"(b1be1b0_assert), [exitfn] "m"(b1be1b0_exitfn), [c1196d0] "m"(b1be1b0_c1196d0)
-      : "memory");
-}
-#else
-#error "FUN_001be1b0: clang naked draft required"
-#endif
+  extern char DAT_002b9288[];
+  extern char DAT_002b93e0[];
+  extern char DAT_002b93a8[];
+  char *entry;
+  char *tag;
+  char *msg;
 
+  entry = (char *)datum_get(*(data_t **)0x4e9368, cache_handle);
+  if (entry[4] != 0 || entry[5] != 0) {
+    tag = *(char **)(entry + 8);
+    msg = csprintf(
+        (char *)0x5ab100,
+        DAT_002b93e0,
+        tag_get_name(*(int *)(tag + 0x3c)));
+    display_assert(msg, DAT_002b9288, 0x141, 1);
+    system_exit(-1);
+  }
+  tag = *(char **)(entry + 8);
+  if (*(int *)(tag + 0x2c) != cache_handle) {
+    display_assert(DAT_002b93a8, DAT_002b9288, 0x144, 1);
+    system_exit(-1);
+  }
+  tag = *(char **)(entry + 8);
+  *(int *)(tag + 0x2c) = -1;
+  tag = *(char **)(entry + 8);
+  *(int *)(tag + 0x30) = 0;
+  datum_delete(*(data_t **)0x4e9368, cache_handle);
+}
 
 void *FUN_001be270(int cache_handle)
 {
