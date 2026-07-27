@@ -1133,6 +1133,7 @@ int FUN_0015e770(int a, int b)
 
 
 /* FUN_0015e7a0 (0x15e7a0) — readable C lift. */
+__attribute__((stdcall))
 void FUN_0015e7a0(void *obj, int *out, int addend)
 {
   *out = *(int *)((char *)obj + 4) + addend;

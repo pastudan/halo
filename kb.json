@@ -27514,8 +27514,9 @@
         },
         {
           "addr": "0xe76b0",
-          "decl": "void FUN_000e76b0(void *widget, void *tag, void *a, float d, int e, int f);",
-          "ported": false
+          "decl": "void FUN_000e76b0(void *widget, void *tag, void *bounds, float opacity_scale, int param_5, int param_6);",
+          "ported": true,
+          "name": "FUN_000e76b0"
         },
         {
           "addr": "0xe7760",
@@ -27550,7 +27551,8 @@
         {
           "addr": "0xe8830",
           "decl": "void network_game_reset_to_pregame_ui(void);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_reset_to_pregame_ui"
         },
         {
           "addr": "0xe8910",
@@ -27698,7 +27700,8 @@
         {
           "addr": "0xeb020",
           "decl": "char FUN_000eb020(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000eb020"
         },
         {
           "addr": "0xeb150",
@@ -27743,7 +27746,8 @@
         {
           "addr": "0xecd50",
           "decl": "char FUN_000ecd50(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000ecd50"
         },
         {
           "addr": "0xece10",
@@ -27794,8 +27798,9 @@
         },
         {
           "addr": "0xeea10",
-          "decl": "void playlist_profile_initialize_name(void *widget);",
-          "ported": false
+          "decl": "char playlist_profile_initialize_name(void *widget, void *player_data, char *done_flag);",
+          "ported": false,
+          "name": "playlist_profile_initialize_name"
         },
         {
           "addr": "0xeead0",
@@ -28054,7 +28059,8 @@
         {
           "addr": "0xf2d50",
           "decl": "void FUN_000f2d50(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2d50"
         },
         {
           "addr": "0xf2e60",
@@ -28116,7 +28122,8 @@
         {
           "addr": "0xf3690",
           "decl": "void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000f3690"
         },
         {
           "addr": "0xf3740",
@@ -38687,8 +38694,8 @@
         },
         {
           "addr": "0x15e7a0",
-          "decl": "void FUN_0015e7a0(void *obj@<eax>, int *out@<edx>, int addend);",
-          "ported": false
+          "decl": "void __stdcall FUN_0015e7a0(void *obj@<eax>, int *out@<edx>, int addend);",
+          "ported": true
         },
         {
           "addr": "0x15e7d0",

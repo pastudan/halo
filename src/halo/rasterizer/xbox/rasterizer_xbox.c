@@ -183,6 +183,7 @@ int FUN_00155350(int a, int b)
 }
 
 /* FUN_00155380 (0x155380) — readable C lift. */
+__attribute__((stdcall))
 int FUN_00155380(int a, int b, int c, int d, int e)
 {
   D3DDevice_CreateTexture((uint32_t)a, (uint32_t)b, (uint32_t)c, (uint32_t)d, (uint32_t)e, 0, 0);
@@ -191,6 +192,7 @@ int FUN_00155380(int a, int b, int c, int d, int e)
 
 
 /* FUN_001553a0 (0x1553a0) — readable C lift. */
+__attribute__((stdcall))
 int FUN_001553a0(int a, int b, int c, int d, int e, int f)
 {
   ((void (__stdcall *)(int, int, int, int, int, int, int))D3DDevice_CreateVolumeTexture)(a, b, c, d, e, f, 0);
@@ -198,6 +200,7 @@ int FUN_001553a0(int a, int b, int c, int d, int e, int f)
 }
 
 /* FUN_001553d0 (0x1553d0) — readable C lift. */
+__attribute__((stdcall))
 int FUN_001553d0(int a, int b, int c, int d)
 {
   return ((int (__stdcall *)(int, int, int, int))D3DDevice_CreateCubeTexture)(a, b, c, d);
@@ -956,6 +959,7 @@ void rasterizer_set_texture(int stage __attribute__((unused)), int a2 __attribut
 
 
 /* FUN_00156070 (0x156070) — readable C lift. */
+__attribute__((stdcall))
 int FUN_00156070(int a, int b, int c)
 {
   ((void (__stdcall *)(int, int, int, int, int))D3DCubeTexture_LockRect)(a, b, c, 0, 0);
