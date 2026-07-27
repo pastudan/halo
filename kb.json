@@ -5073,13 +5073,15 @@
         },
         {
           "addr": "0x1bcc10",
-          "decl": "void FUN_001bcc10(void);",
-          "ported": false
+          "decl": "void FUN_001bcc10(int a, int b, int edx_arg /*@<edx>*/, int ecx_arg /*@<ecx>*/, int eax_arg /*@<eax>*/);",
+          "ported": true,
+          "name": "FUN_001bcc10"
         },
         {
           "addr": "0x1bcc30",
-          "decl": "void FUN_001bcc30(void);",
-          "ported": false
+          "decl": "void FUN_001bcc30(int a, int b, int edx_arg /*@<edx>*/, int ecx_arg /*@<ecx>*/, int eax_arg /*@<eax>*/);",
+          "ported": true,
+          "name": "FUN_001bcc30"
         },
         {
           "addr": "0x1bcc50",
@@ -17325,8 +17327,9 @@
         },
         {
           "addr": "0x89930",
-          "decl": "void FUN_00089930(void);",
-          "ported": false
+          "decl": "void FUN_00089930(float value);",
+          "ported": true,
+          "name": "FUN_00089930"
         },
         {
           "addr": "0x89940",
@@ -19979,7 +19982,8 @@
         {
           "addr": "0x90180",
           "decl": "void FUN_00090180(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00090180"
         },
         {
           "addr": "0x901d0",
@@ -20053,8 +20057,9 @@
         },
         {
           "addr": "0x912c0",
-          "decl": "void profile_rasterizer_stalls(void);",
-          "ported": false
+          "decl": "void profile_rasterizer_stalls(void *arg0, short arg1, int arg2, int unused, int arg4, int arg5);",
+          "ported": true,
+          "name": "profile_rasterizer_stalls"
         },
         {
           "addr": "0x91350",
@@ -20139,12 +20144,14 @@
         {
           "addr": "0x91cf0",
           "decl": "void FUN_00091cf0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00091cf0"
         },
         {
           "addr": "0x91d50",
           "decl": "void FUN_00091d50(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00091d50"
         },
         {
           "addr": "0x91da0",
@@ -20181,7 +20188,8 @@
         {
           "addr": "0x921c0",
           "decl": "void FUN_000921c0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000921c0"
         },
         {
           "addr": "0x922a0",
@@ -26882,7 +26890,8 @@
         {
           "addr": "0x81fa0",
           "decl": "bool FUN_00081fa0(void *addr, int len);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00081fa0"
         },
         {
           "addr": "0x82060",
@@ -28123,7 +28132,7 @@
         {
           "addr": "0x19db80",
           "decl": "wchar_t *ustrncat(wchar_t *dest, const wchar_t *src, size_t count);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19dc20",

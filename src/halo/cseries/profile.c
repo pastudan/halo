@@ -2940,58 +2940,26 @@ void profile_frame_get_stalls(void)
 #endif
 
 
-/* profile_rasterizer_stalls (0x912c0) — XBE naked draft (batch 254). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void profile_rasterizer_stalls(void)
+/* profile_rasterizer_stalls (0x912c0) — readable C lift. */
+void profile_rasterizer_stalls(void *arg0, short arg1, int arg2, int unused, int arg4, int arg5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "fildl 0x3361a0\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "fildl 0x18(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, 0x449c80\n\t"
-      "fmuls 0x254cb8\n\t"
-      "movl %%eax, 0x449c84\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "movl %%ecx, 0x449c8c\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, 0x449c88\n\t"
-      "movw 0xc(%%ebp), %%ax\n\t"
-      "movl %%edx, 0x449ee0\n\t"
-      "movw %%ax, 0x449ee4\n\t"
-      "flds 0x449c90\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps 0x449c90\n\t"
-      "flds 0x449c94\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps 0x449c94\n\t"
-      "fstp %%st(0)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "jge .Lprofile_rasterizer_stalls_1\n\t"
-      "fadds 0x25fb8c\n\t"
-      ".Lprofile_rasterizer_stalls_1:\n\t"
-      "fmuls 0x254cb8\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fstps 0x449ee8\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float scale;
+  float dt;
+  (void)unused;
+  *(int *)0x449c80 = 0;
+  *(int *)0x449c84 = 0;
+  *(int *)0x449c88 = arg4;
+  *(int *)0x449c8c = arg5;
+  *(void **)0x449ee0 = arg0;
+  *(short *)0x449ee4 = arg1;
+  scale = (float)arg4 * *(float *)0x254cb8 / (float)(*(int *)0x3361a0);
+  *(float *)0x449c90 = *(float *)0x449c90 + scale;
+  *(float *)0x449c94 = *(float *)0x449c94 + scale;
+  dt = (float)arg2;
+  if (arg2 < 0)
+    dt = dt + *(float *)0x25fb8c;
+  *(float *)0x449ee8 = dt * *(float *)0x254cb8 / (float)(*(int *)0x3361a0);
 }
-#else
-#error "profile_rasterizer_stalls: clang naked draft required"
-#endif
-
 
 /* FUN_00091350 (0x91350) — readable C lift. */
 void FUN_00091350(uint32_t *out)

@@ -2020,27 +2020,12 @@ void FUN_000898b0(void)
 #endif
 
 
-/* FUN_00089930 (0x89930) — XBE naked draft (batch 178). */
-#if defined(__clang__)
-static void (*const b89930_c1da0cc)(void) = FUN_001da0cc;
-
-__attribute__((naked, noinline))
-void FUN_00089930(void)
+/* FUN_00089930 (0x89930) — readable C lift.
+ * Load float arg into the x87 stack and call FUN_001da0cc. */
+void FUN_00089930(float value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c1da0cc]\n\t"
-      :
-      : [c1da0cc] "m"(b89930_c1da0cc)
-      : "memory");
+  ((void (*)(float))(void *)FUN_001da0cc)(value);
 }
-#else
-#error "FUN_00089930: clang naked draft required"
-#endif
-
 
 /* FUN_00089940 (0x89940) — XBE naked draft (batch 136). */
 #if defined(__clang__)

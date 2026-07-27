@@ -2020,71 +2020,23 @@ short FUN_001bc5c0(void)
   }
 }
 
-/* FUN_001bcc10 (0x1bcc10) — XBE naked draft (batch 263). */
-#if defined(__clang__)
-static void (*const b1bcc10_c1bc3b0)(void) = FUN_001bc3b0;
-
-__attribute__((naked, noinline))
-void FUN_001bcc10(void)
+/* FUN_001bcc10 (0x1bcc10) — readable C lift.
+ * Forward to FUN_001bc3b0 with EDI = format string 0x1d19e7. */
+void FUN_001bcc10(int a, int b, int edx_arg /*@<edx>*/, int ecx_arg /*@<ecx>*/, int eax_arg /*@<eax>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x1d19e7, %%edi\n\t"
-      "call *%[c1bc3b0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1bc3b0] "m"(b1bcc10_c1bc3b0)
-      : "memory");
+  register int edi asm("edi") = 0x1d19e7;
+  (void)edi;
+  ((void (*)(int, int, int, int, int))(void *)FUN_001bc3b0)(a, b, edx_arg, ecx_arg, eax_arg);
 }
-#else
-#error "FUN_001bcc10: clang naked draft required"
-#endif
 
-
-/* FUN_001bcc30 (0x1bcc30) — XBE naked draft (batch 263). */
-#if defined(__clang__)
-static void (*const b1bcc30_c1bc3b0)(void) = FUN_001bc3b0;
-
-__attribute__((naked, noinline))
-void FUN_001bcc30(void)
+/* FUN_001bcc30 (0x1bcc30) — readable C lift.
+ * Forward to FUN_001bc3b0 with EDI = format string 0x1d1a38. */
+void FUN_001bcc30(int a, int b, int edx_arg /*@<edx>*/, int ecx_arg /*@<ecx>*/, int eax_arg /*@<eax>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x1d1a38, %%edi\n\t"
-      "call *%[c1bc3b0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1bc3b0] "m"(b1bcc30_c1bc3b0)
-      : "memory");
+  register int edi asm("edi") = 0x1d1a38;
+  (void)edi;
+  ((void (*)(int, int, int, int, int))(void *)FUN_001bc3b0)(a, b, edx_arg, ecx_arg, eax_arg);
 }
-#else
-#error "FUN_001bcc30: clang naked draft required"
-#endif
-
 
 /* FUN_001bd1b0 (0x1bd1b0) — readable C lift. */
 short FUN_001bd1b0(const char *name)
