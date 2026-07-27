@@ -40672,11 +40672,12 @@
         },
         {
           "addr": "0x148240",
-          "decl": "char FUN_00148240(int bsp /* @<eax> */, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d);",
-          "ported": false,
+          "decl": "char FUN_00148240(int bsp@<eax>, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d);",
+          "ported": true,
           "reg_args": {
             "bsp": "eax"
-          }
+          },
+          "name": "FUN_00148240"
         },
         {
           "addr": "0x148370",
