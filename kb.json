@@ -28889,7 +28889,7 @@
         {
           "addr": "0x1a7ea0",
           "decl": "char FUN_001a7ea0(int unit_handle, int weapon_def_tag);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a7f80",

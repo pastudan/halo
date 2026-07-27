@@ -8300,140 +8300,22 @@ char FUN_001a7df0(int datum_handle __attribute__((unused)), int param_2 __attrib
 #endif
 
 
-/* FUN_001a7ea0 (0x1a7ea0) — XBE naked draft (batch 61). */
-#if defined(__clang__)
-static void *(*const b1a7ea0_get)(int, int) = object_get_and_verify_type;
-static int (*const b1a7ea0_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static void * (*const b1a7ea0_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-static void (*const b1a7ea0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1a7ea0_exitfn)(int) = system_exit;
-static void *(*const b1a7ea0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-char FUN_001a7ea0(int unit_handle __attribute__((unused)), int weapon_def_tag __attribute__((unused)))
+/* FUN_001a7ea0 (0x1a7ea0) — readable C lift. */
+char FUN_001a7ea0(int unit_handle, int weapon_def_tag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_001a7ea0_1\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_001a7ea0_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x2a2(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1adeb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001a7ea0_1\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "sete %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a7ea0_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl $8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x2b68e0\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4e4cf8\n\t"
-      "jne .LFUN_001a7ea0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x108\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b68b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001a7ea0_2:\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movl 0x4e4cf8, %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a7ea0_get), [c1adeb0] "m"(b1a7ea0_c1adeb0), [c1bfbf0] "m"(b1a7ea0_c1bfbf0), [assert] "m"(b1a7ea0_assert), [exitfn] "m"(b1a7ea0_exitfn), [memset] "m"(b1a7ea0_memset)
-      : "memory");
-}
-#else
-#error "FUN_001a7ea0: clang naked draft required"
-#endif
+  char *unit;
+  int weapon;
+  char *weapon_obj;
 
+  if (unit_handle == -1 || weapon_def_tag == -1)
+    return 0;
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  weapon = unit_get_weapon(unit_handle, *(short *)(unit + 0x2a2));
+  if (weapon == -1)
+    return 0;
+  weapon_obj = (char *)object_get_and_verify_type(weapon, 4);
+  return *(int *)weapon_obj == weapon_def_tag;
+}
 
 /* unit_get_animation_frames_remaining (0x1a84c0)
  * Returns the number of animation frames remaining.
