@@ -20976,7 +20976,7 @@
         {
           "addr": "0x17ad40",
           "decl": "void FUN_0017ad40(int a0, int a1, int a2, int a3, int a4, int a5);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ad90",
@@ -21116,7 +21116,7 @@
         {
           "addr": "0x17c930",
           "decl": "void rasterizer_dynamic_lit_geometry_draw(void *param_1, void *param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c940",
@@ -21131,12 +21131,12 @@
         {
           "addr": "0x17c960",
           "decl": "void rasterizer_psuedo_dynamic_screen_quad_draw(int param_1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c970",
           "decl": "int rasterizer_widget_submit(int mode);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c980",
@@ -21156,7 +21156,7 @@
         {
           "addr": "0x17c9b0",
           "decl": "int rasterizer_widget_set_zbuffer_enable(int param_1, int param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c9c0",

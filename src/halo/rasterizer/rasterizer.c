@@ -12494,38 +12494,11 @@ void FUN_0017ad20(void)
 #endif
 
 
-/* FUN_0017ad40 (0x17ad40) — XBE naked draft (batch 376). */
-#if defined(__clang__)
-static void __stdcall (*const b17ad40_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
-
-__attribute__((naked, noinline))
+/* FUN_0017ad40 (0x17ad40) — readable C lift. */
 void FUN_0017ad40(int a0, int a1, int a2, int a3, int a4, int a5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ed2c0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed2c0] "m"(b17ad40_c1ed2c0)
-      : "memory");
+  D3DDevice_SetVertexData4f(a1, a2, a3, a4, a5);
 }
-#else
-#error "FUN_0017ad40: clang naked draft required"
-#endif
-
 
 /* 0x17ad90 */
 void FUN_0017ad90(void)
@@ -14961,26 +14934,11 @@ void rasterizer_environment_fog_screen_end(void *screen_fog __attribute__((unuse
 #endif
 
 
-/* rasterizer_dynamic_lit_geometry_draw (0x17c930) — XBE naked draft (batch 397). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_dynamic_lit_geometry_draw(void *param_1 __attribute__((unused)), void *param_2 __attribute__((unused)))
+/* rasterizer_dynamic_lit_geometry_draw (0x17c930) — readable C lift. */
+void rasterizer_dynamic_lit_geometry_draw(void *param_1, void *param_2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x07, 0xb5, 0xfd, 0xff\n\t"
-      :
-      :
-      : "memory");
+  rasterizer_present(param_1, param_2);
 }
-#else
-#error "rasterizer_dynamic_lit_geometry_draw: clang naked draft required"
-#endif
-
 
 /* 0x17c940 */
 void rasterizer_dynamic_screen_geometry_draw(void)
@@ -15007,47 +14965,17 @@ void rasterizer_dynamic_screen_geometry_draw(void)
   (void)eax;
 }
 
-/* rasterizer_psuedo_dynamic_screen_quad_draw (0x17c960) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_psuedo_dynamic_screen_quad_draw(int param_1 __attribute__((unused)))
+/* rasterizer_psuedo_dynamic_screen_quad_draw (0x17c960) — readable C lift. */
+void rasterizer_psuedo_dynamic_screen_quad_draw(int param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x37, 0x2f, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0016f8a0(param_1);
 }
-#else
-#error "rasterizer_psuedo_dynamic_screen_quad_draw: clang naked draft required"
-#endif
 
-
-/* rasterizer_widget_submit (0x17c970) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int rasterizer_widget_submit(int mode __attribute__((unused)))
+/* rasterizer_widget_submit (0x17c970) — readable C lift. */
+int rasterizer_widget_submit(int mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xf7, 0x07, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  return FUN_0015d170(mode);
 }
-#else
-#error "rasterizer_widget_submit: clang naked draft required"
-#endif
-
 
 /* 0x17c980 */
 void *rasterizer_widget_begin(int handle)
@@ -15099,26 +15027,11 @@ void rasterizer_widget_set_tint_factor(int handle __attribute__((unused)))
 #endif
 
 
-/* rasterizer_widget_set_zbuffer_enable (0x17c9b0) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int rasterizer_widget_set_zbuffer_enable(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)))
+/* rasterizer_widget_set_zbuffer_enable (0x17c9b0) — readable C lift. */
+int rasterizer_widget_set_zbuffer_enable(int param_1, int param_2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x57, 0x09, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  return FUN_0015d310(param_1, param_2);
 }
-#else
-#error "rasterizer_widget_set_zbuffer_enable: clang naked draft required"
-#endif
-
 
 /* rasterizer_widget_draw_sprite2d (0x17c9c0) — XBE naked draft (batch 395). */
 #if defined(__clang__)
