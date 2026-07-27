@@ -30676,7 +30676,7 @@
         {
           "addr": "0x1b77f0",
           "decl": "void FUN_001b77f0(int vehicle_handle@<eax>, void *scratch, void *wheel_state);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001b77f0"
         },
         {
@@ -35833,7 +35833,7 @@
         {
           "addr": "0x34c80",
           "decl": "void actor_perception_refresh(void);",
-          "ported": false,
+          "ported": true,
           "name": "actor_perception_refresh"
         },
         {

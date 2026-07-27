@@ -2136,189 +2136,88 @@ char FUN_001b74d0(int vehicle_handle)
 
 
 
-/* FUN_001b77f0 (0x1b77f0) — XBE naked draft (batch 225). */
-#if defined(__clang__)
-static void *(*const b1b77f0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1b77f0_tag)(int, int) = tag_get;
-static void *(*const b1b77f0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1b77f0_o9f430)(int, short, short, void *, void *, void *, float) = FUN_0009f430;
-
-__attribute__((naked, noinline))
-void FUN_001b77f0(int vehicle_handle __attribute__((unused)), void *scratch __attribute__((unused)), void *wheel_state __attribute__((unused)))
+/* FUN_001b77f0 (0x1b77f0) — readable C lift (restored pre-naked). */
+void FUN_001b77f0(int vehicle_handle, void *scratch, void *wheel_state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x28, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x76656869\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x8c(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x70687973\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3dc(%%ebx), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .LFUN_001b77f0_7\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x74(%%eax), %%edi\n\t"
-      "cmpl $0, (%%edi)\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "jle .LFUN_001b77f0_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "jmp .LFUN_001b77f0_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_001b77f0_1:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "imull $0x130, %%esi, %%esi\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb (%%esi), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb $2, %%al\n\t"
-      "je .LFUN_001b77f0_5\n\t"
-      "flds 0x5c(%%esi)\n\t"
-      "flds 0x58(%%esi)\n\t"
-      "flds 0x54(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x25bc08\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001b77f0_5\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsubs 0x25bc08\n\t"
-      "fmuls 0x2b7d3c\n\t"
-      "flds 0x74(%%esi)\n\t"
-      "fsubs 0x68(%%ecx)\n\t"
-      "fadds 0x2b2264\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x60(%%esi)\n\t"
-      "fadds 0x4(%%esi)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x64(%%esi)\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "fmuls 0x68(%%esi)\n\t"
-      "fadds 0xc(%%esi)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds 0x2533dc\n\t"
-      "fdivs -0x4(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x54(%%esi)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0x58(%%esi)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x5c(%%esi)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x60(%%esi)\n\t"
-      "fmuls 0x253398\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x64(%%esi)\n\t"
-      "fmuls 0x253398\n\t"
-      "fadds -0x18(%%ebp)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x68(%%esi)\n\t"
-      "fmuls 0x253398\n\t"
-      "fadds -0x14(%%ebp)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001b77f0_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_001b77f0_4\n\t"
-      ".LFUN_001b77f0_2:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001b77f0_3\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_001b77f0_4\n\t"
-      ".LFUN_001b77f0_3:\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      ".LFUN_001b77f0_4:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x24(%%ecx), %%ecx\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "addl $0x48, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "andb $1, %%cl\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x70(%%esi), %%ax\n\t"
-      "negb %%cl\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x3dc(%%ebx), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "negl %%ecx\n\t"
-      "addl $9, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[o9f430]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".LFUN_001b77f0_5:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_001b77f0_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_001b77f0_6:\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_001b77f0_7:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [get] "m"(b1b77f0_get), [tag] "m"(b1b77f0_tag), [elem] "m"(b1b77f0_elem), [o9f430] "m"(b1b77f0_o9f430)
-      : "memory");
+  char *veh;
+  char *vehi;
+  char *phys;
+  char *wheel_block;
+  char *wheel_flags;
+  int wheel_count;
+  int wheel_index;
+
+  (void)scratch;
+  veh = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  vehi = (char *)tag_get(0x76656869, *(int *)veh);
+  phys = (char *)tag_get(0x70687973, *(int *)(vehi + 0x8c));
+  if (*(int *)(vehi + 0x3dc) == -1)
+    return;
+
+  wheel_block = phys + 0x74;
+  wheel_count = *(int *)wheel_block;
+  if (wheel_count <= 0)
+    return;
+
+  wheel_flags = (char *)wheel_state;
+  for (wheel_index = 0; wheel_index < wheel_count; wheel_index++) {
+    char *wheel_entry;
+    char *wheel_info;
+    float velocity[3];
+    float mag;
+    float scale;
+    float offset;
+    float impulse_point[3];
+    float force[3];
+    float effect_scale;
+    int effect_kind;
+
+    wheel_info = wheel_flags + wheel_index * 0x130;
+    if ((wheel_info[0] & 2) == 0)
+      continue;
+
+    wheel_entry = (char *)tag_block_get_element(wheel_block, wheel_index, 0x80);
+    velocity[0] = *(float *)(wheel_info + 0x54);
+    velocity[1] = *(float *)(wheel_info + 0x58);
+    velocity[2] = *(float *)(wheel_info + 0x5c);
+    mag = sqrtf(velocity[0] * velocity[0] + velocity[1] * velocity[1] +
+                velocity[2] * velocity[2]);
+    if (mag > *(float *)0x25bc08)
+      continue;
+
+    scale = (mag - *(float *)0x25bc08) * *(float *)0x2b7d3c;
+    offset = *(float *)(wheel_info + 0x74) - *(float *)(wheel_entry + 0x68) +
+             *(float *)0x2b2264;
+    impulse_point[0] = offset * *(float *)(wheel_info + 0x60) +
+                       *(float *)(wheel_info + 4);
+    impulse_point[1] = offset * *(float *)(wheel_info + 0x64) +
+                       *(float *)(wheel_info + 8);
+    impulse_point[2] = offset * *(float *)(wheel_info + 0x68) +
+                       *(float *)(wheel_info + 0xc);
+
+    force[0] = *(float *)0x2533dc / mag * velocity[0];
+    force[1] = *(float *)0x2533dc / mag * velocity[1];
+    force[2] = *(float *)0x2533dc / mag * velocity[2];
+    force[0] = force[0] * *(float *)(wheel_info + 0x60) * *(float *)0x253398 +
+               force[0];
+    force[1] = force[1] * *(float *)(wheel_info + 0x64) * *(float *)0x253398 +
+               force[1];
+    force[2] = force[2] * *(float *)(wheel_info + 0x68) * *(float *)0x253398 +
+               force[2];
+
+    effect_scale = scale;
+    if (effect_scale <= 0.0f)
+      effect_scale = 0.0f;
+    else if (effect_scale >= 1.0f)
+      effect_scale = 1.0f;
+
+    effect_kind = ((*(unsigned char *)(wheel_entry + 0x24) & 1) == 0) ? 9 : 8;
+    FUN_0009f430(
+        *(int *)(vehi + 0x3dc), (short)effect_kind,
+        *(short *)(wheel_info + 0x70), impulse_point, force,
+        (void *)((char *)veh + 0x48), effect_scale);
+  }
 }
-#else
-#error "FUN_001b77f0: clang naked draft required"
-#endif
 
 
 /* vehicle_export_function_values (0x1b79c0) — fill vehicle+0xd4 function-value
