@@ -45834,13 +45834,13 @@
         {
           "addr": "0x1335e0",
           "decl": "float FUN_001335e0(float a, float b, float c, float d, float t0, float t1, float t2, float t3, float t);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001335e0"
         },
         {
           "addr": "0x1336a0",
           "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001336a0"
         }
       ],
