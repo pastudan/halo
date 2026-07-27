@@ -3936,404 +3936,150 @@ char FUN_0012f8d0(int server, void *decoded_msg, void *client_message)
   return ok;
 }
 
-/* FUN_0012f990 (0x12f990) — XBE naked draft (batch 107). */
-#if defined(__clang__)
-static short (*const b12f990_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
-static bool (*const b12f990_c12c500)(int server, int machine) = network_game_server_client_machine_is_joined_to_game;
-static void (*const b12f990_c12b650)(const char *fmt, ...) = network_game_log;
-static bool (*const b12f990_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
-static int (*const b12f990_c12d3b0)(void *machine) = network_game_server_adjust_machine_settings;
-static void (*const b12f990_c1283c0)(int connection, void *buf, int flag) = network_connection_get_address;
-static bool (*const b12f990_c12c100)(void *server) = network_game_server_game_is_open;
-static void (*const b12f990_c12d250)(void *join_token) = network_game_generate_join_game_token;
-static int (*const b12f990_c8da40)(const void *a, const void *b, int size) = csmemcmp;
-static char * (*const b12f990_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
-static void * (*const b12f990_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static char * (*const b12f990_c1daeec)(char *buffer, int max_count, void *stream) = crt_fgets;
-static int (*const b12f990_c8df60)(const char *s1) = csstrlen;
-static int (*const b12f990_c8ddd0)(char *s1, char *s2, unsigned int size) = csstrncmp;
-static int (*const b12f990_c1d9dac)(void *stream) = crt_fclose;
-static void * (*const b12f990_c12b700)(int type, void *data, int16_t message_struct_size) = encode_network_game_message;
-static bool (*const b12f990_c128e00)(void *connection, void *message, unsigned short size, int dest_address, bool reliable) = network_connection_write;
-static char (*const b12f990_c12c560)(int server, void *machine) = network_game_server_accept_client_machine_into_game;
-static int (*const b12f990_c12d2f0)(int server, int machine, int *out) = network_game_server_get_client_machine;
-static int (*const b12f990_c12d570)(void *server) = network_game_server_get_game;
-static void (*const b12f990_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12f990_exitfn)(int) = system_exit;
-static int (*const b12f990_c12a830)(void) = network_game_get_number_of_games_played;
-static bool (*const b12f990_c12f5d0)(void *server) = FUN_0012f5d0;
-static const char * (*const b12f990_c81b90)(void *addr) = transport_address_to_string;
-
-__attribute__((naked, noinline))
-char FUN_0012f990(int server __attribute__((unused)), void *machine __attribute__((unused)), void *message __attribute__((unused)), int message_size __attribute__((unused)))
+/* FUN_0012f990 (0x12f990) — readable C lift. */
+char FUN_0012f990(int server, void *machine, void *message, int message_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xac, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c12c020]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_0012f990_18\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "subl $2, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0xc, -0xc(%%ebp)\n\t"
-      "movl $1, -0x8(%%ebp)\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "call *%[c12c500]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0012f990_1\n\t"
-      "pushl $0x2994e0\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0012f990_1:\n\t"
-      "pushl $3\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xac(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c12bce0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0012f990_16\n\t"
-      "pushl $0\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12d3b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1283c0]\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12c020]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_0012f990_14\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12c100]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0012f990_14\n\t"
-      "leal -0x5c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12d250]\n\t"
-      "pushl $0x10\n\t"
-      "leal -0x5c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x6c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0012f990_13\n\t"
-      "pushl $0x40\n\t"
-      "leal -0xac(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xac(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19f3a0]\n\t"
-      "pushl $0x2658a4\n\t"
-      "pushl $0x2994d0\n\t"
-      "call *%[c1d9e59]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0012f990_6\n\t"
-      "movb $0, -0x4c(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $7, %%ecx\n\t"
-      "leal -0x4b(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "pushl %%ebx\n\t"
-      "stosw\n\t"
-      "leal -0x4c(%%ebp), %%edx\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%edx\n\t"
-      "stosb\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c1daeec]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0012f990_4\n\t"
-      ".LFUN_0012f990_2:\n\t"
-      "leal -0xac(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8df60]\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x4c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xac(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8ddd0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0012f990_3\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x4c(%%ebp), %%eax\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1daeec]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0012f990_2\n\t"
-      "jmp .LFUN_0012f990_4\n\t"
-      ".LFUN_0012f990_3:\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".LFUN_0012f990_4:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1d9dac]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0012f990_5\n\t"
-      "leal -0xac(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x299490\n\t"
-      "movw $6, -0x2(%%ebp)\n\t"
-      "call *%[c12b650]\n\t"
-      "pushl $2\n\t"
-      "leal -0x2(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $5\n\t"
-      "call *%[c12b700]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0012f990_17\n\t"
-      "movw (%%ebx), %%di\n\t"
-      "pushl %%esi\n\t"
-      "shrw $4, %%di\n\t"
-      "call *%[c12d3b0]\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c128e00]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0012f990_5:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".LFUN_0012f990_6:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12c560]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0012f990_11\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0xffffffff, -0x4(%%ebp)\n\t"
-      "call *%[c12d2f0]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[c12d570]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0012f990_7\n\t"
-      "movb 0x40(%%ebx), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jl .LFUN_0012f990_7\n\t"
-      "cmpb $4, %%bl\n\t"
-      "jl .LFUN_0012f990_8\n\t"
-      ".LFUN_0012f990_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2ce\n\t"
-      "pushl $0x298ea0\n\t"
-      "pushl $0x299464\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0012f990_8:\n\t"
-      "movw -0x4(%%ebp), %%cx\n\t"
-      "movw %%cx, -0x10(%%ebp)\n\t"
-      "call *%[c12a830]\n\t"
-      "pushl $8\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $4\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "call *%[c12b700]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0012f990_17\n\t"
-      "movw (%%ebx), %%di\n\t"
-      "pushl %%esi\n\t"
-      "shrw $4, %%di\n\t"
-      "call *%[c12d3b0]\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c128e00]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_0012f990_9\n\t"
-      "pushl $0x299400\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_0012f990_10\n\t"
-      ".LFUN_0012f990_9:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2993c0\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_0012f990_10:\n\t"
-      "cmpb $1, %%bl\n\t"
-      "jne .LFUN_0012f990_18\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c12f5d0]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_0012f990_18\n\t"
-      "pushl $0x299348\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0012f990_11:\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movw $5, -0x2(%%ebp)\n\t"
-      "call *%[c81b90]\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xac(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x299300\n\t"
-      "call *%[c12b650]\n\t"
-      "pushl $2\n\t"
-      "leal -0x2(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $5\n\t"
-      "call *%[c12b700]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0012f990_17\n\t"
-      ".LFUN_0012f990_12:\n\t"
-      "movw (%%ebx), %%di\n\t"
-      "pushl %%esi\n\t"
-      "shrw $4, %%di\n\t"
-      "call *%[c12d3b0]\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c128e00]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0012f990_17\n\t"
-      "pushl $0x2992b8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0012f990_13:\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movw $2, -0x2(%%ebp)\n\t"
-      "call *%[c81b90]\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xac(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x299270\n\t"
-      "jmp .LFUN_0012f990_15\n\t"
-      ".LFUN_0012f990_14:\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movw $5, -0x2(%%ebp)\n\t"
-      "call *%[c81b90]\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xac(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x299228\n\t"
-      ".LFUN_0012f990_15:\n\t"
-      "call *%[c12b650]\n\t"
-      "pushl $2\n\t"
-      "leal -0x2(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $5\n\t"
-      "call *%[c12b700]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_0012f990_12\n\t"
-      "pushl $0x2991ec\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0012f990_16:\n\t"
-      "pushl $0x2991a8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0012f990_17:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_0012f990_18:\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12c020] "m"(b12f990_c12c020), [c12c500] "m"(b12f990_c12c500), [c12b650] "m"(b12f990_c12b650), [c12bce0] "m"(b12f990_c12bce0), [c12d3b0] "m"(b12f990_c12d3b0), [c1283c0] "m"(b12f990_c1283c0), [c12c100] "m"(b12f990_c12c100), [c12d250] "m"(b12f990_c12d250), [c8da40] "m"(b12f990_c8da40), [c19f3a0] "m"(b12f990_c19f3a0), [c1d9e59] "m"(b12f990_c1d9e59), [c1daeec] "m"(b12f990_c1daeec), [c8df60] "m"(b12f990_c8df60), [c8ddd0] "m"(b12f990_c8ddd0), [c1d9dac] "m"(b12f990_c1d9dac), [c12b700] "m"(b12f990_c12b700), [c128e00] "m"(b12f990_c128e00), [c12c560] "m"(b12f990_c12c560), [c12d2f0] "m"(b12f990_c12d2f0), [c12d570] "m"(b12f990_c12d570), [assert] "m"(b12f990_assert), [exitfn] "m"(b12f990_exitfn), [c12a830] "m"(b12f990_c12a830), [c12f5d0] "m"(b12f990_c12f5d0), [c81b90] "m"(b12f990_c81b90)
-      : "memory");
+  char decode_buf[0x50]; /* [0x40]=name(wchar), [0x40..0x4f]=client_token */
+  char expected_token[16];
+  char addr_buf[16];
+  char host_line[0x20];
+  int conn;
+  int in_hosts;
+  short machine_idx_out;
+  void *msg;
+  void *stream;
+  unsigned short msg_len;
+  char result;
+  short reject_code;
+  struct {
+    int games;
+    short idx;
+  } accepted_data;
+  short packet_type;
+  short packet_ver;
+
+  if (network_game_server_get_state(server, (short *)0) != 0)
+    return true;
+  message_size -= 2;
+  packet_type = 0xc;
+  packet_ver = 1;
+  if (network_game_server_client_machine_is_joined_to_game(
+        server, (int)(void *)machine)) {
+    network_game_log("ignoring redundant join request from machine");
+    return true;
+  }
+  if (!FUN_0012bce0((int)decode_buf, (int)((char *)message + 2),
+                    (short *)&message_size, &packet_type, &packet_ver, 3)) {
+    network_game_log(
+      "server failed to decode a message_client_join_game_request packet");
+    return false;
+  }
+  conn = network_game_server_adjust_machine_settings(machine);
+  network_connection_get_address(conn, (void *)addr_buf, 0);
+  if (network_game_server_get_state(server, (short *)0) == 0 &&
+      network_game_server_game_is_open((void *)server)) {
+    network_game_generate_join_game_token(expected_token);
+    /* client token is at decode_buf[0x40..0x4f] */
+    if (csmemcmp(decode_buf + 0x40, expected_token, 0x10) == 0) {
+      wide_to_ascii((const wchar_t *)decode_buf, decode_buf, 0x40);
+      stream = crt_fopen("d:\\hosts.txt", "r");
+      if (stream) {
+        csmemset(host_line, 0, 0x20);
+        in_hosts = 0;
+        while (crt_fgets(host_line, 0x20, stream) != NULL) {
+          if (csstrncmp(decode_buf, host_line, csstrlen(decode_buf)) == 0) {
+            in_hosts = 1;
+            break;
+          }
+        }
+        crt_fclose(stream);
+        if (!in_hosts) {
+          reject_code = 6;
+          network_game_log(
+            "server refused client '%s' because it is not in your hosts file",
+            decode_buf);
+          msg = encode_network_game_message(5, &reject_code, 2);
+          if (!msg)
+            return false;
+          msg_len = *(unsigned short *)msg;
+          conn = network_game_server_adjust_machine_settings(machine);
+          network_connection_write((void *)conn, msg, msg_len >> 4, 0, 1);
+          return false;
+        }
+      }
+      result =
+        network_game_server_accept_client_machine_into_game(server, machine);
+      if (result) {
+        int client_machine;
+
+        machine_idx_out = -1;
+        client_machine = network_game_server_get_client_machine(
+            server, (int)machine, (int *)&machine_idx_out);
+        network_game_server_get_game((void *)server);
+        if (!client_machine || *(char *)(client_machine + 0x40) < 0 ||
+            *(char *)(client_machine + 0x40) >= 4) {
+          display_assert(
+            "network_machine_is_valid(client_machine)",
+            "c:\\halo\\SOURCE\\networking\\network_server_message_handler.c",
+            0x2ce, 1);
+          system_exit(-1);
+        }
+        accepted_data.games = network_game_get_number_of_games_played();
+        accepted_data.idx = machine_idx_out;
+        msg = encode_network_game_message(4, &accepted_data, 8);
+        if (!msg)
+          return false;
+        msg_len = *(unsigned short *)msg;
+        conn = network_game_server_adjust_machine_settings(machine);
+        result =
+          network_connection_write((void *)conn, msg, msg_len >> 4, 0, 1);
+        if (!result)
+          network_game_log(
+            "network_game_server_write() failed in "
+            "network_game_server_handle_message_client_join_game_request()");
+        else
+          network_game_log("sent _message_type_server_machine_accepted message "
+                           "to %d",
+                           (int)machine_idx_out);
+        if (result == 1) {
+          result = FUN_0012f5d0((void *)server);
+          if (!result)
+            network_game_log(
+              "network_game_server_send_game_data_pregame() failed in "
+              "network_game_server_handle_message_client_join_game_request()");
+          return result;
+        }
+        return result;
+      }
+      reject_code = 5;
+      network_game_log(
+        "server failed to accept valid client machine '%s' @%s into the game",
+        decode_buf, transport_address_to_string((void *)addr_buf));
+    } else {
+      reject_code = 2;
+      network_game_log(
+        "client machine '%s' @%s tried to join game with a bad join token",
+        decode_buf, transport_address_to_string((void *)addr_buf));
+    }
+  } else {
+    reject_code = 5;
+    network_game_log(
+      "client machine '%s' @%s tried to join game when they should not be",
+      decode_buf, transport_address_to_string((void *)addr_buf));
+  }
+  msg = encode_network_game_message(5, &reject_code, 2);
+  if (!msg) {
+    network_game_log(
+      "failed to create a message_server_machine_rejected message");
+    return false;
+  }
+  msg_len = *(unsigned short *)msg;
+  conn = network_game_server_adjust_machine_settings(machine);
+  result = network_connection_write((void *)conn, msg, msg_len >> 4, 0, 1);
+  if (!result)
+    network_game_log(
+      "network_game_server_write() failed while sending a rejection reply");
+  return false;
 }
-#else
-#error "FUN_0012f990: clang naked draft required"
-#endif
+
 
