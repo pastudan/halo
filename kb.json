@@ -31323,7 +31323,7 @@
         {
           "addr": "0x17d990",
           "decl": "void FUN_0017d990(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d9a0",
