@@ -3590,7 +3590,8 @@
         {
           "addr": "0x14480",
           "decl": "void FUN_00014480(int actor_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00014480"
         },
         {
           "addr": "0x14510",
@@ -3714,7 +3715,8 @@
         {
           "addr": "0x15880",
           "decl": "int FUN_00015880(int actor_handle, char *state_data);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00015880"
         },
         {
           "addr": "0x15900",
