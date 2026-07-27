@@ -3594,7 +3594,7 @@
         {
           "addr": "0x14460",
           "decl": "void FUN_00014460(int actor_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14480",
@@ -3827,7 +3827,7 @@
         {
           "addr": "0x16cd0",
           "decl": "void FUN_00016cd0(int param_1, int param_2, int param_3, char *param_4);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x16cf0",
@@ -3836,7 +3836,7 @@
         },
         {
           "addr": "0x16d40",
-          "decl": "void actor_look_compute_prop_interest(void);",
+          "decl": "void actor_look_compute_prop_interest(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5);",
           "ported": false,
           "name": "actor_look_compute_prop_interest"
         },
@@ -4051,7 +4051,7 @@
         {
           "addr": "0x1abd0",
           "decl": "void FUN_0001abd0(int actor_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ac00",
@@ -6400,7 +6400,7 @@
         },
         {
           "addr": "0x11ff70",
-          "decl": "void FUN_0011ff70(void);",
+          "decl": "char FUN_0011ff70(void *anim);",
           "ported": false
         }
       ],
@@ -23873,7 +23873,7 @@
         },
         {
           "addr": "0x18e3c0",
-          "decl": "void *scenario_get(void);",
+          "decl": "void *FUN_0018e3c0(void);",
           "ported": true
         },
         {
@@ -33333,7 +33333,7 @@
         },
         {
           "addr": "0x1d8368",
-          "decl": "int __stdcall XapiFormatFATVolume(void *device_path);",
+          "decl": "int __stdcall FUN_001d8368(void *device_path);",
           "ported": false
         },
         {
@@ -37898,13 +37898,13 @@
         },
         {
           "addr": "0x120340",
-          "decl": "void FUN_00120340(void);",
-          "ported": false
+          "decl": "void FUN_00120340(void *anim);",
+          "ported": true
         },
         {
           "addr": "0x120400",
-          "decl": "void FUN_00120400(void);",
-          "ported": false
+          "decl": "void FUN_00120400(void *anim);",
+          "ported": true
         },
         {
           "addr": "0x120470",
@@ -37913,8 +37913,8 @@
         },
         {
           "addr": "0x1204a0",
-          "decl": "void FUN_001204a0(void);",
-          "ported": false
+          "decl": "char FUN_001204a0(void *anim, short a, short b);",
+          "ported": true
         },
         {
           "addr": "0x120500",
@@ -37969,7 +37969,7 @@
         {
           "addr": "0x120950",
           "decl": "void quaternion_compress_8byte(float *q, short *out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1209b0",
@@ -37989,7 +37989,7 @@
         {
           "addr": "0x120cb0",
           "decl": "short FUN_00120cb0(int animation_graph_tag_index, const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x120d10",
@@ -38354,12 +38354,12 @@
         {
           "addr": "0x14ad60",
           "decl": "void render_debug_collision_sphere(void *sphere, void *color);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14ad80",
           "decl": "void render_debug_collision_cylinder(void *cylinder, void *color);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14adb0",
