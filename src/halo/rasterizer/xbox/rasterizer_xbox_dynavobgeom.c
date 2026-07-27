@@ -1351,69 +1351,33 @@ void FUN_0015e800(void)
 #endif
 
 
-/* FUN_0015e9e0 (0x15e9e0) — XBE naked draft (batch 353). */
-#if defined(__clang__)
-static void (*const b15e9e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b15e9e0_exitfn)(int) = system_exit;
-static uint32_t __stdcall (*const b15e9e0_c1ed930)(void *resource) = (void *)D3DResource_Release;
-
-__attribute__((naked, noinline))
+/* FUN_0015e9e0 (0x15e9e0) — readable C lift. */
 void FUN_0015e9e0(void)
 {
-  __asm__ volatile(
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015e9e0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x107\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015e9e0_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x476af4, %%esi\n\t"
-      "movl $0xc, %%edi\n\t"
-      ".LFUN_0015e9e0_2:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0015e9e0_3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, (%%esi)\n\t"
-      ".LFUN_0015e9e0_3:\n\t"
-      "addl $0x14, %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .LFUN_0015e9e0_2\n\t"
-      "movl 0x47dbf0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_0015e9e0_4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, 0x47dbf0\n\t"
-      ".LFUN_0015e9e0_4:\n\t"
-      "movl 0x47dbe8, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0015e9e0_5\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, 0x47dbe8\n\t"
-      ".LFUN_0015e9e0_5:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b15e9e0_assert), [exitfn] "m"(b15e9e0_exitfn), [c1ed930] "m"(b15e9e0_c1ed930)
-      : "memory");
+  int *slot;
+  int i;
+
+  if (!*(int *)0x476ab0) {
+    display_assert((char *)0x29dc40, (char *)0x2a0110, 0x107, 1);
+    system_exit(-1);
+  }
+  slot = (int *)0x476af4;
+  for (i = 0xc; i != 0; i--) {
+    if (*slot) {
+      D3DResource_Release((void *)*slot);
+      *slot = 0;
+    }
+    slot = (int *)((char *)slot + 0x14);
+  }
+  if (*(int *)0x47dbf0) {
+    D3DResource_Release((void *)*(int *)0x47dbf0);
+    *(int *)0x47dbf0 = 0;
+  }
+  if (*(int *)0x47dbe8) {
+    D3DResource_Release((void *)*(int *)0x47dbe8);
+    *(int *)0x47dbe8 = 0;
+  }
 }
-#else
-#error "FUN_0015e9e0: clang naked draft required"
-#endif
-
-
 /* 0x15ea70 */
 void *FUN_0015ea70(int dynamic_triangle_buffer_index)
 {

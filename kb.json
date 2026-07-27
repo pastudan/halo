@@ -38712,7 +38712,7 @@
         {
           "addr": "0x15e9e0",
           "decl": "void FUN_0015e9e0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x15ea70",
