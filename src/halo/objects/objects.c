@@ -20184,32 +20184,11 @@ void FUN_00085260(short param_1, short param_2)
   return;
 }
 
-/* FUN_001397f0 (0x1397f0) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_001397f0(float param_1 __attribute__((unused)), float param_2 __attribute__((unused)))
+/* FUN_001397f0 (0x1397f0) — readable C lift. */
+float FUN_001397f0(float a, float b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(float *)0x2533c8 - ((b * b) / (a * a));
 }
-#else
-#error "FUN_001397f0: clang naked draft required"
-#endif
-
 
 /* objects_scripting_attach (0x144ae0) — XBE naked draft (batch 69). */
 #if defined(__clang__)

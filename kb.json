@@ -16296,8 +16296,8 @@
         {
           "name": "FUN_001397f0",
           "addr": "0x1397f0",
-          "decl": "float FUN_001397f0(float param_1, float param_2);",
-          "ported": false
+          "decl": "float FUN_001397f0(float a, float b);",
+          "ported": true
         },
         {
           "addr": "0x139810",
