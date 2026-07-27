@@ -21051,8 +21051,9 @@
         },
         {
           "addr": "0x17ae90",
-          "decl": "void FUN_0017ae90(void);",
-          "ported": false
+          "decl": "void FUN_0017ae90(int object_handle, int datum, float *position, int callback);",
+          "ported": false,
+          "name": "FUN_0017ae90"
         },
         {
           "addr": "0x17b000",
@@ -31210,7 +31211,7 @@
         {
           "addr": "0x17cfb0",
           "decl": "void FUN_0017cfb0(int object_handle, int datum, float *position, int callback);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cfc0",
