@@ -1809,83 +1809,40 @@ void find_next_target(void)
 #endif
 
 
-/* FUN_000b4fb0 (0xb4fb0) — XBE naked draft (batch 146). */
-#if defined(__clang__)
-static void *(*const bb4fb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bb4fb0_cb4bf0)(void) = (void *)FUN_000b4bf0;
-static void * (*const bb4fb0_ca9350)(void) = game_engine_get_variant;
-static void (*const bb4fb0_cb4e20)(void) = (void *)find_next_target;
-static void (*const bb4fb0_cb4d00)(void) = (void *)FUN_000b4d00;
-
-__attribute__((naked, noinline))
-void FUN_000b4fb0(void)
+/* FUN_000b4fb0 (0xb4fb0) — readable C lift from XBE leaf.
+ * If other player is inactive, no-op. Else adjust score via FUN_000b4d00;
+ * non-force path may call FUN_000b4bf0 / find_next_target for team games. */
+void FUN_000b4fb0(int player_handle, int unused, int other_handle, char force_delta)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xd1(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_000b4fb0_4\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000b4fb0_3\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000b4fb0_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cb4bf0]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[ca9350]\n\t"
-      "movb 0x4e(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000b4fb0_1\n\t"
-      "cmpl %%edi, 0x88(%%ebx)\n\t"
-      "jne .LFUN_000b4fb0_3\n\t"
-      "movl %%esi, %%edi\n\t"
-      "call *%[cb4e20]\n\t"
-      ".LFUN_000b4fb0_1:\n\t"
-      "movl $1, %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[cb4d00]\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000b4fb0_2:\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[cb4d00]\n\t"
-      ".LFUN_000b4fb0_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000b4fb0_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bb4fb0_dget), [cb4bf0] "m"(bb4fb0_cb4bf0), [ca9350] "m"(bb4fb0_ca9350), [cb4e20] "m"(bb4fb0_cb4e20), [cb4d00] "m"(bb4fb0_cb4d00)
-      : "memory");
+  void *players;
+  void *other;
+  void *player;
+  void *variant;
+
+  (void)unused;
+  players = *(void **)0x5aa6d4;
+  other = datum_get(players, other_handle);
+  if (*(unsigned char *)((char *)other + 0xd1))
+    return;
+  if (player_handle == -1)
+    return;
+  player = datum_get(players, player_handle);
+  if (force_delta) {
+    FUN_000b4d00(player_handle, -1);
+    return;
+  }
+  ((void (*)(int, int))(void *)FUN_000b4bf0)(other_handle, player_handle);
+  variant = game_engine_get_variant();
+  if (*(unsigned char *)((char *)variant + 0x4e)) {
+    if (*(int *)((char *)player + 0x88) != other_handle)
+      return;
+    {
+      void (*const fn)(void) = (void (*)(void))(void *)find_next_target;
+      __asm__ volatile("movl %0, %%edi; call *%1" : : "r"(player_handle), "m"(fn) : "eax", "ecx", "edx", "edi", "memory");
+    }
+  }
+  FUN_000b4d00(player_handle, 1);
 }
-#else
-#error "FUN_000b4fb0: clang naked draft required"
-#endif
 
 
 /* FUN_000b5040 (0xb5040) — XBE naked draft (batch 117). */

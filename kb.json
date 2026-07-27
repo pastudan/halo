@@ -8505,8 +8505,9 @@
         },
         {
           "addr": "0xb4fb0",
-          "decl": "void FUN_000b4fb0(void);",
-          "ported": false
+          "decl": "void FUN_000b4fb0(int player_handle, int unused, int other_handle, char force_delta);",
+          "ported": true,
+          "name": "FUN_000b4fb0"
         },
         {
           "addr": "0xb5040",
