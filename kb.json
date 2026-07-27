@@ -13827,7 +13827,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcf3e0",
@@ -22772,7 +22772,7 @@
         {
           "addr": "0x111770",
           "decl": "void FUN_00111770(int state @<esi>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x111910",
@@ -24963,13 +24963,13 @@
           "addr": "0x1ccbe0",
           "comment": "Compute listener distance squared for a channel/source pair.",
           "decl": "float FUN_001ccbe0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1ccca0",
           "comment": "Compute distance for random scale checks.",
           "decl": "float FUN_001ccca0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1ccd70",
