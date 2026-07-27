@@ -287,81 +287,30 @@ void FUN_001ba0c0(void *element __attribute__((unused)))
 #endif
 
 
-/* FUN_001ba250 (0x1ba250) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static int __stdcall (*const b1ba250_c1cf999)(int thread_handle, int priority) = SetThreadPriority;
-
-__attribute__((naked, noinline))
-void FUN_001ba250(void)
+/* FUN_001ba250 (0x1ba250) — readable C lift. */
+void *FUN_001ba250(unsigned char enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x32ea98, %%ecx\n\t"
-      "movb %%al, 0x988(%%ecx)\n\t"
-      "je .LFUN_001ba250_1\n\t"
-      "movl 0x95c(%%ecx), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cf999]\n\t"
-      "movl $0x512000, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ba250_1:\n\t"
-      "movl 0x95c(%%ecx), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1cf999]\n\t"
-      "movl $0x512000, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1cf999] "m"(b1ba250_c1cf999)
-      : "memory");
+  char *base = *(char **)0x32ea98;
+  base[0x988] = (char)enable;
+  if (enable) {
+    SetThreadPriority(*(int *)(base + 0x95c), 1);
+  } else {
+    SetThreadPriority(*(int *)(base + 0x95c), 0);
+  }
+  return (void *)0x512000;
 }
-#else
-#error "FUN_001ba250: clang naked draft required"
-#endif
 
-
-/* FUN_001ba290 (0x1ba290) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static int __stdcall (*const b1ba290_c1cf999)(int thread_handle, int priority) = SetThreadPriority;
-
-__attribute__((naked, noinline))
-void FUN_001ba290(void)
+/* FUN_001ba290 (0x1ba290) — readable C lift. */
+void FUN_001ba290(unsigned char enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x32ea98, %%ecx\n\t"
-      "movb %%al, 0x988(%%ecx)\n\t"
-      "je .LFUN_001ba290_1\n\t"
-      "movl 0x95c(%%ecx), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cf999]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ba290_1:\n\t"
-      "movl 0x95c(%%ecx), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1cf999]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1cf999] "m"(b1ba290_c1cf999)
-      : "memory");
+  char *base = *(char **)0x32ea98;
+  base[0x988] = (char)enable;
+  if (enable) {
+    SetThreadPriority(*(int *)(base + 0x95c), 1);
+  } else {
+    SetThreadPriority(*(int *)(base + 0x95c), 0);
+  }
 }
-#else
-#error "FUN_001ba290: clang naked draft required"
-#endif
-
 
 /* FUN_001ba2f0 (0x1ba2f0) — XBE naked draft (batch 247). */
 #if defined(__clang__)
@@ -594,36 +543,14 @@ void FUN_001ba2f0(int buffer __attribute__((unused)), int size __attribute__((un
 #endif
 
 
-/* FUN_001ba5d0 (0x1ba5d0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static int __stdcall (*const b1ba5d0_c1d0336)(int handle, int timeout_ms) = WaitForSingleObject;
-static bool __stdcall (*const b1ba5d0_c1cfeaa)(void *handle) = SetEvent;
-
-__attribute__((naked, noinline))
+/* FUN_001ba5d0 (0x1ba5d0) — readable C lift. */
 void FUN_001ba5d0(void)
 {
-  __asm__ volatile(
-      "movl 0x32ea98, %%eax\n\t"
-      "movl 0x954(%%eax), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d0336]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001ba5d0_1\n\t"
-      "movl 0x32ea98, %%edx\n\t"
-      "movl 0x950(%%edx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cfeaa]\n\t"
-      ".LFUN_001ba5d0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c1d0336] "m"(b1ba5d0_c1d0336), [c1cfeaa] "m"(b1ba5d0_c1cfeaa)
-      : "memory");
+  char *base = *(char **)0x32ea98;
+  if (WaitForSingleObject(*(int *)(base + 0x954), 0) != 0) {
+    SetEvent(*(void **)(base + 0x950));
+  }
 }
-#else
-#error "FUN_001ba5d0: clang naked draft required"
-#endif
-
 
 /* cache_copy_compressed_alloc (0x1ba660) — readable C lift. */
 void *cache_copy_compressed_alloc(int unused, int a, int b)

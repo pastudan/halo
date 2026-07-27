@@ -2788,51 +2788,24 @@ void profile_frame_get_value(void)
 #endif
 
 
-/* profile_frame_iterator_new (0x910b0) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static void (*const b910b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b910b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void profile_frame_iterator_new(void)
+/* profile_frame_iterator_new (0x910b0) — readable C lift. */
+void profile_frame_iterator_new(int16_t *iter)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lprofile_frame_iterator_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x58b\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x25c3b4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprofile_frame_iterator_new_1:\n\t"
-      "movw $0xffff, (%%esi)\n\t"
-      "movswl 0x3365c4, %%eax\n\t"
-      "addl $0xff, %%eax\n\t"
-      "andl $0x800000ff, %%eax\n\t"
-      "jns .Lprofile_frame_iterator_new_2\n\t"
-      "decl %%eax\n\t"
-      "orl $0xffffff00, %%eax\n\t"
-      "incl %%eax\n\t"
-      ".Lprofile_frame_iterator_new_2:\n\t"
-      "movw %%ax, 0x2(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b910b0_assert), [exitfn] "m"(b910b0_exitfn)
-      : "memory");
+  extern char DAT_0025c3b4[];
+  extern char DAT_002683fc[];
+  int v;
+  if (!iter) {
+    display_assert(DAT_0025c3b4, DAT_002683fc, 0x58b, 1);
+    system_exit(-1);
+  }
+  iter[0] = -1;
+  v = (int)*(int16_t *)0x3365c4 + 0xff;
+  v &= 0x800000ff;
+  if (v < 0) {
+    v = ((v - 1) | 0xffffff00) + 1;
+  }
+  iter[1] = (int16_t)v;
 }
-#else
-#error "profile_frame_iterator_new: clang naked draft required"
-#endif
-
 
 /* profile_frame_iterator_next (0x91110) — XBE naked draft (batch 254). */
 #if defined(__clang__)
