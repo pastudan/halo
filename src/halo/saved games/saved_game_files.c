@@ -75,77 +75,31 @@ void saved_game_files_initialize(void)
 }
 /* --- saved_game_files.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001c1b00 (0x1c1b00) — XBE naked draft (batch 262). */
-#if defined(__clang__)
-static void (*const b1c1b00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c1b00_exitfn)(int) = system_exit;
-static void (*const b1c1b00_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c1b00_c81720)(void *thread_reference) = thread_is_done;
-static void (*const b1c1b00_c81770)(void *thread_reference) = thread_close;
-static void * (*const b1c1b00_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static bool (*const b1c1b00_c81630)(int priority_flags, void *function, int param, void **thread_reference) = thread_new;
-
-__attribute__((naked, noinline))
-void FUN_001c1b00(int profile_handle __attribute__((unused)), void *out __attribute__((unused)))
+/* FUN_001c1b00 (0x1c1b00) — readable C lift (esi=out). */
+void FUN_001c1b00(int profile_handle, void *out /* @<esi> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001c1b00_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2c0\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x2829b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c1b00_1:\n\t"
-      "movl 0x4eaa2c, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c1b00_3\n\t"
-      "pushl $0x2ba0f8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "nop\n\t"
-      ".LFUN_001c1b00_2:\n\t"
-      "movl 0x4eaa2c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81720]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c1b00_2\n\t"
-      "movl 0x4eaa2c, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c81770]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x4eaa2c\n\t"
-      ".LFUN_001c1b00_3:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x4ea9fc\n\t"
-      "movl %%edx, 0x4ea9f8\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x4eaa2c\n\t"
-      "pushl $0x4ea9f8\n\t"
-      "pushl $0x1c15c0\n\t"
-      "pushl $0\n\t"
-      "call *%[c81630]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c1b00_assert), [exitfn] "m"(b1c1b00_exitfn), [c8f390] "m"(b1c1b00_c8f390), [c81720] "m"(b1c1b00_c81720), [c81770] "m"(b1c1b00_c81770), [c8e0b0] "m"(b1c1b00_c8e0b0), [c81630] "m"(b1c1b00_c81630)
-      : "memory");
+  extern char DAT_002829b0[];
+  extern char DAT_002b9f70[];
+  extern char DAT_002ba0f8[];
+  void *thr;
+
+  __asm__ volatile("movl %%esi, %0" : "=r"(out));
+  if (out == 0) {
+    display_assert(DAT_002829b0, DAT_002b9f70, 0x2c0, 1);
+    system_exit(-1);
+  }
+  thr = *(void **)0x4eaa2c;
+  if (thr != 0) {
+    error(2, DAT_002ba0f8);
+    while (!thread_is_done(thr))
+      ;
+    thread_close(*(void **)0x4eaa2c);
+    *(void **)0x4eaa2c = 0;
+  }
+  *(int *)0x4ea9f8 = profile_handle;
+  csmemcpy((void *)0x4ea9fc, out, 0x30);
+  thread_new(0, (void *)0x1c15c0, (int)0x4ea9f8, (void **)0x4eaa2c);
 }
-#else
-#error "FUN_001c1b00: clang naked draft required"
-#endif
-
-
 /* FUN_001c1ba0 (0x1c1ba0) — readable C lift. */
 void FUN_001c1ba0(void)
 {

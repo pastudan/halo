@@ -23691,8 +23691,8 @@
       "functions": [
         {
           "addr": "0x1c1b00",
-          "decl": "void FUN_001c1b00(int profile_handle, void *out@<esi>);",
-          "ported": false,
+          "decl": "void FUN_001c1b00(int profile_handle, void *out /* @<esi> */);",
+          "ported": true,
           "name": "FUN_001c1b00"
         },
         {
