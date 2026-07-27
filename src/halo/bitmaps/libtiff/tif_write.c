@@ -2038,51 +2038,19 @@ unsigned int FUN_0006f8d0(void *tif, int scale)
   return FUN_0006f890(tif) * c * (unsigned int)scale;
 }
 
-/* FUN_0006f910 (0x6f910) — XBE naked draft (batch 338). */
-#if defined(__clang__)
-static void (*const b6f910_c6f890)(void) = FUN_0006f890;
-
-__attribute__((naked, noinline))
-void FUN_0006f910(void)
+/* FUN_0006f910 (0x6f910) — readable C lift. */
+unsigned int FUN_0006f910(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x2c(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_0006f910_1\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006f910_1\n\t"
-      "movl 0x30(%%esi), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0006f910_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6f890]\n\t"
-      "imull 0x2c(%%esi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "imull %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006f910_1:\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f890] "m"(b6f910_c6f890)
-      : "memory");
+  unsigned int a;
+  unsigned int b;
+  unsigned int c;
+  a = *(unsigned int *)((char *)tif + 0x2c);
+  b = *(unsigned int *)((char *)tif + 0x28);
+  c = *(unsigned int *)((char *)tif + 0x30);
+  if (!a || !b || !c)
+    return 0;
+  return FUN_0006f890(tif) * a * c;
 }
-#else
-#error "FUN_0006f910: clang naked draft required"
-#endif
-
 
 /* FUN_0006f950 (0x6f950) — XBE naked draft (batch 387). */
 #if defined(__clang__)

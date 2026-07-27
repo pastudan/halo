@@ -37213,8 +37213,8 @@
         },
         {
           "addr": "0x6f910",
-          "decl": "void FUN_0006f910(void);",
-          "ported": false
+          "decl": "unsigned int FUN_0006f910(void *tif);",
+          "ported": true
         },
         {
           "addr": "0x6f950",
