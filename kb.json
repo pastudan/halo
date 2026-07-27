@@ -4397,7 +4397,7 @@
         {
           "addr": "0x40860",
           "decl": "void ai_handle_unit_effect(int unit_handle, int effect_type, int priority);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x409e0",
