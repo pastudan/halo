@@ -1958,66 +1958,34 @@ void following_camera_new(void *camera)
   *(int *)((char *)camera + 0x18) = 0x3f800000;
 }
 
-/* FUN_000898b0 (0x898b0) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static void *(*const b898b0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b898b0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void *(*const b898b0_tag)(int, int) = tag_get;
-static void *(*const b898b0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void FUN_000898b0(void)
+/* FUN_000898b0 (0x898b0) — readable C lift from XBE leaf. */
+void *FUN_000898b0(int object_index)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000898b0_1\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000898b0_1\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x2a0(%%esi), %%edx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movb (%%eax), %%cl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb $0x15, %%cl\n\t"
-      "je .LFUN_000898b0_1\n\t"
-      "addl $0x84, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000898b0_2\n\t"
-      ".LFUN_000898b0_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x1a8, %%eax\n\t"
-      ".LFUN_000898b0_2:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b898b0_get), [tryget] "m"(b898b0_tryget), [tag] "m"(b898b0_tag), [elem] "m"(b898b0_elem)
-      : "memory");
+  void *unit;
+  void *veh;
+  void *tag;
+  void *elem;
+  signed short idx;
+
+  unit = object_get_and_verify_type(object_index, 3);
+  if (*(int *)((char *)unit + 0xcc) != -1) {
+    veh = object_try_and_get_and_verify_type(*(int *)((char *)unit + 0xcc), 2);
+    if (veh) {
+      tag = tag_get(*(int *)veh, 0x76656869);
+      idx = *(short *)((char *)unit + 0x2a0);
+      elem = tag_block_get_element((char *)tag + 0x2e4, idx, 0x11c);
+      if ((*(unsigned char *)elem & 0x15) != 0) {
+        elem = (char *)elem + 0x84;
+        if (elem) {
+          return elem;
+        }
+      }
+    }
+  }
+  tag = tag_get(*(int *)unit, 0x756e6974);
+  return (char *)tag + 0x1a8;
 }
-#else
-#error "FUN_000898b0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00089930 (0x89930) — readable C lift.
