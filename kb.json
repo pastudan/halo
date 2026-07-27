@@ -25662,7 +25662,7 @@
         {
           "addr": "0x193870",
           "decl": "uint8_t structure_bsp_cluster_sound_encoding(void *bsp, int16_t from_cluster, int16_t to_cluster);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "structure_bsp_definitions.obj",
