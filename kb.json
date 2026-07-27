@@ -5237,8 +5237,8 @@
         },
         {
           "addr": "0xa5830",
-          "decl": "void FUN_000a5830(void);",
-          "ported": false
+          "decl": "char FUN_000a5830(float *from, float *to, int object_handle, int other_handle);",
+          "ported": true
         },
         {
           "addr": "0xa5920",

@@ -189,12 +189,12 @@ void cheat_all_powerups(void)
 
 /* FUN_000a54b0 (0xa54b0) — XBE naked draft (batch 139). */
 #if defined(__clang__)
-static void (*const ba54b0_ca3e60)(void) = FUN_000a3e60;
+static void (*const ba54b0_ca3e60)(void) = (void *)FUN_000a3e60;
 static bool (*const ba54b0_c18f3e0)(void *location, void *position, int16_t *out_sky_index) = FUN_0018f3e0;
 static void * (*const ba54b0_c18e3c0)(void) = global_scenario_get;
 static void *(*const ba54b0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const ba54b0_ca4200)(void) = weather_particle_system_delete;
-static void (*const ba54b0_ca40a0)(void) = weather_particle_system_new;
+static void (*const ba54b0_ca4200)(void) = (void *)weather_particle_system_delete;
+static void (*const ba54b0_ca40a0)(void) = (void *)weather_particle_system_new;
 static void (*const ba54b0_ca4e20)(int16_t weather_index) = weather_particle_system_render;
 
 __attribute__((naked, noinline))
@@ -464,105 +464,47 @@ void FUN_000a5810(float *out, float value, int field0)
   *(int *)out = field0;
 }
 
-/* FUN_000a5830 (0xa5830) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void (*const ba5830_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba5830_exitfn)(int) = system_exit;
-static int (*const ba5830_c13d7f0)(int object_handle) = object_get_root_parent;
-static bool (*const ba5830_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
-
-__attribute__((naked, noinline))
-void FUN_000a5830(void)
+/* FUN_000a5830 (0xa5830) — readable C lift. */
+char FUN_000a5830(float *from, float *to, int object_handle, int other_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x5c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $0x20, 0x4761d8\n\t"
-      "jl .LFUN_000a5830_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15e\n\t"
-      "pushl $0x26b08c\n\t"
-      "pushl $0x253440\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000a5830_1:\n\t"
-      "movw 0x4761d8, %%ax\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "incw %%ax\n\t"
-      "pushl %%edx\n\t"
-      "movw $6, 0x5a8c80(,%%ecx,2)\n\t"
-      "movw %%ax, 0x4761d8\n\t"
-      "call *%[c13d7f0]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%edx)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%edx)\n\t"
-      "leal -0x5c(%%ebp), %%edx\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0xc2ad\n\t"
-      "call *%[ray]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000a5830_2\n\t"
-      "cmpw $3, -0x5c(%%ebp)\n\t"
-      "jne .LFUN_000a5830_3\n\t"
-      "movl -0x24(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d7f0]\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c13d7f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "popl %%esi\n\t"
-      "jne .LFUN_000a5830_3\n\t"
-      ".LFUN_000a5830_2:\n\t"
-      "movb $1, %%bl\n\t"
-      ".LFUN_000a5830_3:\n\t"
-      "cmpw $1, 0x4761d8\n\t"
-      "jg .LFUN_000a5830_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x16f\n\t"
-      "pushl $0x26b08c\n\t"
-      "pushl $0x253418\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000a5830_4:\n\t"
-      "decw 0x4761d8\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba5830_assert), [exitfn] "m"(ba5830_exitfn), [c13d7f0] "m"(ba5830_c13d7f0), [ray] "m"(ba5830_ray)
-      : "memory");
-}
-#else
-#error "FUN_000a5830: clang naked draft required"
-#endif
+  char ok;
+  int root;
+  float delta[3];
+  short hit[0x2e]; /* 0x5c bytes */
+  int hit_obj;
+  int root_a;
+  int root_b;
 
+  ok = 0;
+  if (*(short *)0x4761d8 >= 0x20) {
+    display_assert((const char *)0x253440, (const char *)0x26b08c, 0x15e, 1);
+    system_exit(-1);
+  }
+  {
+    short idx = *(short *)0x4761d8;
+    *(short *)(0x5a8c80 + idx * 2) = 6;
+    *(short *)0x4761d8 = (short)(idx + 1);
+  }
+  root = object_get_root_parent(object_handle);
+  delta[0] = to[0] - from[0];
+  delta[1] = to[1] - from[1];
+  delta[2] = to[2] - from[2];
+  if (!FUN_0014df70(0xc2ad, from, delta, root, hit)) {
+    ok = 1;
+  } else if (hit[0] == 3) {
+    hit_obj = *(int *)((char *)hit + 0x38); /* -0x24 - (-0x5c) = 0x38 */
+    root_a = object_get_root_parent(hit_obj);
+    root_b = object_get_root_parent(other_handle);
+    if (root_a == root_b)
+      ok = 1;
+  }
+  if (*(short *)0x4761d8 <= 1) {
+    display_assert((const char *)0x253418, (const char *)0x26b08c, 0x16f, 1);
+    system_exit(-1);
+  }
+  *(short *)0x4761d8 = (short)(*(short *)0x4761d8 - 1);
+  return ok;
+}
 
 /* FUN_000a5920 (0xa5920) — XBE naked draft (batch 117). */
 #if defined(__clang__)
@@ -747,9 +689,9 @@ void FUN_000a5920(void)
 
 /* FUN_000a5ac0 (0xa5ac0) — XBE naked draft (batch 119). */
 #if defined(__clang__)
-static void (*const ba5ac0_ca5920)(void) = FUN_000a5920;
+static void (*const ba5ac0_ca5920)(void) = (void *)FUN_000a5920;
 static float (*const ba5ac0_norm)(float *) = normalize3d;
-static void (*const ba5ac0_c1d94f0)(void) = FUN_001d94f0;
+static void (*const ba5ac0_c1d94f0)(void) = (void *)FUN_001d94f0;
 static void (*const ba5ac0_ca5590)(void) = (void (*)(void))(void *)&FUN_000a5590;
 static void *(*const ba5ac0_get)(int, int) = object_get_and_verify_type;
 static void *(*const ba5ac0_tag)(int, int) = tag_get;
@@ -922,10 +864,10 @@ void FUN_000a5ac0(void)
 
 /* FUN_000a5c60 (0xa5c60) — XBE naked draft (batch 126). */
 #if defined(__clang__)
-static void (*const ba5c60_ca5920)(void) = FUN_000a5920;
-static void (*const ba5c60_ca5830)(void) = FUN_000a5830;
+static void (*const ba5c60_ca5920)(void) = (void *)FUN_000a5920;
+static void (*const ba5c60_ca5830)(void) = (void *)FUN_000a5830;
 static float (*const ba5c60_norm)(float *) = normalize3d;
-static void (*const ba5c60_c1d94f0)(void) = FUN_001d94f0;
+static void (*const ba5c60_c1d94f0)(void) = (void *)FUN_001d94f0;
 
 __attribute__((naked, noinline))
 void FUN_000a5c60(void)
@@ -1054,8 +996,8 @@ static void *(*const ba5d70_get)(int, int) = object_get_and_verify_type;
 static char (*const ba5d70_c110210)(float *p1, float p2, float *p3, float *p4, float p5, float sine, float cosine) = FUN_00110210;
 static bool (*const ba5d70_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
 static void *(*const ba5d70_tag)(int, int) = tag_get;
-static void (*const ba5d70_ca5ac0)(void) = FUN_000a5ac0;
-static void (*const ba5d70_ca5d70)(void) = FUN_000a5d70;
+static void (*const ba5d70_ca5ac0)(void) = (void *)FUN_000a5ac0;
+static void (*const ba5d70_ca5d70)(void) = (void *)FUN_000a5d70;
 
 __attribute__((naked, noinline))
 void FUN_000a5d70(void)
@@ -1223,7 +1165,7 @@ void FUN_000a5d70(void)
 static void (*const ba5f00_chkstk)(void) = FUN_001d90e0;
 static int16_t (*const ba5f00_c198ad0)(int16_t starting_cluster, float *point, float *direction, float length, float sine, float cosine, int16_t max_count, int16_t *out_indices) = structure_clusters_in_cone;
 static int16_t (*const ba5f00_c140420)(int flags, int16_t cluster_count, int16_t *cluster_indices, int16_t max_count, int *out_handles) = object_find_in_cluster;
-static void (*const ba5f00_ca5d70)(void) = FUN_000a5d70;
+static void (*const ba5f00_ca5d70)(void) = (void *)FUN_000a5d70;
 
 __attribute__((naked, noinline))
 void FUN_000a5f00(void)
@@ -1365,9 +1307,9 @@ void FUN_000a5f00(void)
 static int (*const ba6030_c18e720)(int point) = FUN_0018e720;
 static void * (*const ba6030_c18e3c0)(void) = global_scenario_get;
 static void *(*const ba6030_elem)(void *, int, int) = tag_block_get_element;
-static void (*const ba6030_ca5f00)(void) = FUN_000a5f00;
+static void (*const ba6030_ca5f00)(void) = (void *)FUN_000a5f00;
 static void __cdecl (*const ba6030_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
-static void (*const ba6030_ca5830)(void) = FUN_000a5830;
+static void (*const ba6030_ca5830)(void) = (void *)FUN_000a5830;
 
 __attribute__((naked, noinline))
 void FUN_000a6030(void)
@@ -1485,9 +1427,9 @@ static char * (*const ba6130_c8d9d0)(char *buffer, const char *format, ...) = cs
 static void (*const ba6130_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const ba6130_exitfn)(int) = system_exit;
 static int16_t (*const ba6130_c1a8690)(int unit_handle) = unit_get_zoom_level;
-static void (*const ba6130_ca5610)(void) = FUN_000a5610;
+static void (*const ba6130_ca5610)(void) = (void *)FUN_000a5610;
 static void (*const ba6130_c86b80)(void) = (void *)director_camera_deterministic;
-static void (*const ba6130_ca6030)(void) = FUN_000a6030;
+static void (*const ba6130_ca6030)(void) = (void *)FUN_000a6030;
 static float (*const ba6130_norm)(float *) = normalize3d;
 static void *(*const ba6130_get)(int, int) = object_get_and_verify_type;
 static bool (*const ba6130_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
@@ -1941,9 +1883,9 @@ static int (*const ba6470_cba3c0)(int16_t local_player_index) = local_player_get
 static void *(*const ba6470_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static int (*const ba6470_c1a9880)(int unit_index) = unit_get_aiming_unit_index;
 static int16_t (*const ba6470_cb6a70)(int16_t local_player_index) = player_control_get_zoom_level;
-static void (*const ba6470_ca5610)(void) = FUN_000a5610;
+static void (*const ba6470_ca5610)(void) = (void *)FUN_000a5610;
 static void * (*const ba6470_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
-static void (*const ba6470_ca6030)(void) = FUN_000a6030;
+static void (*const ba6470_ca6030)(void) = (void *)FUN_000a6030;
 static void (*const ba6470_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
 static void (*const ba6470_c140070)(int object_handle, float *position_out, float *direction_out) = object_get_root_location;
 
