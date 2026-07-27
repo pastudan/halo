@@ -32785,7 +32785,7 @@
         {
           "addr": "0x1efa80",
           "decl": "void __stdcall D3D_BlockOnTime(uint32_t time, int param2);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "D3D8:d3dresource.obj",
