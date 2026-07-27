@@ -32755,8 +32755,8 @@
         },
         {
           "addr": "0x796e0",
-          "decl": "void FUN_000796e0(void);",
-          "ported": false
+          "decl": "void FUN_000796e0(short destination_mipmap_index /* @<bx> */, void *destination_bitmap /* @<esi> */, void *source_bitmap /* @<edi> */);",
+          "ported": true
         },
         {
           "addr": "0x798e0",

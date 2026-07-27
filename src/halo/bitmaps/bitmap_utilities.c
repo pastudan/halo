@@ -4392,187 +4392,88 @@ void bitmap_2d_sharpen(void)
 #endif
 
 
-/* FUN_000796e0 (0x796e0) — XBE naked draft (batch 248). */
-#if defined(__clang__)
-static bool (*const b796e0_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b796e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b796e0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000796e0(void)
+/* FUN_000796e0 (0x796e0) — validate 2D mipmap compress args then halt.
+ *
+ * Checks source (@edi) and destination (@esi) bitmaps and mip index (@bx),
+ * then always display_assert(NULL, ..., 0x69f) — unimplemented body.
+ * Source: c:\halo\SOURCE\bitmaps\bitmap_utilities.c, lines 0x63c-0x69f.
+ */
+void FUN_000796e0(short destination_mipmap_index /* @<bx> */,
+                  void *destination_bitmap /* @<esi> */,
+                  void *source_bitmap /* @<edi> */)
 {
-  __asm__ volatile(
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000796e0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x63c\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261aa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_1:\n\t"
-      "cmpw $0, 0xa(%%edi)\n\t"
-      "je .LFUN_000796e0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x63d\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264224\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_2:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000796e0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x63f\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261974\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_3:\n\t"
-      "cmpw $0, 0xa(%%esi)\n\t"
-      "je .LFUN_000796e0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x640\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x26460c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_4:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .LFUN_000796e0_5\n\t"
-      "cmpw 0x14(%%esi), %%bx\n\t"
-      "jle .LFUN_000796e0_6\n\t"
-      ".LFUN_000796e0_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x641\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2618e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_6:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%esi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .LFUN_000796e0_7\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .LFUN_000796e0_8\n\t"
-      ".LFUN_000796e0_7:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".LFUN_000796e0_8:\n\t"
-      "movswl 0x4(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_000796e0_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x642\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2645b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_9:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .LFUN_000796e0_10\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .LFUN_000796e0_11\n\t"
-      ".LFUN_000796e0_10:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".LFUN_000796e0_11:\n\t"
-      "movswl 0x6(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_000796e0_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x643\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264560\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_12:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x8(%%esi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .LFUN_000796e0_13\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .LFUN_000796e0_14\n\t"
-      ".LFUN_000796e0_13:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".LFUN_000796e0_14:\n\t"
-      "movswl 0x8(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_000796e0_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0x644\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264508\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_15:\n\t"
-      "testb $2, 0xe(%%esi)\n\t"
-      "jne .LFUN_000796e0_16\n\t"
-      "pushl $1\n\t"
-      "pushl $0x645\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2644c4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000796e0_16:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69f\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b796e0_c7d470), [assert] "m"(b796e0_assert), [exitfn] "m"(b796e0_exitfn)
-      : "memory");
+  unsigned short tmp;
+  int value;
+
+  if (!bitmap_verify(source_bitmap, 1)) {
+    display_assert("bitmap_verify(source_bitmap, TRUE)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x63c, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)source_bitmap + 0xa) != 0) {
+    display_assert("source_bitmap->type==_bitmap_type_2d",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x63d, 1);
+    system_exit(-1);
+  }
+  if (!bitmap_verify(destination_bitmap, 0)) {
+    display_assert("bitmap_verify(destination_bitmap, FALSE)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x63f, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)destination_bitmap + 0xa) != 0) {
+    display_assert("destination_bitmap->type==_bitmap_type_2d",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x640, 1);
+    system_exit(-1);
+  }
+  if (destination_mipmap_index < 0 ||
+      destination_mipmap_index > *(short *)((char *)destination_bitmap + 0x14)) {
+    display_assert("destination_mipmap_index>=0 && destination_mipmap_index<=destination_bitmap->mipmap_count",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x641, 1);
+    system_exit(-1);
+  }
+
+  tmp = *(unsigned short *)((char *)destination_bitmap + 4);
+  if ((short)(tmp >> destination_mipmap_index) < 1)
+    value = 1;
+  else
+    value = (int)(short)tmp >> destination_mipmap_index;
+  if (value != (int)*(short *)((char *)source_bitmap + 4)) {
+    display_assert("MAX(1, destination_bitmap->width >>destination_mipmap_index)==source_bitmap->width",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x642, 1);
+    system_exit(-1);
+  }
+
+  tmp = *(unsigned short *)((char *)destination_bitmap + 6);
+  if ((short)(tmp >> destination_mipmap_index) < 1)
+    value = 1;
+  else
+    value = (int)(short)tmp >> destination_mipmap_index;
+  if (value != (int)*(short *)((char *)source_bitmap + 6)) {
+    display_assert("MAX(1, destination_bitmap->height>>destination_mipmap_index)==source_bitmap->height",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x643, 1);
+    system_exit(-1);
+  }
+
+  tmp = *(unsigned short *)((char *)destination_bitmap + 8);
+  if ((short)(tmp >> destination_mipmap_index) < 1)
+    value = 1;
+  else
+    value = (int)(short)tmp >> destination_mipmap_index;
+  if (value != (int)*(short *)((char *)source_bitmap + 8)) {
+    display_assert("MAX(1, destination_bitmap->depth >>destination_mipmap_index)==source_bitmap->depth",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x644, 1);
+    system_exit(-1);
+  }
+
+  if ((*(unsigned char *)((char *)destination_bitmap + 0xe) & 2) == 0) {
+    display_assert("TEST_FLAG(destination_bitmap->flags, _bitmap_compressed_bit)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x645, 1);
+    system_exit(-1);
+  }
+
+  display_assert((const char *)0, "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x69f, 1);
+  system_exit(-1);
 }
-#else
-#error "FUN_000796e0: clang naked draft required"
-#endif
 
 
 /* FUN_000798e0 (0x798e0) — XBE naked draft (batch 245). */

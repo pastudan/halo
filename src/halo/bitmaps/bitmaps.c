@@ -794,7 +794,7 @@ static void (*const b7be60_assert)(const char *, const char *, int, bool) = disp
 static void (*const b7be60_exitfn)(int) = system_exit;
 static void (*const b7be60_c79bb0)(void) = FUN_00079bb0;
 static void (*const b7be60_c798e0)(void) = FUN_000798e0;
-static void (*const b7be60_c796e0)(void) = FUN_000796e0;
+static void (*const b7be60_c796e0)(short, void *, void *) = FUN_000796e0;
 
 __attribute__((naked, noinline))
 void bitmap_compress_to_mipmap(void)
