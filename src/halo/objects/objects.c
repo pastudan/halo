@@ -1298,83 +1298,38 @@ int weapon_definition_index_to_list_index(int param_1);
  * Confirmed: CALL 0x140ce0 (object_connect_to_map) with (handle, 0).
  * Confirmed: FCOMP against *(float*)0x2533c0 (0.0f) for degenerate check.
  */
-/* FUN_00135f90 (0x135f90) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static data_t * (*const b135f90_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-static void (*const b135f90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b135f90_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_00135f90 (0x135f90) — readable C lift from XBE leaf.
+ * Allocate object-subtype table at 0x5a90c4, then invoke each of 5 init
+ * callbacks from the 0x323530 vtable (stride 0x28). */
 void FUN_00135f90(void)
 {
-  __asm__ volatile(
-      "pushl $0xc\n\t"
-      "pushl $0x40\n\t"
-      "pushl $0x2832a8\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5a90c4\n\t"
-      "jne .LFUN_00135f90_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e\n\t"
-      "pushl $0x29ae64\n\t"
-      "pushl $0x29ae58\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00135f90_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x323530, %%edi\n\t"
-      ".LFUN_00135f90_2:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00135f90_3\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_00135f90_4\n\t"
-      ".LFUN_00135f90_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96\n\t"
-      "pushl $0x29ae0c\n\t"
-      "pushl $0x29ade4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00135f90_4:\n\t"
-      "movl -0x8(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00135f90_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x37\n\t"
-      "pushl $0x29ae64\n\t"
-      "pushl $0x29ae3c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00135f90_5:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00135f90_6\n\t"
-      "call *%%eax\n\t"
-      ".LFUN_00135f90_6:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x28, %%edi\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_00135f90_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1bfe10] "m"(b135f90_c1bfe10), [assert] "m"(b135f90_assert), [exitfn] "m"(b135f90_exitfn)
-      : "memory");
+  data_t *data;
+  int16_t i;
+  char *entry;
+  void (*fn)(void);
+
+  data = game_state_data_new((char *)0x2832a8, 0x40, 0xc);
+  *(data_t **)0x5a90c4 = data;
+  if (data == NULL) {
+    display_assert((const char *)0x29ae58, (const char *)0x29ae64, 0x2e, true);
+    system_exit(-1);
+  }
+  entry = (char *)0x323530;
+  for (i = 0; i < 5; i++) {
+    if (i < 0 || i >= 5) {
+      display_assert((const char *)0x29ade4, (const char *)0x29ae0c, 0x96, true);
+      system_exit(-1);
+    }
+    if (*(int *)(entry - 8) == 0) {
+      display_assert((const char *)0x29ae3c, (const char *)0x29ae64, 0x37, true);
+      system_exit(-1);
+    }
+    fn = *(void (**)(void))entry;
+    if (fn != NULL)
+      fn();
+    entry += 0x28;
+  }
 }
-#else
-#error "FUN_00135f90: clang naked draft required"
-#endif
 
 
 /* FUN_00136040 (0x136040) — readable C lift. */
@@ -1869,7 +1824,10 @@ float FUN_001366b0(int object_handle, char use_raw_max)
 }
 
 
-/* FUN_00139810 (0x139810) — readable C lift from XBE leaf. */
+/* FUN_00139810 (0x139810) — readable C lift from XBE leaf.
+ * Max of RGB uses x87-style compares: (a > b) ? a : b so NaN prefers b
+ * (matches fcomp / test ah,0x41 / jne). Mid-band keeps factor=scale+1
+ * without dividing by m (matches fst [ebp-4] path). */
 void FUN_00139810(float *color, float scale)
 {
   float one = *(float *)0x2533c8;
@@ -1877,11 +1835,9 @@ void FUN_00139810(float *color, float scale)
   float t;
   float factor;
 
-  /* max(color[0], color[1], color[2]) matching XBE fcom chain */
-  m = color[1];
-  if (color[1] <= color[2]) {
-    m = color[2];
-  }
+  /* max(color[1], color[2]) — fcomp; test ah,0x41; jne → take src */
+  m = (color[1] > color[2]) ? color[1] : color[2];
+  /* if m < color[0] take color[0] — fcomp; test ah,5; jp → keep m */
   if (m < color[0]) {
     m = color[0];
   }

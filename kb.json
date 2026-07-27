@@ -16284,7 +16284,8 @@
         {
           "addr": "0x135f90",
           "decl": "void FUN_00135f90(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00135f90"
         },
         {
           "addr": "0x136040",
@@ -27307,7 +27308,8 @@
         {
           "addr": "0xe4c70",
           "decl": "void FUN_000e4c70(void *draw_state@<edi>, void *cursor@<ebx>, int string_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000e4c70"
         },
         {
           "addr": "0xe4ce0",
@@ -34731,7 +34733,7 @@
           "decl": "void ai_communication_initialize_for_new_map(void);",
           "addr": "0x42b90",
           "name": "ai_communication_initialize_for_new_map",
-          "ported": false
+          "ported": true
         },
         {
           "decl": "void ai_communication_dispose_from_old_map(void);",

@@ -169,101 +169,39 @@ void ai_communication_dispose(void)
 {
 }
 
-/* ai_communication_initialize_for_new_map (0x42b90) — XBE naked draft (batch 87). */
-#if defined(__clang__)
-static void *(*const b42b90_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b42b90_c119b20)(data_t *data) = data_delete_all;
-
-__attribute__((naked, noinline))
+/* ai_communication_initialize_for_new_map (0x42b90) — readable C lift from XBE leaf. */
 void ai_communication_initialize_for_new_map(void)
 {
-  __asm__ volatile(
-      "movl 0x632574, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, 0x10(%%eax)\n\t"
-      "movl 0x632574, %%ecx\n\t"
-      "pushl $8\n\t"
-      "addl $0x14, %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x632574, %%edx\n\t"
-      "pushl $8\n\t"
-      "addl $0x1c, %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "pushl $8\n\t"
-      "addl $0x24, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movswl 0x331f08, %%eax\n\t"
-      "shll $1, %%eax\n\t"
-      "addl $0x24, %%esp\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "orl $0xffffffff, %%edx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lai_communication_initialize_for_new_map_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lai_communication_initialize_for_new_map_1:\n\t"
-      "movl 0x331f0c, %%edi\n\t"
-      "movl %%edx, 0x4(%%edi,%%eax,8)\n\t"
-      "movl 0x331f0c, %%edi\n\t"
-      "movl %%edx, (%%edi,%%eax,8)\n\t"
-      "movswl 0x331f08, %%edi\n\t"
-      "incl %%ecx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "shll $1, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jl .Lai_communication_initialize_for_new_map_1\n\t"
-      ".Lai_communication_initialize_for_new_map_2:\n\t"
-      "movswl 0x331f10, %%eax\n\t"
-      "shll $1, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lai_communication_initialize_for_new_map_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lai_communication_initialize_for_new_map_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lai_communication_initialize_for_new_map_3:\n\t"
-      "movl 0x331f14, %%edi\n\t"
-      "movl %%edx, 0x4(%%edi,%%eax,8)\n\t"
-      "movl 0x331f14, %%edi\n\t"
-      "movl %%edx, (%%edi,%%eax,8)\n\t"
-      "movswl 0x331f10, %%edi\n\t"
-      "incl %%ecx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "shll $1, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jl .Lai_communication_initialize_for_new_map_3\n\t"
-      ".Lai_communication_initialize_for_new_map_4:\n\t"
-      "movl 0x632574, %%ecx\n\t"
-      "movw $0, 0x2c(%%ecx)\n\t"
-      "movl 0x632574, %%edx\n\t"
-      "movw $0, 0x2e(%%edx)\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "pushl $0x100\n\t"
-      "addl $0x30, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x6324ec, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119b20]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b42b90_memset), [c119b20] "m"(b42b90_c119b20)
-      : "memory");
+  void *globals;
+  int n;
+  int i;
+  int *table;
+
+  globals = *(void **)0x632574;
+  *((unsigned char *)globals + 0x10) = 1;
+  csmemset((char *)globals + 0x14, 0, 8);
+  csmemset((char *)globals + 0x1c, 0, 8);
+  csmemset((char *)globals + 0x24, 0, 8);
+
+  n = (int)*(short *)0x331f08 * 2;
+  table = *(int **)0x331f0c;
+  for (i = 0; i < n; i++) {
+    table[i * 2 + 1] = -1;
+    table[i * 2] = -1;
+  }
+
+  n = (int)*(short *)0x331f10 * 2;
+  table = *(int **)0x331f14;
+  for (i = 0; i < n; i++) {
+    table[i * 2 + 1] = -1;
+    table[i * 2] = -1;
+  }
+
+  *(short *)((char *)globals + 0x2c) = 0;
+  *(short *)((char *)globals + 0x2e) = 0;
+  csmemset((char *)globals + 0x30, 0, 0x100);
+  data_delete_all(*(data_t **)0x6324ec);
 }
-#else
-#error "ai_communication_initialize_for_new_map: clang naked draft required"
-#endif
 
 
 /* ai_conversation_advance (0x43520) — readable C lift.

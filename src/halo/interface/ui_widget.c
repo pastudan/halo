@@ -2319,67 +2319,29 @@ int16_t ui_widget_find_localized_string_index(const wchar_t *key /* @<ebx> */)
   return -1;
 }
 
-/* FUN_000e4c70 (0xe4c70) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static void (*const be4c70_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void (*const be4c70_c19b5d0)(int width, int height) = (void *)draw_string_set_indents;
-static void (*const be4c70_c19cdb0)(short *out_rect, void *text, short *out_bounds, short *in_rect) = (void *)FUN_0019cdb0;
-static void (*const be4c70_c184060)(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text) = (void *)rasterizer_draw_string;
-
-__attribute__((naked, noinline))
-void FUN_000e4c70(void *draw_state, void *cursor, int string_index)
+/* FUN_000e4c70 (0xe4c70) — readable C lift from XBE leaf.
+ * draw_state@<edi>, cursor@<ebx>, string_index on stack. */
+void FUN_000e4c70(void *draw_state /*@<edi>*/, void *cursor /*@<ebx>*/, int string_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x2(%%edi), %%si\n\t"
-      "subw 0x2(%%ebx), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jge .LFUN_000e4c70_1\n\t"
-      "pushl $0x2835f0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "jge .LFUN_000e4c70_1\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_000e4c70_1:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19b5d0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c19cdb0]\n\t"
-      "addw $-3, 0x2(%%edi)\n\t"
-      "movw 0x2(%%ebx), %%cx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "movw %%cx, -0x6(%%ebp)\n\t"
-      "call *%[c184060]\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "movw %%ax, (%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8f390] "m"(be4c70_c8f390), [c19b5d0] "m"(be4c70_c19b5d0), [c19cdb0] "m"(be4c70_c19cdb0), [c184060] "m"(be4c70_c184060)
-      : "memory");
+  short height;
+  short bounds[4];
+
+  height = (short)(*(short *)((char *)draw_state + 2) - *(short *)((char *)cursor + 2));
+  if (height < 0) {
+    error(2, (const char *)0x2835f0);
+    if (height < 0)
+      height = 0;
+  }
+  draw_string_set_indents((int)height, 0);
+  FUN_0019cdb0((short *)cursor, (void *)(uintptr_t)(unsigned int)string_index, bounds,
+               (short *)draw_state);
+  *(short *)((char *)draw_state + 2) =
+      (short)(*(short *)((char *)draw_state + 2) - 3);
+  bounds[1] = *(short *)((char *)cursor + 2);
+  rasterizer_draw_string((void *)0, bounds, (const void *)0, 0,
+                         (unsigned short *)(uintptr_t)(unsigned int)string_index);
+  *(short *)cursor = *(short *)draw_state;
 }
-#else
-#error "FUN_000e4c70: clang naked draft required"
-#endif
 
 
 /* ui_widget_match_localized_substring (0xe4ce0) — readable C lift from XBE leaf. */
