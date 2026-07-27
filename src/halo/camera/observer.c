@@ -1431,99 +1431,33 @@ void FUN_00089240(int object_handle, void *arg)
   first_person_camera_for_unit_and_vector(obj + 0x1ec, object_handle, arg);
 }
 
-/* first_person_camera_update (0x89270) — XBE naked draft (batch 138). */
-#if defined(__clang__)
-static int (*const b89270_cb6870)(int16_t local_player_index) = player_control_get_unit_index;
-static void (*const b89270_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b89270_exitfn)(int) = system_exit;
-static float * (*const b89270_cb7f10)(int16_t local_player_index, float *out_direction) = player_control_get_facing_direction;
-static void (*const b89270_c88d50)(void *, int, void *) = first_person_camera_for_unit_and_vector;
-static float (*const b89270_cb6690)(int16_t local_player_index) = player_control_get_field_of_view;
-
-__attribute__((naked, noinline))
-void first_person_camera_update(void)
+/* first_person_camera_update (0x89270) — readable C lift from XBE leaf.
+ * fov_slot, player (local index at +0), camera state. */
+void first_person_camera_update(float *fov_slot, int16_t *player, void *camera)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cb6870]\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .Lfirst_person_camera_update_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9d\n\t"
-      "pushl $0x26720c\n\t"
-      "pushl $0x266e9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfirst_person_camera_update_1:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lfirst_person_camera_update_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9e\n\t"
-      "pushl $0x26720c\n\t"
-      "pushl $0x25f120\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfirst_person_camera_update_2:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw (%%edi), %%dx\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cb7f10]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "call *%[c88d50]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cb6690]\n\t"
-      "fsts 0x20(%%esi)\n\t"
-      "fcoms (%%ebx)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lfirst_person_camera_update_3\n\t"
-      "popl %%edi\n\t"
-      "movl $0x3e3851ec, 0x60(%%esi)\n\t"
-      "movb $1, 0x4f(%%esi)\n\t"
-      "fstps (%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lfirst_person_camera_update_3:\n\t"
-      "popl %%edi\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cb6870] "m"(b89270_cb6870), [assert] "m"(b89270_assert), [exitfn] "m"(b89270_exitfn), [cb7f10] "m"(b89270_cb7f10), [c88d50] "m"(b89270_c88d50), [cb6690] "m"(b89270_cb6690)
-      : "memory");
+  int unit;
+  float facing[3];
+  float fov;
+
+  unit = player_control_get_unit_index(player[0]);
+  if (!fov_slot) {
+    display_assert((const char *)0x266e9c, (const char *)0x26720c, 0x9d, true);
+    system_exit(-1);
+  }
+  if (!camera) {
+    display_assert((const char *)0x25f120, (const char *)0x26720c, 0x9e, true);
+    system_exit(-1);
+  }
+  player_control_get_facing_direction(player[0], facing);
+  first_person_camera_for_unit_and_vector(facing, unit, camera);
+  fov = player_control_get_field_of_view(player[0]);
+  *(float *)((char *)camera + 0x20) = fov;
+  if (fov != *fov_slot) {
+    *(unsigned int *)((char *)camera + 0x60) = 0x3e3851ecu;
+    *((unsigned char *)camera + 0x4f) = 1;
+    *fov_slot = fov;
+  }
 }
-#else
-#error "first_person_camera_update: clang naked draft required"
-#endif
 
 
 /* FUN_00089330 (0x89330) — readable C lift. */

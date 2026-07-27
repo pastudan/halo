@@ -27457,7 +27457,7 @@
         },
         {
           "addr": "0xe5090",
-          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, int widget, int16_t a7);",
+          "decl": "void ui_widget_pending_load_apply(int a6@<eax>, void *widget, int16_t a7);",
           "ported": true
         },
         {
