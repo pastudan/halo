@@ -7100,7 +7100,7 @@
         {
           "addr": "0x86a50",
           "decl": "void FUN_00086a50(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x86b80",

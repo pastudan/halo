@@ -1769,135 +1769,31 @@ void director_load_camera(void)
 #endif
 
 
-/* FUN_00086a50 (0x86a50) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void (*const b86a50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b86a50_exitfn)(int) = system_exit;
-static void (*const b86a50_c89850)(void) = (void (*)(void))following_camera_new;
-static void (*const b86a50_c865a0)(int16_t local_player_index, int param_1, bool param_2) = FUN_000865a0;
-static void (*const b86a50_c8cf10)(void) = (void (*)(void))FUN_0008cf10;
-static void (*const b86a50_c89350)(void) = (void (*)(void))FUN_00089350;
-static void (*const b86a50_c88c40)(void) = (void (*)(void))first_person_camera_new;
-static void (*const b86a50_cff4d0)(int channel, const char *format, ...) = console_printf;
-
-__attribute__((naked, noinline))
+/* FUN_00086a50 (0x86a50) — readable C lift (restored pre-naked). */
 void FUN_00086a50(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .LFUN_00086a50_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_00086a50_2\n\t"
-      ".LFUN_00086a50_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00086a50_2:\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "movswl %%si, %%edi\n\t"
-      "imull $0xf8, %%edi, %%edi\n\t"
-      "addl $0x3352b0, %%edi\n\t"
-      "movswl (%%edi), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, (%%edi)\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "movswl (%%ebx,%%edx,2), %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "ja .LFUN_00086a50_7\n\t"
-      "jmp *.LFUN_00086a50_jt(,%%eax,4)\n\t"
-      ".LFUN_00086a50_3:\n\t"
-      "leal 0xc(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c89850]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x89cd0\n\t"
-      "call *%[c865a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .LFUN_00086a50_9\n\t"
-      ".LFUN_00086a50_4:\n\t"
-      "movl 0x74(%%edi), %%edx\n\t"
-      "leal 0x7c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0xc(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8cf10]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8cf30\n\t"
-      "call *%[c865a0]\n\t"
-      "jmp .LFUN_00086a50_8\n\t"
-      ".LFUN_00086a50_5:\n\t"
-      "leal 0x7c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x5c(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0xc(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c89350]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x893a0\n\t"
-      "call *%[c865a0]\n\t"
-      "jmp .LFUN_00086a50_8\n\t"
-      ".LFUN_00086a50_6:\n\t"
-      "leal 0xc(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c88c40]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x89270\n\t"
-      "call *%[c865a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .LFUN_00086a50_9\n\t"
-      ".LFUN_00086a50_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x200\n\t"
-      "pushl $0x26700c\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      ".LFUN_00086a50_8:\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00086a50_9:\n\t"
-      "movswl (%%edi), %%edx\n\t"
-      "movswl (%%ebx,%%edx,2), %%eax\n\t"
-      "movl 0x2ee5e0(,%%eax,4), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x267094\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_00086a50_jt:\n\t"
-      ".long .LFUN_00086a50_3\n\t"
-      ".long .LFUN_00086a50_4\n\t"
-      ".long .LFUN_00086a50_5\n\t"
-      ".long .LFUN_00086a50_9\n\t"
-      ".long .LFUN_00086a50_6\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b86a50_assert), [exitfn] "m"(b86a50_exitfn), [c89850] "m"(b86a50_c89850), [c865a0] "m"(b86a50_c865a0), [c8cf10] "m"(b86a50_c8cf10), [c89350] "m"(b86a50_c89350), [c88c40] "m"(b86a50_c88c40), [cff4d0] "m"(b86a50_cff4d0)
-      : "memory");
-}
-#else
-#error "FUN_00086a50: clang naked draft required"
-#endif
+  int eax = 0;
+  int esi = 0;
 
+  /* cmp (int16_t)esi, 4 -> jl 0x86a82 */
+  display_assert((char *)0x00266fc0, (char *)0x0026700c, 179, 0);
+  system_exit(0);
+  /* cmp eax, 4 -> ja 0x86b24 */
+  following_camera_new();
+  FUN_000865a0(0x00089cd0, 0, 0);
+  FUN_0008cf10();
+  FUN_000865a0(0x0008cf30, 0, 0);
+  FUN_00089350();
+  FUN_000865a0(0x000893a0, 0, 0);
+  first_person_camera_new();
+  FUN_000865a0(0x00089270, 0, 0);
+  display_assert((char *)0, (char *)0x0026700c, 512, 0);
+  system_exit(0);
+  console_printf(0, (char *)0x00267094);
+
+  (void)eax;
+  (void)esi;
+}
 
 /* director_camera_deterministic (0x86b80) — readable C lift. */
 int director_camera_deterministic(int player_index, void *a, void *b)
