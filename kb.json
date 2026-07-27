@@ -13827,7 +13827,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcf3e0",
@@ -15492,9 +15492,9 @@
         },
         {
           "addr": "0x11be10",
-          "decl": "int FUN_0011be10(short *table @<eax>, void *key);",
+          "decl": "int FUN_0011be10(short *table /* @<eax> */, void *key);",
           "name": "FUN_0011be10",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11beb0",
@@ -25500,8 +25500,9 @@
         },
         {
           "addr": "0x1ba710",
-          "decl": "void FUN_001ba710(void);",
-          "ported": false
+          "decl": "void FUN_001ba710(void *cache /* @<eax> */);",
+          "ported": false,
+          "name": "FUN_001ba710"
         },
         {
           "addr": "0x1ba7c0",
@@ -25883,7 +25884,7 @@
         {
           "addr": "0x1913c0",
           "comment": "Walk a reference list and unlink the entry whose +4 field matches value.",
-          "decl": "void reference_list_remove(data_t *data, int *head, int value);",
+          "decl": "void reference_list_remove(void *data, int *head, int value);",
           "name": "reference_list_remove",
           "ported": false,
           "source_path": "src/halo/structures/structures.c"
@@ -39173,7 +39174,8 @@
         {
           "addr": "0x1b9de0",
           "decl": "bool cache_files_give_time_to_precache(const char *name);",
-          "ported": false
+          "ported": true,
+          "name": "cache_files_give_time_to_precache"
         },
         {
           "addr": "0x1b9890",
@@ -40213,8 +40215,9 @@
         },
         {
           "addr": "0x80fc0",
-          "decl": "void FUN_00080fc0(void);",
-          "ported": false
+          "decl": "unsigned int FUN_00080fc0(unsigned int a /* @<eax> */, unsigned int c /* @<ecx> */, unsigned int d /* @<edx> */);",
+          "ported": false,
+          "name": "FUN_00080fc0"
         },
         {
           "addr": "0x81090",
@@ -40223,8 +40226,9 @@
         },
         {
           "addr": "0x81110",
-          "decl": "void FUN_00081110(void);",
-          "ported": false
+          "decl": "unsigned int FUN_00081110(unsigned int bit_count /* @<esi> */, unsigned int bit_offset /* @<edi> */, int unused);",
+          "ported": false,
+          "name": "FUN_00081110"
         }
       ],
       "name": "message_header.obj",
