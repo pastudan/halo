@@ -324,75 +324,38 @@ void FUN_000d46e0(void)
 {
 }
 
-/* hud_set_state_message (0xd4d90) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void *(*const bd4d90_tag)(int, int) = tag_get;
-static void *(*const bd4d90_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void hud_set_state_message(short param_1, short param_2)
+/* hud_set_state_message (0xd4d90) — readable C lift from XBE leaf. */
+void hud_set_state_message(short player_index, short message_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x46bd10, %%eax\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lhud_set_state_message_3\n\t"
-      "movl 0x46bd0c, %%ecx\n\t"
-      "movl 0xfc(%%ecx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lhud_set_state_message_3\n\t"
-      "movl 0x46bd18, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movswl 0x8(%%ebp), %%esi\n\t"
-      "imull $0x460, %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "addl %%edx, %%esi\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .Lhud_set_state_message_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x686d7420\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x20(%%eax), %%edx\n\t"
-      "addl $0x20, %%eax\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jge .Lhud_set_state_message_1\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $-1, %%di\n\t"
-      "setne %%dl\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x454(%%esi)\n\t"
-      "movb $0, 0x459(%%esi)\n\t"
-      "movb %%dl, 0x458(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhud_set_state_message_1:\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpw $-1, %%di\n\t"
-      ".Lhud_set_state_message_2:\n\t"
-      "setne %%dl\n\t"
-      "popl %%edi\n\t"
-      "movb %%dl, 0x458(%%esi)\n\t"
-      "popl %%esi\n\t"
-      ".Lhud_set_state_message_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(bd4d90_tag), [elem] "m"(bd4d90_elem)
-      : "memory");
+  unsigned char *globals;
+  void *tag;
+  void *block;
+  void *elem;
+  char *slot;
+  char valid;
+
+  globals = *(unsigned char **)0x46bd10;
+  if (globals[1] != 0)
+    return;
+  if (*(int *)(*(unsigned char **)0x46bd0c + 0xfc) == -1)
+    return;
+  slot = *(char **)0x46bd18 + (int)player_index * 0x460;
+  if (message_index != -1) {
+    tag = tag_get(0x686d7420, *(int *)(*(unsigned char **)0x46bd0c + 0xfc));
+    block = (char *)tag + 0x20;
+    if ((int)message_index < *(int *)block) {
+      elem = tag_block_get_element(block, message_index, 0x40);
+      *(void **)(slot + 0x454) = elem;
+      slot[0x459] = 0;
+      slot[0x458] = 1;
+      return;
+    }
+    message_index = -1;
+  }
+  valid = message_index != -1;
+  slot[0x458] = valid;
 }
-#else
-#error "hud_set_state_message: clang naked draft required"
-#endif
+
 
 
 /* scripted_hud_set_flashing_state (0xd4740)
