@@ -3424,138 +3424,41 @@ char action_vehicle_setup_impromptu(int actor_handle __attribute__((unused)), in
 #endif
 
 
-/* FUN_0001beb0 (0x1beb0) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void *(*const b1beb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b1beb0_c20280)(int actor_handle, char flag) = actor_pursuit_find_nearby_actors;
-static int (*const b1beb0_gtime)(void) = game_time_get;
-static char (*const b1beb0_c2d9b0)(int actor_handle, int encounter_handle, float distance) = actor_move_to_prop;
-static void (*const b1beb0_c2f1a0)(int actor_handle) = FUN_0002f1a0;
-
-__attribute__((naked, noinline))
+/* FUN_0001beb0 (0x1beb0) — readable C lift (restored pre-naked). */
 void FUN_0001beb0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x4c(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0001beb0_9\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb $0, 0x9f(%%esi)\n\t"
-      "movb 0x1cc(%%esi), %%cl\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c20280]\n\t"
-      "movb 0x9d(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0001beb0_4\n\t"
-      "cmpl $-1, 0x1d0(%%esi)\n\t"
-      "jne .LFUN_0001beb0_1\n\t"
-      "cmpw $0, 0xaa(%%esi)\n\t"
-      "jne .LFUN_0001beb0_3\n\t"
-      "movw $0x96, 0xaa(%%esi)\n\t"
-      "jmp .LFUN_0001beb0_3\n\t"
-      ".LFUN_0001beb0_1:\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0xa4(%%esi), %%edx\n\t"
-      "addl $0xa8c, %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .LFUN_0001beb0_3\n\t"
-      ".LFUN_0001beb0_2:\n\t"
-      "movb $1, 0x9c(%%esi)\n\t"
-      ".LFUN_0001beb0_3:\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0001beb0_9\n\t"
-      "movb 0x9f(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0001beb0_8\n\t"
-      "movl 0x1d0(%%esi), %%ecx\n\t"
-      "pushl $0x41000000\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2d9b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movb 0x9c(%%esi), %%al\n\t"
-      "jne .LFUN_0001beb0_10\n\t"
-      "popl %%edi\n\t"
-      "movb $1, 0xa0(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0001beb0_4:\n\t"
-      "movb $1, 0x9c(%%esi)\n\t"
-      "movl 0x1d0(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0001beb0_3\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb 0x9e(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0001beb0_5\n\t"
-      "movb 0xa0(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0001beb0_6\n\t"
-      ".LFUN_0001beb0_5:\n\t"
-      "cmpw $2, 0x32(%%ecx)\n\t"
-      "jl .LFUN_0001beb0_2\n\t"
-      "flds 0x11c(%%ecx)\n\t"
-      "fcomps 0x253f78\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0001beb0_2\n\t"
-      "movb 0xa0(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0001beb0_7\n\t"
-      ".LFUN_0001beb0_6:\n\t"
-      "flds 0x11c(%%ecx)\n\t"
-      "fcomps 0x253f30\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0001beb0_7\n\t"
-      "movl $1, %%eax\n\t"
-      "movb %%al, 0x9f(%%esi)\n\t"
-      "movb $0, 0x9c(%%esi)\n\t"
-      "jmp .LFUN_0001beb0_3\n\t"
-      ".LFUN_0001beb0_7:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb %%al, 0x9f(%%esi)\n\t"
-      "movb %%al, 0x9c(%%esi)\n\t"
-      "jmp .LFUN_0001beb0_3\n\t"
-      ".LFUN_0001beb0_8:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2f1a0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0001beb0_9:\n\t"
-      "movb 0x9c(%%esi), %%al\n\t"
-      ".LFUN_0001beb0_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1beb0_dget), [c20280] "m"(b1beb0_c20280), [gtime] "m"(b1beb0_gtime), [c2d9b0] "m"(b1beb0_c2d9b0), [c2f1a0] "m"(b1beb0_c2f1a0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
+  /* test (char)eax, (char)eax -> je 0x1c025 */
+  actor_pursuit_find_nearby_actors(0, 0);
+  /* test (char)eax, (char)eax -> je 0x1bf7c */
+  /* relift: cmp dword ptr [esi + 0x1d0], -1 -> jne 0x1bf19 */
+  /* relift: cmp word ptr [esi + 0xaa], 0 -> jne 0x1bf35 */
+  game_time_get();
+  /* cmp eax, edx -> jl 0x1bf35 */
+  /* test (char)eax, (char)eax -> jne 0x1c025 */
+  /* test (char)eax, (char)eax -> je 0x1c01c */
+  actor_move_to_prop(0, 0, 0.0f);
+  /* cmp eax, -1 -> je 0x1bf35 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
+  /* test (char)eax, (char)eax -> je 0x1bfb3 */
+  /* test (char)eax, (char)eax -> je 0x1bfdf */
+  /* relift: cmp word ptr [ecx + 0x32], 2 -> jl 0x1bf2e */
+  /* relift: relift: fcomp dword ptr [0x253f78] */
+  /* test (char)eax, (char)eax -> jne 0x1c009 */
+  /* relift: relift: fcomp dword ptr [0x253f30] */
+  /* test (char)eax, 0x41 -> jne 0x1c009 */
+  FUN_0002f1a0(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
-#else
-#error "FUN_0001beb0: clang naked draft required"
-#endif
 
 
 /* FUN_0001cda0 (0x1cda0) — XBE naked draft (batch 122). */

@@ -6337,150 +6337,31 @@ void FUN_00057d00(int unit_handle __attribute__((unused)), int encounter_index _
 #endif
 
 
-/* FUN_00058af0 (0x58af0) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-static void *(*const b58af0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static vector3_t * (*const b58af0_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static int16_t (*const b58af0_c1adfc0)(int unit_handle, int seat_substring, int16_t seat_desire_type, int16_t *seat_indices, int16_t max_seats) = vehicle_scripting_find_available_seats;
-static void (*const b58af0_c54680)(unsigned int combined_index, void *iter) = FUN_00054680;
-static int (*const b58af0_c54750)(void *iter) = FUN_00054750;
-static void __cdecl (*const b58af0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
-static char (*const b58af0_c1d420)(int actor_handle, int param_2, int param_3, int param_4, int16_t param_5, int16_t *param_6) = actor_action_try_to_enter_vehicle;
-
-__attribute__((naked, noinline))
-void FUN_00058af0(int actor_handle __attribute__((unused)), int vehicle_handle __attribute__((unused)), void *seat_list __attribute__((unused)), char require_pilot __attribute__((unused)))
+/* FUN_00058af0 (0x58af0) — readable C lift (restored pre-naked). */
+void FUN_00058af0(int actor_handle, int vehicle_handle, void *seat_list,
+                  char require_pilot)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x348, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00058af0_7\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00058af0_7\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c1412f0]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1adfc0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jle .LFUN_00058af0_6\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c54680]\n\t"
-      "leal -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c54750]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00058af0_3\n\t"
-      "movl $9, %%edi\n\t"
-      ".LFUN_00058af0_1:\n\t"
-      "cmpw $0x40, %%si\n\t"
-      "jae .LFUN_00058af0_2\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
-      "shll $2, %%ecx\n\t"
-      "movl %%edx, -0x348(%%ebp,%%ecx,1)\n\t"
-      "fsubs 0x12c(%%eax)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs 0x130(%%eax)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fsubs 0x134(%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x344(%%ebp,%%ecx,1)\n\t"
-      "cmpw %%di, 0x6c(%%eax)\n\t"
-      "fstp %%st(0)\n\t"
-      "sete %%al\n\t"
-      "fstp %%st(0)\n\t"
-      "movb %%al, -0x340(%%ebp,%%ecx,1)\n\t"
-      "fstp %%st(0)\n\t"
-      "incl %%esi\n\t"
-      ".LFUN_00058af0_2:\n\t"
-      "leal -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c54750]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00058af0_1\n\t"
-      ".LFUN_00058af0_3:\n\t"
-      "pushl $0x56830\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x348(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9260]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .LFUN_00058af0_6\n\t"
-      ".LFUN_00058af0_4:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "movb -0x340(%%ebp,%%eax,1), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_00058af0_5\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_00058af0_6\n\t"
-      ".LFUN_00058af0_5:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl -0x348(%%ebp,%%eax,1), %%eax\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d420]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "incl %%edi\n\t"
-      "cmpw %%si, %%di\n\t"
-      "jl .LFUN_00058af0_4\n\t"
-      ".LFUN_00058af0_6:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00058af0_7:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(b58af0_tryget), [c1412f0] "m"(b58af0_c1412f0), [c1adfc0] "m"(b58af0_c1adfc0), [c54680] "m"(b58af0_c54680), [c54750] "m"(b58af0_c54750), [c1d9260] "m"(b58af0_c1d9260), [c1d420] "m"(b58af0_c1d420)
-      : "memory");
+  float world[3];
+  int16_t seat_count;
+  int i;
+
+  if (actor_handle == -1)
+    return;
+  if (object_try_and_get_and_verify_type(vehicle_handle, 3) == NULL)
+    return;
+
+  object_get_world_position(vehicle_handle, (vector3_t *)world);
+  seat_count = vehicle_scripting_find_available_seats(
+      vehicle_handle, actor_handle, -1, (int16_t *)seat_list, 0x10);
+  if (seat_count <= 0)
+    return;
+
+  for (i = 0; i < (int)seat_count; i++) {
+    if (require_pilot == 0)
+      actor_action_try_to_enter_vehicle(actor_handle, vehicle_handle, 0, -1,
+                                        (int16_t)i, (int16_t *)seat_list);
+  }
 }
-#else
-#error "FUN_00058af0: clang naked draft required"
-#endif
 
 
 /* FUN_00058c40 (0x58c40) — readable C lift. */

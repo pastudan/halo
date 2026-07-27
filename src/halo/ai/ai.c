@@ -2657,151 +2657,64 @@ void ai_handle_damage(int victim_handle __attribute__((unused)), int source_hand
 #endif
 
 
-/* ai_handle_deleted_object (0x40700) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static void *(*const b40700_get)(int, int) = object_get_and_verify_type;
-static void (*const b40700_c3cc10)(int actor_handle, int flag) = actor_delete;
-static void (*const b40700_c3d330)(int actor_handle, int unit_handle) = actor_swarm_unit_died;
-static void (*const b40700_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b40700_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b40700_c3b410)(int actor_handle, int old_prop, int new_prop) = FUN_0003b410;
-static void (*const b40700_c64a80)(int actor_handle, int prop_handle) = prop_iterator_next;
-static void (*const b40700_c44660)(int unit_handle, char param_2) = ai_conversation_unit_died;
-
-__attribute__((naked, noinline))
-void ai_handle_deleted_object(int object_handle __attribute__((unused)))
+/* ai_handle_deleted_object (0x40700) — readable C lift (restored pre-naked). */
+void ai_handle_deleted_object(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lai_handle_deleted_object_11\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movb 0x64(%%eax), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $3, %%dl\n\t"
-      "je .Lai_handle_deleted_object_10\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl 0x1a4(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lai_handle_deleted_object_1\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c3cc10]\n\t"
-      "jmp .Lai_handle_deleted_object_2\n\t"
-      ".Lai_handle_deleted_object_1:\n\t"
-      "movl 0x1a8(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_handle_deleted_object_3\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c3d330]\n\t"
-      ".Lai_handle_deleted_object_2:\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lai_handle_deleted_object_3:\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lai_handle_deleted_object_7\n\t"
-      "nop\n\t"
-      ".Lai_handle_deleted_object_4:\n\t"
-      "cmpl %%edi, 0x18(%%esi)\n\t"
-      "jne .Lai_handle_deleted_object_5\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c3b410]\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64a80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lai_handle_deleted_object_6\n\t"
-      ".Lai_handle_deleted_object_5:\n\t"
-      "cmpl %%edi, 0x110(%%esi)\n\t"
-      "jne .Lai_handle_deleted_object_6\n\t"
-      "movl $0xffffffff, 0x110(%%esi)\n\t"
-      "movb $0, 0x136(%%esi)\n\t"
-      "movb $0, 0x135(%%esi)\n\t"
-      ".Lai_handle_deleted_object_6:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lai_handle_deleted_object_4\n\t"
-      ".Lai_handle_deleted_object_7:\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c44660]\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movw 0x8b8(%%eax), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lai_handle_deleted_object_10\n\t"
-      "jmp .Lai_handle_deleted_object_8\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".Lai_handle_deleted_object_8:\n\t"
-      "movswl %%dx, %%esi\n\t"
-      "leal 0x8bc(,%%esi,4), %%esi\n\t"
-      "cmpl %%edi, (%%esi,%%eax,1)\n\t"
-      "jne .Lai_handle_deleted_object_9\n\t"
-      "decl %%ecx\n\t"
-      "movw %%cx, 0x8b8(%%eax)\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movw 0x8b8(%%eax), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lai_handle_deleted_object_9\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "movl 0x8bc(%%eax,%%ecx,4), %%ecx\n\t"
-      "movl %%ecx, (%%esi,%%eax,1)\n\t"
-      "movl 0x632574, %%eax\n\t"
-      ".Lai_handle_deleted_object_9:\n\t"
-      "movw 0x8b8(%%eax), %%cx\n\t"
-      "incl %%edx\n\t"
-      "cmpw %%cx, %%dx\n\t"
-      "jl .Lai_handle_deleted_object_8\n\t"
-      ".Lai_handle_deleted_object_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".Lai_handle_deleted_object_11:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b40700_get), [c3cc10] "m"(b40700_c3cc10), [c3d330] "m"(b40700_c3d330), [c1197b0] "m"(b40700_c1197b0), [c119810] "m"(b40700_c119810), [c3b410] "m"(b40700_c3b410), [c64a80] "m"(b40700_c64a80), [c44660] "m"(b40700_c44660)
-      : "memory");
+  char *ai_globals;
+  char *unit;
+  char *prop;
+  data_iter_t iter;
+  int owner;
+  int index;
+
+  ai_globals = *(char **)0x632574;
+  if (*(char *)(ai_globals + 1) == 0)
+    return;
+
+  unit = (char *)object_get_and_verify_type(object_handle, -1);
+  if (((1 << *(uint8_t *)(unit + 0x64)) & 3) == 0)
+    return;
+
+  unit = (char *)object_get_and_verify_type(object_handle, 3);
+  owner = *(int *)(unit + 0x1a4);
+  if (owner != -1)
+    actor_delete(owner, 0);
+  else {
+    owner = *(int *)(unit + 0x1a8);
+    if (owner != -1)
+      actor_swarm_unit_died(owner, object_handle);
+  }
+
+  data_iterator_new(&iter, prop_data);
+  for (prop = (char *)data_iterator_next(&iter); prop != 0;
+       prop = (char *)data_iterator_next(&iter)) {
+    if (*(int *)(prop + 0x18) == object_handle) {
+      FUN_0003b410(*(int *)(prop + 4), iter.datum_handle, -1);
+      prop_iterator_next(*(int *)(prop + 4), iter.datum_handle);
+    } else if (*(int *)(prop + 0x110) == object_handle) {
+      *(int *)(prop + 0x110) = -1;
+      *(char *)(prop + 0x136) = 0;
+      *(char *)(prop + 0x135) = 0;
+    }
+  }
+
+  ai_conversation_unit_died(object_handle, 1);
+
+  index = 0;
+  while (index < *(int16_t *)(ai_globals + 0x8b8)) {
+    if (*(int *)(ai_globals + index * 4 + 0x8bc) == object_handle) {
+      *(int16_t *)(ai_globals + 0x8b8) -= 1;
+      ai_globals = *(char **)0x632574;
+      if (*(int16_t *)(ai_globals + 0x8b8) > 0) {
+        *(int *)(ai_globals + index * 4 + 0x8bc) =
+            *(int *)(ai_globals +
+                     *(int16_t *)(ai_globals + 0x8b8) * 4 + 0x8bc);
+      }
+      continue;
+    }
+    index++;
+  }
 }
-#else
-#error "ai_handle_deleted_object: clang naked draft required"
-#endif
 
 
 /* ai_handle_unit_effect (0x40860) — readable C lift. */
