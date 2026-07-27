@@ -218,7 +218,7 @@ file_ref_t *file_reference_set_name(file_ref_t *info, const char *name)
 }
 
 /* file_reference_get_location (0x1997f0) — readable C lift. */
-uint16_t file_reference_get_location(void *info)
+int16_t file_reference_get_location(file_ref_t *info)
 {
   char *ref;
 

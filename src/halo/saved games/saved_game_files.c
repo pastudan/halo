@@ -2637,58 +2637,31 @@ char FUN_001c3320(int16_t expect_zero)
 
 
 
-/* FUN_001c33b0 (0x1c33b0) — XBE naked draft (batch 271). */
-#if defined(__clang__)
-static void (*const b1c33b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c33b0_exitfn)(int) = system_exit;
-static void (*const b1c33b0_c19ac00)(void) = file_write;
-static void (*const b1c33b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_001c33b0(void)
+/* FUN_001c33b0 (0x1c33b0) — readable C lift from XBE leaf. */
+char FUN_001c33b0(void *buffer)
 {
-  __asm__ volatile(
-      "movb 0x4eacc8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c33b0_1\n\t"
-      "movw 0x4eacc4, %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .LFUN_001c33b0_2\n\t"
-      ".LFUN_001c33b0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x741\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2babe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movw 0x4eacc4, %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c33b0_2:\n\t"
-      "cmpw $0x64, %%ax\n\t"
-      "jge .LFUN_001c33b0_3\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x206\n\t"
-      "movw %%ax, 0x202(%%esi)\n\t"
-      "incw 0x4eacc4\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19ac00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      ".LFUN_001c33b0_3:\n\t"
-      "pushl $0x2bab68\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c33b0_assert), [exitfn] "m"(b1c33b0_exitfn), [c19ac00] "m"(b1c33b0_c19ac00), [c8f390] "m"(b1c33b0_c8f390)
-      : "memory");
+  extern char DAT_002babe0[];
+  extern char DAT_002ba8e8[];
+  extern char DAT_002bab68[];
+  short count;
+  bool (*write3)(file_ref_t *, int, void *) =
+      (bool (*)(file_ref_t *, int, void *))file_write;
+
+  if (*(unsigned char *)0x4eacc8 == 0 || (count = *(short *)0x4eacc4) < 0) {
+    display_assert(DAT_002babe0, DAT_002ba8e8, 0x741, true);
+    system_exit(-1);
+    count = *(short *)0x4eacc4;
+  }
+  if (count >= 0x64) {
+    error(2, DAT_002bab68);
+    return 0;
+  }
+  *(short *)((char *)buffer + 0x202) = count;
+  *(short *)0x4eacc4 = (short)(count + 1);
+  return (char)write3((file_ref_t *)0x4eabb0, 0x206, buffer);
 }
-#else
-#error "FUN_001c33b0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001c3430 (0x1c3430) — XBE naked draft (batch 258). */

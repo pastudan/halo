@@ -16333,8 +16333,9 @@
         },
         {
           "addr": "0x139990",
-          "decl": "int FUN_00139990(int param_1);",
-          "ported": false
+          "decl": "char FUN_00139990(int handle);",
+          "ported": true,
+          "name": "FUN_00139990"
         },
         {
           "decl": "void FUN_00139a30(int param_1);",
@@ -16709,8 +16710,9 @@
         {
           "addr": "0x13dc10",
           "decl": "void FUN_0013dc10(short camera_point_index);",
-          "ported": false,
-          "source_path": "objects/objects.c"
+          "ported": true,
+          "source_path": "objects/objects.c",
+          "name": "FUN_0013dc10"
         },
         {
           "addr": "0x13dcb0",
@@ -23764,8 +23766,9 @@
         },
         {
           "addr": "0x1c33b0",
-          "decl": "void FUN_001c33b0(void);",
-          "ported": false
+          "decl": "char FUN_001c33b0(void *buffer@<esi>);",
+          "ported": true,
+          "name": "FUN_001c33b0"
         },
         {
           "addr": "0x1c3430",

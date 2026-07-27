@@ -2030,79 +2030,26 @@ char FUN_00139930(int object_handle)
   return *(int *)(obj + 0xc) != *(int *)0x5a8d64;
 }
 
-/* FUN_00139990 (0x139990) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static void *(*const b139990_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b139990_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b139990_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_00139990(int param_1 __attribute__((unused)))
+/* FUN_00139990 (0x139990) — readable C lift from XBE leaf. */
+char FUN_00139990(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5a90bc, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x5a8d60, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00139990_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x67f\n\t"
-      "pushl $0x29b324\n\t"
-      "pushl $0x29b4ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00139990_1:\n\t"
-      "movl 0x5a8d64, %%eax\n\t"
-      "cmpl %%eax, 0xc(%%esi)\n\t"
-      "je .LFUN_00139990_2\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00139990_2:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movb 0x5a8d60, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00139990_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x68e\n\t"
-      "pushl $0x29b324\n\t"
-      "pushl $0x29b4ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00139990_3:\n\t"
-      "movb $0, 0x5a8d60\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b139990_dget), [assert] "m"(b139990_assert), [exitfn] "m"(b139990_exitfn)
-      : "memory");
+  extern char DAT_0029b4ac[];
+  extern char DAT_0029b324[];
+  void *datum;
+
+  datum = datum_get(*(void **)0x5a90bc, handle);
+  if (*(unsigned char *)0x5a8d60 == 0) {
+    display_assert(DAT_0029b4ac, DAT_0029b324, 0x67f, true);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)datum + 0xc) != *(int *)0x5a8d64) {
+    *(int *)((char *)datum + 0xc) = *(int *)0x5a8d64;
+    return 1;
+  }
+  return 0;
 }
-#else
-#error "FUN_00139990: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00139a30 (0x139a30) — XBE naked draft (batch 62). */
@@ -5147,74 +5094,36 @@ void FUN_0013dcb0(void)
   *(short *)(*(int *)0x46f084 + 0x90) = 0;
 }
 
-/* FUN_0013dc10 (0x13dc10) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static scenario_t * (*const b13dc10_c18e380)(void) = global_scenario_get;
-static void *(*const b13dc10_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b13dc10_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-static void (*const b13dc10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_0013dc10(short camera_point_index __attribute__((unused)))
+/* FUN_0013dc10 (0x13dc10) — readable C lift from XBE leaf. */
+void FUN_0013dc10(short camera_point_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .LFUN_0013dc10_1\n\t"
-      "movl 0x46f084, %%eax\n\t"
-      "movw $0, 0x90(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0013dc10_1:\n\t"
-      "pushl %%esi\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4f0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "leal 0x28(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18f180]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $-1, -0x4(%%ebp)\n\t"
-      "jne .LFUN_0013dc10_2\n\t"
-      "addl $4, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x29ba08\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movl 0x46f084, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0, 0x90(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0013dc10_2:\n\t"
-      "movl 0x46f084, %%eax\n\t"
-      "movw $2, 0x90(%%eax)\n\t"
-      "movw -0x4(%%ebp), %%dx\n\t"
-      "movw %%dx, 0x94(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b13dc10_c18e380), [elem] "m"(b13dc10_elem), [c18f180] "m"(b13dc10_c18f180), [c8f390] "m"(b13dc10_c8f390)
-      : "memory");
+  extern char DAT_0029ba08[];
+  scenario_t *scenario;
+  char *element;
+  unsigned char location[8];
+  void *game;
+
+  game = *(void **)0x46f084;
+  if (camera_point_index == (short)0xffff) {
+    *(short *)((char *)game + 0x90) = 0;
+    return;
+  }
+  scenario = global_scenario_get();
+  element = (char *)tag_block_get_element((char *)scenario + 0x4f0,
+                                          (int)camera_point_index, 0x68);
+  scenario_location_from_point(location, element + 0x28);
+  if (*(short *)(location + 4) == -1) {
+    error(2, DAT_0029ba08, element + 4);
+    game = *(void **)0x46f084;
+    *(short *)((char *)game + 0x90) = 0;
+    return;
+  }
+  game = *(void **)0x46f084;
+  *(short *)((char *)game + 0x90) = 2;
+  *(short *)((char *)game + 0x94) = *(short *)(location + 4);
 }
-#else
-#error "FUN_0013dc10: clang naked draft required"
-#endif
+
+
 
 
 /*
