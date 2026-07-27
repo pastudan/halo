@@ -267,71 +267,26 @@ void FUN_000677f0(void)
 #endif
 
 
-/* FUN_00067960 (0x67960) — XBE naked draft (batch 348). */
-#if defined(__clang__)
-static void (*const b67960_c66380)(void) = TIFFDefaultDirectory;
-static void (*const b67960_c6f9d0)(void) = FUN_0006f9d0;
-static void (*const b67960_ftol)(void) = FUN_001d9068;
-static void (*const b67960_c67760)(void) = FUN_00067760;
-
-__attribute__((naked, noinline))
-void FUN_00067960(void)
+/* FUN_00067960 (0x67960) — readable C lift.
+ * ABI: type@<ax>, tag@<cx>, out@<edx>; packs one float as RATIONAL. */
+int FUN_00067960(unsigned short type /*@<ax>*/, unsigned short tag /*@<cx>*/,
+                 void *out /*@<edx>*/, void *ctx, float value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "cmpl $5, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, %%edi\n\t"
-      "movw %%cx, (%%edi)\n\t"
-      "movw %%ax, 0x2(%%edi)\n\t"
-      "movl $1, 0x4(%%edi)\n\t"
-      "jne .LFUN_00067960_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00067960_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c66380]\n\t"
-      "movl 0x10(%%eax), %%eax\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25feb8\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c6f9d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00067960_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmull 0x25feb0\n\t"
-      "faddl 0x25fea8\n\t"
-      "call *%[ftol]\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl $0x2710, -0x4(%%ebp)\n\t"
-      "call *%[c67760]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c66380] "m"(b67960_c66380), [c6f9d0] "m"(b67960_c6f9d0), [ftol] "m"(b67960_ftol), [c67760] "m"(b67960_c67760)
-      : "memory");
-}
-#else
-#error "FUN_00067960: clang naked draft required"
-#endif
+  int pair[2];
+  void *typeinfo;
 
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = type;
+  *((unsigned int *)out + 1) = 1;
+  if (type == 5 && value < 0.0f) {
+    typeinfo = ((void *(*)(unsigned int))TIFFDefaultDirectory)((unsigned int)tag);
+    FUN_0006f9d0(*(void **)ctx, (void *)0x25feb8,
+                 *(void **)((char *)typeinfo + 0x10), (double)value);
+  }
+  pair[0] = (int)((double)value * 10000.0 + 0.5);
+  pair[1] = 0x2710;
+  return ((int (*)(void *))FUN_00067760)(pair);
+}
 
 /* FUN_000679f0 (0x679f0) — XBE naked draft (batch 340). */
 #if defined(__clang__)
@@ -557,7 +512,7 @@ static void (*const b67c50_c65f70)(void) = _TIFFgetfield;
 static void (*const b67c50_c67ac0)(void) = (void *)FUN_00067ac0;
 static void (*const b67c50_c67b40)(void) = (void *)FUN_00067b40;
 static void (*const b67c50_c67b80)(void) = FUN_00067b80;
-static void (*const b67c50_c67960)(void) = FUN_00067960;
+static void (*const b67c50_c67960)(void) = (void *)FUN_00067960;
 static void (*const b67c50_c67760)(void) = FUN_00067760;
 static void (*const b67c50_c67a70)(void) = (void *)FUN_00067a70;
 
@@ -1021,7 +976,7 @@ static void * (*const b680a0_c8e0b0)(void *destination, void *source, size_t siz
 static void (*const b680a0_c67b40)(void) = (void *)FUN_00067b40;
 static void (*const b680a0_c679f0)(void) = FUN_000679f0;
 static void (*const b680a0_c67710)(void) = (void *)FUN_00067710;
-static void (*const b680a0_c67960)(void) = FUN_00067960;
+static void (*const b680a0_c67960)(void) = (void *)FUN_00067960;
 static void (*const b680a0_c67f70)(void) = FUN_00067f70;
 static void (*const b680a0_c68030)(void) = (void *)FUN_00068030;
 static void (*const b680a0_c67c50)(void) = FUN_00067c50;

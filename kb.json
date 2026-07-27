@@ -245,8 +245,9 @@
         },
         {
           "addr": "0x67960",
-          "decl": "void FUN_00067960(void);",
-          "ported": false
+          "decl": "int FUN_00067960(unsigned short type@<ax>, unsigned short tag@<cx>, void *out@<edx>, void *ctx, float value);",
+          "ported": true,
+          "name": "FUN_00067960"
         },
         {
           "addr": "0x679f0",
@@ -693,7 +694,7 @@
         },
         {
           "addr": "0x1b8f10",
-          "decl": "void FUN_001b8f10(void);",
+          "decl": "void FUN_001b8f10(int vehicle_handle, void *wheel_buffer, void *scratch_buffer);",
           "ported": true,
           "name": "FUN_001b8f10"
         },
@@ -33558,7 +33559,7 @@
         },
         {
           "addr": "0x1d0b9c",
-          "decl": "unsigned int __stdcall FUN_001d0b9c(void *a, void *b, void *c);",
+          "decl": "void FUN_001d0b9c(void);",
           "ported": true,
           "name": "FUN_001d0b9c"
         },

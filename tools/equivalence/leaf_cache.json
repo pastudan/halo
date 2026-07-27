@@ -1,1 +1,17 @@
-{}
+{
+  "0x100207f8": {
+    "confidence": "weak",
+    "coverage_pct": 100.0
+  },
+  "0x67960": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 59.7
+  },
+  "0x67b80": {
+    "class": "non_leaf"
+  },
+  "0xc9d40": {
+    "class": "non_leaf"
+  }
+}
