@@ -21215,7 +21215,7 @@
         {
           "addr": "0x17c990",
           "decl": "void rasterizer_widget_set_texture(int handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c9a0",

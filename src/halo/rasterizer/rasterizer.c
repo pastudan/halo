@@ -14954,25 +14954,11 @@ void *rasterizer_widget_begin(int handle)
 
 
 /* rasterizer_widget_set_texture (0x17c990) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_widget_set_texture(int handle __attribute__((unused)))
+/* rasterizer_widget_set_texture — readable C lift (jmp thunk). */
+void rasterizer_widget_set_texture(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xf7, 0x21, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0015eb90();
 }
-#else
-#error "rasterizer_widget_set_texture: clang naked draft required"
-#endif
-
 
 /* rasterizer_widget_set_tint_factor (0x17c9a0) — XBE naked draft (batch 398). */
 #if defined(__clang__)
