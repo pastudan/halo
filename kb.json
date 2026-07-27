@@ -10673,7 +10673,7 @@
           "addr": "0xc1190",
           "decl": "void FUN_000c1190(int16_t function_index, int thread_datum, char init);",
           "name": "FUN_000c1190",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/hs/hs.c"
         },
         {
