@@ -27481,7 +27481,7 @@
         {
           "addr": "0xe53e0",
           "decl": "void ui_widget_list_prev(void *widget @<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "ui_widget_list_prev"
         },
         {

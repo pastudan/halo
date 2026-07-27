@@ -1535,6 +1535,20 @@ class StubManager:
                     _struct.pack_into('<i',  _tag_bytes, 0x220, -1)     # area_damage_tag (absent)
                     _tag_bytes[_SYNTH_TAG_SIZE - 4:] = _SYNTH_SENTINEL
                     uc.mem_write(_SYNTH_TAG_ADDR, bytes(_tag_bytes))
+                # UI widget definition tags ('DeLa' / 0x44654c61): list walkers
+                # read +0x54 (child count) and +0x2c flags. Zeroed synth tags make
+                # ui_widget_list_prev/next spin forever on circular random heaps.
+                try:
+                    _grp = int.from_bytes(_safe_read(caller_esp + 4, 4), "little")
+                except Exception:
+                    _grp = 0
+                if _grp == 0x44654c61:
+                    import struct as _struct
+                    _ui = bytearray(uc.mem_read(_SYNTH_TAG_ADDR, _SYNTH_TAG_SIZE))
+                    _struct.pack_into('<i', _ui, 0x54, 1)          # selectable / has children
+                    _ui[0x2c] = _ui[0x2c] | 1                       # flags bit0
+                    _struct.pack_into('<h', _ui, 2, 0)              # type = 0 (container)
+                    uc.mem_write(_SYNTH_TAG_ADDR, bytes(_ui))
                 uc.reg_write(UC_X86_REG_EAX, _SYNTH_TAG_ADDR)
                 return True
 
