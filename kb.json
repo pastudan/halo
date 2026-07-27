@@ -13257,9 +13257,9 @@
         },
         {
           "addr": "0xd50f0",
-          "decl": "int hud_messaging_slot_compare(int *param_1, int *param_2);",
+          "decl": "int hud_messaging_slot_compare(const void *a, const void *b);",
           "name": "hud_messaging_slot_compare",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/interface/hud_messaging.c"
         },
         {

@@ -1107,38 +1107,20 @@ void *hud_find_message_slot(int base, int param2, int tag_handle /*  */)
   return result;
 }
 
-/* hud_messaging_slot_compare (0xd50f0) — XBE naked draft (batch 100). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int hud_messaging_slot_compare(int *param_1, int *param_2)
+/* hud_messaging_slot_compare (0xd50f0) — readable C lift. */
+int hud_messaging_slot_compare(const void *a, const void *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "subl (%%edx), %%eax\n\t"
-      "jne .Lhud_messaging_slot_compare_1\n\t"
-      "movl 0x84(%%ecx), %%eax\n\t"
-      "subl 0x84(%%edx), %%eax\n\t"
-      "jne .Lhud_messaging_slot_compare_1\n\t"
-      "movzbl 0x83(%%edx), %%edx\n\t"
-      "movzbl 0x83(%%ecx), %%eax\n\t"
-      "subl %%edx, %%eax\n\t"
-      ".Lhud_messaging_slot_compare_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "hud_messaging_slot_compare: clang naked draft required"
-#endif
+  int delta;
 
+  delta = *(const int *)b - *(const int *)a;
+  if (delta != 0)
+    return delta;
+  delta = *(const int *)((const char *)b + 0x84) - *(const int *)((const char *)a + 0x84);
+  if (delta != 0)
+    return delta;
+  return (int)*(const unsigned char *)((const char *)b + 0x83) -
+         (int)*(const unsigned char *)((const char *)a + 0x83);
+}
 
 /* Clear all scripted HUD message slots across all 4 players x 4 slots. */
 _BYTE *scripted_hud_messages_clear(void)
