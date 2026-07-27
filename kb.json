@@ -37950,8 +37950,8 @@
         },
         {
           "addr": "0x120ee0",
-          "decl": "void animation_frame_get_xy_translation(void);",
-          "ported": false
+          "decl": "void animation_frame_get_xy_translation(void *animation, short frame_index, int *out_xy);",
+          "ported": true
         },
         {
           "addr": "0x120f20",

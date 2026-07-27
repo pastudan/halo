@@ -2372,46 +2372,19 @@ short FUN_00120cb0(int animation_graph_tag_index __attribute__((unused)), const 
 #endif
 
 
-/* animation_frame_get_xy_translation (0x120ee0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static void (*const b120ee0_c120590)(void *animation, short frame_index, short frame_size) = FUN_00120590;
-
-__attribute__((naked, noinline))
-void animation_frame_get_xy_translation(void)
+/* animation_frame_get_xy_translation (0x120ee0) — readable C lift. */
+void animation_frame_get_xy_translation(void *animation, short frame_index, int *out_xy)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpw $1, 0x26(%%eax)\n\t"
-      "jne .Lanimation_frame_get_xy_translation_1\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl $8\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c120590]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lanimation_frame_get_xy_translation_1:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl $0, (%%eax)\n\t"
-      "movl $0, 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c120590] "m"(b120ee0_c120590)
-      : "memory");
+  int *frame;
+  if (*(short *)((char *)animation + 0x26) == 1) {
+    frame = (int *)((void *(*)(void *, short, short))FUN_00120590)(animation, frame_index, 8);
+    out_xy[0] = frame[0];
+    out_xy[1] = frame[1];
+  } else {
+    out_xy[0] = 0;
+    out_xy[1] = 0;
+  }
 }
-#else
-#error "animation_frame_get_xy_translation: clang naked draft required"
-#endif
-
 
 /* inverse_kinematics_adjust_matrices (0x120fd0) — XBE naked draft (batch 246). */
 #if defined(__clang__)
