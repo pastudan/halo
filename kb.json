@@ -31075,7 +31075,7 @@
           "addr": "0x1843b0",
           "name": "rasterizer_transparent_geometry_next_group",
           "decl": "void *rasterizer_transparent_geometry_next_group(void *group);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x184460",
