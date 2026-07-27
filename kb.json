@@ -20637,7 +20637,7 @@
         {
           "addr": "0x10ad10",
           "decl": "void periodic_functions_initialize(void);",
-          "ported": false,
+          "ported": true,
           "name": "periodic_functions_initialize"
         },
         {

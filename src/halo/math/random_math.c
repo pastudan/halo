@@ -179,100 +179,48 @@ void FUN_0010aa60(short type_index, void *buffer)
   }
 }
 
-/* periodic_functions_initialize (0x10ad10) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static void (*const b10ad10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b10ad10_exitfn)(int) = system_exit;
-static int *(*const b10ad10_gseed)(void) = get_global_random_seed_address;
-static void * (*const b10ad10_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b10ad10_c10aa60)(short type_index, void *buffer) = FUN_0010aa60;
-static void (*const b10ad10_c10a930)(int16_t type_index, void *buffer) = FUN_0010a930;
-
-__attribute__((naked, noinline))
+/* periodic_functions_initialize (0x10ad10) — readable C lift. */
 void periodic_functions_initialize(void)
 {
-  __asm__ volatile(
-      "movb 0x46e39c, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lperiodic_functions_initialize_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x43\n\t"
-      "pushl $0x28c80c\n\t"
-      "pushl $0x28c8f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lperiodic_functions_initialize_1:\n\t"
-      "movb $1, 0x46e39c\n\t"
-      "call *%[gseed]\n\t"
-      "movl $0x20f3f660, (%%eax)\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x46e3b8, %%esi\n\t"
-      ".Lperiodic_functions_initialize_2:\n\t"
-      "pushl $0x4e\n\t"
-      "pushl $0x28c80c\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x400\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "je .Lperiodic_functions_initialize_3\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c10aa60]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lperiodic_functions_initialize_4\n\t"
-      ".Lperiodic_functions_initialize_3:\n\t"
-      "movb %%bl, 0x46e39c\n\t"
-      ".Lperiodic_functions_initialize_4:\n\t"
-      "incl %%edi\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpw $0xc, %%di\n\t"
-      "jl .Lperiodic_functions_initialize_2\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x46e3a0, %%esi\n\t"
-      ".Lperiodic_functions_initialize_5:\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0x28c80c\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x400\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "je .Lperiodic_functions_initialize_6\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "call *%[c10a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "jmp .Lperiodic_functions_initialize_7\n\t"
-      ".Lperiodic_functions_initialize_6:\n\t"
-      "movb %%bl, 0x46e39c\n\t"
-      ".Lperiodic_functions_initialize_7:\n\t"
-      "incl %%edi\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpw $6, %%di\n\t"
-      "jl .Lperiodic_functions_initialize_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b10ad10_assert), [exitfn] "m"(b10ad10_exitfn), [gseed] "m"(b10ad10_gseed), [c8ee60] "m"(b10ad10_c8ee60), [c10aa60] "m"(b10ad10_c10aa60), [c10a930] "m"(b10ad10_c10a930)
-      : "memory");
+  extern char DAT_0028c80c[];
+  extern char DAT_0028c8f8[];
+  int i;
+  void *buf;
+  short idx;
+
+  if (*(unsigned char *)0x46e39c) {
+    display_assert(DAT_0028c8f8, DAT_0028c80c, 0x43, 1);
+    system_exit(-1);
+  }
+  *(unsigned char *)0x46e39c = 1;
+  *get_global_random_seed_address() = 0x20f3f660;
+  for (i = 0; i < 12; i++) {
+    buf = debug_malloc(0x400, 0, DAT_0028c80c, 0x4e);
+    ((void **)0x46e3b8)[i] = buf;
+    if (buf != 0)
+      FUN_0010aa60((short)i, buf);
+    else
+      *(unsigned char *)0x46e39c = 0;
+  }
+  for (i = 0; i < 6; i++) {
+    buf = debug_malloc(0x400, 0, DAT_0028c80c, 0x60);
+    ((void **)0x46e3a0)[i] = buf;
+    if (buf != 0) {
+      idx = (short)i;
+      /* FUN_0010a930: type_index@bx, buffer on stack. */
+      __asm__ volatile(
+          "movw %0, %%bx\n\t"
+          "pushl %1\n\t"
+          "call %P2\n\t"
+          "addl $4, %%esp"
+          :
+          : "r"(idx), "r"(buf), "X"(FUN_0010a930)
+          : "eax", "ecx", "edx", "ebx", "memory");
+    } else {
+      *(unsigned char *)0x46e39c = 0;
+    }
+  }
 }
-#else
-#error "periodic_functions_initialize: clang naked draft required"
-#endif
-
-
 /* Factorial: n! for n>=0; returns 1 for n<=1, 0 for n<0.
  * 0x10add0 / random_math.obj (probability.c)
  */
