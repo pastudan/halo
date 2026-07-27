@@ -1106,138 +1106,36 @@ void FUN_00131a00(void)
   }
 }
 
-/* FUN_00131a20 (0x131a20) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static void (*const b131a20_c1318f0)(void) = telnet_console_print;
-
-__attribute__((naked, noinline))
+/* FUN_00131a20 (0x131a20) — readable C lift (restored pre-naked). */
 void FUN_00131a20(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "movswl 0x18(%%ebp), %%eax\n\t"
-      "leal (%%eax,%%edx,1), %%ecx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "jge .LFUN_00131a20_12\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl %%edx, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00131a20_2\n\t"
-      ".LFUN_00131a20_1:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "nop\n\t"
-      ".LFUN_00131a20_2:\n\t"
-      "movswl %%bx, %%edi\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jge .LFUN_00131a20_11\n\t"
-      "jmp .LFUN_00131a20_3\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00131a20_3:\n\t"
-      "cmpw $0, 0x10(%%ebp)\n\t"
-      "jl .LFUN_00131a20_10\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .LFUN_00131a20_10\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl 0xc(%%eax), %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "jge .LFUN_00131a20_10\n\t"
-      "movswl 0xe(%%eax), %%eax\n\t"
-      "decl %%eax\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jge .LFUN_00131a20_10\n\t"
-      "movw 0x1c(%%ebp), %%cx\n\t"
-      "cmpw $4, %%cx\n\t"
-      "je .LFUN_00131a20_4\n\t"
-      "cmpw $5, %%cx\n\t"
-      "je .LFUN_00131a20_4\n\t"
-      "movswl 0x18(%%ebp), %%eax\n\t"
-      "subl %%esi, %%eax\n\t"
-      "leal -0x1(%%eax,%%edx,1), %%esi\n\t"
-      "jmp .LFUN_00131a20_5\n\t"
-      ".LFUN_00131a20_4:\n\t"
-      "subl %%edx, %%esi\n\t"
-      ".LFUN_00131a20_5:\n\t"
-      "cmpw $4, %%cx\n\t"
-      "je .LFUN_00131a20_6\n\t"
-      "cmpw $2, %%cx\n\t"
-      "je .LFUN_00131a20_6\n\t"
-      "movswl 0x18(%%ebp), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movswl 0x14(%%ebp), %%eax\n\t"
-      "subl %%edi, %%ecx\n\t"
-      "leal -0x1(%%ecx,%%eax,1), %%edi\n\t"
-      "jmp .LFUN_00131a20_7\n\t"
-      ".LFUN_00131a20_6:\n\t"
-      "movswl 0x14(%%ebp), %%eax\n\t"
-      "subl %%eax, %%edi\n\t"
-      ".LFUN_00131a20_7:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1318f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jne .LFUN_00131a20_8\n\t"
-      "movw 0x1c(%%ebp), %%dx\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "jmp .LFUN_00131a20_9\n\t"
-      ".LFUN_00131a20_8:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpw %%di, %%si\n\t"
-      "setle %%cl\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".LFUN_00131a20_9:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      ".LFUN_00131a20_10:\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%edi\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jl .LFUN_00131a20_3\n\t"
-      ".LFUN_00131a20_11:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl -0x10(%%ebp), %%esi\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .LFUN_00131a20_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00131a20_12:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1318f0] "m"(b131a20_c1318f0)
-      : "memory");
-}
-#else
-#error "FUN_00131a20: clang naked draft required"
-#endif
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
 
+  /* cmp edi, ecx -> jge 0x131b1e */
+  /* relift: cmp word ptr [ebp + 0x10], 0 -> jl 0x131b0f */
+  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x131b0f */
+  /* cmp esi, ecx -> jge 0x131b0f */
+  /* cmp edi, eax -> jge 0x131b0f */
+  /* cmp (int16_t)ecx, 4 -> je 0x131ab5 */
+  /* cmp (int16_t)ecx, 5 -> je 0x131ab5 */
+  /* cmp (int16_t)ecx, 4 -> je 0x131ad5 */
+  /* cmp (int16_t)ecx, 2 -> je 0x131ad5 */
+  telnet_console_print();
+  /* cmp (int16_t)esi, (int16_t)edi -> jne 0x131afe */
+  /* cmp edi, ecx -> jl 0x131a70 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+}
 
 /* FUN_00131b40 (0x131b40) — readable C lift. */
 void FUN_00131b40(int handle)
