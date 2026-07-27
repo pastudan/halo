@@ -28581,8 +28581,8 @@
         },
         {
           "addr": "0x1a67e0",
-          "decl": "short FUN_001a67e0(const char *param_1);",
-          "ported": false,
+          "decl": "int16_t FUN_001a67e0(const char *name);",
+          "ported": true,
           "source_path": "units/units.c"
         },
         {

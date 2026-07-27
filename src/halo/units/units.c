@@ -581,57 +581,17 @@ char *FUN_001a67b0(short param_1, unsigned char param_2)
 }
 
 
-/* FUN_001a67e0 (0x1a67e0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static int (*const b1a67e0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-
-__attribute__((naked, noinline))
-short FUN_001a67e0(const char *param_1 __attribute__((unused)))
+/* FUN_001a67e0 (0x1a67e0) — readable C lift. */
+int16_t FUN_001a67e0(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_001a67e0_1:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl 0x32d7c8(,%%eax,8), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001a67e0_2\n\t"
-      "incl %%esi\n\t"
-      "cmpw $0xd1, %%si\n\t"
-      "jl .LFUN_001a67e0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a67e0_2:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8dcb0] "m"(b1a67e0_c8dcb0)
-      : "memory");
+  int16_t i;
+
+  for (i = 0; i < 0xd1; i++) {
+    if (csstrcmp(*(const char **)(0x32d7c8 + (int)i * 8), name) == 0)
+      return i;
+  }
+  return -1;
 }
-#else
-#error "FUN_001a67e0: clang naked draft required"
-#endif
-
-
 
 /* FUN_001a6820 (0x1a6820) — XBE naked draft (batch 69). */
 #if defined(__clang__)
