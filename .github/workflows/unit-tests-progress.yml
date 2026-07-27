@@ -1,0 +1,176 @@
+name: Unit Tests & Progress
+
+# Cloud CI (no self-hosted / XBE required):
+#   1) host-side unit tests
+#   2) decomp progress report + shields.io endpoint badges
+#   3) publish dashboard to gh-pages
+#   4) refresh README progress banner on push/schedule
+on:
+  push:
+    branches:
+      - main
+      - master
+      - track-a-collision-bsp
+  pull_request:
+    branches:
+      - main
+      - master
+      - track-a-collision-bsp
+  schedule:
+    # Keep the README banner fresh even when lifts land from many worktrees.
+    - cron: "0 */6 * * *"
+  workflow_dispatch:
+
+concurrency:
+  group: unit-tests-progress-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  unit-tests:
+    name: Host unit tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest
+
+      - name: Run host unit tests
+        run: python3 tools/report/run_host_unit_tests.py -v
+
+      - name: Job summary
+        if: always()
+        run: |
+          {
+            echo "## Host unit tests"
+            echo ""
+            echo "Pure host contracts (no cachebeta.xbe / xemu / RXDK)."
+            echo "XBE-dependent modules self-skip via unittest.skipUnless."
+          } >> "$GITHUB_STEP_SUMMARY"
+
+  progress:
+    name: Publish progress badges
+    runs-on: ubuntu-latest
+    needs: unit-tests
+    # PRs get the report artifact only; pushes/schedule refresh pages + README.
+    permissions:
+      contents: write
+      pages: write
+      id-token: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Needed so bot commits can push back to the triggering branch.
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Generate progress report
+        env:
+          PROGRESS_DASHBOARD_URL: https://pastudan.github.io/halo/
+          PROGRESS_BADGE_ENDPOINT_BASE: https://pastudan.github.io/halo
+          PROGRESS_USE_ENDPOINT_BADGES: "1"
+        run: |
+          mkdir -p artifacts/progress
+          python3 tools/report/generate_decomp_report.py \
+            --output artifacts/progress/report.json \
+            --html artifacts/progress/index.html \
+            --no-readme
+          python3 tools/report/write_shields_badges.py \
+            --report artifacts/progress/report.json \
+            --output-dir artifacts/progress
+
+      - name: Write job summary
+        run: |
+          python3 <<'PY'
+          import json, os
+          report = json.load(open("artifacts/progress/report.json"))
+          fn = report["summary"]["functions"]
+          by = report["summary"]["bytes"]
+          meta = report.get("meta", {})
+          path = os.environ["GITHUB_STEP_SUMMARY"]
+          with open(path, "a", encoding="utf-8") as fh:
+              fh.write("## Decompilation progress\n\n")
+              fh.write(f"| Metric | Value |\n|---|---:|\n")
+              fh.write(f"| Functions | {fn['ported']:,} / {fn['total']:,} ({fn['percent']:.2f}%) |\n")
+              fh.write(f"| Bytes | {by['ported']:,} / {by['total']:,} ({by['percent']:.2f}%) |\n")
+              fh.write(f"| Commit | `{meta.get('commit', 'unknown')}` |\n")
+              fh.write(f"| Branch | `{meta.get('branch', 'unknown')}` |\n\n")
+              fh.write(
+                  "Badge: "
+                  "![progress](https://img.shields.io/endpoint?"
+                  "url=https://pastudan.github.io/halo/badge.json)\n"
+              )
+          PY
+
+      - name: Upload progress artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: progress-report
+          path: artifacts/progress/
+          if-no-files-found: error
+
+      - name: Prepare GitHub Pages payload
+        if: github.event_name != 'pull_request'
+        run: |
+          mkdir -p artifacts/pages
+          cp -a artifacts/progress/. artifacts/pages/
+          # Root-level badge.json so shields endpoint URL stays short.
+          cp artifacts/progress/badge.json artifacts/pages/badge.json
+          cp artifacts/progress/functions-badge.json artifacts/pages/functions-badge.json
+          # Also mirror under /progress/ for the existing dashboard layout.
+          mkdir -p artifacts/pages/progress
+          cp -a artifacts/progress/. artifacts/pages/progress/
+
+      - name: Deploy to GitHub Pages
+        if: github.event_name != 'pull_request'
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./artifacts/pages
+          publish_branch: gh-pages
+          keep_files: true
+          user_name: github-actions[bot]
+          user_email: github-actions[bot]@users.noreply.github.com
+
+      - name: Refresh README progress banner
+        if: github.event_name != 'pull_request'
+        env:
+          PROGRESS_DASHBOARD_URL: https://pastudan.github.io/halo/
+          PROGRESS_BADGE_ENDPOINT_BASE: https://pastudan.github.io/halo
+          PROGRESS_USE_ENDPOINT_BADGES: "1"
+        run: |
+          python3 tools/report/generate_decomp_report.py \
+            --output artifacts/progress/report.json \
+            --endpoint-badges \
+            --dashboard-url https://pastudan.github.io/halo/ \
+            --badge-endpoint-base https://pastudan.github.io/halo
+          if git diff --quiet -- README.md; then
+            echo "README progress section unchanged"
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "chore(ci): refresh decompilation progress banner [skip ci]"
+            # Push to the branch that triggered this workflow.
+            git push origin "HEAD:${GITHUB_REF_NAME}"
+          fi

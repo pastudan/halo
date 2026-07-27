@@ -2776,7 +2776,13 @@ def generate_html(report: dict, output_path: str, history_path: str = None):
         f.write(html)
 
 
-def update_readme_progress(report: dict, readme_path: str = 'README.md') -> bool:
+def update_readme_progress(
+    report: dict,
+    readme_path: str = 'README.md',
+    dashboard_url: str | None = None,
+    use_endpoint_badges: bool = False,
+    badge_endpoint_base: str | None = None,
+) -> bool:
     """Update README.md Game Code Progress section with data from current report."""
     root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '../..'))
     target_path = os.path.join(root_dir, readme_path) if not os.path.isabs(readme_path) else readme_path
@@ -2825,12 +2831,39 @@ def update_readme_progress(report: dict, readme_path: str = 'README.md') -> bool
     badge_color = color_badge(func_pct)
     func_bar = make_bar(func_pct)
     bytes_bar = make_bar(bytes_pct)
+    dash = dashboard_url or os.environ.get(
+        'PROGRESS_DASHBOARD_URL', 'https://stianeklund.github.io/halo/'
+    )
+    endpoint_base = (
+        badge_endpoint_base
+        or os.environ.get('PROGRESS_BADGE_ENDPOINT_BASE')
+        or dash.rstrip('/')
+    )
+
+    if use_endpoint_badges or os.environ.get('PROGRESS_USE_ENDPOINT_BADGES') == '1':
+        progress_badge = (
+            f"[![Decompilation Progress](https://img.shields.io/endpoint?"
+            f"url={endpoint_base}/badge.json)]({dash})"
+        )
+        functions_badge = (
+            f"[![Ported Functions](https://img.shields.io/endpoint?"
+            f"url={endpoint_base}/functions-badge.json)]({dash})"
+        )
+    else:
+        progress_badge = (
+            f"[![Decompilation Progress](https://img.shields.io/badge/"
+            f"decompilation-{func_pct:.2f}%25-{badge_color}.svg)]({dash})"
+        )
+        functions_badge = (
+            f"[![Ported Functions](https://img.shields.io/badge/"
+            f"functions-{func_ported:,}%2F{func_total:,}-blue.svg)]({dash})"
+        )
 
     progress_content = (
         "<!-- GAME_CODE_PROGRESS_START -->\n"
-        f"[![Decompilation Progress](https://img.shields.io/badge/decompilation-{func_pct:.2f}%25-{badge_color}.svg)](https://stianeklund.github.io/halo/)\n"
-        f"[![Ported Functions](https://img.shields.io/badge/functions-{func_ported:,}%2F{func_total:,}-blue.svg)](https://stianeklund.github.io/halo/)\n\n"
-        "Progress breakdown from the [Decompilation Progress Dashboard](https://stianeklund.github.io/halo/):\n\n"
+        f"{progress_badge}\n"
+        f"{functions_badge}\n\n"
+        f"Progress breakdown from the [Decompilation Progress Dashboard]({dash}):\n\n"
         f"* **Ported Functions:** `{func_ported:,} / {func_total:,}` (`{func_pct:.2f}%`)\n"
         f"  `[{func_bar}] {func_pct:.2f}%`\n"
         f"* **Ported Code Bytes:** `{bytes_ported:,} / {bytes_total:,}` (`{bytes_pct:.2f}%`)\n"
@@ -2838,7 +2871,7 @@ def update_readme_progress(report: dict, readme_path: str = 'README.md') -> bool
         f"* **Average VC71 Match Accuracy:** `{match_avg:.2f}%` (`{scored_cnt:,}` scored functions, weighted: `{match_weighted:.2f}%`)\n"
         f"* **Equivalence Verified:** `{equiv_tested:,}` functions tested (`{equiv_hc:,}` high confidence)\n"
         f"* **Translation Units:** `{progress_units_cnt}` source units (`{platform_units_cnt}` platform/SDK buckets tracked separately)\n\n"
-        "> Explore the interactive call graph and unit breakdown: **[Decompilation Progress Dashboard](https://stianeklund.github.io/halo/)** (or locally at [`artifacts/progress/index.html`](artifacts/progress/index.html))\n"
+        f"> Explore the interactive call graph and unit breakdown: **[Decompilation Progress Dashboard]({dash})** (or locally at [`artifacts/progress/index.html`](artifacts/progress/index.html))\n"
         "<!-- GAME_CODE_PROGRESS_END -->"
     )
 
@@ -2874,6 +2907,12 @@ def main():
                     help='Path to README.md to update with progress (default: README.md)')
     ap.add_argument('--no-readme', action='store_true',
                     help='Skip updating README.md')
+    ap.add_argument('--dashboard-url', metavar='URL',
+                    help='Dashboard link used in README badges (default: stianeklund pages or PROGRESS_DASHBOARD_URL)')
+    ap.add_argument('--endpoint-badges', action='store_true',
+                    help='Use shields.io endpoint badges (badge.json) instead of static percent badges')
+    ap.add_argument('--badge-endpoint-base', metavar='URL',
+                    help='Base URL for badge.json / functions-badge.json when using --endpoint-badges')
     args = ap.parse_args()
     
     print('Generating decomp.dev-compatible report...')
@@ -2891,7 +2930,13 @@ def main():
         print(f'\n✓ HTML dashboard written to: {args.html}')
 
     if not args.no_readme:
-        if update_readme_progress(report, args.readme):
+        if update_readme_progress(
+            report,
+            args.readme,
+            dashboard_url=args.dashboard_url,
+            use_endpoint_badges=args.endpoint_badges,
+            badge_endpoint_base=args.badge_endpoint_base,
+        ):
             print(f'✓ Updated progress in {args.readme}')
     
     if args.pretty:
