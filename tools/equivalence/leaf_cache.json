@@ -1118,7 +1118,7 @@
   "0x185950": {
     "class": "non_leaf",
     "confidence": "weak",
-    "coverage_pct": 0.0
+    "coverage_pct": 14.5
   },
   "0x185f80": {
     "class": "non_leaf",

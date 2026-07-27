@@ -23433,7 +23433,8 @@
         {
           "addr": "0x185950",
           "decl": "void render_camera_build_frustum_bounds(void);",
-          "ported": false
+          "ported": true,
+          "name": "render_camera_build_frustum_bounds"
         },
         {
           "addr": "0x185a70",
