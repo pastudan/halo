@@ -31310,7 +31310,7 @@
         {
           "addr": "0x17d910",
           "decl": "void rasterizer_screen_effects_initialize(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d950",
@@ -31340,7 +31340,7 @@
         {
           "addr": "0x17da00",
           "decl": "void FUN_0017da00(int a0);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017da00"
         },
         {
@@ -31442,8 +31442,8 @@
         },
         {
           "addr": "0x17eb50",
-          "decl": "void FUN_0017eb50(void);",
-          "ported": false
+          "decl": "char FUN_0017eb50(void);",
+          "ported": true
         },
         {
           "addr": "0x17eb90",

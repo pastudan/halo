@@ -1257,41 +1257,19 @@ float FUN_0017d8f0(void)
 
 
 
-/* rasterizer_screen_effects_initialize (0x17d910) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-static void * (*const b17d910_c1bfbf0)(const char *name, const char *a2, int size) = (void *)game_state_malloc;
-static void (*const b17d910_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17d910_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* rasterizer_screen_effects_initialize (0x17d910) — readable C lift. */
 void rasterizer_screen_effects_initialize(void)
 {
-  __asm__ volatile(
-      "pushl $0x78\n\t"
-      "pushl $0\n\t"
-      "pushl $0x2af368\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x47e4d4\n\t"
-      "jne .Lrasterizer_screen_effects_initialize_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x36\n\t"
-      "pushl $0x2af334\n\t"
-      "pushl $0x2af314\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_screen_effects_initialize_1:\n\t"
-      "ret\n\t"
-      :
-      : [c1bfbf0] "m"(b17d910_c1bfbf0), [assert] "m"(b17d910_assert), [exitfn] "m"(b17d910_exitfn)
-      : "memory");
+  void *p;
+
+  p = game_state_malloc((const char *)0x2af368, 0, 0x78);
+  *(void **)0x47e4d4 = p;
+  if (!p) {
+    display_assert((const char *)0x2af314, (const char *)0x2af334, 0x36, 1);
+    system_exit(-1);
+  }
 }
-#else
-#error "rasterizer_screen_effects_initialize: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017d950 (0x17d950) — readable C lift. */
@@ -1349,45 +1327,22 @@ float FUN_0017d9d0(short index)
   return *(float *)(spr + 0x64 + (int)index * 4);
 }
 
-/* FUN_0017da00 (0x17da00) — XBE naked draft (batch 381). */
-#if defined(__clang__)
-static void *(*const b17da00_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void FUN_0017da00(int a0 __attribute__((unused)))
+/* FUN_0017da00 (0x17da00) — readable C lift. */
+void FUN_0017da00(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017da00_3\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_0017da00_1\n\t"
-      "movb 0x39(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_0017da00_2\n\t"
-      ".LFUN_0017da00_1:\n\t"
-      "pushl $0x38\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x39(%%eax)\n\t"
-      ".LFUN_0017da00_2:\n\t"
-      "movb $1, 0x38(%%eax)\n\t"
-      ".LFUN_0017da00_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b17da00_memset)
-      : "memory");
+  unsigned char *p;
+
+  p = *(unsigned char **)0x47e4d4;
+  if (!p)
+    return;
+  if (a0 || !p[0x39]) {
+    csmemset(p, 0, 0x38);
+    p = *(unsigned char **)0x47e4d4;
+    p[0x39] = 1;
+  }
+  p[0x38] = 1;
 }
-#else
-#error "FUN_0017da00: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017da40 (0x17da40) — XBE naked draft (batch 323). */
@@ -1838,7 +1793,7 @@ static void (*const b17e040_exitfn)(int) = system_exit;
 static void (*const b17e040_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
 __attribute__((naked, noinline))
-void FUN_0017e040(int a __attribute__((unused)), int b __attribute__((unused)))
+void FUN_0017e040(void)
 {
   __asm__ volatile(
       "movb 0x47e4d8, %%al\n\t"
@@ -2843,44 +2798,20 @@ void FUN_0017eb30(float *point0, float *point1, float *point2, void *color)
   FUN_0017e800(point0, point1, point2, color, color, color);
 }
 
-/* FUN_0017eb50 (0x17eb50) — XBE naked draft (batch 385). */
-#if defined(__clang__)
-static void * (*const b17eb50_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
-static void (*const b17eb50_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_0017eb50(void)
+/* FUN_0017eb50 (0x17eb50) — readable C lift. */
+char FUN_0017eb50(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl $0x29\n\t"
-      "pushl $0x2af728\n\t"
-      "pushl $0\n\t"
-      "pushl $0x24000\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x47ec40\n\t"
-      "jne .LFUN_0017eb50_1\n\t"
-      "pushl $0x2af710\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_0017eb50_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b17eb50_c8ee60), [c8f390] "m"(b17eb50_c8f390)
-      : "memory");
+  void *p;
+
+  p = debug_malloc(0x24000, 0, (const char *)0x2af728, 0x29);
+  *(void **)0x47ec40 = p;
+  if (!p) {
+    error(2, (const char *)0x2af710);
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_0017eb50: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017eb90 (0x17eb90) — readable C lift. */
