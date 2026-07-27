@@ -14480,8 +14480,8 @@
         },
         {
           "addr": "0x100b00",
-          "decl": "int16_t main_get_window_count(void);",
-          "ported": false
+          "decl": "short main_get_window_count(void);",
+          "ported": true
         },
         {
           "addr": "0x100b40",

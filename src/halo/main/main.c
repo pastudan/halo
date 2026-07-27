@@ -3524,46 +3524,19 @@ void main_run_demos(void)
   *(char *)0x46da44 = 1;
 }
 
-/* main_get_window_count (0x100b00) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-static bool (*const b100b00_ca8e60)(void) = game_engine_force_single_screen;
-static bool (*const b100b00_c930a0)(void) = cinematic_in_progress;
-static __int16 (*const b100b00_cba4b0)(void) = local_player_count;
-
-__attribute__((naked, noinline))
-int16_t main_get_window_count(void)
+/* main_get_window_count (0x100b00) — readable C lift. */
+short main_get_window_count(void)
 {
-  __asm__ volatile(
-      "call *%[ca8e60]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lmain_get_window_count_1\n\t"
-      "call *%[c930a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lmain_get_window_count_2\n\t"
-      ".Lmain_get_window_count_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      ".Lmain_get_window_count_2:\n\t"
-      "call *%[cba4b0]\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jl .Lmain_get_window_count_1\n\t"
-      "call *%[cba4b0]\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jle .Lmain_get_window_count_3\n\t"
-      "movl $4, %%eax\n\t"
-      "ret\n\t"
-      ".Lmain_get_window_count_3:\n\t"
-      "call *%[cba4b0]\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [ca8e60] "m"(b100b00_ca8e60), [c930a0] "m"(b100b00_c930a0), [cba4b0] "m"(b100b00_cba4b0)
-      : "memory");
+  short n;
+  if (game_engine_force_single_screen() || cinematic_in_progress())
+    return 1;
+  n = local_player_count();
+  if (n < 1)
+    return 1;
+  if (n > 4)
+    return 4;
+  return n;
 }
-#else
-#error "main_get_window_count: clang naked draft required"
-#endif
-
 
 void main_crash(int unused)
 {
