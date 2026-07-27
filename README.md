@@ -24,20 +24,20 @@ In practice, that means:
 Game Code Progress
 ------------------
 <!-- GAME_CODE_PROGRESS_START -->
-[![Decompilation Progress](https://img.shields.io/badge/decompilation-71.16%25-yellowgreen.svg)](https://stianeklund.github.io/halo/)
-[![Ported Functions](https://img.shields.io/badge/functions-4,851%2F6,817-blue.svg)](https://stianeklund.github.io/halo/)
+[![Decompilation Progress](https://img.shields.io/endpoint?url=https://pastudan.github.io/halo/badge.json)](https://pastudan.github.io/halo/)
+[![Ported Functions](https://img.shields.io/endpoint?url=https://pastudan.github.io/halo/functions-badge.json)](https://pastudan.github.io/halo/)
 
-Progress breakdown from the [Decompilation Progress Dashboard](https://stianeklund.github.io/halo/):
+Progress breakdown from the [Decompilation Progress Dashboard](https://pastudan.github.io/halo/):
 
-* **Ported Functions:** `4,851 / 6,817` (`71.16%`)
-  `[████████████████████████████░░░░░░░░░░░░] 71.16%`
-* **Ported Code Bytes:** `986,288 / 1,842,658` (`53.53%`)
-  `[█████████████████████░░░░░░░░░░░░░░░░░░░] 53.53%`
-* **Average VC71 Match Accuracy:** `88.60%` (`3,539` scored functions, weighted: `82.60%`)
-* **Equivalence Verified:** `703` functions tested (`281` high confidence)
-* **Translation Units:** `173` source units (`39` platform/SDK buckets tracked separately)
+* **Ported Functions:** `5,896 / 6,820` (`86.45%`)
+  `[███████████████████████████████████░░░░░] 86.45%`
+* **Ported Code Bytes:** `7,417,075 / 11,216,767` (`66.12%`)
+  `[██████████████████████████░░░░░░░░░░░░░░] 66.12%`
+* **Average VC71 Match Accuracy:** `89.00%` (`3,770` scored functions, weighted: `65.20%`)
+* **Equivalence Verified:** `406` functions tested (`141` high confidence)
+* **Translation Units:** `175` source units (`40` platform/SDK buckets tracked separately)
 
-> Explore the interactive call graph and unit breakdown: **[Decompilation Progress Dashboard](https://stianeklund.github.io/halo/)** (or locally at [`artifacts/progress/index.html`](artifacts/progress/index.html))
+> Explore the interactive call graph and unit breakdown: **[Decompilation Progress Dashboard](https://pastudan.github.io/halo/)** (or locally at [`artifacts/progress/index.html`](artifacts/progress/index.html))
 <!-- GAME_CODE_PROGRESS_END -->
 
 Community
