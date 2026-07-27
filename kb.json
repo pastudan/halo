@@ -14704,7 +14704,7 @@
         {
           "addr": "0x1037b0",
           "decl": "float *FUN_001037b0(float *out, float *p0, float *p1, float *p2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x103860",
