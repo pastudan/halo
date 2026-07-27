@@ -2228,114 +2228,57 @@ char FUN_00148eb0(void *state __attribute__((unused)), int node_index __attribut
 #endif
 
 
-/* collision_bsp_test_vector (0x149480) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-static void (*const b149480_c14d9d0)(short collision_function) = collision_log_add_call;
-static void (*const b149480_c14d940)(void *counter) = collision_log_query_counter;
-static char (*const b149480_c148eb0)(void *state, int node_index, float t0, float t1) = FUN_00148eb0;
-static void (*const b149480_c14d950)(short collision_function, unsigned int start_lo, int start_hi) = collision_log_add_time;
-
-__attribute__((naked, noinline))
-char collision_bsp_test_vector(int collision_flags __attribute__((unused)), int bsp __attribute__((unused)), short flags __attribute__((unused)), int breakable_surfaces __attribute__((unused)), int origin __attribute__((unused)), int direction __attribute__((unused)), float max_t __attribute__((unused)), float *result __attribute__((unused)))
+/* collision_bsp_test_vector (0x149480) — readable C lift from XBE leaf.
+ * Thin wrapper: build vector state and walk BSP from node 0. */
+char collision_bsp_test_vector(int collision_flags, int bsp, short flags,
+                               int breakable_surfaces, int origin, int direction,
+                               float max_t, float *result)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x28, %%esp\n\t"
-      "movl 0x5064dc, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%edx, %%edi\n\t"
-      "sete %%al\n\t"
-      "addl $4, %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c14d9d0]\n\t"
-      "pushl $0x46f090\n\t"
-      "call *%[c14d940]\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "movl %%ecx, -0x28(%%ebp)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "movw %%dx, -0x20(%%ebp)\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $5, %%ah\n\t"
-      "movl %%edi, -0x24(%%ebp)\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "jp .Lcollision_bsp_test_vector_1\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lcollision_bsp_test_vector_2\n\t"
-      ".Lcollision_bsp_test_vector_1:\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      ".Lcollision_bsp_test_vector_2:\n\t"
-      "fstps (%%ecx)\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edx, 0x14(%%ecx)\n\t"
-      "movb %%dl, -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_bsp_test_vector_3\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "jmp .Lcollision_bsp_test_vector_5\n\t"
-      ".Lcollision_bsp_test_vector_3:\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_bsp_test_vector_4\n\t"
-      "movl $0x3f800000, 0x10(%%ebp)\n\t"
-      "jmp .Lcollision_bsp_test_vector_5\n\t"
-      ".Lcollision_bsp_test_vector_4:\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      ".Lcollision_bsp_test_vector_5:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c148eb0]\n\t"
-      "movl 0x46f090, %%ecx\n\t"
-      "movb %%al, %%bl\n\t"
-      "movl 0x46f094, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c14d950]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c14d9d0] "m"(b149480_c14d9d0), [c14d940] "m"(b149480_c14d940), [c148eb0] "m"(b149480_c148eb0), [c14d950] "m"(b149480_c14d950)
-      : "memory");
-}
-#else
-#error "collision_bsp_test_vector: clang naked draft required"
-#endif
+  int log_fn;
+  collision_bsp_vector_state state;
+  float t1;
+  char hit;
 
+  log_fn = 4 + (bsp == *(int *)0x5064dc ? 1 : 0);
+  collision_log_add_call((short)log_fn);
+  collision_log_query_counter((void *)0x46f090);
+
+  state.collision_flags = collision_flags;
+  state.bsp = bsp;
+  state.flags = (unsigned short)flags;
+  state.pad_u16 = 0;
+  state.breakable_surfaces = breakable_surfaces;
+  state.origin = (float *)origin;
+  state.direction = (float *)direction;
+  state.result = result;
+  state.last_leaf = -1;
+  state.leaf_side = 0;
+  state.pad_u8[0] = 0;
+  state.pad_u8[1] = 0;
+  state.pad_u8[2] = 0;
+  state.plane_index = -1;
+
+  /* result[0] = max_t unless ordered-negative (NaN keeps max_t). */
+  if (max_t < 0.0f) {
+    result[0] = 0.0f;
+  } else {
+    result[0] = max_t;
+  }
+  result[5] = 0.0f; /* +0x14 leaf count */
+
+  if (max_t < 0.0f) {
+    t1 = 0.0f;
+  } else if (max_t > 1.0f) {
+    t1 = 1.0f;
+  } else {
+    t1 = max_t;
+  }
+
+  hit = FUN_00148eb0(&state, 0, 0.0f, t1);
+  collision_log_add_time((short)log_fn, *(unsigned int *)0x46f090,
+                         *(int *)0x46f094);
+  return hit;
+}
 
 
 /* -------------------------------------------------------------------------

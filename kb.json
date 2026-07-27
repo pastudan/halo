@@ -40658,7 +40658,8 @@
         {
           "addr": "0x149480",
           "decl": "char collision_bsp_test_vector(int collision_flags, int bsp, short flags, int breakable_surfaces, int origin, int direction, float max_t, float *result);",
-          "ported": false
+          "ported": true,
+          "name": "collision_bsp_test_vector"
         },
         {
           "addr": "0x149570",
