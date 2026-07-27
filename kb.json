@@ -21736,8 +21736,8 @@
         },
         {
           "addr": "0x155880",
-          "decl": "void FUN_00155880(void);",
-          "ported": false
+          "decl": "int FUN_00155880(int a /* @<eax> */, int b /* @<ecx> */, int unused, int *out);",
+          "ported": true
         },
         {
           "addr": "0x1559a0",

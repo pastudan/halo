@@ -215,33 +215,15 @@ int FUN_00155560(int a, int b, int c, int d, int e)
   return 0;
 }
 
-/* FUN_00155880 (0x155880) — XBE naked draft (batch 326). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00155880(void)
+/* FUN_00155880 (0x155880) — readable C lift. */
+int FUN_00155880(int a /* @<eax> */, int b /* @<ecx> */, int unused, int *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "shll $5, %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movl 0x1fb498(,%%eax,4), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int idx;
+  (void)unused;
+  idx = (a << 5) + b;
+  *out = *(int *)(0x1fb498 + idx * 4);
+  return 0;
 }
-#else
-#error "FUN_00155880: clang naked draft required"
-#endif
-
-
 /* 0x1559a0 */
 void _rasterizer_reset_state(void)
 {
