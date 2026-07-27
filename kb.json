@@ -26769,8 +26769,8 @@
         },
         {
           "addr": "0x80070",
-          "decl": "void FUN_00080070(void);",
-          "ported": false
+          "decl": "void FUN_00080070(const unsigned short *a, const unsigned short *b, unsigned short *out);",
+          "ported": true
         },
         {
           "addr": "0x800d0",
