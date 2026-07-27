@@ -7706,7 +7706,7 @@
           "decl": "void motion_sensor_initialize(void);",
           "file": "src/halo/interface/event_manager.c",
           "name": "motion_sensor_initialize",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdb140",
@@ -7726,7 +7726,7 @@
         },
         {
           "addr": "0xdb1e0",
-          "decl": "void FUN_000db1e0(void);",
+          "decl": "void FUN_000db1e0(float *xy, char flag, int16_t value);",
           "ported": true
         },
         {
@@ -7756,7 +7756,7 @@
         },
         {
           "addr": "0xdbfb0",
-          "decl": "void FUN_000dbfb0(int param_1, int param_2, int param_3);",
+          "decl": "void FUN_000dbfb0(int16_t local_player_index, int param_2, void *pt);",
           "ported": true
         },
         {
