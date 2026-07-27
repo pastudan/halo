@@ -27958,7 +27958,7 @@
         {
           "addr": "0xf2690",
           "decl": "void FUN_000f2690(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2720",
@@ -27989,7 +27989,7 @@
         {
           "addr": "0xf2b00",
           "decl": "void FUN_000f2b00(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2b90",
@@ -28010,7 +28010,7 @@
         {
           "addr": "0xf2ed0",
           "decl": "void FUN_000f2ed0(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2f60",
@@ -28025,17 +28025,17 @@
         {
           "addr": "0xf31d0",
           "decl": "void color_picker_get_string(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf3280",
           "decl": "void FUN_000f3280(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf3320",
           "decl": "void FUN_000f3320(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf3400",
