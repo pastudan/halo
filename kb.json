@@ -3692,7 +3692,7 @@
           "addr": "0x151b0",
           "decl": "void FUN_000151b0(int actor_handle);",
           "name": "FUN_000151b0",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/actor_looking.c"
         },
         {
@@ -3762,7 +3762,8 @@
         {
           "addr": "0x15f60",
           "decl": "void FUN_00015f60(int actor_handle, int *param_2);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00015f60"
         },
         {
           "addr": "0x16000",

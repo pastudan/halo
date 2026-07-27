@@ -1794,72 +1794,38 @@ void FUN_00015150(int actor_handle)
   }
 }
 
-/* FUN_000151b0 (0x151b0) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void *(*const b151b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b151b0_c1ac450)(int unit_handle) = unit_start_running_blindly;
-static int (*const b151b0_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void FUN_000151b0(int actor_handle __attribute__((unused)))
+/* FUN_000151b0 (0x151b0) — readable C lift from XBE leaf. */
+void FUN_000151b0(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xb4(%%esi), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x9c(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "incl %%edx\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movl %%edx, 0xb4(%%esi)\n\t"
-      "jle .LFUN_000151b0_1\n\t"
-      "decl %%eax\n\t"
-      "movw %%ax, 0x9c(%%esi)\n\t"
-      ".LFUN_000151b0_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x9e(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_000151b0_2\n\t"
-      "decl %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movw %%ax, 0x9e(%%esi)\n\t"
-      "jne .LFUN_000151b0_2\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .LFUN_000151b0_2\n\t"
-      "movw 0xa8(%%esi), %%ax\n\t"
-      "cmpw $9, %%ax\n\t"
-      "jl .LFUN_000151b0_2\n\t"
-      "cmpw $0xc, %%ax\n\t"
-      "jg .LFUN_000151b0_2\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ac450]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000151b0_2:\n\t"
-      "cmpw $0, 0xa8(%%esi)\n\t"
-      "jle .LFUN_000151b0_3\n\t"
-      "call *%[gtime]\n\t"
-      "addl $0x2ee, %%eax\n\t"
-      "movl %%eax, 0x39c(%%esi)\n\t"
-      ".LFUN_000151b0_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b151b0_dget), [c1ac450] "m"(b151b0_c1ac450), [gtime] "m"(b151b0_gtime)
-      : "memory");
+  char *actor;
+  unsigned short timer;
+  short action;
+
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  *(int *)(actor + 0xb4) += 1;
+  timer = *(unsigned short *)(actor + 0x9c);
+  if ((short)timer > 0) {
+    *(unsigned short *)(actor + 0x9c) = (unsigned short)(timer - 1);
+  }
+  timer = *(unsigned short *)(actor + 0x9e);
+  if ((short)timer > 0) {
+    timer = (unsigned short)(timer - 1);
+    *(unsigned short *)(actor + 0x9e) = timer;
+    if (timer == 0) {
+      if (*(int *)(actor + 0x18) != -1) {
+        action = *(short *)(actor + 0xa8);
+        if (action >= 9 && action <= 0xc) {
+          unit_start_running_blindly(*(int *)(actor + 0x18));
+        }
+      }
+    }
+  }
+  if (*(short *)(actor + 0xa8) > 0) {
+    *(int *)(actor + 0x39c) = game_time_get() + 0x2ee;
+  }
 }
-#else
-#error "FUN_000151b0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00015250 (0x15250)
@@ -2946,81 +2912,41 @@ void actor_clear_flee_target(int actor_handle)
   }
 }
 
-/* FUN_00015f60 (0x15f60) — XBE naked draft (batch 76). */
-#if defined(__clang__)
-static void *(*const b15f60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_00015f60(int actor_handle __attribute__((unused)), int *param_2 __attribute__((unused)))
+/* FUN_00015f60 (0x15f60) — readable C lift from XBE leaf. */
+void FUN_00015f60(int actor_handle, int *param_2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xa4(%%eax), %%cl\n\t"
-      "addl $0x9c, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_00015f60_1\n\t"
-      "movl 0x2ee700, %%edx\n\t"
-      "jmp .LFUN_00015f60_4\n\t"
-      ".LFUN_00015f60_1:\n\t"
-      "movb 0xa(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_00015f60_2\n\t"
-      "movl 0x2ee704, %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "movl %%eax, 0xc(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00015f60_2:\n\t"
-      "movb 0x9(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_00015f60_3\n\t"
-      "movl 0x2ee6e8, %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%edx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00015f60_3:\n\t"
-      "movl 0x2ee6f4, %%edx\n\t"
-      ".LFUN_00015f60_4:\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl 0xc(%%edx), %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b15f60_dget)
-      : "memory");
+  char *actor;
+  char *look;
+  int *src;
+
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  look = actor + 0x9c;
+  if (actor[0xa4] == 0) {
+    src = *(int **)0x2ee700;
+  } else if (look[0xa] != 0) {
+    src = *(int **)0x2ee704;
+    param_2[0] = src[0];
+    param_2[1] = src[1];
+    param_2[2] = src[2];
+    param_2[3] = src[3];
+    return;
+  } else if (look[9] != 0) {
+    src = *(int **)0x2ee6e8;
+    param_2[0] = src[0];
+    param_2[1] = src[1];
+    param_2[2] = src[2];
+    param_2[3] = src[3];
+    return;
+  } else {
+    src = *(int **)0x2ee6f4;
+  }
+  param_2[0] = src[0];
+  param_2[1] = src[1];
+  param_2[2] = src[2];
+  param_2[3] = src[3];
 }
-#else
-#error "FUN_00015f60: clang naked draft required"
-#endif
+
+
 
 
 /* actor_replace_prop_handle (0x16000) — readable C lift. */
@@ -4045,69 +3971,31 @@ void FUN_000169a0(int actor_handle __attribute__((unused)), int unit_handle __at
 #endif
 
 
-/* actor_look_secondary_stop (0x16bd0) — XBE naked draft (batch 75). */
-#if defined(__clang__)
-static void *(*const b16bd0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b16bd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b16bd0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void actor_look_secondary_stop(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), char *param_4 __attribute__((unused)), int param_5 __attribute__((unused)), char *param_6 __attribute__((unused)))
+/* actor_look_secondary_stop (0x16bd0) — readable C lift from XBE leaf. */
+void actor_look_secondary_stop(int param_1, int param_2, int param_3, char *param_4,
+                               int param_5, char *param_6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x24\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x1c(%%ebp), %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movb $0xff, (%%esi)\n\t"
-      "jne .Lactor_look_secondary_stop_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x550\n\t"
-      "pushl $0x253758\n\t"
-      "pushl $0x253744\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_look_secondary_stop_1:\n\t"
-      "cmpb $0, (%%edi)\n\t"
-      "movb 0x4(%%esi), %%al\n\t"
-      "je .Lactor_look_secondary_stop_2\n\t"
-      "orb $1, %%al\n\t"
-      "jmp .Lactor_look_secondary_stop_3\n\t"
-      ".Lactor_look_secondary_stop_2:\n\t"
-      "andb $0xfe, %%al\n\t"
-      ".Lactor_look_secondary_stop_3:\n\t"
-      "movb %%al, 0x4(%%esi)\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lactor_look_secondary_stop_4\n\t"
-      "pushl $0x58\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0xffff, 0x2(%%esi)\n\t"
-      ".Lactor_look_secondary_stop_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b16bd0_memset), [assert] "m"(b16bd0_assert), [exitfn] "m"(b16bd0_exitfn)
-      : "memory");
+  (void)param_1;
+  (void)param_2;
+  (void)param_3;
+  csmemset(param_4, 0, 0x24);
+  *param_4 = (char)0xff;
+  if (param_6 == 0) {
+    display_assert((const char *)0x253744, (const char *)0x253758, 0x550, 1);
+    system_exit(-1);
+  }
+  if (*param_6 != 0) {
+    param_4[4] = (char)(param_4[4] | 1);
+  } else {
+    param_4[4] = (char)(param_4[4] & ~1);
+  }
+  if (param_5 != 0) {
+    csmemset((void *)param_5, 0, 0x58);
+    *(short *)((char *)param_5 + 2) = (short)0xffff;
+  }
 }
-#else
-#error "actor_look_secondary_stop: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00016c40 (0x16c40) */
