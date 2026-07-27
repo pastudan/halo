@@ -1235,54 +1235,20 @@ int file_compare_last_modification_dates(const void *a, const void *b)
   return csmemcmp(a, b, 8);
 }
 
-/* file_read_only (0x19a400) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static file_ref_t * (*const b19a400_c199620)(file_ref_t *info) = file_reference_verify;
-static void (*const b19a400_c19a370)(int16_t location, const char *path, char *out) = path_from_file_reference;
-static int __stdcall (*const b19a400_c1d0e96)(const char *path) = file_get_full_attributes;
-
-__attribute__((naked, noinline))
-void file_read_only(void)
+/* file_read_only (0x19a400) — readable C lift. */
+bool file_read_only(file_ref_t *info)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c199620]\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "leal 0x8(%%eax), %%edx\n\t"
-      "movswl 0x6(%%eax), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c19a370]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d0e96]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lfile_read_only_1\n\t"
-      "testb $1, %%al\n\t"
-      "movb $1, %%al\n\t"
-      "jne .Lfile_read_only_2\n\t"
-      ".Lfile_read_only_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".Lfile_read_only_2:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c199620] "m"(b19a400_c199620), [c19a370] "m"(b19a400_c19a370), [c1d0e96] "m"(b19a400_c1d0e96)
-      : "memory");
+  char path[0x100];
+  file_ref_t *ref;
+  int attrs;
+
+  ref = file_reference_verify(info);
+  path_from_file_reference(*(int16_t *)((char *)ref + 6), (const char *)((char *)ref + 8), path);
+  attrs = file_get_full_attributes(path);
+  if (attrs == -1)
+    return 0;
+  return (attrs & 1) != 0;
 }
-#else
-#error "file_read_only: clang naked draft required"
-#endif
 
 
 /* file_set_eof (0x19aad0) — XBE naked draft (batch 266). */
@@ -1448,54 +1414,15 @@ bool file_write(file_ref_t *info __attribute__((unused)),
 #endif
 
 
-/* file_write_to_position (0x19acf0) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static bool (*const b19acf0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static bool (*const b19acf0_c19ac00)(file_ref_t *info, void *buffer, int size) = file_write;
-
-__attribute__((naked, noinline))
-bool file_write_to_position(file_ref_t *info __attribute__((unused)),
-                            int offset __attribute__((unused)),
-                            void *buffer __attribute__((unused)),
-                            int size __attribute__((unused)))
+/* file_write_to_position (0x19acf0) — readable C lift. */
+bool file_write_to_position(file_ref_t *info, int offset, void *buffer, int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19aa00]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lfile_write_to_position_1\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19ac00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lfile_write_to_position_1\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lfile_write_to_position_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19aa00] "m"(b19acf0_c19aa00), [c19ac00] "m"(b19acf0_c19ac00)
-      : "memory");
+  if (!file_set_position(info, offset))
+    return 0;
+  if (!file_write(info, buffer, size))
+    return 0;
+  return 1;
 }
-#else
-#error "file_write_to_position: clang naked draft required"
-#endif
 
 
 /* file_get_last_modification_date (0x19ad30) — XBE naked draft (batch 257). */

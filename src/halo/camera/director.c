@@ -2119,64 +2119,21 @@ void FUN_00086a50(void)
 #endif
 
 
-/* director_camera_deterministic (0x86b80) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static void (*const b86b80_c864b0)(void) = director_desired_perspective;
-static void (*const b86b80_c88c80)(void) = FUN_00088c80;
-static void (*const b86b80_c89c00)(void) = FUN_00089c00;
-
-__attribute__((naked, noinline))
-void director_camera_deterministic(void)
+/* director_camera_deterministic (0x86b80) — readable C lift. */
+int director_camera_deterministic(int player_index, void *a, void *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c864b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jne .Ldirector_camera_deterministic_1\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c88c80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldirector_camera_deterministic_1:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c89c00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c864b0] "m"(b86b80_c864b0), [c88c80] "m"(b86b80_c88c80), [c89c00] "m"(b86b80_c89c00)
-      : "memory");
+  int perspective;
+  int result;
+  int last;
+
+  result = ((int (*)(int, int *))director_desired_perspective)(player_index, &perspective);
+  if ((int16_t)result == 0)
+    last = ((int (*)(int, void *, void *))FUN_00088c80)(player_index, a, b);
+  else
+    last = ((int (*)(int, void *, void *))FUN_00089c00)(player_index, a, b);
+  /* Original ends with MOV AX, SI — keeps high 16 from the last callee. */
+  return (last & ~0xffff) | (result & 0xffff);
 }
-#else
-#error "director_camera_deterministic: clang naked draft required"
-#endif
 
 
 /* FUN_00086be0 (0x86be0) — XBE naked draft (batch 139). */
@@ -2718,28 +2675,25 @@ void FUN_00087c00(float *camera)
   }
 }
 
-/* editor_camera_move_to_point (0x87c80) — readable C lift from XBE leaf. */
-extern char DAT_0025bb20[];
-extern char DAT_00267120[];
-
+/* editor_camera_move_to_point (0x87c80) — readable C lift. */
 void editor_camera_move_to_point(float *point)
 {
-  float tmp[3];
+  float dir[3];
   float *cam;
   float scale;
 
-  if (point == 0) {
-    display_assert(DAT_0025bb20, DAT_00267120, 0x8b, 1);
+  if (!point) {
+    display_assert((const char *)0x25bb20, (const char *)0x267120, 0x8b, 1);
     system_exit(-1);
   }
   cam = *(float **)0x3356b0;
-  FUN_0010cc40(tmp, cam + 3);
-  cam = *(float **)0x3356b0;
+  angles_to_vector(dir, cam + 3);
   scale = *(float *)0x254e04;
-  cam[0] = point[0] - tmp[0] * scale;
-  cam[1] = point[1] - tmp[1] * scale;
-  cam[2] = point[2] - tmp[2] * scale;
+  cam[0] = point[0] - dir[0] * scale;
+  cam[1] = point[1] - dir[1] * scale;
+  cam[2] = point[2] - dir[2] * scale;
 }
+
 
 /* editor_camera_set_position_and_roll (0x87d00) — XBE naked draft (batch 118). */
 #if defined(__clang__)

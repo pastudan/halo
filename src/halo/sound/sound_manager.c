@@ -3957,7 +3957,7 @@ char FUN_001cc1c0(int looping_handle, int unused, void *out)
 {
   void *d;
   (void)unused;
-  d = datum_absolute_index_to_index(*(data_t **)0x4fdba0, looping_handle);
+  d = (void *)datum_absolute_index_to_index(*(data_t **)0x4fdba0, looping_handle);
   if (d == NULL)
     return 0;
   {

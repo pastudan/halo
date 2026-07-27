@@ -77,57 +77,22 @@ const char *FUN_00081c80(int error_code)
   (void)esi;
 }
 
-/* FUN_00081e00 (0x81e00) — XBE naked draft (batch 147). */
-#if defined(__clang__)
-static void (*const b81e00_c222de0)(void) = (void (*)(void))FUN_00222df7;
-static void (*const b81e00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81e00_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00081e00(void)
+/* FUN_00081e00 (0x81e00) — readable C lift. */
+void FUN_00081e00(uint32_t *key, uint32_t *nonce)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x5ab210\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x5ab214\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x5ab218\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x5ab21c\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x5ab220\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0x335094, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%edx, 0x5ab224\n\t"
-      "jne .LFUN_00081e00_1\n\t"
-      "pushl $0x5ab210\n\t"
-      "pushl $0x5ab220\n\t"
-      "call *%[c222de0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00081e00_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5c\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x26649c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081e00_1:\n\t"
-      "incl 0x335094\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c222de0] "m"(b81e00_c222de0), [assert] "m"(b81e00_assert), [exitfn] "m"(b81e00_exitfn)
-      : "memory");
+  *(uint32_t *)0x5ab210 = key[0];
+  *(uint32_t *)0x5ab214 = key[1];
+  *(uint32_t *)0x5ab218 = key[2];
+  *(uint32_t *)0x5ab21c = key[3];
+  *(uint32_t *)0x5ab220 = nonce[0];
+  *(uint32_t *)0x5ab224 = nonce[1];
+  if (*(int *)0x335094 == 0) {
+    /* 0x222de0: XNet thunk, __stdcall RET 8 (2 args). */
+    if (((int(__stdcall *)(void *, void *))0x222de0)((void *)0x5ab220, (void *)0x5ab210)) {
+      display_assert((const char *)0x26649c, (const char *)0x266458, 0x5c, 1);
+      system_exit(-1);
+    }
+  }
+  (*(int *)0x335094)++;
 }
-#else
-#error "FUN_00081e00: clang naked draft required"
-#endif
 

@@ -7108,8 +7108,9 @@
         },
         {
           "addr": "0x86b80",
-          "decl": "void director_camera_deterministic(void);",
-          "ported": false
+          "decl": "int director_camera_deterministic(int player_index, void *a, void *b);",
+          "ported": true,
+          "name": "director_camera_deterministic"
         },
         {
           "addr": "0x86be0",
@@ -7197,7 +7198,8 @@
         {
           "addr": "0x87c80",
           "decl": "void editor_camera_move_to_point(float *point);",
-          "ported": true
+          "ported": true,
+          "name": "editor_camera_move_to_point"
         },
         {
           "addr": "0x87d00",
@@ -7959,8 +7961,9 @@
         },
         {
           "addr": "0x19a400",
-          "decl": "void file_read_only(void);",
-          "ported": false
+          "decl": "bool file_read_only(file_ref_t *info);",
+          "ported": true,
+          "name": "file_read_only"
         },
         {
           "addr": "0x19a450",
@@ -8035,8 +8038,9 @@
         },
         {
           "addr": "0x19acf0",
-          "decl": "void file_write_to_position(void);",
-          "ported": false
+          "decl": "bool file_write_to_position(file_ref_t *info, int offset, void *buffer, int size);",
+          "ported": true,
+          "name": "file_write_to_position"
         },
         {
           "addr": "0x19ad30",
@@ -20100,8 +20104,9 @@
         },
         {
           "addr": "0x92060",
-          "decl": "void profile_idle_start(void);",
-          "ported": false
+          "decl": "int profile_idle_start(uint32_t *a, uint32_t *b);",
+          "ported": true,
+          "name": "profile_idle_start"
         },
         {
           "addr": "0x92090",
@@ -26788,8 +26793,9 @@
         },
         {
           "addr": "0x81f30",
-          "decl": "void transport_nonce_is_equal(void);",
-          "ported": false
+          "decl": "bool transport_nonce_is_equal(const void *a, const void *b);",
+          "ported": true,
+          "name": "transport_nonce_is_equal"
         },
         {
           "addr": "0x81fa0",
@@ -26809,7 +26815,8 @@
         {
           "addr": "0x820d0",
           "decl": "void *transport_get_key(void *dst);",
-          "ported": true
+          "ported": true,
+          "name": "transport_get_key"
         },
         {
           "addr": "0x82310",
@@ -26843,8 +26850,8 @@
         },
         {
           "addr": "0x829b0",
-          "decl": "int FUN_000829b0(int endpoint_set);",
-          "ported": false
+          "decl": "int FUN_000829b0(void *endpoint_set);",
+          "ported": true
         },
         {
           "addr": "0x82a30",
@@ -26863,7 +26870,7 @@
         },
         {
           "addr": "0x82c90",
-          "decl": "unsigned char FUN_00082c90(void *endpoint);",
+          "decl": "char FUN_00082c90(void *endpoint);",
           "ported": true
         },
         {
@@ -26873,8 +26880,9 @@
         },
         {
           "addr": "0x82d70",
-          "decl": "int get_next_endpoint_from_set(int type);",
-          "ported": false
+          "decl": "void *get_next_endpoint_from_set(int type);",
+          "ported": true,
+          "name": "get_next_endpoint_from_set"
         },
         {
           "addr": "0x82df0",
@@ -26908,8 +26916,8 @@
         },
         {
           "addr": "0x832a0",
-          "decl": "void FUN_000832a0(void);",
-          "ported": false
+          "decl": "int FUN_000832a0(int *a, int *b);",
+          "ported": true
         },
         {
           "addr": "0x83bd0",
@@ -33421,6 +33429,12 @@
           "addr": "0x225cd1",
           "decl": "int __stdcall xnet_recvfrom(int socket, void *buf, int len, int flags, void *from, int *fromlen);",
           "ported": false
+        },
+        {
+          "addr": "0x222de0",
+          "decl": "int __stdcall FUN_00222de0(void *a, void *b);",
+          "ported": false,
+          "name": "FUN_00222de0"
         }
       ],
       "name": "XNET:wsock.obj",
@@ -39845,8 +39859,8 @@
         },
         {
           "addr": "0x81e00",
-          "decl": "void FUN_00081e00(void);",
-          "ported": false
+          "decl": "void FUN_00081e00(uint32_t *key, uint32_t *nonce);",
+          "ported": true
         }
       ],
       "name": "transport_address.obj",
@@ -39928,8 +39942,8 @@
         },
         {
           "addr": "0x80470",
-          "decl": "void FUN_00080470(void);",
-          "ported": false
+          "decl": "unsigned short *FUN_00080470(uint32_t *a@<esi>, uint32_t *b@<ebx>, uint32_t *c@<edi>, int buffer, unsigned short buffer_size);",
+          "ported": true
         },
         {
           "addr": "0x804e0",

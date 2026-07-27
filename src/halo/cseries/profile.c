@@ -3608,6 +3608,25 @@ void FUN_00092050(char value)
   *(char *)0x2ee784 = value;
 }
 
+/* profile_idle_start (0x92060) — readable C lift. */
+int profile_idle_start(uint32_t *a, uint32_t *b)
+{
+  uint32_t left;
+  uint32_t right;
+
+  left = a[1];
+  if (left == 0)
+    return 1;
+  right = b[1];
+  if (left > right)
+    return 1;
+  if (right == 0)
+    return -1;
+  if (left < right)
+    return -1;
+  return 0;
+}
+
 /* 0x92110 */
 char *FUN_00092110(int32_t addr, int32_t *symtab)
 {
