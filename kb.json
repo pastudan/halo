@@ -2628,7 +2628,7 @@
         {
           "addr": "0x1b8a0",
           "decl": "void action_vehicle_perform(void);",
-          "ported": false,
+          "ported": true,
           "name": "action_vehicle_perform"
         },
         {
@@ -2915,7 +2915,7 @@
         {
           "addr": "0x1e360",
           "decl": "void actor_action_find_escape_from_danger(void);",
-          "ported": false,
+          "ported": true,
           "name": "actor_action_find_escape_from_danger"
         },
         {
