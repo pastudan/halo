@@ -336,140 +336,63 @@ void memory_pool_compact(void *pool)
   FUN_0011e430(pool);
 }
 
-/* memory_pool_block_resize (0x11e8a0) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-static void * (*const b11e8a0_c11e5a0)(void *pool, void **block_reference) = FUN_0011e5a0;
-static void (*const b11e8a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11e8a0_exitfn)(int) = system_exit;
-static bool (*const b11e8a0_c11e6c0)(void *pool, void **block_reference, int size) = memory_pool_block_new;
-static void * (*const b11e8a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b11e8a0_c11e7a0)(void *pool, void **block_reference) = memory_pool_block_free;
-
-__attribute__((naked, noinline))
-bool memory_pool_block_resize(void *pool __attribute__((unused)), void **block_reference __attribute__((unused)), int new_size __attribute__((unused)))
+/* memory_pool_block_resize (0x11e8a0) — readable C lift.
+ *
+ * Grow/shrink a block in place when the next neighbour (or pool end) leaves
+ * enough room; otherwise allocate a fresh block, memcpy the old payload,
+ * free the old block, and retarget the caller's reference.
+ */
+bool memory_pool_block_resize(void *pool, void **block_reference, int new_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c11e5a0]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "leal 0x18(%%ecx), %%ebx\n\t"
-      "testb $3, %%bl\n\t"
-      "movl %%eax, %%esi\n\t"
-      "je .Lmemory_pool_block_resize_1\n\t"
-      "orl $3, %%ebx\n\t"
-      "incl %%ebx\n\t"
-      ".Lmemory_pool_block_resize_1:\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jge .Lmemory_pool_block_resize_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xae\n\t"
-      "pushl $0x290084\n\t"
-      "pushl $0x290178\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmemory_pool_block_resize_2:\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lmemory_pool_block_resize_3\n\t"
-      "movl 0x28(%%edi), %%eax\n\t"
-      "addl 0x24(%%edi), %%eax\n\t"
-      ".Lmemory_pool_block_resize_3:\n\t"
-      "leal (%%ebx,%%esi,1), %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "ja .Lmemory_pool_block_resize_6\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x2c(%%edi), %%ecx\n\t"
-      "subl %%ebx, %%eax\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl %%ecx, 0x2c(%%edi)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "js .Lmemory_pool_block_resize_4\n\t"
-      "cmpl 0x28(%%edi), %%eax\n\t"
-      "jle .Lmemory_pool_block_resize_5\n\t"
-      ".Lmemory_pool_block_resize_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb8\n\t"
-      "pushl $0x290084\n\t"
-      "pushl $0x290144\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmemory_pool_block_resize_5:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmemory_pool_block_resize_6:\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c11e6c0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lmemory_pool_block_resize_8\n\t"
-      "cmpl 0x4(%%esi), %%ebx\n\t"
-      "jg .Lmemory_pool_block_resize_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc8\n\t"
-      "pushl $0x290084\n\t"
-      "pushl $0x290128\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmemory_pool_block_resize_7:\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "subl $0x18, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c11e7a0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "leal 0x10(%%ebp), %%esi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c11e5a0]\n\t"
-      "movl %%ebx, 0x8(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, (%%ebx)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmemory_pool_block_resize_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11e5a0] "m"(b11e8a0_c11e5a0), [assert] "m"(b11e8a0_assert), [exitfn] "m"(b11e8a0_exitfn), [c11e6c0] "m"(b11e8a0_c11e6c0), [c8e0b0] "m"(b11e8a0_c8e0b0), [c11e7a0] "m"(b11e8a0_c11e7a0)
-      : "memory");
+  char *p = (char *)pool;
+  char *block;
+  unsigned int new_total;
+  unsigned int limit;
+  int free_size;
+  void *new_data;
+  void **tmp_ref;
+
+  block = (char *)FUN_0011e5a0(pool, block_reference);
+  new_total = (unsigned int)(new_size + 0x18);
+  if ((new_total & 3) != 0)
+    new_total = (new_total | 3) + 1;
+
+  if (new_size < 0) {
+    display_assert((const char *)0x290178, (const char *)0x290084, 0xae, true);
+    system_exit(-1);
+  }
+
+  limit = *(unsigned int *)(block + 0xc);
+  if (limit == 0)
+    limit = (unsigned int)(*(int *)(p + 0x28) + *(int *)(p + 0x24));
+
+  if ((unsigned int)block + new_total <= limit) {
+    free_size = *(int *)(p + 0x2c) + (*(int *)(block + 4) - (int)new_total);
+    *(int *)(p + 0x2c) = free_size;
+    if (free_size < 0 || free_size > *(int *)(p + 0x28)) {
+      display_assert((const char *)0x290144, (const char *)0x290084, 0xb8, true);
+      system_exit(-1);
+    }
+    *(unsigned int *)(block + 4) = new_total;
+    return true;
+  }
+
+  /* Reuse the new_size stack slot as a temporary block_reference. */
+  new_data = NULL;
+  tmp_ref = &new_data;
+  if (!memory_pool_block_new(pool, tmp_ref, new_size))
+    return false;
+
+  if ((int)new_total <= *(int *)(block + 4)) {
+    display_assert((const char *)0x290128, (const char *)0x290084, 0xc8, true);
+    system_exit(-1);
+  }
+
+  csmemcpy(new_data, *block_reference, (size_t)(*(int *)(block + 4) - 0x18));
+  memory_pool_block_free(pool, block_reference);
+  block = (char *)FUN_0011e5a0(pool, tmp_ref);
+  *(void ***)(block + 8) = block_reference;
+  *block_reference = new_data;
+  return true;
 }
-#else
-#error "memory_pool_block_resize: clang naked draft required"
-#endif
 
