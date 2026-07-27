@@ -553,7 +553,7 @@ static void __stdcall (*const b1ba710_c1d371d)(void *addr, unsigned int size, un
 static void *(*const b1ba710_memset)(void *, int, unsigned int) = csmemset;
 
 __attribute__((naked, noinline))
-void FUN_001ba710(void)
+void FUN_001ba710(void *cache __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%esi\n\t"
