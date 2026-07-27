@@ -12745,7 +12745,8 @@
         {
           "addr": "0xcde00",
           "decl": "void hs_runtime_update(void);",
-          "ported": false
+          "ported": true,
+          "name": "hs_runtime_update"
         },
         {
           "addr": "0xcdeb0",
