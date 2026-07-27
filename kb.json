@@ -25853,7 +25853,8 @@
         {
           "addr": "0x620f0",
           "decl": "void obstacles_get_discs_in_sphere(int16_t *partition, float *ref_point, float radius, float *vector, void *obstacles, void *scenario);",
-          "ported": false
+          "ported": true,
+          "name": "obstacles_get_discs_in_sphere"
         },
         {
           "addr": "0x62410",
