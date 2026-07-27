@@ -12376,7 +12376,7 @@
         {
           "addr": "0xc9d40",
           "decl": "void FUN_000c9d40(int list_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9d80",
