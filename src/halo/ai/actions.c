@@ -1711,142 +1711,69 @@ char actor_action_handle_surprise(int actor_handle, short type)
   return 1;
 }
 
-/* actor_action_handle_panic_transition (0x1dd40) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static void *(*const b1dd40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b1dd40_gtime)(void) = game_time_get;
-static void (*const b1dd40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1dd40_exitfn)(int) = system_exit;
-static void (*const b1dd40_c46f10)(int16_t type, int unit_handle, int param3, int param4, int16_t param5, int16_t param6, int16_t param7) = FUN_00046f10;
-static char (*const b1dd40_c1d3c0)(int actor_handle, short param_2, int param_3, char param_4) = FUN_0001d3c0;
-
-__attribute__((naked, noinline))
-char actor_action_handle_panic_transition(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), char param_3 __attribute__((unused)), short param_4 __attribute__((unused)))
+/* actor_action_handle_panic_transition (0x1dd40) — restored readable C from d2535c6b4 */
+/* actor_action_handle_panic_transition (0x1dd40) — Handles a panic-level
+ * transition for an actor. If the actor's current panic level (actor+0x308)
+ * meets or exceeds param_2 and the actor is not suppressed (actor+0x160),
+ * evaluates the transition. In guard action (0x6c==4) with positive shield
+ * value (actor+0xa8), clamps the shield to the panic level. Otherwise, if
+ * enough time has passed since actor+0x398, checks whether to play a sound
+ * event or attempt seek cover via FUN_0001d3c0. Clears panic level on exit.
+ *
+ * Confirmed: datum_get(actor_data, actor_handle) at 0x1dd50.
+ * Confirmed: game_time_get() at 0x1ddd6.
+ * Confirmed: display_assert + system_exit pattern at 0x1de08-0x1de25.
+ * Confirmed: FUN_00046f10 sound event call at 0x1de43.
+ * Confirmed: FUN_0001d3c0 call at 0x1de74. */
+char actor_action_handle_panic_transition(int actor_handle, short param_2,
+                                          char param_3, short param_4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x308(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw 0xc(%%ebp), %%ax\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jl .Lactor_action_handle_panic_transition_6\n\t"
-      "movb 0x160(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lactor_action_handle_panic_transition_6\n\t"
-      "cmpw $4, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_handle_panic_transition_2\n\t"
-      "movw 0xa8(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lactor_action_handle_panic_transition_2\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "jle .Lactor_action_handle_panic_transition_1\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "movw %%ax, 0xa8(%%esi)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "movw $0, 0x308(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_panic_transition_1:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movw %%ax, 0xa8(%%esi)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "movw $0, 0x308(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_panic_transition_2:\n\t"
-      "cmpl $-1, 0x398(%%esi)\n\t"
-      "je .Lactor_action_handle_panic_transition_3\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x398(%%esi), %%ecx\n\t"
-      "addl $7, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jge .Lactor_action_handle_panic_transition_6\n\t"
-      ".Lactor_action_handle_panic_transition_3:\n\t"
-      "movw 0x308(%%esi), %%dx\n\t"
-      "cmpw 0x14(%%ebp), %%dx\n\t"
-      "movl 0x30c(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "setge %%bl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movb %%bl, 0xc(%%ebp)\n\t"
-      "jne .Lactor_action_handle_panic_transition_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x295\n\t"
-      "pushl $0x2544b0\n\t"
-      "pushl $0x254610\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_action_handle_panic_transition_4:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_panic_transition_5\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lactor_action_handle_panic_transition_5\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x22\n\t"
-      "call *%[c46f10]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movw $0, 0x308(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_panic_transition_5:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x30c(%%esi), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x308(%%esi), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d3c0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "popl %%ebx\n\t"
-      ".Lactor_action_handle_panic_transition_6:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "movw $0, 0x308(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1dd40_dget), [gtime] "m"(b1dd40_gtime), [assert] "m"(b1dd40_assert), [exitfn] "m"(b1dd40_exitfn), [c46f10] "m"(b1dd40_c46f10), [c1d3c0] "m"(b1dd40_c1d3c0)
-      : "memory");
-}
-#else
-#error "actor_action_handle_panic_transition: clang naked draft required"
-#endif
+  char *actor;
+  short panic_level;
+  short shield_value;
+  int iVar5;
+  char bVar3;
+  volatile char result;
 
+  actor = (char *)datum_get(actor_data, actor_handle);
+  panic_level = *(short *)(actor + 0x308);
+  result = 0;
+  if (param_2 <= panic_level && *(char *)(actor + 0x160) == '\0') {
+    if (*(short *)(actor + 0x6c) == 4 &&
+        (shield_value = *(short *)(actor + 0xa8), shield_value > 0)) {
+      if (panic_level < shield_value) {
+        *(short *)(actor + 0xa8) = shield_value;
+        *(short *)(actor + 0x308) = 0;
+        return result;
+      }
+      *(short *)(actor + 0xa8) = panic_level;
+      *(short *)(actor + 0x308) = 0;
+      return result;
+    }
+    if (*(int *)(actor + 0x398) != -1) {
+      iVar5 = game_time_get();
+      if (iVar5 <= *(int *)(actor + 0x398) + 7) {
+        goto done;
+      }
+    }
+    bVar3 = *(short *)(actor + 0x308) >= param_4;
+    if (*(int *)(actor + 0x30c) == 0) {
+      display_assert("actor->stimuli.panic_prop_index != 0x00000000",
+                     "c:\\halo\\SOURCE\\ai\\actions.c", 0x295, 1);
+      system_exit(-1);
+    }
+    if (param_3 != '\0' && !bVar3) {
+      FUN_00046f10(0x22, *(int *)(actor + 0x18), -1, -1, -1, -1, 0);
+      *(short *)(actor + 0x308) = 0;
+      return result;
+    }
+    result = FUN_0001d3c0(actor_handle, *(short *)(actor + 0x308),
+                          *(int *)(actor + 0x30c), bVar3);
+  }
+done:
+  *(short *)(actor + 0x308) = 0;
+  return result;
+}
 
 /* actor_action_handle_combat_targeting (0x1dea0)
  * If the actor has a valid target (actor+0x1b0 != NONE) and its current action
