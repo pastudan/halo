@@ -579,85 +579,27 @@ unsigned short *FUN_000804e0(int buffer, unsigned short buffer_size, void *key_p
   return key_agreement_build_message(1, local, buffer, buffer_size);
 }
 
-/* FUN_000805a0 (0x805a0) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-static void (*const b805a0_c81170)(void) = FUN_00081170;
-static void (*const b805a0_c81250)(void) = FUN_00081250;
-static void (*const b805a0_c80470)(void) = (void *)FUN_00080470;
-static void (*const b805a0_c80c20)(unsigned short *header, int byte_order) = (void *)byte_swap_message_header;
-static int (*const b805a0_c82f50)(int *ep, const char *buf, int len) = send_endpoint;
-
-__attribute__((naked, noinline))
-void FUN_000805a0(void)
+/* FUN_000805a0 (0x805a0) — readable C lift. */
+char FUN_000805a0(int *endpoint, uint32_t *arg1, uint32_t *arg2, uint32_t *arg3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "call *%[c81170]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c81250]\n\t"
-      "pushl $0x200\n\t"
-      "pushl $0x334780\n\t"
-      "leal -0xc(%%ebp), %%ebx\n\t"
-      "call *%[c80470]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000805a0_1\n\t"
-      "movw (%%esi), %%di\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "shrw $4, %%di\n\t"
-      "call *%[c80c20]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movswl %%di, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c82f50]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LFUN_000805a0_2\n\t"
-      ".LFUN_000805a0_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000805a0_2:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c81170] "m"(b805a0_c81170), [c81250] "m"(b805a0_c81250), [c80470] "m"(b805a0_c80470), [c80c20] "m"(b805a0_c80c20), [c82f50] "m"(b805a0_c82f50)
-      : "memory");
-}
-#else
-#error "FUN_000805a0: clang naked draft required"
-#endif
+  uint32_t local[3];
+  char ok = 1;
+  unsigned short *msg;
+  unsigned short len;
+  int sent;
 
+  FUN_00081170(arg2, arg3, local);
+  FUN_00081250(arg2, arg3, local, arg1);
+  msg = FUN_00080470(arg2, local, arg1, 0x334780, 0x200);
+  if (msg == 0)
+    return 0;
+  len = (unsigned short)((*msg) >> 4);
+  byte_swap_message_header(msg, 1);
+  sent = send_endpoint(endpoint, (const char *)msg, (int)(short)len);
+  if (sent != (int)(short)len)
+    return 0;
+  return ok;
+}
 
 /* FUN_00080620 (0x80620) — XBE naked draft (batch 116). */
 #if defined(__clang__)

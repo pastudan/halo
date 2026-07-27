@@ -40306,8 +40306,9 @@
         },
         {
           "addr": "0x805a0",
-          "decl": "void FUN_000805a0(void);",
-          "ported": false
+          "decl": "char FUN_000805a0(int *endpoint, uint32_t *arg1, uint32_t *arg2, uint32_t *arg3);",
+          "ported": true,
+          "name": "FUN_000805a0"
         },
         {
           "addr": "0x80620",
