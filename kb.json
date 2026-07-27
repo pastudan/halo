@@ -39136,7 +39136,7 @@
         {
           "addr": "0x169670",
           "decl": "void FUN_00169670(int a0, int a1, int a2, int a3, int a4, int a5);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1696d0",
