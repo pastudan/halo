@@ -1411,744 +1411,526 @@ void FUN_00181a90(void)
 #endif
 
 
-/* FUN_00181c20 (0x181c20) — XBE naked draft (batch 79). */
-#if defined(__clang__)
-static void (*const b181c20_c16f910)(int16_t profile) = (void *)FUN_0016f910;
-static void (*const b181c20_c17cfc0)(int param_1, int param_2) = (void *)FUN_0017cfc0;
-static void (*const b181c20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b181c20_exitfn)(int) = system_exit;
-static unsigned char * (*const b181c20_c181060)(void *lens_flare_params) = (void *)FUN_00181060;
-static float * (*const b181c20_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
-static float (*const b181c20_c17ff80)(unsigned char param_1) = (void *)FUN_0017ff80;
-static float (*const b181c20_c181420)(void *lens_flare_params, short rotation_fn) = (void *)FUN_00181420;
-static float (*const b181c20_norm)(float *) = normalize3d;
-static void *(*const b181c20_elem)(void *, int, int) = tag_block_get_element;
-static unsigned char (*const b181c20_c180770)(float alpha) = (void *)FUN_00180770;
-static float (*const b181c20_c10a5e0)(int16_t function_type, float input) = (void *)FUN_0010a5e0;
-static float * (*const b181c20_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = (void *)FUN_0007c270;
-static void (*const b181c20_c10b820)(float a, float b, float blend, float *out) = (void *)scalars_interpolate;
-static unsigned int (*const b181c20_d1c90)(float *) = FUN_000d1c90;
-static char (*const b181c20_c17cfd0)(int param_1, int param_2, short param_3) = (void *)FUN_0017cfd0;
-static void (*const b181c20_c17cfe0)(int tex_flags) = (void *)FUN_0017cfe0;
-static void (*const b181c20_c158ae0)(int mode) = (void *)FUN_00158ae0;
-static void (*const b181c20_c17d010)(float *position, float radius, float *scale2d, float angle, uint32_t color) = (void *)FUN_0017d010;
-static void (*const b181c20_c17d020)(void) = (void *)FUN_0017d020;
-static void (*const b181c20_c169fd0)(int *param_1) = (void *)FUN_00169fd0;
-static void (*const b181c20_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+/* FUN_00181c20 (0x181c20) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
 void FUN_00181c20(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xb4, %%esp\n\t"
-      "pushl $0x19\n\t"
-      "call *%[c16f910]\n\t"
-      "movb 0x3256d7, %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00181c20_47\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "jne .LFUN_00181c20_47\n\t"
-      "movl 0x4d0480, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00181c20_47\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl $5\n\t"
-      "call *%[c17cfc0]\n\t"
-      "movl 0x4d0480, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%ecx, -0x78(%%ebp)\n\t"
-      "jle .LFUN_00181c20_40\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_00181c20_1:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .LFUN_00181c20_2\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_00181c20_3\n\t"
-      ".LFUN_00181c20_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x43\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b0174\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_3:\n\t"
-      "leal (%%esi,%%esi,4), %%ebx\n\t"
-      "leal 0x4c6480(,%%ebx,8), %%ebx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c181060]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x10(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xb4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%edx, -0x68(%%ebp)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movzbl 0x22(%%ebx), %%eax\n\t"
-      "andl $0xffffff7f, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw 0x5a5bc2, %%ax\n\t"
-      "movl %%ecx, -0x64(%%ebp)\n\t"
-      "movl %%edx, -0x60(%%ebp)\n\t"
-      "jne .LFUN_00181c20_39\n\t"
-      "movl 0x24(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl (%%ebx), %%edi\n\t"
-      "movl %%edi, -0x20(%%ebp)\n\t"
-      "jle .LFUN_00181c20_39\n\t"
-      "movzbl 0x1b(%%ebx), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jbe .LFUN_00181c20_39\n\t"
-      "movl 0xc4(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00181c20_39\n\t"
-      "leal 0x4(%%ebx), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "movl %%eax, -0x74(%%ebp)\n\t"
-      "flds -0x74(%%ebp)\n\t"
-      "fsubs 0x5a5bc8\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%eax, -0x70(%%ebp)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "movl %%edx, -0x6c(%%ebp)\n\t"
-      "flds -0x70(%%ebp)\n\t"
-      "movzbl (%%esi), %%eax\n\t"
-      "fsubs 0x5a5bcc\n\t"
-      "movl %%eax, -0x28(%%ebp)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds -0x6c(%%ebp)\n\t"
-      "fsubs 0x5a5bd0\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0x5a5bdc\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x5a5bd4\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds 0x5a5bd4\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "flds 0x5a5bdc\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fsubs -0x18(%%ebp)\n\t"
-      "fstps -0x48(%%ebp)\n\t"
-      "fsubs -0x14(%%ebp)\n\t"
-      "flds -0x40(%%ebp)\n\t"
-      "fsubs -0x10(%%ebp)\n\t"
-      "flds -0x48(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fstps -0x48(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fstps -0x44(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      "fildl -0x28(%%ebp)\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds 0x1c(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00181c20_5\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fsubs 0x1c(%%edi)\n\t"
-      "flds 0x18(%%edi)\n\t"
-      "fsubs 0x1c(%%edi)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00181c20_4\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_6\n\t"
-      ".LFUN_00181c20_4:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00181c20_7\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00181c20_5:\n\t"
-      "movl $0x3f800000, -0xc(%%ebp)\n\t"
-      ".LFUN_00181c20_6:\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17ff80]\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "movw 0x80(%%edi), %%di\n\t"
-      "movl %%ebx, %%esi\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "call *%[c181420]\n\t"
-      "movl -0x20(%%ebp), %%edi\n\t"
-      "fmuls 0x84(%%edi)\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "fstps -0x98(%%ebp)\n\t"
-      "flds 0x5a5c6c\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "flds 0x5a5c68\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x5a5c64\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5c78\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "flds 0x5a5c74\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x5a5c70\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fpatan\n\t"
-      "fmuls 0x2b073c\n\t"
-      "fstps -0x9c(%%ebp)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fsubs 0xc(%%edi)\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmuls 0xc(%%edi)\n\t"
-      "fchs\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "call *%[norm]\n\t"
-      "fstp %%st(0)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x5a5bdc\n\t"
-      "movl $0x3f800000, -0x8c(%%ebp)\n\t"
-      "fmuls -0x60(%%ebp)\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls -0x64(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x68(%%ebp)\n\t"
-      "fmuls 0x5a5bd4\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fsubrs -0x8(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00181c20_8\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x88(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_10\n\t"
-      ".LFUN_00181c20_7:\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_6\n\t"
-      ".LFUN_00181c20_8:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00181c20_9\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x88(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_10\n\t"
-      ".LFUN_00181c20_9:\n\t"
-      "fstps -0x88(%%ebp)\n\t"
-      ".LFUN_00181c20_10:\n\t"
-      "flds -0x60(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "flds -0x64(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x68(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fsubrs -0x8(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00181c20_11\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x84(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_13\n\t"
-      ".LFUN_00181c20_11:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00181c20_12\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x84(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_13\n\t"
-      ".LFUN_00181c20_12:\n\t"
-      "fstps -0x84(%%ebp)\n\t"
-      ".LFUN_00181c20_13:\n\t"
-      "flds 0x5a5bdc\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x5a5bd4\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00181c20_14\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x80(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_16\n\t"
-      ".LFUN_00181c20_14:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00181c20_15\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x80(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_16\n\t"
-      ".LFUN_00181c20_15:\n\t"
-      "fstps -0x80(%%ebp)\n\t"
-      ".LFUN_00181c20_16:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00181c20_39\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x23(%%ebx), %%dl\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17ff80]\n\t"
-      "fstps -0x7c(%%ebp)\n\t"
-      "movl 0xc4(%%edi), %%eax\n\t"
-      "leal 0xc4(%%edi), %%ecx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%esi, -0x2c(%%ebp)\n\t"
-      "jle .LFUN_00181c20_39\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_00181c20_17:\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "flds 0x34(%%edi)\n\t"
-      "movswl 0x3c(%%edi), %%eax\n\t"
-      "flds 0x38(%%edi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fmuls -0x7c(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fmuls -0x8c(%%ebp,%%eax,4)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_00181c20_18\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      ".LFUN_00181c20_18:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00181c20_38\n\t"
-      "flds 0x28(%%edi)\n\t"
-      "flds 0x2c(%%edi)\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fmuls -0x7c(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x40(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00181c20_19\n\t"
-      "flds 0x44(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00181c20_19\n\t"
-      "flds 0x48(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00181c20_19\n\t"
-      "flds 0x4c(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00181c20_19\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c180770]\n\t"
-      "movzbl %%al, %%esi\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "shll $0x18, %%esi\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "orl %%eax, %%esi\n\t"
-      "movl $0x3f800000, -0x5c(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_30\n\t"
-      ".LFUN_00181c20_19:\n\t"
-      "cmpw $1, 0x72(%%edi)\n\t"
-      "leal 0x44(%%edi), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%edx, -0x54(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x50(%%ebp)\n\t"
-      "movl %%ecx, -0x4c(%%ebp)\n\t"
-      "movl %%edx, -0x58(%%ebp)\n\t"
-      "jle .LFUN_00181c20_29\n\t"
-      "flds 0x74(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00181c20_20\n\t"
-      "pushl $1\n\t"
-      "pushl $0x28b\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b0718\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_20:\n\t"
-      "flds 0x5a5e18\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "fadds 0x78(%%edi)\n\t"
-      "movw 0x72(%%edi), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "fdivs 0x74(%%edi)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10a5e0]\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x70(%%edi), %%al\n\t"
-      "pushl %%esi\n\t"
-      "leal 0x64(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x54(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x38(%%ebp), %%ecx\n\t"
-      "andl $3, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c7c270]\n\t"
-      "movl 0x60(%%edi), %%eax\n\t"
-      "movl 0x50(%%edi), %%ecx\n\t"
-      "leal -0x3c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10b820]\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00181c20_21\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_00181c20_22\n\t"
-      ".LFUN_00181c20_21:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29b\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b06dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_22:\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00181c20_23\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_00181c20_24\n\t"
-      ".LFUN_00181c20_23:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29c\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b06a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_24:\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00181c20_25\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_00181c20_26\n\t"
-      ".LFUN_00181c20_25:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29d\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b0664\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_26:\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00181c20_27\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_00181c20_28\n\t"
-      ".LFUN_00181c20_27:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29e\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b0628\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_28:\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      "fmuls -0x58(%%ebp)\n\t"
-      "fstps -0x58(%%ebp)\n\t"
-      "flds -0x54(%%ebp)\n\t"
-      "fmuls -0x38(%%ebp)\n\t"
-      "fstps -0x54(%%ebp)\n\t"
-      "flds -0x50(%%ebp)\n\t"
-      "fmuls -0x34(%%ebp)\n\t"
-      "fstps -0x50(%%ebp)\n\t"
-      "flds -0x4c(%%ebp)\n\t"
-      "fmuls -0x30(%%ebp)\n\t"
-      "fstps -0x4c(%%ebp)\n\t"
-      ".LFUN_00181c20_29:\n\t"
-      "leal -0x58(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[d1c90]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x40(%%edi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, -0x5c(%%ebp)\n\t"
-      ".LFUN_00181c20_30:\n\t"
-      "cmpw $0, -0x2c(%%ebp)\n\t"
-      "jne .LFUN_00181c20_31\n\t"
-      "flds -0x98(%%ebp)\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "fadds 0x20(%%edi)\n\t"
-      "movl 0xa0(%%ecx), %%edx\n\t"
-      "movl 0xa4(%%ecx), %%eax\n\t"
-      "movl %%edx, -0x94(%%ebp)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "movl %%eax, -0x90(%%ebp)\n\t"
-      "jmp .LFUN_00181c20_32\n\t"
-      ".LFUN_00181c20_31:\n\t"
-      "movl 0x20(%%edi), %%ecx\n\t"
-      "movl %%ecx, -0x24(%%ebp)\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "movl $0x3f800000, -0x90(%%ebp)\n\t"
-      "movl $0x3f800000, -0x94(%%ebp)\n\t"
-      ".LFUN_00181c20_32:\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_00181c20_33\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fadds -0x9c(%%ebp)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      ".LFUN_00181c20_33:\n\t"
-      "testb $4, %%al\n\t"
-      "je .LFUN_00181c20_34\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".LFUN_00181c20_34:\n\t"
-      "testb $2, %%al\n\t"
-      "je .LFUN_00181c20_35\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".LFUN_00181c20_35:\n\t"
-      "flds 0x1c(%%edi)\n\t"
-      "movl 0x2c(%%ecx), %%eax\n\t"
-      "flds -0x48(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%edi), %%dx\n\t"
-      "fadds -0x74(%%ebp)\n\t"
-      "fstps -0xa8(%%ebp)\n\t"
-      "flds -0x44(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "fadds -0x70(%%ebp)\n\t"
-      "fstps -0xa4(%%ebp)\n\t"
-      "flds -0x40(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fadds -0x6c(%%ebp)\n\t"
-      "fstps -0xa0(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[c17cfd0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00181c20_39\n\t"
-      "movl -0x5c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17cfe0]\n\t"
-      "movb (%%edi), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb $8, %%al\n\t"
-      "je .LFUN_00181c20_36\n\t"
-      "movb 0x22(%%ebx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jns .LFUN_00181c20_36\n\t"
-      "pushl $2\n\t"
-      "jmp .LFUN_00181c20_37\n\t"
-      ".LFUN_00181c20_36:\n\t"
-      "pushl $0\n\t"
-      ".LFUN_00181c20_37:\n\t"
-      "call *%[c158ae0]\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fmuls 0x253d4c\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "leal -0x94(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xa8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17d010]\n\t"
-      "movl -0x2c(%%ebp), %%esi\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_38:\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "movl 0xc4(%%ecx), %%edx\n\t"
-      "incl %%esi\n\t"
-      "addl $0xc4, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "movl %%esi, -0x2c(%%ebp)\n\t"
-      "jl .LFUN_00181c20_17\n\t"
-      ".LFUN_00181c20_39:\n\t"
-      "movl -0x78(%%ebp), %%ecx\n\t"
-      "movl 0x4d0480, %%eax\n\t"
-      "incl %%ecx\n\t"
-      "movswl %%cx, %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "movl %%ecx, -0x78(%%ebp)\n\t"
-      "jl .LFUN_00181c20_1\n\t"
-      ".LFUN_00181c20_40:\n\t"
-      "pushl $0\n\t"
-      "call *%[c158ae0]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c17d020]\n\t"
-      "movb 0x3256fe, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00181c20_46\n\t"
-      "movl 0x4d0480, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00181c20_46\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x42480000, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00181c20_41:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_00181c20_42\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_00181c20_43\n\t"
-      ".LFUN_00181c20_42:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x43\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b0174\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00181c20_43:\n\t"
-      "leal (%%esi,%%esi,4), %%eax\n\t"
-      "movl 0x4c64a4(,%%eax,8), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "leal 0x4c6480(,%%eax,8), %%eax\n\t"
-      "jle .LFUN_00181c20_45\n\t"
-      "movzbl 0x22(%%eax), %%edx\n\t"
-      "andl $0xffffff7f, %%edx\n\t"
-      "cmpw 0x5a5bc2, %%dx\n\t"
-      "jne .LFUN_00181c20_45\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "cmpl %%ebx, 0x10(%%ecx)\n\t"
-      "je .LFUN_00181c20_44\n\t"
-      "testb $1, 0x30(%%ecx)\n\t"
-      "je .LFUN_00181c20_45\n\t"
-      ".LFUN_00181c20_44:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c169fd0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00181c20_45:\n\t"
-      "movl 0x4d0480, %%eax\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_00181c20_41\n\t"
-      ".LFUN_00181c20_46:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00181c20_47:\n\t"
-      "pushl $0x19\n\t"
-      "call *%[c16fa40]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c16f910] "m"(b181c20_c16f910), [c17cfc0] "m"(b181c20_c17cfc0), [assert] "m"(b181c20_assert), [exitfn] "m"(b181c20_exitfn), [c181060] "m"(b181c20_c181060), [c17ffc0] "m"(b181c20_c17ffc0), [c17ff80] "m"(b181c20_c17ff80), [c181420] "m"(b181c20_c181420), [norm] "m"(b181c20_norm), [elem] "m"(b181c20_elem), [c180770] "m"(b181c20_c180770), [c10a5e0] "m"(b181c20_c10a5e0), [c7c270] "m"(b181c20_c7c270), [c10b820] "m"(b181c20_c10b820), [d1c90] "m"(b181c20_d1c90), [c17cfd0] "m"(b181c20_c17cfd0), [c17cfe0] "m"(b181c20_c17cfe0), [c158ae0] "m"(b181c20_c158ae0), [c17d010] "m"(b181c20_c17d010), [c17d020] "m"(b181c20_c17d020), [c169fd0] "m"(b181c20_c169fd0), [c16fa40] "m"(b181c20_c16fa40)
-      : "memory");
+  /* atan2 from libm (used for flare screen-angle computation) */
+  extern double atan2(double, double);
+
+  /* Outer loop state */
+  int lf_count; /* DAT_004d0480 */
+  int i; /* outer loop counter (ESI, sign-extended as CX) */
+  int outer_ctr; /* [EBP-0x78] inner loop index within outer */
+  int *entry; /* lens flare queue entry: &DAT_004c6480 + i*0x28 (EBX) */
+  unsigned char *light_data; /* return of FUN_00181060 (ESI after call) */
+  float *dir_ptr; /* FUN_0017ffc0 return (3-float decoded direction) */
+  int definition; /* entry[0] = tag definition ptr (EDI) */
+
+  /* Relative position of flare to camera */
+  float delta[3]; /* [EBP-0x18/-0x14/-0x10] entry - camera (contiguous array for normalize3d) */
+  float view_dot; /* [EBP-0x1c] dot(fwd, delta) */
+
+  /* Reflection billboard offset */
+  float refl_off_x; /* [EBP-0x48] */
+  float refl_off_y; /* [EBP-0x44] */
+  float refl_off_z; /* [EBP-0x40] */
+
+  /* Decoded perpendicular direction of the flare (from FUN_0017ffc0) */
+  float dir_local[3]; /* [EBP-0xb4] buffer passed to FUN_0017ffc0 (12 bytes) */
+  float dir_x; /* [EBP-0x68] copy of dir_ptr[0] = local_6c */
+  float dir_y; /* [EBP-0x64] copy of dir_ptr[1] = local_68 */
+  float dir_z; /* [EBP-0x60] copy of dir_ptr[2] = local_64 */
+
+  /* Per-flare scalar values */
+  float brightness_byte; /* [EBP-0x28] *light_data * scale = local_2c */
+  float entry_x; /* [EBP-0x74] entry[1] (float) */
+  float entry_y; /* [EBP-0x70] entry[2] */
+  float entry_z; /* [EBP-0x6c] entry[3] */
+
+  /* Occlusion/brightness accumulator */
+  float brightness; /* [EBP-0xc] accumulated brightness = local_10 */
+  float depth_scale; /* [EBP-0x4] = local_8 */
+  float depth_bias; /* [EBP-0x8] = local_c */
+
+  /* Corona rotation */
+  float
+    corona_rot; /* [EBP-0x9c] = local_9c, output of FUN_00181420 * def[0x84] */
+  float flare_angle; /* [EBP-0xa0] = local_a0, fpatan result * scale */
+
+  /* Visibility array [5]: [0]=1.0, [1]=near_clip, [2]=direction, [3]=backward,
+   * [4]=rotation_fn */
+  float vis[5]; /* [EBP-0x8c] = local_90 */
+
+  /* Second loop (sun glow) */
+  short sun_i; /* [sVar13] second loop counter */
+  int sun_entry; /* pointer into lens flare queue for sun glow */
+
+  /* Inner reflection loop */
+  int refl_idx; /* [EBP-0x2c] reflection loop counter = local_30 */
+  int refl_count; /* *(int *)(definition + 0xc4) */
+  void *refl; /* tag_block_get_element result = puVar8 */
+  int refl_ivar; /* iVar7 inner loop counter */
+
+  /* Reflection color */
+  unsigned int color; /* packed ARGB for FUN_0017d010 (uVar11) */
+  unsigned int tex_flags; /* [EBP-0x5c] local_60 */
+  float anim_alpha; /* [EBP-0x58] local_5c */
+  float anim_r; /* [EBP-0x54] local_58 */
+  float anim_g; /* [EBP-0x50] local_54 */
+  float anim_b; /* [EBP-0x4c] local_50 */
+
+  /* Animation color: alpha from scalars_interpolate, RGB[3] from FUN_0007c270.
+   * In MSVC layout: anim_alpha_out at EBP-0x3c (local_40),
+   * anim_rgb[0..2] at EBP-0x38/0x34/0x30 (local_3c/38/34). */
+  float anim_alpha_out; /* [EBP-0x3c] = local_40, from scalars_interpolate */
+  float anim_rgb[3];    /* [EBP-0x38..0x30] = local_3c/38/34, from FUN_0007c270 */
+
+  /* Reflection size and position output */
+  float refl_size;       /* current reflection size (local_8 reused = local_c in Ghidra) */
+  float refl_anim;       /* animation period result (local_8 reused again) */
+  float flare_size_angle; /* [EBP-0x24] = local_28, rotation + offset */
+  float pos[3];          /* [EBP-0xa8..0xa0]: billboard position x/y/z */
+  float scale2d[2];      /* [EBP-0x94] = local_98/local_94 */
+  unsigned short refl_flags; /* *puVar8 */
+  unsigned int stencil_mode; /* uVar15 */
+  char occlusion_result; /* cVar4 return of FUN_0017cfd0 */
+  int iVar1; /* iVar1 = i * 0x28 */
+
+  FUN_0016f910(0x19);
+
+  if (*(char *)0x3256d7 == '\0' || *(short *)0x5a5bc0 != 0 ||
+      *(int *)0x4d0480 <= 0) {
+    FUN_0016fa40(0x19);
+    return;
+  }
+
+  FUN_0017cfc0(5, 0);
+
+  lf_count = *(int *)0x4d0480;
+  outer_ctr = 0;
+  if (lf_count > 0) {
+    i = 0;
+    do {
+      /* Bounds check */
+      if ((short)outer_ctr < 0 || i >= lf_count) {
+        display_assert(
+          "lens_flare_index>=0 && lens_flare_index<local_lens_flare_count",
+          "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c", 0x43, 1);
+        system_exit(-1);
+      }
+
+      iVar1 = i * 0x28;
+      /* entry = &DAT_004c6480 + i*0x28 (5*8 = 0x28 bytes per entry) */
+      entry = (int *)((char *)0x4c6480 + iVar1);
+
+      /* FUN_00181060 takes @eax = entry (lens_flare_params ptr).
+       * Returns pointer to light color/alpha byte in the light table. */
+      light_data = FUN_00181060((void *)entry);
+
+      /* FUN_0017ffc0 decodes packed normal entry[4] into dir_local[3] */
+      dir_ptr = FUN_0017ffc0(dir_local, (unsigned int)entry[4]);
+      dir_x = dir_ptr[0];
+      dir_y = dir_ptr[1];
+      dir_z = dir_ptr[2];
+
+      /* Filter by window index: byte[entry+0x22] & 0x7f == DAT_005a5bc2 */
+      if (((*(unsigned char *)((char *)entry + 0x22) & 0x7f) ==
+           *(unsigned short *)0x5a5bc2) &&
+          (*(int *)((char *)entry + 0x24) > 0) &&
+          (*(unsigned char *)((char *)entry + 0x1b) != 0) &&
+          (*(int *)(entry[0] + 0xc4) > 0)) {
+        definition = entry[0];
+        entry_x = *(float *)((char *)entry + 4);
+        entry_y = *(float *)((char *)entry + 8);
+        entry_z = *(float *)((char *)entry + 0xc);
+
+        /* Compute relative position to camera origin */
+        delta[0] = entry_x - *(float *)0x5a5bc8;
+        delta[1] = entry_y - *(float *)0x5a5bcc;
+        delta[2] = entry_z - *(float *)0x5a5bd0;
+
+        /* view_dot = dot(camera_fwd, delta) */
+        view_dot = *(float *)0x5a5bd4 * delta[0] + *(float *)0x5a5bd8 * delta[1] +
+                   *(float *)0x5a5bdc * delta[2];
+
+        /* Reflection offset: 2*(view_fwd * dot - delta) */
+        refl_off_x = *(float *)0x5a5bd4 * view_dot - delta[0];
+        refl_off_y = *(float *)0x5a5bd8 * view_dot - delta[1];
+        refl_off_z = *(float *)0x5a5bdc * view_dot - delta[2];
+        refl_off_x = refl_off_x + refl_off_x;
+        refl_off_y = refl_off_y + refl_off_y;
+        refl_off_z = refl_off_z + refl_off_z;
+
+        brightness_byte = (float)*light_data * *(float *)0x261518;
+
+        /* Near-clip brightness: clamp (view_dot - near_end) / (near_start -
+         * near_end) */
+        if (*(float *)(definition + 0x1c) <= *(float *)0x2533c0) {
+          brightness = 1.0f;
+        } else {
+          brightness =
+            (view_dot - *(float *)(definition + 0x1c)) /
+            (*(float *)(definition + 0x18) - *(float *)(definition + 0x1c));
+          if (brightness < *(float *)0x2533c0) {
+            brightness = 0.0f;
+          } else if (*(float *)0x2533c8 < brightness) {
+            brightness = 1.0f;
+          }
+        }
+
+        /* FUN_0017ff80: scale byte to float */
+        brightness = brightness_byte * brightness *
+                     FUN_0017ff80(*(unsigned char *)((char *)entry + 0x1b));
+
+        /* FUN_00181420: corona rotation size.
+         * Takes @esi = entry (lens_flare_params), @di =
+         * *(short*)(definition+0x80). Returns float (ST0) = corona rotation
+         * size. */
+        corona_rot =
+          FUN_00181420((void *)entry, *(short *)(definition + 0x80)) *
+          *(float *)(definition + 0x84);
+
+        /* fpatan of screen-space projection */
+        flare_angle = (float)atan2(*(float *)0x5a5c6c * delta[2] +
+                                     *(float *)0x5a5c68 * delta[1] +
+                                     delta[0] * *(float *)0x5a5c64,
+                                   *(float *)0x5a5c78 * delta[2] +
+                                     *(float *)0x5a5c74 * delta[1] +
+                                     delta[0] * *(float *)0x5a5c70) *
+                      *(float *)0x2b073c;
+
+        /* depth scale: 1.0 / (far - near) */
+        depth_scale = *(float *)0x2533c8 / (*(float *)(definition + 8) -
+                                            *(float *)(definition + 0xc));
+        depth_bias = -(depth_scale * *(float *)(definition + 0xc));
+
+        /* Normalize delta (in-place, modifies delta[0]/y/z via &delta[0]) */
+        normalize3d(&delta[0]);
+
+        /* Visibility array:
+         * [0] = 1.0 (always)
+         * [1] = camera-facing: clamp(depth_bias - dot(dir, camera_pos) *
+         * depth_scale) [2] = light-facing:  clamp(depth_bias - dot(dir, delta)
+         * * depth_scale) [3] = backward:      clamp(dot(fwd, delta) *
+         * depth_scale + depth_bias) [4] = rotation fn output (filled later if
+         * brightness > 0) */
+        vis[0] = 1.0f;
+
+        {
+          float v;
+          v = depth_bias -
+              (dir_x * *(float *)0x5a5bd4 + *(float *)0x5a5bd8 * dir_y +
+               *(float *)0x5a5bdc * dir_z) *
+                depth_scale;
+          if (v < *(float *)0x2533c0) {
+            vis[1] = 0.0f;
+          } else if (*(float *)0x2533c8 < v) {
+            vis[1] = 1.0f;
+          } else {
+            vis[1] = v;
+          }
+        }
+
+        {
+          float v;
+          v =
+            depth_bias -
+            (dir_x * delta[0] + dir_y * delta[1] + dir_z * delta[2]) * depth_scale;
+          if (v < *(float *)0x2533c0) {
+            vis[2] = 0.0f;
+          } else if (*(float *)0x2533c8 < v) {
+            vis[2] = 1.0f;
+          } else {
+            vis[2] = v;
+          }
+        }
+
+        {
+          float v;
+          v = (*(float *)0x5a5bdc * delta[2] + *(float *)0x5a5bd8 * delta[1] +
+               delta[0] * *(float *)0x5a5bd4) *
+                depth_scale +
+              depth_bias;
+          if (v < *(float *)0x2533c0) {
+            vis[3] = 0.0f;
+          } else if (*(float *)0x2533c8 < v) {
+            vis[3] = 1.0f;
+          } else {
+            vis[3] = v;
+          }
+        }
+
+        if (*(float *)0x2533c0 < brightness) {
+          /* vis[4] = rotation function output for animation */
+          vis[4] = FUN_0017ff80(*(unsigned char *)((char *)entry + 0x23));
+
+          refl_idx = 0;
+          refl_count = *(int *)(definition + 0xc4);
+          if (refl_count > 0) {
+            refl_ivar = 0;
+            do {
+              int saved_refl_idx;
+              saved_refl_idx = refl_idx;
+
+              /* tag_block_get_element(definition+0xc4, refl_ivar, 0x80) */
+              refl = tag_block_get_element((void *)(definition + 0xc4),
+                                           refl_ivar, 0x80);
+
+              /* Compute reflection scale from animation:
+               * ((max - min) * vis[4] + min) * vis[flags] * brightness */
+              {
+                float anim_val;
+                anim_val = (*(float *)((char *)refl + 0x38) -
+                            *(float *)((char *)refl + 0x34)) *
+                             vis[4] +
+                           *(float *)((char *)refl + 0x34);
+                /* refl[0x3c] = vis-factor index (short, sign-extended) */
+                anim_alpha = anim_val *
+                             vis[(int)(*(short *)((char *)refl + 0x3c))] *
+                             brightness;
+              }
+
+              if (refl_idx == 0) {
+                brightness = anim_alpha;
+              }
+
+              if (*(float *)0x2533c0 < anim_alpha) {
+                refl_size = (*(float *)((char *)refl + 0x2c) -
+                             *(float *)((char *)refl + 0x28)) *
+                              vis[4] +
+                            *(float *)((char *)refl + 0x28);
+
+                /* Check if all tint color components are zero */
+                if (*(float *)((char *)refl + 0x40) == *(float *)0x2533c0 &&
+                    *(float *)((char *)refl + 0x44) == *(float *)0x2533c0 &&
+                    *(float *)((char *)refl + 0x48) == *(float *)0x2533c0 &&
+                    *(float *)((char *)refl + 0x4c) == *(float *)0x2533c0) {
+                  /* No tint: use alpha from light_data byte, color from entry
+                   */
+                  color = (unsigned int)FUN_00180770(anim_alpha) << 0x18 |
+                          (*(unsigned int *)((char *)entry + 0x18) & 0xffffff);
+                  tex_flags = 0x3f800000;
+                } else {
+                  /* Has tint: build ARGB from animation color */
+                  anim_r = *(float *)((char *)refl + 0x44);
+                  anim_g = *(float *)((char *)refl + 0x48);
+                  anim_b = *(float *)((char *)refl + 0x4c);
+                  /* anim_alpha already set above */
+
+                  if (*(short *)((char *)refl + 0x72) > 1) {
+                    /* Has animation: compute animated color */
+                    if (*(float *)((char *)refl + 0x74) == *(float *)0x2533c0) {
+                      display_assert(
+                        "reflection->animation_period!=0.0f",
+                        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c",
+                        0x28b, 1);
+                      system_exit(-1);
+                    }
+                    refl_anim = FUN_0010a5e0(
+                      *(short *)((char *)refl + 0x72),
+                      (*(float *)0x5a5e18 + *(float *)((char *)refl + 0x78)) /
+                        *(float *)((char *)refl + 0x74));
+
+                    /* Interpolate RGB into anim_rgb[3] (EBP-0x38..EBP-0x30):
+                     * output, mode, lower, upper, t */
+                    FUN_0007c270(
+                      anim_rgb,
+                      (unsigned int)(*(unsigned char *)((char *)refl + 0x70) &
+                                     3),
+                      (float *)((char *)refl + 0x54),
+                      (float *)((char *)refl + 0x64), refl_anim);
+
+                    /* Interpolate alpha into anim_alpha_out (EBP-0x3c):
+                     * lower=entry[0x50], upper=entry[0x60], t, output */
+                    scalars_interpolate(*(float *)((char *)refl + 0x50),
+                                       *(float *)((char *)refl + 0x60),
+                                       refl_anim, &anim_alpha_out);
+
+                    /* Validate animation_color.alpha */
+                    if (anim_alpha_out < *(float *)0x2533c0 ||
+                        (anim_alpha_out < *(float *)0x2533c8 ==
+                         (anim_alpha_out == *(float *)0x2533c8))) {
+                      display_assert(
+                        "animation_color.alpha>=0.0f && "
+                        "animation_color.alpha<=1.0f",
+                        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c",
+                        0x29b, 1);
+                      system_exit(-1);
+                    }
+                    /* Validate animation_color.red */
+                    if (anim_rgb[0] < *(float *)0x2533c0 ||
+                        (anim_rgb[0] < *(float *)0x2533c8 ==
+                         (anim_rgb[0] == *(float *)0x2533c8))) {
+                      display_assert(
+                        "animation_color.red >=0.0f && animation_color.red "
+                        "<=1.0f",
+                        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c",
+                        0x29c, 1);
+                      system_exit(-1);
+                    }
+                    /* Validate animation_color.green */
+                    if (anim_rgb[1] < *(float *)0x2533c0 ||
+                        (anim_rgb[1] < *(float *)0x2533c8 ==
+                         (anim_rgb[1] == *(float *)0x2533c8))) {
+                      display_assert(
+                        "animation_color.green>=0.0f && "
+                        "animation_color.green<=1.0f",
+                        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c",
+                        0x29d, 1);
+                      system_exit(-1);
+                    }
+                    /* Validate animation_color.blue */
+                    if (anim_rgb[2] < *(float *)0x2533c0 ||
+                        (anim_rgb[2] < *(float *)0x2533c8 ==
+                         (anim_rgb[2] == *(float *)0x2533c8))) {
+                      display_assert(
+                        "animation_color.blue >=0.0f && animation_color.blue "
+                        "<=1.0f",
+                        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c",
+                        0x29e, 1);
+                      system_exit(-1);
+                    }
+
+                    anim_alpha = anim_alpha_out * anim_alpha;
+                    anim_r    = anim_r * anim_rgb[0];
+                    anim_g    = anim_g * anim_rgb[1];
+                    anim_b    = anim_b * anim_rgb[2];
+                  }
+
+                  {
+                    /* Pack ARGB: FUN_000d1c90 takes float[4] = {alpha,r,g,b}
+                     * at [EBP-0x58] = {anim_alpha, anim_r, anim_g, anim_b}.
+                     * These four contiguous slots map to local_5c/58/54/50. */
+                    float argb4[4];
+                    argb4[0] = anim_alpha;
+                    argb4[1] = anim_r;
+                    argb4[2] = anim_g;
+                    argb4[3] = anim_b;
+                    color = FUN_000d1c90(argb4);
+                  }
+                  tex_flags = *(unsigned int *)((char *)refl + 0x40);
+                }
+
+                /* Reflection position */
+                if (refl_idx == 0) {
+                  flare_size_angle =
+                    corona_rot + *(float *)((char *)refl + 0x20);
+                  scale2d[0] = *(float *)(definition + 0xa0);
+                  scale2d[1] = *(float *)(definition + 0xa4);
+                } else {
+                  flare_size_angle = *(float *)((char *)refl + 0x20);
+                  scale2d[0] = 1.0f;
+                  scale2d[1] = 1.0f;
+                }
+
+                refl_flags = *(unsigned short *)refl;
+
+                /* Optional rotation offset */
+                if (refl_flags & 1) {
+                  flare_size_angle = flare_size_angle + flare_angle;
+                }
+
+                /* Optional scale by brightness */
+                if (refl_flags & 4) {
+                  refl_size = (brightness_byte + *(float *)0x2533c8) *
+                              refl_size * *(float *)0x253398;
+                }
+
+                /* Optional scale by view dot */
+                if (refl_flags & 2) {
+                  refl_size = refl_size * view_dot;
+                }
+
+                /* Billboard position: entry_xyz + offset * refl_size */
+                {
+                  float fVar2;
+                  fVar2 = *(float *)((char *)refl + 0x1c);
+                  pos[0] = refl_off_x * fVar2 + entry_x;
+                  pos[1] = refl_off_y * fVar2 + entry_y;
+                  pos[2] = refl_off_z * fVar2 + entry_z;
+                }
+
+                /* FUN_0017cfd0: check occlusion / stencil */
+                occlusion_result =
+                  FUN_0017cfd0(0, *(unsigned int *)(definition + 0x2c),
+                               *(unsigned short *)((char *)refl + 4));
+                if (occlusion_result != '\0') {
+                  break; /* exit inner loop */
+                }
+
+                FUN_0017cfe0(tex_flags);
+
+                /* stencil mode */
+                if ((refl_flags & 8) != 0 &&
+                    (char)(*(unsigned char *)((char *)entry + 0x22)) < 0) {
+                  stencil_mode = 2;
+                } else {
+                  stencil_mode = 0;
+                }
+                FUN_00158ae0((short)stencil_mode);
+
+                /* Draw the lens flare reflection:
+                 * FUN_0017d010(&pos, refl_size, &scale2d,
+                 *              flare_size_angle * deg2rad_scale, color) */
+                FUN_0017d010(pos, refl_size, scale2d,
+                             flare_size_angle * *(float *)0x253d4c, color);
+
+                saved_refl_idx = refl_idx;
+              }
+
+              refl_idx = saved_refl_idx + 1;
+              refl_ivar = (int)(short)refl_idx;
+              refl_count = *(int *)(definition + 0xc4);
+            } while (refl_ivar < refl_count);
+          }
+        }
+      }
+
+      outer_ctr = outer_ctr + 1;
+      i = (int)(short)outer_ctr;
+      lf_count = *(int *)0x4d0480;
+    } while (i < lf_count);
+  }
+
+  FUN_00158ae0(0);
+  FUN_0017ad90();
+
+  /* Second pass: render sun glow overlays (DAT_003256fe guard) */
+  if (*(char *)0x3256fe != '\0') {
+    lf_count = *(int *)0x4d0480;
+    if (lf_count > 0) {
+      sun_i = 0;
+      i = 0;
+      do {
+        if (sun_i < 0 || i >= lf_count) {
+          display_assert(
+            "lens_flare_index>=0 && lens_flare_index<local_lens_flare_count",
+            "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c", 0x43, 1);
+          system_exit(-1);
+        }
+
+        sun_entry = (int)((char *)0x4c6480 + (int)(short)sun_i * 0x28);
+        if (*(int *)((char *)sun_entry + 0x24) > 0 &&
+            ((*(unsigned char *)((char *)sun_entry + 0x22) & 0x7f) ==
+             *(unsigned short *)0x5a5bc2)) {
+          int sun_def;
+          sun_def = *(int *)sun_entry;
+          if (*(int *)(sun_def + 0x10) == 0x42480000 ||
+              (*(unsigned char *)(sun_def + 0x30) & 1) != 0) {
+            FUN_00169fd0((int *)sun_entry);
+          }
+        }
+
+        sun_i = sun_i + 1;
+        i = (int)sun_i;
+        lf_count = *(int *)0x4d0480;
+      } while (i < lf_count);
+    }
+  }
+
+  FUN_0016fa40(0x19);
 }
-#else
-#error "FUN_00181c20: clang naked draft required"
-#endif
 
 
 /* rasterizer_memory_pool.c */
