@@ -15094,7 +15094,7 @@
         {
           "addr": "0x124900",
           "decl": "void FUN_00124900(void *model);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x124a10",
