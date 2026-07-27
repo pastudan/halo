@@ -16800,9 +16800,9 @@
         },
         {
           "addr": "0x13ec00",
-          "decl": "int object_markers_need_update(int object_handle);",
+          "decl": "char object_markers_need_update(int object_handle);",
           "name": "object_markers_need_update",
-          "ported": false,
+          "ported": true,
           "source_path": "objects/objects.c"
         },
         {

@@ -6678,52 +6678,20 @@ void object_marker_end(void)
   object_globals->object_marker_initialized = 0;
 }
 
-/* object_markers_need_update (0x13ec00) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-static void *(*const b13ec00_get)(int, int) = object_get_and_verify_type;
-static void (*const b13ec00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b13ec00_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int object_markers_need_update(int object_handle __attribute__((unused)))
+/* object_markers_need_update (0x13ec00) — readable C lift. */
+extern char DAT_0029b91c[];
+extern char DAT_0029bc30[];
+char object_markers_need_update(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0x46f084, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x1(%%ecx), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lobject_markers_need_update_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdc6\n\t"
-      "pushl $0x29b91c\n\t"
-      "pushl $0x29bc30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lobject_markers_need_update_1:\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "cmpl 0x5a8d28, %%edx\n\t"
-      "setne %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b13ec00_get), [assert] "m"(b13ec00_assert), [exitfn] "m"(b13ec00_exitfn)
-      : "memory");
-}
-#else
-#error "object_markers_need_update: clang naked draft required"
-#endif
+  char *obj;
 
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  if (*(*(char **)0x46f084 + 1) == 0) {
+    display_assert(DAT_0029bc30, DAT_0029b91c, 0xdc6, true);
+    system_exit(-1);
+  }
+  return *(int *)(obj + 8) != *(int *)0x5a8d28;
+}
 
 /*
  * object_mark (0x13ec50) — mark an object with the current generation.
