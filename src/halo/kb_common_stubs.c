@@ -10092,43 +10092,14 @@ void FUN_001331d0(int glow_widget, int particle_ptr)
 }
 #endif
 
-/* FUN_00133260 (0x133260) — XBE naked draft (batch 372). */
-#if defined(__clang__)
-static void *(*const b133260_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_00133260(void)
+/* FUN_00133260 (0x133260) — readable C lift. */
+void FUN_00133260(void *obj, void *state, float dt)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x224(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x676c7721\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x44(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fadds 0x2c(%%esi)\n\t"
-      "fstps 0x2c(%%esi)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x48(%%esi)\n\t"
-      "fadds 0x30(%%esi)\n\t"
-      "fstps 0x30(%%esi)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x4c(%%esi)\n\t"
-      "fadds 0x34(%%esi)\n\t"
-      "fstps 0x34(%%esi)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b133260_tag)
-      : "memory");
+  tag_get(0x676c7721, *(int *)((char *)obj + 0x224));
+  *(float *)((char *)state + 0x2c) += dt * *(float *)((char *)state + 0x44);
+  *(float *)((char *)state + 0x30) += dt * *(float *)((char *)state + 0x48);
+  *(float *)((char *)state + 0x34) += dt * *(float *)((char *)state + 0x4c);
 }
-#else
-#error "FUN_00133260: clang naked draft required"
-#endif
-
 
 /* 0x133300 */
 #if 0 /* ported in objects.c */

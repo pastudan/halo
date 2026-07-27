@@ -462,8 +462,9 @@
         },
         {
           "addr": "0x133260",
-          "decl": "void FUN_00133260(void);",
-          "ported": false
+          "decl": "void FUN_00133260(void *obj@<eax>, void *state@<esi>, float dt);",
+          "ported": true,
+          "name": "FUN_00133260"
         },
         {
           "addr": "0x133300",
