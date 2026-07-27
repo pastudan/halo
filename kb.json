@@ -21646,6 +21646,12 @@
           "source_path": "src/halo/rasterizer/xbox/rasterizer_xbox_decals.c"
         },
         {
+          "addr": "0x15d300",
+          "decl": "void FUN_0015d300(void);",
+          "ported": false,
+          "name": "FUN_0015d300"
+        },
+        {
           "addr": "0x15d310",
           "decl": "int FUN_0015d310(short type, int count);",
           "ported": true
@@ -21654,6 +21660,12 @@
           "addr": "0x15d480",
           "decl": "short __cdecl FUN_0015d480(int dynamic_vertex_buffer_index);",
           "ported": true
+        },
+        {
+          "addr": "0x15d5a0",
+          "decl": "void FUN_0015d5a0(void);",
+          "ported": false,
+          "name": "FUN_0015d5a0"
         },
         {
           "addr": "0x15d5b0",
@@ -24984,7 +24996,7 @@
           "addr": "0x1ccca0",
           "comment": "Compute distance for random scale checks.",
           "decl": "float FUN_001ccca0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccd70",
