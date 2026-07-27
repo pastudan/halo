@@ -2817,7 +2817,8 @@
         {
           "addr": "0x20990",
           "decl": "char FUN_00020990(int actor_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00020990"
         },
         {
           "addr": "0x21080",
