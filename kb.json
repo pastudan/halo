@@ -4087,7 +4087,7 @@
         },
         {
           "addr": "0x27a10",
-          "decl": "int FUN_00027a10(int actor_handle);",
+          "decl": "int FUN_00027a10(int actor_handle /* @<eax> */);",
           "ported": true
         },
         {
@@ -12494,7 +12494,7 @@
         },
         {
           "addr": "0xcaa80",
-          "decl": "char *hs_get_thread_script_name(int thread_index);",
+          "decl": "char *hs_get_thread_script_name(int thread_index@<esi>);",
           "ported": true
         },
         {
@@ -16792,7 +16792,7 @@
         },
         {
           "addr": "0x13df70",
-          "decl": "void object_postprocess_node_matrices(data_t *data, int object_handle);",
+          "decl": "void object_postprocess_node_matrices(data_t *data, int object_handle@<ebx>);",
           "ported": true
         },
         {
@@ -20223,7 +20223,7 @@
         {
           "addr": "0x921c0",
           "decl": "int FUN_000921c0(const char *name, int *table);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000921c0"
         },
         {
@@ -27464,7 +27464,7 @@
         },
         {
           "addr": "0xe5090",
-          "decl": "void ui_widget_pending_load_apply(int a6@<eax>, void *widget, int16_t a7);",
+          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, int widget, int16_t a7);",
           "ported": true
         },
         {
@@ -29659,7 +29659,7 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle, int unused);",
+          "decl": "char *unit_get_weapon_name(int unit_handle@<esi>, int unused);",
           "name": "unit_get_weapon_name",
           "ported": true,
           "obj": "units.obj"
