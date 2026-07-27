@@ -27441,7 +27441,8 @@
         {
           "addr": "0xe9bd0",
           "decl": "char ui_widget_event_handler_set_difficulty(void *widget, void *event_data, bool *widget_deleted);",
-          "ported": false
+          "ported": true,
+          "name": "ui_widget_event_handler_set_difficulty"
         },
         {
           "addr": "0xe9cb0",

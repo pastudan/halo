@@ -3074,55 +3074,22 @@ char FUN_000e9a60(void *widget)
   return 1;
 }
 
-/* ui_widget_event_handler_set_difficulty (0xe9bd0) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static void (*const be9bd0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be9bd0_exitfn)(int) = (void *)system_exit;
-static void (*const be9bd0_c100060)(int16_t difficulty) = (void *)main_set_difficulty;
-static void (*const be9bd0_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
-
-__attribute__((naked, noinline))
+/* ui_widget_event_handler_set_difficulty (0xe9bd0) — readable C lift. */
 char ui_widget_event_handler_set_difficulty(void *widget, void *event_data, bool *widget_deleted)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movw 0x3c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lui_widget_event_handler_set_difficulty_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lui_widget_event_handler_set_difficulty_2\n\t"
-      ".Lui_widget_event_handler_set_difficulty_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x313\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285ad8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_event_handler_set_difficulty_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x3c(%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c100060]\n\t"
-      "pushl $2\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be9bd0_assert), [exitfn] "m"(be9bd0_exitfn), [c100060] "m"(be9bd0_c100060), [ce5ab0] "m"(be9bd0_ce5ab0)
-      : "memory");
-}
-#else
-#error "ui_widget_event_handler_set_difficulty: clang naked draft required"
-#endif
+  short difficulty;
 
+  (void)event_data;
+  (void)widget_deleted;
+  difficulty = *(short *)((char *)widget + 0x3c);
+  if (difficulty < 0 || difficulty >= 4) {
+    display_assert((const char *)0x285ad8, (const char *)0x2859a4, 0x313, 1);
+    system_exit(-1);
+  }
+  main_set_difficulty(difficulty);
+  ui_play_audio_feedback_sound(2);
+  return 1;
+}
 
 /* display_error_abort_to_dashboard (0xe9cb0) — readable C lift. */
 extern char DAT_002859a4[];

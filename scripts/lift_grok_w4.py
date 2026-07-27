@@ -614,6 +614,83 @@ void ui_play_audio_feedback_sound(int16_t sound_selector)
 )
 
 
+L(
+    0xE9BD0,
+    "interface/ui_widget.c",
+    "ui_widget_event_handler_set_difficulty",
+    """
+/* ui_widget_event_handler_set_difficulty (0xe9bd0) — readable C lift. */
+char ui_widget_event_handler_set_difficulty(void *widget, void *event_data, bool *widget_deleted)
+{
+  short difficulty;
+
+  (void)event_data;
+  (void)widget_deleted;
+  difficulty = *(short *)((char *)widget + 0x3c);
+  if (difficulty < 0 || difficulty >= 4) {
+    display_assert((const char *)0x285ad8, (const char *)0x2859a4, 0x313, 1);
+    system_exit(-1);
+  }
+  main_set_difficulty(difficulty);
+  ui_play_audio_feedback_sound(2);
+  return 1;
+}
+""",
+    "char ui_widget_event_handler_set_difficulty(void *widget, void *event_data, bool *widget_deleted);",
+)
+
+L(
+    0xF5290,
+    "interface/ui_widget_text_search_and_replace_functions.c",
+    "ui_widget_text_search_and_replace_function_invoke",
+    """
+/* ui_widget_text_search_and_replace_function_invoke (0xf5290) — readable C lift. */
+wchar_t *ui_widget_text_search_and_replace_function_invoke(void *widget, unsigned short function_index)
+{
+  wchar_t *(*fn)(void *);
+
+  if (widget == 0) {
+    display_assert((const char *)0x2832a8, (const char *)0x28a748, 0x2d, 1);
+    system_exit(-1);
+  }
+  if ((short)function_index < 0 || function_index >= 2)
+    return (wchar_t *)0x28a730;
+  fn = *(wchar_t *(**)(void *))(0x31e5a4 + (int)(short)function_index * 4);
+  return fn(widget);
+}
+""",
+    "wchar_t *ui_widget_text_search_and_replace_function_invoke(void *widget, unsigned short function_index);",
+)
+
+L(
+    0x11C4D0,
+    "networking/network_messages.c",
+    "FUN_0011c4d0",
+    """
+/* FUN_0011c4d0 (0x11c4d0) — readable C lift. */
+void FUN_0011c4d0(int cache, void *pointer)
+{
+  int *block;
+  void (*dispose_fn)(int);
+
+  if (pointer == 0) {
+    display_assert((const char *)0x267eec, (const char *)0x28f768, 0x11a, 1);
+    system_exit(-1);
+  }
+  block = (int *)((char *)pointer - 0x10);
+  FUN_0011c290(cache);
+  FUN_0011c210(cache, (int)block);
+  if ((block[1] & 2) == 0) {
+    dispose_fn = *(void (**)(int))(cache + 0x34);
+    dispose_fn(block[0]);
+    block[1] = (block[1] & ~1) | 2;
+  }
+}
+""",
+    "void FUN_0011c4d0(int cache, void *pointer);",
+)
+
+
 def audit_naked_true() -> list[tuple[str, str, str]]:
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     bad = []
@@ -757,13 +834,7 @@ def commit_push(flips: list[str], touched: set[Path]) -> None:
 
 
 def main() -> int:
-    order = [
-        0x124BA0,
-        0xE4370,
-        0x11C4D0,
-        0x124E20,
-        0xE5AB0,
-    ]
+    order = [0xE9BD0]
     true0, _ = count_ported(json.loads(KB_PATH.read_text(encoding="utf-8")))
     print(f"start true={true0} naked_true={len(audit_naked_true())}", flush=True)
     flips: list[str] = []
