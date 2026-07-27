@@ -25958,7 +25958,7 @@
           "addr": "0x191a50",
           "decl": "int cluster_partition_iter_first(void *partition, int *state, int16_t cluster_idx);",
           "name": "cluster_partition_iter_first",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c"
         },
         {

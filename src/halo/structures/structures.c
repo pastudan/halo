@@ -3139,69 +3139,37 @@ void cluster_partition_remove_object(void *partition __attribute__((unused)), in
 #endif
 
 
-/* cluster_partition_iter_first (0x191a50) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void * (*const b191a50_c18e3c0)(void) = global_scenario_get;
-static void (*const b191a50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b191a50_exitfn)(int) = system_exit;
-static void *(*const b191a50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int cluster_partition_iter_first(void *partition __attribute__((unused)), int *state __attribute__((unused)), int16_t cluster_idx __attribute__((unused)))
+/* cluster_partition_iter_first (0x191a50) — readable C lift from XBE leaf. */
+int cluster_partition_iter_first(void *partition, int *state, int16_t cluster_idx)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x10(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lcluster_partition_iter_first_1\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x134(%%eax), %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .Lcluster_partition_iter_first_2\n\t"
-      ".Lcluster_partition_iter_first_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd5\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x2b2668\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_iter_first_2:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movl (%%eax,%%edx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "movl 0x4(%%ecx), %%ecx\n\t"
-      "je .Lcluster_partition_iter_first_3\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcluster_partition_iter_first_3:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b191a50_c18e3c0), [assert] "m"(b191a50_assert), [exitfn] "m"(b191a50_exitfn), [dget] "m"(b191a50_dget)
-      : "memory");
+  void *scenario;
+  int handle;
+  void *data;
+  char *datum;
+
+  if (cluster_idx < 0) {
+    extern char DAT_002b2668[];
+    extern char DAT_002b26b8[];
+    display_assert(DAT_002b2668, DAT_002b26b8, 0xd5, 1);
+    system_exit(-1);
+  }
+  scenario = global_scenario_get();
+  if ((int)cluster_idx >= *(int *)((char *)scenario + 0x134)) {
+    extern char DAT_002b2668[];
+    extern char DAT_002b26b8[];
+    display_assert(DAT_002b2668, DAT_002b26b8, 0xd5, 1);
+    system_exit(-1);
+  }
+  handle = *(int *)(*(int *)partition + (int)cluster_idx * 4);
+  *state = handle;
+  data = *(void **)((char *)partition + 4);
+  if (handle == -1)
+    return -1;
+  datum = (char *)datum_get(data, handle);
+  *state = *(int *)(datum + 8);
+  return *(int *)(datum + 4);
 }
-#else
-#error "cluster_partition_iter_first: clang naked draft required"
-#endif
+
 
 
 /* leaf_map_node_stack_push (FUN_00191ad0, 0x191ad0)
