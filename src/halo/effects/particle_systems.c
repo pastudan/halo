@@ -2113,81 +2113,33 @@ void FUN_000a0e60(void)
 #endif
 
 
-/* particle_system_update (0xa1170) — XBE naked draft (batch 148). */
-#if defined(__clang__)
-static void (*const ba1170_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba1170_exitfn)(int) = system_exit;
-static int (*const ba1170_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const ba1170_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static bool (*const ba1170_c18e910)(void *location) = scenario_location_potentially_visible_local;
-static void (*const ba1170_ca0800)(int particle_system_handle) = FUN_000a0800;
-
-__attribute__((naked, noinline))
+/* particle_system_update (0xa1170) — readable C lift. */
 void particle_system_update(void)
 {
-  __asm__ volatile(
-      "movb 0x32574c, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lparticle_system_update_6\n\t"
-      "movl 0x5aa8a8, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lparticle_system_update_1\n\t"
-      "movb 0x24(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lparticle_system_update_2\n\t"
-      ".Lparticle_system_update_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3d0\n\t"
-      "pushl $0x26abcc\n\t"
-      "pushl $0x26ad14\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x5aa8a8, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lparticle_system_update_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lparticle_system_update_5\n\t"
-      ".Lparticle_system_update_3:\n\t"
-      "movl 0x5aa8a8, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $-1, 0x1c(%%eax)\n\t"
-      "je .Lparticle_system_update_4\n\t"
-      "addl $0x18, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e910]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lparticle_system_update_4\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[ca0800]\n\t"
-      ".Lparticle_system_update_4:\n\t"
-      "movl 0x5aa8a8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .Lparticle_system_update_3\n\t"
-      ".Lparticle_system_update_5:\n\t"
-      "popl %%esi\n\t"
-      ".Lparticle_system_update_6:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba1170_assert), [exitfn] "m"(ba1170_exitfn), [c1198f0] "m"(ba1170_c1198f0), [dget] "m"(ba1170_dget), [c18e910] "m"(ba1170_c18e910), [ca0800] "m"(ba1170_ca0800)
-      : "memory");
-}
-#else
-#error "particle_system_update: clang naked draft required"
-#endif
+  extern char DAT_0032574c[];
+  extern char DAT_0026abcc[];
+  extern char DAT_0026ad14[];
+  void *header;
+  int idx;
+  char *ps;
+  void (__attribute__((regparm(1))) *update_one)(int) =
+      (void (__attribute__((regparm(1))) *)(int))FUN_000a0800;
 
+  if (!*(unsigned char *)DAT_0032574c)
+    return;
+  header = *(void **)0x5aa8a8;
+  if (header == 0 || !*((unsigned char *)header + 0x24)) {
+    display_assert(DAT_0026ad14, DAT_0026abcc, 0x3d0, 1);
+    system_exit(-1);
+    header = *(void **)0x5aa8a8;
+  }
+  idx = data_next_index((data_t *)header, -1);
+  while (idx != -1) {
+    ps = (char *)datum_get(*(data_t **)0x5aa8a8, idx);
+    if (*(short *)(ps + 0x1c) != (short)0xffff) {
+      if (scenario_location_potentially_visible_local(ps + 0x18))
+        update_one(idx);
+    }
+    idx = data_next_index(*(data_t **)0x5aa8a8, idx);
+  }
+}

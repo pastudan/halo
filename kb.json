@@ -17630,7 +17630,8 @@
         {
           "addr": "0xa1170",
           "decl": "void particle_system_update(void);",
-          "ported": false
+          "ported": true,
+          "name": "particle_system_update"
         }
       ],
       "name": "particle_systems.obj",

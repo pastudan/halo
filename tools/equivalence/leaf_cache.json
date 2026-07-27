@@ -710,6 +710,11 @@
     "confidence": "weak",
     "coverage_pct": 0.0
   },
+  "0xa1170": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 32.9
+  },
   "0xa57b0": {
     "class": "non_leaf",
     "confidence": "high",
