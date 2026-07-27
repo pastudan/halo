@@ -265,96 +265,27 @@ wchar_t *ustrtok(wchar_t *s, const wchar_t *delim)
   return _wcstok(s, delim);
 }
 
-/* ustrxfrm (0x19dff0) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static void (*const b19dff0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19dff0_exitfn)(int) = system_exit;
-static size_t (*const b19dff0_c1db11e)(const wchar_t *str) = _wcslen;
-static size_t (*const b19dff0_c1dc257)(wchar_t *dest, const wchar_t *src, size_t count) = FUN_001dc257;
-
-__attribute__((naked, noinline))
-size_t ustrxfrm(wchar_t *dest __attribute__((unused)), const wchar_t *src __attribute__((unused)), size_t count __attribute__((unused)))
+/* ustrxfrm (0x19dff0) — readable C lift. */
+size_t ustrxfrm(wchar_t *dest, const wchar_t *src, size_t count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lustrxfrm_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .Lustrxfrm_2\n\t"
-      ".Lustrxfrm_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17c\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4660\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lustrxfrm_2:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1db11e]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x8000, %%eax\n\t"
-      "jb .Lustrxfrm_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17d\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b47b4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lustrxfrm_3:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1db11e]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x8000, %%eax\n\t"
-      "jb .Lustrxfrm_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17e\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4790\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lustrxfrm_4:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "cmpl $0x8000, %%esi\n\t"
-      "jb .Lustrxfrm_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17f\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b492c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lustrxfrm_5:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1dc257]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19dff0_assert), [exitfn] "m"(b19dff0_exitfn), [c1db11e] "m"(b19dff0_c1db11e), [c1dc257] "m"(b19dff0_c1dc257)
-      : "memory");
+  if (dest == NULL || src == NULL) {
+    display_assert((const char *)0x2b4660, (const char *)0x2b45b4, 0x17c, 1);
+    system_exit(-1);
+  }
+  if (_wcslen(dest) >= 0x8000) {
+    display_assert((const char *)0x2b47b4, (const char *)0x2b45b4, 0x17d, 1);
+    system_exit(-1);
+  }
+  if (_wcslen(src) >= 0x8000) {
+    display_assert((const char *)0x2b4790, (const char *)0x2b45b4, 0x17e, 1);
+    system_exit(-1);
+  }
+  if (count >= 0x8000) {
+    display_assert((const char *)0x2b492c, (const char *)0x2b45b4, 0x17f, 1);
+    system_exit(-1);
+  }
+  return FUN_001dc257(dest, src, count);
 }
-#else
-#error "ustrxfrm: clang naked draft required"
-#endif
-
 
 /* 0x19e0c0 */
 wchar_t *ustrlwr(wchar_t *s)
