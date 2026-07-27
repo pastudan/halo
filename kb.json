@@ -15565,7 +15565,7 @@
           "addr": "0x11c310",
           "decl": "int FUN_0011c310(const char *name, int size, void (*lock_proc)(void *, int), void (*unlock_proc)(void *), void *base_address);",
           "name": "FUN_0011c310",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11c430",
