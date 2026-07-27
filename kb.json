@@ -20450,8 +20450,8 @@
         },
         {
           "addr": "0xe1f20",
-          "decl": "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
-          "ported": false,
+          "decl": "int FUN_000e1f20(uint32_t reg, float a, float b, float c, float d);",
+          "ported": true,
           "name": "FUN_000e1f20"
         },
         {
