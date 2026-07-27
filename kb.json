@@ -15770,7 +15770,7 @@
           "addr": "0x11a770",
           "decl": "void *FUN_0011a770(int *state, int element_size_type, unsigned int *element_count_ref, int maximum_element_count, void *bs_definition);",
           "name": "FUN_0011a770",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11a8e0",
@@ -15787,7 +15787,7 @@
           "addr": "0x11aa40",
           "decl": "bool FUN_0011aa40(int group, void *decoded_packet, char *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);",
           "name": "FUN_0011aa40",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11b2a0",
@@ -15810,7 +15810,7 @@
           "addr": "0x11b750",
           "decl": "bool FUN_0011b750(int definition, int encoded_packet, short encoded_packet_size, int decoded_packet, unsigned short *version_out, short *bytes_consumed_out);",
           "name": "FUN_0011b750",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11b850",
@@ -15852,7 +15852,7 @@
           "addr": "0x11bc20",
           "decl": "void FUN_0011bc20(short *table, void *key);",
           "name": "FUN_0011bc20",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11be10",
@@ -15864,13 +15864,13 @@
           "addr": "0x11beb0",
           "decl": "int FUN_0011beb0(short *table, short growth_bits);",
           "name": "FUN_0011beb0",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11c0f0",
           "decl": "int FUN_0011c0f0(short *table, void *key);",
           "name": "FUN_0011c0f0",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11c1b0",
@@ -26350,32 +26350,32 @@
         {
           "addr": "0x620f0",
           "decl": "void obstacles_get_discs_in_sphere(int16_t *partition, float *ref_point, float radius, float *vector, void *obstacles, void *scenario);",
-          "ported": true,
+          "ported": false,
           "name": "obstacles_get_discs_in_sphere"
         },
         {
           "addr": "0x62410",
           "decl": "short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy, float radius);",
           "name": "FUN_00062410",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x624b0",
           "decl": "char FUN_000624b0(void *obstacles, short skip_index, float *pt0, float *vec_a, float radius_base, float max_distance, char check_extant, void *result);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000624b0"
         },
         {
           "addr": "0x625a0",
           "decl": "void FUN_000625a0(void *obstacles, short disc_index, float *point, float base_value, float *out_b, float *out_a, float *out_scalar);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000625a0"
         },
         {
           "addr": "0x62680",
           "decl": "void FUN_00062680(int16_t *partition, uint32_t arg2, int16_t index, uint32_t *out_mask);",
           "name": "FUN_00062680",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x628b0",
@@ -26457,7 +26457,7 @@
         {
           "addr": "0x105830",
           "decl": "void calculate_vertex(short subdivision_index@<eax>, short subdivision_count@<ecx>, short parent2@<edx>, short parent1@<ebx>, void *sphere@<edi>, short new_vertex);",
-          "ported": true,
+          "ported": false,
           "name": "calculate_vertex"
         },
         {
@@ -26469,14 +26469,14 @@
         {
           "addr": "0x105c80",
           "decl": "short shell_update(short vertex_count, float *vertices @<ebx>);",
-          "ported": true,
+          "ported": false,
           "name": "shell_update"
         },
         {
           "addr": "0x105d20",
           "decl": "int16_t convex_hull2d_reduce(int16_t vertex_count, float *vertices, int16_t *out_indices);",
           "name": "convex_hull2d_reduce",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x106030",
@@ -26523,7 +26523,7 @@
         {
           "addr": "0x191440",
           "decl": "void reference_list_copy(void *result, void *source);",
-          "ported": true,
+          "ported": false,
           "name": "reference_list_copy",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -26590,7 +26590,7 @@
           "comment": "Find clusters overlapping position+radius and add the object to both per-object and per-cluster reference lists.",
           "decl": "void cluster_partition_add_object(void *partition, int object_handle, void *first_cluster_ref, void *position, uint32_t radius_fp, void *location);",
           "name": "cluster_partition_add_object",
-          "ported": true,
+          "ported": false,
           "source_path": "src/halo/structures/structures.c"
         },
         {
@@ -26634,7 +26634,7 @@
         {
           "addr": "0x191bd0",
           "decl": "char FUN_00191bd0(int search_value@<ebx>, void **param_1, char *out);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00191bd0"
         },
         {
@@ -26647,7 +26647,7 @@
           "addr": "0x191cb0",
           "decl": "void leaf_map_mark_portal_designators(void *structure, uint32_t portal_index);",
           "name": "leaf_map_mark_portal_designators",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x191d80",
@@ -26723,7 +26723,7 @@
         {
           "addr": "0x1943e0",
           "decl": "void build_structure_lens_flares(void *scenario);",
-          "ported": true,
+          "ported": false,
           "name": "build_structure_lens_flares"
         },
         {
@@ -26740,25 +26740,25 @@
         {
           "addr": "0x195550",
           "decl": "void FUN_00195550(short surface_count, int *out_indices, unsigned int *mask, int out_surfaces);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00195550"
         },
         {
           "addr": "0x195650",
           "decl": "void FUN_00195650(void *out@<eax>, int *indices@<ecx>, int16_t count@<edx>);",
           "name": "FUN_00195650",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1956d0",
           "decl": "int FUN_001956d0(void *param_1, void *param_2, int16_t count@<esi>);",
           "name": "FUN_001956d0",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x195790",
           "decl": "void FUN_00195790(int *surface_material_offsets@<eax>, unsigned short surface_count, int lightmap_pass_index, void *material_begin_cb, void *surface_draw_cb, void *pass_end_cb, int param_7);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00195790"
         },
         {
@@ -26870,13 +26870,13 @@
         {
           "addr": "0x197130",
           "decl": "int FUN_00197130(float *bounds, void *param_2, int *param_3, int count, float *center, float radius, float *cull_bounds, int param_8, int param_9, int intersection, int leaf@<eax>);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00197130"
         },
         {
           "addr": "0x197310",
           "decl": "short FUN_00197310(void *verts@<eax>, void *plane@<ecx>, void *ref@<edx>, void *arg1, int16_t count, int sign, short *out);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00197310"
         },
         {
@@ -27015,7 +27015,7 @@
           "decl": "void set_file_location_volume_name(int16_t location, const char *volume_name);",
           "name": "set_file_location_volume_name",
           "source_path": "src/halo/structures/structures.c",
-          "ported": true
+          "ported": false
         }
       ],
       "name": "structures.obj",
@@ -35524,7 +35524,7 @@
         {
           "addr": "0x2bab0",
           "decl": "void FUN_0002bab0(char use_3d , float *movement_direction , float *facing_direction , float *out);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0002bab0"
         },
         {
@@ -36051,7 +36051,7 @@
         {
           "addr": "0x44660",
           "decl": "void ai_conversation_unit_died(int unit_handle, char force);",
-          "ported": true,
+          "ported": false,
           "name": "ai_conversation_unit_died"
         },
         {
@@ -36081,7 +36081,7 @@
         {
           "addr": "0x45830",
           "decl": "int FUN_00045830(int type /* @<eax> */, int actor /* @<edi> */, int target /* @<esi> */, int p0, int p1, int p2, int p3, int p4, int p5, int p6);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00045830"
         },
         {
@@ -37413,7 +37413,7 @@
           "addr": "0x5af70",
           "decl": "bool FUN_0005af70(int encounter_handle /* @<eax> */, void *rule /* @<edi> */);",
           "name": "?",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x5b200",
@@ -42498,7 +42498,7 @@
         {
           "addr": "0x1d76fc",
           "decl": "void FUN_001d76fc(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001d76fc"
         },
         {
