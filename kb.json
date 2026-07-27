@@ -10106,8 +10106,8 @@
         },
         {
           "addr": "0x1c7770",
-          "decl": "void unattached_looping_sound_stop(int sound_index);",
-          "ported": false
+          "decl": "void unattached_looping_sound_stop(int sound_handle);",
+          "ported": true
         },
         {
           "addr": "0x1c77a0",

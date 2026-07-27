@@ -1453,35 +1453,14 @@ int unattached_looping_sound_start(int sound_tag, int param_2, int param_3)
   }
   return handle;
 }
-/* unattached_looping_sound_stop (0x1c7770) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static void *(*const b1c7770_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void unattached_looping_sound_stop(int sound_index __attribute__((unused)))
+/* unattached_looping_sound_stop (0x1c7770) — readable C lift. */
+void unattached_looping_sound_stop(int sound_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5054e4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $2, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1c7770_dget)
-      : "memory");
-}
-#else
-#error "unattached_looping_sound_stop: clang naked draft required"
-#endif
+  char *entry;
 
+  entry = (char *)datum_get(*(void **)0x5054e4, sound_handle);
+  *(uint32_t *)(entry + 4) |= 2u;
+}
 
 /* FUN_001c77a0 (0x1c77a0) — XBE naked draft (batch 254). */
 #if defined(__clang__)
