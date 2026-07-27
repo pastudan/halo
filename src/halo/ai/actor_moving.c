@@ -121,73 +121,33 @@ void midpoint3d(float *a, float *b, float *out)
   out[2] = (a[2] + b[2]) * half;
 }
 
-/* actor_test_destination (0x2a580) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void *(*const b2a580_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static float (*const b2a580_c3bd50)(int actor_handle) = actor_destination_tolerance;
-
-__attribute__((naked, noinline))
-char actor_test_destination(int actor_handle __attribute__((unused)))
+/* actor_test_destination (0x2a580) — readable C lift from XBE leaf. */
+char actor_test_destination(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x46c(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lactor_test_destination_1\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .Lactor_test_destination_1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c3bd50]\n\t"
-      "flds 0x488(%%esi)\n\t"
-      "fsubs 0x12c(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "flds 0x48c(%%esi)\n\t"
-      "fsubs 0x130(%%esi)\n\t"
-      "flds 0x490(%%esi)\n\t"
-      "fsubs 0x134(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(4)\n\t"
-      ".byte 0xd8, 0xcd\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .Lactor_test_destination_2\n\t"
-      ".Lactor_test_destination_1:\n\t"
-      "movb $1, 0x484(%%esi)\n\t"
-      ".Lactor_test_destination_2:\n\t"
-      "movb 0x484(%%esi), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2a580_dget), [c3bd50] "m"(b2a580_c3bd50)
-      : "memory");
+  char *actor;
+  short mode;
+  float tol;
+  float dx, dy, dz;
+  float dist2;
+
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  mode = *(short *)(actor + 0x46c);
+  if (mode != 0 && mode != 1) {
+    tol = actor_destination_tolerance(actor_handle);
+    dx = *(float *)(actor + 0x488) - *(float *)(actor + 0x12c);
+    dy = *(float *)(actor + 0x48c) - *(float *)(actor + 0x130);
+    dz = *(float *)(actor + 0x490) - *(float *)(actor + 0x134);
+    dist2 = dx * dx + dy * dy + dz * dz;
+    if (dist2 > tol * tol) {
+      actor[0x484] = 1;
+    }
+  } else {
+    actor[0x484] = 1;
+  }
+  return actor[0x484];
 }
-#else
-#error "actor_test_destination: clang naked draft required"
-#endif
+
+
 
 
 /* actor_get_stopping_distances (0x2a610) — XBE naked draft (batch 83). */
@@ -427,82 +387,36 @@ int actor_move_animation_impulse(int actor_handle __attribute__((unused)), int16
 #endif
 
 
-/* actor_move_force_stop (0x2a860) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void *(*const b2a860_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static bool (*const b2a860_c1a9ad0)(int unit_handle) = unit_is_busy;
-static char (*const b2a860_c1ca90)(int actor_handle) = actor_action_deny_transition;
-static void (*const b2a860_c3c3e0)(int actor_handle) = actor_unit_control_stop_animation_impulse;
-
-__attribute__((naked, noinline))
-int actor_move_force_stop(int actor_handle __attribute__((unused)))
+/* actor_move_force_stop (0x2a860) — readable C lift from XBE leaf. */
+int actor_move_force_stop(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $-1, 0x418(%%eax)\n\t"
-      "jne .Lactor_move_force_stop_2\n\t"
-      "movl 0x18(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_move_force_stop_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a9ad0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_move_force_stop_2\n\t"
-      ".Lactor_move_force_stop_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1ca90]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_move_force_stop_2\n\t"
-      "movb %%al, 0x504(%%edi)\n\t"
-      "movl 0x31fc38, %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "addl $0x6e0, %%edi\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edi)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edx, 0x8(%%edi)\n\t"
-      "call *%[c3c3e0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_move_force_stop_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2a860_dget), [c1a9ad0] "m"(b2a860_c1a9ad0), [c1ca90] "m"(b2a860_c1ca90), [c3c3e0] "m"(b2a860_c3c3e0)
-      : "memory");
+  char *actor;
+  char *actor2;
+  int *dst;
+  int *src;
+
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  actor2 = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (*(short *)(actor2 + 0x418) != -1) {
+    return 0;
+  }
+  if (*(int *)(actor2 + 0x18) != -1 && unit_is_busy(*(int *)(actor2 + 0x18))) {
+    return 0;
+  }
+  if (actor_action_deny_transition(actor_handle)) {
+    return 0;
+  }
+  actor[0x504] = 0;
+  src = *(int **)0x31fc38;
+  dst = (int *)(actor + 0x6e0);
+  dst[0] = src[0];
+  dst[1] = src[1];
+  dst[2] = src[2];
+  actor_unit_control_stop_animation_impulse(actor_handle);
+  return 1;
 }
-#else
-#error "actor_move_force_stop: clang naked draft required"
-#endif
+
+
 
 
 /* actor_move_try_evasion_vector (0x2a8f0) — XBE naked draft (batch 81). */

@@ -34224,7 +34224,7 @@
           "addr": "0x2a580",
           "decl": "char actor_test_destination(int actor_handle);",
           "name": "actor_test_destination",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2cdb0",
@@ -34277,7 +34277,7 @@
         {
           "addr": "0x2a860",
           "decl": "int actor_move_force_stop(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_force_stop"
         },
         {
