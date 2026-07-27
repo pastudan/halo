@@ -855,51 +855,24 @@ bool cache_files_precache_map_begin(char *map_name __attribute__((unused)), bool
 #endif
 
 
-/* cache_files_precache_map_end (0x1bda30) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static void (*const b1bda30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bda30_exitfn)(int) = system_exit;
-static void (*const b1bda30_c1baf50)(void) = FUN_001baf50;
-static void (*const b1bda30_c1beb10)(void) = xbox_texture_cache_return_memory;
-static void (*const b1bda30_c1bcfb0)(short map_file_index) = FUN_001bcfb0;
-static void (*const b1bda30_c1bd020)(short map_file_index) = cache_file_read_header_into_slot;
-
-__attribute__((naked, noinline))
+/* cache_files_precache_map_end (0x1bda30) — readable C lift. */
 void cache_files_precache_map_end(void)
 {
-  __asm__ volatile(
-      "movb 0x4e9220, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lcache_files_precache_map_end_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3d4\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8dc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_files_precache_map_end_1:\n\t"
-      "call *%[c1baf50]\n\t"
-      "call *%[c1beb10]\n\t"
-      "movw 0x4e9222, %%ax\n\t"
-      "call *%[c1bcfb0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4e9222, %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bd020]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $0, 0x4e9220\n\t"
-      "movw $0xffff, 0x4e9222\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bda30_assert), [exitfn] "m"(b1bda30_exitfn), [c1baf50] "m"(b1bda30_c1baf50), [c1beb10] "m"(b1bda30_c1beb10), [c1bcfb0] "m"(b1bda30_c1bcfb0), [c1bd020] "m"(b1bda30_c1bd020)
-      : "memory");
+  extern char DAT_002b8c98[];
+  extern char DAT_002b8dc0[];
+  short map_file_index;
+  if (!*(unsigned char *)0x4e9220) {
+    display_assert(DAT_002b8dc0, DAT_002b8c98, 0x3d4, 1);
+    system_exit(-1);
+  }
+  FUN_001baf50();
+  xbox_texture_cache_return_memory();
+  map_file_index = *(short *)0x4e9222;
+  FUN_001bcfb0(map_file_index);
+  cache_file_read_header_into_slot(map_file_index);
+  *(unsigned char *)0x4e9220 = 0;
+  *(unsigned short *)0x4e9222 = 0xffff;
 }
-#else
-#error "cache_files_precache_map_end: clang naked draft required"
-#endif
-
 
 /* Load cached game state if the cached map metadata matches the currently
  * loaded scenario, map type, checksum, and difficulty. */

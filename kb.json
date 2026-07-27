@@ -5167,7 +5167,7 @@
         {
           "addr": "0x1bda30",
           "decl": "void cache_files_precache_map_end(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bda90",
