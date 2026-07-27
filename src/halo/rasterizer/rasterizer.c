@@ -10039,34 +10039,23 @@ void FUN_00174cc0(void)
   }
 }
 
-/* FUN_00174ce0 (0x174ce0) — XBE naked draft (batch 402). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_00174ce0 (0x174ce0) — readable C lift. */
 void FUN_00174ce0(void)
 {
-  __asm__ volatile(
-      "movl 0x325740, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpb %%cl, %%al\n\t"
-      "movl %%ecx, 0x47e4b8\n\t"
-      "movb %%cl, 0x47e4c0\n\t"
-      "je .LFUN_00174ce0_1\n\t"
-      "cmpb %%cl, %%ah\n\t"
-      "je .LFUN_00174ce0_1\n\t"
-      "cmpw $-1, 0x5a5bc2\n\t"
-      "je .LFUN_00174ce0_1\n\t"
-      ".byte 0xe9, 0x36, 0x3d, 0x07, 0x00\n\t"
-      ".LFUN_00174ce0_1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int v;
+
+  v = *(unsigned int *)0x325740;
+  *(unsigned int *)0x47e4b8 = 0;
+  *(unsigned char *)0x47e4c0 = 0;
+  if ((unsigned char)v == 0)
+    return;
+  if ((unsigned char)(v >> 8) == 0)
+    return;
+  if (*(short *)0x5a5bc2 == -1)
+    return;
+  D3DDevice_BeginVisibilityTest();
 }
-#else
-#error "FUN_00174ce0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00178820 (0x178820) — XBE naked draft (batch 379). */
