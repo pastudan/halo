@@ -1800,54 +1800,40 @@ void hashtable_dispose(short *table __attribute__((unused)))
 #endif
 
 
-/* FUN_0011ba00 (0x11ba00) — XBE naked draft (batch 95). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int FUN_0011ba00(unsigned char *key __attribute__((unused)), unsigned int key_size __attribute__((unused)))
+/* FUN_0011ba00 (0x11ba00) — readable C lift. */
+int FUN_0011ba00(unsigned char *key, unsigned int key_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jbe .LFUN_0011ba00_3\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      ".LFUN_0011ba00_1:\n\t"
-      "cmpw $0xf, %%cx\n\t"
-      "jne .LFUN_0011ba00_2\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "subl $0xf, %%edx\n\t"
-      ".LFUN_0011ba00_2:\n\t"
-      "movzbw (%%esi), %%bx\n\t"
-      "movswl %%cx, %%edi\n\t"
-      "movswl 0x3220d4(,%%edi,2), %%edi\n\t"
-      "imulw %%bx, %%di\n\t"
-      "addl %%edi, %%eax\n\t"
-      "incl %%ecx\n\t"
-      "movswl %%cx, %%edi\n\t"
-      "incl %%esi\n\t"
-      "cmpl %%edx, %%edi\n\t"
-      "jb .LFUN_0011ba00_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_0011ba00_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int remain;
+  int hash;
+  short idx;
+  unsigned char *p;
+  int term;
+  unsigned short byte_v;
+  int prime;
+
+  remain = key_size;
+  hash = 0;
+  idx = 0;
+  if (remain == 0)
+    return 0;
+  p = key;
+  for (;;) {
+    if (idx == 15) {
+      idx = 0;
+      remain -= 15;
+    }
+    byte_v = *p;
+    prime = (int)hashtable_primes[idx];
+    prime = (prime & ~0xffff) | (unsigned short)((unsigned short)prime * byte_v);
+    hash += prime;
+    idx++;
+    p++;
+    term = (int)idx;
+    if ((unsigned int)term >= remain)
+      break;
+  }
+  return hash;
 }
-#else
-#error "FUN_0011ba00: clang naked draft required"
-#endif
 
 
 /* FUN_0011ba50 (0x11ba50) — XBE naked draft (batch 84). */

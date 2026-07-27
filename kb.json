@@ -40021,7 +40021,7 @@
           "addr": "0x80530",
           "decl": "int key_agreement_peek_packet_type(unsigned char *msgptr, unsigned short msg_size, unsigned char *packet_type);",
           "name": "key_agreement_peek_packet_type",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x805a0",

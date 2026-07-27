@@ -7,71 +7,32 @@
  * ======================================================================== */
 #include "../../common.h"
 
-/* key_agreement_peek_packet_type (0x80530) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void (*const b80530_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80530_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int key_agreement_peek_packet_type(unsigned char *msgptr __attribute__((unused)), unsigned short msg_size __attribute__((unused)), unsigned char *packet_type __attribute__((unused)))
+/* key_agreement_peek_packet_type (0x80530) — readable C lift. */
+int key_agreement_peek_packet_type(unsigned char *msgptr, unsigned short msg_size,
+                                   unsigned char *packet_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "je .Lkey_agreement_peek_packet_type_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lkey_agreement_peek_packet_type_2\n\t"
-      ".Lkey_agreement_peek_packet_type_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc4\n\t"
-      "pushl $0x265b5c\n\t"
-      "pushl $0x265ba8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lkey_agreement_peek_packet_type_2:\n\t"
-      "movzwl 0xc(%%ebp), %%ecx\n\t"
-      "movb -0x1(%%ecx,%%esi,1), %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb (%%esi), %%al\n\t"
-      "movb %%cl, (%%edi)\n\t"
-      "andl $3, %%eax\n\t"
-      "testb $2, %%al\n\t"
-      "je .Lkey_agreement_peek_packet_type_4\n\t"
-      "movb (%%esi), %%dl\n\t"
-      "shrb $2, %%dl\n\t"
-      "andb $3, %%dl\n\t"
-      "cmpb $3, %%dl\n\t"
-      "jne .Lkey_agreement_peek_packet_type_4\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lkey_agreement_peek_packet_type_3\n\t"
-      "cmpb $1, %%cl\n\t"
-      "jne .Lkey_agreement_peek_packet_type_4\n\t"
-      ".Lkey_agreement_peek_packet_type_3:\n\t"
-      "popl %%edi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lkey_agreement_peek_packet_type_4:\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80530_assert), [exitfn] "m"(b80530_exitfn)
-      : "memory");
+  extern char DAT_00265ba8[];
+  extern char DAT_00265b5c[];
+  unsigned char last;
+  unsigned char flags;
+  unsigned char subtype;
+
+  if (!msgptr || !packet_type) {
+    display_assert(DAT_00265ba8, DAT_00265b5c, 0xc4, 1);
+    system_exit(-1);
+  }
+  last = msgptr[msg_size - 1];
+  flags = (unsigned char)(msgptr[0] & 3);
+  *packet_type = last;
+  if (!(flags & 2))
+    return 0;
+  subtype = (unsigned char)((msgptr[0] >> 2) & 3);
+  if (subtype != 3)
+    return 0;
+  if (last == 0 || last == 1)
+    return 1;
+  return 0;
 }
-#else
-#error "key_agreement_peek_packet_type: clang naked draft required"
-#endif
 
 
 /* key_message_xor_keystream (0x807d0) — readable C lift from XBE leaf. */
