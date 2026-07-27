@@ -464,69 +464,29 @@ void input_open_state_file(void)
   }
 }
 
-/* input_state_process_packet (0xce620) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void (*const bce620_cce530)(void *state) = FUN_000ce530;
-static int __stdcall (*const bce620_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = ReadFile;
-static int __stdcall (*const bce620_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
-
-__attribute__((naked, noinline))
-void input_state_process_packet(void *state __attribute__((unused)))
+/* input_state_process_packet (0xce620) — readable C lift. */
+void input_state_process_packet(void *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x46b818, %%eax\n\t"
-      "subl $3, %%eax\n\t"
-      "je .Linput_state_process_packet_2\n\t"
-      "decl %%eax\n\t"
-      "je .Linput_state_process_packet_1\n\t"
-      "decl %%eax\n\t"
-      "jne .Linput_state_process_packet_3\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cce530]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Linput_state_process_packet_1:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x46b814, %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x28\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[c1d13c9]\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Linput_state_process_packet_2:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x46b814, %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x28\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[c1d14b6]\n\t"
-      ".Linput_state_process_packet_3:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce530] "m"(bce620_cce530), [c1d13c9] "m"(bce620_c1d13c9), [c1d14b6] "m"(bce620_c1d14b6)
-      : "memory");
+  int mode;
+  unsigned int got;
+
+  mode = *(int *)0x46b818;
+  mode -= 3;
+  if (mode == 0) {
+    got = 0;
+    WriteFile(*(void **)0x46b814, state, 0x28, &got, 0);
+    return;
+  }
+  if (mode == 1) {
+    got = 0;
+    ReadFile(*(void **)0x46b814, state, 0x28, &got, 0);
+    return;
+  }
+  if (mode == 2) {
+    FUN_000ce530(state);
+    return;
+  }
 }
-#else
-#error "input_state_process_packet: clang naked draft required"
-#endif
 
 
 /* FUN_000cf3e0 (0xcf3e0)

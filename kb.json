@@ -13817,7 +13817,8 @@
         {
           "addr": "0xce530",
           "decl": "void FUN_000ce530(void *state);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_000ce530"
         },
         {
           "addr": "0xce590",
@@ -32862,12 +32863,13 @@
         },
         {
           "addr": "0x1d13c9",
-          "decl": "int __stdcall ReadFile(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped);",
-          "ported": false
+          "decl": "int __stdcall FUN_001d13c9(void *handle, void *buf, unsigned int n, unsigned int *got, void *overlapped);",
+          "ported": false,
+          "name": "FUN_001d13c9"
         },
         {
           "addr": "0x1d14b6",
-          "decl": "int __stdcall WriteFile(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped);",
+          "decl": "int __stdcall FUN_001d14b6(void *handle, void *buf, unsigned int n, unsigned int *got, void *overlapped);",
           "name": "WriteFile",
           "ported": false
         },
