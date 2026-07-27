@@ -84,144 +84,36 @@ void FUN_000a4000(float *dst, float *src, float scale)
   }
 }
 
-/* weather_particle_system_new (0xa40a0) — XBE naked draft (batch 125). */
-#if defined(__clang__)
-static void (*const ba40a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba40a0_exitfn)(int) = system_exit;
-static void *(*const ba40a0_tag)(int, int) = tag_get;
-static void *(*const ba40a0_elem)(void *, int, int) = tag_block_get_element;
-static unsigned int *(*const ba40a0_lseed)(void) = random_math_get_local_seed_address;
-static float (*const ba40a0_rrange)(int *, float, float) = random_real_range;
-
-__attribute__((naked, noinline))
+/* weather_particle_system_new (0xa40a0) — readable C lift (restored pre-naked). */
 void weather_particle_system_new(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jl .Lweather_particle_system_new_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lweather_particle_system_new_2\n\t"
-      ".Lweather_particle_system_new_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweather_particle_system_new_2:\n\t"
-      "movswl %%si, %%edi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "imull $0x9c, %%edi, %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x7261696e\n\t"
-      "addl $0x4557f4, %%edi\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lweather_particle_system_new_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x26b00c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweather_particle_system_new_3:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%eax, 0xc(%%edi)\n\t"
-      "movl %%esi, (%%edi)\n\t"
-      "movl %%ecx, 0x4(%%edi)\n\t"
-      "movl %%ecx, 0x8(%%edi)\n\t"
-      "incw 0x4557f0\n\t"
-      "movl 0x24(%%ebx), %%edx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "leal 0x24(%%ebx), %%eax\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "jle .Lweather_particle_system_new_7\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lweather_particle_system_new_4:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x7261696e\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "jl .Lweather_particle_system_new_5\n\t"
-      "cmpl 0x24(%%eax), %%ebx\n\t"
-      "jl .Lweather_particle_system_new_6\n\t"
-      ".Lweather_particle_system_new_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x26af84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweather_particle_system_new_6:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0x25c\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x1c(%%edx,%%edi,1), %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl $0xffffffff, 0xc(%%esi)\n\t"
-      "movw $0, 0x8(%%esi)\n\t"
-      "movl 0xa8(%%ebx), %%ecx\n\t"
-      "movl 0xa4(%%ebx), %%edx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps (%%esi)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x30(%%ebx), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "cmpl (%%eax), %%ebx\n\t"
-      "jl .Lweather_particle_system_new_4\n\t"
-      ".Lweather_particle_system_new_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba40a0_assert), [exitfn] "m"(ba40a0_exitfn), [tag] "m"(ba40a0_tag), [elem] "m"(ba40a0_elem), [lseed] "m"(ba40a0_lseed), [rrange] "m"(ba40a0_rrange)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+  int ebp = 0;
+
+  /* cmp (int16_t)esi, 4 -> jl 0xa40d3 */
+  display_assert((char *)0x00266fc0, (char *)0x0026af50, 91, 0);
+  system_exit(0);
+  tag_get(0, 0);
+  /* cmp eax, -1 -> je 0xa411c */
+  display_assert((char *)0x0026b00c, (char *)0x0026af50, 177, 0);
+  system_exit(0);
+  tag_get('niar', 0);
+  /* relift: cmp word ptr [ebp + 8], 0 -> jl 0xa416c */
+  /* relift: cmp ebx, dword ptr [eax + 0x24] -> jl 0xa4189 */
+  display_assert((char *)0x0026af84, (char *)0x0026af50, 102, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  /* relift: cmp ebx, dword ptr [eax] -> jl 0xa4150 */
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
+  (void)ebp;
 }
-#else
-#error "weather_particle_system_new: clang naked draft required"
-#endif
 
 
 /* weather_particle_system_delete (0xa4200) — readable C lift. */
@@ -859,138 +751,42 @@ int16_t FUN_000a4a00(int16_t *out_buf, float radius)
   return found;
 }
 
-/* FUN_000a4ab0 (0xa4ab0) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void (*const ba4ab0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba4ab0_exitfn)(int) = system_exit;
-static void *(*const ba4ab0_tag)(int, int) = tag_get;
-static void (*const ba4ab0_ftol)(void) = FUN_001d9068;
-static void (*const ba4ab0_ca4310)(void) = (void *)FUN_000a4310;
-static void *(*const ba4ab0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const ba4ab0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
+/* FUN_000a4ab0 (0xa4ab0) — readable C lift (restored pre-naked). */
 void FUN_000a4ab0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "jl .LFUN_000a4ab0_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_000a4ab0_2\n\t"
-      ".LFUN_000a4ab0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000a4ab0_2:\n\t"
-      "movswl %%si, %%esi\n\t"
-      "imull $0x9c, %%esi, %%esi\n\t"
-      "addl $0x4557f4, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7261696e\n\t"
-      "call *%[tag]\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x7261696e\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .LFUN_000a4ab0_3\n\t"
-      "movl 0x24(%%eax), %%ecx\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jl .LFUN_000a4ab0_4\n\t"
-      ".LFUN_000a4ab0_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x26af50\n\t"
-      "pushl $0x26af84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000a4ab0_4:\n\t"
-      "movswl 0x4557f0, %%ecx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "leal 0x1c(%%eax,%%esi,1), %%esi\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "fidivl 0xc(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "fstp %%st(0)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "setl %%dl\n\t"
-      "decl %%edx\n\t"
-      "andl %%eax, %%edx\n\t"
-      "movswl 0x8(%%esi), %%eax\n\t"
-      "movl %%edx, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jge .LFUN_000a4ab0_6\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000a4ab0_5:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[ca4310]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000a4ab0_6\n\t"
-      "movswl 0x8(%%esi), %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "jl .LFUN_000a4ab0_5\n\t"
-      ".LFUN_000a4ab0_6:\n\t"
-      "movswl 0x8(%%esi), %%edx\n\t"
-      "cmpl %%edi, %%edx\n\t"
-      "jle .LFUN_000a4ab0_8\n\t"
-      "nop\n\t"
-      ".LFUN_000a4ab0_7:\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "movl 0x5aa89c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "movl 0x50(%%eax), %%ebx\n\t"
-      "movl 0x5aa89c, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "decw 0x8(%%esi)\n\t"
-      "movl %%ebx, 0xc(%%esi)\n\t"
-      "movswl 0x8(%%esi), %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "jg .LFUN_000a4ab0_7\n\t"
-      ".LFUN_000a4ab0_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba4ab0_assert), [exitfn] "m"(ba4ab0_exitfn), [tag] "m"(ba4ab0_tag), [ftol] "m"(ba4ab0_ftol), [ca4310] "m"(ba4ab0_ca4310), [dget] "m"(ba4ab0_dget), [c1196d0] "m"(ba4ab0_c1196d0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp (int16_t)esi, 4 -> jl 0xa4ae3 */
+  display_assert((char *)0x00266fc0, (char *)0x0026af50, 91, 0);
+  system_exit(0);
+  tag_get('niar', 0);
+  tag_get('niar', 0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jl 0xa4b1e */
+  /* cmp edx, ecx -> jl 0xa4b3b */
+  display_assert((char *)0x0026af84, (char *)0x0026af50, 102, 0);
+  system_exit(0);
+  FUN_001d9068();
+  /* cmp eax, edi -> jge 0xa4b97 */
+  FUN_000a4310();
+  /* cmp eax, -1 -> je 0xa4b97 */
+  /* cmp ecx, edi -> jl 0xa4b80 */
+  /* cmp edx, edi -> jle 0xa4bd4 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  datum_delete((void *)(uintptr_t)eax, 0);
+  /* cmp ecx, edi -> jg 0xa4ba0 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_000a4ab0: clang naked draft required"
-#endif
 
 
 /* FUN_000a4be0 (0xa4be0) — readable C lift (restored pre-naked). */

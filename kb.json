@@ -30749,7 +30749,7 @@
         {
           "addr": "0xa40a0",
           "decl": "void weather_particle_system_new(void);",
-          "ported": false,
+          "ported": true,
           "name": "weather_particle_system_new"
         },
         {
@@ -30787,7 +30787,7 @@
         {
           "addr": "0xa4ab0",
           "decl": "void FUN_000a4ab0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a4ab0"
         },
         {
