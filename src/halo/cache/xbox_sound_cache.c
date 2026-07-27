@@ -1,40 +1,14 @@
 /* --- xbox_sound_cache.obj batch drafts (2026-07-26) --- */
 
-/* xbox_sound_cache_idle (0x1bded0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static void (*const b1bded0_c11d8d0)(void *cache) = lruv_idle;
-static void (*const b1bded0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bded0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* xbox_sound_cache_idle (0x1bded0) — readable C lift. */
 void xbox_sound_cache_idle(void)
 {
-  __asm__ volatile(
-      "movl 0x4e9370, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11d8d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0, 0x5054ea\n\t"
-      "je .Lxbox_sound_cache_idle_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x94\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b9260\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lxbox_sound_cache_idle_1:\n\t"
-      "ret\n\t"
-      :
-      : [c11d8d0] "m"(b1bded0_c11d8d0), [assert] "m"(b1bded0_assert), [exitfn] "m"(b1bded0_exitfn)
-      : "memory");
+  lruv_idle(*(void **)0x4e9370);
+  if (*(int16_t *)0x5054ea != 0) {
+    display_assert((const char *)0x2b9260, (const char *)0x2b9288, 0x94, 1);
+    system_exit(-1);
+  }
 }
-#else
-#error "xbox_sound_cache_idle: clang naked draft required"
-#endif
-
-
 /* sound_cache_sound_new (0x1bdf10) — XBE naked draft (batch 282). */
 #if defined(__clang__)
 static void (*const b1bdf10_assert)(const char *, const char *, int, bool) = display_assert;

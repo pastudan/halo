@@ -466,76 +466,24 @@ void texture_cache_bitmap_new(int tag_index __attribute__((unused)), void *bitma
 #endif
 
 
-/* texture_cache_bitmap_delete (0x1be9f0) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static void (*const b1be9f0_c11d8f0)(void *cache, int block_index) = lruv_block_delete;
-
-__attribute__((naked, noinline))
-void texture_cache_bitmap_delete(void)
+/* texture_cache_bitmap_delete (0x1be9f0) — readable C lift. */
+void texture_cache_bitmap_delete(void *entry)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movb 0xe(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jns .Ltexture_cache_bitmap_delete_2\n\t"
-      "movl 0x24(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Ltexture_cache_bitmap_delete_1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4ea980, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11d8f0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Ltexture_cache_bitmap_delete_1:\n\t"
-      "andb $0x7f, 0xe(%%esi)\n\t"
-      "movl $0xffffffff, 0x24(%%esi)\n\t"
-      "movl $0, 0x2c(%%esi)\n\t"
-      ".Ltexture_cache_bitmap_delete_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11d8f0] "m"(b1be9f0_c11d8f0)
-      : "memory");
+  if ((*(unsigned char *)((char *)entry + 0xe) & 0x80) == 0)
+    return;
+  if (*(int *)((char *)entry + 0x24) != -1)
+    lruv_block_delete(*(void **)0x4ea980, *(int *)((char *)entry + 0x24));
+  *(unsigned char *)((char *)entry + 0xe) &= 0x7f;
+  *(int *)((char *)entry + 0x24) = -1;
+  *(int *)((char *)entry + 0x2c) = 0;
 }
-#else
-#error "texture_cache_bitmap_delete: clang naked draft required"
-#endif
-
-
-/* FUN_001beb70 (0x1beb70) — XBE naked draft (batch 289). */
-#if defined(__clang__)
-static void *(*const b1beb70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static const char * (*const b1beb70_c1ba1f0)(int tag_index) = tag_get_name;
-
-__attribute__((naked, noinline))
-void FUN_001beb70(void)
+/* FUN_001beb70 (0x1beb70) — readable C lift. */
+const char *FUN_001beb70(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4ea978, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl 0x20(%%edx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1beb70_dget), [c1ba1f0] "m"(b1beb70_c1ba1f0)
-      : "memory");
+  void *entry;
+  entry = datum_get(*(data_t **)0x4ea978, handle);
+  return tag_get_name(*(int *)(*(char **)((char *)entry + 8) + 0x20));
 }
-#else
-#error "FUN_001beb70: clang naked draft required"
-#endif
 
 
 /* FUN_001becc0 (0x1becc0) — XBE naked draft (batch 271). */
@@ -581,46 +529,17 @@ void texture_cache_flush(void)
   lruv_cache_dispose_all(*(void **)0x4ea980);
 }
 
-/* FUN_001bed50 (0x1bed50) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static void *(*const b1bed50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int __stdcall (*const b1bed50_c1ed980)(void *resource) = D3DResource_IsBusy;
-
-__attribute__((naked, noinline))
-void FUN_001bed50(void)
+/* FUN_001bed50 (0x1bed50) — readable C lift. */
+int FUN_001bed50(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4ea978, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_001bed50_1\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed980]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001bed50_1\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001bed50_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1bed50_dget), [c1ed980] "m"(b1bed50_c1ed980)
-      : "memory");
+  void *entry;
+  entry = datum_get(*(data_t **)0x4ea978, handle);
+  if (*(unsigned char *)((char *)entry + 4) != 0) {
+    if (D3DResource_IsBusy((char *)entry + 0xc) == 0)
+      return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_001bed50: clang naked draft required"
-#endif
-
-
 /* FUN_001bed90 (0x1bed90) — XBE naked draft (batch 261). */
 #if defined(__clang__)
 static void *(*const b1bed90_dget)(void *, int) = (void *(*)(void *, int))datum_get;

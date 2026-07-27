@@ -25416,8 +25416,9 @@
         },
         {
           "addr": "0x1bac70",
-          "decl": "void FUN_001bac70(void);",
-          "ported": false
+          "decl": "void FUN_001bac70(int index@<esi>);",
+          "ported": true,
+          "name": "FUN_001bac70"
         },
         {
           "addr": "0x1baca0",
@@ -30270,13 +30271,15 @@
         },
         {
           "addr": "0x1be9f0",
-          "decl": "void texture_cache_bitmap_delete(void);",
-          "ported": false
+          "decl": "void texture_cache_bitmap_delete(void *entry);",
+          "ported": true,
+          "name": "texture_cache_bitmap_delete"
         },
         {
           "addr": "0x1beb70",
-          "decl": "void FUN_001beb70(void);",
-          "ported": false
+          "decl": "const char *FUN_001beb70(int handle);",
+          "ported": true,
+          "name": "FUN_001beb70"
         },
         {
           "addr": "0x1becc0",
@@ -30290,8 +30293,9 @@
         },
         {
           "addr": "0x1bed50",
-          "decl": "void FUN_001bed50(void);",
-          "ported": false
+          "decl": "int FUN_001bed50(int handle);",
+          "ported": true,
+          "name": "FUN_001bed50"
         },
         {
           "addr": "0x1bed90",
@@ -32210,8 +32214,9 @@
         },
         {
           "addr": "0x11dd60",
-          "decl": "void FUN_0011dd60(void);",
-          "ported": true
+          "decl": "void *lruv_new(int name, int page_count, int page_size_bits, int maximum_block_count, void (*delete_cb)(int), int (*query_cb)(int));",
+          "ported": true,
+          "name": "lruv_new"
         },
         {
           "addr": "0x11ddc0",
@@ -39845,7 +39850,8 @@
         {
           "addr": "0x1bded0",
           "decl": "void xbox_sound_cache_idle(void);",
-          "ported": false
+          "ported": true,
+          "name": "xbox_sound_cache_idle"
         },
         {
           "addr": "0x1bdf10",

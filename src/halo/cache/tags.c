@@ -926,38 +926,13 @@ void FUN_001bac00(unsigned char bit)
   *(unsigned int *)(base + 0x904) |= (1u << bit);
 }
 
-/* FUN_001bac70 (0x1bac70) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static bool __stdcall (*const b1bac70_c1d33e6)(void *counter) = QueryPerformanceCounter;
-
-__attribute__((naked, noinline))
-void FUN_001bac70(void)
+/* FUN_001bac70 (0x1bac70) — readable C lift. */
+void FUN_001bac70(int index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d33e6]\n\t"
-      "movl 0x4e5638(,%%esi,8), %%edx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x4e5610(,%%esi,4), %%eax\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movl %%eax, 0x4e5610(,%%esi,4)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d33e6] "m"(b1bac70_c1d33e6)
-      : "memory");
+  unsigned int counter[2];
+  QueryPerformanceCounter(counter);
+  *(int *)(0x4e5610 + index * 4) += (int)counter[0] - *(int *)(0x4e5638 + index * 8);
 }
-#else
-#error "FUN_001bac70: clang naked draft required"
-#endif
-
-
 /* FUN_001baca0 (0x1baca0) — XBE naked draft (batch 246). */
 #if defined(__clang__)
 static void (*const b1baca0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
