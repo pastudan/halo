@@ -6326,13 +6326,13 @@
         {
           "addr": "0x11f460",
           "decl": "void dispose_handle(void *pool, void *block_hdr);",
-          "ported": false,
+          "ported": true,
           "name": "dispose_handle"
         },
         {
           "addr": "0x11f4e0",
           "decl": "void lock_handle(void *pool, void **handle_slot);",
-          "ported": false,
+          "ported": true,
           "name": "lock_handle"
         },
         {
@@ -17333,7 +17333,7 @@
         {
           "addr": "0x898b0",
           "decl": "void *FUN_000898b0(int object_index@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000898b0"
         },
         {
