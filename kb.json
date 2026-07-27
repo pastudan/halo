@@ -6337,8 +6337,9 @@
         },
         {
           "addr": "0x11f550",
-          "decl": "void unlock_handle(void);",
-          "ported": false
+          "decl": "void unlock_handle(void *pool, void *user_ptr);",
+          "ported": true,
+          "name": "unlock_handle"
         },
         {
           "addr": "0x11f6d0",
@@ -6353,8 +6354,9 @@
         },
         {
           "addr": "0x11f880",
-          "decl": "void pool_new_handle_clear(void);",
-          "ported": false
+          "decl": "void *pool_new_handle_clear(void *pool, int alloc_size, const char *file, unsigned int line);",
+          "ported": true,
+          "name": "pool_new_handle_clear"
         },
         {
           "addr": "0x11f930",
