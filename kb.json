@@ -19841,7 +19841,8 @@
         {
           "addr": "0x154540",
           "decl": "void FUN_00154540(float *accum, float *coeffs, float scale);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00154540"
         },
         {
           "addr": "0x154630",
@@ -38672,7 +38673,8 @@
         {
           "addr": "0x14bdb0",
           "decl": "char collision_sphere_test_vector(void *sphere, float *origin, float *direction, float *out_t, float *out_plane);",
-          "ported": false
+          "ported": true,
+          "name": "collision_sphere_test_vector"
         },
         {
           "addr": "0x14bf30",
@@ -40651,7 +40653,8 @@
         {
           "addr": "0x1493b0",
           "decl": "int collision_bsp_test_sphere(int bsp, short flags, int breakable_surfaces, int origin, float radius, int *results);",
-          "ported": false
+          "ported": true,
+          "name": "collision_bsp_test_sphere"
         },
         {
           "addr": "0x149480",

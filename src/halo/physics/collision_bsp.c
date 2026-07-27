@@ -3132,89 +3132,40 @@ void bsp3d_test_sphere_recursive(void *state __attribute__((unused)), int node_i
 #endif
 
 
-/* collision_bsp_test_sphere (0x1493b0) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-static void (*const b1493b0_c14d9d0)(short collision_function) = collision_log_add_call;
-static void (*const b1493b0_c14d940)(void *counter) = collision_log_query_counter;
-static void (*const b1493b0_c148b90)(void *state, int node_index) = bsp3d_test_sphere_recursive;
-static void (*const b1493b0_c14d950)(short collision_function, unsigned int start_lo, int start_hi) = collision_log_add_time;
-
-__attribute__((naked, noinline))
-int collision_bsp_test_sphere(int bsp __attribute__((unused)), short flags __attribute__((unused)), int breakable_surfaces __attribute__((unused)), int origin __attribute__((unused)), float radius __attribute__((unused)), int *results __attribute__((unused)))
+/* collision_bsp_test_sphere (0x1493b0) — readable C lift from XBE leaf.
+ * Thin wrapper: build sphere state, recurse from node 0, return any-hit. */
+int collision_bsp_test_sphere(int bsp, short flags, int breakable_surfaces,
+                              int origin, float radius, int *results)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x228, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x5064dc, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "sete %%al\n\t"
-      "addl $6, %%eax\n\t"
-      "movl %%eax, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c14d9d0]\n\t"
-      "pushl $0x46f098\n\t"
-      "call *%[c14d940]\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movl %%edx, -0x220(%%ebp)\n\t"
-      "movl %%esi, -0x228(%%ebp)\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "movw %%cx, -0x224(%%ebp)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "leal -0x228(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x21c(%%ebp)\n\t"
-      "movl %%ecx, -0x218(%%ebp)\n\t"
-      "movl %%esi, -0x214(%%ebp)\n\t"
-      "movl %%ebx, -0x210(%%ebp)\n\t"
-      "movl %%ebx, 0xc0c(%%esi)\n\t"
-      "movl %%ebx, (%%esi)\n\t"
-      "movl %%ebx, 0x404(%%esi)\n\t"
-      "movl %%ebx, 0x808(%%esi)\n\t"
-      "call *%[c148b90]\n\t"
-      "movl 0x46f09c, %%eax\n\t"
-      "movl 0x46f098, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c14d950]\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jg .Lcollision_bsp_test_sphere_1\n\t"
-      "cmpl %%ebx, 0x404(%%esi)\n\t"
-      "jg .Lcollision_bsp_test_sphere_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_bsp_test_sphere_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c14d9d0] "m"(b1493b0_c14d9d0), [c14d940] "m"(b1493b0_c14d940), [c148b90] "m"(b1493b0_c148b90), [c14d950] "m"(b1493b0_c14d950)
-      : "memory");
+  int log_fn;
+  collision_bsp_sphere_state state;
+
+  log_fn = 6 + (bsp == *(int *)0x5064dc ? 1 : 0);
+  collision_log_add_call((short)log_fn);
+  collision_log_query_counter((void *)0x46f098);
+
+  state.bsp = bsp;
+  state.flags = (unsigned short)flags;
+  state.pad0 = 0;
+  state.breakable_surfaces = breakable_surfaces;
+  state.origin = (float *)origin;
+  state.radius = radius;
+  state.results = results;
+  state.plane_stack_count = 0;
+  results[0xc0c / 4] = 0;
+  results[0] = 0;
+  results[0x404 / 4] = 0;
+  results[0x808 / 4] = 0;
+
+  bsp3d_test_sphere_recursive(&state, 0);
+  collision_log_add_time((short)log_fn, *(unsigned int *)0x46f098,
+                         *(int *)0x46f09c);
+
+  if (results[0] > 0 || results[0x404 / 4] > 0) {
+    return 1;
+  }
+  return 0;
 }
-#else
-#error "collision_bsp_test_sphere: clang naked draft required"
-#endif
 
 
 
@@ -4600,101 +4551,62 @@ char FUN_0014e7d0(uint32_t collision_flags __attribute__((unused)), float *point
 #endif
 
 
-/* FUN_0014e940 (0x14e940) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-static void *(*const b14e940_gbsp)(void) = global_collision_bsp_get;
-static char (*const b14e940_c148b20)(int bsp, short flags, int breakable_surfaces, int origin, int direction, float radius, float *result, float *normal_out) = collision_bsp_test_pill_new;
-
-__attribute__((naked, noinline))
-char FUN_0014e940(int unused __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), float radius __attribute__((unused)), int pad0 __attribute__((unused)), int pad1 __attribute__((unused)), void *result __attribute__((unused)))
+/* FUN_0014e940 (0x14e940) — readable C lift from XBE leaf.
+ * Pill test against global collision BSP; fills a collision-result blob. */
+char FUN_0014e940(int unused, float *origin, float *direction, float radius,
+                  int pad0, int pad1, void *result)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal 0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movw %%di, (%%esi)\n\t"
-      "movl %%edi, 0x4(%%esi)\n\t"
-      "movw %%di, 0x8(%%esi)\n\t"
-      "movl %%edi, 0xc(%%esi)\n\t"
-      "movw %%di, 0x10(%%esi)\n\t"
-      "movl $0x3f800000, 0x14(%%esi)\n\t"
-      "call *%[gbsp]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c148b20]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0014e940_1\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "leal 0x24(%%esi), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl %%ecx, 0x14(%%esi)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movw $2, (%%esi)\n\t"
-      "movl $0x7f7fffff, 0x30(%%esi)\n\t"
-      "movw %%di, 0x34(%%esi)\n\t"
-      "movl %%edi, 0x44(%%esi)\n\t"
-      "movl %%edi, 0x48(%%esi)\n\t"
-      "movb $0, 0x4c(%%esi)\n\t"
-      "movb $0, 0x4d(%%esi)\n\t"
-      "movw %%di, 0x4e(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "jmp .LFUN_0014e940_2\n\t"
-      ".LFUN_0014e940_1:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      ".LFUN_0014e940_2:\n\t"
-      "flds 0x14(%%esi)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "fld %%st(0)\n\t"
-      "popl %%edi\n\t"
-      "fmuls (%%ebx)\n\t"
-      "fadds (%%ecx)\n\t"
-      "fstps 0x18(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x4(%%ebx)\n\t"
-      "fadds 0x4(%%ecx)\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      "fmuls 0x8(%%ebx)\n\t"
-      "fadds 0x8(%%ecx)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "fstps 0x20(%%esi)\n\t"
-      "movl %%ecx, 0x24(%%esi)\n\t"
-      "movl %%ecx, 0x28(%%esi)\n\t"
-      "movl %%ecx, 0x2c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gbsp] "m"(b14e940_gbsp), [c148b20] "m"(b14e940_c148b20)
-      : "memory");
-}
-#else
-#error "FUN_0014e940: clang naked draft required"
-#endif
+  float t;
+  float normal[3];
+  char hit;
+  unsigned char *res;
+  float *res_f;
+  void *bsp;
+  unsigned int flt_max_bits;
+  (void)unused;
+  (void)pad0;
+  (void)pad1;
 
+  res = (unsigned char *)result;
+  res_f = (float *)result;
+
+  *(short *)(res + 0x00) = (short)-1;
+  *(int *)(res + 0x04) = -1;
+  *(short *)(res + 0x08) = (short)-1;
+  *(int *)(res + 0x0c) = -1;
+  *(short *)(res + 0x10) = (short)-1;
+  res_f[5] = 1.0f; /* +0x14 */
+  hit = 0;
+  t = 0.0f;
+
+  bsp = global_collision_bsp_get();
+  if (collision_bsp_test_pill_new((int)bsp, 0, 0, (int)origin, (int)direction,
+                                  radius, &t, normal)) {
+    res_f[5] = t;
+    res_f[9] = normal[0];
+    res_f[10] = normal[1];
+    res_f[11] = normal[2];
+    *(short *)(res + 0x00) = 2;
+    flt_max_bits = 0x7f7fffffu;
+    res_f[12] = *(float *)&flt_max_bits; /* +0x30 */
+    *(short *)(res + 0x34) = (short)-1;
+    *(int *)(res + 0x44) = -1;
+    *(int *)(res + 0x48) = -1;
+    res[0x4c] = 0;
+    res[0x4d] = 0;
+    *(short *)(res + 0x4e) = (short)-1;
+    hit = 1;
+  }
+
+  t = res_f[5];
+  res_f[6] = origin[0] + t * direction[0];
+  res_f[7] = origin[1] + t * direction[1];
+  res_f[8] = origin[2] + t * direction[2];
+  res_f[9] = 0.0f;
+  res_f[10] = 0.0f;
+  res_f[11] = 0.0f;
+  return hit;
+}
 
 
 /* FUN_0014e640 (0x14e640) — XBE naked draft (batch 236). */

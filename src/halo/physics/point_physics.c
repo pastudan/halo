@@ -278,133 +278,45 @@ void FUN_00154270(int object_handle __attribute__((unused)), void *buffer_a __at
 #endif
 
 
-/* FUN_00154540 (0x154540) — XBE naked draft (batch 223). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00154540(float *accum __attribute__((unused)), float *coeffs __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_00154540 (0x154540) — readable C lift from XBE leaf.
+ * Asymmetric 1D rate integrate/dampen using coeffs[0..3] and signed scale. */
+void FUN_00154540(float *accum, float *coeffs, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fabs\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0xc(%%edx)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00154540_4\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fchs\n\t"
-      "fcomps (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00154540_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds (%%ecx)\n\t"
-      "jmp .LFUN_00154540_3\n\t"
-      ".LFUN_00154540_1:\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00154540_2\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fadds (%%ecx)\n\t"
-      "jmp .LFUN_00154540_3\n\t"
-      ".LFUN_00154540_2:\n\t"
-      "flds (%%ecx)\n\t"
-      "fdivs 0xc(%%ebp)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".LFUN_00154540_3:\n\t"
-      "fstps (%%ecx)\n\t"
-      "fmuls (%%edx)\n\t"
-      "fcoms (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00154540_8\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00154540_4:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00154540_9\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "flds (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00154540_5\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "jmp .LFUN_00154540_7\n\t"
-      ".LFUN_00154540_5:\n\t"
-      "fcomps 0x2533c0\n\t"
-      "flds (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00154540_6\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00154540_7\n\t"
-      ".LFUN_00154540_6:\n\t"
-      "fdivs 0xc(%%ebp)\n\t"
-      "fsubs 0x2533c8\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".LFUN_00154540_7:\n\t"
-      "fstps (%%ecx)\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      "fchs\n\t"
-      "fcoms (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00154540_8\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%ecx)\n\t"
-      ".LFUN_00154540_8:\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00154540_9:\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      :
-      : "memory");
+  float abs_scale;
+  float a;
+  float b;
+  float lim;
+
+  abs_scale = scale < 0.0f ? -scale : scale;
+  a = abs_scale * coeffs[2];
+  b = abs_scale * coeffs[3];
+
+  if (scale > 0.0f) {
+    if (*accum <= -b) {
+      *accum = *accum + b;
+    } else if (*accum >= 0.0f) {
+      *accum = *accum + a;
+    } else {
+      *accum = (*accum / b + 1.0f) * a;
+    }
+    lim = abs_scale * coeffs[0];
+    if (lim < *accum) {
+      *accum = lim;
+    }
+  } else if (scale < 0.0f) {
+    if (*accum >= b) {
+      *accum = *accum - b;
+    } else if (*accum <= 0.0f) {
+      *accum = *accum - a;
+    } else {
+      *accum = (*accum / b - 1.0f) * a;
+    }
+    lim = -(abs_scale * coeffs[1]);
+    if (lim > *accum) {
+      *accum = lim;
+    }
+  }
 }
-#else
-#error "FUN_00154540: clang naked draft required"
-#endif
 
 
 /* FUN_00154630 (0x154630) — readable C lift from XBE leaf.

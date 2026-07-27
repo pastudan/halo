@@ -836,168 +836,63 @@ void render_debug_collision_cylinder(void *cylinder, void *color)
 }
 
 
-/* collision_sphere_test_vector (0x14bdb0) — XBE naked draft (batch 225). */
-#if defined(__clang__)
-static float (*const b14bdb0_norm)(float *) = normalize3d;
-
-__attribute__((naked, noinline))
-char collision_sphere_test_vector(void *sphere __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), float *out_t __attribute__((unused)), float *out_plane __attribute__((unused)))
+/* collision_sphere_test_vector (0x14bdb0) — readable C lift from XBE leaf.
+ * Ray vs sphere feature; writes hit t and contact plane. */
+char collision_sphere_test_vector(void *sphere, float *origin, float *direction,
+                                  float *out_t, float *out_plane)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "fsubs (%%eax)\n\t"
-      "xorb %%dl, %%dl\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0x10(%%edi)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x14(%%edi)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x18(%%edi)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .Lcollision_sphere_test_vector_1\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl $0, (%%eax)\n\t"
-      "jmp .Lcollision_sphere_test_vector_2\n\t"
-      ".Lcollision_sphere_test_vector_1:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_sphere_test_vector_5\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lcollision_sphere_test_vector_4\n\t"
-      "fsqrt\n\t"
-      "fsubrs 0x8(%%ebp)\n\t"
-      "fcoms 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .Lcollision_sphere_test_vector_4\n\t"
-      "fdivs 0xc(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "fstps (%%eax)\n\t"
-      ".Lcollision_sphere_test_vector_2:\n\t"
-      "flds (%%eax)\n\t"
-      "pushl %%esi\n\t"
-      "fld %%st(0)\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "fmuls (%%ecx)\n\t"
-      "pushl %%esi\n\t"
-      "fld %%st(1)\n\t"
-      "movb $1, %%bl\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "fsubs -0x10(%%ebp)\n\t"
-      "fstps (%%esi)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      "call *%[norm]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lcollision_sphere_test_vector_3\n\t"
-      "movl $0, (%%esi)\n\t"
-      "movl $0, 0x4(%%esi)\n\t"
-      "movl $0x3f800000, 0x8(%%esi)\n\t"
-      ".Lcollision_sphere_test_vector_3:\n\t"
-      "flds 0x14(%%edi)\n\t"
-      "movb %%bl, %%al\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "flds 0x10(%%edi)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds 0x18(%%edi)\n\t"
-      "fstps 0xc(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_sphere_test_vector_4:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lcollision_sphere_test_vector_5:\n\t"
-      "popl %%edi\n\t"
-      "movb %%dl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [norm] "m"(b14bdb0_norm)
-      : "memory");
+  float *s;
+  float dx, dy, dz;
+  float radius;
+  float c;
+  float b;
+  float a;
+  float disc;
+  float t;
+  float mag;
+
+  s = (float *)sphere;
+  dx = s[3] - origin[0];
+  dy = s[4] - origin[1];
+  dz = s[5] - origin[2];
+  radius = s[6];
+  c = (dx * dx + dy * dy + dz * dz) - (radius * radius);
+
+  if (!(c > 0.0f)) {
+    *out_t = 0.0f;
+  } else {
+    b = dx * direction[0] + dy * direction[1] + dz * direction[2];
+    if (!(b > 0.0f)) {
+      return 0;
+    }
+    a = direction[0] * direction[0] + direction[1] * direction[1] +
+        direction[2] * direction[2];
+    disc = (b * b) - (a * c);
+    if (disc < 0.0f) {
+      return 0;
+    }
+    disc = sqrtf(disc);
+    t = b - disc;
+    if (!(t <= a)) {
+      return 0;
+    }
+    *out_t = t / a;
+  }
+
+  t = *out_t;
+  out_plane[0] = t * direction[0] - dx;
+  out_plane[1] = t * direction[1] - dy;
+  out_plane[2] = t * direction[2] - dz;
+  mag = normalize3d(out_plane);
+  if (mag == 0.0f) {
+    out_plane[0] = 0.0f;
+    out_plane[1] = 0.0f;
+    out_plane[2] = 1.0f;
+  }
+  out_plane[3] = s[3] * out_plane[0] + s[4] * out_plane[1] + s[5] * out_plane[2] +
+                 s[6];
+  return 1;
 }
-#else
-#error "collision_sphere_test_vector: clang naked draft required"
-#endif
 
 
 /* collision_cylinder_test_vector (0x14bf30) — XBE naked draft (batch 223). */
