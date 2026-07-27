@@ -14279,41 +14279,19 @@ char FUN_0017c2f0(void *shader __attribute__((unused)), void *state __attribute_
 #endif
 
 
-/* rasterizer_window_set_fog (0x17c790) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-static void * (*const b17c790_c1bfbf0)(const char *name, const char *a2, int size) = (void *)game_state_malloc;
-static void (*const b17c790_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17c790_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* rasterizer_window_set_fog (0x17c790) — readable C lift. */
 void rasterizer_window_set_fog(void)
 {
-  __asm__ volatile(
-      "pushl $0x10\n\t"
-      "pushl $0\n\t"
-      "pushl $0x2af214\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x47e4d0\n\t"
-      "jne .Lrasterizer_window_set_fog_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x121\n\t"
-      "pushl $0x2af1ec\n\t"
-      "pushl $0x2af1bc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_window_set_fog_1:\n\t"
-      ".byte 0xe9, 0x41, 0xa8, 0xfd, 0xff\n\t"
-      :
-      : [c1bfbf0] "m"(b17c790_c1bfbf0), [assert] "m"(b17c790_assert), [exitfn] "m"(b17c790_exitfn)
-      : "memory");
+  void *p;
+
+  p = game_state_malloc((const char *)0x2af214, 0, 0x10);
+  *(void **)0x47e4d0 = p;
+  if (!p) {
+    display_assert((const char *)0x2af1bc, (const char *)0x2af1ec, 0x121, 1);
+    system_exit(-1);
+  }
+  FUN_00157010();
 }
-#else
-#error "rasterizer_window_set_fog: clang naked draft required"
-#endif
 
 
 /* FUN_0017C7D0 (0x17c7d0) — readable C lift (jmp thunk). */
@@ -14389,11 +14367,10 @@ void *rasterizer_widget_begin(int handle)
 
 
 
-/* rasterizer_widget_set_texture (0x17c990) — XBE naked draft (batch 398). */
 /* rasterizer_widget_set_texture — readable C lift (jmp thunk). */
 void rasterizer_widget_set_texture(int handle)
 {
-  FUN_0015eb90();
+  FUN_0015eb90(handle);
 }
 
 /* rasterizer_widget_set_tint_factor (0x17c9a0) — readable C lift (nop/ret thunk). */

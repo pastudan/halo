@@ -21143,7 +21143,7 @@
         {
           "addr": "0x17c790",
           "decl": "void rasterizer_window_set_fog(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c7d0",
