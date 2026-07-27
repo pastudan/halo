@@ -25884,7 +25884,7 @@
         {
           "addr": "0x1ce550",
           "decl": "char sound_refresh_looping(int sound_tag_index, void *source, void *track, short track_type);",
-          "ported": false,
+          "ported": true,
           "name": "sound_refresh_looping"
         },
         {

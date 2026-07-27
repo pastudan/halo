@@ -4777,431 +4777,77 @@ short FUN_001cd8b0(int sound_handle __attribute__((unused)))
 #endif
 
 
-/* sound_refresh_looping (0x1ce550) — XBE naked draft (batch 257). */
-#if defined(__clang__)
-static bool (*const b1ce550_c21fb0)(float *v) = valid_real_normal3d;
-static void (*const b1ce550_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1ce550_exitfn)(int) = system_exit;
-static void (*const b1ce550_c1cc5b0)(int sound_tag_index, void *source) = FUN_001cc5b0;
-static int (*const b1ce550_c1cc440)(int source) = (void *)FUN_001cc440;
-static int (*const b1ce550_c1cd190)(int sound_tag_index, void *track, void *source) = FUN_001cd190;
-static void *(*const b1ce550_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1ce550_tag)(int, int) = tag_get;
-static void (*const b1ce550_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-static void (*const b1ce550_ca2d30)(void) = (void *)player_effect_continuous_refresh;
-static void *(*const b1ce550_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1ce550_c1cda50)(int sound_tag_handle, int looping_handle, int track_index, int type) = sound_create_looping_entry;
-static void (*const b1ce550_c1cc8f0)(short mode, float seconds, int fade_in_sound_index, int fade_out_sound_index) = sound_start_fade;
-static void (*const b1ce550_c1cc2f0)(int sound_handle, int tag_index) = FUN_001cc2f0;
-static int16_t (*const b1ce550_c1cd5a0)(void *source, float priority) = sound_allocate_channel;
+/* sound_refresh_looping (0x1ce550) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-char sound_refresh_looping(int sound_tag_index __attribute__((unused)), void *source __attribute__((unused)), void *track __attribute__((unused)), short track_type __attribute__((unused)))
+
+char sound_refresh_looping(int sound_tag_index, void *source, void *track,
+                           short track_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "cmpw $2, 0x14(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "sete -0x1(%%ebp)\n\t"
-      "cmpw $0, (%%ebx)\n\t"
-      "pushl %%edi\n\t"
-      "je .Lsound_refresh_looping_1\n\t"
-      "leal 0x18(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c21fb0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsound_refresh_looping_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f4\n\t"
-      "pushl $0x2c12cc\n\t"
-      "pushl $0x2c17c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_refresh_looping_1:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1cc5b0]\n\t"
-      "movb 0x4eaf40, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_refresh_looping_30\n\t"
-      "movb 0x4eaf41, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_refresh_looping_30\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "call *%[c1cc440]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movb $1, %%cl\n\t"
-      "jne .Lsound_refresh_looping_2\n\t"
-      "cmpw $2, 0x14(%%ebp)\n\t"
-      "je .Lsound_refresh_looping_29\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1cd190]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "je .Lsound_refresh_looping_28\n\t"
-      ".Lsound_refresh_looping_2:\n\t"
-      "movl 0x4fdba0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x6c736e64\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl 0x4(%%ebx), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .Lsound_refresh_looping_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x30e\n\t"
-      "pushl $0x2c12cc\n\t"
-      "pushl $0x2c1860\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_refresh_looping_3:\n\t"
-      "cmpw $2, 0x14(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "leal 0xc(%%ebx), %%edi\n\t"
-      "movl $0x10, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movb 0x4eaf54, %%dl\n\t"
-      "movb %%dl, 0x4c(%%ebx)\n\t"
-      "je .Lsound_refresh_looping_4\n\t"
-      "movb 0x4e(%%ebx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_refresh_looping_5\n\t"
-      ".Lsound_refresh_looping_4:\n\t"
-      "cmpw $0, 0x50(%%ebx)\n\t"
-      "jne .Lsound_refresh_looping_5\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl 0x4fdba0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_refresh_looping_5:\n\t"
-      "movl -0x14(%%ebp), %%esi\n\t"
-      "movl 0x38(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_refresh_looping_6\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "addl $0xc, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca2d30]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lsound_refresh_looping_6:\n\t"
-      "movl 0x3c(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "leal 0x3c(%%esi), %%eax\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "jle .Lsound_refresh_looping_26\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "jmp .Lsound_refresh_looping_8\n\t"
-      ".Lsound_refresh_looping_7:\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      ".Lsound_refresh_looping_8:\n\t"
-      "pushl $0xa0\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_refresh_looping_9\n\t"
-      "movl $0xffffffff, 0xd4(%%ebx,%%esi,4)\n\t"
-      ".Lsound_refresh_looping_9:\n\t"
-      "movw 0x14(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lsound_refresh_looping_10\n\t"
-      "movl 0x3c(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_refresh_looping_11\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1cda50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, 0xd4(%%ebx,%%esi,4)\n\t"
-      "jmp .Lsound_refresh_looping_11\n\t"
-      ".Lsound_refresh_looping_10:\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lsound_refresh_looping_19\n\t"
-      ".Lsound_refresh_looping_11:\n\t"
-      "movb 0x4e(%%ebx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsound_refresh_looping_19\n\t"
-      "movb 0x18(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x4c(%%edi), %%esi\n\t"
-      "je .Lsound_refresh_looping_12\n\t"
-      "movl 0x8c(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_refresh_looping_12\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lsound_refresh_looping_12:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lsound_refresh_looping_25\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0xd4(%%ebx,%%eax,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_refresh_looping_15\n\t"
-      "cmpw $0, 0x14(%%ebp)\n\t"
-      "jne .Lsound_refresh_looping_13\n\t"
-      "testb $1, (%%edi)\n\t"
-      "jne .Lsound_refresh_looping_15\n\t"
-      ".Lsound_refresh_looping_13:\n\t"
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x18(%%ebp), %%dl\n\t"
-      "movb 0x4d(%%ebx), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb %%al, %%dl\n\t"
-      "je .Lsound_refresh_looping_14\n\t"
-      "testb $4, (%%edi)\n\t"
-      "je .Lsound_refresh_looping_14\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1cda50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lsound_refresh_looping_25\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0xd4(%%ebx,%%edx,4), %%eax\n\t"
-      "movl 0xc(%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "call *%[c1cc8f0]\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%esi, 0xd4(%%ebx,%%edx,4)\n\t"
-      "jmp .Lsound_refresh_looping_25\n\t"
-      ".Lsound_refresh_looping_14:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsound_refresh_looping_25\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0xd4(%%ebx,%%eax,4), %%eax\n\t"
-      "call *%[c1cc2f0]\n\t"
-      "jmp .Lsound_refresh_looping_25\n\t"
-      ".Lsound_refresh_looping_15:\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "pushl $2\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1cda50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lsound_refresh_looping_25\n\t"
-      "movl 0x4fdba4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x14(%%ebp)\n\t"
-      "jne .Lsound_refresh_looping_16\n\t"
-      "testb $1, (%%edi)\n\t"
-      "je .Lsound_refresh_looping_18\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "jmp .Lsound_refresh_looping_17\n\t"
-      ".Lsound_refresh_looping_16:\n\t"
-      "movl 0x2c127c, %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      ".Lsound_refresh_looping_17:\n\t"
-      "pushl $0\n\t"
-      "call *%[c1cc8f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lsound_refresh_looping_18:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl %%esi, 0xd4(%%ebx,%%eax,4)\n\t"
-      "jmp .Lsound_refresh_looping_25\n\t"
-      ".Lsound_refresh_looping_19:\n\t"
-      "cmpw $2, 0x52(%%ebx)\n\t"
-      "je .Lsound_refresh_looping_25\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lsound_refresh_looping_20\n\t"
-      "movl 0xd4(%%ebx,%%esi,4), %%ecx\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "call *%[c1cc8f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "jmp .Lsound_refresh_looping_25\n\t"
-      ".Lsound_refresh_looping_20:\n\t"
-      "movl 0xd4(%%ebx,%%esi,4), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lsound_refresh_looping_22\n\t"
-      "testb $2, (%%edi)\n\t"
-      "jne .Lsound_refresh_looping_21\n\t"
-      "cmpl $-1, 0x5c(%%edi)\n\t"
-      "jne .Lsound_refresh_looping_22\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "testb $2, (%%eax)\n\t"
-      "jne .Lsound_refresh_looping_22\n\t"
-      ".Lsound_refresh_looping_21:\n\t"
-      "movl 0xc(%%edi), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "call *%[c1cc8f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lsound_refresh_looping_22:\n\t"
-      "movl 0x5c(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_refresh_looping_25\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x18(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_refresh_looping_23\n\t"
-      "movl 0x9c(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_refresh_looping_23\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lsound_refresh_looping_23:\n\t"
-      "testb $2, (%%edi)\n\t"
-      "je .Lsound_refresh_looping_24\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1cda50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lsound_refresh_looping_25\n\t"
-      ".Lsound_refresh_looping_24:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0xd4(%%ebx,%%ecx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_refresh_looping_25\n\t"
-      "movl 0x4fdba4, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $-1, 0x8c(%%edi)\n\t"
-      "je .Lsound_refresh_looping_25\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0xd4(%%ebx,%%eax,4), %%eax\n\t"
-      "call *%[c1cc2f0]\n\t"
-      "movw $3, 0x2(%%edi)\n\t"
-      ".Lsound_refresh_looping_25:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "movl 0x3c(%%eax), %%edx\n\t"
-      "addl $0x3c, %%eax\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jl .Lsound_refresh_looping_7\n\t"
-      "movl -0x14(%%ebp), %%esi\n\t"
-      ".Lsound_refresh_looping_26:\n\t"
-      "cmpw $0, 0x50(%%ebx)\n\t"
-      "jne .Lsound_refresh_looping_27\n\t"
-      "movl 0x20(%%esi), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1cd5a0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lsound_refresh_looping_27\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl 0x4fdba0, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lsound_refresh_looping_27:\n\t"
-      "movb 0x18(%%ebp), %%cl\n\t"
-      "movw 0x14(%%ebp), %%dx\n\t"
-      "movb %%cl, 0x4d(%%ebx)\n\t"
-      "movw %%dx, 0x52(%%ebx)\n\t"
-      ".Lsound_refresh_looping_28:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_refresh_looping_29:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_refresh_looping_30:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c21fb0] "m"(b1ce550_c21fb0), [assert] "m"(b1ce550_assert), [exitfn] "m"(b1ce550_exitfn), [c1cc5b0] "m"(b1ce550_c1cc5b0), [c1cc440] "m"(b1ce550_c1cc440), [c1cd190] "m"(b1ce550_c1cd190), [dget] "m"(b1ce550_dget), [tag] "m"(b1ce550_tag), [c1196d0] "m"(b1ce550_c1196d0), [ca2d30] "m"(b1ce550_ca2d30), [elem] "m"(b1ce550_elem), [c1cda50] "m"(b1ce550_c1cda50), [c1cc8f0] "m"(b1ce550_c1cc8f0), [c1cc2f0] "m"(b1ce550_c1cc2f0), [c1cd5a0] "m"(b1ce550_c1cd5a0)
-      : "memory");
+  char created = 0;
+  char *src = (char *)source;
+  if (*(int16_t *)src != 0) {
+    if (!valid_real_normal3d((float *)(src + 0x18))) {
+      display_assert((char *)0x2c17c0, "c:\\halo\\SOURCE\\sound\\sound_manager.c",
+                     0x2f4, 1);
+      system_exit(-1);
+    }
+  }
+  FUN_001cc5b0(sound_tag_index, source);
+  if (!*(char *)0x4eaf40 || !*(char *)0x4eaf41)
+    return 0;
+  {
+    int looping_index = FUN_001cc440(sound_tag_index);
+    if (looping_index == -1) {
+      if (track_type == 2)
+        return 0;
+      looping_index = FUN_001cd190(sound_tag_index, track, source);
+      if (looping_index == -1)
+        return 0;
+      created = 1;
+    }
+    {
+      char *loop = (char *)datum_get(*(data_t **)0x4fdba0, looping_index);
+      void *lsnd = tag_get(0x6c736e64, sound_tag_index);
+      if (*(int *)(loop + 4) != sound_tag_index) {
+        display_assert((char *)0x2c1860, "c:\\halo\\SOURCE\\sound\\sound_manager.c",
+                       0x30e, 1);
+        system_exit(-1);
+      }
+      csmemcpy(loop + 0xc, source, 0x40);
+      loop[0x4c] = *(char *)0x4eaf54;
+      if (track_type != 2 && loop[0x4e] && *(int16_t *)(loop + 0x50) == 0) {
+        datum_delete(*(data_t **)0x4fdba0, looping_index);
+        return 1;
+      }
+      if (!FUN_001cc200(looping_index, track, loop + 0xc))
+        return 0;
+      if (*(int16_t *)(loop + 0x52) == 2)
+        return 1;
+      {
+        int i;
+        char *tracks = (char *)lsnd + 0x48;
+        for (i = 0; i < *(int *)tracks; i++) {
+          char *elem = (char *)tag_block_get_element(tracks, i, 0x68);
+          if (*(int *)(loop + 0x54 + i * 4) < *(int *)0x4eaf4c &&
+              *(int *)(elem + 0xc) != -1) {
+            float out[3];
+            float params[3];
+            params[0] = *(float *)(elem + 0x18);
+            params[1] = *(float *)(elem + 0x10);
+            params[2] = *(float *)(elem + 0x14);
+            FUN_001cd390(elem, out);
+            if (!FUN_001cc200(looping_index, params, out))
+              return 0;
+            if (*(int *)(loop + 0x10) != (int)0x1cc200)
+              sound_start(*(int *)(elem + 0xc), out, *(int *)(loop + 8), 0, 0, 0);
+          }
+        }
+      }
+      (void)created;
+      return 1;
+    }
+  }
 }
-#else
-#error "sound_refresh_looping: clang naked draft required"
-#endif
 
 
 /* FUN_001ce9c0 (0x1ce9c0) — XBE naked draft (batch 275). */
