@@ -3589,30 +3589,14 @@ void main_save_map_no_timeout(void)
   *(char *)0x46da2a = 0;
 }
 
-/* main_roll_credits (0x102070) — XBE naked draft (batch 188). */
-#if defined(__clang__)
-static void (*const b102070_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b102070_c101fe0)(void) = main_menu_load;
-static void (*const b102070_cdc110)(void) = FUN_000dc110;
-
-__attribute__((naked, noinline))
+/* main_roll_credits (0x102070) — readable C lift. */
 void main_roll_credits(void)
 {
-  __asm__ volatile(
-      "pushl $0x28b68c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[c101fe0]\n\t"
-      "jmp *%[cdc110]\n\t"
-      :
-      : [c8f390] "m"(b102070_c8f390), [c101fe0] "m"(b102070_c101fe0), [cdc110] "m"(b102070_cdc110)
-      : "memory");
+  extern char DAT_0028b68c[];
+  error(2, DAT_0028b68c);
+  main_menu_load();
+  FUN_000dc110();
 }
-#else
-#error "main_roll_credits: clang naked draft required"
-#endif
-
 
 /* FUN_001008a0 (0x1008a0) — XBE naked draft (batch 150). */
 #if defined(__clang__)

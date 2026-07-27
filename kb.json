@@ -14583,7 +14583,7 @@
         {
           "addr": "0x102070",
           "decl": "void main_roll_credits(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x102090",
