@@ -24976,7 +24976,7 @@
           "addr": "0x1ccbe0",
           "comment": "Compute listener distance squared for a channel/source pair.",
           "decl": "float FUN_001ccbe0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccca0",
