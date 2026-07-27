@@ -4894,59 +4894,21 @@ void FUN_0013c980(int param_1 __attribute__((unused)), int param_2 __attribute__
 #endif
 
 
-/* FUN_0013c9e0 (0x13c9e0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static int (*const b13c9e0_c1ba210)(int tag_index) = tag_get_group_tag;
-static void * (*const b13c9e0_c13c100)(int16_t object_type) = FUN_0013c100;
-
-__attribute__((naked, noinline))
-unsigned short FUN_0013c9e0(int tag_index __attribute__((unused)))
+/* FUN_0013c9e0 (0x13c9e0) — readable C lift. */
+int16_t FUN_0013c9e0(int tag_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ba210]\n\t"
-      "addl $4, %%esp\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0013c9e0_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c13c100]\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "je .LFUN_0013c9e0_2\n\t"
-      "incl %%esi\n\t"
-      "cmpw $0xc, %%si\n\t"
-      "jl .LFUN_0013c9e0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0013c9e0_2:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ba210] "m"(b13c9e0_c1ba210), [c13c100] "m"(b13c9e0_c13c100)
-      : "memory");
-}
-#else
-#error "FUN_0013c9e0: clang naked draft required"
-#endif
+  int group;
+  int16_t i;
+  void *entry;
 
+  group = tag_get_group_tag(tag_index);
+  for (i = 0; i < 0xc; i++) {
+    entry = FUN_0013c100(i);
+    if (*(int *)((char *)entry + 4) == group)
+      return i;
+  }
+  return -1;
+}
 
 /* FUN_0013ca30 (0x13ca30) — XBE naked draft (batch 67). */
 #if defined(__clang__)

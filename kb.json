@@ -16556,8 +16556,8 @@
         },
         {
           "addr": "0x13c9e0",
-          "decl": "unsigned short FUN_0013c9e0(int tag_index);",
-          "ported": false,
+          "decl": "int16_t FUN_0013c9e0(int tag_index);",
+          "ported": true,
           "source_path": "objects/objects.c"
         },
         {
