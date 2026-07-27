@@ -2864,97 +2864,44 @@ int FUN_001916d0(int partition, int *state)
   return -1;
 }
 
-/* cluster_partition_copy (0x191700) — XBE naked draft (batch 95). */
-#if defined(__clang__)
-static void * (*const b191700_c18e3c0)(void) = scenario_get;
-static void * (*const b191700_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b191700_c191440)(void *result, void *source) = reference_list_copy;
-
-__attribute__((naked, noinline))
-void cluster_partition_copy(void **destination __attribute__((unused)), void **source __attribute__((unused)))
+/* cluster_partition_copy (0x191700) — readable C lift from XBE leaf. */
+void cluster_partition_copy(void *destination, void *source)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x134(%%eax), %%eax\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c191440]\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c191440]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b191700_c18e3c0), [c8e0b0] "m"(b191700_c8e0b0), [c191440] "m"(b191700_c191440)
-      : "memory");
+  void *scenario;
+  int count;
+
+  scenario = global_scenario_get();
+  count = *(int *)((char *)scenario + 0x134);
+  csmemcpy(*(void **)destination, *(void **)source, (size_t)count * 4);
+  reference_list_copy(*(void **)((char *)destination + 8),
+                      *(void **)((char *)source + 8));
+  reference_list_copy(*(void **)((char *)destination + 4),
+                      *(void **)((char *)source + 4));
 }
-#else
-#error "cluster_partition_copy: clang naked draft required"
-#endif
 
 
-/* FUN_00191750 (0x191750) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void * (*const b191750_c18e3c0)(void) = scenario_get;
-static void (*const b191750_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b191750_exitfn)(int) = system_exit;
 
-__attribute__((naked, noinline))
-int * FUN_00191750(short cluster_index __attribute__((unused)), int **partition __attribute__((unused)))
+
+/* FUN_00191750 (0x191750) — readable C lift from XBE leaf. */
+int *FUN_00191750(short cluster_index, int **partition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00191750_1\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x134(%%eax), %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .LFUN_00191750_2\n\t"
-      ".LFUN_00191750_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd5\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x2b2668\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00191750_2:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movswl %%si, %%edx\n\t"
-      "leal (%%ecx,%%edx,4), %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b191750_c18e3c0), [assert] "m"(b191750_assert), [exitfn] "m"(b191750_exitfn)
-      : "memory");
+  extern char DAT_002b2668[];
+  extern char DAT_002b26b8[];
+  void *scenario;
+
+  if (cluster_index < 0) {
+    goto bad;
+  }
+  scenario = global_scenario_get();
+  if ((int)cluster_index >= *(int *)((char *)scenario + 0x134)) {
+bad:
+    display_assert(DAT_002b2668, DAT_002b26b8, 0xd5, true);
+    system_exit(-1);
+  }
+  return *partition + (int)cluster_index;
 }
-#else
-#error "FUN_00191750: clang naked draft required"
-#endif
+
+
 
 
 /* cluster_partition_add_object (0x1917a0) — XBE naked draft (batch 82). */
@@ -2965,7 +2912,7 @@ static int16_t (*const b1917a0_c199230)(uint16_t cluster_count, float *position,
 static void (*const b1917a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static int (*const b1917a0_c119610)(data_t *data) = data_new_at_index;
 static void *(*const b1917a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void * (*const b1917a0_c18e3c0)(void) = scenario_get;
+static void * (*const b1917a0_c18e3c0)(void) = global_scenario_get;
 
 __attribute__((naked, noinline))
 void cluster_partition_add_object(void *partition __attribute__((unused)), int object_handle __attribute__((unused)), void *first_cluster_ref __attribute__((unused)), void *position __attribute__((unused)), uint32_t radius_fp __attribute__((unused)), void *location __attribute__((unused)))
@@ -3171,7 +3118,7 @@ void cluster_partition_add_object(void *partition __attribute__((unused)), int o
 #if defined(__clang__)
 static void *(*const b1919a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b1919a0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-static void * (*const b1919a0_c18e3c0)(void) = scenario_get;
+static void * (*const b1919a0_c18e3c0)(void) = global_scenario_get;
 static void (*const b1919a0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1919a0_exitfn)(int) = system_exit;
 static void (*const b1919a0_c1913c0)(data_t *data, int *head, int value) = reference_list_remove;
@@ -3254,7 +3201,7 @@ void cluster_partition_remove_object(void *partition __attribute__((unused)), in
 
 /* cluster_partition_iter_first (0x191a50) — XBE naked draft (batch 92). */
 #if defined(__clang__)
-static void * (*const b191a50_c18e3c0)(void) = scenario_get;
+static void * (*const b191a50_c18e3c0)(void) = global_scenario_get;
 static void (*const b191a50_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b191a50_exitfn)(int) = system_exit;
 static void *(*const b191a50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
@@ -3496,51 +3443,27 @@ char FUN_00191bd0(int search_value __attribute__((unused)), void **param_1 __att
 #endif
 
 
-/* FUN_00191c70 (0x191c70) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-static void *(*const b191c70_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-short FUN_00191c70(void *block __attribute__((unused)), int search_value __attribute__((unused)))
+/* FUN_00191c70 (0x191c70) — readable C lift from XBE leaf. */
+short FUN_00191c70(void *block, int search_value)
 {
-  __asm__ volatile(
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00191c70_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_00191c70_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00191c70_1:\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "je .LFUN_00191c70_3\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00191c70_1\n\t"
-      ".LFUN_00191c70_2:\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      ".LFUN_00191c70_3:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b191c70_elem)
-      : "memory");
+  short i;
+  void *elem;
+
+  if (*(int *)block <= 0) {
+    return (short)0xffff;
+  }
+  i = 0;
+  do {
+    elem = tag_block_get_element(block, (int)i, 0x10);
+    if (*(int *)elem == search_value) {
+      return i;
+    }
+    i = (short)(i + 1);
+  } while ((int)i < *(int *)block);
+  return (short)0xffff;
 }
-#else
-#error "FUN_00191c70: clang naked draft required"
-#endif
+
+
 
 
 /* leaf_map_mark_portal_designators (0x191cb0) — XBE naked draft (batch 87). */
@@ -3998,7 +3921,7 @@ void FUN_001954d0(void)
 
 /* FUN_00195550 (0x195550) — XBE naked draft (batch 86). */
 #if defined(__clang__)
-static void * (*const b195550_c18e3c0)(void) = scenario_get;
+static void * (*const b195550_c18e3c0)(void) = global_scenario_get;
 static void *(*const b195550_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b195550_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b195550_exitfn)(int) = system_exit;
@@ -4109,7 +4032,7 @@ void FUN_00195550(short surface_count __attribute__((unused)), int *out_indices 
 
 /* FUN_00195650 (0x195650) — XBE naked draft (batch 92). */
 #if defined(__clang__)
-static void * (*const b195650_c18e3c0)(void) = scenario_get;
+static void * (*const b195650_c18e3c0)(void) = global_scenario_get;
 static void (*const b195650_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = FUN_00091ef0;
 static void *(*const b195650_elem)(void *, int, int) = tag_block_get_element;
 
@@ -4177,7 +4100,7 @@ void FUN_00195650(void *out __attribute__((unused)), int *indices __attribute__(
 
 /* FUN_001956d0 (0x1956d0) — XBE naked draft (batch 88). */
 #if defined(__clang__)
-static void * (*const b1956d0_c18e3c0)(void) = scenario_get;
+static void * (*const b1956d0_c18e3c0)(void) = global_scenario_get;
 static int (*const b1956d0_c17c970)(int mode) = rasterizer_widget_submit;
 static void * (*const b1956d0_c17c980)(int handle) = rasterizer_widget_begin;
 static void (*const b1956d0_assert)(const char *, const char *, int, bool) = display_assert;
@@ -5111,7 +5034,7 @@ int16_t FUN_00196fd0(int *out_buf, int16_t max_count, int unused_10,
 
 /* FUN_00195790 (0x195790) — XBE naked draft (batch 81). */
 #if defined(__clang__)
-static void * (*const b195790_c18e3c0)(void) = scenario_get;
+static void * (*const b195790_c18e3c0)(void) = global_scenario_get;
 static void *(*const b195790_elem)(void *, int, int) = tag_block_get_element;
 static void * (*const b195790_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
 static void *(*const b195790_tag)(int, int) = tag_get;
@@ -5366,7 +5289,7 @@ void FUN_00195790(int *surface_material_offsets __attribute__((unused)), unsigne
 
 /* FUN_00197130 (0x197130) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static void * (*const b197130_c18e3c0)(void) = scenario_get;
+static void * (*const b197130_c18e3c0)(void) = global_scenario_get;
 static void *(*const b197130_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b197130_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b197130_exitfn)(int) = system_exit;
@@ -5555,7 +5478,7 @@ int FUN_00197130(float *bounds __attribute__((unused)), void *param_2 __attribut
 
 /* FUN_00197310 (0x197310) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static void * (*const b197310_c18e3c0)(void) = scenario_get;
+static void * (*const b197310_c18e3c0)(void) = global_scenario_get;
 static void (*const b197310_xfrmpt)(float *, float *, float *) = matrix_transform_point;
 static int16_t (*const b197310_c106960)(int16_t count, float *verts, float *plane, int16_t max_count, float *out_verts, uint32_t *out_bitmask, float epsilon, void *changed) = convex_polygon3d_clip_to_plane;
 static void (*const b197310_assert)(const char *, const char *, int, bool) = display_assert;
@@ -6242,7 +6165,7 @@ void structures_cluster_marker_end(void)
 
 /* structure_render_surface_from_point_and_leaf (0x198580) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static void * (*const b198580_c18e3c0)(void) = scenario_get;
+static void * (*const b198580_c18e3c0)(void) = global_scenario_get;
 static void *(*const b198580_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b198580_c1935f0)(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index) = structure_bsp_find_material_for_surface;
 static void (*const b198580_c180500)(float *param_1, float *param_2) = FUN_00180500;
@@ -6597,7 +6520,7 @@ int16_t FUN_001989b0(uint16_t cluster_count, float *position, float radius,
 #if defined(__clang__)
 static void (*const b198ad0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b198ad0_exitfn)(int) = system_exit;
-static void * (*const b198ad0_c18e3c0)(void) = scenario_get;
+static void * (*const b198ad0_c18e3c0)(void) = global_scenario_get;
 static int (*const b198ad0_c1984c0)(int16_t cluster_index) = structure_cluster_mark;
 static void *(*const b198ad0_elem)(void *, int, int) = tag_block_get_element;
 static bool (*const b198ad0_c198440)(int16_t cluster_index) = structure_cluster_unmarked;
@@ -6782,7 +6705,7 @@ int16_t structure_clusters_in_cone(int16_t starting_cluster __attribute__((unuse
 static void (*const b198cb0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b198cb0_exitfn)(int) = system_exit;
 static bool (*const b198cb0_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
-static void * (*const b198cb0_c18e3c0)(void) = scenario_get;
+static void * (*const b198cb0_c18e3c0)(void) = global_scenario_get;
 static char (*const b198cb0_c198580)(void *render_context, uint32_t leaf_index, int material_type, int16_t *out_collection_index, int16_t *out_geometry_index, int32_t *out_surface, float *out_u, float *out_v) = structure_render_surface_from_point_and_leaf;
 static void *(*const b198cb0_elem)(void *, int, int) = tag_block_get_element;
 
@@ -8923,7 +8846,7 @@ void FUN_00192710(void)
 /* FUN_00194070 (0x194070) — XBE naked draft (batch 113). */
 #if defined(__clang__)
 static __int16 (*const b194070_cba4b0)(void) = local_player_count;
-static void * (*const b194070_c18e3c0)(void) = scenario_get;
+static void * (*const b194070_c18e3c0)(void) = global_scenario_get;
 static void *(*const b194070_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b194070_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
 static void (*const b194070_c18ab30)(char wireframe, float *bounds, void *color) = FUN_0018ab30;
@@ -9175,7 +9098,7 @@ void FUN_00194070(void)
 /* FUN_001975e0 (0x1975e0) — XBE naked draft (batch 112). */
 #if defined(__clang__)
 static void (*const b1975e0_chkstk)(void) = FUN_001d90e0;
-static void * (*const b1975e0_c18e3c0)(void) = scenario_get;
+static void * (*const b1975e0_c18e3c0)(void) = global_scenario_get;
 static void (*const b1975e0_c185f80)(void *param_1, void *param_2) = render_frustum_get_projection_bounds;
 static uint32_t * (*const b1975e0_c193550)(void *bsp, int16_t cluster_index) = structure_bsp_get_cluster_sound_data;
 static void *(*const b1975e0_elem)(void *, int, int) = tag_block_get_element;

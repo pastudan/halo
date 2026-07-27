@@ -25867,15 +25867,15 @@
         },
         {
           "addr": "0x191700",
-          "decl": "void cluster_partition_copy(void **destination, void **source);",
+          "decl": "void cluster_partition_copy(void *destination, void *source);",
           "name": "cluster_partition_copy",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c"
         },
         {
           "addr": "0x191750",
-          "decl": "int *FUN_00191750(short cluster_index@<esi>, int **partition);",
-          "ported": false,
+          "decl": "int *FUN_00191750(short cluster_index@<si>, int **partition);",
+          "ported": true,
           "name": "FUN_00191750"
         },
         {
@@ -30511,8 +30511,9 @@
         },
         {
           "addr": "0x180820",
-          "decl": "void compress_real_to_int16(void);",
-          "ported": false
+          "decl": "int16_t compress_real_to_int16(float value);",
+          "ported": true,
+          "name": "compress_real_to_int16"
         },
         {
           "addr": "0x180890",
