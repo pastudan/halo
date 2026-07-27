@@ -20825,8 +20825,9 @@
         },
         {
           "addr": "0x16fbd0",
-          "decl": "void FUN_0016fbd0(void);",
-          "ported": false
+          "decl": "float FUN_0016fbd0(short index);",
+          "ported": true,
+          "name": "FUN_0016fbd0"
         },
         {
           "addr": "0x16fcf0",
@@ -20837,7 +20838,8 @@
         {
           "addr": "0x16fdd0",
           "decl": "void FUN_0016FDD0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0016FDD0"
         },
         {
           "addr": "0x16feb0",
@@ -20977,8 +20979,9 @@
         },
         {
           "addr": "0x174bd0",
-          "decl": "void FUN_00174bd0(char flag);",
-          "ported": false
+          "decl": "char FUN_00174bd0(char flag);",
+          "ported": true,
+          "name": "FUN_00174bd0"
         },
         {
           "addr": "0x174cc0",
@@ -21069,8 +21072,9 @@
         },
         {
           "addr": "0x17adc0",
-          "decl": "void FUN_0017adc0(void);",
-          "ported": false
+          "decl": "int FUN_0017adc0(int test_id);",
+          "ported": true,
+          "name": "FUN_0017adc0"
         },
         {
           "addr": "0x17ae90",
@@ -27418,8 +27422,9 @@
         },
         {
           "addr": "0xe53e0",
-          "decl": "void ui_widget_list_prev(void *widget@<edi>);",
-          "ported": false
+          "decl": "void ui_widget_list_prev(void *widget @<edi>);",
+          "ported": false,
+          "name": "ui_widget_list_prev"
         },
         {
           "addr": "0xe5440",
