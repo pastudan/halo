@@ -2822,7 +2822,7 @@
           "addr": "0x20670",
           "decl": "char actor_action_handle_evasion(int actor_handle);",
           "name": "actor_action_handle_evasion",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x20990",
@@ -3678,7 +3678,7 @@
         {
           "addr": "0x153e0",
           "decl": "bool FUN_000153e0(int actor_handle @<ebx>);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000153e0"
         },
         {
@@ -3807,7 +3807,7 @@
         {
           "addr": "0x16d40",
           "decl": "void actor_look_compute_prop_interest(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5);",
-          "ported": true,
+          "ported": false,
           "name": "actor_look_compute_prop_interest"
         },
         {
@@ -9545,7 +9545,7 @@
           "addr": "0xaf660",
           "decl": "void game_engine_player_killed(int killer_handle, int kill_object_handle, int dead_handle, int betrayal);",
           "name": "game_engine_player_killed",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xaf9a0",
@@ -13883,7 +13883,7 @@
           "addr": "0xd0030",
           "decl": "void input_get_raw_data_string(char *buffer, int16_t size);",
           "name": "input_get_raw_data_string",
-          "ported": true
+          "ported": false
         }
       ],
       "name": "input_xbox.obj",
@@ -14130,7 +14130,7 @@
           "addr": "0xf63f0",
           "decl": "void virtual_keyboard_process_input(void);",
           "name": "virtual_keyboard_process_input",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xf6740",
@@ -15408,7 +15408,7 @@
           "addr": "0x11a430",
           "decl": "int FUN_0011a430(int *state, short count, int element_size);",
           "name": "FUN_0011a430",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11a560",
@@ -15467,7 +15467,7 @@
           "addr": "0x11b2a0",
           "decl": "void FUN_0011b2a0(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out);",
           "name": "FUN_0011b2a0",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11b540",
@@ -15478,7 +15478,7 @@
           "addr": "0x11b650",
           "decl": "bool FUN_0011b650(int definition, short version, void *data, char *buffer, short *buffer_size_out, short maximum_buffer_size);",
           "name": "FUN_0011b650",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11b750",
@@ -15514,7 +15514,7 @@
           "addr": "0x11ba50",
           "decl": "int FUN_0011ba50(short *table @<esi>, void *key, unsigned short *slot_index_out);",
           "name": "FUN_0011ba50",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11bb70",
@@ -16973,7 +16973,7 @@
           "addr": "0x13f4b0",
           "decl": "void objects_dump_memory(void);",
           "name": "objects_dump_memory",
-          "ported": true,
+          "ported": false,
           "source": "src/halo/objects/objects.c"
         },
         {
@@ -17193,7 +17193,7 @@
           "addr": "0x1417c0",
           "decl": "void objects_reconnect_to_structure_bsp(void);",
           "name": "objects_reconnect_to_structure_bsp",
-          "ported": true,
+          "ported": false,
           "source": "src/halo/objects/objects.c"
         },
         {
@@ -21034,7 +21034,7 @@
           "addr": "0x174d10",
           "decl": "void rasterizer_transparent_geometry_group_draw(void *group, int dirty);",
           "name": "rasterizer_transparent_geometry_group_draw",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x178820",
@@ -21734,7 +21734,7 @@
           "addr": "0x15d5b0",
           "decl": "void __cdecl rasterizer_draw_dynamic_vertices(int first_primitive_index, int primitive_count, int dynamic_vertex_buffer_index, short vertices_per_primitive);",
           "name": "rasterizer_draw_dynamic_vertices",
-          "ported": true
+          "ported": false
         }
       ],
       "name": "rasterizer_decals.obj",
@@ -22804,7 +22804,7 @@
         {
           "addr": "0x1108b0",
           "decl": "char FUN_001108b0(int *tree, int vector, int *out_node);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001108b0"
         },
         {
@@ -25904,7 +25904,7 @@
         {
           "addr": "0x628b0",
           "decl": "void FUN_000628b0(int16_t *partition, uint32_t arg2);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000628b0"
         },
         {
@@ -26005,7 +26005,7 @@
           "addr": "0x106030",
           "decl": "int FUN_00106030(void *param_1, int param_2, short param_3, int param_4);",
           "name": "FUN_00106030",
-          "ported": true,
+          "ported": false,
           "source_path": "src/halo/structures/structures.c",
           "object": "structures.obj"
         },
@@ -26040,7 +26040,7 @@
           "comment": "Walk a reference list and unlink the entry whose +4 field matches value.",
           "decl": "void reference_list_remove(void *data, int *head, int value);",
           "name": "reference_list_remove",
-          "ported": true,
+          "ported": false,
           "source_path": "src/halo/structures/structures.c"
         },
         {
@@ -26479,7 +26479,7 @@
         {
           "addr": "0x198580",
           "decl": "char structure_render_surface_from_point_and_leaf(void *render_context, uint32_t leaf_index, int material_type, int16_t *out_collection_index, int16_t *out_geometry_index, int32_t *out_surface, float *out_u, float *out_v);",
-          "ported": true,
+          "ported": false,
           "name": "structure_render_surface_from_point_and_leaf",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -26502,13 +26502,13 @@
         {
           "addr": "0x198ad0",
           "decl": "int16_t structure_clusters_in_cone(int16_t starting_cluster, float *point, float *direction, float length, float sine, float cosine, int16_t max_count, int16_t *out_indices);",
-          "ported": true,
+          "ported": false,
           "name": "structure_clusters_in_cone"
         },
         {
           "addr": "0x198cb0",
           "decl": "char structure_test_vector(float *point, float *direction, float *out_point, int16_t *out_collection_index, int16_t *out_material_index, int32_t *out_surface_index, float *out_u, float *out_v);",
-          "ported": true,
+          "ported": false,
           "name": "structure_test_vector",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -26649,7 +26649,7 @@
         {
           "addr": "0x196e10",
           "decl": "void FUN_00196e10(uint16_t *sound_list@<edi>, void *env@<ebx>, float distance);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00196e10"
         },
         {
@@ -28957,7 +28957,7 @@
         {
           "addr": "0x1a68d0",
           "decl": "short FUN_001a68d0(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001a68d0"
         },
         {
@@ -29595,7 +29595,7 @@
           "addr": "0x1ac680",
           "decl": "void FUN_001ac680(float initial_p, float initial_v, float max_v, float max_a, int plan);",
           "name": "FUN_001ac680",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1acb70",
@@ -29743,7 +29743,7 @@
           "addr": "0x1aea90",
           "decl": "char FUN_001aea90(void *anim_state);",
           "name": "unit_cause_player_melee_damage",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1af0d0",
@@ -29810,7 +29810,7 @@
           "addr": "0x1b0d90",
           "decl": "short FUN_001b0d90(int unit_handle, char *anim_state);",
           "name": "FUN_001b0d90",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1b1290",
@@ -29952,7 +29952,7 @@
           "addr": "0x1b3400",
           "decl": "uint16_t vehicle_scripting_load_magic(int vehicle_handle, int seat_substring, int group_handle);",
           "name": "vehicle_scripting_load_magic",
-          "ported": true,
+          "ported": false,
           "delinked": "delinked/units_batch_1b32d0.obj"
         },
         {
@@ -31579,7 +31579,7 @@
         {
           "addr": "0x17db40",
           "decl": "void rasterizer_screen_effect_set_video(int a0, float a1);",
-          "ported": true,
+          "ported": false,
           "name": "rasterizer_screen_effect_set_video"
         },
         {
@@ -32632,7 +32632,7 @@
           "addr": "0x11de10",
           "name": "FUN_0011de10",
           "decl": "int FUN_0011de10(void *cache, unsigned int size);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1bfe90",
@@ -34429,7 +34429,7 @@
         {
           "addr": "0xfe6c0",
           "decl": "void FUN_000fe6c0(short trigger_index@<eax>, int weapon@<ecx>);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000fe6c0"
         }
       ],
@@ -34672,7 +34672,7 @@
         {
           "addr": "0x2b020",
           "decl": "short FUN_0002b020(float *avoidance_ray, float *ray_origin, int avoidance_data, float *ray_direction, float *collision_t, char *param_3);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0002b020"
         },
         {
@@ -34696,7 +34696,7 @@
         {
           "addr": "0x2b830",
           "decl": "void FUN_0002b830(float *facing_basis , char use_3d, float *out_vector, short *out_index, float *in_vec , float *weight_vec);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0002b830"
         },
         {
@@ -34733,7 +34733,7 @@
         {
           "addr": "0x2daa0",
           "decl": "void actor_move_compute_facing(char want_facing , short move_dir , int actor_handle, char use_z, float max_speed_sq, char path_gate, float arg4, float arg5, float arg6, float arg7, float maximum_throttle, float *movement, float *out_facing, short *out_dir, float *out_vec2, char *out_byte, char *out_bool);",
-          "ported": true,
+          "ported": false,
           "name": "actor_move_compute_facing"
         }
       ],
@@ -34767,7 +34767,7 @@
           "decl": "uint16_t FUN_0002f380(int actor_handle, int prop_handle);",
           "name": "FUN_0002f380",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x2f470",
@@ -35020,7 +35020,7 @@
           "decl": "void ai_communication_initialize(void);",
           "addr": "0x42a30",
           "name": "ai_communication_initialize",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x42b80",
@@ -35333,7 +35333,7 @@
           "addr": "0x49120",
           "decl": "void *ai_debug_get_path_storage(int actor_handle);",
           "name": "ai_debug_get_path_storage",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x49220",
@@ -38823,7 +38823,7 @@
           "addr": "0x146e30",
           "decl": "void bsp3d_clip_line_to_leaves(void);",
           "name": "bsp3d_clip_line_to_leaves",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1470b0",
@@ -44173,13 +44173,13 @@
         {
           "addr": "0x1335e0",
           "decl": "float FUN_001335e0(float a, float b, float c, float d, float t0, float t1, float t2, float t3, float t);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001335e0"
         },
         {
           "addr": "0x1336a0",
           "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001336a0"
         }
       ],
@@ -44198,7 +44198,7 @@
         {
           "addr": "0x679f0",
           "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000679f0"
         },
         {
