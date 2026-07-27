@@ -15133,7 +15133,7 @@
         {
           "addr": "0x124e20",
           "decl": "void network_game_client_game_out_of_sync(void *client);",
-          "ported": false,
+          "ported": true,
           "name": "network_game_client_game_out_of_sync"
         },
         {
