@@ -387,52 +387,22 @@ void FUN_001c1da0(void)
   base[0x72] = 1; /* DAT_004eaaaa */
 }
 
-/* FUN_001c1dc0 (0x1c1dc0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static void (*const b1c1dc0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c1dc0_c81720)(void *thread_reference) = thread_is_done;
-static void (*const b1c1dc0_c81770)(void *thread_reference) = thread_close;
-static void *(*const b1c1dc0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_001c1dc0 (0x1c1dc0) — readable C lift from XBE leaf. */
 void FUN_001c1dc0(void)
 {
-  __asm__ volatile(
-      "movl 0x4eaaa4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c1dc0_2\n\t"
-      "pushl $0x2ba430\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_001c1dc0_1\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_001c1dc0_1:\n\t"
-      "movl 0x4eaaa4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81720]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c1dc0_1\n\t"
-      "movl 0x4eaaa4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c81770]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x4eaaa4\n\t"
-      ".LFUN_001c1dc0_2:\n\t"
-      "pushl $0x74\n\t"
-      "pushl $0\n\t"
-      "pushl $0x4eaa38\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c8f390] "m"(b1c1dc0_c8f390), [c81720] "m"(b1c1dc0_c81720), [c81770] "m"(b1c1dc0_c81770), [memset] "m"(b1c1dc0_memset)
-      : "memory");
+  extern char DAT_002ba430[];
+
+  if (*(void **)0x4eaaa4 != 0) {
+    error(2, DAT_002ba430);
+    while (!thread_is_done(*(void **)0x4eaaa4)) {
+    }
+    thread_close(*(void **)0x4eaaa4);
+    *(void **)0x4eaaa4 = 0;
+  }
+  csmemset((void *)0x4eaa38, 0, 0x74);
 }
-#else
-#error "FUN_001c1dc0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001c1e20 (0x1c1e20) — XBE naked draft (batch 251). */
@@ -1387,7 +1357,7 @@ static void * (*const b1c2750_c8e0b0)(void *destination, void *source, size_t si
 static bool (*const b1c2750_c81630)(int priority_flags, void *function, int param, void **thread_reference) = thread_new;
 
 __attribute__((naked, noinline))
-void playlist_profile_read(void)
+void playlist_profile_read(int profile_index __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1447,53 +1417,23 @@ void playlist_profile_read(void)
 #endif
 
 
-/* playlist_profile_get_display_name (0x1c27f0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static void (*const b1c27f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c27f0_exitfn)(int) = system_exit;
-static void (*const b1c27f0_cab570)(game_variant_t *variant) = game_engine_variant_cleanup;
-static void (*const b1c27f0_c1c2750)(void) = playlist_profile_read;
-
-__attribute__((naked, noinline))
-void playlist_profile_get_display_name(void)
+/* playlist_profile_get_display_name (0x1c27f0) — readable C lift from XBE leaf. */
+void playlist_profile_get_display_name(int profile_index, game_variant_t *variant)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lplaylist_profile_get_display_name_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x131\n\t"
-      "pushl $0x2ba59c\n\t"
-      "pushl $0x282808\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_get_display_name_1:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lplaylist_profile_get_display_name_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cab570]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1c2750]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplaylist_profile_get_display_name_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c27f0_assert), [exitfn] "m"(b1c27f0_exitfn), [cab570] "m"(b1c27f0_cab570), [c1c2750] "m"(b1c27f0_c1c2750)
-      : "memory");
+  extern char DAT_00282808[];
+  extern char DAT_002ba59c[];
+
+  if (variant == 0) {
+    display_assert(DAT_00282808, DAT_002ba59c, 0x131, true);
+    system_exit(-1);
+  }
+  if (profile_index != -1) {
+    game_engine_variant_cleanup(variant);
+    playlist_profile_read(profile_index);
+  }
 }
-#else
-#error "playlist_profile_get_display_name: clang naked draft required"
-#endif
+
+
 
 
 /* saved_game_file_close (0x1c2890) — XBE naked draft (batch 252). */
@@ -2670,63 +2610,31 @@ void FUN_001c3250(void)
 #endif
 
 
-/* FUN_001c3320 (0x1c3320) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static void (*const b1c3320_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c3320_exitfn)(int) = system_exit;
-static bool (*const b1c3320_c19a930)(file_ref_t *info) = file_close;
-static void (*const b1c3320_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_001c3320(void)
+/* FUN_001c3320 (0x1c3320) — readable C lift from XBE leaf. */
+char FUN_001c3320(int16_t expect_zero)
 {
-  __asm__ volatile(
-      "testw %%si, %%si\n\t"
-      "je .LFUN_001c3320_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x685\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba8c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3320_1:\n\t"
-      "movb 0x4eacc8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c3320_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x687\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bab34\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3320_2:\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c3320_3\n\t"
-      "movzwl %%si, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2baafc\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c3320_3:\n\t"
-      "movw $0xffff, 0x4eacc4\n\t"
-      "movb $0, 0x4eacc8\n\t"
-      "movb $1, %%al\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c3320_assert), [exitfn] "m"(b1c3320_exitfn), [c19a930] "m"(b1c3320_c19a930), [c8f390] "m"(b1c3320_c8f390)
-      : "memory");
+  extern char DAT_002ba8c0[];
+  extern char DAT_002ba8e8[];
+  extern char DAT_002bab34[];
+  extern char DAT_002baafc[];
+
+  if (expect_zero != 0) {
+    display_assert(DAT_002ba8c0, DAT_002ba8e8, 0x685, true);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x4eacc8 == 0) {
+    display_assert(DAT_002bab34, DAT_002ba8e8, 0x687, true);
+    system_exit(-1);
+  }
+  if (!file_close((file_ref_t *)0x4eabb0)) {
+    error(2, DAT_002baafc, (unsigned int)(uint16_t)expect_zero);
+  }
+  *(uint16_t *)0x4eacc4 = 0xffff;
+  *(unsigned char *)0x4eacc8 = 0;
+  return 1;
 }
-#else
-#error "FUN_001c3320: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001c33b0 (0x1c33b0) — XBE naked draft (batch 271). */
@@ -2942,52 +2850,25 @@ void FUN_001c3500(void)
 #endif
 
 
-/* FUN_001c35a0 (0x1c35a0) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static void (*const b1c35a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c35a0_exitfn)(int) = system_exit;
-static bool (*const b1c35a0_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-
-__attribute__((naked, noinline))
-void FUN_001c35a0(void)
+/* FUN_001c35a0 (0x1c35a0) — readable C lift from XBE leaf. */
+bool FUN_001c35a0(void *buffer)
 {
-  __asm__ volatile(
-      "movb 0x4eacc8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c35a0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x793\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2baac8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c35a0_1:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001c35a0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x794\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x265878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c35a0_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x206\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19ab50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c35a0_assert), [exitfn] "m"(b1c35a0_exitfn), [c19ab50] "m"(b1c35a0_c19ab50)
-      : "memory");
+  extern char DAT_002baac8[];
+  extern char DAT_002ba8e8[];
+  extern char DAT_00265878[];
+
+  if (*(unsigned char *)0x4eacc8 != 0) {
+    display_assert(DAT_002baac8, DAT_002ba8e8, 0x793, true);
+    system_exit(-1);
+  }
+  if (buffer == 0) {
+    display_assert(DAT_00265878, DAT_002ba8e8, 0x794, true);
+    system_exit(-1);
+  }
+  return file_read((file_ref_t *)0x4eabb0, 0x206, buffer);
 }
-#else
-#error "FUN_001c35a0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001c3610 (0x1c3610) — XBE naked draft (batch 258). */

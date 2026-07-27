@@ -23597,7 +23597,8 @@
         {
           "addr": "0x1c1dc0",
           "decl": "void FUN_001c1dc0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001c1dc0"
         },
         {
           "addr": "0x1c1e20",
@@ -23654,13 +23655,15 @@
         },
         {
           "addr": "0x1c2750",
-          "decl": "void playlist_profile_read(void);",
-          "ported": false
+          "decl": "void playlist_profile_read(int profile_index);",
+          "ported": false,
+          "name": "playlist_profile_read"
         },
         {
           "addr": "0x1c27f0",
-          "decl": "void playlist_profile_get_display_name(void);",
-          "ported": false
+          "decl": "void playlist_profile_get_display_name(int profile_index, game_variant_t *variant);",
+          "ported": true,
+          "name": "playlist_profile_get_display_name"
         },
         {
           "addr": "0x1c2840",
@@ -23755,8 +23758,9 @@
         },
         {
           "addr": "0x1c3320",
-          "decl": "void FUN_001c3320(void);",
-          "ported": false
+          "decl": "char FUN_001c3320(int16_t expect_zero@<si>);",
+          "ported": true,
+          "name": "FUN_001c3320"
         },
         {
           "addr": "0x1c33b0",
@@ -23775,8 +23779,9 @@
         },
         {
           "addr": "0x1c35a0",
-          "decl": "void FUN_001c35a0(void);",
-          "ported": false
+          "decl": "bool FUN_001c35a0(void *buffer@<esi>);",
+          "ported": true,
+          "name": "FUN_001c35a0"
         },
         {
           "addr": "0x1c3610",
@@ -28570,7 +28575,7 @@
           "addr": "0x8dc30",
           "decl": "char *FUN_0008dc30(char *destination, const char *source);",
           "ported": true,
-          "name": "*FUN_0008dc30"
+          "name": "FUN_0008dc30"
         },
         {
           "addr": "0x122a50",
