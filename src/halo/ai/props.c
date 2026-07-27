@@ -1285,7 +1285,7 @@ static bool (*const b64b40_ca7a30)(int16_t team_a, int16_t team_b) = game_allegi
 static int (*const b64b40_c645a0)(int actor_handle, int unit_handle, char friendly) = prop_new_unacknowledged;
 static void (*const b64b40_c31df0)(int actor_handle, int prop_handle, float *out_pos, char refresh_flag, char swarm_refresh) = prop_position_refresh;
 static void (*const b64b40_c33440)(int actor_handle, int prop_handle, float *out_pos) = prop_status_refresh;
-static char (*const b64b40_c32940)(int actor_handle, int prop_handle) = actor_expected_acknowledgement;
+static char (*const b64b40_c32940)(int actor_handle, int prop_handle) = (void *)actor_expected_acknowledgement;
 static void (*const b64b40_c2f2b0)(int actor_handle, int prop_handle, int param_3, char param_4) = actor_perception_acknowledge;
 
 __attribute__((naked, noinline))

@@ -12214,7 +12214,7 @@
         {
           "addr": "0xc8720",
           "decl": "char FUN_000c8720(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc88b0",
@@ -15751,7 +15751,8 @@
         {
           "addr": "0x12f5d0",
           "decl": "bool FUN_0012f5d0(void *server);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0012f5d0"
         },
         {
           "addr": "0x12bdb0",
@@ -15937,8 +15938,9 @@
         },
         {
           "addr": "0x12da90",
-          "decl": "void FUN_0012da90(int endpoint @<ebx>, unsigned short reason @<ax>);",
-          "ported": false
+          "decl": "void FUN_0012da90(int endpoint /* @<ebx> */, unsigned short reason /* @<ax> */);",
+          "ported": true,
+          "name": "FUN_0012da90"
         },
         {
           "addr": "0x12db30",
@@ -34792,7 +34794,7 @@
           "decl": "char actor_expected_acknowledgement(int actor_handle, int prop_handle);",
           "name": "actor_expected_acknowledgement",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32ac0",

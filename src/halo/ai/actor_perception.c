@@ -4585,149 +4585,53 @@ void actor_perception_refresh_danger_zone(int actor_handle __attribute__((unused
 #endif
 
 
-/* actor_expected_acknowledgement (0x32940) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-static void *(*const b32940_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b32940_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b32940_exitfn)(int) = system_exit;
-static void (*const b32940_c64540)(int *out, int actor_handle) = FUN_00064540;
-static int (*const b32940_c64570)(int *iter) = FUN_00064570;
-
-__attribute__((naked, noinline))
-char actor_expected_acknowledgement(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)))
+/* actor_expected_acknowledgement (0x32940) — readable C lift. */
+char actor_expected_acknowledgement(int actor_handle, int prop_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_expected_acknowledgement_1\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jg .Lactor_expected_acknowledgement_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe22\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256318\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_expected_acknowledgement_1:\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lactor_expected_acknowledgement_6\n\t"
-      "nop\n\t"
-      ".Lactor_expected_acknowledgement_2:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "cmpl %%edx, -0x8(%%ebp)\n\t"
-      "je .Lactor_expected_acknowledgement_5\n\t"
-      "movl 0x18(%%ecx), %%eax\n\t"
-      "cmpl 0x18(%%esi), %%eax\n\t"
-      "je .Lactor_expected_acknowledgement_4\n\t"
-      "movl 0x1c(%%ecx), %%edx\n\t"
-      "cmpl 0x1c(%%esi), %%edx\n\t"
-      "je .Lactor_expected_acknowledgement_4\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_expected_acknowledgement_5\n\t"
-      "movb 0x60(%%ecx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_expected_acknowledgement_5\n\t"
-      "movw 0x24(%%ecx), %%ax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_expected_acknowledgement_3\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jle .Lactor_expected_acknowledgement_4\n\t"
-      ".Lactor_expected_acknowledgement_3:\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lactor_expected_acknowledgement_5\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lactor_expected_acknowledgement_5\n\t"
-      ".Lactor_expected_acknowledgement_4:\n\t"
-      "flds 0xbc(%%esi)\n\t"
-      "fsubs 0xbc(%%ecx)\n\t"
-      "flds 0xc0(%%esi)\n\t"
-      "fsubs 0xc0(%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x253dcc\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jp .Lactor_expected_acknowledgement_5\n\t"
-      "flds 0xc4(%%ecx)\n\t"
-      "fsubs 0xc4(%%esi)\n\t"
-      "fabs\n\t"
-      "fcompl 0x256310\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_expected_acknowledgement_5\n\t"
-      "flds 0xe8(%%ecx)\n\t"
-      "fmuls 0xe8(%%esi)\n\t"
-      "flds 0xe4(%%ecx)\n\t"
-      "fmuls 0xe4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0xe0(%%ecx)\n\t"
-      "fmuls 0xe0(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x253398\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_expected_acknowledgement_5\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lactor_expected_acknowledgement_5:\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .Lactor_expected_acknowledgement_2\n\t"
-      ".Lactor_expected_acknowledgement_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b32940_dget), [assert] "m"(b32940_assert), [exitfn] "m"(b32940_exitfn), [c64540] "m"(b32940_c64540), [c64570] "m"(b32940_c64570)
-      : "memory");
-}
-#else
-#error "actor_expected_acknowledgement: clang naked draft required"
-#endif
+  char *prop;
+  char *other;
+  int iter;
+  char found;
+  short state;
+  float dx, dy, dz, dot;
 
+  datum_get(*(data_t **)0x6325a4, actor_handle);
+  prop = (char *)datum_get(*(data_t **)0x5ab23c, prop_handle);
+  found = 0;
+  state = *(short *)(prop + 0x24);
+  if (state >= 4 && state <= 5) {
+    display_assert((const char *)0x256318, (const char *)0x255fb0, 0xe22, 1);
+    system_exit(-1);
+  }
+  FUN_00064540(&iter, actor_handle);
+  other = (char *)FUN_00064570(&iter);
+  while (other) {
+    if (iter != prop_handle) {
+      if (*(int *)(other + 0x18) == *(int *)(prop + 0x18) ||
+          *(int *)(other + 0x1c) == *(int *)(prop + 0x1c) ||
+          (*(unsigned char *)(prop + 0x60) && *(unsigned char *)(other + 0x60) &&
+           ((*(short *)(other + 0x24) >= 4 && *(short *)(other + 0x24) <= 5) ||
+            (*(short *)(other + 0x24) >= 2 && *(short *)(other + 0x24) <= 3)))) {
+        dx = *(float *)(prop + 0xbc) - *(float *)(other + 0xbc);
+        dy = *(float *)(prop + 0xc0) - *(float *)(other + 0xc0);
+        if (dx * dx + dy * dy < *(float *)0x253dcc) {
+          dz = *(float *)(other + 0xc4) - *(float *)(prop + 0xc4);
+          if (dz < 0)
+            dz = -dz;
+          if (dz < *(double *)0x256310) {
+            dot = *(float *)(other + 0xe8) * *(float *)(prop + 0xe8) +
+                  *(float *)(other + 0xe4) * *(float *)(prop + 0xe4) +
+                  *(float *)(other + 0xe0) * *(float *)(prop + 0xe0);
+            if (dot > *(float *)0x253398)
+              found = 1;
+          }
+        }
+      }
+    }
+    other = (char *)FUN_00064570(&iter);
+  }
+  return found;
+}
 
 /* actor_perception_unreachable (0x32ac0) — readable C lift from XBE leaf. */
 void actor_perception_unreachable(int actor_handle, int prop_handle, char flag)

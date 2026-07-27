@@ -5317,171 +5317,69 @@ void FUN_000ce3c0(void)
 
 
 
-/* FUN_000c8720 (0xc8720) — XBE naked draft (batch 122). */
-#if defined(__clang__)
-static void *(*const bc8720_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bc8720_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc8720_exitfn)(int) = system_exit;
-static bool (*const bc8720_cc73a0)(int datum_index) = FUN_000c73a0;
-static bool (*const bc8720_cc74c0)(int datum_index) = FUN_000c74c0;
-static void * (*const bc8720_cc3d00)(int16_t function_index) = hs_function_table_get;
-static int (*const bc8720_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-char FUN_000c8720(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
+/* FUN_000c8720 (0xc8720) — readable C lift: coerce boolean/script expr types. */
+char FUN_000c8720(int16_t function_index, int root_datum)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $7, %%si\n\t"
-      "jl .LFUN_000c8720_1\n\t"
-      "cmpw $0xc, %%si\n\t"
-      "jle .LFUN_000c8720_2\n\t"
-      ".LFUN_000c8720_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17d\n\t"
-      "pushl $0x27cdc0\n\t"
-      "pushl $0x27cfe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c8720_2:\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      ".LFUN_000c8720_3:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_000c8720_8\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x46b6fc, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c8720_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x48e\n\t"
-      "pushl $0x27bd0c\n\t"
-      "pushl $0x27cbd4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000c8720_4:\n\t"
-      "cmpw $0, 0x4(%%esi)\n\t"
-      "jne .LFUN_000c8720_7\n\t"
-      "movl $6, %%ebx\n\t"
-      "movw %%bx, 0x4(%%esi)\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x6(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%cl\n\t"
-      "je .LFUN_000c8720_5\n\t"
-      "movw %%bx, 0x2(%%esi)\n\t"
-      "call *%[cc73a0]\n\t"
-      "jmp .LFUN_000c8720_6\n\t"
-      ".LFUN_000c8720_5:\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "call *%[cc74c0]\n\t"
-      ".LFUN_000c8720_6:\n\t"
-      "movb %%al, %%bl\n\t"
-      ".LFUN_000c8720_7:\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "incl %%ecx\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jne .LFUN_000c8720_3\n\t"
-      "jmp .LFUN_000c8720_9\n\t"
-      ".LFUN_000c8720_8:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_000c8720_9\n\t"
-      "cmpw $2, -0x4(%%ebp)\n\t"
-      "jl .LFUN_000c8720_11\n\t"
-      ".LFUN_000c8720_9:\n\t"
-      "cmpw $0xa, %%si\n\t"
-      "jne .LFUN_000c8720_10\n\t"
-      "cmpw $2, -0x4(%%ebp)\n\t"
-      "jg .LFUN_000c8720_12\n\t"
-      ".LFUN_000c8720_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c8720_11:\n\t"
-      "cmpw $0xa, %%si\n\t"
-      "jne .LFUN_000c8720_13\n\t"
-      ".LFUN_000c8720_12:\n\t"
-      "movl $0x25386f, %%eax\n\t"
-      "jmp .LFUN_000c8720_14\n\t"
-      ".LFUN_000c8720_13:\n\t"
-      "movl $0x27cfd0, %%eax\n\t"
-      ".LFUN_000c8720_14:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cc3d00]\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x27cfac\n\t"
-      "pushl $0x46b704\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x46b704, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bc8720_dget), [assert] "m"(bc8720_assert), [exitfn] "m"(bc8720_exitfn), [cc73a0] "m"(bc8720_cc73a0), [cc74c0] "m"(bc8720_cc74c0), [cc3d00] "m"(bc8720_cc3d00), [c1d90f0] "m"(bc8720_c1d90f0)
-      : "memory");
-}
-#else
-#error "FUN_000c8720: clang naked draft required"
-#endif
+  char *root;
+  char *node;
+  int child;
+  char ok;
+  int count;
+  const char *fname;
+  void *entry;
 
+  root = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(root + 0x10));
+  child = *(int *)(node + 8);
+  ok = 1;
+  if (function_index < 7 || function_index > 0xc) {
+    display_assert((const char *)0x27cfe0, (const char *)0x27cdc0, 0x17d, 1);
+    system_exit(-1);
+  }
+  count = 0;
+  while (child != -1) {
+    node = (char *)datum_get(*(data_t **)0x5aa6c8, child);
+    ok = 1;
+    if (*(int *)0x46b6fc) {
+      display_assert((const char *)0x27cbd4, (const char *)0x27bd0c, 0x48e, 1);
+      system_exit(-1);
+    }
+    if (*(short *)(node + 4) == 0) {
+      *(short *)(node + 4) = 6;
+      node = (char *)datum_get(*(data_t **)0x5aa6c8, child);
+      if ((*(unsigned char *)(node + 6) & 1) != 0) {
+        *(short *)(node + 2) = 6;
+        ok = (char)FUN_000c73a0(child);
+      } else {
+        ok = (char)FUN_000c74c0(child);
+      }
+    }
+    node = (char *)datum_get(*(data_t **)0x5aa6c8, child);
+    child = *(int *)(node + 8);
+    count++;
+    if (!ok)
+      break;
+  }
+  if (ok) {
+    if (count < 2)
+      goto fail_msg;
+    if (function_index == 0xa && count > 2)
+      goto fail_msg;
+    return ok;
+  }
+fail_msg:
+  if (function_index == 0xa)
+    fname = (const char *)0x25386f;
+  else
+    fname = (const char *)0x27cfd0;
+  entry = hs_function_table_get(function_index);
+  crt_sprintf((char *)0x46b704, (const char *)0x27cfac,
+              *(const char **)((char *)entry + 4), fname);
+  *(int *)0x46b6fc = 0x46b704;
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(int *)0x46b700 = *(int *)(node + 0xc);
+  return 0;
+}
 
 /* FUN_000c88b0 (0xc88b0) — readable C lift: hs type-check binary op args. */
 char FUN_000c88b0(int16_t function_index, int root_datum)
