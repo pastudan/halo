@@ -21075,7 +21075,8 @@
         {
           "addr": "0x17b580",
           "decl": "void FUN_0017b580(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0017b580"
         },
         {
           "addr": "0x17b5c0",
@@ -31202,7 +31203,7 @@
         {
           "addr": "0x17cf90",
           "decl": "void FUN_0017cf90(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017cf90"
         },
         {
@@ -38690,12 +38691,14 @@
         {
           "addr": "0x15f200",
           "decl": "void FUN_0015f200(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0015f200"
         },
         {
           "addr": "0x15f220",
           "decl": "void FUN_0015f220(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0015f220"
         },
         {
           "addr": "0x15f540",
@@ -38716,8 +38719,9 @@
         },
         {
           "addr": "0x15f8e0",
-          "decl": "void FUN_0015f8e0(void *parameters, void *vertices);",
-          "ported": false
+          "decl": "void FUN_0015f8e0(void *render_data, void *vertices);",
+          "ported": false,
+          "name": "FUN_0015f8e0"
         },
         {
           "addr": "0x160920",

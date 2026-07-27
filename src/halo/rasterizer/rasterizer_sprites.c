@@ -334,7 +334,7 @@ void FUN_0017cf40(void)
 /* FUN_0017cf50 (0x17cf50) — readable C lift (jmp thunk to 0x15f200). */
 void FUN_0017cf50(void)
 {
-  ((void (*)(void))0x15f200)();
+  FUN_0015f200();
 }
 
 /* FUN_0017cf60 (0x17cf60) — readable C lift. */
@@ -346,7 +346,7 @@ void FUN_0017cf60(uint32_t source, uint32_t param, int arg3, int arg4, uint32_t 
 /* FUN_0017cf70 (0x17cf70) — readable C lift (jmp thunk to 0x15f210). */
 void FUN_0017cf70(void)
 {
-  ((void (*)(void))0x15f210)();
+  FUN_0015f210();
 }
 
 
@@ -359,7 +359,7 @@ void FUN_0017cf80(int arg1, int arg2, uint32_t handle, int subcount2)
 /* FUN_0017cf90 (0x17cf90) — readable C lift (jmp thunk to 0x15f220). */
 void FUN_0017cf90(void)
 {
-  ((void (*)(void))0x15f220)();
+  FUN_0015f220();
 }
 
 
@@ -390,7 +390,7 @@ void FUN_0017cfe0(int tex_flags)
 /* FUN_0017cff0 (0x17cff0) — readable C lift (jmp thunk to 0x17b580). */
 void FUN_0017cff0(void)
 {
-  ((void (*)(void))0x17b580)();
+  FUN_0017b580();
 }
 
 
