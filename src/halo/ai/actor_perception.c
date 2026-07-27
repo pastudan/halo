@@ -4133,893 +4133,177 @@ char actor_perception_create_orphan_from_friend(int actor_handle __attribute__((
 #endif
 
 
-/* actor_perception_refresh (0x34c80) — XBE naked draft (batch 104). */
-#if defined(__clang__)
-static void * (*const b34c80_c18e3c0)(void) = scenario_get;
-static void *(*const b34c80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b34c80_memset)(void *, int, unsigned int) = csmemset;
-static void *(*const b34c80_get)(int, int) = object_get_and_verify_type;
-static uint32_t * (*const b34c80_c193550)(void *bsp, int16_t cluster_index) = structure_bsp_get_cluster_sound_data;
-static void (*const b34c80_c108f00)(int16_t bit_vector_size, int v0, int v1, int result_out) = bit_vector_or;
-static void (*const b34c80_c13eb70)(void) = object_reset_markers;
-static void (*const b34c80_c64540)(int *out, int actor_handle) = FUN_00064540;
-static int (*const b34c80_c64570)(int *iter) = FUN_00064570;
-static int16_t (*const b34c80_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
-static int16_t (*const b34c80_c13fe10)(void *iter_state, int object_handle) = object_get_first_cluster;
-static int16_t (*const b34c80_c13d5f0)(void *param_1, int param_2) = FUN_0013d5f0;
-static int (*const b34c80_c13ec50)(int object_handle) = object_mark;
-static void (*const b34c80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b34c80_exitfn)(int) = system_exit;
-static int (*const b34c80_gtime)(void) = game_time_get;
-static void (*const b34c80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b34c80_c3b410)(int actor_handle, int old_prop, int new_prop) = FUN_0003b410;
-static void (*const b34c80_c64a80)(int actor_handle, int prop_handle) = prop_iterator_next;
-static int (*const b34c80_c13d5b0)(int *state, int16_t cluster_idx) = cluster_partition_object_iter_first;
-static void (*const b34c80_c342a0)(int actor_handle, int unit_handle, void *primary_list, void *secondary_list) = actor_perception_refresh_test_object;
-static int (*const b34c80_c13d5d0)(int *state) = cluster_partition_object_iter_next;
-static void (*const b34c80_c13d570)(int *param_1, int param_2) = cluster_get_first_noncollideable_object;
-static void (*const b34c80_c13d590)(int *param_1) = cluster_get_next_noncollideable_object;
-static void __cdecl (*const b34c80_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
-static int (*const b34c80_c645a0)(int actor_handle, int unit_handle, char friendly) = prop_new_unacknowledged;
-static void (*const b34c80_c31df0)(int actor_handle, int prop_handle, float *out_pos, char refresh_flag, char swarm_refresh) = prop_position_refresh;
-static void (*const b34c80_c13ebc0)(void) = object_marker_end;
-
-__attribute__((naked, noinline))
+/* actor_perception_refresh (0x34c80) — readable C lift (restored pre-naked). */
 void actor_perception_refresh(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xcc4, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%ebx, -0x1c(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "movw %%cx, -0x6be(%%ebp)\n\t"
-      "movw %%cx, -0x6c0(%%ebp)\n\t"
-      "movw %%cx, -0xcc2(%%ebp)\n\t"
-      "movw %%cx, -0xcc4(%%ebp)\n\t"
-      "movb 0x6(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl %%eax, -0x34(%%ebp)\n\t"
-      "je .Lactor_perception_refresh_3\n\t"
-      "movl 0x28(%%eax), %%edx\n\t"
-      "movl 0x6325a0, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "pushl $0x40\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      "call *%[memset]\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw %%di, 0x2(%%esi)\n\t"
-      "jle .Lactor_perception_refresh_4\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lactor_perception_refresh_1:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movl 0x18(%%esi,%%edx,4), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x4c(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lactor_perception_refresh_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c193550]\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x134(%%ebx), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c108f00]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movb $1, -0x4(%%ebp)\n\t"
-      ".Lactor_perception_refresh_2:\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x2(%%esi), %%di\n\t"
-      "jl .Lactor_perception_refresh_1\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_refresh_4\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "jmp .Lactor_perception_refresh_4\n\t"
-      ".Lactor_perception_refresh_3:\n\t"
-      "movswl 0x148(%%eax), %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lactor_perception_refresh_4\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c193550]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      ".Lactor_perception_refresh_4:\n\t"
-      "call *%[c13eb70]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lactor_perception_refresh_52\n\t"
-      ".Lactor_perception_refresh_5:\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_perception_refresh_6\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jle .Lactor_perception_refresh_51\n\t"
-      ".Lactor_perception_refresh_6:\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "movl 0x20(%%esi), %%eax\n\t"
-      "movw 0x76(%%esi), %%cx\n\t"
-      "movw 0x6a(%%esi), %%dx\n\t"
-      "movb 0x12e(%%esi), %%bl\n\t"
-      "movl 0x1c(%%esi), %%edi\n\t"
-      "fld %%st(0)\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "movw %%cx, -0x30(%%ebp)\n\t"
-      "movb 0x63(%%esi), %%cl\n\t"
-      "movw %%dx, -0x3c(%%ebp)\n\t"
-      "movb 0x127(%%esi), %%dl\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movb %%cl, -0x18(%%ebp)\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "movb %%dl, -0x14(%%ebp)\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x2c(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "jne .Lactor_perception_refresh_7\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lactor_perception_refresh_8\n\t"
-      ".Lactor_perception_refresh_7:\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lactor_perception_refresh_8:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movb $0, -0x5(%%ebp)\n\t"
-      "je .Lactor_perception_refresh_9\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_9:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lactor_perception_refresh_11\n\t"
-      "movb 0x8(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_perception_refresh_10\n\t"
-      "movb 0x13(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_perception_refresh_11\n\t"
-      ".Lactor_perception_refresh_10:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_11:\n\t"
-      "movb -0x18(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_refresh_12\n\t"
-      "cmpw $0, -0x3c(%%ebp)\n\t"
-      "jle .Lactor_perception_refresh_13\n\t"
-      ".Lactor_perception_refresh_12:\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_13:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x255fe0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_perception_refresh_14\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_14:\n\t"
-      "movb -0x14(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_refresh_26\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movb $1, %%bl\n\t"
-      "je .Lactor_perception_refresh_20\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl -0x2c(%%ebp), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl -0x20(%%ebp), %%edx\n\t"
-      "movl 0x58(%%edi), %%ecx\n\t"
-      "movl 0x3a0(%%edx), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jg .Lactor_perception_refresh_15\n\t"
-      "movl %%edx, %%ecx\n\t"
-      ".Lactor_perception_refresh_15:\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lactor_perception_refresh_17\n\t"
-      "movl 0x3cc(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_16\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lactor_perception_refresh_17\n\t"
-      ".Lactor_perception_refresh_16:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lactor_perception_refresh_17:\n\t"
-      "movb 0x45(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_refresh_18\n\t"
-      "movb 0x44(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_refresh_18\n\t"
-      "movb 0x42(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_refresh_18\n\t"
-      "movb $1, %%al\n\t"
-      "jmp .Lactor_perception_refresh_19\n\t"
-      ".Lactor_perception_refresh_18:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lactor_perception_refresh_19:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lactor_perception_refresh_33\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_refresh_20\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x255fdc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_perception_refresh_23\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_20:\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_perception_refresh_21\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_21:\n\t"
-      "movb -0x4(%%ebp), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lactor_perception_refresh_22\n\t"
-      "cmpw $0x96, -0x30(%%ebp)\n\t"
-      "jle .Lactor_perception_refresh_22\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_22:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d6d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jle .Lactor_perception_refresh_24\n\t"
-      ".Lactor_perception_refresh_23:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_24:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "flds 0x254e74\n\t"
-      "jne .Lactor_perception_refresh_25\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "cmpw $3, 0x6a(%%ecx)\n\t"
-      "jge .Lactor_perception_refresh_25\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x254df8\n\t"
-      ".Lactor_perception_refresh_25:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_perception_refresh_23\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_26:\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_refresh_27\n\t"
-      "fcomps 0x255fd8\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_31\n\t"
-      ".Lactor_perception_refresh_27:\n\t"
-      "fcomps 0x255fdc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_perception_refresh_28\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lactor_perception_refresh_29\n\t"
-      ".Lactor_perception_refresh_28:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lactor_perception_refresh_29:\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "cmpw $4, 0x6e(%%eax)\n\t"
-      "jl .Lactor_perception_refresh_30\n\t"
-      "movb $1, -0x5(%%ebp)\n\t"
-      "jmp .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_30:\n\t"
-      "movb 0x1cc(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lactor_perception_refresh_32\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x254e74\n\t"
-      ".Lactor_perception_refresh_31:\n\t"
-      "fnstsw %%ax\n\t"
-      "movb $1, -0x5(%%ebp)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lactor_perception_refresh_33\n\t"
-      ".Lactor_perception_refresh_32:\n\t"
-      "movb $0, -0x5(%%ebp)\n\t"
-      ".Lactor_perception_refresh_33:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movb %%bl, -0x4(%%ebp)\n\t"
-      "je .Lactor_perception_refresh_36\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lactor_perception_refresh_36\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x44(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      "call *%[c13fe10]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lactor_perception_refresh_36\n\t"
-      ".Lactor_perception_refresh_34:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "sarl $5, %%eax\n\t"
-      "testl %%edx, (%%edi,%%eax,4)\n\t"
-      "jne .Lactor_perception_refresh_35\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x44(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d5f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lactor_perception_refresh_34\n\t"
-      "jmp .Lactor_perception_refresh_36\n\t"
-      ".Lactor_perception_refresh_35:\n\t"
-      "movb $1, -0x4(%%ebp)\n\t"
-      ".Lactor_perception_refresh_36:\n\t"
-      "movb 0x14(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_refresh_40\n\t"
-      "movl 0x1c(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_40\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x28(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_38\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%di, 0x2(%%ebx)\n\t"
-      "jle .Lactor_perception_refresh_40\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lactor_perception_refresh_37:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl 0x18(%%ebx,%%ecx,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13ec50]\n\t"
-      "addl $4, %%esp\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x2(%%ebx), %%di\n\t"
-      "jl .Lactor_perception_refresh_37\n\t"
-      "jmp .Lactor_perception_refresh_40\n\t"
-      ".Lactor_perception_refresh_38:\n\t"
-      "movl -0x34(%%ebp), %%eax\n\t"
-      "movl 0x24(%%eax), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lactor_perception_refresh_40\n\t"
-      ".Lactor_perception_refresh_39:\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[c13ec50]\n\t"
-      "movl 0x1ac(%%ebx), %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .Lactor_perception_refresh_39\n\t"
-      ".Lactor_perception_refresh_40:\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13ec50]\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_refresh_47\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "leal -0x6c0(%%ebp), %%edi\n\t"
-      "jne .Lactor_perception_refresh_41\n\t"
-      "leal -0xcc4(%%ebp), %%edi\n\t"
-      ".Lactor_perception_refresh_41:\n\t"
-      "movb -0x5(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "je .Lactor_perception_refresh_46\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_refresh_42\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa6d\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x2564c4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_42:\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jge .Lactor_perception_refresh_43\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "fmuls 0x2564c0\n\t"
-      "leal (%%eax,%%eax,2), %%edx\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "movl %%eax, 0x4(%%edi,%%edx,4)\n\t"
-      "movswl 0x2(%%edi), %%eax\n\t"
-      "movl -0x28(%%ebp), %%edx\n\t"
-      "leal (%%eax,%%eax,2), %%ecx\n\t"
-      "movl %%edx, 0x8(%%edi,%%ecx,4)\n\t"
-      "movswl 0x2(%%edi), %%eax\n\t"
-      "incl %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "fstps (%%edi,%%eax,4)\n\t"
-      "incw 0x2(%%edi)\n\t"
-      "jmp .Lactor_perception_refresh_51\n\t"
-      ".Lactor_perception_refresh_43:\n\t"
-      "cmpl $-1, 0x2c8520\n\t"
-      "je .Lactor_perception_refresh_44\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x2c8520, %%ecx\n\t"
-      "addl $0x96, %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jle .Lactor_perception_refresh_51\n\t"
-      ".Lactor_perception_refresh_44:\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x2564b8, %%eax\n\t"
-      "jne .Lactor_perception_refresh_45\n\t"
-      "movl $0x2564b0, %%eax\n\t"
-      ".Lactor_perception_refresh_45:\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x256474\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x2c8520\n\t"
-      "jmp .Lactor_perception_refresh_51\n\t"
-      ".Lactor_perception_refresh_46:\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_refresh_51\n\t"
-      "incw (%%edi)\n\t"
-      "jmp .Lactor_perception_refresh_51\n\t"
-      ".Lactor_perception_refresh_47:\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_perception_refresh_48\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jle .Lactor_perception_refresh_49\n\t"
-      ".Lactor_perception_refresh_48:\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "je .Lactor_perception_refresh_50\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c3b410]\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c64a80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lactor_perception_refresh_50\n\t"
-      ".Lactor_perception_refresh_49:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".Lactor_perception_refresh_50:\n\t"
-      "movl -0x28(%%ebp), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c3b410]\n\t"
-      "movl -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c64a80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_51:\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lactor_perception_refresh_5\n\t"
-      ".Lactor_perception_refresh_52:\n\t"
-      "movl -0x10(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lactor_perception_refresh_58\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "movl 0x134(%%eax), %%ecx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .Lactor_perception_refresh_58\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lactor_perception_refresh_53\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lactor_perception_refresh_53:\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "sarl $5, %%eax\n\t"
-      "testl %%edx, (%%ebx,%%eax,4)\n\t"
-      "je .Lactor_perception_refresh_57\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d5b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_55\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lactor_perception_refresh_54:\n\t"
-      "leal -0xcc4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x6c0(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c342a0]\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d5d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lactor_perception_refresh_54\n\t"
-      ".Lactor_perception_refresh_55:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d570]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_57\n\t"
-      "jmp .Lactor_perception_refresh_56\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lactor_perception_refresh_56:\n\t"
-      "leal -0xcc4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x6c0(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c342a0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13d590]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lactor_perception_refresh_56\n\t"
-      ".Lactor_perception_refresh_57:\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "movl 0x134(%%ecx), %%edx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .Lactor_perception_refresh_53\n\t"
-      "jmp .Lactor_perception_refresh_59\n\t"
-      ".Lactor_perception_refresh_58:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".Lactor_perception_refresh_59:\n\t"
-      "movw -0x6be(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lactor_perception_refresh_69\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpw $4, -0x6c0(%%ebp)\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      "jge .Lactor_perception_refresh_64\n\t"
-      "pushl $0x2f5b0\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x6bc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9260]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw %%di, -0x6be(%%ebp)\n\t"
-      "jle .Lactor_perception_refresh_69\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lactor_perception_refresh_60:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "cmpl %%ebx, -0x6b8(%%ebp,%%eax,1)\n\t"
-      "jne .Lactor_perception_refresh_61\n\t"
-      "movl -0x6bc(%%ebp,%%eax,1), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c645a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lactor_perception_refresh_62\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0xbc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c31df0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_61:\n\t"
-      "movw -0x6c0(%%ebp), %%ax\n\t"
-      "incw %%ax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "movw %%ax, -0x6c0(%%ebp)\n\t"
-      "jge .Lactor_perception_refresh_63\n\t"
-      ".Lactor_perception_refresh_62:\n\t"
-      "incl %%edi\n\t"
-      "cmpw -0x6be(%%ebp), %%di\n\t"
-      "jl .Lactor_perception_refresh_60\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      "jmp .Lactor_perception_refresh_69\n\t"
-      ".Lactor_perception_refresh_63:\n\t"
-      "movw -0x6be(%%ebp), %%ax\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      ".Lactor_perception_refresh_64:\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jge .Lactor_perception_refresh_69\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lactor_perception_refresh_65:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%ebx\n\t"
-      "movl -0x6b8(%%ebp,%%ebx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "leal -0x6b8(%%ebp,%%ebx,4), %%ebx\n\t"
-      "je .Lactor_perception_refresh_68\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x24(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_perception_refresh_66\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jle .Lactor_perception_refresh_67\n\t"
-      ".Lactor_perception_refresh_66:\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_67\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c3b410]\n\t"
-      "movl 0xc(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c64a80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_67:\n\t"
-      "movl (%%ebx), %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c3b410]\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c64a80]\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_68:\n\t"
-      "incl %%edi\n\t"
-      "cmpw -0x6be(%%ebp), %%di\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      "jl .Lactor_perception_refresh_65\n\t"
-      ".Lactor_perception_refresh_69:\n\t"
-      "movw -0xcc2(%%ebp), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lactor_perception_refresh_80\n\t"
-      "movl -0x6c0(%%ebp), %%eax\n\t"
-      "movl -0xcc4(%%ebp), %%edx\n\t"
-      "leal (%%edx,%%eax,1), %%ebx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "addl $2, %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "jg .Lactor_perception_refresh_70\n\t"
-      "movl $4, %%eax\n\t"
-      ".Lactor_perception_refresh_70:\n\t"
-      "cmpw %%ax, %%bx\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "jge .Lactor_perception_refresh_75\n\t"
-      "pushl $0x2f5b0\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xcc0(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d9260]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0, -0xcc2(%%ebp)\n\t"
-      "jle .Lactor_perception_refresh_80\n\t"
-      ".Lactor_perception_refresh_71:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "cmpl $-1, -0xcbc(%%ebp,%%eax,1)\n\t"
-      "jne .Lactor_perception_refresh_72\n\t"
-      "movl -0xcc0(%%ebp,%%eax,1), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c645a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_73\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0xbc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c31df0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_72:\n\t"
-      "incw -0xcc4(%%ebp)\n\t"
-      "incl %%ebx\n\t"
-      "cmpw -0x1c(%%ebp), %%bx\n\t"
-      "jge .Lactor_perception_refresh_74\n\t"
-      ".Lactor_perception_refresh_73:\n\t"
-      "incl %%edi\n\t"
-      "cmpw -0xcc2(%%ebp), %%di\n\t"
-      "jl .Lactor_perception_refresh_71\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "call *%[c13ebc0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_perception_refresh_74:\n\t"
-      "movw -0xcc2(%%ebp), %%cx\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      ".Lactor_perception_refresh_75:\n\t"
-      "cmpw %%cx, %%di\n\t"
-      "jge .Lactor_perception_refresh_80\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "jmp .Lactor_perception_refresh_76\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lactor_perception_refresh_76:\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%ebx\n\t"
-      "movl -0xcbc(%%ebp,%%ebx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "leal -0xcbc(%%ebp,%%ebx,4), %%ebx\n\t"
-      "je .Lactor_perception_refresh_79\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x24(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_perception_refresh_77\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jle .Lactor_perception_refresh_78\n\t"
-      ".Lactor_perception_refresh_77:\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_refresh_78\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c3b410]\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c64a80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_78:\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c3b410]\n\t"
-      "movl (%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c64a80]\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_refresh_79:\n\t"
-      "incl %%ecx\n\t"
-      "cmpw -0xcc2(%%ebp), %%cx\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "jl .Lactor_perception_refresh_76\n\t"
-      ".Lactor_perception_refresh_80:\n\t"
-      "call *%[c13ebc0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b34c80_c18e3c0), [dget] "m"(b34c80_dget), [memset] "m"(b34c80_memset), [get] "m"(b34c80_get), [c193550] "m"(b34c80_c193550), [c108f00] "m"(b34c80_c108f00), [c13eb70] "m"(b34c80_c13eb70), [c64540] "m"(b34c80_c64540), [c64570] "m"(b34c80_c64570), [c1d6d0] "m"(b34c80_c1d6d0), [c13fe10] "m"(b34c80_c13fe10), [c13d5f0] "m"(b34c80_c13d5f0), [c13ec50] "m"(b34c80_c13ec50), [assert] "m"(b34c80_assert), [exitfn] "m"(b34c80_exitfn), [gtime] "m"(b34c80_gtime), [c8f390] "m"(b34c80_c8f390), [c3b410] "m"(b34c80_c3b410), [c64a80] "m"(b34c80_c64a80), [c13d5b0] "m"(b34c80_c13d5b0), [c342a0] "m"(b34c80_c342a0), [c13d5d0] "m"(b34c80_c13d5d0), [c13d570] "m"(b34c80_c13d570), [c13d590] "m"(b34c80_c13d590), [c1d9260] "m"(b34c80_c1d9260), [c645a0] "m"(b34c80_c645a0), [c31df0] "m"(b34c80_c31df0), [c13ebc0] "m"(b34c80_c13ebc0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+  int local_28 = 0;
+  int local_2c = 0;
+
+  scenario_get();
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a0), 0);
+  csmemset((void *)0, 0, 64);
+  /* relift: cmp word ptr [esi + 2], (int16_t)edi -> jle 0x34d8b */
+  object_get_and_verify_type(0, 3);
+  /* cmp (int16_t)eax, 0xffff -> je 0x34d58 */
+  structure_bsp_get_cluster_sound_data((void *)(uintptr_t)eax, eax);
+  bit_vector_or(0, eax, 0, 0);
+  /* relift: cmp (int16_t)edi, word ptr [esi + 2] -> jl 0x34d10 */
+  /* test (char)eax, (char)eax -> je 0x34d8b */
+  /* cmp (int16_t)eax, 0xffff -> je 0x34d8b */
+  structure_bsp_get_cluster_sound_data((void *)(uintptr_t)eax, eax);
+  object_reset_markers();
+  FUN_00064540((void *)0, 0);
+  FUN_00064570((void *)0);
+  /* test esi, esi -> je 0x35245 */
+  /* cmp (int16_t)eax, 4 -> jl 0x34dc7 */
+  /* cmp (int16_t)eax, 5 -> jle 0x3522f */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
+  /* test eax, eax -> je 0x34e67 */
+  /* test (char)ecx, (char)ecx -> je 0x34e60 */
+  /* test (char)ecx, (char)ecx -> je 0x34e67 */
+  /* test (char)eax, (char)eax -> jne 0x34e75 */
+  /* relift: cmp word ptr [ebp - 0x3c], 0 -> jle 0x34e7c */
+  /* relift: relift: fcomp dword ptr [0x255fe0] */
+  /* test (char)eax, 0x41 -> jne 0x34e93 */
+  /* test (char)eax, (char)eax -> je 0x34fa6 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
+  object_get_and_verify_type(local_2c, 3);
+  /* cmp ecx, edx -> jg 0x34ede */
+  /* cmp ecx, -1 -> je 0x34ef4 */
+  /* cmp eax, -1 -> je 0x34ef2 */
+  /* cmp eax, ecx -> jge 0x34ef4 */
+  /* test (char)eax, (char)eax -> jne 0x34f0d */
+  /* test (char)eax, (char)eax -> jne 0x34f0d */
+  /* test (char)eax, (char)eax -> jne 0x34f0d */
+  /* test (char)ebx, (char)ebx -> je 0x34fff */
+  /* test (char)eax, (char)eax -> je 0x34f32 */
+  /* relift: relift: fcomp dword ptr [0x255fdc] */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x34f49 */
+  /* test (char)ebx, (char)ebx -> je 0x34f5f */
+  /* relift: cmp word ptr [ebp - 0x30], 0x96 -> jle 0x34f5f */
+  actor_action_try_to_panic(0);
+  /* cmp (int16_t)eax, 1 -> jle 0x34f78 */
+  /* relift: relift: fld dword ptr [0x254e74] */
+  /* relift: cmp word ptr [ecx + 0x6a], 3 -> jge 0x34f94 */
+  /* relift: relift: fld dword ptr [0x254df8] */
+  /* test (char)eax, (char)eax -> je 0x34fba */
+  /* relift: relift: fcomp dword ptr [0x255fd8] */
+  /* relift: relift: fcomp dword ptr [0x255fdc] */
+  /* relift: cmp word ptr [eax + 0x6e], 4 -> jl 0x34fdd */
+  /* test (char)ecx, (char)ecx -> jne 0x34ffb */
+  /* relift: relift: fcomp dword ptr [0x254e74] */
+  /* test (char)eax, 0x41 -> je 0x34fff */
+  /* test edi, edi -> je 0x3505a */
+  object_get_first_cluster((void *)0, 0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x3505a */
+  /* relift: test dword ptr [edi + eax*4], edx -> jne 0x35056 */
+  FUN_0013d5f0((void *)0, 0);
+  /* cmp (int16_t)eax, 0xffff -> jne 0x35027 */
+  /* test (char)eax, (char)eax -> je 0x350e2 */
+  /* cmp eax, -1 -> je 0x350e2 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
+  /* cmp eax, -1 -> je 0x350b9 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a0), 0);
+  /* relift: cmp word ptr [ebx + 2], (int16_t)edi -> jle 0x350e2 */
+  object_mark(0);
+  /* relift: cmp (int16_t)edi, word ptr [ebx + 2] -> jl 0x350a0 */
+  /* cmp edi, -1 -> je 0x350e2 */
+  object_get_and_verify_type(0, 3);
+  object_mark(0);
+  /* cmp edi, -1 -> jne 0x350c4 */
+  object_mark(0);
+  /* test (char)eax, (char)eax -> je 0x351e0 */
+  /* test (char)eax, (char)eax -> je 0x35141 */
+  display_assert((char *)0x002564c4, (char *)0x00255fb0, 2669, 1);
+  system_exit(-1);
+  /* cmp (int16_t)eax, 0x80 -> jge 0x35183 */
+  /* relift: cmp dword ptr [0x2c8520], -1 -> je 0x351a5 */
+  game_time_get();
+  /* cmp eax, ecx -> jle 0x3522f */
+  error(2, (char *)0x00256474);
+  game_time_get();
+  /* mem[0x002c8520] = eax */
+  /* test (char)eax, (char)eax -> jne 0x3522f */
+  /* cmp (int16_t)eax, 4 -> jl 0x351f0 */
+  /* cmp (int16_t)eax, 5 -> jle 0x35213 */
+  FUN_0003b410(0, 0, -1);
+  prop_iterator_next(0, 0);
+  FUN_0003b410(0, local_28, -1);
+  prop_iterator_next(0, local_28);
+  FUN_00064570((void *)0);
+  /* test esi, esi -> jne 0x34db3 */
+  /* test ebx, ebx -> je 0x3531d */
+  /* test ecx, ecx -> jle 0x3531d */
+  /* relift: test dword ptr [ebx + eax*4], edx -> je 0x35306 */
+  cluster_partition_object_iter_first((void *)0, 0);
+  /* cmp eax, -1 -> je 0x352c6 */
+  /* relift: actor_perception_refresh_test_object(actor_handle, unit_handle, primary_list, secondary_list); */
+  cluster_partition_object_iter_next((void *)0);
+  /* cmp eax, -1 -> jne 0x352a0 */
+  cluster_get_first_noncollideable_object((void *)0, 0);
+  /* cmp eax, -1 -> je 0x35306 */
+  /* relift: actor_perception_refresh_test_object(actor_handle, unit_handle, primary_list, secondary_list); */
+  cluster_get_next_noncollideable_object((void *)0);
+  /* cmp eax, -1 -> jne 0x352e0 */
+  /* cmp eax, edx -> jl 0x35270 */
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x3546f */
+  qsort((void *)0, 0, 12, (void *)0);
+  /* relift: cmp word ptr [ebp - 0x6be], (int16_t)edi -> jle 0x3546f */
+  /* relift: cmp dword ptr [ebp + eax - 0x6b8], ebx -> jne 0x353ae */
+  prop_new_unacknowledged(0, 0, 0);
+  /* cmp eax, ebx -> je 0x353c4 */
+  prop_position_refresh(0, 0, 0, 0, 0);
+  /* relift: cmp (int16_t)edi, word ptr [ebp - 0x6be] -> jl 0x35370 */
+  /* cmp (int16_t)edi, (int16_t)eax -> jge 0x3546f */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
+  /* cmp (int16_t)eax, 4 -> jl 0x3542a */
+  /* cmp (int16_t)eax, 5 -> jle 0x35448 */
+  /* cmp eax, -1 -> je 0x35448 */
+  FUN_0003b410(0, 0, -1);
+  prop_iterator_next(0, 0);
+  FUN_0003b410(0, 0, -1);
+  prop_iterator_next(0, 0);
+  /* test (int16_t)ecx, (int16_t)ecx -> jle 0x355e0 */
+  qsort((void *)0, 0, 12, (void *)0);
+  /* relift: cmp word ptr [ebp - 0xcc2], 0 -> jle 0x355e0 */
+  /* relift: cmp dword ptr [ebp + eax - 0xcbc], -1 -> jne 0x35517 */
+  prop_new_unacknowledged(0, 0, 0);
+  /* cmp eax, -1 -> je 0x35525 */
+  prop_position_refresh(0, 0, 0, 0, 0);
+  /* relift: cmp (int16_t)ebx, word ptr [ebp - 0x1c] -> jge 0x3553e */
+  /* relift: cmp (int16_t)edi, word ptr [ebp - 0xcc2] -> jl 0x354d7 */
+  object_marker_end();
+  /* cmp (int16_t)edi, (int16_t)ecx -> jge 0x355e0 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
+  /* cmp (int16_t)eax, 4 -> jl 0x3559b */
+  /* cmp (int16_t)eax, 5 -> jle 0x355b9 */
+  /* cmp eax, -1 -> je 0x355b9 */
+  FUN_0003b410(0, 0, -1);
+  prop_iterator_next(0, 0);
+  FUN_0003b410(0, 0, -1);
+  prop_iterator_next(0, 0);
+  object_marker_end();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+  (void)local_28;
+  (void)local_2c;
 }
-#else
-#error "actor_perception_refresh: clang naked draft required"
-#endif
 
 
 /* FUN_000355f0 (0x355f0) — readable C lift (restored pre-naked). */
