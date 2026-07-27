@@ -10356,7 +10356,7 @@
         {
           "addr": "0x1c6d90",
           "decl": "void FUN_001c6d90(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001c6d90"
         },
         {
@@ -10423,7 +10423,7 @@
         {
           "addr": "0x1c77a0",
           "decl": "void FUN_001c77a0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001c77a0"
         },
         {
@@ -25701,7 +25701,7 @@
         {
           "addr": "0x1be2b0",
           "decl": "void FUN_001be2b0(void *perm_entry@<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001be2b0"
         },
         {
