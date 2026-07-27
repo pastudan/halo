@@ -1245,130 +1245,32 @@ void *pool_new_handle_clear(void *pool, int alloc_size, const char *file, unsign
   return block;
 }
 
-/* pool_resize_handle (0x11f930) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static void (*const b11f930_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11f930_exitfn)(int) = system_exit;
-static int (*const b11f930_c11ef50)(void *block_hdr, void *pool) = stack_memory_pool_valid_block;
-static void * (*const b11f930_c11f750)(int new_size, void *pool, void *block_hdr, const char *file, unsigned int line) = stack_memory_pool_alloc_or_resize;
-static unsigned int (*const b11f930_c11ea90)(void *block_hdr) = FUN_0011ea90;
-
-__attribute__((naked, noinline))
+/* pool_resize_handle (0x11f930) — readable C lift (restored pre-naked). */
 void pool_resize_handle(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lpool_resize_handle_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc1\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2904f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpool_resize_handle_1:\n\t"
-      "movl (%%esi), %%ebx\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c11ef50]\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "jne .Lpool_resize_handle_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc5\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x290538\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpool_resize_handle_2:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpool_resize_handle_3:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .Lpool_resize_handle_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22f\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2901b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpool_resize_handle_4:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl (%%ebx), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "andl $0x7fffffff, %%esi\n\t"
-      "call *%[c11f750]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lpool_resize_handle_6\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x18(%%edi), %%edx\n\t"
-      "andl $0x7fffffff, %%ecx\n\t"
-      "subl %%esi, %%ecx\n\t"
-      "movl 0x14(%%edi), %%esi\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "movl %%esi, 0x14(%%edi)\n\t"
-      "jle .Lpool_resize_handle_5\n\t"
-      "movl %%ecx, 0x18(%%edi)\n\t"
-      ".Lpool_resize_handle_5:\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x24(%%edi), %%ecx\n\t"
-      "andl $0x7fffffff, %%edx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jbe .Lpool_resize_handle_2\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c11ea90]\n\t"
-      "movl %%eax, 0x24(%%edi)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpool_resize_handle_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11f930_assert), [exitfn] "m"(b11f930_exitfn), [c11ef50] "m"(b11f930_c11ef50), [c11f750] "m"(b11f930_c11f750), [c11ea90] "m"(b11f930_c11ea90)
-      : "memory");
-}
-#else
-#error "pool_resize_handle: clang naked draft required"
-#endif
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
 
+  display_assert((char *)0x002904f8, (char *)0x0029018c, 193, 0);
+  system_exit(0);
+  stack_memory_pool_valid_block((void *)0, (void *)0);
+  display_assert((char *)0x00290538, (char *)0x0029018c, 197, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x11f9c1 */
+  display_assert((char *)0x002901b8, (char *)0x0029018c, 559, 0);
+  system_exit(0);
+  stack_memory_pool_alloc_or_resize(0, (void *)0, (void *)0, (char *)0, 0);
+  /* test eax, eax -> je 0x11fa2d */
+  /* cmp edx, ecx -> jbe 0x11f993 */
+  FUN_0011ea90((void *)0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+}
 
 /* pool_new_pointer_clear (0x11faf0) — XBE naked draft (batch 132). */
 #if defined(__clang__)

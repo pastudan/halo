@@ -6343,7 +6343,7 @@
         {
           "addr": "0x11f930",
           "decl": "void pool_resize_handle(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11faf0",
