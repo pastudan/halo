@@ -7349,73 +7349,31 @@ void FUN_00019b20(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00019c70 (0x19c70) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b19c70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b19c70_tag)(int, int) = tag_get;
-static int *(*const b19c70_gseed)(void) = get_global_random_seed_address;
-static float (*const b19c70_rrange)(int *, float, float) = random_real_range;
-static void (*const b19c70_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_00019c70(int actor_handle __attribute__((unused)))
+/* FUN_00019c70 (0x19c70) — readable C lift from XBE leaf. */
+void FUN_00019c70(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x58(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0, 0xa4(%%esi)\n\t"
-      "jne .LFUN_00019c70_1\n\t"
-      "movl 0x348(%%eax), %%ecx\n\t"
-      "movl 0x344(%%eax), %%edx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "jmp .LFUN_00019c70_2\n\t"
-      ".LFUN_00019c70_1:\n\t"
-      "movl 0x350(%%eax), %%edx\n\t"
-      "movl 0x34c(%%eax), %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      ".LFUN_00019c70_2:\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fmuls 0x253394\n\t"
-      "addl $0xc, %%esp\n\t"
-      "call *%[ftol]\n\t"
-      "movl %%eax, 0xbc(%%esi)\n\t"
-      "movl %%eax, 0xc0(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b19c70_dget), [tag] "m"(b19c70_tag), [gseed] "m"(b19c70_gseed), [rrange] "m"(b19c70_rrange), [ftol] "m"(b19c70_ftol)
-      : "memory");
+  char *actor;
+  void *actr_tag;
+  float lo;
+  float hi;
+  int ticks;
+
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  actr_tag = tag_get(0x61637472, *(int *)(actor + 0x58));
+  if (*(short *)(actor + 0xa4) == 0) {
+    hi = *(float *)((char *)actr_tag + 0x348);
+    lo = *(float *)((char *)actr_tag + 0x344);
+  } else {
+    hi = *(float *)((char *)actr_tag + 0x350);
+    lo = *(float *)((char *)actr_tag + 0x34c);
+  }
+  ticks = (int)(random_real_range(get_global_random_seed_address(), lo, hi) *
+                *(float *)0x253394);
+  *(int *)(actor + 0xbc) = ticks;
+  *(int *)(actor + 0xc0) = ticks;
 }
-#else
-#error "FUN_00019c70: clang naked draft required"
-#endif
+
+
 
 
 /* actor_look_secondary (0x19d00) — Secondary actor aim/fire target evaluation.

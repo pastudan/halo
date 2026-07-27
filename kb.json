@@ -3978,7 +3978,8 @@
         {
           "addr": "0x19c70",
           "decl": "void FUN_00019c70(int actor_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00019c70"
         },
         {
           "addr": "0x19d00",
@@ -34411,7 +34412,7 @@
         },
         {
           "addr": "0x2f5b0",
-          "decl": "int FUN_0002f5b0(int param_1, int param_2);",
+          "decl": "int FUN_0002f5b0(float *a, float *b);",
           "name": "FUN_0002f5b0",
           "source_path": "src/halo/ai/actor_perception.c",
           "ported": true
@@ -34527,7 +34528,8 @@
         {
           "addr": "0x31440",
           "decl": "void actor_berserk(int actor_handle, int berserk_flag);",
-          "ported": false
+          "ported": true,
+          "name": "actor_berserk"
         },
         {
           "addr": "0x314f0",
