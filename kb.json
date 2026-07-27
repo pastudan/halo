@@ -27776,7 +27776,7 @@
         {
           "addr": "0xeaec0",
           "decl": "char FUN_000eaec0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000eaec0"
         },
         {
@@ -28220,7 +28220,7 @@
         },
         {
           "addr": "0xf3850",
-          "decl": "void multiplayer_game_set_text_box_for_teams_noteams(void *widget);",
+          "decl": "void multiplayer_game_set_text_box_for_teams_noteams(int *handles, int count);",
           "ported": false,
           "name": "multiplayer_game_set_text_box_for_teams_noteams"
         },

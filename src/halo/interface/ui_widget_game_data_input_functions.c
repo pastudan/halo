@@ -6613,258 +6613,128 @@ void FUN_000f3690(int *out_handles /*@<eax>*/, void *widget /*@<ecx>*/)
     out_handles[2] = sentinel;
 }
 
-/* multiplayer_game_set_text_box_for_game_ruleset (0xf3740) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void (*const bf3740_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf3740_exitfn)(int) = (void *)system_exit;
-static void (*const bf3740_c1c18f0)(void) = (void *)player_profile_new;
-static void (*const bf3740_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* multiplayer_game_set_text_box_for_game_ruleset (0xf3740) — readable C lift from XBE leaf. */
 void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      "movw %%si, -0x3(%%ebp)\n\t"
-      "movl $0x5aa3c0, %%edx\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_1:\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_game_ruleset_4\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jle .Lmultiplayer_game_set_text_box_for_game_ruleset_4\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_2:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "cmpl (%%ebx,%%eax,4), %%ecx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_game_ruleset_3\n\t"
-      "incl %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_game_ruleset_2\n\t"
-      "jmp .Lmultiplayer_game_set_text_box_for_game_ruleset_4\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_3:\n\t"
-      "movb $1, -0x4(%%ebp,%%esi,1)\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_4:\n\t"
-      "addl $0x34, %%edx\n\t"
-      "incl %%esi\n\t"
-      "cmpl $0x5aa45c, %%edx\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_game_ruleset_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lmultiplayer_game_set_text_box_for_game_ruleset_13\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_5:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax,%%ebx,4), %%edx\n\t"
-      "cmpl $-1, %%edx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_game_ruleset_12\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl $0x5aa3c0, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_6:\n\t"
-      "cmpl (%%eax), %%edx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_game_ruleset_7\n\t"
-      "addl $0x34, %%eax\n\t"
-      "incl %%ecx\n\t"
-      "cmpl $0x5aa45c, %%eax\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_game_ruleset_6\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_7:\n\t"
-      "cmpl $3, %%ecx\n\t"
-      "jne .Lmultiplayer_game_set_text_box_for_game_ruleset_12\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_8:\n\t"
-      "cmpb $1, -0x4(%%ebp,%%esi,1)\n\t"
-      "jne .Lmultiplayer_game_set_text_box_for_game_ruleset_10\n\t"
-      "cmpl $3, %%esi\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_game_ruleset_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0xca2\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x289550\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_9:\n\t"
-      "incl %%esi\n\t"
-      "cmpl $3, %%esi\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_game_ruleset_8\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_10:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl (%%edx,%%ebx,4), %%eax\n\t"
-      "movl %%esi, %%edi\n\t"
-      "imull $0x34, %%edi, %%edi\n\t"
-      "leal 0x5aa3c4(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c18f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_game_ruleset_11\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx,%%ebx,4), %%edx\n\t"
-      "movl %%edx, 0x5aa3c0(%%edi)\n\t"
-      "movb $1, -0x4(%%ebp,%%esi,1)\n\t"
-      "jmp .Lmultiplayer_game_set_text_box_for_game_ruleset_12\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_11:\n\t"
-      "pushl $0x289530\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_12:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "incl %%ebx\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_game_ruleset_5\n\t"
-      ".Lmultiplayer_game_set_text_box_for_game_ruleset_13:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf3740_assert), [exitfn] "m"(bf3740_exitfn), [c1c18f0] "m"(bf3740_c1c18f0), [c8f390] "m"(bf3740_c8f390)
-      : "memory");
+  char used[3];
+  int slot_i;
+  int *slot;
+  int j;
+  int handle;
+  int found;
+  int free_i;
+  char ok;
+
+  used[0] = 0;
+  used[1] = 0;
+  used[2] = 0;
+
+  slot_i = 0;
+  for (slot = (int *)0x5aa3c0; (unsigned)slot < 0x5aa45c;
+       slot = (int *)((char *)slot + 0x34), slot_i++) {
+    if (*slot == -1)
+      continue;
+    for (j = 0; j < count; j++) {
+      if (*slot == handles[j]) {
+        used[slot_i] = 1;
+        break;
+      }
+    }
+  }
+
+  for (j = 0; j < count; j++) {
+    handle = handles[j];
+    if (handle == -1)
+      continue;
+    found = 0;
+    for (slot = (int *)0x5aa3c0; (unsigned)slot < 0x5aa45c;
+         slot = (int *)((char *)slot + 0x34), found++) {
+      if (handle == *slot)
+        break;
+    }
+    if (found != 3)
+      continue;
+
+    for (free_i = 0; free_i < 3; free_i++) {
+      if (used[free_i] != 1)
+        break;
+    }
+    if (free_i >= 3) {
+      display_assert((const char *)0x289550, (const char *)0x288938, 0xca2, 1);
+      system_exit(-1);
+    }
+
+    ok = player_profile_new(handle, (void *)(0x5aa3c4 + free_i * 0x34));
+    if (ok) {
+      *(int *)(0x5aa3c0 + free_i * 0x34) = handle;
+      used[free_i] = 1;
+    } else {
+      error(2, (const char *)0x289530);
+    }
+  }
 }
-#else
-#error "multiplayer_game_set_text_box_for_game_ruleset: clang naked draft required"
-#endif
 
 
-/* multiplayer_game_set_text_box_for_teams_noteams (0xf3850) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void (*const bf3850_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf3850_exitfn)(int) = (void *)system_exit;
-static char (*const bf3850_c1c26f0)(int, void *) = (void *)playlist_profile_delete;
-static void (*const bf3850_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void multiplayer_game_set_text_box_for_teams_noteams(void *widget)
+/* multiplayer_game_set_text_box_for_teams_noteams (0xf3850) — readable C lift from XBE leaf. */
+void multiplayer_game_set_text_box_for_teams_noteams(int *handles, int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      "movw %%si, -0x3(%%ebp)\n\t"
-      "movl $0x5aa260, %%edx\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_1:\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_teams_noteams_4\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jle .Lmultiplayer_game_set_text_box_for_teams_noteams_4\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_2:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "cmpl (%%ebx,%%eax,4), %%ecx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_teams_noteams_3\n\t"
-      "incl %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_teams_noteams_2\n\t"
-      "jmp .Lmultiplayer_game_set_text_box_for_teams_noteams_4\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_3:\n\t"
-      "movb $1, -0x4(%%ebp,%%esi,1)\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_4:\n\t"
-      "addl $0x6c, %%edx\n\t"
-      "incl %%esi\n\t"
-      "cmpl $0x5aa3a4, %%edx\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_teams_noteams_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lmultiplayer_game_set_text_box_for_teams_noteams_13\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_5:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax,%%ebx,4), %%edx\n\t"
-      "cmpl $-1, %%edx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_teams_noteams_12\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl $0x5aa260, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_6:\n\t"
-      "cmpl (%%eax), %%edx\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_teams_noteams_7\n\t"
-      "addl $0x6c, %%eax\n\t"
-      "incl %%ecx\n\t"
-      "cmpl $0x5aa3a4, %%eax\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_teams_noteams_6\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_7:\n\t"
-      "cmpl $3, %%ecx\n\t"
-      "jne .Lmultiplayer_game_set_text_box_for_teams_noteams_12\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_8:\n\t"
-      "cmpb $1, -0x4(%%ebp,%%esi,1)\n\t"
-      "jne .Lmultiplayer_game_set_text_box_for_teams_noteams_10\n\t"
-      "cmpl $3, %%esi\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_teams_noteams_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0xcd5\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x289550\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_9:\n\t"
-      "incl %%esi\n\t"
-      "cmpl $3, %%esi\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_teams_noteams_8\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_10:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl (%%edx,%%ebx,4), %%eax\n\t"
-      "movl %%esi, %%edi\n\t"
-      "imull $0x6c, %%edi, %%edi\n\t"
-      "leal 0x5aa264(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c26f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lmultiplayer_game_set_text_box_for_teams_noteams_11\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx,%%ebx,4), %%edx\n\t"
-      "movl %%edx, 0x5aa260(%%edi)\n\t"
-      "movb $1, -0x4(%%ebp,%%esi,1)\n\t"
-      "jmp .Lmultiplayer_game_set_text_box_for_teams_noteams_12\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_11:\n\t"
-      "pushl $0x28956c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_12:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "incl %%ebx\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jl .Lmultiplayer_game_set_text_box_for_teams_noteams_5\n\t"
-      ".Lmultiplayer_game_set_text_box_for_teams_noteams_13:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf3850_assert), [exitfn] "m"(bf3850_exitfn), [c1c26f0] "m"(bf3850_c1c26f0), [c8f390] "m"(bf3850_c8f390)
-      : "memory");
+  char used[3];
+  int slot_i;
+  int *slot;
+  int j;
+  int handle;
+  int found;
+  int free_i;
+  char ok;
+
+  used[0] = 0;
+  used[1] = 0;
+  used[2] = 0;
+
+  slot_i = 0;
+  for (slot = (int *)0x5aa260; (unsigned)slot < 0x5aa3a4;
+       slot = (int *)((char *)slot + 0x6c), slot_i++) {
+    if (*slot == -1)
+      continue;
+    for (j = 0; j < count; j++) {
+      if (*slot == handles[j]) {
+        used[slot_i] = 1;
+        break;
+      }
+    }
+  }
+
+  for (j = 0; j < count; j++) {
+    handle = handles[j];
+    if (handle == -1)
+      continue;
+    found = 0;
+    for (slot = (int *)0x5aa260; (unsigned)slot < 0x5aa3a4;
+         slot = (int *)((char *)slot + 0x6c), found++) {
+      if (handle == *slot)
+        break;
+    }
+    if (found != 3)
+      continue;
+
+    for (free_i = 0; free_i < 3; free_i++) {
+      if (used[free_i] != 1)
+        break;
+    }
+    if (free_i >= 3) {
+      display_assert((const char *)0x289550, (const char *)0x288938, 0xcd5, 1);
+      system_exit(-1);
+    }
+
+    ok = playlist_profile_delete(handle, (void *)(0x5aa264 + free_i * 0x6c));
+    if (ok) {
+      *(int *)(0x5aa260 + free_i * 0x6c) = handle;
+      used[free_i] = 1;
+    } else {
+      error(2, (const char *)0x28956c);
+    }
+  }
 }
-#else
-#error "multiplayer_game_set_text_box_for_teams_noteams: clang naked draft required"
-#endif
 
 
 /* FUN_000f3960 (0xf3960) — readable C lift: compare two int handles. */
