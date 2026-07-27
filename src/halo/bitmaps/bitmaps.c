@@ -1762,131 +1762,188 @@ int bitmap_get_pixel_data_size(void *bitmap)
   return bytes;
 }
 
-/* 0x7e0b0 */
+/* bitmap_2d_new (0x7e0b0) — readable C from XBE. */
 void *bitmap_2d_new(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  extern char DAT_00265030[];
+  extern char DAT_00264fe8[];
+  extern char DAT_00264a74[];
+  extern char DAT_00264da0[];
+  extern char DAT_00264fb0[];
+  void *bitmap;
+  void *pixels;
+  int16_t flags;
+  int size;
 
-  /* test (int16_t)edi, (int16_t)edi -> jle 0x7e0c6 */
-  /* cmp (int16_t)edi, 0x7530 -> jle 0x7e0e6 */
-  display_assert((char *)0x00265030, (char *)0x00264a74, 181, 0);
-  system_exit(0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x7e0f6 */
-  /* cmp (int16_t)ebx, 0x7530 -> jle 0x7e116 */
-  display_assert((char *)0x00264fe8, (char *)0x00264a74, 182, 0);
-  system_exit(0);
-  debug_malloc(48, 0, (char *)0x00264a74, 184);
-  /* test esi, esi -> je 0x7e218 */
-  csmemset((void *)(uintptr_t)esi, 0, 48);
-  /* test eax, edx -> jne 0x7e18d */
-  /* cmp (int16_t)ecx, 0xe -> jl 0x7e19d */
-  /* cmp (int16_t)ecx, 0x10 -> jg 0x7e19d */
-  /* cmp (int16_t)ecx, 0x11 -> jne 0x7e1a7 */
-  bitmap_get_pixel_data_size((void *)(uintptr_t)esi);
-  debug_malloc(eax, 0, (char *)0, 0);
-  bitmap_verify((void *)(uintptr_t)esi, 0);
-  /* test (char)eax, (char)eax -> jne 0x7e227 */
-  display_assert((char *)0x00264da0, (char *)0x00264a74, 217, 0);
-  system_exit(0);
-  error(0, (char *)0x00264fb0);
-  error(0, (char *)0x00264f8c);
-  return NULL;
+  if ((int16_t)width <= 0 || (int16_t)width > 0x7530) {
+    display_assert(DAT_00265030, DAT_00264a74, 181, 1);
+    system_exit(-1);
+  }
+  if ((int16_t)height <= 0 || (int16_t)height > 0x7530) {
+    display_assert(DAT_00264fe8, DAT_00264a74, 182, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  bitmap = debug_malloc(0x30, 0, DAT_00264a74, 184);
+  if (!bitmap) {
+    error(2, DAT_00264fb0);
+    return NULL;
+  }
+
+  csmemset(bitmap, 0, 0x30);
+  *(uint32_t *)bitmap = 0x6269746d; /* 'bitm' */
+  *(int16_t *)((char *)bitmap + 4) = (int16_t)width;
+  *(int16_t *)((char *)bitmap + 6) = (int16_t)height;
+  *(int16_t *)((char *)bitmap + 8) = 1;
+  *(int16_t *)((char *)bitmap + 0xa) = 0; /* _bitmap_type_2d */
+  *(int16_t *)((char *)bitmap + 0xc) = (int16_t)format;
+  *(int16_t *)((char *)bitmap + 0x14) = (int16_t)mipmap_count;
+  flags = 0x40;
+  if ((((int)(int16_t)width) & ((int)(int16_t)width - 1)) == 0 &&
+      (((int)(int16_t)height) & ((int)(int16_t)height - 1)) == 0)
+    flags = 0x41;
+  if ((int16_t)format >= 0xe && (int16_t)format <= 0x10)
+    flags = (int16_t)(flags | 2);
+  if ((int16_t)format == 0x11)
+    flags = (int16_t)(flags | 4);
+  *(int16_t *)((char *)bitmap + 0xe) = flags;
+
+  size = bitmap_get_pixel_data_size(bitmap);
+  pixels = debug_malloc((uint32_t)size, 0, NULL, 0xd5);
+  *(void **)((char *)bitmap + 0x2c) = pixels;
+  if (!pixels) {
+    error(2, DAT_00264fb0);
+    return bitmap;
+  }
+  if (!bitmap_verify(bitmap, 0)) {
+    display_assert(DAT_00264da0, DAT_00264a74, 217, 1);
+    system_exit(-1);
+  }
+  return bitmap;
 }
 
-/* 0x7e230 */
+/* bitmap_3d_new (0x7e230) — readable C from XBE. */
 void *bitmap_3d_new(unsigned short width, unsigned short height, unsigned short depth, unsigned short mipmap_count, unsigned short format)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
+  extern char DAT_002650f8[];
+  extern char DAT_002650b0[];
+  extern char DAT_00265070[];
+  extern char DAT_00264a74[];
+  extern char DAT_00264da0[];
+  extern char DAT_00264fb0[];
+  void *bitmap;
+  void *pixels;
+  int16_t flags;
+  int size;
 
-  /* test (int16_t)edi, (int16_t)edi -> jle 0x7e246 */
-  /* cmp (int16_t)edi, 0x7530 -> jle 0x7e266 */
-  display_assert((char *)0x002650f8, (char *)0x00264a74, 241, 0);
-  system_exit(0);
-  /* test (int16_t)eax, (int16_t)eax -> jle 0x7e275 */
-  /* cmp (int16_t)eax, 0x7530 -> jle 0x7e295 */
-  display_assert((char *)0x002650b0, (char *)0x00264a74, 242, 0);
-  system_exit(0);
-  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x7e2a5 */
-  /* cmp (int16_t)ebx, 0x100 -> jle 0x7e2c5 */
-  display_assert((char *)0x00265070, (char *)0x00264a74, 243, 0);
-  system_exit(0);
-  debug_malloc(48, 0, (char *)0x00264a74, 245);
-  /* test esi, esi -> je 0x7e3d3 */
-  csmemset((void *)(uintptr_t)esi, 0, 48);
-  /* test eax, edx -> jne 0x7e348 */
-  /* test eax, edx -> jne 0x7e348 */
-  /* cmp (int16_t)ecx, 0xe -> jl 0x7e358 */
-  /* cmp (int16_t)ecx, 0x10 -> jg 0x7e358 */
-  /* cmp (int16_t)ecx, 0x11 -> jne 0x7e362 */
-  bitmap_get_pixel_data_size((void *)(uintptr_t)esi);
-  debug_malloc(eax, 0, (char *)0, 0);
-  bitmap_verify((void *)(uintptr_t)esi, 0);
-  /* test (char)eax, (char)eax -> jne 0x7e3e2 */
-  display_assert((char *)0x00264da0, (char *)0x00264a74, 278, 0);
-  system_exit(0);
-  error(0, (char *)0x00264fb0);
-  error(0, (char *)0x00264f8c);
-  return NULL;
+  if ((int16_t)width <= 0 || (int16_t)width > 0x7530) {
+    display_assert(DAT_002650f8, DAT_00264a74, 241, 1);
+    system_exit(-1);
+  }
+  if ((int16_t)height <= 0 || (int16_t)height > 0x7530) {
+    display_assert(DAT_002650b0, DAT_00264a74, 242, 1);
+    system_exit(-1);
+  }
+  if ((int16_t)depth <= 0 || (int16_t)depth > 0x100) {
+    display_assert(DAT_00265070, DAT_00264a74, 243, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  bitmap = debug_malloc(0x30, 0, DAT_00264a74, 245);
+  if (!bitmap) {
+    error(2, DAT_00264fb0);
+    return NULL;
+  }
+
+  csmemset(bitmap, 0, 0x30);
+  *(uint32_t *)bitmap = 0x6269746d;
+  *(int16_t *)((char *)bitmap + 4) = (int16_t)width;
+  *(int16_t *)((char *)bitmap + 6) = (int16_t)height;
+  *(int16_t *)((char *)bitmap + 8) = (int16_t)depth;
+  *(int16_t *)((char *)bitmap + 0xa) = 1; /* _bitmap_type_3d */
+  *(int16_t *)((char *)bitmap + 0xc) = (int16_t)format;
+  *(int16_t *)((char *)bitmap + 0x14) = (int16_t)mipmap_count;
+  flags = 0x40;
+  if ((((int)(int16_t)width) & ((int)(int16_t)width - 1)) == 0 &&
+      (((int)(int16_t)height) & ((int)(int16_t)height - 1)) == 0 &&
+      (((int)(int16_t)depth) & ((int)(int16_t)depth - 1)) == 0)
+    flags = 0x41;
+  if ((int16_t)format >= 0xe && (int16_t)format <= 0x10)
+    flags = (int16_t)(flags | 2);
+  if ((int16_t)format == 0x11)
+    flags = (int16_t)(flags | 4);
+  *(int16_t *)((char *)bitmap + 0xe) = flags;
+
+  size = bitmap_get_pixel_data_size(bitmap);
+  pixels = debug_malloc((uint32_t)size, 0, NULL, 0x111);
+  *(void **)((char *)bitmap + 0x2c) = pixels;
+  if (!pixels) {
+    error(2, DAT_00264fb0);
+    return bitmap;
+  }
+  if (!bitmap_verify(bitmap, 0)) {
+    display_assert(DAT_00264da0, DAT_00264a74, 278, 1);
+    system_exit(-1);
+  }
+  return bitmap;
 }
 
-/* 0x7e3f0 */
+/* bitmap_cube_map_new (0x7e3f0) — readable C from XBE. */
 void *bitmap_cube_map_new(unsigned short width, unsigned short mipmap_count, unsigned short format)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
+  extern char DAT_00265150[];
+  extern char DAT_00265138[];
+  extern char DAT_00264a74[];
+  extern char DAT_00264da0[];
+  extern char DAT_00264fb0[];
+  void *bitmap;
+  void *pixels;
+  int16_t flags;
+  int size;
 
-  /* test (int16_t)edi, (int16_t)edi -> jle 0x7e405 */
-  /* cmp (int16_t)edi, 0x7530 -> jle 0x7e425 */
-  display_assert((char *)0x00265150, (char *)0x00264a74, 300, 0);
-  system_exit(0);
-  /* test eax, ecx -> je 0x7e44f */
-  display_assert((char *)0x00265138, (char *)0x00264a74, 301, 0);
-  system_exit(0);
-  debug_malloc(48, 0, (char *)0x00264a74, 303);
-  /* test esi, esi -> je 0x7e53e */
-  csmemset((void *)(uintptr_t)esi, 0, 48);
-  /* cmp (int16_t)eax, 0x10 -> jg 0x7e4c5 */
-  /* cmp (int16_t)eax, 0x11 -> jne 0x7e4cf */
-  bitmap_get_pixel_data_size((void *)(uintptr_t)esi);
-  debug_malloc(eax, 0, (char *)0, 0);
-  bitmap_verify((void *)(uintptr_t)esi, 0);
-  /* test (char)eax, (char)eax -> jne 0x7e54d */
-  display_assert((char *)0x00264da0, (char *)0x00264a74, 337, 0);
-  system_exit(0);
-  error(0, (char *)0x00264fb0);
-  error(0, (char *)0x00264f8c);
-  return NULL;
+  if ((int16_t)width <= 0 || (int16_t)width > 0x7530) {
+    display_assert(DAT_00265150, DAT_00264a74, 300, 1);
+    system_exit(-1);
+  }
+  if ((((int)(int16_t)width) & ((int)(int16_t)width - 1)) != 0) {
+    display_assert(DAT_00265138, DAT_00264a74, 301, 1);
+    system_exit(-1);
+  }
 
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
+  bitmap = debug_malloc(0x30, 0, DAT_00264a74, 303);
+  if (!bitmap) {
+    error(2, DAT_00264fb0);
+    return NULL;
+  }
+
+  csmemset(bitmap, 0, 0x30);
+  *(uint32_t *)bitmap = 0x6269746d;
+  *(int16_t *)((char *)bitmap + 4) = (int16_t)width;
+  *(int16_t *)((char *)bitmap + 6) = (int16_t)width;
+  *(int16_t *)((char *)bitmap + 8) = 1;
+  *(int16_t *)((char *)bitmap + 0xa) = 2; /* _bitmap_type_cube_map */
+  *(int16_t *)((char *)bitmap + 0xc) = (int16_t)format;
+  *(int16_t *)((char *)bitmap + 0x14) = (int16_t)mipmap_count;
+  *(uint32_t *)((char *)bitmap + 0x28) = 0;
+  flags = 0x41;
+  if ((int16_t)format >= 0xe && (int16_t)format <= 0x10)
+    flags = 0x43;
+  if ((int16_t)format == 0x11)
+    flags = (int16_t)(flags | 4);
+  *(int16_t *)((char *)bitmap + 0xe) = flags;
+
+  size = bitmap_get_pixel_data_size(bitmap);
+  pixels = debug_malloc((uint32_t)size, 0, NULL, 0x14d);
+  *(void **)((char *)bitmap + 0x2c) = pixels;
+  if (!pixels) {
+    error(2, DAT_00264fb0);
+    return bitmap;
+  }
+  if (!bitmap_verify(bitmap, 0)) {
+    display_assert(DAT_00264da0, DAT_00264a74, 337, 1);
+    system_exit(-1);
+  }
+  return bitmap;
 }
 
 /* bitmap_3d_slice_insert (0x7e560) — XBE naked draft (batch 247). */
