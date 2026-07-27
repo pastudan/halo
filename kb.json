@@ -15192,7 +15192,8 @@
         {
           "addr": "0x125a90",
           "decl": "char network_game_client_update_local_player_data(void *client, void *player);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_update_local_player_data"
         },
         {
           "addr": "0x125b90",
