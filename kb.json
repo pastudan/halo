@@ -21165,7 +21165,7 @@
         {
           "addr": "0x17c8f0",
           "decl": "void rasterizer_environment_fog_screen_end(void *screen_fog);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c900",

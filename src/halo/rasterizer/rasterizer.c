@@ -14895,25 +14895,11 @@ void rasterizer_environment_fog_screen_draw(void)
 }
 
 /* rasterizer_environment_fog_screen_end (0x17c8f0) — XBE naked draft (batch 397). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_environment_fog_screen_end(void *screen_fog __attribute__((unused)))
+/* rasterizer_environment_fog_screen_end — readable C lift (jmp thunk). */
+void rasterizer_environment_fog_screen_end(void *screen_fog)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xd7, 0xb0, 0xfd, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_001579d0();
 }
-#else
-#error "rasterizer_environment_fog_screen_end: clang naked draft required"
-#endif
-
 
 /* rasterizer_dynamic_lit_geometry_draw (0x17c930) — readable C lift. */
 void rasterizer_dynamic_lit_geometry_draw(void *param_1, void *param_2)
