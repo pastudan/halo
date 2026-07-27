@@ -555,36 +555,17 @@ short scripted_hud_get_timer_ticks(void)
   return result;
 }
 
-/* scripted_hud_time_code_show (0xd4a20) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static int (*const bd4a20_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void scripted_hud_time_code_show(char param_1)
+/* scripted_hud_time_code_show (0xd4a20) — readable C lift. */
+void scripted_hud_time_code_show(char show)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lscripted_hud_time_code_show_1\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x2f66e4\n\t"
-      "movl %%eax, 0x2f66e8\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lscripted_hud_time_code_show_1:\n\t"
-      "movl $0xffffffff, 0x2f66e4\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(bd4a20_gtime)
-      : "memory");
+  if (show) {
+    int t = game_time_get();
+    *(int *)0x2f66e4 = t;
+    *(int *)0x2f66e8 = t;
+  } else {
+    *(int *)0x2f66e4 = -1;
+  }
 }
-#else
-#error "scripted_hud_time_code_show: clang naked draft required"
-#endif
-
 
 /* scripted_hud_time_code_start (0xd4a50) — XBE naked draft (batch 99). */
 #if defined(__clang__)
