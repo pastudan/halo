@@ -1040,100 +1040,42 @@ void FUN_001932d0(void *node, void *leaf)
   }
 }
 
-/* FUN_00193340 (0x193340) — XBE naked draft (batch 139). */
-#if defined(__clang__)
-static void *(*const b193340_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b193340_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b193340_exitfn)(int) = system_exit;
-static void (*const b193340_c1932d0)(void) = (void (*)(void))FUN_001932d0;
-static void (*const b193340_c193340)(void) = (void (*)(void))FUN_00193340;
-
-__attribute__((naked, noinline))
-void FUN_00193340(void)
+/* FUN_00193340 (0x193340) — readable C lift from XBE leaf.
+ * Walk 2 child slots; push path bits onto 0x4d8a90 stack; recurse or leaf. */
+void FUN_00193340(void *block, int index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_00193340_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "jne .LFUN_00193340_2\n\t"
-      "orl $0x80000000, %%edi\n\t"
-      ".LFUN_00193340_2:\n\t"
-      "cmpw $0x100, 0x4d8e90\n\t"
-      "jl .LFUN_00193340_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00193340_3:\n\t"
-      "movswl 0x4d8e90, %%edx\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl %%edi, 0x4d8a90(,%%edx,4)\n\t"
-      "incw 0x4d8e90\n\t"
-      "movl 0x4(%%ecx,%%eax,4), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jns .LFUN_00193340_4\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00193340_5\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "call *%[c1932d0]\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "jmp .LFUN_00193340_5\n\t"
-      ".LFUN_00193340_4:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c193340]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00193340_5:\n\t"
-      "cmpw $0, 0x4d8e90\n\t"
-      "jg .LFUN_00193340_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x33\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b28dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00193340_6:\n\t"
-      "decw 0x4d8e90\n\t"
-      "incl %%esi\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl .LFUN_00193340_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b193340_elem), [assert] "m"(b193340_assert), [exitfn] "m"(b193340_exitfn), [c1932d0] "m"(b193340_c1932d0), [c193340] "m"(b193340_c193340)
-      : "memory");
+  void *node;
+  int i;
+  int path_index;
+  int child;
+
+  node = tag_block_get_element(*(void **)block, index, 0xc);
+  for (i = 0; i < 2; i++) {
+    path_index = index;
+    if (i == 0)
+      path_index |= (int)0x80000000;
+    if (*(short *)0x4d8e90 >= 0x100) {
+      display_assert((const char *)0x2b2878, (const char *)0x2b28b4, 0x2a, 1);
+      system_exit(-1);
+    }
+    *(int *)(0x4d8a90 + (*(short *)0x4d8e90) * 4) = path_index;
+    (*(short *)0x4d8e90)++;
+    child = ((int *)((char *)node + 4))[i];
+    if (child < 0) {
+      if (child != -1)
+        FUN_001932d0((void *)child, block);
+    } else {
+      FUN_00193340(block, child);
+    }
+    if (*(short *)0x4d8e90 <= 0) {
+      display_assert((const char *)0x2b28dc, (const char *)0x2b28b4, 0x33, 1);
+      system_exit(-1);
+    }
+    (*(short *)0x4d8e90)--;
+  }
 }
-#else
-#error "FUN_00193340: clang naked draft required"
-#endif
+
+
 
 
 /* leaf_map_initialize_from_bsp (0x193420) — XBE naked draft (batch 129). */

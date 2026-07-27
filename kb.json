@@ -25729,8 +25729,9 @@
         },
         {
           "addr": "0x193340",
-          "decl": "void FUN_00193340(void);",
-          "ported": false
+          "decl": "void FUN_00193340(void *block, int index);",
+          "ported": true,
+          "name": "FUN_00193340"
         },
         {
           "addr": "0x193420",
