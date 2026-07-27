@@ -17422,8 +17422,9 @@
         },
         {
           "addr": "0x8ab10",
-          "decl": "void FUN_0008ab10(void);",
-          "ported": false
+          "decl": "void FUN_0008ab10(float *vec@<eax>, float *out_a, float *out_b);",
+          "ported": true,
+          "name": "FUN_0008ab10"
         },
         {
           "addr": "0x8ab90",

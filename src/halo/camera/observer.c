@@ -3035,73 +3035,27 @@ void observer_up_from_forward(float *forward, float *up)
   up[2] = tmp[0] * forward[1] - tmp[1] * forward[0];
 }
 
-/* FUN_0008ab10 (0x8ab10) — XBE naked draft (batch 148). */
-#if defined(__clang__)
-static float (*const b8ab10_norm)(float *) = normalize3d;
-static void (*const b8ab10_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
-
-__attribute__((naked, noinline))
-void FUN_0008ab10(void)
+/* FUN_0008ab10 (0x8ab10) — readable C lift from XBE leaf. */
+void FUN_0008ab10(float *vec, float *out_a, float *out_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "call *%[norm]\n\t"
-      "fcoms 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_0008ab10_1\n\t"
-      "fld %%st(0)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fsin\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "fcos\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rots]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[rots]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0008ab10_1:\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [norm] "m"(b8ab10_norm), [rots] "m"(b8ab10_rots)
-      : "memory");
+  float tmp[3];
+  float mag;
+  float s;
+  float c;
+
+  tmp[0] = vec[0];
+  tmp[1] = vec[1];
+  tmp[2] = vec[2];
+  mag = normalize3d(tmp);
+  if (!(mag > *(float *)0x2533c0) && !(mag < *(float *)0x2533c0)) {
+    return;
+  }
+  s = (float)__builtin_sin((double)mag);
+  c = (float)__builtin_cos((double)mag);
+  rotate_vector3d_by_sincos(out_a, tmp, s, c);
+  rotate_vector3d_by_sincos(out_b, tmp, s, c);
 }
-#else
-#error "FUN_0008ab10: clang naked draft required"
-#endif
+
 
 
 /* FUN_0008ac70 (0x8ac70) — readable C lift. */
