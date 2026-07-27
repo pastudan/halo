@@ -1461,89 +1461,36 @@ void race_update_team_score(void)
 #endif
 
 
-/* FUN_000B4800 (0xb4800) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void *(*const bb4800_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bb4800_ca9970)(int param_1, int param_2, int param_3) = game_engine_state_message;
-static bool (*const bb4800_ca8e40)(void) = game_engine_can_score;
-static void *(*const bb4800_get)(int, int) = object_get_and_verify_type;
-static int (*const bb4800_cad270)(float *position, float radius, float height, int16_t type, int16_t index) = find_netgame_flag;
-static void (*const bb4800_cb46b0)(void) = (void *)race_update_team_score;
-
-__attribute__((naked, noinline))
-void FUN_000B4800(void)
+/* FUN_000B4800 (0xb4800) — readable C lift. */
+void FUN_000B4800(int player_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x16\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[ca9970]\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000B4800_3\n\t"
-      "call *%[ca8e40]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000B4800_3\n\t"
-      "movl 0x34(%%esi), %%ecx\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[get]\n\t"
-      "movl 0xcc(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .LFUN_000B4800_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[get]\n\t"
-      "pushl $-1\n\t"
-      "pushl $3\n\t"
-      "pushl $0\n\t"
-      "addl $0x50, %%eax\n\t"
-      "pushl $0x40200000\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cad270]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "jmp .LFUN_000B4800_2\n\t"
-      ".LFUN_000B4800_1:\n\t"
-      "pushl $-1\n\t"
-      "pushl $3\n\t"
-      "pushl $0x3f19999a\n\t"
-      "addl $0x50, %%eax\n\t"
-      "pushl $0x3fc00000\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cad270]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000B4800_2:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000B4800_3\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[cb46b0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000B4800_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bb4800_dget), [ca9970] "m"(bb4800_ca9970), [ca8e40] "m"(bb4800_ca8e40), [get] "m"(bb4800_get), [cad270] "m"(bb4800_cad270), [cb46b0] "m"(bb4800_cb46b0)
-      : "memory");
-}
-#else
-#error "FUN_000B4800: clang naked draft required"
-#endif
+  char *player;
+  int object_handle;
+  char *obj;
+  int parent;
+  int flag;
+  void (*race_fn)(int, int);
 
+  player = (char *)datum_get(*(void **)0x5aa6d4, player_handle);
+  game_engine_state_message(player_handle, 0x16, player_handle);
+  object_handle = *(int *)(player + 0x34);
+  if (object_handle == -1)
+    return;
+  if (!game_engine_can_score())
+    return;
+  obj = (char *)object_get_and_verify_type(object_handle, 3);
+  parent = *(int *)(obj + 0xcc);
+  if (parent != -1) {
+    obj = (char *)object_get_and_verify_type(parent, 3);
+    flag = find_netgame_flag((float *)(obj + 0x50), 2.5f, 0.0f, 3, -1);
+  } else {
+    flag = find_netgame_flag((float *)(obj + 0x50), 1.5f, 0.6f, 3, -1);
+  }
+  if (flag == -1)
+    return;
+  race_fn = (void (*)(int, int))(void *)race_update_team_score;
+  race_fn(player_handle, flag);
+}
 
 /* FUN_000b4a70 (0xb4a70) — readable C lift. */
 char FUN_000b4a70(int handle_b, int handle_a, int handle_c)

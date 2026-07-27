@@ -8463,8 +8463,8 @@
         },
         {
           "addr": "0xb4800",
-          "decl": "void FUN_000B4800(void);",
-          "ported": false
+          "decl": "void FUN_000B4800(int player_handle);",
+          "ported": true
         },
         {
           "addr": "0xb4960",
