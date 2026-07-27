@@ -1123,34 +1123,13 @@ void FUN_0015e650(void)
 #endif
 
 
-/* FUN_0015e770 (0x15e770) — XBE naked draft (batch 359). */
-#if defined(__clang__)
-static void (*const b15e770_c1ef100)(void) = (void *)D3DVertexBuffer_Lock;
-
-__attribute__((naked, noinline))
-void FUN_0015e770(void)
+/* FUN_0015e770 (0x15e770) — readable C lift. */
+int FUN_0015e770(int a, int b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ef100]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ef100] "m"(b15e770_c1ef100)
-      : "memory");
+  ((void (__stdcall *)(int, int, int, int, int))D3DVertexBuffer_Lock)(a, b, 0, 0, 0);
+  return 0;
 }
-#else
-#error "FUN_0015e770: clang naked draft required"
-#endif
+
 
 
 /* FUN_0015e7a0 (0x15e7a0) — readable C lift. */
@@ -8436,37 +8415,13 @@ void FUN_00165420(void)
 #endif
 
 
-/* FUN_00165980 (0x165980) — XBE naked draft (batch 381). */
-#if defined(__clang__)
-static void __stdcall (*const b165980_c1ea650)(uint32_t count, void *rects, uint32_t flags, uint32_t color, float z, uint32_t stencil) = (void *)D3DDevice_Clear;
-
-__attribute__((naked, noinline))
-void FUN_00165980(void)
+/* FUN_00165980 (0x165980) — readable C lift. */
+int FUN_00165980(int a, int b, int c, int d, int e)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1ea650]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ea650] "m"(b165980_c1ea650)
-      : "memory");
+  D3DDevice_Clear((uint32_t)a, (void *)(unsigned)b, (uint32_t)c, (uint32_t)d, *(float *)&e, 0);
+  return 0;
 }
-#else
-#error "FUN_00165980: clang naked draft required"
-#endif
+
 
 
 /* FUN_001659a0 (0x1659a0) — XBE naked draft (batch 384). */
@@ -11578,64 +11533,22 @@ void FUN_00168280(void)
 #endif
 
 
-/* FUN_001682c0 (0x1682c0) — XBE naked draft (batch 385). */
-#if defined(__clang__)
-static void __stdcall (*const b1682c0_c1edc70)(void *texture, unsigned int level, void *locked_rect, void *rect, unsigned int flags) = (void *)D3DTexture_LockRect;
-
-__attribute__((naked, noinline))
-void FUN_001682c0(void)
+/* FUN_001682c0 (0x1682c0) — readable C lift. */
+int FUN_001682c0(int a, int b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1edc70]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1edc70] "m"(b1682c0_c1edc70)
-      : "memory");
+  D3DTexture_LockRect((void *)(unsigned)a, (unsigned int)b, 0, 0, 0);
+  return 0;
 }
-#else
-#error "FUN_001682c0: clang naked draft required"
-#endif
 
 
-/* FUN_00168300 (0x168300) — XBE naked draft (batch 359). */
-#if defined(__clang__)
-static void (*const b168300_c1edd80)(void) = (void *)D3DVolumeTexture_LockBox;
 
-__attribute__((naked, noinline))
-void FUN_00168300(void)
+/* FUN_00168300 (0x168300) — readable C lift. */
+int FUN_00168300(int a, int b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1edd80]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1edd80] "m"(b168300_c1edd80)
-      : "memory");
+  ((void (__stdcall *)(int, int, int, int, int))D3DVolumeTexture_LockBox)(a, b, 0, 0, 0);
+  return 0;
 }
-#else
-#error "FUN_00168300: clang naked draft required"
-#endif
+
 
 
 /* FUN_00168340 (0x168340) — XBE naked draft (batch 352). */
@@ -12620,34 +12533,13 @@ int FUN_00168be0(int a, int b, int c)
   return D3DDevice_CreateIndexBuffer(a, b, c, 0, 0);
 }
 
-/* FUN_00168c40 (0x168c40) — XBE naked draft (batch 359). */
-#if defined(__clang__)
-static void (*const b168c40_c1ef100)(void) = (void *)D3DVertexBuffer_Lock;
-
-__attribute__((naked, noinline))
-void FUN_00168c40(void)
+/* FUN_00168c40 (0x168c40) — readable C lift. */
+int FUN_00168c40(int a, int b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ef100]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ef100] "m"(b168c40_c1ef100)
-      : "memory");
+  ((void (__stdcall *)(int, int, int, int, int))D3DVertexBuffer_Lock)(a, b, 0, 0, 0);
+  return 0;
 }
-#else
-#error "FUN_00168c40: clang naked draft required"
-#endif
+
 
 
 /* FUN_00168c70 (0x168c70) — readable C lift. */
