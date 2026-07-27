@@ -4759,37 +4759,21 @@ void FUN_000ca410(int object_handle, int scenario_index)
   FUN_000ca160(scenario_index, 0, 1, object_handle);
 }
 
-/* FUN_000ca430 (0xca430) — readable C lift from XBE leaf.
- * For each player object: if not already in cluster game_flag, teleport via FUN_000ca160. */
+/* FUN_000ca430 (0xca430) — readable C lift: teleport players failing cluster. */
 void FUN_000ca430(int16_t game_flag, int16_t scenario_index)
 {
-  void *players;
-  int idx;
-  char *player;
-  int object_handle;
+  int player;
+  char *node;
+  int unit;
 
-  players = *(void **)0x5aa6d4;
-  for (idx = data_next_index(players, -1); idx != -1;
-       idx = data_next_index(players, idx)) {
-    player = (char *)datum_get(players, idx);
-    object_handle = *(int *)(player + 0x34);
-    if (object_handle == -1)
-      continue;
-    if (FUN_0018ef00((int)game_flag, object_handle))
-      continue;
-    {
-      void (*const fn)(void) = (void (*)(void))(void *)FUN_000ca160;
-      int scen = (int)scenario_index;
-      __asm__ volatile(
-          "movl %1, %%ebx; pushl $1; pushl $1; pushl %2; call *%0; addl $12, %%esp"
-          :
-          : "m"(fn), "r"(object_handle), "r"(scen)
-          : "eax", "ecx", "edx", "ebx", "memory");
-    }
+  for (player = data_next_index(*(data_t **)0x5aa6d4, -1); player != -1;
+       player = data_next_index(*(data_t **)0x5aa6d4, player)) {
+    node = (char *)datum_get(*(data_t **)0x5aa6d4, player);
+    unit = *(int *)(node + 0x34);
+    if (unit != -1 && !FUN_0018ef00((int)game_flag, unit))
+      FUN_000ca160(scenario_index, 1, 1, unit);
   }
 }
-
-
 
 
 /* FUN_000ca670 (0xca670) — readable C lift: enum tostring. */
