@@ -303,162 +303,66 @@ unsigned int FUN_0011a700(int *state, int maximum_value)
   return (unsigned int)FUN_0011a650(state);
 }
 
-/* FUN_0011a770 (0x11a770) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-static void (*const b11a770_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const b11a770_exitfn)(int) = (void *)system_exit;
-static unsigned char (*const b11a770_c11a560)(int *state) = (void *)FUN_0011a560;
-static short (*const b11a770_c11a5d0)(int *state) = (void *)FUN_0011a5d0;
-static int (*const b11a770_c11a650)(int *state) = (void *)FUN_0011a650;
-static int64_t (*const b11a770_c11a6d0)(int *state) = (void *)FUN_0011a6d0;
-static int (*const b11a770_c11a340)(int *state, short count, void *bs_definition) = (void *)FUN_0011a340;
-
-__attribute__((naked, noinline))
-void * FUN_0011a770(int *state __attribute__((unused)), int element_size_type __attribute__((unused)), unsigned int *element_count_ref __attribute__((unused)), int maximum_element_count __attribute__((unused)), void *bs_definition __attribute__((unused)))
+/* FUN_0011a770 (0x11a770) — readable C lift (restored pre-naked). */
+void *FUN_0011a770(int *state, int element_size_type, unsigned int *element_count_ref,
+                   int maximum_element_count, void *bs_definition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_0011a770_1\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .LFUN_0011a770_1\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0011a770_1\n\t"
-      "cmpl 0x8(%%esi), %%eax\n\t"
-      "jl .LFUN_0011a770_2\n\t"
-      ".LFUN_0011a770_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15c\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28ef20\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a770_2:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0011a770_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15d\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f0c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a770_3:\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jg .LFUN_0011a770_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15e\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f0a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a770_4:\n\t"
-      "movl 0x18(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_0011a770_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15f\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28ef80\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a770_5:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl $8, %%eax\n\t"
-      "cmpl $9, %%eax\n\t"
-      "ja .LFUN_0011a770_10\n\t"
-      "movzbl 0x11a8d0(%%eax), %%eax\n\t"
-      "jmp *.LFUN_0011a770_jt(,%%eax,4)\n\t"
-      ".LFUN_0011a770_6:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11a560]\n\t"
-      "addl $4, %%esp\n\t"
-      "movzbl %%al, %%eax\n\t"
-      "jmp .LFUN_0011a770_11\n\t"
-      ".LFUN_0011a770_7:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11a5d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jmp .LFUN_0011a770_11\n\t"
-      ".LFUN_0011a770_8:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11a650]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_0011a770_11\n\t"
-      ".LFUN_0011a770_9:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11a6d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_0011a770_11\n\t"
-      ".LFUN_0011a770_10:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x172\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a770_11:\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_0011a770_12\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0011a770_12\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jg .LFUN_0011a770_12\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "call *%[c11a340]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a770_12:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0011a770_jt:\n\t"
-      ".long .LFUN_0011a770_9\n\t"
-      ".long .LFUN_0011a770_8\n\t"
-      ".long .LFUN_0011a770_7\n\t"
-      ".long .LFUN_0011a770_6\n\t"
-      ".long .LFUN_0011a770_10\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b11a770_assert), [exitfn] "m"(b11a770_exitfn), [c11a560] "m"(b11a770_c11a560), [c11a5d0] "m"(b11a770_c11a5d0), [c11a650] "m"(b11a770_c11a650), [c11a6d0] "m"(b11a770_c11a6d0), [c11a340] "m"(b11a770_c11a340)
-      : "memory");
+  short sVar1;
+  unsigned int count;
+  void *result;
+
+  if (((state == NULL) || (*state == 0) || (state[1] < 0)) ||
+      (state[2] <= state[1])) {
+    display_assert("state && state->buffer && state->offset>=0 && "
+                   "state->offset<state->buffer_size",
+                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x15c, 1);
+    system_exit(-1);
+  }
+  if (element_count_ref == NULL) {
+    display_assert("element_count_reference",
+                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x15d, 1);
+    system_exit(-1);
+  }
+  if (maximum_element_count < 1) {
+    display_assert("maximum_element_count>0",
+                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x15e, 1);
+    system_exit(-1);
+  }
+  if (bs_definition == NULL) {
+    display_assert("bs_definition",
+                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x15f, 1);
+    system_exit(-1);
+  }
+  switch (element_size_type) {
+  case 1:
+    count = FUN_0011a560(state) & 0xff;
+    break;
+  case -2:
+    sVar1 = FUN_0011a5d0(state);
+    count = (unsigned int)(int)sVar1;
+    break;
+  case -4:
+    count = (unsigned int)FUN_0011a650(state);
+    break;
+  case -8:
+    count = (unsigned int)(int)FUN_0011a6d0(state);
+    break;
+  default:
+    display_assert(NULL,
+                   "c:\\halo\\SOURCE\\memory\\data_encoding.c", 0x172, 1);
+    system_exit(-1);
+    count = *element_count_ref;
+    break;
+  }
+  if (((char)state[3] == '\0') && ((int)count >= 0) &&
+      ((int)count <= maximum_element_count)) {
+    *element_count_ref = count;
+    result = (void *)FUN_0011a340(state, (short)count, bs_definition);
+    return result;
+  }
+  return NULL;
 }
-#else
-#error "FUN_0011a770: clang naked draft required"
-#endif
+
 
 
 /* FUN_0011a8e0 (0x11a8e0) — readable C lift. */

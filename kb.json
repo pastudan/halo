@@ -15770,7 +15770,7 @@
           "addr": "0x11a770",
           "decl": "void *FUN_0011a770(int *state, int element_size_type, unsigned int *element_count_ref, int maximum_element_count, void *bs_definition);",
           "name": "FUN_0011a770",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a8e0",
@@ -16085,7 +16085,7 @@
         {
           "addr": "0x12eb20",
           "decl": "bool network_game_server_start(void *server);",
-          "ported": false,
+          "ported": true,
           "name": "network_game_server_start"
         },
         {
