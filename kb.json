@@ -6092,7 +6092,7 @@
           "addr": "0x8e3f0",
           "decl": "void *system_realloc(void *ptr, int size);",
           "name": "system_realloc",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8e470",
