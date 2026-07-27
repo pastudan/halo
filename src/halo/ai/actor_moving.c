@@ -550,33 +550,7 @@ int actor_aim_jump(int actor_handle, int a2, char param_3, float param_4,
 }
 
 
-/* 0x2ade0 — actor_move_build_obstacle_list: scan nearby objects and record an
- * obstacle entry for each colliding object found within the actor's avoidance
- * radius.
- *
- * Confirmed: search radius = max(*0x2557f0, *0x255778) * actor[0x6044]
- *   (FCOMP/TEST AH,0x41 at 0x2ae0f selects the larger; FMUL at 0x2ae22).
- * Confirmed: object_find_in_radius(1, 0xc2, obj+0x48, actor+0xc, radius,
- *   handles, 0x800) at 0x2ae47; handles is a 2048-int stack buffer; the
- *   int16 return is the found count, treated unsigned (MOVZX at 0x2ae5e).
- * Confirmed: actor[0x3c] (record count) zeroed at 0x2ae52, capped at 0x400.
- * Confirmed: each object's own handle (obj+8) is skipped (0x2ae8c); -1
- *   handles are skipped (0x2ae83).
- * Confirmed: tag_get('obje', obj_tag_id) then tag_get('coll', objtag[0x7c])
- *   at 0x2ae9d/0x2aeab; collision tag block at coll[0x280] drives the per-
- *   element loop.
- * Confirmed: FUN_0001aae0 writes center[3] (&[EBP-0x20]) + obj_radius
- *   (&[EBP-0x10]); matrix_transform_point writes out[3]; node==0xffff uses
- *   world matrix, else node matrix (0x2af0b branch). scale_term =
- *   marker[0x1c] * matrix[0]. obj_radius ([EBP-0x10]) is distinct from the
- *   search radius and drives the record math at 0x2af9f/0x2afd8.
- * Confirmed: distance is 2D (X,Y only) — sqrt(dx*dx+dy*dy)+scale_term
- *   (FLD -0x30/-0x2c at 0x2af4b; out[2] written but unread).
- * Confirmed store offsets from disasm 0x2afb8-0x2affb (decompiler shifts
- *   these one slot — see store-offset table in the lift report):
- *   record[0x40]=handle, [0x44..0x4c]=center xyz, [0x4c] RMW to
- *   center[2]-(obj_radius-maxdist), [0x50]=max(2*obj_radius-2*maxdist,
- *   *0x2533c0), [0x54]=maxdist. Record stride 0x18, base actor+0x40. */
+/* FUN_0002ade0 (0x2ade0) — readable C lift (restored pre-naked). */
 void FUN_0002ade0(int actor_handle)
 {
   int handles[2048];
@@ -1518,107 +1492,264 @@ void FUN_0002b830(float *facing_basis __attribute__((unused)), char use_3d __att
 #endif
 
 
-/* 0x2bab0 — actor_move_facing_to_movement_frame: express the movement
- * direction in the local frame of the facing direction, writing the result
- * into the caller's output vector.
- *
- * Register args (confirmed from caller actor_move_compute_facing @ 0x2dbeb-0x2dbf7):
- *   use_3d              @<al>   : 0 selects the 2D (planar) path, nonzero the
- *                                 full 3D path.
- *   movement_direction  @<esi>  : float[3] unit movement direction.
- *   facing_direction    @<edi>  : float[3] unit facing direction.
- *   out                 @<ebx>  : float[3] result frame coordinates.
- *
- * 3D path: out = ( movement.facing, movement.left, movement.up ) where
- *   biped_build_flying_axes(facing, left, up) builds the orthonormal frame
- *   (left at EBP-0x10, up at EBP-0x1c).  Then normalize3d(out).
- *   Asserts: real_normal3d(movement) @0x775, real_normal3d(facing) @0x776.
- * 2D path: out[0] = movement.facing (2D dot), out[1] = the 2D cross
- *   facing[0]*movement[1] - facing[1]*movement[0], out[2] = 0; normalize3d.
- *   Asserts: real_normal2d(movement) @0x785, real_normal2d(facing) @0x786,
- *   realcmp(movement->k) @0x787, realcmp(facing->k) @0x788 (k-component must
- *   be finite and below the *0x2549d8 bound). */
-void FUN_0002bab0(char use_3d /* @<al> */,
-                  float *movement_direction /* @<esi> */,
-                  float *facing_direction /* @<edi> */, float *out /* @<ebx> */)
+/* FUN_0002bab0 (0x2bab0) — XBE naked draft (batch 80). */
+#if defined(__clang__)
+static bool (*const b2bab0_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b2bab0_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
+static void (*const b2bab0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b2bab0_exitfn)(int) = system_exit;
+static void (*const b2bab0_c1a2d90)(float *forward, float *left, float *up) = (void *)biped_build_flying_axes;
+static float (*const b2bab0_norm)(float *) = normalize3d;
+static int (*const b2bab0_c28610)(float *v) = (void *)valid_real_normal2d;
+
+__attribute__((naked, noinline))
+void FUN_0002bab0(char use_3d __attribute__((unused)), float *movement_direction __attribute__((unused)), float *facing_direction __attribute__((unused)), float *out __attribute__((unused)))
 {
-  float left[3];
-  float up[3];
-  float mk;
-  float fk;
-
-  if (use_3d != 0) {
-    if (valid_real_normal3d(movement_direction) == 0) {
-      display_assert(
-        csprintf((char *)0x5ab100, "%s: assert_valid_real_normal3d(%f, %f, %f)",
-                 "movement_direction", (double)movement_direction[0],
-                 (double)movement_direction[1], (double)movement_direction[2]),
-        "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x775, 1);
-      system_exit(-1);
-    }
-    if (valid_real_normal3d(facing_direction) == 0) {
-      display_assert(
-        csprintf((char *)0x5ab100, "%s: assert_valid_real_normal3d(%f, %f, %f)",
-                 "facing_direction", (double)facing_direction[0],
-                 (double)facing_direction[1], (double)facing_direction[2]),
-        "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x776, 1);
-      system_exit(-1);
-    }
-    biped_build_flying_axes(facing_direction, left, up);
-    out[0] = movement_direction[0] * facing_direction[0] +
-             facing_direction[1] * movement_direction[1] +
-             facing_direction[2] * movement_direction[2];
-    out[1] = left[1] * movement_direction[1] + left[2] * movement_direction[2] +
-             left[0] * movement_direction[0];
-    out[2] = up[1] * movement_direction[1] + up[2] * movement_direction[2] +
-             up[0] * movement_direction[0];
-    normalize3d(out);
-    return;
-  }
-
-  if (valid_real_normal2d(movement_direction) == 0) {
-    display_assert(
-      csprintf((char *)0x5ab100, "%s: assert_valid_real_normal2d(%f, %f)",
-               "(real_vector2d *) movement_direction",
-               (double)movement_direction[0], (double)movement_direction[1]),
-      "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x785, 1);
-    system_exit(-1);
-  }
-  if (valid_real_normal2d(facing_direction) == 0) {
-    display_assert(
-      csprintf((char *)0x5ab100, "%s: assert_valid_real_normal2d(%f, %f)",
-               "(real_vector2d *) facing_direction",
-               (double)facing_direction[0], (double)facing_direction[1]),
-      "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x786, 1);
-    system_exit(-1);
-  }
-  mk = movement_direction[2];
-  if (((*(unsigned int *)&mk & 0x7f800000) == 0x7f800000) ||
-      (!(fabsf(mk) < *(double *)0x2549d8))) {
-    display_assert(csprintf((char *)0x5ab100,
-                            "%s, %s: assert_valid_realcmp(%f, %f)",
-                            "movement_direction->k", (char *)0x255b18,
-                            (double)movement_direction[2], 0, 0),
-                   "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x787, 1);
-    system_exit(-1);
-  }
-  fk = facing_direction[2];
-  if (((*(unsigned int *)&fk & 0x7f800000) == 0x7f800000) ||
-      (!(fabsf(fk) < *(double *)0x2549d8))) {
-    display_assert(csprintf((char *)0x5ab100,
-                            "%s, %s: assert_valid_realcmp(%f, %f)",
-                            "facing_direction->k", (char *)0x255b18,
-                            (double)facing_direction[2], 0, 0),
-                   "c:\\halo\\SOURCE\\ai\\actor_moving.c", 0x788, 1);
-    system_exit(-1);
-  }
-  out[0] = movement_direction[0] * facing_direction[0] +
-           movement_direction[1] * facing_direction[1];
-  out[1] = facing_direction[0] * movement_direction[1] +
-           (-facing_direction[1]) * movement_direction[0];
-  out[2] = 0.0f;
-  normalize3d(out);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x1c, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "pushl %%esi\n\t"
+      "je .LFUN_0002bab0_3\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0002bab0_1\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x775\n\t"
+      "pushl $0x255984\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255b80\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0002bab0_1:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c21fb0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0002bab0_2\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x776\n\t"
+      "pushl $0x255984\n\t"
+      "subl $0x18, %%esp\n\t"
+      "fstpl 0x10(%%esp)\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255b6c\n\t"
+      "pushl $0x254a24\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x24, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0002bab0_2:\n\t"
+      "leal -0x1c(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a2d90]\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      "pushl %%ebx\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds (%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps (%%ebx)\n\t"
+      "flds -0xc(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x10(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps 0x4(%%ebx)\n\t"
+      "flds -0x18(%%ebp)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "flds -0x14(%%ebp)\n\t"
+      "fmuls 0x8(%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "flds -0x1c(%%ebp)\n\t"
+      "fmuls (%%esi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps 0x8(%%ebx)\n\t"
+      "call *%[norm]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0002bab0_3:\n\t"
+      "call *%[c28610]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0002bab0_4\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x785\n\t"
+      "pushl $0x255984\n\t"
+      "subl $0x10, %%esp\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%esi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255b44\n\t"
+      "pushl $0x2555d4\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0002bab0_4:\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c28610]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .LFUN_0002bab0_5\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x786\n\t"
+      "pushl $0x255984\n\t"
+      "subl $0x10, %%esp\n\t"
+      "fstpl 0x8(%%esp)\n\t"
+      "flds (%%edi)\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255b20\n\t"
+      "pushl $0x2555d4\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0002bab0_5:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "andl $0x7f800000, %%edx\n\t"
+      "cmpl $0x7f800000, %%edx\n\t"
+      "je .LFUN_0002bab0_6\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_0002bab0_8\n\t"
+      "jmp .LFUN_0002bab0_7\n\t"
+      ".LFUN_0002bab0_6:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_0002bab0_7:\n\t"
+      "flds 0x8(%%esi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x787\n\t"
+      "pushl $0x255984\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255b18\n\t"
+      "pushl $0x255b00\n\t"
+      "pushl $0x255ad8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0002bab0_8:\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "fsts -0x4(%%ebp)\n\t"
+      "movl -0x4(%%ebp), %%eax\n\t"
+      "andl $0x7f800000, %%eax\n\t"
+      "cmpl $0x7f800000, %%eax\n\t"
+      "je .LFUN_0002bab0_9\n\t"
+      "fabs\n\t"
+      "fcompl 0x2549d8\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $5, %%ah\n\t"
+      "jnp .LFUN_0002bab0_11\n\t"
+      "jmp .LFUN_0002bab0_10\n\t"
+      ".LFUN_0002bab0_9:\n\t"
+      "fstp %%st(0)\n\t"
+      ".LFUN_0002bab0_10:\n\t"
+      "flds 0x8(%%edi)\n\t"
+      "pushl $1\n\t"
+      "pushl $0x788\n\t"
+      "pushl $0x255984\n\t"
+      "pushl $0\n\t"
+      "pushl $0\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x255b18\n\t"
+      "pushl $0x255ac4\n\t"
+      "pushl $0x255ad8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x20, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_0002bab0_11:\n\t"
+      "flds 0x4(%%edi)\n\t"
+      "pushl %%ebx\n\t"
+      "fchs\n\t"
+      "flds (%%edi)\n\t"
+      "flds (%%esi)\n\t"
+      "fmuls (%%edi)\n\t"
+      "flds 0x4(%%esi)\n\t"
+      "fmuls 0x4(%%edi)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps (%%ebx)\n\t"
+      "fmuls 0x4(%%esi)\n\t"
+      "fxch %%st(1)\n\t"
+      "fmuls (%%esi)\n\t"
+      "movl $0, 0x8(%%ebx)\n\t"
+      ".byte 0xde, 0xc1\n\t"
+      "fstps 0x4(%%ebx)\n\t"
+      "call *%[norm]\n\t"
+      "addl $4, %%esp\n\t"
+      "fstp %%st(0)\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c21fb0] "m"(b2bab0_c21fb0), [c8d9d0] "m"(b2bab0_c8d9d0), [assert] "m"(b2bab0_assert), [exitfn] "m"(b2bab0_exitfn), [c1a2d90] "m"(b2bab0_c1a2d90), [norm] "m"(b2bab0_norm), [c28610] "m"(b2bab0_c28610)
+      : "memory");
 }
+#else
+#error "FUN_0002bab0: clang naked draft required"
+#endif
 
 
 /* FUN_0002bd80 (0x2bd80) — XBE naked draft (batch 79). */

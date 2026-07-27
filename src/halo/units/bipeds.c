@@ -2018,472 +2018,230 @@ void biped_get_autoaim_pill(int unit_handle, float *out_pos, float *out_axis,
   *out_value = *(int *)(biped_tag + 0x458);
 }
 
-/* biped_fix_position (0x1a1430) — XBE naked draft (batch 55). */
-#if defined(__clang__)
-static void (*const b1a1430_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1a1430_exitfn)(int) = system_exit;
-static void (*const b1a1430_c1aae0)(int object_handle, float *center, float *radius) = FUN_0001aae0;
-static void *(*const b1a1430_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a1430_tag)(int, int) = tag_get;
-static void (*const b1a1430_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
-static int (*const b1a1430_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
-static float (*const b1a1430_norm)(float *) = normalize3d;
-static int (*const b1a1430_c18e720)(int point) = FUN_0018e720;
-static void * (*const b1a1430_c18e3c0)(void) = scenario_get;
-static void *(*const b1a1430_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b1a1430_c14f020)(uint32_t collision_flags, float *point, float vertical_extent, float p4, float p5, int unit_handle, float *point_out) = FUN_0014f020;
-static char (*const b1a1430_c14e7d0)(uint32_t collision_flags, float *point, float *offset_vec, float p4, int unit_handle, void *result) = FUN_0014e7d0;
-static bool (*const b1a1430_c14cc80)(int param_1, int param_2, int param_3, float param_4, int16_t *param_5) = FUN_0014cc80;
-static bool (*const b1a1430_v30d0)(unsigned int, float *, float *, int, short *) = FUN_000130d0;
-static void (*const b1a1430_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-static void (*const b1a1430_c1446a0)(int object_handle) = object_update_children_recursive;
-static void (*const b1a1430_otrans)(int, float *, void *) = object_translate;
-
-__attribute__((naked, noinline))
-char biped_fix_position(int unit_handle __attribute__((unused)), int seat_handle __attribute__((unused)), float *initial_position __attribute__((unused)), float *final_position __attribute__((unused)), float scale __attribute__((unused)), char keep_basis __attribute__((unused)), char dont_teleport __attribute__((unused)), char scale_by_height __attribute__((unused)))
+/* biped_fix_position (0x1a1430) — readable C lift (restored pre-naked)
+ *
+ * Tries to find a collision-free world position for a biped (used when
+ * teleporting it out of a vehicle seat, respawning, etc.). Starting from an
+ * initial position (either supplied via initial_position, or the biped's
+ * estimated camera/standing position when NULL), it walks a fixed table of
+ * displacement directions at 0x2b4b80 (stride 3 floats), scaling each by
+ * `scale`. For each candidate it (1) finds the BSP3D leaf, rejecting points
+ * outside the BSP; (2) runs a battery of collision tests (FUN_0014f020 sphere
+ * fit, FUN_0014e7d0 vector-to-surface, and when a seat is involved the
+ * FUN_0014cc80 / FUN_000130d0 line-of-sight checks against both objects). The
+ * first candidate that passes all gates becomes the fixed location: the biped
+ * object's position (obj+0xc) is updated, children are re-parented, and the
+ * object is translated to the new location (unless dont_teleport). The final
+ * world point is optionally written to final_position. Returns 1 on success.
+ *
+ * The whole search runs inside the collision-user-depth stack (global
+ * 0x4761d8 / stack 0x5a8c80, marker 7), asserting depth < 0x20 on entry
+ * (line 0x37f) and > 1 on exit (line 0x438).
+ *
+ * Confirmed (disasm): cdecl, 8 stack params, char return. param_4 is float*
+ *   (3-float out-write at 0x1a1891). param_6/7/8 are byte flags (TEST AL,AL).
+ *   collision_flags = (biped_tag+0x2f4 & 0x20) ? 0x20c3a0 : (0x20c3a0 +
+ *   0xffdfff00) via NEG/SBB/AND/ADD. The direction-search count is branchless:
+ *   loop_limit = 0x1b - ((p6!=0)-1 & 9) -> 0x1b when p6, 0x12 when !p6.
+ *   The cross product cross = normalize3d(forward_axis x up_axis) is built from
+ *   the biped's basis rows at obj+0x24 (right) and obj+0x30 (up); FSUBP order
+ *   preserved from disasm. final candidate stored at local_14/10/c.
+ * Inferred: the 0x2b4b80 table is a spiral/expanding set of search offsets;
+ *   collision_flags low bits select the collision material/group mask.
+ * Uncertain: exact field meanings inside the 130d0 collision result buffer
+ *   beyond the hit-object-handle word at +0x38 (compared to the two unit
+ *   handles to skip self/seat hits).
+ */
+char biped_fix_position(int unit_handle, int seat_handle,
+                        float *initial_position, float *final_position,
+                        float scale, char keep_basis, char dont_teleport,
+                        char scale_by_height)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x538, %%esp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movb %%bl, -0x1(%%ebp)\n\t"
-      "jne .Lbiped_fix_position_1\n\t"
-      "movb 0x20(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lbiped_fix_position_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x37d\n\t"
-      "pushl $0x2b4d5c\n\t"
-      "pushl $0x2b4e68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbiped_fix_position_1:\n\t"
-      "cmpw $0x20, 0x4761d8\n\t"
-      "jl .Lbiped_fix_position_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x37f\n\t"
-      "pushl $0x2b4d5c\n\t"
-      "pushl $0x253440\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbiped_fix_position_2:\n\t"
-      "movw 0x4761d8, %%ax\n\t"
-      "pushl %%esi\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "incw %%ax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "movw %%ax, 0x4761d8\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movw $7, 0x5a8c80(,%%ecx,2)\n\t"
-      "jne .Lbiped_fix_position_3\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .Lbiped_fix_position_24\n\t"
-      "jmp .Lbiped_fix_position_4\n\t"
-      ".Lbiped_fix_position_3:\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .Lbiped_fix_position_5\n\t"
-      ".Lbiped_fix_position_4:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "leal -0x30(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x60(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1aae0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lbiped_fix_position_5:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jne .Lbiped_fix_position_6\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "movb $1, %%bl\n\t"
-      "movl %%edx, %%edi\n\t"
-      ".Lbiped_fix_position_6:\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x2f4(%%eax), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "andb $0x20, %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $0xffdfff00, %%ecx\n\t"
-      "addl $0x20c3a0, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%ecx, -0x30(%%ebp)\n\t"
-      "je .Lbiped_fix_position_7\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%edx, -0x2c(%%ebp)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movl %%edx, -0x24(%%ebp)\n\t"
-      "movl %%ecx, -0x28(%%ebp)\n\t"
-      "leal -0x48(%%ebp), %%edx\n\t"
-      "jmp .Lbiped_fix_position_8\n\t"
-      ".Lbiped_fix_position_7:\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      ".Lbiped_fix_position_8:\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a0890]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lbiped_fix_position_9\n\t"
-      "movl $0xffffffff, 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".Lbiped_fix_position_9:\n\t"
-      "movb 0x1c(%%ebp), %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%dl, %%dl\n\t"
-      "setne %%cl\n\t"
-      "movl $0x1b, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "andl $9, %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x4c(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lbiped_fix_position_10\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x70(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c14c8e0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lbiped_fix_position_10:\n\t"
-      "flds 0x38(%%esi)\n\t"
-      "leal -0x3c(%%ebp), %%eax\n\t"
-      "fmuls 0x28(%%esi)\n\t"
-      "pushl %%eax\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "fmuls 0x34(%%esi)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "fmuls 0x30(%%esi)\n\t"
-      "flds 0x24(%%esi)\n\t"
-      "fmuls 0x38(%%esi)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "flds 0x24(%%esi)\n\t"
-      "fmuls 0x34(%%esi)\n\t"
-      "flds 0x30(%%esi)\n\t"
-      "fmuls 0x28(%%esi)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      "call *%[norm]\n\t"
-      "fstp %%st(0)\n\t"
-      "movl 0x31fc44, %%eax\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls (%%eax)\n\t"
-      "addl $4, %%esp\n\t"
-      "fstps -0x48(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "fstps -0x44(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "movb 0x24(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      "je .Lbiped_fix_position_11\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      ".Lbiped_fix_position_11:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movl %%ebx, -0x20(%%ebp)\n\t"
-      "jmp .Lbiped_fix_position_12\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lbiped_fix_position_12:\n\t"
-      "cmpw -0x4c(%%ebp), %%bx\n\t"
-      "jge .Lbiped_fix_position_23\n\t"
-      "movb 0x1c(%%ebp), %%al\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "testb %%al, %%al\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "je .Lbiped_fix_position_13\n\t"
-      "shll $2, %%eax\n\t"
-      "fmuls 0x2b4b80(%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x24(%%esi)\n\t"
-      "fadds -0x2c(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0x28(%%esi)\n\t"
-      "fadds -0x28(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x2c(%%esi)\n\t"
-      "fadds -0x24(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls 0x2b4b84(%%eax)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "faddp %%st(1)\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "fadds -0xc(%%ebp)\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls 0x2b4b88(%%eax)\n\t"
-      "fsts -0x14(%%ebp)\n\t"
-      "fmuls 0x30(%%esi)\n\t"
-      "fadd %%st(2), %%st(0)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x34(%%esi)\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x38(%%esi)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "jmp .Lbiped_fix_position_14\n\t"
-      ".Lbiped_fix_position_13:\n\t"
-      "fmuls 0x2b4b80(,%%eax,4)\n\t"
-      "leal 0x2b4b80(,%%eax,4), %%eax\n\t"
-      "fadds -0x2c(%%ebp)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "fadds -0x28(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "fadds -0x24(%%ebp)\n\t"
-      ".Lbiped_fix_position_14:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18e720]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lbiped_fix_position_22\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18e720]\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e3c0]\n\t"
-      "addl $0xe0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x8(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lbiped_fix_position_22\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "movl -0x30(%%ebp), %%ebx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c14f020]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lbiped_fix_position_21\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "leal -0x110(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x48(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c14e7d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbiped_fix_position_21\n\t"
-      "cmpl $-1, 0xc(%%ebp)\n\t"
-      "je .Lbiped_fix_position_16\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "leal -0x538(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x70(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c14cc80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbiped_fix_position_21\n\t"
-      "leal -0xc0(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x60(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[v30d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lbiped_fix_position_15\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "cmpl %%ecx, -0x88(%%ebp)\n\t"
-      "jne .Lbiped_fix_position_21\n\t"
-      ".Lbiped_fix_position_15:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal -0xc0(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x60(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[v30d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lbiped_fix_position_16\n\t"
-      "cmpl %%edi, -0x88(%%ebp)\n\t"
-      "jne .Lbiped_fix_position_21\n\t"
-      ".Lbiped_fix_position_16:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c18f180]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $-1, -0x50(%%ebp)\n\t"
-      "jne .Lbiped_fix_position_17\n\t"
-      "pushl $1\n\t"
-      "pushl $0x41e\n\t"
-      "pushl $0x2b4d5c\n\t"
-      "pushl $0x2b4e44\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbiped_fix_position_17:\n\t"
-      "testb $8, 0x2f4(%%edi)\n\t"
-      "jne .Lbiped_fix_position_18\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fsubs 0x42c(%%edi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      ".Lbiped_fix_position_18:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lbiped_fix_position_19\n\t"
-      "movb 0x20(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbiped_fix_position_19\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "leal 0xc(%%esi), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "call *%[c1446a0]\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[otrans]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lbiped_fix_position_19:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lbiped_fix_position_20\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      ".Lbiped_fix_position_20:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lbiped_fix_position_21:\n\t"
-      "movl -0x20(%%ebp), %%ebx\n\t"
-      ".Lbiped_fix_position_22:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "incl %%ebx\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%ebx, -0x20(%%ebp)\n\t"
-      "je .Lbiped_fix_position_12\n\t"
-      ".Lbiped_fix_position_23:\n\t"
-      "movb -0x1(%%ebp), %%bl\n\t"
-      ".Lbiped_fix_position_24:\n\t"
-      "cmpw $1, 0x4761d8\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "jg .Lbiped_fix_position_25\n\t"
-      "pushl $1\n\t"
-      "pushl $0x438\n\t"
-      "pushl $0x2b4d5c\n\t"
-      "pushl $0x253418\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbiped_fix_position_25:\n\t"
-      "decw 0x4761d8\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b1a1430_assert), [exitfn] "m"(b1a1430_exitfn), [c1aae0] "m"(b1a1430_c1aae0), [get] "m"(b1a1430_get), [tag] "m"(b1a1430_tag), [c1a0890] "m"(b1a1430_c1a0890), [c14c8e0] "m"(b1a1430_c14c8e0), [norm] "m"(b1a1430_norm), [c18e720] "m"(b1a1430_c18e720), [c18e3c0] "m"(b1a1430_c18e3c0), [elem] "m"(b1a1430_elem), [c14f020] "m"(b1a1430_c14f020), [c14e7d0] "m"(b1a1430_c14e7d0), [c14cc80] "m"(b1a1430_c14cc80), [v30d0] "m"(b1a1430_v30d0), [c18f180] "m"(b1a1430_c18f180), [c1446a0] "m"(b1a1430_c1446a0), [otrans] "m"(b1a1430_otrans)
-      : "memory");
+  unsigned int *biped_obj;
+  int biped_tag;
+  int depth;
+  unsigned char success;
+  short i;
+  short loop_limit;
+  int from_seat;
+  int collision_flags;
+  int leaf_index;
+  int bsp;
+  int leaf_elem;
+  float *src_pos;
+  float *basis; /* biped_obj as float[] — basis-matrix rows at +0x24..0x38 */
+  float position[3]; /* local_2c/28/24 */
+  float camera_height; /* local_18 ([EBP-0x18], 1a0890 arg4) */
+  float height_offset; /* local_1c ([EBP-0x1c], 1a0890 arg3) */
+  float offset_vec[3]; /* local_4c/48/44 */
+  float cross[3]; /* local_40/3c/38 */
+  float fx, fy;
+  float candidate[3]; /* local_14: candidate.x; local_10/c/8 below */
+  float cand[3]; /* local_10/c/8 — the BSP query point */
+  /* Out buffers passed to collision callees. Sized per each callee's writes;
+   * preserve sizes to keep the original 0x538 frame layout. */
+  char center[12]; /* local_64 — 1aae0 sphere center / 130d0 args */
+  char box[16]; /* local_74 — 14c8e0 out, reused as 14cc80 arg1 */
+  char location[16]; /* local_58/54/50 — scenario_location_from_point */
+  char surf_result[80]; /* local_114 — 14e7d0 result */
+  char los_result[56]; /* local_c4 — 130d0 result; +0x38 = hit handle */
+  static char obstruction[1064]; /* local_53c — 14cc80 working buffer */
+
+  success = 0;
+  if ((final_position == (float *)0) && (dont_teleport != '\0')) {
+    display_assert("final_position || !dont_teleport",
+                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0x37d, true);
+    system_exit(-1);
+  }
+  if (*(int16_t *)0x4761d8 >= 0x20) {
+    display_assert("global_current_collision_user_depth < "
+                   "MAXIMUM_COLLISION_USER_STACK_DEPTH",
+                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0x37f, true);
+    system_exit(-1);
+  }
+  depth = *(int16_t *)0x4761d8;
+  *(int16_t *)0x4761d8 = (int16_t)(depth + 1);
+  *(int16_t *)(0x5a8c80 + depth * 2) = 7;
+
+  /* Branch structure preserved from disasm (0x1a14aa): call FUN_0001aae0 only
+   * when a seat is involved, jumping straight to the epilogue when both handles
+   * are NONE. */
+  if (unit_handle == -1) {
+    if (seat_handle == -1) {
+      goto epilogue;
+    }
+    goto call_aae0;
+  }
+  if (seat_handle != -1) {
+  call_aae0:
+    FUN_0001aae0(seat_handle, (float *)center, (float *)&from_seat);
+  }
+  {
+    from_seat = (unit_handle == -1);
+    if (from_seat) {
+      unit_handle = seat_handle;
+    }
+    biped_obj = (unsigned int *)object_get_and_verify_type(unit_handle, 1);
+    biped_tag = (int)tag_get(0x62697064, *biped_obj); /* 'bipd' */
+    collision_flags =
+      (-(int)((*(unsigned int *)(biped_tag + 0x2f4) & 0x20) != 0) &
+       0xffdfff00) +
+      0x20c3a0;
+
+    if (initial_position == (float *)0) {
+      src_pos = &position[0];
+    } else {
+      position[0] = initial_position[0];
+      position[1] = initial_position[1];
+      position[2] = initial_position[2];
+      src_pos = &offset_vec[0];
+    }
+    biped_get_camera_height_and_offset(unit_handle, (vector3_t *)src_pos,
+                                       &height_offset, &camera_height);
+    if (from_seat) {
+      unit_handle = -1;
+    }
+    loop_limit = (short)(0x1b - ((keep_basis != '\0') - 1 & 9));
+    if (seat_handle != -1) {
+      FUN_0014c8e0((int *)box, seat_handle);
+    }
+    /* cross = right_axis(obj+0x24) x up_axis(obj+0x30); normalize. The basis
+     * rows at obj+0x24..0x38 are floats; load them as floats (FLD), not via
+     * int->float conversion. FSUBP order preserved exactly from disasm. */
+    basis = (float *)biped_obj;
+    cross[0] = basis[0xe] * basis[0xa] - basis[0xb] * basis[0xd];
+    cross[1] = basis[0xb] * basis[0xc] - basis[9] * basis[0xe];
+    cross[2] = basis[9] * basis[0xd] - basis[0xc] * basis[0xa];
+    normalize3d(&cross[0]);
+    offset_vec[0] = height_offset * global_up_vector_ptr[0];
+    offset_vec[1] = height_offset * global_up_vector_ptr[1];
+    offset_vec[2] = height_offset * global_up_vector_ptr[2];
+    if (scale_by_height != '\0') {
+      scale = camera_height * scale;
+    }
+
+    i = 0;
+    while ((short)i < loop_limit) {
+      leaf_index = (int)(short)i;
+      if (keep_basis == '\0') {
+        cand[0] = scale * ((float *)0x2b4b80)[leaf_index * 3] + position[0];
+        cand[1] = scale * ((float *)0x2b4b84)[leaf_index * 3] + position[1];
+        cand[2] = scale * ((float *)0x2b4b88)[leaf_index * 3] + position[2];
+      } else {
+        fx = scale * ((float *)0x2b4b80)[leaf_index * 3];
+        fy = scale * ((float *)0x2b4b84)[leaf_index * 3];
+        candidate[2] = scale * ((float *)0x2b4b88)[leaf_index * 3];
+        cand[0] = candidate[2] * basis[0xc] + cross[0] * fy + fx * basis[9] +
+                  position[0];
+        cand[1] = candidate[2] * basis[0xd] + cross[1] * fy + fx * basis[0xa] +
+                  position[1];
+        cand[2] = candidate[2] * basis[0xe] + cross[2] * fy + fx * basis[0xb] +
+                  position[2];
+      }
+
+      if (FUN_0018e720((int)&cand[0]) != -1) {
+        leaf_index = FUN_0018e720((int)&cand[0]) & 0x7fffffff;
+        bsp = (int)scenario_get();
+        leaf_elem =
+          (int)tag_block_get_element((void *)(bsp + 0xe0), leaf_index, 0x10);
+        if ((*(short *)(leaf_elem + 8) != -1) &&
+            (FUN_0014f020((uint32_t)collision_flags, &cand[0],
+                          camera_height + camera_height, height_offset,
+                          camera_height, unit_handle, &cand[0]) != '\0') &&
+            (FUN_0014e7d0((uint32_t)collision_flags, &cand[0], &offset_vec[0],
+                          camera_height, unit_handle, surf_result) == '\0') &&
+            ((seat_handle == -1) ||
+             ((FUN_0014cc80((int)box, (int)&cand[0], (int)&offset_vec[0],
+                            camera_height, (int16_t *)obstruction) == '\0') &&
+              ((FUN_000130d0((uint32_t)collision_flags, &cand[0],
+                             (float *)center, unit_handle,
+                             (int16_t *)los_result) == 0) ||
+               (*(int *)(los_result + 0x38) == seat_handle)) &&
+              ((FUN_000130d0((uint32_t)collision_flags, (float *)center,
+                             &cand[0], seat_handle,
+                             (int16_t *)los_result) == 0) ||
+               (*(int *)(los_result + 0x38) == unit_handle))))) {
+          biped_tag = (int)tag_get(0x62697064, *biped_obj);
+          scenario_location_from_point(location, &cand[0]);
+          if (*(short *)(location + 4) == -1) {
+            display_assert("fixed_location.cluster_index!=NONE",
+                           "c:\\halo\\SOURCE\\units\\bipeds.c", 0x41e, true);
+            system_exit(-1);
+          }
+          if ((*(unsigned char *)(biped_tag + 0x2f4) & 8) == 0) {
+            cand[2] = cand[2] - *(float *)(biped_tag + 0x42c);
+          }
+          if ((unit_handle != -1) && (dont_teleport == '\0')) {
+            biped_obj[3] = *(unsigned int *)&cand[0];
+            biped_obj[4] = *(unsigned int *)&cand[1];
+            biped_obj[5] = *(unsigned int *)&cand[2];
+            object_update_children_recursive(unit_handle);
+            object_translate(unit_handle, &cand[0], location);
+          }
+          if (final_position != (float *)0) {
+            final_position[0] = cand[0];
+            final_position[1] = cand[1];
+            final_position[2] = cand[2];
+          }
+          success = 1;
+        }
+      }
+      i = (short)(i + 1);
+      if (success != 0) {
+        break;
+      }
+    }
+  }
+
+epilogue:
+  if (*(int16_t *)0x4761d8 < 2) {
+    display_assert("global_current_collision_user_depth > 1",
+                   "c:\\halo\\SOURCE\\units\\bipeds.c", 0x438, true);
+    system_exit(-1);
+  }
+  *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
+  return (char)success;
 }
-#else
-#error "biped_fix_position: clang naked draft required"
-#endif
 
 
 /* biped_render_debug (0x1a1900)
