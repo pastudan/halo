@@ -39855,8 +39855,8 @@
         },
         {
           "addr": "0x1bdf10",
-          "decl": "void sound_cache_sound_new(void);",
-          "ported": false
+          "decl": "void sound_cache_sound_new(void *unused, char *entry);",
+          "ported": true
         },
         {
           "addr": "0x1bdf60",

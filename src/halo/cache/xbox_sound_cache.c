@@ -9,46 +9,20 @@ void xbox_sound_cache_idle(void)
     system_exit(-1);
   }
 }
-/* sound_cache_sound_new (0x1bdf10) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static void (*const b1bdf10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bdf10_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void sound_cache_sound_new(void)
+/* sound_cache_sound_new (0x1bdf10) — readable C lift. */
+void sound_cache_sound_new(void *unused, char *entry)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl 0x30(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsound_cache_sound_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9e\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b92b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_sound_new_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0xffffffff, 0x2c(%%esi)\n\t"
-      "movl $0, 0x30(%%esi)\n\t"
-      "movl %%eax, 0x34(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bdf10_assert), [exitfn] "m"(b1bdf10_exitfn)
-      : "memory");
+  extern char DAT_002b9288[];
+  extern char DAT_002b92b0[];
+  (void)unused;
+  if (*(int *)(entry + 0x30) != 0) {
+    display_assert(DAT_002b92b0, DAT_002b9288, 0x9e, 1);
+    system_exit(-1);
+  }
+  *(int *)(entry + 0x2c) = -1;
+  *(int *)(entry + 0x30) = 0;
+  *(void **)(entry + 0x34) = unused;
 }
-#else
-#error "sound_cache_sound_new: clang naked draft required"
-#endif
-
 
 /* FUN_001bdf60 (0x1bdf60) — XBE naked draft (batch 269). */
 #if defined(__clang__)
