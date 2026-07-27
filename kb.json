@@ -21853,8 +21853,8 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "void action_avoid_setup(void);",
-          "ported": false
+          "decl": "char action_avoid_setup(void * a0, void * a1);",
+          "ported": true
         },
         {
           "addr": "0x12920",

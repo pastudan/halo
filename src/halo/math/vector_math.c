@@ -1165,48 +1165,18 @@ void action_alert_perform(void)
 #endif
 
 
-/* action_avoid_setup (0x128c0) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static void (*const b128c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b128c0_exitfn)(int) = system_exit;
-static void *(*const b128c0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void action_avoid_setup(void)
+/* action_avoid_setup (0x128c0) — readable C lift. */
+char action_avoid_setup(void * a0, void * a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Laction_avoid_setup_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e\n\t"
-      "pushl $0x25339c\n\t"
-      "pushl $0x25334c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Laction_avoid_setup_1:\n\t"
-      "pushl $4\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b128c0_assert), [exitfn] "m"(b128c0_exitfn), [memset] "m"(b128c0_memset)
-      : "memory");
+  if (a1 == NULL) {
+    display_assert((const char *)0x25334c, (const char *)0x25339c, 0x1e, 1);
+    system_exit(-1);
+  }
+  {
+    uintptr_t _r = (uintptr_t)csmemset(a1, 0, 4);
+    return (char)((_r & ~0xffu) | 1u);
+  }
 }
-#else
-#error "action_avoid_setup: clang naked draft required"
-#endif
-
 
 /* action_avoid_perform (0x12920) — XBE naked draft (batch 267). */
 #if defined(__clang__)
