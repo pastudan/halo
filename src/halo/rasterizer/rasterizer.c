@@ -14960,26 +14960,11 @@ void rasterizer_widget_set_texture(int handle)
   FUN_0015eb90();
 }
 
-/* rasterizer_widget_set_tint_factor (0x17c9a0) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_widget_set_tint_factor(int handle __attribute__((unused)))
+/* rasterizer_widget_set_tint_factor (0x17c9a0) — readable C lift (nop/ret thunk). */
+void rasterizer_widget_set_tint_factor(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x57, 0x09, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  (void)handle;
 }
-#else
-#error "rasterizer_widget_set_tint_factor: clang naked draft required"
-#endif
-
 
 /* rasterizer_widget_set_zbuffer_enable (0x17c9b0) — readable C lift. */
 int rasterizer_widget_set_zbuffer_enable(int param_1, int param_2)
@@ -15006,26 +14991,11 @@ void rasterizer_widget_end(int handle)
   FUN_0015ee80();
 }
 
-/* rasterizer_widget_submit_occlusion_test (0x17c9f0) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_widget_submit_occlusion_test(int handle __attribute__((unused)))
+/* rasterizer_widget_submit_occlusion_test (0x17c9f0) — readable C lift (nop/ret thunk). */
+void rasterizer_widget_submit_occlusion_test(int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xa7, 0x0b, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  (void)handle;
 }
-#else
-#error "rasterizer_widget_submit_occlusion_test: clang naked draft required"
-#endif
-
 
 /* rasterizer_widget_get_occlusion_test_result (0x17ca00) — readable C lift (jmp thunk). */
 void rasterizer_widget_get_occlusion_test_result(void)

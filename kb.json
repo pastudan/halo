@@ -21222,7 +21222,7 @@
         {
           "addr": "0x17c9a0",
           "decl": "void rasterizer_widget_set_tint_factor(int handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c9b0",
@@ -21247,7 +21247,7 @@
         {
           "addr": "0x17c9f0",
           "decl": "void rasterizer_widget_submit_occlusion_test(int handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ca00",
