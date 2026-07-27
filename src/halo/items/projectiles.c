@@ -97,68 +97,24 @@ void FUN_000f7e40(int projectile_handle, int16_t state)
     *(int16_t *)(proj + 0x1e0) = state;
 }
 
-/* FUN_000f7e60 (0xf7e60) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static int (*const bf7e60_c9ee40)(int effect_tag_index, int object_index, int attached_object, uint16_t marker_index, short marker_count, void *effect_definition, float *marker_points, float *marker_forwards, float scale_a, float scale_b, float unknown1, float unknown2) = effect_new_attached_from_markers;
-static int (*const bf7e60_c9f0e0)(int effect_tag_index, int object_index, float *translational_velocity, short marker_count, void *effect_definition, float *marker_points, float *marker_forwards, float scale_a, float scale_b, float unknown1, float unknown2, float unknown3) = effect_new_unattached_from_markers;
-
-__attribute__((naked, noinline))
-void FUN_000f7e60(int effect_tag_index __attribute__((unused)), int object_index __attribute__((unused)), void *tag_def __attribute__((unused)), float *marker_points __attribute__((unused)), float *marker_forwards __attribute__((unused)), float scale_a __attribute__((unused)), float scale_b __attribute__((unused)))
+/* FUN_000f7e60 (0xf7e60) — readable C lift from XBE leaf. */
+void FUN_000f7e60(float scale_a, float scale_b, void *tag_def, float *marker_points,
+                  float *marker_forwards, int effect_tag_index, int object_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpw $3, (%%eax)\n\t"
-      "jne .LFUN_000f7e60_1\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x38(%%eax), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x3e(%%eax), %%cx\n\t"
-      "pushl $0x31f3a0\n\t"
-      "pushl $5\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c9ee40]\n\t"
-      "addl $0x30, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f7e60_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x31f3a0\n\t"
-      "pushl $5\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c9f0e0]\n\t"
-      "addl $0x30, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c9ee40] "m"(bf7e60_c9ee40), [c9f0e0] "m"(bf7e60_c9f0e0)
-      : "memory");
+  if (*(int16_t *)tag_def == 3) {
+    effect_new_attached_from_markers(
+        effect_tag_index, object_index, *(int *)((char *)tag_def + 0x38),
+        *(uint16_t *)((char *)tag_def + 0x3e), 5, (void *)0x31f3a0, marker_points,
+        marker_forwards, scale_a, scale_b, 0.0f, 0.0f);
+  } else {
+    float unknown3;
+    *(int *)&unknown3 = 1;
+    effect_new_unattached_from_markers(
+        effect_tag_index, object_index, 0, 5, (void *)0x31f3a0, marker_points,
+        marker_forwards, scale_a, scale_b, 0.0f, 0.0f, unknown3);
+  }
 }
-#else
-#error "FUN_000f7e60: clang naked draft required"
-#endif
+
 
 
 /* For each of the 4 scale slots in a projectile's tag definition, compute the
