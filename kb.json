@@ -22958,22 +22958,22 @@
         {
           "addr": "0x94400",
           "decl": "void FUN_00094400(char *out, void *event, int **stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x944b0",
           "decl": "void FUN_000944b0(char *out, void *event, int **stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x94560",
           "decl": "void FUN_00094560(char *out, void *event, int **stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x94620",
           "decl": "void apply_facing_vector(char *thread, void *event, int **stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x946e0",
@@ -23075,7 +23075,7 @@
         {
           "addr": "0x955b0",
           "decl": "int recorded_animation_get_time_left(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95640",
