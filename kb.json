@@ -31194,7 +31194,7 @@
         {
           "addr": "0x17cf80",
           "decl": "void FUN_0017cf80(int arg1, int arg2, uint32_t handle, int subcount2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cf90",
@@ -38696,8 +38696,9 @@
         },
         {
           "addr": "0x15f540",
-          "decl": "void FUN_0015f540(void);",
-          "ported": false
+          "decl": "void FUN_0015f540(int arg1, int arg2, uint32_t handle, int subcount2);",
+          "ported": false,
+          "name": "FUN_0015f540"
         },
         {
           "addr": "0x15f5e0",
