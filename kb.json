@@ -37437,7 +37437,7 @@
         {
           "addr": "0x6f220",
           "decl": "void FUN_0006f220(unsigned char *p, int count);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0006f220"
         },
         {
