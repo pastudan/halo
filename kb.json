@@ -13731,7 +13731,7 @@
         {
           "addr": "0xce5c0",
           "decl": "void input_open_state_file(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcf500",
@@ -22777,7 +22777,7 @@
         {
           "addr": "0x111770",
           "decl": "void FUN_00111770(int state @<esi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x111910",
