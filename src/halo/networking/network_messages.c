@@ -427,156 +427,64 @@ unsigned char FUN_0011a560(int *state)
 
 
 
-/* FUN_0011a5d0 (0x11a5d0) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void (*const b11a5d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a5d0_exitfn)(int) = system_exit;
-static void (*const b11a5d0_c118620)(void *data, int count, int element_size) = FUN_00118620;
-
-__attribute__((naked, noinline))
-short FUN_0011a5d0(int *state __attribute__((unused)))
+/* FUN_0011a5d0 (0x11a5d0) — readable C lift.
+ * Read next int16 from a bounded buffer cursor (with byte-swap). */
+short FUN_0011a5d0(int *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_0011a5d0_1\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .LFUN_0011a5d0_1\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0011a5d0_1\n\t"
-      "cmpl 0x8(%%esi), %%eax\n\t"
-      "jle .LFUN_0011a5d0_2\n\t"
-      ".LFUN_0011a5d0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f058\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a5d0_2:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "leal 0x2(%%eax), %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jg .LFUN_0011a5d0_3\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_0011a5d0_3\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "pushl $-2\n\t"
-      "addl %%eax, %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c118620]\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "je .LFUN_0011a5d0_4\n\t"
-      "movswl (%%edi), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a5d0_3:\n\t"
-      "movb $1, 0xc(%%esi)\n\t"
-      ".LFUN_0011a5d0_4:\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11a5d0_assert), [exitfn] "m"(b11a5d0_exitfn), [c118620] "m"(b11a5d0_c118620)
-      : "memory");
+  extern char DAT_0028f058[];
+  extern char DAT_0028eef8[];
+  int offset;
+  int limit;
+  short *ptr;
+
+  if (state == 0 || state[0] == 0 || state[1] < 0 || state[1] > state[2]) {
+    display_assert(DAT_0028f058, DAT_0028eef8, 0x100, true);
+    system_exit(-1);
+  }
+  offset = state[1];
+  limit = state[2];
+  if (offset + 2 > limit || *((unsigned char *)state + 0xc) != 0) {
+    *((unsigned char *)state + 0xc) = 1;
+    return 0;
+  }
+  ptr = (short *)((char *)state[0] + offset);
+  FUN_00118620(ptr, 1, -2);
+  state[1] = offset + 2;
+  if (ptr == 0)
+    return 0;
+  return *ptr;
 }
-#else
-#error "FUN_0011a5d0: clang naked draft required"
-#endif
 
 
-/* FUN_0011a650 (0x11a650) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void (*const b11a650_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a650_exitfn)(int) = system_exit;
-static void (*const b11a650_c118620)(void *data, int count, int element_size) = FUN_00118620;
 
-__attribute__((naked, noinline))
-int FUN_0011a650(int *state __attribute__((unused)))
+/* FUN_0011a650 (0x11a650) — readable C lift.
+ * Read next int32 from a bounded buffer cursor (with byte-swap). */
+int FUN_0011a650(int *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_0011a650_1\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .LFUN_0011a650_1\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0011a650_1\n\t"
-      "cmpl 0x8(%%esi), %%eax\n\t"
-      "jle .LFUN_0011a650_2\n\t"
-      ".LFUN_0011a650_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f058\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a650_2:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "leal 0x4(%%eax), %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jg .LFUN_0011a650_3\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_0011a650_3\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "pushl $-4\n\t"
-      "addl %%eax, %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c118620]\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl $4, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "je .LFUN_0011a650_4\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a650_3:\n\t"
-      "movb $1, 0xc(%%esi)\n\t"
-      ".LFUN_0011a650_4:\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11a650_assert), [exitfn] "m"(b11a650_exitfn), [c118620] "m"(b11a650_c118620)
-      : "memory");
+  extern char DAT_0028f058[];
+  extern char DAT_0028eef8[];
+  int offset;
+  int limit;
+  int *ptr;
+
+  if (state == 0 || state[0] == 0 || state[1] < 0 || state[1] > state[2]) {
+    display_assert(DAT_0028f058, DAT_0028eef8, 0x100, true);
+    system_exit(-1);
+  }
+  offset = state[1];
+  limit = state[2];
+  if (offset + 4 > limit || *((unsigned char *)state + 0xc) != 0) {
+    *((unsigned char *)state + 0xc) = 1;
+    return 0;
+  }
+  ptr = (int *)((char *)state[0] + offset);
+  FUN_00118620(ptr, 1, -4);
+  state[1] = offset + 4;
+  if (ptr == 0)
+    return 0;
+  return *ptr;
 }
-#else
-#error "FUN_0011a650: clang naked draft required"
-#endif
+
 
 
 /* FUN_0011a6d0 (0x11a6d0) — readable C lift. */

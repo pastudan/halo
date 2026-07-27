@@ -1820,71 +1820,33 @@ char network_game_client_add_player_to_game(void *client __attribute__((unused))
 #endif
 
 
-/* network_game_client_switch_to_pregame (0x125660) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static void (*const b125660_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b125660_exitfn)(int) = system_exit;
-static void (*const b125660_c12abc0)(void *game, bool flag) = network_game_reset_for_next_round;
-static void (*const b125660_c128d20)(int connection) = network_connection_keep_alive;
-static void (*const b125660_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b125660_ce8830)(void) = network_game_reset_to_pregame_ui;
-
-__attribute__((naked, noinline))
-char network_game_client_switch_to_pregame(void *client __attribute__((unused)))
+/* network_game_client_switch_to_pregame (0x125660) — readable C lift. */
+char network_game_client_switch_to_pregame(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .Lnetwork_game_client_switch_to_pregame_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x499\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2917a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_switch_to_pregame_1:\n\t"
-      "cmpw $2, 0xca6(%%esi)\n\t"
-      "je .Lnetwork_game_client_switch_to_pregame_2\n\t"
-      "leal 0x85c(%%esi), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12abc0]\n\t"
-      "movl 0x82c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c128d20]\n\t"
-      "pushl $0x291f84\n\t"
-      "movl %%ebx, 0xc98(%%esi)\n\t"
-      "movl $1, 0xc90(%%esi)\n\t"
-      "movl %%ebx, 0xc9c(%%esi)\n\t"
-      "movb %%bl, 0xcad(%%esi)\n\t"
-      "movw $2, 0xca6(%%esi)\n\t"
-      "movb %%bl, 0xcac(%%esi)\n\t"
-      "call *%[c12b650]\n\t"
-      "call *%[ce8830]\n\t"
-      "movl 0x82c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c128d20]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_switch_to_pregame_2:\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b125660_assert), [exitfn] "m"(b125660_exitfn), [c12abc0] "m"(b125660_c12abc0), [c128d20] "m"(b125660_c128d20), [c12b650] "m"(b125660_c12b650), [ce8830] "m"(b125660_ce8830)
-      : "memory");
+  extern char DAT_002917a8[];
+  extern char DAT_00291774[];
+  extern char DAT_00291f84[];
+
+  if (client == 0) {
+    display_assert(DAT_002917a8, DAT_00291774, 0x499, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)client + 0xca6) != 2) {
+    network_game_reset_for_next_round((char *)client + 0x85c, 1);
+    network_connection_keep_alive(*(int *)((char *)client + 0x82c));
+    *(int *)((char *)client + 0xc98) = 0;
+    *(int *)((char *)client + 0xc90) = 1;
+    *(int *)((char *)client + 0xc9c) = 0;
+    *((unsigned char *)client + 0xcad) = 0;
+    *(short *)((char *)client + 0xca6) = 2;
+    *((unsigned char *)client + 0xcac) = 0;
+    network_game_log(DAT_00291f84);
+    network_game_reset_to_pregame_ui();
+    network_connection_keep_alive(*(int *)((char *)client + 0x82c));
+  }
+  return 1;
 }
-#else
-#error "network_game_client_switch_to_pregame: clang naked draft required"
-#endif
+
 
 
 static __attribute__((unused)) char network_client_manager_send_player_request(void *client, void *payload,
