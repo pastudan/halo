@@ -169,7 +169,6 @@ int FUN_00061e80(float *p0, float *p1, float radius)
   return (dx * dx + dy * dy) <= (radius * radius);
 }
 
->>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
 
 
 /* 0x61ec0 — 3D point-in-radius test.
@@ -2420,56 +2419,32 @@ int FUN_00106290(int16_t count, void *index_array, void *vertex_base,
   return 1;
 }
 
-/* FUN_00106330 (0x106330) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float FUN_00106330(int16_t count __attribute__((unused)), float *points __attribute__((unused)))
+/* FUN_00106330 (0x106330) — readable C lift from XBE leaf. */
+float FUN_00106330(int16_t count, float *points)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "flds 0x2533c0\n\t"
-      "cmpw $2, %%dx\n\t"
-      "jle .LFUN_00106330_2\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $-2, %%edx\n\t"
-      "leal 0x8(%%ecx), %%eax\n\t"
-      "movzwl %%dx, %%edx\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_00106330_1:\n\t"
-      "flds (%%eax)\n\t"
-      "addl $8, %%eax\n\t"
-      "decl %%edx\n\t"
-      "fsubs (%%ecx)\n\t"
-      "flds -0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "fxch %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fmuls 0x253398\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_00106330_1\n\t"
-      ".LFUN_00106330_2:\n\t"
-      "fabs\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float acc;
+  float half = *(float *)0x253398;
+  float zero = *(float *)0x2533c0;
+  int i;
+  float dx1, dy1, dx2, dy2;
+
+  acc = zero;
+  if (count > 2) {
+    for (i = 0; i < (int)count - 2; i++) {
+      dx1 = points[2 * (i + 1)] - points[0];
+      dy1 = points[2 * (i + 1) + 1] - points[1];
+      dx2 = points[2 * (i + 2)] - points[0];
+      dy2 = points[2 * (i + 2) + 1] - points[1];
+      acc += (dx1 * dy2 - dy1 * dx2) * half;
+    }
+  }
+  if (acc < 0) {
+    acc = -acc;
+  }
+  return acc;
 }
-#else
-#error "FUN_00106330: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_0018e420 (0x18e420)
@@ -2841,8 +2816,7 @@ void cluster_partition_copy(void *destination, void *source)
 
   scenario = global_scenario_get();
   count = *(int *)((char *)scenario + 0x134);
-  csmemcpy(*(void **)destination, *(void **)source, (size_t)count * 4);>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
-  reference_list_copy(*(void **)((char *)destination + 8),
+  csmemcpy(*(void **)destination, *(void **)source, (size_t)count * 4);  reference_list_copy(*(void **)((char *)destination + 8),
                       *(void **)((char *)source + 8));
   reference_list_copy(*(void **)((char *)destination + 4),
                       *(void **)((char *)source + 4));
@@ -2851,8 +2825,7 @@ void cluster_partition_copy(void *destination, void *source)
 
 
 
-/* FUN_00191750 (0x191750) — readable C lift from XBE leaf. */>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
-int *FUN_00191750(short cluster_index, int **partition)
+/* FUN_00191750 (0x191750) — readable C lift from XBE leaf. */int *FUN_00191750(short cluster_index, int **partition)
 {
   extern char DAT_002b2668[];
   extern char DAT_002b26b8[];
@@ -2863,14 +2836,12 @@ int *FUN_00191750(short cluster_index, int **partition)
   }
   scenario = global_scenario_get();
   if ((int)cluster_index >= *(int *)((char *)scenario + 0x134)) {
-bad:>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
-    display_assert(DAT_002b2668, DAT_002b26b8, 0xd5, true);
+bad:    display_assert(DAT_002b2668, DAT_002b26b8, 0xd5, true);
     system_exit(-1);
   }
   return *partition + (int)cluster_index;
 }
 
->>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
 
 
 /* cluster_partition_add_object (0x1917a0) — XBE naked draft (batch 82). */

@@ -23712,7 +23712,8 @@
         {
           "addr": "0x1c29b0",
           "decl": "void saved_game_files_notify_memory_units_changed(void);",
-          "ported": false
+          "ported": true,
+          "name": "saved_game_files_notify_memory_units_changed"
         },
         {
           "addr": "0x1c29c0",
