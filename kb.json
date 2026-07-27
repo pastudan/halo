@@ -23752,8 +23752,9 @@
         },
         {
           "addr": "0x1c1e20",
-          "decl": "void FUN_001c1e20(void);",
-          "ported": false
+          "decl": "int FUN_001c1e20(int a0, wchar_t *name);",
+          "ported": true,
+          "name": "FUN_001c1e20"
         },
         {
           "addr": "0x1c1f70",
@@ -23763,8 +23764,9 @@
         },
         {
           "addr": "0x1c1fa0",
-          "decl": "void playlist_profile_get(void);",
-          "ported": false
+          "decl": "char playlist_profile_get(const char *path, void *out_variant);",
+          "ported": true,
+          "name": "playlist_profile_get"
         },
         {
           "addr": "0x1c20d0",
@@ -23780,7 +23782,8 @@
         {
           "addr": "0x1c2120",
           "decl": "void FUN_001c2120(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_001c2120"
         },
         {
           "addr": "0x1c22e0",
@@ -23790,8 +23793,9 @@
         },
         {
           "addr": "0x1c2550",
-          "decl": "void playlist_profile_write(void);",
-          "ported": false
+          "decl": "char playlist_profile_write(void *args);",
+          "ported": true,
+          "name": "playlist_profile_write"
         },
         {
           "addr": "0x1c26b0",
@@ -23842,7 +23846,8 @@
         {
           "addr": "0x1c29c0",
           "decl": "void saved_game_file_get_useable_untitled_profile_name(wchar_t *out_name);",
-          "ported": false
+          "ported": true,
+          "name": "saved_game_file_get_useable_untitled_profile_name"
         },
         {
           "addr": "0x1c2af0",
@@ -23967,8 +23972,9 @@
         },
         {
           "addr": "0x1c38d0",
-          "decl": "int saved_game_file_find_profile_index_for_directory_path(void *path, int unused);",
-          "ported": false
+          "decl": "int saved_game_file_find_profile_index_for_directory_path(const char *path, int16_t expect_type);",
+          "ported": true,
+          "name": "saved_game_file_find_profile_index_for_directory_path"
         },
         {
           "addr": "0x1c3a30",
@@ -23987,8 +23993,9 @@
         },
         {
           "addr": "0x1c4030",
-          "decl": "void FUN_001c4030(void);",
-          "ported": false
+          "decl": "char FUN_001c4030(int16_t slot_index /* @<eax> */, uint16_t record_index, void *buffer);",
+          "ported": true,
+          "name": "FUN_001c4030"
         },
         {
           "addr": "0x1c4210",
@@ -24008,13 +24015,15 @@
         },
         {
           "addr": "0x1c46c0",
-          "decl": "char delete_enumerated_saved_game_file(int param_1);",
-          "ported": false
+          "decl": "char delete_enumerated_saved_game_file(int packed);",
+          "ported": true,
+          "name": "delete_enumerated_saved_game_file"
         },
         {
           "addr": "0x1c4850",
-          "decl": "void FUN_001c4850(void);",
-          "ported": false
+          "decl": "char FUN_001c4850(file_ref_t *info, int packed);",
+          "ported": true,
+          "name": "FUN_001c4850"
         }
       ],
       "name": "saved_game_files.obj",
@@ -33182,13 +33191,15 @@
         },
         {
           "addr": "0x1d2f22",
-          "decl": "int FUN_001d2f22(char *prefix, wchar_t *name, int a, int b, char *buf, int size);",
-          "ported": false
+          "decl": "int __stdcall FUN_001d2f22(char *prefix, wchar_t *name, int a, int b, char *buf, int size);",
+          "ported": false,
+          "name": "FUN_001d2f22"
         },
         {
           "addr": "0x1d3185",
-          "decl": "void FUN_001d3185(void);",
-          "ported": false
+          "decl": "int __stdcall FUN_001d3185(char *prefix, wchar_t *name);",
+          "ported": false,
+          "name": "FUN_001d3185"
         },
         {
           "addr": "0x1d3254",

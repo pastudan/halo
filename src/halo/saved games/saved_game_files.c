@@ -215,143 +215,45 @@ void FUN_001c1dc0(void)
 
 
 
-/* FUN_001c1e20 (0x1c1e20) — XBE naked draft (batch 251). */
-#if defined(__clang__)
-static void (*const b1c1e20_c1c5560)(void) = FUN_001c5560;
-static void (*const b1c1e20_c1c4850)(void) = FUN_001c4850;
-static game_variant_t * (*const b1c1e20_caa190)(game_variant_t *out) = game_engine_slayer_default;
-static void * (*const b1c1e20_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b1c1e20_cab570)(game_variant_t *variant) = game_engine_variant_cleanup;
-static wchar_t * (*const b1c1e20_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static void (*const b1c1e20_c1c3160)(void) = saved_game_file_generate_checksum;
-static bool (*const b1c1e20_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c1e20_c19ac00)(void) = file_write;
-static void (*const b1c1e20_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static char (*const b1c1e20_c1c46c0)(int param_1) = delete_enumerated_saved_game_file;
-static void (*const b1c1e20_c1c2890)(void) = saved_game_file_close;
-
-__attribute__((naked, noinline))
-void FUN_001c1e20(void)
+/* FUN_001c1e20 (0x1c1e20) — readable C lift. */
+int FUN_001c1e20(int a0, wchar_t *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x3dc, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "call *%[c1c5560]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .LFUN_001c1e20_3\n\t"
-      "leal -0x374(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c4850]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c1e20_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb $0, -0x200(%%ebp)\n\t"
-      "movl $0x7f, %%ecx\n\t"
-      "leal -0x1ff(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "stosw\n\t"
-      ".byte 0xaa\n\t"
-      "leal -0x3dc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[caa190]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $0x1a, %%ecx\n\t"
-      "leal -0x268(%%ebp), %%edi\n\t"
-      "rep movsl\n\t"
-      "pushl $0x68\n\t"
-      "leal -0x268(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x200(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "andb $0xfe, -0x19c(%%ebp)\n\t"
-      "leal -0x200(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cab570]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl $0xb\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x200(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19dc90]\n\t"
-      "leal -0x198(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x200(%%ebp), %%ecx\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%ecx\n\t"
-      "movw $0, -0x1ea(%%ebp)\n\t"
-      "call *%[c1c3160]\n\t"
-      "leal -0x374(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19aa00]\n\t"
-      "addl $0x34, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_001c1e20_1\n\t"
-      "leal -0x200(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x374(%%ebp), %%ecx\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19ac00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c1e20_2\n\t"
-      ".LFUN_001c1e20_1:\n\t"
-      "pushl $0x2ba4a0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1c46c0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      ".LFUN_001c1e20_2:\n\t"
-      "leal -0x374(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c2890]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001c1e20_3:\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c1e20_4:\n\t"
-      "pushl $0x2ba470\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1c46c0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c5560] "m"(b1c1e20_c1c5560), [c1c4850] "m"(b1c1e20_c1c4850), [caa190] "m"(b1c1e20_caa190), [c8e0b0] "m"(b1c1e20_c8e0b0), [cab570] "m"(b1c1e20_cab570), [c19dc90] "m"(b1c1e20_c19dc90), [c1c3160] "m"(b1c1e20_c1c3160), [c19aa00] "m"(b1c1e20_c19aa00), [c19ac00] "m"(b1c1e20_c19ac00), [c8f390] "m"(b1c1e20_c8f390), [c1c46c0] "m"(b1c1e20_c1c46c0), [c1c2890] "m"(b1c1e20_c1c2890)
-      : "memory");
-}
-#else
-#error "FUN_001c1e20: clang naked draft required"
-#endif
+  int handle;
+  file_ref_t ref;
+  game_variant_t tmp;
+  unsigned char variant[0x200];
+  game_variant_t *def;
+  char ok;
 
+  handle = ((int (*)(int, int, int))(void *)FUN_001c5560)(1, a0, (int)name);
+  if (handle == -1)
+    return -1;
+  if (!FUN_001c4850(&ref, handle)) {
+    error(2, (const char *)0x2ba470);
+    delete_enumerated_saved_game_file(handle);
+    return -1;
+  }
+
+  csmemset(variant, 0, 0x200);
+  def = game_engine_slayer_default(&tmp);
+  csmemcpy(variant, def, 0x68);
+  variant[0x64] = (unsigned char)(variant[0x64] & 0xfe);
+  game_engine_variant_cleanup((game_variant_t *)variant);
+  ustrncpy((wchar_t *)variant, name, 0xb);
+  ((wchar_t *)variant)[0xb] = 0;
+  saved_game_file_generate_checksum(variant, 0x68, variant + 0x68);
+
+  ok = file_set_position(&ref, 0);
+  if (ok)
+    ok = file_write(&ref, 0x200, variant);
+  if (!ok) {
+    error(2, (const char *)0x2ba4a0);
+    delete_enumerated_saved_game_file(handle);
+    handle = -1;
+  }
+  saved_game_file_close(&ref, handle);
+  return handle;
+}
 
 /* FUN_001c1f70 (0x1c1f70) — readable C lift. */
 void FUN_001c1f70(int profile_index)
@@ -364,143 +266,43 @@ void FUN_001c1f70(int profile_index)
     error(2, DAT_002ba4d4, profile_index);
 }
 
-/* playlist_profile_get (0x1c1fa0) — XBE naked draft (batch 251). */
-#if defined(__clang__)
-static void (*const b1c1fa0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c1fa0_exitfn)(int) = system_exit;
-static file_ref_t * (*const b1c1fa0_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c1fa0_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c1fa0_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-static void (*const b1c1fa0_c1c3160)(void) = saved_game_file_generate_checksum;
-static int (*const b1c1fa0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
-static void * (*const b1c1fa0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static bool (*const b1c1fa0_c19a930)(file_ref_t *info) = file_close;
-static void (*const b1c1fa0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void playlist_profile_get(void)
+/* playlist_profile_get (0x1c1fa0) — readable C lift. */
+char playlist_profile_get(const char *path, void *out_variant)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x320, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Lplaylist_profile_get_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lplaylist_profile_get_2\n\t"
-      ".Lplaylist_profile_get_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf3\n\t"
-      "pushl $0x2ba59c\n\t"
-      "pushl $0x2ba584\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_get_2:\n\t"
-      "pushl $0\n\t"
-      "leal -0x120(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplaylist_profile_get_6\n\t"
-      "leal -0x120(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_get_6\n\t"
-      "leal -0x320(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x120(%%ebp), %%eax\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19ab50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_get_4\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x320(%%ebp), %%edx\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c3160]\n\t"
-      "pushl $0x14\n\t"
-      "leal -0x2b8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lplaylist_profile_get_3\n\t"
-      "pushl $0x68\n\t"
-      "leal -0x320(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "leal -0x120(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_get_3:\n\t"
-      "pushl $0x2ba558\n\t"
-      "jmp .Lplaylist_profile_get_5\n\t"
-      ".Lplaylist_profile_get_4:\n\t"
-      "pushl $0x2ba538\n\t"
-      ".Lplaylist_profile_get_5:\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "leal -0x120(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_get_6:\n\t"
-      "pushl $0x2ba510\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c1fa0_assert), [exitfn] "m"(b1c1fa0_exitfn), [c1999f0] "m"(b1c1fa0_c1999f0), [c19a7a0] "m"(b1c1fa0_c19a7a0), [c19ab50] "m"(b1c1fa0_c19ab50), [c1c3160] "m"(b1c1fa0_c1c3160), [c8da40] "m"(b1c1fa0_c8da40), [c8e0b0] "m"(b1c1fa0_c8e0b0), [c19a930] "m"(b1c1fa0_c19a930), [c8f390] "m"(b1c1fa0_c8f390)
-      : "memory");
-}
-#else
-#error "playlist_profile_get: clang naked draft required"
-#endif
+  file_ref_t ref;
+  unsigned char buf[0x200];
+  unsigned char sig[0x14];
+  char ok;
 
+  ok = 0;
+  if (!path || !out_variant) {
+    display_assert((const char *)0x2ba584, (const char *)0x2ba59c, 0xf3, 1);
+    system_exit(-1);
+  }
+  if (!file_reference_create_from_path(&ref, path, 0)) {
+    error(2, (const char *)0x2ba510);
+    return 0;
+  }
+  if (!file_open(&ref, 1)) {
+    error(2, (const char *)0x2ba510);
+    return 0;
+  }
+  if (!file_read(&ref, 0x200, buf)) {
+    error(2, (const char *)0x2ba538);
+    file_close(&ref);
+    return 0;
+  }
+  saved_game_file_generate_checksum(buf, 0x68, sig);
+  if (csmemcmp(sig, buf + 0x68, 0x14) != 0) {
+    error(2, (const char *)0x2ba558);
+    file_close(&ref);
+    return 0;
+  }
+  csmemcpy(out_variant, buf, 0x68);
+  ok = 1;
+  file_close(&ref);
+  return ok;
+}
 
 /* FUN_001c20d0 (0x1c20d0) — readable C lift. */
 char FUN_001c20d0(int file_index, wchar_t *out_name)
@@ -522,174 +324,54 @@ void FUN_001c2110(void)
   (void)0;
 }
 
-/* FUN_001c2120 (0x1c2120) — XBE naked draft (batch 253). */
-#if defined(__clang__)
-static int (*const b1c2120_c1b9930)(int group_tag, const char *name, ...) = tag_loaded;
-static int (*const b1c2120_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
-static void (*const b1c2120_c199a60)(void) = directory_create_or_delete_contents;
-static char * (*const b1c2120_c8dd30)(char *destination, const char *source, size_t max_size) = csstrcat;
-static int (*const b1c2120_c19d420)(int param_1, int param_2) = FUN_0019d420;
-static void * (*const b1c2120_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static wchar_t * (*const b1c2120_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static void (*const b1c2120_c1c3160)(void) = saved_game_file_generate_checksum;
-static file_ref_t * (*const b1c2120_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c2120_c19a490)(file_ref_t *info) = FUN_0019a490;
-static bool (*const b1c2120_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c2120_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c2120_c19ac00)(void) = file_write;
-static bool (*const b1c2120_c19a930)(file_ref_t *info) = file_close;
-static void (*const b1c2120_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1c2120_c1c29b0)(void) = saved_game_files_notify_memory_units_changed;
-
-__attribute__((naked, noinline))
+/* FUN_001c2120 (0x1c2120) — readable C lift. */
 void FUN_001c2120(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x4e4, %%esp\n\t"
-      "pushl $0x28a4bc\n\t"
-      "pushl $0x75737472\n\t"
-      "call *%[c1b9930]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "je .LFUN_001c2120_4\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001c2120_1:\n\t"
-      "leal -0x4e4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x32eb28(,%%ebx,4)\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $0x1a, %%ecx\n\t"
-      "leal -0x27c(%%ebp), %%edi\n\t"
-      "pushl $0x2ba67c\n\t"
-      "rep movsl\n\t"
-      "leal -0x108(%%ebp), %%ecx\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d9179]\n\t"
-      "leal -0x108(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movb $0, -0x9(%%ebp)\n\t"
-      "call *%[c199a60]\n\t"
-      "pushl $0xff\n\t"
-      "leal -0x108(%%ebp), %%eax\n\t"
-      "pushl $0x2ba670\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dd30]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movb $0, -0x9(%%ebp)\n\t"
-      "call *%[c19d420]\n\t"
-      "pushl $0x68\n\t"
-      "leal -0x27c(%%ebp), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x47c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0xb\n\t"
-      "leal -0x47c(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19dc90]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "addl $0x44, %%esp\n\t"
-      "movb %%bl, %%dh\n\t"
-      "leal -0x414(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x47c(%%ebp), %%ecx\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%ecx\n\t"
-      "movw $0, -0x466(%%ebp)\n\t"
-      "orw %%dx, -0x418(%%ebp)\n\t"
-      "call *%[c1c3160]\n\t"
-      "pushl $0\n\t"
-      "leal -0x108(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x214(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c2120_2\n\t"
-      "leal -0x214(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19a490]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c2120_2\n\t"
-      "leal -0x214(%%ebp), %%edx\n\t"
-      "pushl $2\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c2120_2\n\t"
-      "leal -0x214(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19aa00]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c2120_2\n\t"
-      "leal -0x47c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x214(%%ebp), %%edx\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19ac00]\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "leal -0x214(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a930]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "jne .LFUN_001c2120_2\n\t"
-      "incw 0x4eaaa8\n\t"
-      "jmp .LFUN_001c2120_3\n\t"
-      ".LFUN_001c2120_2:\n\t"
-      "leal -0x108(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2ba634\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c2120_3:\n\t"
-      "incl %%ebx\n\t"
-      "cmpl $0x1a, %%ebx\n\t"
-      "jl .LFUN_001c2120_1\n\t"
-      "call *%[c1c29b0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c2120_4:\n\t"
-      "pushl $0x2ba5d0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1b9930] "m"(b1c2120_c1b9930), [c1d9179] "m"(b1c2120_c1d9179), [c199a60] "m"(b1c2120_c199a60), [c8dd30] "m"(b1c2120_c8dd30), [c19d420] "m"(b1c2120_c19d420), [c8e0b0] "m"(b1c2120_c8e0b0), [c19dc90] "m"(b1c2120_c19dc90), [c1c3160] "m"(b1c2120_c1c3160), [c1999f0] "m"(b1c2120_c1999f0), [c19a490] "m"(b1c2120_c19a490), [c19a7a0] "m"(b1c2120_c19a7a0), [c19aa00] "m"(b1c2120_c19aa00), [c19ac00] "m"(b1c2120_c19ac00), [c19a930] "m"(b1c2120_c19a930), [c8f390] "m"(b1c2120_c8f390), [c1c29b0] "m"(b1c2120_c1c29b0)
-      : "memory");
-}
-#else
-#error "FUN_001c2120: clang naked draft required"
-#endif
+  int tag;
+  int i;
+  game_variant_t tmp;
+  game_variant_t *def;
+  char path[0xff];
+  file_ref_t ref;
+  unsigned char variant[0x200];
+  wchar_t *disp;
+  char wrote;
 
+  tag = tag_loaded(0x75737472, (const char *)0x28a4bc);
+  if (tag == -1) {
+    error(2, (const char *)0x2ba5d0);
+    return;
+  }
+  for (i = 0; i < 0x1a; i++) {
+    def = ((game_variant_t * (*)(game_variant_t *))(void *)(*(void **)(0x32eb28 + 4 * i)))(&tmp);
+    csmemcpy(&tmp, def, 0x68);
+    snprintf(path, 0xff, (const char *)0x2ba67c, i);
+    path[0xfe] = 0;
+    directory_create_or_delete_contents(path);
+    csstrcat(path, (const char *)0x2ba670, 0xff);
+    path[0xfe] = 0;
+    disp = (wchar_t *)FUN_0019d420(tag, i);
+    csmemcpy(variant, &tmp, 0x68);
+    ustrncpy((wchar_t *)variant, disp, 0xb);
+    ((wchar_t *)variant)[0xb] = 0;
+    *(uint16_t *)(variant + 0x64) =
+        (uint16_t)(*(uint16_t *)(variant + 0x64) | (uint16_t)(i << 8));
+    saved_game_file_generate_checksum(variant, 0x68, variant + 0x68);
+
+    wrote = 0;
+    if (file_reference_create_from_path(&ref, path, 0) &&
+        FUN_0019a490(&ref) && file_open(&ref, 2) && file_set_position(&ref, 0)) {
+      wrote = file_write(&ref, 0x200, variant);
+      file_close(&ref);
+      if (wrote == 1) {
+        *(uint16_t *)0x4eaaa8 = (uint16_t)(*(uint16_t *)0x4eaaa8 + 1);
+        continue;
+      }
+    }
+    error(2, (const char *)0x2ba634, path);
+  }
+  saved_game_files_notify_memory_units_changed();
+}
 
 /* playlist_profile_create_default_profiles_on_disk (0x1c22e0) — XBE naked draft (batch 244). */
 #if defined(__clang__)
@@ -937,155 +619,54 @@ char playlist_profile_create_default_profiles_on_disk(int profile_index __attrib
 #endif
 
 
-/* playlist_profile_write (0x1c2550) — XBE naked draft (batch 249). */
-#if defined(__clang__)
-static void (*const b1c2550_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c2550_exitfn)(int) = system_exit;
-static void (*const b1c2550_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1c2550_c1c2af0)(void) = (void *)saved_game_files_take_mutex;
-static void (*const b1c2550_c1c4850)(void) = FUN_001c4850;
-static void * (*const b1c2550_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b1c2550_c1c3160)(void) = saved_game_file_generate_checksum;
-static bool (*const b1c2550_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c2550_c19ac00)(void) = file_write;
-static void (*const b1c2550_c1c2890)(void) = saved_game_file_close;
-static void (*const b1c2550_c1c4990)(void) = FUN_001c4990;
-static char (*const b1c2550_c1c46c0)(int param_1) = delete_enumerated_saved_game_file;
-static void (*const b1c2550_c1c2b10)(void) = (void *)saved_game_files_release_mutex;
-
-__attribute__((naked, noinline))
-void playlist_profile_write(void)
+/* playlist_profile_write (0x1c2550) — readable C lift. */
+char playlist_profile_write(void *args)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30c, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplaylist_profile_write_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x202\n\t"
-      "pushl $0x2ba59c\n\t"
-      "pushl $0x266c9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_write_1:\n\t"
-      "pushl $0x2ba7ac\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[c1c2af0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_write_7\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "addl $4, %%esi\n\t"
-      "call *%[c1c4850]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_write_6\n\t"
-      "pushl $0x68\n\t"
-      "leal -0x30c(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "leal -0x2a4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x30c(%%ebp), %%eax\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c3160]\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19aa00]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_write_2\n\t"
-      "leal -0x30c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19ac00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplaylist_profile_write_3\n\t"
-      ".Lplaylist_profile_write_2:\n\t"
-      "pushl $0x2ba780\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lplaylist_profile_write_3:\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c2890]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_write_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1c4990]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplaylist_profile_write_4\n\t"
-      "pushl $0x2ba14c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplaylist_profile_write_4:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lplaylist_profile_write_5\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1c46c0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lplaylist_profile_write_5:\n\t"
-      "call *%[c1c2b10]\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "jmp .Lplaylist_profile_write_8\n\t"
-      ".Lplaylist_profile_write_6:\n\t"
-      "pushl $0x2ba510\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[c1c2b10]\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "jmp .Lplaylist_profile_write_8\n\t"
-      ".Lplaylist_profile_write_7:\n\t"
-      "pushl $0x2ba030\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplaylist_profile_write_8:\n\t"
-      "pushl $0x2ba764\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c2550_assert), [exitfn] "m"(b1c2550_exitfn), [c8f390] "m"(b1c2550_c8f390), [c1c2af0] "m"(b1c2550_c1c2af0), [c1c4850] "m"(b1c2550_c1c4850), [c8e0b0] "m"(b1c2550_c8e0b0), [c1c3160] "m"(b1c2550_c1c3160), [c19aa00] "m"(b1c2550_c19aa00), [c19ac00] "m"(b1c2550_c19ac00), [c1c2890] "m"(b1c2550_c1c2890), [c1c4990] "m"(b1c2550_c1c4990), [c1c46c0] "m"(b1c2550_c1c46c0), [c1c2b10] "m"(b1c2550_c1c2b10)
-      : "memory");
-}
-#else
-#error "playlist_profile_write: clang naked draft required"
-#endif
+  int profile_index;
+  void *variant;
+  file_ref_t ref;
+  unsigned char buf[0x200];
+  char failed_io;
+  char ok_close;
 
+  if (!args) {
+    display_assert((const char *)0x266c9c, (const char *)0x2ba59c, 0x202, 1);
+    system_exit(-1);
+  }
+  error(2, (const char *)0x2ba7ac);
+  if (!take_mutex(*(int **)0x4eacbc, 0x36ee80)) {
+    error(2, (const char *)0x2ba030);
+    error(2, (const char *)0x2ba764);
+    return 0;
+  }
+
+  profile_index = *(int *)args;
+  variant = (char *)args + 4;
+  failed_io = 0;
+  if (!FUN_001c4850(&ref, profile_index)) {
+    error(2, (const char *)0x2ba510);
+    saved_game_files_release_mutex();
+    error(2, (const char *)0x2ba764);
+    return 0;
+  }
+
+  csmemcpy(buf, variant, 0x68);
+  saved_game_file_generate_checksum(buf, 0x68, buf + 0x68);
+  if (!file_set_position(&ref, 0) || !file_write(&ref, 0x200, buf)) {
+    error(2, (const char *)0x2ba780);
+    failed_io = 1;
+  }
+  ok_close = saved_game_file_close(&ref, profile_index);
+  if (ok_close) {
+    if (!((char (*)(int, void *))(void *)FUN_001c4990)(profile_index, variant))
+      error(2, (const char *)0x2ba14c);
+  }
+  if (failed_io)
+    delete_enumerated_saved_game_file(profile_index);
+  saved_game_files_release_mutex();
+  error(2, (const char *)0x2ba764);
+  return 0;
+}
 
 /* FUN_001c26b0 (0x1c26b0) — readable C lift. */
 void FUN_001c26b0(int a0, int a1, int a2)
@@ -1207,128 +788,38 @@ void saved_game_files_notify_memory_units_changed(void)
 {
   *(unsigned char *)0x4eacc7 = 1;
 }
-/* saved_game_file_get_useable_untitled_profile_name (0x1c29c0) — XBE naked draft (batch 253). */
-#if defined(__clang__)
-static void (*const b1c29c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c29c0_exitfn)(int) = system_exit;
-static int (*const b1c29c0_c1b9930)(int group_tag, const char *name, ...) = tag_loaded;
-static char * (*const b1c29c0_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
-static int (*const b1c29c0_c19d420)(int param_1, int param_2) = FUN_0019d420;
-static void (*const b1c29c0_c19e9f0)(wchar_t *buffer, int buffer_size, const wchar_t *format, ...) = unicode_sprintf;
-static void (*const b1c29c0_c1d2f22)(void) = FUN_001d2f22;
-static void (*const b1c29c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void saved_game_file_get_useable_untitled_profile_name(wchar_t *out_name __attribute__((unused)))
+/* saved_game_file_get_useable_untitled_profile_name (0x1c29c0) — readable C lift. */
+void saved_game_file_get_useable_untitled_profile_name(wchar_t *out_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x108, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lsaved_game_file_get_useable_untitled_profile_name_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2c1\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba974\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_get_useable_untitled_profile_name_1:\n\t"
-      "pushl $0x28a528\n\t"
-      "pushl $0x75737472\n\t"
-      "movw $0, (%%esi)\n\t"
-      "call *%[c1b9930]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "je .Lsaved_game_file_get_useable_untitled_profile_name_4\n\t"
-      "movl 0x32eb94, %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x7(%%ebp)\n\t"
-      "movw %%ax, -0x3(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movb %%al, -0x108(%%ebp)\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "movl $0x3f, %%ecx\n\t"
-      "leal -0x107(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "pushl $8\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "stosw\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movb $0, -0x8(%%ebp)\n\t"
-      ".byte 0xaa\n\t"
-      "call *%[c19f3a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      ".Lsaved_game_file_get_useable_untitled_profile_name_2:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "leal 0x1(%%ebx), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19d420]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7f\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19e9f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl $0x100\n\t"
-      "leal -0x108(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movw $0, 0xfe(%%esi)\n\t"
-      "call *%[c1d2f22]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsaved_game_file_get_useable_untitled_profile_name_3\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "cmpl $0x3e7, %%ebx\n\t"
-      "jl .Lsaved_game_file_get_useable_untitled_profile_name_2\n\t"
-      ".Lsaved_game_file_get_useable_untitled_profile_name_3:\n\t"
-      "popl %%edi\n\t"
-      "cmpl $0x3e7, %%ebx\n\t"
-      "popl %%ebx\n\t"
-      "jne .Lsaved_game_file_get_useable_untitled_profile_name_5\n\t"
-      "pushl $0x3e7\n\t"
-      "pushl $0x2ba940\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsaved_game_file_get_useable_untitled_profile_name_4:\n\t"
-      "pushl $0x28a528\n\t"
-      "pushl $0x2ba918\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lsaved_game_file_get_useable_untitled_profile_name_5:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c29c0_assert), [exitfn] "m"(b1c29c0_exitfn), [c1b9930] "m"(b1c29c0_c1b9930), [c19f3a0] "m"(b1c29c0_c19f3a0), [c19d420] "m"(b1c29c0_c19d420), [c19e9f0] "m"(b1c29c0_c19e9f0), [c1d2f22] "m"(b1c29c0_c1d2f22), [c8f390] "m"(b1c29c0_c8f390)
-      : "memory");
-}
-#else
-#error "saved_game_file_get_useable_untitled_profile_name: clang naked draft required"
-#endif
+  int tag;
+  char prefix[8];
+  char path[0x100];
+  int n;
+  wchar_t *fmt;
 
+  if (!out_name) {
+    display_assert((const char *)0x2ba974, (const char *)0x2ba8e8, 0x2c1, 1);
+    system_exit(-1);
+  }
+  out_name[0] = 0;
+  tag = tag_loaded(0x75737472, (const char *)0x28a528);
+  if (tag == -1) {
+    error(2, (const char *)0x2ba918, (const char *)0x28a528);
+    return;
+  }
+  csmemset(path, 0, 0x100);
+  csmemset(prefix, 0, 8);
+  wide_to_ascii((const wchar_t *)*(void **)0x32eb94, prefix, 8);
+  for (n = 0; n < 0x3e7; n++) {
+    fmt = (wchar_t *)FUN_0019d420(tag, 2);
+    unicode_sprintf(out_name, 0x7f, fmt, n + 1);
+    out_name[0x7f] = 0;
+    if (FUN_001d2f22(prefix, out_name, 3, 0, path, 0x100) != 0)
+      return;
+  }
+  error(2, (const char *)0x2ba940, 0x3e7);
+  out_name[0] = 0;
+}
 
 /* saved_game_files_take_mutex (0x1c2af0) — readable C lift. */
 void saved_game_files_take_mutex(void)
@@ -1836,160 +1327,52 @@ unsigned int FUN_001c3710(unsigned int a, unsigned int c, unsigned int d, unsign
   return r;
 }
 
-/* saved_game_file_find_profile_index_for_directory_path (0x1c38d0) — XBE naked draft (batch 249). */
-#if defined(__clang__)
-static void (*const b1c38d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c38d0_exitfn)(int) = system_exit;
-static int (*const b1c38d0_c8df60)(const char *s1) = csstrlen;
-static bool (*const b1c38d0_c81870)(int *mutex_reference, int timeout_ms) = take_mutex;
-static void (*const b1c38d0_c1c3610)(void) = FUN_001c3610;
-static void (*const b1c38d0_c1c3430)(void) = FUN_001c3430;
-static void (*const b1c38d0_c1c35a0)(void) = FUN_001c35a0;
-static int (*const b1c38d0_c1e6596)(const char *a, const char *b, size_t n) = __strnicmp;
-static void (*const b1c38d0_c1c3710)(void) = FUN_001c3710;
-static void (*const b1c38d0_c1c3500)(void) = FUN_001c3500;
-static void (*const b1c38d0_c818d0)(int *mutex_reference) = release_mutex;
-static void (*const b1c38d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-int saved_game_file_find_profile_index_for_directory_path(void *path __attribute__((unused)), int unused __attribute__((unused)))
+/* saved_game_file_find_profile_index_for_directory_path (0x1c38d0) — readable C lift. */
+int saved_game_file_find_profile_index_for_directory_path(const char *path, int16_t expect_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x214, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lsaved_game_file_find_profile_index_for_directory_path_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x486\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba9d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8df60]\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x4eacbc, %%eax\n\t"
-      "pushl $0x36ee80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81870]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_find_profile_index_for_directory_path_8\n\t"
-      "movl 0x4eacc0, %%ecx\n\t"
-      "pushl $0x36ee80\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c81870]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_find_profile_index_for_directory_path_7\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c1c3610]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "call *%[c1c3430]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_find_profile_index_for_directory_path_6\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .Lsaved_game_file_find_profile_index_for_directory_path_5\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_2:\n\t"
-      "leal -0x214(%%ebp), %%esi\n\t"
-      "call *%[c1c35a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsaved_game_file_find_profile_index_for_directory_path_5\n\t"
-      "movw 0xc(%%ebp), %%si\n\t"
-      "cmpw %%si, -0x14(%%ebp)\n\t"
-      "jne .Lsaved_game_file_find_profile_index_for_directory_path_3\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x214(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e6596]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsaved_game_file_find_profile_index_for_directory_path_4\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_3:\n\t"
-      "incl %%edi\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "jl .Lsaved_game_file_find_profile_index_for_directory_path_2\n\t"
-      "jmp .Lsaved_game_file_find_profile_index_for_directory_path_5\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_4:\n\t"
-      "movl -0xf(%%ebp), %%edx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1c3710]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_5:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c1c3500]\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_6:\n\t"
-      "movl 0x4eacc0, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c818d0]\n\t"
-      "movl 0x4eacbc, %%edx\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c818d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_7:\n\t"
-      "pushl $0x2bae8c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movl 0x4eacbc, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c818d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsaved_game_file_find_profile_index_for_directory_path_8:\n\t"
-      "pushl $0x2bae64\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c38d0_assert), [exitfn] "m"(b1c38d0_exitfn), [c8df60] "m"(b1c38d0_c8df60), [c81870] "m"(b1c38d0_c81870), [c1c3610] "m"(b1c38d0_c1c3610), [c1c3430] "m"(b1c38d0_c1c3430), [c1c35a0] "m"(b1c38d0_c1c35a0), [c1e6596] "m"(b1c38d0_c1e6596), [c1c3710] "m"(b1c38d0_c1c3710), [c1c3500] "m"(b1c38d0_c1c3500), [c818d0] "m"(b1c38d0_c818d0), [c8f390] "m"(b1c38d0_c8f390)
-      : "memory");
-}
-#else
-#error "saved_game_file_find_profile_index_for_directory_path: clang naked draft required"
-#endif
+  int result;
+  int path_len;
+  unsigned int count;
+  int i;
+  unsigned char record[0x206];
 
+  result = -1;
+  if (!path) {
+    display_assert((const char *)0x2ba9d4, (const char *)0x2ba8e8, 0x486, 1);
+    system_exit(-1);
+  }
+  path_len = csstrlen(path);
+  if (!take_mutex(*(int **)0x4eacbc, 0x36ee80)) {
+    error(2, (const char *)0x2bae64);
+    return -1;
+  }
+  if (!take_mutex(*(int **)0x4eacc0, 0x36ee80)) {
+    error(2, (const char *)0x2bae8c);
+    release_mutex(*(int **)0x4eacbc);
+    return -1;
+  }
+
+  count = FUN_001c3610(0);
+  if (FUN_001c3430(0)) {
+    for (i = 0; i < (int)count; i++) {
+      if (!FUN_001c35a0(record))
+        break;
+      if (*(int16_t *)(record + 0x200) != expect_type)
+        continue;
+      if (__strnicmp(path, (const char *)record, (size_t)path_len) == 0) {
+        result = (int)FUN_001c3710(
+            (unsigned int)i, 0, (unsigned int)expect_type,
+            record[0x204], record[0x205]);
+        break;
+      }
+    }
+    FUN_001c3500(0);
+  }
+
+  release_mutex(*(int **)0x4eacc0);
+  release_mutex(*(int **)0x4eacbc);
+  return result;
+}
 
 /* FUN_001c3a30 (0x1c3a30) — XBE naked draft (batch 256). */
 #if defined(__clang__)
@@ -2586,195 +1969,64 @@ void FUN_001c3e40(void)
 #endif
 
 
-/* FUN_001c4030 (0x1c4030) — XBE naked draft (batch 247). */
-#if defined(__clang__)
-static void (*const b1c4030_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c4030_exitfn)(int) = system_exit;
-static bool (*const b1c4030_c81870)(int *mutex_reference, int timeout_ms) = take_mutex;
-static file_ref_t * (*const b1c4030_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c4030_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static int (*const b1c4030_c19aa70)(file_ref_t *info) = file_get_eof;
-static void (*const b1c4030_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c4030_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c4030_c19ac00)(void) = file_write;
-static bool (*const b1c4030_c19a930)(file_ref_t *info) = file_close;
-static void (*const b1c4030_c818d0)(int *mutex_reference) = release_mutex;
-
-__attribute__((naked, noinline))
-void FUN_001c4030(void)
+/* FUN_001c4030 (0x1c4030) — readable C lift. */
+char FUN_001c4030(int16_t slot_index, uint16_t record_index, void *buffer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw %%ax, %%si\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%si, %%si\n\t"
-      "movb %%bl, -0x1(%%ebp)\n\t"
-      "je .LFUN_001c4030_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7e2\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bacc8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4030_1:\n\t"
-      "movb 0x4eacc8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4030_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7e4\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2baac8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4030_2:\n\t"
-      "cmpw $9, %%si\n\t"
-      "jae .LFUN_001c4030_3\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001c4030_4\n\t"
-      ".LFUN_001c4030_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7e5\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bb244\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4030_4:\n\t"
-      "movl 0x4eacc0, %%eax\n\t"
-      "pushl $0x36ee80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81870]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4030_13\n\t"
-      "pushl %%edi\n\t"
-      "movzwl %%si, %%edi\n\t"
-      "movl 0x32eb98(,%%edi,4), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c4030_10\n\t"
-      "pushl $2\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4030_10\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19aa70]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x206, %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "divl %%ecx\n\t"
-      "movzwl 0x8(%%ebp), %%ebx\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "imull $0x206, %%esi, %%esi\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_001c4030_5\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2bac8c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c4030_5:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "leal 0x206(%%esi), %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "ja .LFUN_001c4030_7\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19aa00]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4030_6\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x206\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19ac00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4030_6\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .LFUN_001c4030_9\n\t"
-      ".LFUN_001c4030_6:\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "pushl $0x2bb284\n\t"
-      "jmp .LFUN_001c4030_8\n\t"
-      ".LFUN_001c4030_7:\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x2bb1cc\n\t"
-      ".LFUN_001c4030_8:\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_001c4030_9:\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c4030_12\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2baafc\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jmp .LFUN_001c4030_11\n\t"
-      ".LFUN_001c4030_10:\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2bac54\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      ".LFUN_001c4030_11:\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c4030_12:\n\t"
-      "movl 0x4eacc0, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c818d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c4030_13:\n\t"
-      "pushl $0x2bae8c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c4030_assert), [exitfn] "m"(b1c4030_exitfn), [c81870] "m"(b1c4030_c81870), [c1999f0] "m"(b1c4030_c1999f0), [c19a7a0] "m"(b1c4030_c19a7a0), [c19aa70] "m"(b1c4030_c19aa70), [c8f390] "m"(b1c4030_c8f390), [c19aa00] "m"(b1c4030_c19aa00), [c19ac00] "m"(b1c4030_c19ac00), [c19a930] "m"(b1c4030_c19a930), [c818d0] "m"(b1c4030_c818d0)
-      : "memory");
-}
-#else
-#error "FUN_001c4030: clang naked draft required"
-#endif
+  char ok;
+  unsigned path;
+  unsigned eof;
+  unsigned offset;
 
+  ok = 0;
+  if (slot_index != 0) {
+    display_assert((const char *)0x2bacc8, (const char *)0x2ba8e8, 0x7e2, 1);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x4eacc8 != 0) {
+    display_assert((const char *)0x2baac8, (const char *)0x2ba8e8, 0x7e4, 1);
+    system_exit(-1);
+  }
+  if ((uint16_t)slot_index >= 9 || !buffer) {
+    display_assert((const char *)0x2bb244, (const char *)0x2ba8e8, 0x7e5, 1);
+    system_exit(-1);
+  }
+  if (!take_mutex(*(int **)0x4eacc0, 0x36ee80)) {
+    error(2, (const char *)0x2bae8c);
+    return 0;
+  }
+
+  path = *(unsigned *)(0x32eb98 + 4 * (unsigned)(uint16_t)slot_index);
+  if (!file_reference_create_from_path((file_ref_t *)0x4eabb0, (char *)path, 0) ||
+      !file_open((file_ref_t *)0x4eabb0, 2)) {
+    error(2, (const char *)0x2bac54, (unsigned)(uint16_t)slot_index);
+    release_mutex(*(int **)0x4eacc0);
+    return 0;
+  }
+
+  eof = (unsigned)file_get_eof((file_ref_t *)0x4eabb0);
+  offset = (unsigned)record_index * 0x206u;
+  if ((eof % 0x206u) != 0)
+    error(2, (const char *)0x2bac8c, (unsigned)(uint16_t)slot_index);
+
+  if (offset + 0x206u > eof) {
+    error(2, (const char *)0x2bb1cc, (unsigned)record_index,
+          (unsigned)(uint16_t)slot_index);
+  } else if (!file_set_position((file_ref_t *)0x4eabb0, (int)offset) ||
+             !file_write((file_ref_t *)0x4eabb0, 0x206, buffer)) {
+    ok = 0;
+    error(2, (const char *)0x2bb284, (unsigned)record_index,
+          (unsigned)(uint16_t)slot_index);
+  } else {
+    ok = 1;
+  }
+
+  if (!file_close((file_ref_t *)0x4eabb0)) {
+    error(2, (const char *)0x2baafc, (unsigned)(uint16_t)slot_index);
+    ok = 0;
+  }
+  release_mutex(*(int **)0x4eacc0);
+  return ok;
+}
 
 /* FUN_001c4210 (0x1c4210) — XBE naked draft (batch 247). */
 #if defined(__clang__)
@@ -3197,299 +2449,136 @@ wchar_t *saved_game_file_get_display_name(int file_index)
 
 
 
-/* delete_enumerated_saved_game_file (0x1c46c0) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static void (*const b1c46c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1c46c0_ce98b0)(void) = ui_widget_clear_last_error_index;
-static void (*const b1c46c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c46c0_exitfn)(int) = system_exit;
-static void (*const b1c46c0_c1c3e40)(void) = FUN_001c3e40;
-static char * (*const b1c46c0_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
-static void (*const b1c46c0_c1d3185)(void) = FUN_001d3185;
-static void (*const b1c46c0_c1c43f0)(void) = FUN_001c43f0;
-
-__attribute__((naked, noinline))
-char delete_enumerated_saved_game_file(int param_1 __attribute__((unused)))
+/* delete_enumerated_saved_game_file (0x1c46c0) — readable C lift. */
+char delete_enumerated_saved_game_file(int packed)
 {
+  int slot;
+  int idx;
+  int kind;
+  unsigned char record[0x208];
+  char prefix[8];
+  char ok;
+  char *ascii;
+
+  ok = 0;
+  if (*(unsigned char *)0x4eacc7 != 0) {
+    error(2, (const char *)0x2bb590);
+    ui_widget_clear_last_error_index();
+    return 0;
+  }
+
+  kind = packed & 0xf;
+  slot = (packed >> 8) & 0xff;
+  idx = (int)((unsigned)packed >> 16) & 0xfff;
+
+  if (slot != 0) {
+    display_assert((const char *)0x2ba8c0, (const char *)0x2ba8e8, 0x1ef, 1);
+    system_exit(-1);
+  }
+  if (kind < 0 || kind >= 2 || slot < 0 || slot >= 9 || idx < 0 || idx >= 0x64) {
+    error(2, (const char *)0x2bb450);
+    ui_widget_clear_last_error_index();
+    return 0;
+  }
+
   __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x214, %%esp\n\t"
-      "movb 0x4eacc7, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "je .Ldelete_enumerated_saved_game_file_1\n\t"
-      "pushl $0x2bb590\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[ce98b0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldelete_enumerated_saved_game_file_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movzbl %%ah, %%ebx\n\t"
-      "sarl $0x10, %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "andl $0xf, %%esi\n\t"
-      "andl $0xfff, %%edi\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Ldelete_enumerated_saved_game_file_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ef\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba8c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldelete_enumerated_saved_game_file_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .Ldelete_enumerated_saved_game_file_7\n\t"
-      "cmpl $2, %%esi\n\t"
-      "jge .Ldelete_enumerated_saved_game_file_7\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jl .Ldelete_enumerated_saved_game_file_7\n\t"
-      "cmpl $9, %%ebx\n\t"
-      "jge .Ldelete_enumerated_saved_game_file_7\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jl .Ldelete_enumerated_saved_game_file_7\n\t"
-      "cmpl $0x64, %%edi\n\t"
-      "jge .Ldelete_enumerated_saved_game_file_7\n\t"
-      "leal -0x214(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c1c3e40]\n\t"
+      "pushl %[buf]\n\t"
+      "call FUN_001c3e40\n\t"
       "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Ldelete_enumerated_saved_game_file_6\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movl %%ecx, -0xb(%%ebp)\n\t"
-      "sete %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movw %%cx, -0x7(%%ebp)\n\t"
-      "movb $0, -0xc(%%ebp)\n\t"
-      "movb %%cl, -0x5(%%ebp)\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "je .Ldelete_enumerated_saved_game_file_5\n\t"
-      "testl $0x40000000, 0x8(%%ebp)\n\t"
-      "jne .Ldelete_enumerated_saved_game_file_3\n\t"
-      "movl 0x32eb94(,%%ebx,4), %%ecx\n\t"
-      "leal -0x114(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $8\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19f3a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d3185]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ldelete_enumerated_saved_game_file_3\n\t"
-      "pushl $0x2bb55c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".Ldelete_enumerated_saved_game_file_3:\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c1c43f0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Ldelete_enumerated_saved_game_file_4\n\t"
-      "pushl $0x2bb534\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".Ldelete_enumerated_saved_game_file_4:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Ldelete_enumerated_saved_game_file_9\n\t"
-      "pushl $0x2bb514\n\t"
-      "jmp .Ldelete_enumerated_saved_game_file_8\n\t"
-      ".Ldelete_enumerated_saved_game_file_5:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x2bb4f4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "call *%[ce98b0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldelete_enumerated_saved_game_file_6:\n\t"
-      "pushl $0x2bb4a8\n\t"
-      "jmp .Ldelete_enumerated_saved_game_file_8\n\t"
-      ".Ldelete_enumerated_saved_game_file_7:\n\t"
-      "pushl $0x2bb450\n\t"
-      ".Ldelete_enumerated_saved_game_file_8:\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Ldelete_enumerated_saved_game_file_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "call *%[ce98b0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8f390] "m"(b1c46c0_c8f390), [ce98b0] "m"(b1c46c0_ce98b0), [assert] "m"(b1c46c0_assert), [exitfn] "m"(b1c46c0_exitfn), [c1c3e40] "m"(b1c46c0_c1c3e40), [c19f3a0] "m"(b1c46c0_c19f3a0), [c1d3185] "m"(b1c46c0_c1d3185), [c1c43f0] "m"(b1c46c0_c1c43f0)
-      : "memory");
+      : "=a"(ok)
+      : "a"(slot), "D"(idx), [buf] "r"(record)
+      : "ecx", "edx", "memory", "cc");
+  if (!ok) {
+    error(2, (const char *)0x2bb4a8);
+    ui_widget_clear_last_error_index();
+    return 0;
+  }
+
+  ok = (char)(slot == 0);
+  if (!ok) {
+    error(2, (const char *)0x2bb4f4, slot);
+    ui_widget_clear_last_error_index();
+    return 0;
+  }
+
+  if ((packed & 0x40000000) == 0) {
+    csmemset(prefix, 0, 8);
+    ascii = wide_to_ascii((const wchar_t *)*(void **)(0x32eb94 + 4 * slot), prefix, 8);
+    if (((int (*)(char *))(void *)FUN_001d3185)(ascii)) {
+      error(2, (const char *)0x2bb55c);
+      ok = 0;
+    }
+  }
+
+  {
+    char del_ok;
+    __asm__ volatile(
+        "call FUN_001c43f0\n\t"
+        : "=a"(del_ok)
+        : "a"(slot), "c"(idx)
+        : "edx", "memory", "cc");
+    if (!del_ok) {
+      error(2, (const char *)0x2bb534);
+      ok = 0;
+    }
+  }
+
+  if (slot != 0)
+    error(2, (const char *)0x2bb514);
+
+  ui_widget_clear_last_error_index();
+  return ok;
 }
-#else
-#error "delete_enumerated_saved_game_file: clang naked draft required"
-#endif
 
-
-/* FUN_001c4850 (0x1c4850) — XBE naked draft (batch 249). */
-#if defined(__clang__)
-static void (*const b1c4850_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c4850_exitfn)(int) = system_exit;
-static void (*const b1c4850_c1c3e40)(void) = FUN_001c3e40;
-static file_ref_t * (*const b1c4850_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c4850_c19a7a0)(file_ref_t *info, int flags) = file_open;
-
-__attribute__((naked, noinline))
-void FUN_001c4850(void)
+/* FUN_001c4850 (0x1c4850) — readable C lift. */
+char FUN_001c4850(file_ref_t *info, int packed)
 {
+  int slot;
+  int idx;
+  int kind;
+  unsigned char record[0x208];
+  char ok;
+
+  kind = packed & 0xf;
+  slot = (packed >> 8) & 0xff;
+  idx = (packed >> 16) & 0xfff;
+
+  if (slot != 0) {
+    display_assert((const char *)0x2ba8c0, (const char *)0x2ba8e8, 0x241, 1);
+    system_exit(-1);
+  }
+  if (!info) {
+    display_assert((const char *)0x2ba8b0, (const char *)0x2ba8e8, 0x244, 1);
+    system_exit(-1);
+  }
+  if (kind < 0 || kind >= 2) {
+    display_assert((const char *)0x2ba878, (const char *)0x2ba8e8, 0x245, 1);
+    system_exit(-1);
+  }
+  if (slot < 0 || slot >= 9) {
+    display_assert((const char *)0x2ba838, (const char *)0x2ba8e8, 0x246, 1);
+    system_exit(-1);
+  }
+  if (idx < 0 || idx >= 0x64) {
+    display_assert((const char *)0x2ba7e8, (const char *)0x2ba8e8, 0x247, 1);
+    system_exit(-1);
+  }
+
   __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x208, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movzbl %%ah, %%ebx\n\t"
-      "sarl $0x10, %%eax\n\t"
-      "andl $0xfff, %%eax\n\t"
-      "andl $0xf, %%esi\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "je .LFUN_001c4850_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x241\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba8c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4850_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001c4850_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x244\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba8b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4850_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .LFUN_001c4850_3\n\t"
-      "cmpl $2, %%esi\n\t"
-      "jl .LFUN_001c4850_4\n\t"
-      ".LFUN_001c4850_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x245\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4850_4:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jl .LFUN_001c4850_5\n\t"
-      "cmpl $9, %%ebx\n\t"
-      "jl .LFUN_001c4850_6\n\t"
-      ".LFUN_001c4850_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x246\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba838\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4850_6:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jl .LFUN_001c4850_7\n\t"
-      "cmpl $0x64, %%edi\n\t"
-      "jl .LFUN_001c4850_8\n\t"
-      ".LFUN_001c4850_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x247\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2ba7e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c4850_8:\n\t"
-      "leal -0x208(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c1c3e40]\n\t"
+      "pushl %[buf]\n\t"
+      "call FUN_001c3e40\n\t"
       "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4850_9\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0\n\t"
-      "leal -0x208(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c4850_9\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_001c4850_9\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4850_9\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c4850_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c4850_assert), [exitfn] "m"(b1c4850_exitfn), [c1c3e40] "m"(b1c4850_c1c3e40), [c1999f0] "m"(b1c4850_c1999f0), [c19a7a0] "m"(b1c4850_c19a7a0)
-      : "memory");
+      : "=a"(ok)
+      : "a"(slot), "D"(idx), [buf] "r"(record)
+      : "ecx", "edx", "memory", "cc");
+  if (!ok)
+    return 0;
+  if (!file_reference_create_from_path(info, (const char *)record, 0))
+    return 0;
+  if (slot != 0)
+    return 0;
+  if (!file_open(info, 3))
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_001c4850: clang naked draft required"
-#endif
 
