@@ -12911,72 +12911,23 @@ void FUN_001506d0(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7
 {
   FUN_00150550(a0, a1, a2, 0, a3, a4, a5, a6, a7, a8);
 }
-/* FUN_00150710 (0x150710) — XBE naked draft (batch 322). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00150710(void)
+/* FUN_00150710 (0x150710) — readable C lift. */
+float FUN_00150710(float x, float a, float b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00150710_5\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00150710_2\n\t"
-      ".LFUN_00150710_1:\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00150710_2:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00150710_4\n\t"
-      ".LFUN_00150710_3:\n\t"
-      "flds 0x2533c8\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00150710_4:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00150710_5:\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_00150710_3\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_00150710_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (a < b) {
+    if (x <= a)
+      return *(float *)0x2533c0;
+    if (x >= b)
+      return *(float *)0x2533c8;
+    return (x - a) / (b - a);
+  }
+  if (x <= b)
+    return *(float *)0x2533c8;
+  if (x >= a)
+    return *(float *)0x2533c0;
+  return (a - x) / (a - b);
 }
-#else
-#error "FUN_00150710: clang naked draft required"
-#endif
+
 
 
 /* FUN_00150790 (0x150790) — XBE naked draft (batch 376). */

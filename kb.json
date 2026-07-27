@@ -529,8 +529,9 @@
         },
         {
           "addr": "0x150710",
-          "decl": "void FUN_00150710(void);",
-          "ported": false
+          "decl": "float FUN_00150710(float x, float a, float b);",
+          "ported": true,
+          "name": "FUN_00150710"
         },
         {
           "addr": "0x150790",
