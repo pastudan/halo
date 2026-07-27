@@ -21140,7 +21140,7 @@
         {
           "addr": "0x17c7d0",
           "decl": "void FUN_0017C7D0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c7e0",
@@ -21250,7 +21250,7 @@
         {
           "addr": "0x17ca00",
           "decl": "void rasterizer_widget_get_occlusion_test_result(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ca10",
@@ -21265,12 +21265,12 @@
         {
           "addr": "0x17ca30",
           "decl": "void rasterizer_hud_motion_sensor_blip_end(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ca40",
           "decl": "void FUN_0017ca40(void);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "rasterizer.obj",

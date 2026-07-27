@@ -1838,7 +1838,7 @@ static void (*const b17e040_exitfn)(int) = system_exit;
 static void (*const b17e040_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
 __attribute__((naked, noinline))
-void FUN_0017e040(void)
+void FUN_0017e040(int a __attribute__((unused)), int b __attribute__((unused)))
 {
   __asm__ volatile(
       "movb 0x47e4d8, %%al\n\t"

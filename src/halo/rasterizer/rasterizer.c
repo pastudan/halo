@@ -12619,7 +12619,7 @@ static void (*const b17ae90_exitfn)(int) = system_exit;
 static void (*const b17ae90_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_0017ae90(void)
+void FUN_0017ae90(int object_handle __attribute__((unused)), int datum __attribute__((unused)), float *position __attribute__((unused)), int callback __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -12761,7 +12761,7 @@ static void (*const b17b000_c156510)(void *state) = rasterizer_set_pixel_shader;
 static void (*const b17b000_c17cfe0)(int tex_flags) = FUN_0017cfe0;
 
 __attribute__((naked, noinline))
-void FUN_0017b000(void)
+void FUN_0017b000(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -13122,7 +13122,7 @@ static void (*const b17b540_exitfn)(int) = system_exit;
 static void __stdcall (*const b17b540_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
 
 __attribute__((naked, noinline))
-void FUN_0017b540(void)
+void FUN_0017b540(int tex_flags __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -13409,7 +13409,7 @@ static void __stdcall (*const b17b7d0_c1ed2c0)(uint32_t reg, float a, float b, f
 static void (*const b17b7d0_c1ed490)(void) = (void *)D3DDevice_End;
 
 __attribute__((naked, noinline))
-void FUN_0017b7d0(void)
+void FUN_0017b7d0(float *position __attribute__((unused)), float radius __attribute__((unused)), float *scale2d __attribute__((unused)), float angle __attribute__((unused)), uint32_t color __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -14880,17 +14880,13 @@ void rasterizer_window_set_fog(void)
 #endif
 
 
-/* 0x17c7d0 */
+/* FUN_0017C7D0 (0x17c7d0) — readable C lift (jmp thunk). */
 void FUN_0017C7D0(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jne 0x1559f9 */
-  display_assert((char *)0x0029dc40, (char *)0x0029dc0c, 1331, 0);
-  system_exit(0);
-
-  (void)eax;
+  _rasterizer_reset_state();
 }
+
+
 
 /* rasterizer_environment_fog_screen_draw (0x17c8e0) — XBE naked draft (batch 397). */
 #if defined(__clang__)
@@ -15087,21 +15083,13 @@ void rasterizer_widget_submit_occlusion_test(int handle __attribute__((unused)))
 #endif
 
 
-/* 0x17ca00 */
+/* rasterizer_widget_get_occlusion_test_result (0x17ca00) — readable C lift (jmp thunk). */
 void rasterizer_widget_get_occlusion_test_result(void)
 {
-  int eax = 0;
-
-  /* test eax, eax -> jne 0x15a726 */
-  display_assert((char *)0x0029dc40, (char *)0x0029f6c0, 81, 0);
-  system_exit(0);
-  D3DDevice_SetRenderState_CullMode(0);
-  D3DDevice_SetRenderState_Simple(0, 0);
-  /* mem[0x001fb784] = 0 */
-  D3DDevice_SetRenderState_Simple(0, 0);
-
-  (void)eax;
+  FUN_0015a700();
 }
+
+
 
 /* rasterizer_hud_motion_sensor_blip_begin (0x17ca10) — XBE naked draft (batch 398). */
 #if defined(__clang__)
@@ -15145,55 +15133,18 @@ void rasterizer_hud_motion_sensor_blip_draw(void)
 #endif
 
 
-/* 0x17ca30 */
+/* rasterizer_hud_motion_sensor_blip_end (0x17ca30) — readable C lift (jmp thunk). */
 void rasterizer_hud_motion_sensor_blip_end(void)
 {
-  int eax = 0;
-  int ecx = 0;
-
-  D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, eax);
-  D3DDevice_SetVertexData4f(ecx, 0.0f, 0.0f, 0.0f, 0.0f);
-
-  (void)eax;
-  (void)ecx;
+  FUN_0015a4c0();
 }
 
-/* 0x17ca40 */
+
+
+/* FUN_0017ca40 (0x17ca40) — readable C lift (jmp thunk). */
 void FUN_0017ca40(void)
 {
-  int eax = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* test eax, eax -> jne 0x15aa6f */
-  display_assert((char *)0x0029dc40, (char *)0x0029f6c0, 167, 0);
-  system_exit(0);
-  D3DDevice_SetRenderState_CullMode(0);
-  D3DDevice_SetRenderState_Simple(0, 0);
-  /* mem[0x001fb784] = 0 */
-  D3DDevice_SetRenderState_Simple(0, 0);
-  /* mem[0x001fb788] = 0 */
-  D3DDevice_SetRenderState_ZEnable(0);
-  D3DDevice_SetRenderState_ZBias(0);
-  FUN_00178b40(0, 0, 0);
-  /* relift: relift: mov (int16_t)eax, word ptr [0x5a5bfa] */
-  /* relift: relift: fld dword ptr [0x255e94] */
-  /* relift: relift: fld dword ptr [0x25eeac] */
-  D3DDevice_SetVertexShaderConstant(0, (void *)0, 0);
-  csmemset((void *)0x005a5ac0, 0, 240);
-  /* mem[0x005a5b98] = 0 */
-  /* mem[0x005a5b94] = 1 */
-  /* mem[0x005a5ae0] = 4 */
-  rasterizer_set_pixel_shader((void *)0x005a5ac0);
-  /* test edi, edi -> je 0x15abfb */
-  /* test eax, eax -> je 0x15abfb */
-  /* test esi, esi -> jne 0x15ac1b */
-  display_assert((char *)0x0029f6f8, (char *)0x0029f6c0, 221, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0x15ac44 */
-  display_assert((char *)0x0029dc40, (char *)0x0029f6c0, 222, 0);
-
-  (void)eax;
-  (void)esi;
-  (void)edi;
+  FUN_0015aa40();
 }
+
+
