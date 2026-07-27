@@ -20997,7 +20997,7 @@
         {
           "addr": "0x178ab0",
           "decl": "void FUN_00178ab0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x178b40",
@@ -42284,7 +42284,7 @@
         },
         {
           "addr": "0x001eb6d0",
-          "decl": "void D3DDevice_DeleteVertexShader(void);",
+          "decl": "void __stdcall D3DDevice_DeleteVertexShader(uint32_t handle);",
           "ported": true
         },
         {

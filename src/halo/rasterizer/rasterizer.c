@@ -10125,59 +10125,28 @@ void FUN_00178850(void)
 #endif
 
 
-/* FUN_00178ab0 (0x178ab0) — XBE naked draft (batch 346). */
-#if defined(__clang__)
-static void (*const b178ab0_c1eb6d0)(void) = (void *)D3DDevice_DeleteVertexShader;
-static void (*const b178ab0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void (*const b178ab0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_00178ab0 (0x178ab0) — readable C lift. */
 void FUN_00178ab0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "movl $0x325208, %%esi\n\t"
-      "movl $0x43, %%edi\n\t"
-      "nop\n\t"
-      ".LFUN_00178ab0_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1eb6d0]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00178ab0_2\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00178ab0_3\n\t"
-      ".LFUN_00178ab0_2:\n\t"
-      "pushl $0x2add58\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00178ab0_3:\n\t"
-      "addl $0x10, %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .LFUN_00178ab0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "testb %%bl, %%bl\n\t"
-      "popl %%ebx\n\t"
-      "jne .LFUN_00178ab0_4\n\t"
-      "pushl $0x2add24\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00178ab0_4:\n\t"
-      "ret\n\t"
-      :
-      : [c1eb6d0] "m"(b178ab0_c1eb6d0), [c167ff0] "m"(b178ab0_c167ff0), [c8f390] "m"(b178ab0_c8f390)
-      : "memory");
+  char ok;
+  int i;
+  unsigned int *slot;
+
+  ok = 1;
+  slot = (unsigned int *)0x325208;
+  for (i = 0; i < 0x43; i++) {
+    D3DDevice_DeleteVertexShader(slot[0]);
+    if (!ok) {
+      FUN_00167ff0(0, (const char *)0x2add58);
+      ok = 0;
+    } else {
+      ok = 1;
+    }
+    slot += 4;
+  }
+  if (!ok)
+    error(2, (const char *)0x2add24);
 }
-#else
-#error "FUN_00178ab0: clang naked draft required"
-#endif
 
 
 /* FUN_00178b40 (0x178b40) — XBE naked draft (batch 301). */
