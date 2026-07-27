@@ -24851,7 +24851,7 @@
         },
         {
           "addr": "0x1c9bf0",
-          "decl": "void FUN_001c9bf0(void);",
+          "decl": "void FUN_001c9bf0(short vchannel_index);",
           "ported": true,
           "name": "FUN_001c9bf0"
         },
