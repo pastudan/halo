@@ -62,396 +62,212 @@ int FUN_00180050(short param_1)
 
 
 
-/* FUN_001800b0 (0x1800b0) — XBE naked draft (batch 79). */
-#if defined(__clang__)
-static void (*const b1800b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1800b0_exitfn)(int) = system_exit;
-static void (*const b1800b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static float * (*const b1800b0_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
+/* FUN_001800b0 (0x1800b0) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-void FUN_001800b0(short param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), int param_4 __attribute__((unused)), int param_5 __attribute__((unused)), int param_6 __attribute__((unused)))
+void FUN_001800b0(short param_1, int param_2, int param_3, int param_4,
+                  int param_5, int param_6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_001800b0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x118\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2b0084\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_1:\n\t"
-      "movl 0x18(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_001800b0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x119\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x263b58\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_2:\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_001800b0_13\n\t"
-      "subl $2, %%eax\n\t"
-      "je .LFUN_001800b0_9\n\t"
-      "subl $2, %%eax\n\t"
-      "je .LFUN_001800b0_3\n\t"
-      "pushl $0x2b004c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001800b0_3:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "imull $0x44, %%eax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_001800b0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x145\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2b0008\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_4:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_001800b0_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x146\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2affc4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_5:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LFUN_001800b0_17\n\t"
-      "addl $0x18, %%esi\n\t"
-      "addl $0x10, %%edi\n\t"
-      "nop\n\t"
-      ".LFUN_001800b0_6:\n\t"
-      "leal -0x10(%%edi), %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "leal -0x18(%%esi), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl -0x4(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "leal -0xc(%%esi), %%edx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x24(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "leal 0xc(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movswl 0x8(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl $3, %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps 0x18(%%esi)\n\t"
-      "movswl 0xa(%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      "movzbl 0xc(%%edi), %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%ecx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_001800b0_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x155\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2affb0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_7:\n\t"
-      "movzbl 0xd(%%edi), %%eax\n\t"
-      "cdq\n\t"
-      "movl $3, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_001800b0_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x156\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2aff9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_8:\n\t"
-      "movzbl 0xc(%%edi), %%ecx\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "movw %%dx, 0x20(%%esi)\n\t"
-      "movzbl 0xd(%%edi), %%ecx\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "shrl $0x1f, %%ecx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movw %%dx, 0x22(%%esi)\n\t"
-      "movzbl 0xe(%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "addl $0x44, %%esi\n\t"
-      "addl $0x20, %%edi\n\t"
-      "decl %%ebx\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fmuls 0x261518\n\t"
-      "fsts -0x20(%%esi)\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fstps -0x1c(%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_001800b0_6\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001800b0_9:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "leal (%%ebx,%%ebx,4), %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_001800b0_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x133\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2aff48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_10:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "leal (,%%ebx,8), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_001800b0_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x134\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2afef8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_11:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LFUN_001800b0_17\n\t"
-      "addl $0x10, %%esi\n\t"
-      "addl $6, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001800b0_12:\n\t"
-      "movl -0x6(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "leal -0x10(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movswl -0x2(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x14, %%esi\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "addl $8, %%edi\n\t"
-      "decl %%ebx\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps -0x18(%%esi)\n\t"
-      "movswl -0x8(%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      ".byte 0xdc, 0xc0\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps -0x14(%%esi)\n\t"
-      "jne .LFUN_001800b0_12\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001800b0_13:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "imull $0x38, %%eax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_001800b0_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11f\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2afeb0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_14:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_001800b0_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0x120\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2afe68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001800b0_15:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LFUN_001800b0_17\n\t"
-      "addl $0x18, %%esi\n\t"
-      "addl $0x10, %%edi\n\t"
-      ".LFUN_001800b0_16:\n\t"
-      "leal -0x10(%%edi), %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "leal -0x18(%%esi), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl -0x4(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x24(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "leal -0xc(%%esi), %%edx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "leal 0xc(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x18(%%esi)\n\t"
-      "movl 0xc(%%edi), %%edx\n\t"
-      "movl %%edx, 0x1c(%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "addl $0x38, %%esi\n\t"
-      "addl $0x20, %%edi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_001800b0_16\n\t"
-      ".LFUN_001800b0_17:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1800b0_assert), [exitfn] "m"(b1800b0_exitfn), [c8f390] "m"(b1800b0_c8f390), [c17ffc0] "m"(b1800b0_c17ffc0)
-      : "memory");
+  /* Three 12-byte (3-float) scratch buffers for FUN_0017ffc0 output */
+  float buf_c[3]; /* at EBP-0xc */
+  float buf_18[3]; /* at EBP-0x18 */
+  float buf_24[3]; /* at EBP-0x24 */
+
+  /* temp for MOVSX + FILD idiom: param_1 slot reused as int temp */
+  int temp_int;
+
+  float weight0;
+  float *result;
+  int i;
+  int count;
+  unsigned int *in32;
+  unsigned int *out32;
+  unsigned char *in8;
+  signed short *in16;
+  unsigned char node0_byte;
+  unsigned char node1_byte;
+
+  if (param_3 == 0) {
+    display_assert("uncompressed",
+                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x118,
+                   1);
+    system_exit(-1);
+  }
+  if (param_5 == 0) {
+    display_assert("compressed",
+                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x119,
+                   1);
+    system_exit(-1);
+  }
+
+  if (param_1 == 1) {
+    /* environment_vertex: uncompressed=56 bytes, compressed=32 bytes */
+    count = param_2;
+    if (param_2 * 0x38 != param_4) {
+      display_assert("count*sizeof(struct "
+                     "environment_vertex_uncompressed)==uncompressed_size",
+                     "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c",
+                     0x11f, 1);
+      system_exit(-1);
+    }
+    if ((count << 5) != param_6) {
+      display_assert(
+        "count*sizeof(struct environment_vertex_compressed)==compressed_size",
+        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x120, 1);
+      system_exit(-1);
+    }
+    if (count > 0) {
+      /* ESI = out+0x18, EDI = in+0x10 at loop entry */
+      out32 = (unsigned int *)(param_3 + 0x18);
+      in32 = (unsigned int *)(param_5 + 0x10);
+      for (i = 0; i < count; i++) {
+        /* copy position xyz (3 dwords) from in[0..8] to out[0..8] */
+        out32[-6] = in32[-4];
+        out32[-5] = in32[-3];
+        out32[-4] = in32[-2];
+        /* unpack normal from in[12] into buf_24 */
+        result = FUN_0017ffc0(buf_24, in32[-1]);
+        out32[-3] = ((unsigned int *)result)[0];
+        out32[-2] = ((unsigned int *)result)[1];
+        out32[-1] = ((unsigned int *)result)[2];
+        /* unpack binormal from in[16] into buf_18 */
+        result = FUN_0017ffc0(buf_18, in32[0]);
+        out32[0] = ((unsigned int *)result)[0];
+        out32[1] = ((unsigned int *)result)[1];
+        out32[2] = ((unsigned int *)result)[2];
+        /* unpack tangent from in[20] into buf_c */
+        result = FUN_0017ffc0(buf_c, in32[1]);
+        out32[3] = ((unsigned int *)result)[0];
+        out32[4] = ((unsigned int *)result)[1];
+        out32[5] = ((unsigned int *)result)[2];
+        /* copy texcoords (2 raw dwords) from in[24..28] to out[48..52] */
+        out32[6] = in32[2];
+        out32[7] = in32[3];
+        /* advance: out += 56 bytes = 14 dwords, in += 32 bytes = 8 dwords */
+        out32 += 14;
+        in32 += 8;
+      }
+    }
+  } else if (param_1 == 3) {
+    /* environment_lightmap_vertex: uncompressed=20 bytes, compressed=8 bytes */
+    count = param_2;
+    if (param_2 * 0x14 != param_4) {
+      display_assert(
+        "count*sizeof(struct "
+        "environment_lightmap_vertex_uncompressed)==uncompressed_size",
+        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x133, 1);
+      system_exit(-1);
+    }
+    if (param_2 * 8 != param_6) {
+      display_assert("count*sizeof(struct "
+                     "environment_lightmap_vertex_compressed)==compressed_size",
+                     "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c",
+                     0x134, 1);
+      system_exit(-1);
+    }
+    if (count > 0) {
+      /* ESI = out+0x10, EDI = in+0x6 at loop entry */
+      out32 = (unsigned int *)(param_3 + 0x10);
+      in16 = (signed short *)(param_5 + 6);
+      for (i = 0; i < count; i++) {
+        /* unpack normal from in[0] into buf_24 */
+        result = FUN_0017ffc0(buf_24, *(unsigned int *)(in16 - 3));
+        out32[-4] = ((unsigned int *)result)[0];
+        out32[-3] = ((unsigned int *)result)[1];
+        out32[-2] = ((unsigned int *)result)[2];
+        /* texcoord u: (s16 * 2 + 1) * (1/65535) -- in[4] */
+        temp_int = (int)in16[-1];
+        *(float *)(out32 - 1) =
+          ((float)temp_int + (float)temp_int + 1.0f) * (1.0f / 65535.0f);
+        /* texcoord v: (s16 * 2 + 1) * (1/65535) -- in[6] */
+        temp_int = (int)in16[0];
+        *(float *)out32 =
+          ((float)temp_int + (float)temp_int + 1.0f) * (1.0f / 65535.0f);
+        /* advance: out += 20 bytes = 5 dwords, in += 8 bytes = 4 shorts */
+        out32 += 5;
+        in16 += 4;
+      }
+    }
+  } else {
+    if (param_1 != 5) {
+      error(2, "### ERROR can't uncompress this type of vertex buffer");
+      return;
+    }
+    /* model_vertex: uncompressed=68 bytes, compressed=32 bytes */
+    count = param_2;
+    if (param_2 * 0x44 != param_4) {
+      display_assert(
+        "count*sizeof(struct model_vertex_uncompressed)==uncompressed_size",
+        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x145, 1);
+      system_exit(-1);
+    }
+    if ((count << 5) != param_6) {
+      display_assert(
+        "count*sizeof(struct model_vertex_compressed)==compressed_size",
+        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c", 0x146, 1);
+      system_exit(-1);
+    }
+    if (count > 0) {
+      /* ESI = out+0x18, EDI = in+0x10 at loop entry */
+      out32 = (unsigned int *)(param_3 + 0x18);
+      in32 = (unsigned int *)(param_5 + 0x10);
+      for (i = 0; i < count; i++) {
+        /* copy position xyz from in[0..8] to out[0..8] */
+        out32[-6] = in32[-4];
+        out32[-5] = in32[-3];
+        out32[-4] = in32[-2];
+        /* unpack normal from in[12] into buf_c */
+        result = FUN_0017ffc0(buf_c, in32[-1]);
+        out32[-3] = ((unsigned int *)result)[0];
+        out32[-2] = ((unsigned int *)result)[1];
+        out32[-1] = ((unsigned int *)result)[2];
+        /* unpack binormal from in[16] into buf_18 */
+        result = FUN_0017ffc0(buf_18, in32[0]);
+        out32[0] = ((unsigned int *)result)[0];
+        out32[1] = ((unsigned int *)result)[1];
+        out32[2] = ((unsigned int *)result)[2];
+        /* unpack tangent from in[20] into buf_24 */
+        result = FUN_0017ffc0(buf_24, in32[1]);
+        out32[3] = ((unsigned int *)result)[0];
+        out32[4] = ((unsigned int *)result)[1];
+        out32[5] = ((unsigned int *)result)[2];
+        /* texcoord u: (s16*2+1)*(1/65535) from in[24] */
+        temp_int = (int)*(signed short *)((int)in32 + 8);
+        *(float *)(out32 + 6) =
+          ((float)temp_int + (float)temp_int + 1.0f) * (1.0f / 65535.0f);
+        /* texcoord v: (s16*2+1)*(1/65535) from in[26] */
+        temp_int = (int)*(signed short *)((int)in32 + 10);
+        *(float *)(out32 + 7) =
+          ((float)temp_int + (float)temp_int + 1.0f) * (1.0f / 65535.0f);
+        /* node_index[0] = in[28] / 3 (assert in[28] % 3 == 0) */
+        in8 = (unsigned char *)in32;
+        node0_byte = in8[12];
+        node1_byte = in8[13];
+        if ((unsigned int)node0_byte % 3 != 0) {
+          display_assert("src->nodes[0]%3==0",
+                         "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c",
+                         0x155, 1);
+          system_exit(-1);
+        }
+        if ((unsigned int)node1_byte % 3 != 0) {
+          display_assert("src->nodes[1]%3==0",
+                         "c:\\halo\\SOURCE\\rasterizer\\rasterizer_geometry.c",
+                         0x156, 1);
+          system_exit(-1);
+        }
+        /* node_index stored as short = byte / 3 */
+        *(short *)(out32 + 8) = (short)((int)node0_byte / 3);
+        *((short *)(out32 + 8) + 1) = (short)((int)node1_byte / 3);
+        /* weight0 = in[30] * (1/255.0f); weight1 = 1.0f - weight0 */
+        weight0 = (float)(int)in8[14] * (1.0f / 255.0f);
+        *(float *)(out32 + 9) = weight0;
+        *(float *)(out32 + 10) = 1.0f - weight0;
+        /* advance: out += 68 bytes = 17 dwords, in += 32 bytes = 8 dwords */
+        out32 += 17;
+        in32 += 8;
+      }
+    }
+  }
 }
-#else
-#error "FUN_001800b0: clang naked draft required"
-#endif
 
 
 /* FUN_00180500 (0x180500) — readable C lift from XBE leaf. */
