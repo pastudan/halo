@@ -18170,8 +18170,8 @@
         },
         {
           "addr": "0xa32e0",
-          "decl": "void FUN_000a32e0(void);",
-          "ported": false
+          "decl": "void FUN_000a32e0(float *obj@<esi>, float pitch, float yaw);",
+          "ported": true
         },
         {
           "addr": "0xa3370",

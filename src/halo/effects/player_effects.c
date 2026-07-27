@@ -1249,73 +1249,27 @@ void player_effect_get_screen_flash(void)
 #endif
 
 
-/* FUN_000a32e0 (0xa32e0) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static unsigned int *(*const ba32e0_lseed)(void) = random_math_get_local_seed_address;
-static void (*const ba32e0_c10b380)(unsigned int *seed, float *out) = (void *)random_seed_get_direction3d;
-static void (*const ba32e0_c1092d0)(float *out_matrix, float *axis, float sine, float cosine) = (void *)FUN_001092d0;
-
-__attribute__((naked, noinline))
-void FUN_000a32e0(void)
+/* FUN_000a32e0 (0xa32e0) — readable C lift. */
+void FUN_000a32e0(float *obj, float pitch, float yaw)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000a32e0_1\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10b380]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcos\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsin\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1092d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_000a32e0_1:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000a32e0_2\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10b380]\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstps 0x28(%%esi)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps 0x2c(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps 0x30(%%esi)\n\t"
-      ".LFUN_000a32e0_2:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [lseed] "m"(ba32e0_lseed), [c10b380] "m"(ba32e0_c10b380), [c1092d0] "m"(ba32e0_c1092d0)
-      : "memory");
-}
-#else
-#error "FUN_000a32e0: clang naked draft required"
-#endif
+  float dir[3];
+  unsigned int *seed;
+  char *base;
 
+  base = (char *)obj;
+  if (yaw != 0.0f) {
+    seed = random_math_get_local_seed_address();
+    random_seed_get_direction3d(seed, dir);
+    FUN_001092d0(obj, dir, __builtin_sinf(yaw), __builtin_cosf(yaw));
+  }
+  if (pitch != 0.0f) {
+    seed = random_math_get_local_seed_address();
+    random_seed_get_direction3d(seed, dir);
+    *(float *)(base + 0x28) = dir[0] * pitch;
+    *(float *)(base + 0x2c) = dir[1] * pitch;
+    *(float *)(base + 0x30) = dir[2] * pitch;
+  }
+}
 
 /* player_effect_get_camera_effect_matrix (0xa3370) — XBE naked draft (batch 106). */
 #if defined(__clang__)
