@@ -15358,9 +15358,9 @@
         },
         {
           "addr": "0x11a6d0",
-          "decl": "int64_t FUN_0011a6d0(int *state);",
+          "decl": "unsigned long long FUN_0011a6d0(int *state);",
           "name": "FUN_0011a6d0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a700",
