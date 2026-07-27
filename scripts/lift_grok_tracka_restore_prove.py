@@ -76,6 +76,11 @@ def extract_func(old: str, name: str, addr: int) -> str | None:
             continue
         if body.count("__asm__") > 2 or "XBE naked" in body:
             continue
+        # Reject truncated preprocessor extracts (common cause of `endif` compile fails).
+        if re.search(r"(?m)^endif\b", body) or re.search(r"(?m)^else\b", body):
+            continue
+        if body.count("#if") != body.count("#endif"):
+            continue
         # Normalize header comment to mark readable lift
         if "readable C lift" not in body[:200]:
             body = re.sub(
