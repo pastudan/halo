@@ -20133,7 +20133,8 @@
         {
           "addr": "0x91b70",
           "decl": "void FUN_00091b70(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00091b70"
         },
         {
           "addr": "0x91ba0",
