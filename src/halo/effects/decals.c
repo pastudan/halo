@@ -2788,57 +2788,23 @@ void decals_disconnect_from_structure_bsp(void)
 #endif
 
 
-/* decals_update (0x99f80) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void (*const b99f80_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b99f80_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b99f80_c996b0)(void) = decal_update;
-
-__attribute__((naked, noinline))
+/* decals_update (0x99f80) — readable C lift. */
 void decals_update(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x5aa8b8, %%eax\n\t"
-      "movb 0x24(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Ldecals_update_2\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ldecals_update_2\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Ldecals_update_1:\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "call *%[c996b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Ldecals_update_1\n\t"
-      "popl %%edi\n\t"
-      ".Ldecals_update_2:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b99f80_c1197b0), [c119810] "m"(b99f80_c119810), [c996b0] "m"(b99f80_c996b0)
-      : "memory");
-}
-#else
-#error "decals_update: clang naked draft required"
-#endif
+  data_iter_t iter;
+  char *globals;
+  void *decal;
 
+  globals = *(char **)0x5aa8b8;
+  if (!globals[0x24])
+    return;
+  data_iterator_new(&iter, (data_t *)globals);
+  decal = data_iterator_next(&iter);
+  while (decal != NULL) {
+    decal_update();
+    decal = data_iterator_next(&iter);
+  }
+}
 
 /* decal_delete (0x9a160) — XBE naked draft (batch 121). */
 #if defined(__clang__)

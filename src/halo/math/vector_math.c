@@ -444,48 +444,20 @@ char FUN_00012000(int actor_handle __attribute__((unused)), int param_2 __attrib
 #endif
 
 
-/* FUN_00012090 (0x12090) — XBE naked draft (batch 275). */
-#if defined(__clang__)
-static void *(*const b12090_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b12090_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_00012090(void)
+/* FUN_00012090 (0x12090) — readable C lift: actor meta flags from actr tag. */
+void FUN_00012090(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x58(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "movl $1, %%ecx\n\t"
-      "movw %%cx, 0x3fc(%%esi)\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb $0x40, %%dl\n\t"
-      "je .LFUN_00012090_1\n\t"
-      "movb %%cl, 0x426(%%esi)\n\t"
-      "movb %%cl, 0x427(%%esi)\n\t"
-      ".LFUN_00012090_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b12090_dget), [tag] "m"(b12090_tag)
-      : "memory");
-}
-#else
-#error "FUN_00012090: clang naked draft required"
-#endif
+  char *actor;
+  unsigned char *tag;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  tag = (unsigned char *)tag_get(0x61637472, *(int *)(actor + 0x58));
+  *(uint16_t *)(actor + 0x3fc) = 1;
+  if (tag[0] & 0x40) {
+    actor[0x426] = 1;
+    actor[0x427] = 1;
+  }
+}
 
 /* action_alert_update (0x12200) — XBE naked draft (batch 258). */
 #if defined(__clang__)

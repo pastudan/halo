@@ -228,68 +228,21 @@ void recorded_animations_clear_debug_storage(void)
   csmemset(*(void **)0x44df0c, 0, 0x400);
 }
 
-/* recorded_animation_controlling_unit (0x94ff0) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static void (*const b94ff0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b94ff0_c119810)(data_iter_t *iterator) = data_iterator_next;
-
-__attribute__((naked, noinline))
-char recorded_animation_controlling_unit(int unit_handle __attribute__((unused)))
+/* recorded_animation_controlling_unit (0x94ff0) — readable C lift. */
+char recorded_animation_controlling_unit(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x44df04, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrecorded_animation_controlling_unit_3\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lrecorded_animation_controlling_unit_1:\n\t"
-      "cmpl %%esi, 0x4(%%eax)\n\t"
-      "jne .Lrecorded_animation_controlling_unit_2\n\t"
-      "testb $1, 0xa(%%eax)\n\t"
-      "je .Lrecorded_animation_controlling_unit_4\n\t"
-      ".Lrecorded_animation_controlling_unit_2:\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lrecorded_animation_controlling_unit_1\n\t"
-      ".Lrecorded_animation_controlling_unit_3:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrecorded_animation_controlling_unit_4:\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b94ff0_c1197b0), [c119810] "m"(b94ff0_c119810)
-      : "memory");
-}
-#else
-#error "recorded_animation_controlling_unit: clang naked draft required"
-#endif
+  data_iter_t iter;
+  char *thread;
 
+  data_iterator_new(&iter, *(data_t **)0x44df04);
+  thread = (char *)data_iterator_next(&iter);
+  while (thread != NULL) {
+    if (*(int *)(thread + 4) == unit_handle && (thread[0xa] & 1) == 0)
+      return 1;
+    thread = (char *)data_iterator_next(&iter);
+  }
+  return 0;
+}
 
 /* FUN_00095050 (0x95050) — XBE naked draft (batch 287). */
 #if defined(__clang__)
@@ -347,63 +300,22 @@ void FUN_00095050(int unit __attribute__((unused)), int *out __attribute__((unus
 #endif
 
 
-/* recorded_animation_kill (0x952d0) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static void (*const b952d0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b952d0_c119810)(data_iter_t *iterator) = data_iterator_next;
-
-__attribute__((naked, noinline))
-void recorded_animation_kill(int unit_handle __attribute__((unused)))
+/* recorded_animation_kill (0x952d0) — readable C lift. */
+void recorded_animation_kill(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x44df04, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrecorded_animation_kill_4\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lrecorded_animation_kill_1:\n\t"
-      "cmpl %%esi, 0x4(%%eax)\n\t"
-      "je .Lrecorded_animation_kill_2\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lrecorded_animation_kill_1\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrecorded_animation_kill_2:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrecorded_animation_kill_3\n\t"
-      "orb $3, 0xa(%%eax)\n\t"
-      ".Lrecorded_animation_kill_3:\n\t"
-      "popl %%esi\n\t"
-      ".Lrecorded_animation_kill_4:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(b952d0_c1197b0), [c119810] "m"(b952d0_c119810)
-      : "memory");
-}
-#else
-#error "recorded_animation_kill: clang naked draft required"
-#endif
+  data_iter_t iter;
+  char *thread;
 
+  data_iterator_new(&iter, *(data_t **)0x44df04);
+  thread = (char *)data_iterator_next(&iter);
+  while (thread != NULL) {
+    if (*(int *)(thread + 4) == unit_handle) {
+      thread[0xa] = (char)(thread[0xa] | 3);
+      return;
+    }
+    thread = (char *)data_iterator_next(&iter);
+  }
+}
 
 /* recorded_animation_get_time_left (0x955b0) — XBE naked draft (batch 283). */
 #if defined(__clang__)
@@ -2348,7 +2260,7 @@ static void *(*const b95330_get)(int, int) = object_get_and_verify_type;
 static int (*const b95330_cba500)(int) = player_index_from_unit_index;
 static void (*const b95330_c95050)(int unit, int *out) = FUN_00095050;
 static void *(*const b95330_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b95330_c94ff0)(int unit_handle) = recorded_animation_controlling_unit;
+static char (*const b95330_c94ff0)(int unit_handle) = (void *)recorded_animation_controlling_unit;
 static int (*const b95330_c119610)(data_t *data) = data_new_at_index;
 static void *(*const b95330_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b95330_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;

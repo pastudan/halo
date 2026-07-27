@@ -6732,7 +6732,7 @@
         {
           "addr": "0x99f80",
           "decl": "void decals_update(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x99fd0",
@@ -21831,8 +21831,8 @@
         },
         {
           "addr": "0x12090",
-          "decl": "void FUN_00012090(void);",
-          "ported": false
+          "decl": "void FUN_00012090(int actor_handle);",
+          "ported": true
         },
         {
           "addr": "0x120e0",
@@ -22969,7 +22969,7 @@
         {
           "addr": "0x94ff0",
           "decl": "char recorded_animation_controlling_unit(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95050",
@@ -22989,7 +22989,7 @@
         {
           "addr": "0x952d0",
           "decl": "void recorded_animation_kill(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95330",
@@ -33565,7 +33565,7 @@
         {
           "addr": "0x19d420",
           "decl": "const wchar_t *FUN_0019d420(int tag_index, int16_t string_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19d480",
