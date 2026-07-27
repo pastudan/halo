@@ -11470,65 +11470,49 @@ void ui_widget_update_list_selection(void *widget /* @<ecx> */, void *definition
   } while (child != NULL);
 }
 
-/* ui_widget_list_prev (0xe53e0) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static void *(*const be53e0_tag)(int, int) = (void *)tag_get;
-
-__attribute__((naked, noinline))
+/* ui_widget_list_prev (0xe53e0) — readable C lift from XBE leaf. */
 void ui_widget_list_prev(void *widget)
 {
-  __asm__ volatile(
-      "movl 0x38(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "je .Lui_widget_list_prev_1\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jne .Lui_widget_list_prev_2\n\t"
-      ".Lui_widget_list_prev_1:\n\t"
-      "movl 0x34(%%edi), %%esi\n\t"
-      ".Lui_widget_list_prev_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_list_prev_5\n\t"
-      ".Lui_widget_list_prev_3:\n\t"
-      "cmpl 0x38(%%edi), %%esi\n\t"
-      "je .Lui_widget_list_prev_5\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x54(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jg .Lui_widget_list_prev_4\n\t"
-      "testb $1, 0x2c(%%eax)\n\t"
-      "jne .Lui_widget_list_prev_4\n\t"
-      "movw 0xe(%%edi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lui_widget_list_prev_4\n\t"
-      "cmpw $3, %%ax\n\t"
-      "je .Lui_widget_list_prev_4\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_list_prev_3\n\t"
-      "movl 0x34(%%edi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_list_prev_3\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lui_widget_list_prev_4:\n\t"
-      "movl %%esi, 0x38(%%edi)\n\t"
-      ".Lui_widget_list_prev_5:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(be53e0_tag)
-      : "memory");
+  void *cur;
+  void *tag;
+  short kind;
+
+  cur = *(void **)((char *)widget + 0x38);
+  if (cur != 0) {
+    cur = *(void **)((char *)cur + 0x2c);
+  }
+  if (cur == 0) {
+    cur = *(void **)((char *)widget + 0x34);
+  }
+  if (cur == 0) {
+    return;
+  }
+  for (;;) {
+    if (cur == *(void **)((char *)widget + 0x38)) {
+      return;
+    }
+    tag = tag_get(0x44654c61, *(int *)cur);
+    if (*(int *)((char *)tag + 0x54) > 0 ||
+        (*(unsigned char *)((char *)tag + 0x2c) & 1) != 0) {
+      *(void **)((char *)widget + 0x38) = cur;
+      return;
+    }
+    kind = *(short *)((char *)widget + 0xe);
+    if (kind == 2 || kind == 3) {
+      *(void **)((char *)widget + 0x38) = cur;
+      return;
+    }
+    cur = *(void **)((char *)cur + 0x2c);
+    if (cur == 0) {
+      cur = *(void **)((char *)widget + 0x34);
+      if (cur == 0) {
+        return;
+      }
+    }
+  }
 }
-#else
-#error "ui_widget_list_prev: clang naked draft required"
-#endif
+
+
 
 
 /* ui_widget_list_next (0xe5440) — XBE naked draft (batch 141). */

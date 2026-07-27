@@ -202,66 +202,21 @@ wchar_t *ustrncat(wchar_t *dest, const wchar_t *src, size_t count)
   return _wcsncat(dest, src, count);
 }
 
-/* ustrncmp (0x19dc20) — XBE naked draft (batch 270). */
-#if defined(__clang__)
-static void (*const b19dc20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19dc20_exitfn)(int) = system_exit;
-static int (*const b19dc20_c1dc02c)(const wchar_t *s1, const wchar_t *s2, size_t count) = _wcsncmp;
-
-__attribute__((naked, noinline))
-int ustrncmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attribute__((unused)), size_t count __attribute__((unused)))
+/* ustrncmp (0x19dc20) — readable C lift from XBE leaf. */
+int ustrncmp(const wchar_t *s1, const wchar_t *s2, size_t count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lustrncmp_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .Lustrncmp_2\n\t"
-      ".Lustrncmp_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12a\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b4828\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lustrncmp_2:\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "cmpl $0x8000, %%edi\n\t"
-      "jb .Lustrncmp_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12b\n\t"
-      "pushl $0x2b45b4\n\t"
-      "pushl $0x2b48c4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lustrncmp_3:\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1dc02c]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19dc20_assert), [exitfn] "m"(b19dc20_exitfn), [c1dc02c] "m"(b19dc20_c1dc02c)
-      : "memory");
+  if (s1 == 0 || s2 == 0) {
+    display_assert((const char *)0x2b4828, (const char *)0x2b45b4, 0x12a, 1);
+    system_exit(-1);
+  }
+  if (count >= 0x8000) {
+    display_assert((const char *)0x2b48c4, (const char *)0x2b45b4, 0x12b, 1);
+    system_exit(-1);
+  }
+  return _wcsncmp(s1, s2, count);
 }
-#else
-#error "ustrncmp: clang naked draft required"
-#endif
+
+
 
 
 /* 0x19dd00 */

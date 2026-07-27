@@ -28104,7 +28104,8 @@
         {
           "addr": "0x19dc20",
           "decl": "int ustrncmp(const wchar_t *s1, const wchar_t *s2, size_t count);",
-          "ported": false
+          "ported": true,
+          "name": "ustrncmp"
         },
         {
           "addr": "0x19dd00",

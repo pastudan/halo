@@ -79,58 +79,26 @@ char object_double_charge_shield(int object_handle)
   return 0;
 }
 
-/* FUN_00136840 (0x136840) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b136840_get)(int, int) = object_get_and_verify_type;
-static char (*const b136840_c13c740)(int object_handle) = FUN_0013c740;
-static void (*const b136840_c136840)(int object_handle) = FUN_00136840;
-
-__attribute__((naked, noinline))
-void FUN_00136840(int object_handle __attribute__((unused)))
+/* FUN_00136840 (0x136840) — readable C lift from XBE leaf. */
+void FUN_00136840(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc8(%%eax), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_00136840_3\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_00136840_1:\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc4(%%eax), %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c13c740]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00136840_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c136840]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00136840_2:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%edi, %%esi\n\t"
-      "jne .LFUN_00136840_1\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_00136840_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b136840_get), [c13c740] "m"(b136840_c13c740), [c136840] "m"(b136840_c136840)
-      : "memory");
+  void *obj;
+  int child;
+  int sibling;
+
+  obj = object_get_and_verify_type(object_handle, -1);
+  child = *(int *)((char *)obj + 0xc8);
+  while (child != -1) {
+    obj = object_get_and_verify_type(child, -1);
+    sibling = *(int *)((char *)obj + 0xc4);
+    if (!FUN_0013c740(child)) {
+      FUN_00136840(child);
+    }
+    child = sibling;
+  }
 }
-#else
-#error "FUN_00136840: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00136890 (0x136890) — readable C lift. */
