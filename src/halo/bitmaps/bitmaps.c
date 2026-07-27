@@ -2219,66 +2219,27 @@ unsigned int bitmap_2d_get_pixel(int bitmap_ref __attribute__((unused)), float *
 #endif
 
 
-/* bitmap_get_pixel_count (0x7dfe0) — XBE naked draft (batch 276). */
-#if defined(__clang__)
-static bool (*const b7dfe0_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b7dfe0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7dfe0_exitfn)(int) = system_exit;
-static int (*const b7dfe0_c7d8b0)(void *bitmap, int mipmap_index) = bitmap_mipmap_get_pixel_count;
-
-__attribute__((naked, noinline))
-int bitmap_get_pixel_count(void *bitmap __attribute__((unused)))
+/* bitmap_get_pixel_count (0x7dfe0) — readable C lift. */
+int bitmap_get_pixel_count(void *bitmap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_get_pixel_count_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x378\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x264da0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_get_pixel_count_1:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpw %%si, 0x14(%%edi)\n\t"
-      "jl .Lbitmap_get_pixel_count_3\n\t"
-      ".Lbitmap_get_pixel_count_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d8b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "addl %%eax, %%ebx\n\t"
-      "incl %%esi\n\t"
-      "cmpw 0x14(%%edi), %%si\n\t"
-      "jle .Lbitmap_get_pixel_count_2\n\t"
-      ".Lbitmap_get_pixel_count_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b7dfe0_c7d470), [assert] "m"(b7dfe0_assert), [exitfn] "m"(b7dfe0_exitfn), [c7d8b0] "m"(b7dfe0_c7d8b0)
-      : "memory");
-}
-#else
-#error "bitmap_get_pixel_count: clang naked draft required"
-#endif
+  extern char DAT_00264da0[];
+  extern char DAT_00264a74[];
+  int total;
+  int16_t i;
+  int16_t count;
 
+  if (!bitmap_verify(bitmap, 0)) {
+    display_assert(DAT_00264da0, DAT_00264a74, 0x378, 1);
+    system_exit(-1);
+  }
+  total = 0;
+  count = *(int16_t *)((char *)bitmap + 0x14);
+  if (count < 0)
+    return 0;
+  for (i = 0; i <= count; i++)
+    total += bitmap_mipmap_get_pixel_count(bitmap, i);
+  return total;
+}
 
 /* bitmap_get_pixel_data_size (0x7e040) — XBE naked draft (batch 268). */
 #if defined(__clang__)

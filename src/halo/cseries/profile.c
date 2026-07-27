@@ -3136,57 +3136,18 @@ void FUN_00091ba0(void)
 #endif
 
 
-/* FUN_00091c10 (0x91c10) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-static void *(*const b91c10_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b91c10_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-
-__attribute__((naked, noinline))
-void FUN_00091c10(void)
+/* FUN_00091c10 (0x91c10) — readable C lift. */
+void FUN_00091c10(void *dst, void *src, const char *name, int field)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0x110\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_00091c10_2\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00091c10_2\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00091c10_1\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x8(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00091c10_1:\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x108(%%esi)\n\t"
-      ".LFUN_00091c10_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b91c10_memset), [c8de70] "m"(b91c10_c8de70)
-      : "memory");
+  csmemset(dst, 0, 0x110);
+  if (src && *(int *)src) {
+    *(int *)dst = *(int *)src;
+    *((int *)dst + 1) = *((int *)src + 1);
+    if (name)
+      csstrncpy((char *)dst + 8, name, 0xff);
+    *(int *)((char *)dst + 0x108) = field;
+  }
 }
-#else
-#error "FUN_00091c10: clang naked draft required"
-#endif
-
 
 /* FUN_00091c70 (0x91c70) — XBE naked draft (batch 261). */
 #if defined(__clang__)

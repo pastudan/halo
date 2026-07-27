@@ -1928,37 +1928,12 @@ void FUN_0011feb0(void *pool)
   *(unsigned char *)pool = 1;
 }
 
-/* FUN_0011fef0 (0x11fef0) — XBE naked draft (batch 175). */
-#if defined(__clang__)
-static void (*const b11fef0_c11fd50)(void) = FUN_0011fd50;
-static void *(*const b11fef0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_0011fef0(void)
+/* FUN_0011fef0 (0x11fef0) — readable C lift. */
+void *FUN_0011fef0(void *pool, int handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "call *%[c11fd50]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11fd50] "m"(b11fef0_c11fd50), [dget] "m"(b11fef0_dget)
-      : "memory");
+  FUN_0011fd50(pool);
+  return datum_get(*(data_t **)((char *)pool + 0x18), handle);
 }
-#else
-#error "FUN_0011fef0: clang naked draft required"
-#endif
-
 
 /* FUN_0011ff10 (0x11ff10) — readable C lift. */
 int FUN_0011ff10(int16_t a, int16_t b)

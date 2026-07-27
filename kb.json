@@ -4777,7 +4777,7 @@
         {
           "addr": "0x7dfe0",
           "decl": "int bitmap_get_pixel_count(void *bitmap);",
-          "ported": false,
+          "ported": true,
           "name": "bitmap_get_pixel_count"
         },
         {
@@ -6386,8 +6386,8 @@
         },
         {
           "addr": "0x11fef0",
-          "decl": "void FUN_0011fef0(void);",
-          "ported": false
+          "decl": "void *FUN_0011fef0(void *pool, int handle);",
+          "ported": true
         },
         {
           "addr": "0x11ff10",
@@ -20059,8 +20059,8 @@
         },
         {
           "addr": "0x91c10",
-          "decl": "void FUN_00091c10(void);",
-          "ported": false
+          "decl": "void FUN_00091c10(void *dst, void *src, const char *name, int field);",
+          "ported": true
         },
         {
           "addr": "0x91c70",
