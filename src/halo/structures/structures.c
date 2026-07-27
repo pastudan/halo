@@ -1,5 +1,4 @@
-/* 0x18e3c0 is structure-BSP getter (kb: FUN_0018e3c0); Capstone named it scenario_get. */
-#define scenario_get FUN_0018e3c0
+/* 0x18e3c0 is structure-BSP getter; Capstone named it scenario_get (see decl.h). */
 
 #include "x87_math.h" /* x87_fatan2f: inline FPATAN atan2, matches original */
 
@@ -2476,7 +2475,7 @@ static void (*const b1913c0_exitfn)(int) = system_exit;
 static void (*const b1913c0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
 
 __attribute__((naked, noinline))
-void reference_list_remove(data_t *data __attribute__((unused)), int *head __attribute__((unused)), int value __attribute__((unused)))
+void reference_list_remove(void *data __attribute__((unused)), int *head __attribute__((unused)), int value __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2634,92 +2633,26 @@ void reference_list_copy(void *result __attribute__((unused)), void *source __at
 #endif
 
 
-/* cluster_partition_globals_new (0x191500) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void * (*const b191500_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-static int (*const b191500_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static data_t * (*const b191500_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-static void (*const b191500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void cluster_partition_globals_new(void **out __attribute__((unused)), const char *name __attribute__((unused)))
+/* cluster_partition_globals_new (0x191500) — readable C lift.
+ *
+ * Allocate the cluster first-ref table (0x800 bytes) plus two game-state
+ * datum arrays (object refs / cluster refs), stuffing them into out[0..2].
+ */
+void cluster_partition_globals_new(void **out, const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x200, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl $0x800\n\t"
-      "pushl $0x2b2654\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl $0x2b2648\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d90f0]\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x200(%%ebp), %%edx\n\t"
-      "pushl $0x280e94\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "pushl $0xc\n\t"
-      "leal -0x200(%%ebp), %%eax\n\t"
-      "pushl $0x800\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bfe10]\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl $0x2b263c\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "call *%[c1d90f0]\n\t"
-      "leal -0x100(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x200(%%ebp), %%eax\n\t"
-      "pushl $0x280e94\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0x48, %%esp\n\t"
-      "pushl $0xc\n\t"
-      "leal -0x200(%%ebp), %%ecx\n\t"
-      "pushl $0x800\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1bfe10]\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      "je .Lcluster_partition_globals_new_1\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lcluster_partition_globals_new_1\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lcluster_partition_globals_new_2\n\t"
-      ".Lcluster_partition_globals_new_1:\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2b260c\n\t"
-      "pushl $0\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lcluster_partition_globals_new_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1bfbf0] "m"(b191500_c1bfbf0), [c1d90f0] "m"(b191500_c1d90f0), [c1bfe10] "m"(b191500_c1bfe10), [c8f390] "m"(b191500_c8f390)
-      : "memory");
+  char name_buf[0x100];
+  char full_buf[0x100];
+
+  out[0] = game_state_malloc(name, (const char *)0x2b2654, 0x800);
+  crt_sprintf(name_buf, (const char *)0x2b2648, name);
+  crt_sprintf(full_buf, (const char *)0x280e94, name_buf);
+  out[1] = game_state_data_new(full_buf, 0x800, 0xc);
+  crt_sprintf(name_buf, (const char *)0x2b263c, name);
+  crt_sprintf(full_buf, (const char *)0x280e94, name_buf);
+  out[2] = game_state_data_new(full_buf, 0x800, 0xc);
+  if (out[0] == NULL || out[2] == NULL || out[1] == NULL)
+    error(0, (const char *)0x2b260c, name);
 }
-#else
-#error "cluster_partition_globals_new: clang naked draft required"
-#endif
 
 
 /* cluster_partition_clear (0x1915d0) — readable C lift. */
@@ -2852,7 +2785,7 @@ static int16_t (*const b1917a0_c199230)(uint16_t cluster_count, float *position,
 static void (*const b1917a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static int (*const b1917a0_c119610)(data_t *data) = data_new_at_index;
 static void *(*const b1917a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void * (*const b1917a0_c18e3c0)(void) = global_scenario_get;
+static void * (*const b1917a0_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 
 __attribute__((naked, noinline))
 void cluster_partition_add_object(void *partition __attribute__((unused)), int object_handle __attribute__((unused)), void *first_cluster_ref __attribute__((unused)), void *position __attribute__((unused)), uint32_t radius_fp __attribute__((unused)), void *location __attribute__((unused)))
@@ -3054,89 +2987,47 @@ void cluster_partition_add_object(void *partition __attribute__((unused)), int o
 #endif
 
 
-/* cluster_partition_remove_object (0x1919a0) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void *(*const b1919a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1919a0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-static void * (*const b1919a0_c18e3c0)(void) = global_scenario_get;
-static void (*const b1919a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1919a0_exitfn)(int) = system_exit;
-static void (*const b1919a0_c1913c0)(data_t *data, int *head, int value) = reference_list_remove;
-
-__attribute__((naked, noinline))
-void cluster_partition_remove_object(void *partition __attribute__((unused)), int object_handle __attribute__((unused)), void *first_cluster_ref __attribute__((unused)))
+/* cluster_partition_remove_object (0x1919a0) — readable C lift.
+ *
+ * Walk the object's cluster-ref linked list, deleting each cluster-ref datum
+ * and removing the object from that cluster's object list, then clear the
+ * caller's first_cluster_ref head to -1.
+ */
+void cluster_partition_remove_object(void *partition, int object_handle,
+                                     void *first_cluster_ref)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%eax), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lcluster_partition_remove_object_4\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".Lcluster_partition_remove_object_1:\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "movw 0x4(%%eax), %%bx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lcluster_partition_remove_object_2\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x134(%%eax), %%ecx\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jl .Lcluster_partition_remove_object_3\n\t"
-      ".Lcluster_partition_remove_object_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd5\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x2b2668\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_remove_object_3:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "leal (%%edx,%%ecx,4), %%eax\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1913c0]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl 0x8(%%edx), %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .Lcluster_partition_remove_object_1\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lcluster_partition_remove_object_4:\n\t"
-      "movl $0xffffffff, (%%eax)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1919a0_dget), [c1196d0] "m"(b1919a0_c1196d0), [c18e3c0] "m"(b1919a0_c18e3c0), [assert] "m"(b1919a0_assert), [exitfn] "m"(b1919a0_exitfn), [c1913c0] "m"(b1919a0_c1913c0)
-      : "memory");
+  char *part = (char *)partition;
+  int *head = (int *)first_cluster_ref;
+  int handle;
+  char *datum;
+  int16_t cluster_idx;
+  void *scenario;
+
+  handle = *head;
+  if (handle != -1) {
+    do {
+      datum = (char *)datum_get(*(void **)(part + 8), handle);
+      cluster_idx = *(int16_t *)(datum + 4);
+      datum_delete(*(data_t **)(part + 8), handle);
+      if (cluster_idx < 0) {
+        display_assert((const char *)0x2b2668, (const char *)0x2b26b8, 0xd5,
+                       true);
+        system_exit(-1);
+      }
+      scenario = scenario_get();
+      if ((int)cluster_idx >= *(int *)((char *)scenario + 0x134)) {
+        display_assert((const char *)0x2b2668, (const char *)0x2b26b8, 0xd5,
+                       true);
+        system_exit(-1);
+      }
+      reference_list_remove(*(void **)(part + 4),
+                            (int *)(*(int *)part + (int)cluster_idx * 4),
+                            object_handle);
+      handle = *(int *)(datum + 8);
+    } while (handle != -1);
+  }
+  *head = -1;
 }
-#else
-#error "cluster_partition_remove_object: clang naked draft required"
-#endif
 
 
 /* cluster_partition_iter_first (0x191a50) — readable C lift from XBE leaf. */
@@ -3829,7 +3720,7 @@ void FUN_001954d0(void)
 
 /* FUN_00195550 (0x195550) — XBE naked draft (batch 86). */
 #if defined(__clang__)
-static void * (*const b195550_c18e3c0)(void) = global_scenario_get;
+static void * (*const b195550_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static void *(*const b195550_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b195550_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b195550_exitfn)(int) = system_exit;
@@ -3940,8 +3831,9 @@ void FUN_00195550(short surface_count __attribute__((unused)), int *out_indices 
 
 /* FUN_00195650 (0x195650) — XBE naked draft (batch 92). */
 #if defined(__clang__)
-static void * (*const b195650_c18e3c0)(void) = global_scenario_get;
-static void (*const b195650_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = FUN_00091ef0;
+static void * (*const b195650_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
+static void (*const b195650_c91ef0)(int *keys, int count, int (*cmp)(int, int)) =
+    (void (*)(int *, int, int (*)(int, int)))FUN_00091ef0;
 static void *(*const b195650_elem)(void *, int, int) = tag_block_get_element;
 
 __attribute__((naked, noinline))
@@ -4008,7 +3900,7 @@ void FUN_00195650(void *out __attribute__((unused)), int *indices __attribute__(
 
 /* FUN_001956d0 (0x1956d0) — XBE naked draft (batch 88). */
 #if defined(__clang__)
-static void * (*const b1956d0_c18e3c0)(void) = global_scenario_get;
+static void * (*const b1956d0_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static int (*const b1956d0_c17c970)(int mode) = rasterizer_widget_submit;
 static void * (*const b1956d0_c17c980)(int handle) = rasterizer_widget_begin;
 static void (*const b1956d0_assert)(const char *, const char *, int, bool) = display_assert;
@@ -4942,7 +4834,7 @@ int16_t FUN_00196fd0(int *out_buf, int16_t max_count, int unused_10,
 
 /* FUN_00195790 (0x195790) — XBE naked draft (batch 81). */
 #if defined(__clang__)
-static void * (*const b195790_c18e3c0)(void) = global_scenario_get;
+static void * (*const b195790_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static void *(*const b195790_elem)(void *, int, int) = tag_block_get_element;
 static void * (*const b195790_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
 static void *(*const b195790_tag)(int, int) = tag_get;
@@ -5197,7 +5089,7 @@ void FUN_00195790(int *surface_material_offsets __attribute__((unused)), unsigne
 
 /* FUN_00197130 (0x197130) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static void * (*const b197130_c18e3c0)(void) = global_scenario_get;
+static void * (*const b197130_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static void *(*const b197130_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b197130_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b197130_exitfn)(int) = system_exit;
@@ -5386,7 +5278,7 @@ int FUN_00197130(float *bounds __attribute__((unused)), void *param_2 __attribut
 
 /* FUN_00197310 (0x197310) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static void * (*const b197310_c18e3c0)(void) = global_scenario_get;
+static void * (*const b197310_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static void (*const b197310_xfrmpt)(float *, float *, float *) = matrix_transform_point;
 static int16_t (*const b197310_c106960)(int16_t count, float *verts, float *plane, int16_t max_count, float *out_verts, uint32_t *out_bitmask, float epsilon, void *changed) = convex_polygon3d_clip_to_plane;
 static void (*const b197310_assert)(const char *, const char *, int, bool) = display_assert;
@@ -5934,7 +5826,7 @@ void render_structure_visibility(void)
             ((unsigned short *)0x4d8edc)[bit_index]);
           *cluster_rec = (short)cluster_index;
           render_frustum_get_projection_bounds((void *)0x5065a4,
-                                               cluster_rec + 2);
+                                               (float *)(cluster_rec + 2));
         }
         cluster_index = cluster_index + 1;
         bit_index = (int)(short)cluster_index;
@@ -6073,7 +5965,7 @@ void structures_cluster_marker_end(void)
 
 /* structure_render_surface_from_point_and_leaf (0x198580) — XBE naked draft (batch 82). */
 #if defined(__clang__)
-static void * (*const b198580_c18e3c0)(void) = global_scenario_get;
+static void * (*const b198580_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static void *(*const b198580_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b198580_c1935f0)(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index) = (void *)structure_bsp_find_material_for_surface;
 static void (*const b198580_c180500)(float *param_1, float *param_2) = FUN_00180500;
@@ -6428,7 +6320,7 @@ int16_t FUN_001989b0(uint16_t cluster_count, float *position, float radius,
 #if defined(__clang__)
 static void (*const b198ad0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b198ad0_exitfn)(int) = system_exit;
-static void * (*const b198ad0_c18e3c0)(void) = global_scenario_get;
+static void * (*const b198ad0_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static int (*const b198ad0_c1984c0)(int16_t cluster_index) = structure_cluster_mark;
 static void *(*const b198ad0_elem)(void *, int, int) = tag_block_get_element;
 static bool (*const b198ad0_c198440)(int16_t cluster_index) = structure_cluster_unmarked;
@@ -6613,7 +6505,7 @@ int16_t structure_clusters_in_cone(int16_t starting_cluster __attribute__((unuse
 static void (*const b198cb0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b198cb0_exitfn)(int) = system_exit;
 static bool (*const b198cb0_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
-static void * (*const b198cb0_c18e3c0)(void) = global_scenario_get;
+static void * (*const b198cb0_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static char (*const b198cb0_c198580)(void *render_context, uint32_t leaf_index, int material_type, int16_t *out_collection_index, int16_t *out_geometry_index, int32_t *out_surface, float *out_u, float *out_v) = structure_render_surface_from_point_and_leaf;
 static void *(*const b198cb0_elem)(void *, int, int) = tag_block_get_element;
 
@@ -8754,7 +8646,7 @@ void FUN_00192710(void)
 /* FUN_00194070 (0x194070) — XBE naked draft (batch 113). */
 #if defined(__clang__)
 static __int16 (*const b194070_cba4b0)(void) = local_player_count;
-static void * (*const b194070_c18e3c0)(void) = global_scenario_get;
+static void * (*const b194070_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
 static void *(*const b194070_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b194070_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
 static void (*const b194070_c18ab30)(char wireframe, float *bounds, void *color) = FUN_0018ab30;
@@ -9006,8 +8898,9 @@ void FUN_00194070(void)
 /* FUN_001975e0 (0x1975e0) — XBE naked draft (batch 112). */
 #if defined(__clang__)
 static void (*const b1975e0_chkstk)(void) = (void (*)(void))FUN_001d90e0;
-static void * (*const b1975e0_c18e3c0)(void) = global_scenario_get;
-static void (*const b1975e0_c185f80)(void *param_1, void *param_2) = render_frustum_get_projection_bounds;
+static void * (*const b1975e0_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
+static void (*const b1975e0_c185f80)(void *param_1, void *param_2) =
+    (void (*)(void *, void *))render_frustum_get_projection_bounds;
 static uint32_t * (*const b1975e0_c193550)(void *bsp, int16_t cluster_index) = structure_bsp_get_cluster_sound_data;
 static void *(*const b1975e0_elem)(void *, int, int) = tag_block_get_element;
 static short (*const b1975e0_c197310)(void *verts, void *plane, void *ref, void *arg1, int16_t count, int sign, short *out) = FUN_00197310;

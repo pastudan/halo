@@ -26012,7 +26012,7 @@
         {
           "addr": "0x191500",
           "decl": "void cluster_partition_globals_new(void **out, const char *name);",
-          "ported": false,
+          "ported": true,
           "name": "cluster_partition_globals_new",
           "source_path": "src/halo/structures/structures.c"
         },
