@@ -10406,8 +10406,8 @@
         },
         {
           "addr": "0x1c1290",
-          "decl": "void game_state_read_from_persistent_storage(void);",
-          "ported": false
+          "decl": "void game_state_read_from_persistent_storage(int mode);",
+          "ported": true
         },
         {
           "addr": "0x1c1340",

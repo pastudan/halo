@@ -1149,84 +1149,45 @@ char FUN_001c1280(int profile_handle, void *out_path)
   return FUN_001c4da0(profile_handle, out_path);
 }
 
-/* game_state_read_from_persistent_storage (0x1c1290) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static void (*const b1c1290_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c1290_exitfn)(int) = system_exit;
-static void *(*const b1c1290_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void game_state_read_from_persistent_storage(void)
+/* game_state_read_from_persistent_storage (0x1c1290) — readable C lift (esi=buf). */
+void game_state_read_from_persistent_storage(int mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "je .Lgame_state_read_from_persistent_storage_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jl .Lgame_state_read_from_persistent_storage_1\n\t"
-      "cmpl $2, %%eax\n\t"
-      "jl .Lgame_state_read_from_persistent_storage_2\n\t"
-      ".Lgame_state_read_from_persistent_storage_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x237\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x2b9fec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_state_read_from_persistent_storage_2:\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb %%al, %%ch\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0xffff, 0x18(%%esi)\n\t"
-      "movb $3, 0x2a(%%esi)\n\t"
-      "movb %%bl, 0x2b(%%esi)\n\t"
-      "movb %%bl, 0x2d(%%esi)\n\t"
-      "movb %%bl, 0x2f(%%esi)\n\t"
-      "orl $1, %%ecx\n\t"
-      "orw %%cx, 0x1a(%%esi)\n\t"
-      "subl %%ebx, %%eax\n\t"
-      "movb %%bl, 0x2c(%%esi)\n\t"
-      "movw %%bx, 0x26(%%esi)\n\t"
-      "je .Lgame_state_read_from_persistent_storage_4\n\t"
-      "decl %%eax\n\t"
-      "je .Lgame_state_read_from_persistent_storage_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x252\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x2b9fbc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgame_state_read_from_persistent_storage_3:\n\t"
-      "movb $1, 0x2b(%%esi)\n\t"
-      ".Lgame_state_read_from_persistent_storage_4:\n\t"
-      "movb %%bl, 0x28(%%esi)\n\t"
-      "movb %%bl, 0x29(%%esi)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c1290_assert), [exitfn] "m"(b1c1290_exitfn), [memset] "m"(b1c1290_memset)
-      : "memory");
+  unsigned char *buf;
+  unsigned short flags;
+  extern char DAT_002b9f70[];
+  extern char DAT_002b9fec[];
+  extern char DAT_002b9fbc[];
+
+  __asm__ volatile("movl %%esi, %0" : "=r"(buf));
+  if (buf == 0 || mode < 0 || mode >= 2) {
+    display_assert(DAT_002b9fec, DAT_002b9f70, 0x237, 1);
+    system_exit(-1);
+  }
+
+  csmemset(buf, 0, 0x30);
+  *(unsigned short *)(buf + 0x18) = 0xffff;
+  buf[0x2a] = 3;
+  buf[0x2b] = 0;
+  buf[0x2d] = 0;
+  buf[0x2f] = 0;
+  flags = (unsigned short)(((unsigned)mode << 8) | 1u);
+  *(unsigned short *)(buf + 0x1a) |= flags;
+  buf[0x2c] = 0;
+  *(unsigned short *)(buf + 0x26) = 0;
+
+  if (mode == 0) {
+    /* fall through */
+  } else if (mode == 1) {
+    buf[0x2b] = 1;
+  } else {
+    display_assert(DAT_002b9fbc, DAT_002b9f70, 0x252, 1);
+    system_exit(-1);
+    return;
+  }
+  buf[0x28] = 0;
+  buf[0x29] = 0;
 }
-#else
-#error "game_state_read_from_persistent_storage: clang naked draft required"
-#endif
+
 
 
 /* player_profile_setup_default_gamespy_settings (0x1c1340) — XBE naked draft (batch 244). */
