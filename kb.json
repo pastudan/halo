@@ -7731,8 +7731,9 @@
         },
         {
           "addr": "0xdb250",
-          "decl": "void FUN_000db250(void);",
-          "ported": false
+          "decl": "char FUN_000db250(int object_handle @<esi>);",
+          "ported": true,
+          "name": "FUN_000db250"
         },
         {
           "addr": "0xdb330",
