@@ -1421,153 +1421,55 @@ int poll_endpoint_set(int endpoint_set __attribute__((unused)), unsigned short t
 #endif
 
 
-/* add_endpoint_to_set (0x82700) — XBE naked draft (batch 248). */
-#if defined(__clang__)
-static void (*const b82700_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82700_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int add_endpoint_to_set(int endpoint __attribute__((unused)), void *set __attribute__((unused)))
+/* add_endpoint_to_set (0x82700) — readable C lift from XBE leaf. */
+int add_endpoint_to_set(int *endpoint, void *set)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Ladd_endpoint_to_set_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Ladd_endpoint_to_set_2\n\t"
-      ".Ladd_endpoint_to_set_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22f\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2665ec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ladd_endpoint_to_set_2:\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Ladd_endpoint_to_set_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x230\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ladd_endpoint_to_set_3:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Ladd_endpoint_to_set_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x39\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x266450\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ladd_endpoint_to_set_4:\n\t"
-      "movl 0x108(%%esi), %%ecx\n\t"
-      "movl 0x10c(%%esi), %%eax\n\t"
-      "decl %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jg .Ladd_endpoint_to_set_12\n\t"
-      "leal 0x1(%%eax), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jl .Ladd_endpoint_to_set_12\n\t"
-      "movl 0x104(%%esi), %%edx\n\t"
-      "movl %%ebx, (%%edx,%%edi,4)\n\t"
-      "testb $2, 0x4(%%ebx)\n\t"
-      "movl (%%esi), %%ebx\n\t"
-      "je .Ladd_endpoint_to_set_7\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jbe .Ladd_endpoint_to_set_6\n\t"
-      "movl 0x104(%%esi), %%ecx\n\t"
-      "movl (%%ecx,%%edi,4), %%edx\n\t"
-      "movl (%%edx), %%edx\n\t"
-      "leal 0x4(%%esi), %%ecx\n\t"
-      ".Ladd_endpoint_to_set_5:\n\t"
-      "cmpl %%edx, (%%ecx)\n\t"
-      "je .Ladd_endpoint_to_set_6\n\t"
-      "incl %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "cmpl (%%esi), %%eax\n\t"
-      "jb .Ladd_endpoint_to_set_5\n\t"
-      ".Ladd_endpoint_to_set_6:\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .Ladd_endpoint_to_set_11\n\t"
-      "cmpl $0x40, %%ebx\n\t"
-      "jae .Ladd_endpoint_to_set_11\n\t"
-      "movl 0x104(%%esi), %%ecx\n\t"
-      "movl (%%ecx,%%edi,4), %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%esi,%%eax,4)\n\t"
-      "jmp .Ladd_endpoint_to_set_10\n\t"
-      ".Ladd_endpoint_to_set_7:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jbe .Ladd_endpoint_to_set_9\n\t"
-      "movl 0x104(%%esi), %%edx\n\t"
-      "movl (%%edx,%%edi,4), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "leal 0x4(%%esi), %%ecx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Ladd_endpoint_to_set_8:\n\t"
-      "cmpl %%edx, (%%ecx)\n\t"
-      "je .Ladd_endpoint_to_set_9\n\t"
-      "incl %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "cmpl (%%esi), %%eax\n\t"
-      "jb .Ladd_endpoint_to_set_8\n\t"
-      ".Ladd_endpoint_to_set_9:\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .Ladd_endpoint_to_set_11\n\t"
-      "cmpl $0x40, %%ebx\n\t"
-      "jae .Ladd_endpoint_to_set_11\n\t"
-      "movl 0x104(%%esi), %%edx\n\t"
-      "movl (%%edx,%%edi,4), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%esi,%%eax,4)\n\t"
-      ".Ladd_endpoint_to_set_10:\n\t"
-      "incl (%%esi)\n\t"
-      ".Ladd_endpoint_to_set_11:\n\t"
-      "movl 0x10c(%%esi), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "incl %%edx\n\t"
-      "movl %%edx, 0x10c(%%esi)\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "popl %%edi\n\t"
-      "orb $8, %%cl\n\t"
-      "popl %%esi\n\t"
-      "movb %%cl, 0x4(%%eax)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ladd_endpoint_to_set_12:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $0xffffffec, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82700_assert), [exitfn] "m"(b82700_exitfn)
-      : "memory");
+  int *esi;
+  int count;
+  int max;
+  int idx;
+  int *arr;
+  int n;
+  int i;
+  int sock;
+
+  assert_halt(endpoint && set);
+  assert_halt(*(uint8_t *)0x335090);
+  assert_halt(set != 0);
+
+  esi = (int *)set;
+  max = *(int *)((char *)esi + 0x108);
+  count = *(int *)((char *)esi + 0x10c);
+  if (count > max - 1)
+    return -20;
+  idx = count + 1;
+  if (idx < 0)
+    return -20;
+
+  arr = *(int **)((char *)esi + 0x104);
+  arr[idx] = (int)endpoint;
+
+  n = esi[0];
+  sock = *endpoint;
+  i = 0;
+  if (n > 0) {
+    int *fds = esi + 1;
+    while (i < n) {
+      if (*fds == sock)
+        break;
+      i++;
+      fds++;
+    }
+  }
+  if (i == n && n < 0x40) {
+    esi[1 + i] = sock;
+    esi[0] = n + 1;
+  }
+
+  *(int *)((char *)esi + 0x10c) = count + 1;
+  *(uint8_t *)((char *)endpoint + 4) |= 8;
+  return 0;
 }
-#else
-#error "add_endpoint_to_set: clang naked draft required"
-#endif
-
-
 /* rewind_endpoint_set (0x82940) — readable C lift. */
 void rewind_endpoint_set(void *a0)
 {

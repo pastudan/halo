@@ -27036,8 +27036,9 @@
         },
         {
           "addr": "0x82700",
-          "decl": "int add_endpoint_to_set(int endpoint, void *set);",
-          "ported": false
+          "decl": "int add_endpoint_to_set(int *endpoint, void *set);",
+          "ported": true,
+          "name": "add_endpoint_to_set"
         },
         {
           "addr": "0x82940",
