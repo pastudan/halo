@@ -1454,92 +1454,40 @@ void first_person_weapon_update(int16_t local_player_index)
 
 
 
-/* first_person_weapon_render_update (0xddae0) — XBE naked draft (batch 225). */
-#if defined(__clang__)
-static void (*const bddae0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bddae0_exitfn)(int) = system_exit;
-static int16_t (*const bddae0_c86410)(int16_t local_player_index) = director_get_perspective;
-static int16_t (*const bddae0_cb6a70)(int16_t local_player_index) = player_control_get_zoom_level;
-static void (*const bddae0_cdcb30)(int16_t local_player_index, uint8_t activate) = FUN_000dcb30;
-
-__attribute__((naked, noinline))
+/* first_person_weapon_render_update (0xddae0) — readable C lift from XBE leaf. */
 void first_person_weapon_render_update(void)
 {
-  __asm__ volatile(
-      "movl 0x506548, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "je .Lfirst_person_weapon_render_update_6\n\t"
-      "testw %%ax, %%ax\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jl .Lfirst_person_weapon_render_update_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lfirst_person_weapon_render_update_2\n\t"
-      ".Lfirst_person_weapon_render_update_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x599\n\t"
-      "pushl $0x282294\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x506548, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfirst_person_weapon_render_update_2:\n\t"
-      "movl 0x46bea8, %%edx\n\t"
-      "movswl %%si, %%esi\n\t"
-      "imull $0x1ea0, %%esi, %%esi\n\t"
-      "movl 0x4(%%esi,%%edx,1), %%ecx\n\t"
-      "addl %%edx, %%esi\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "je .Lfirst_person_weapon_render_update_5\n\t"
-      "cmpl %%edi, 0x8(%%esi)\n\t"
-      "je .Lfirst_person_weapon_render_update_5\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c86410]\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lfirst_person_weapon_render_update_3\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x506548, %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cb6a70]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "jne .Lfirst_person_weapon_render_update_3\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lfirst_person_weapon_render_update_4\n\t"
-      ".Lfirst_person_weapon_render_update_3:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lfirst_person_weapon_render_update_4:\n\t"
-      "movl 0x506548, %%edi\n\t"
-      "call *%[cdcb30]\n\t"
-      "cmpb $0, (%%esi)\n\t"
-      "popl %%ebx\n\t"
-      "je .Lfirst_person_weapon_render_update_5\n\t"
-      "movl 0x506548, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      ".byte 0xe9, 0xf6, 0xf9, 0xff, 0xff\n\t"
-      ".Lfirst_person_weapon_render_update_5:\n\t"
-      "popl %%esi\n\t"
-      ".Lfirst_person_weapon_render_update_6:\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(bddae0_assert), [exitfn] "m"(bddae0_exitfn), [c86410] "m"(bddae0_c86410), [cb6a70] "m"(bddae0_cb6a70), [cdcb30] "m"(bddae0_cdcb30)
-      : "memory");
-}
-#else
-#error "first_person_weapon_render_update: clang naked draft required"
-#endif
+  int16_t player;
+  char *slot;
+  char *base;
+  char activate;
+  int16_t persp;
+  int16_t zoom;
 
+  player = *(int16_t *)0x506548;
+  if (player == (int16_t)-1)
+    return;
+  if (player < 0 || player >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x282294, 0x599, 1);
+    system_exit(-1);
+    player = *(int16_t *)0x506548;
+  }
+  base = *(char **)0x46bea8;
+  slot = base + (int)player * 0x1ea0;
+  if (*(int *)(slot + 4) == -1 || *(int *)(slot + 8) == -1)
+    return;
+  persp = director_get_perspective(player);
+  if (persp == 0) {
+    zoom = player_control_get_zoom_level(*(int16_t *)0x506548);
+    activate = (zoom == (int16_t)-1) ? 1 : 0;
+  } else {
+    activate = 0;
+  }
+  FUN_000dcb30(*(int16_t *)0x506548, activate);
+  if (slot[0] == 0)
+    return;
+  first_person_weapon_update(*(int16_t *)0x506548);
+}
 
 /* 0xddb90 — resolve a marker only for the currently rendered local player. */
 #if defined(__clang__)
