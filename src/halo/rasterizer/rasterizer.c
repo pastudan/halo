@@ -15033,47 +15033,17 @@ int rasterizer_widget_set_zbuffer_enable(int param_1, int param_2)
   return FUN_0015d310(param_1, param_2);
 }
 
-/* rasterizer_widget_draw_sprite2d (0x17c9c0) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-short rasterizer_widget_draw_sprite2d(int dynamic_vertex_buffer_index __attribute__((unused)))
+/* rasterizer_widget_draw_sprite2d (0x17c9c0) — readable C lift. */
+short rasterizer_widget_draw_sprite2d(int dynamic_vertex_buffer_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xb7, 0x0a, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  return FUN_0015d480(dynamic_vertex_buffer_index);
 }
-#else
-#error "rasterizer_widget_draw_sprite2d: clang naked draft required"
-#endif
 
-
-/* rasterizer_widget_draw_sprite3d (0x17c9d0) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int rasterizer_widget_draw_sprite3d(int zbuf_result __attribute__((unused)))
+/* rasterizer_widget_draw_sprite3d (0x17c9d0) — readable C lift. */
+int rasterizer_widget_draw_sprite3d(int zbuf_result)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x77, 0x22, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  return FUN_0015ec50(zbuf_result);
 }
-#else
-#error "rasterizer_widget_draw_sprite3d: clang naked draft required"
-#endif
-
 
 /* rasterizer_widget_end (0x17c9e0) — XBE naked draft (batch 398). */
 #if defined(__clang__)

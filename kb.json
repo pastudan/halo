@@ -21161,12 +21161,12 @@
         {
           "addr": "0x17c9c0",
           "decl": "short rasterizer_widget_draw_sprite2d(int dynamic_vertex_buffer_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c9d0",
           "decl": "int rasterizer_widget_draw_sprite3d(int zbuf_result);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c9e0",
