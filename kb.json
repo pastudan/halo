@@ -6058,7 +6058,7 @@
           "addr": "0x8e320",
           "decl": "int system_unique_identifiers_equal(const void *id1, const void *id2);",
           "name": "system_unique_identifiers_equal",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8e380",
@@ -7901,7 +7901,7 @@
           "addr": "0x1999a0",
           "decl": "bool file_references_equal(file_ref_t *info1, file_ref_t *info2);",
           "name": "file_references_equal",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x199a60",
@@ -14248,7 +14248,7 @@
         {
           "addr": "0xffeb0",
           "decl": "void FUN_000ffeb0(char param_1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xffef0",
@@ -20115,7 +20115,7 @@
           "addr": "0x92090",
           "decl": "void symbol_table_dispose(int32_t *symtab);",
           "name": "symbol_table_dispose",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x92110",

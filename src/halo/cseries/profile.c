@@ -435,62 +435,23 @@ do_output: {
   } while ((int16_t)idx != *(int16_t *)0x3365c4);
 }
 }
-/* symbol_table_dispose (0x92090) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static void (*const b92090_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b92090_exitfn)(int) = system_exit;
-static void (*const b92090_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-void symbol_table_dispose(int32_t *symtab __attribute__((unused)))
+/* symbol_table_dispose (0x92090) — readable C lift. */
+void symbol_table_dispose(int32_t *symtab)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lsymbol_table_dispose_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x225\n\t"
-      "pushl $0x268b14\n\t"
-      "pushl $0x268b04\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsymbol_table_dispose_1:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsymbol_table_dispose_2\n\t"
-      "pushl $0x227\n\t"
-      "pushl $0x268b14\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lsymbol_table_dispose_2:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsymbol_table_dispose_3\n\t"
-      "pushl $0x228\n\t"
-      "pushl $0x268b14\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lsymbol_table_dispose_3:\n\t"
-      "movl $0, (%%esi)\n\t"
-      "movl $0, 0x4(%%esi)\n\t"
-      "movl $0, 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b92090_assert), [exitfn] "m"(b92090_exitfn), [c8ef70] "m"(b92090_c8ef70)
-      : "memory");
+  extern char DAT_00268b04[];
+  extern char DAT_00268b14[];
+  if (!symtab) {
+    display_assert(DAT_00268b04, DAT_00268b14, 0x225, true);
+    system_exit(-1);
+  }
+  if (symtab[1])
+    debug_free((void *)symtab[1], DAT_00268b14, 0x227);
+  if (symtab[2])
+    debug_free((void *)symtab[2], DAT_00268b14, 0x228);
+  symtab[0] = 0;
+  symtab[1] = 0;
+  symtab[2] = 0;
 }
-#else
-#error "symbol_table_dispose: clang naked draft required"
-#endif
 
 /* --- profile.obj batch drafts (2026-07-26) --- */
 
