@@ -6016,7 +6016,7 @@
           "addr": "0x8e190",
           "decl": "int csstricmp(const char *s1, const char *s2);",
           "name": "csstricmp",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "cseries.obj",
