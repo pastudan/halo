@@ -4722,7 +4722,7 @@
         },
         {
           "addr": "0x7d0d0",
-          "decl": "void bitmap_format_to_a8r8g8b8(void);",
+          "decl": "unsigned int bitmap_format_to_a8r8g8b8(short format, void *pixels, int index);",
           "ported": false
         },
         {
@@ -32713,7 +32713,7 @@
         },
         {
           "addr": "0x78c30",
-          "decl": "void bitmap_2d_sharpen(void);",
+          "decl": "void bitmap_2d_sharpen(void *bitmap, float amount, int positive_table);",
           "ported": false
         },
         {
@@ -32846,8 +32846,8 @@
         },
         {
           "addr": "0x7b310",
-          "decl": "void bitmap_sharpen(void);",
-          "ported": false
+          "decl": "void bitmap_sharpen(void *bitmap, float amount);",
+          "ported": true
         },
         {
           "addr": "0x7b470",

@@ -3987,7 +3987,7 @@ static void (*const b78c30_c8ef70)(void *ptr, const char *file, int line) = debu
 static void (*const b78c30_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void bitmap_2d_sharpen(void)
+void bitmap_2d_sharpen(void *bitmap __attribute__((unused)), float amount __attribute__((unused)), int positive_table __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -6281,160 +6281,82 @@ void hsv_color_to_rgb_color(void)
 #endif
 
 
-/* bitmap_sharpen (0x7b310) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-static bool (*const b7b310_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b7b310_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7b310_exitfn)(int) = system_exit;
-static void (*const b7b310_ftol)(void) = FUN_001d9068;
-static void (*const b7b310_c79180)(int unused, int positive_table, int negative_table, void *bitmap /* */) = FUN_00079180;
-static void (*const b7b310_c790b0)(int unused, int positive_table, int negative_table, void *bitmap /* */) = FUN_000790b0;
-static void (*const b7b310_c78c30)(void) = bitmap_2d_sharpen;
-
-__attribute__((naked, noinline))
-void bitmap_sharpen(void)
+/* bitmap_sharpen (0x7b310) — build sharpen tables and dispatch by bitmap type.
+ *
+ * amount<=0 -> return. Else amount*100 clamped to [0,100], fill 256-entry
+ * pos/neg tables at 0x334360/0x334160, then dispatch:
+ *   2D -> bitmap_2d_sharpen(bitmap, amount, pos_table) with neg@esi
+ *   3D -> FUN_000790b0(amount_bits, pos, neg, bitmap@esi)
+ *   cube -> FUN_00079180(amount_bits, pos, neg, bitmap@esi)
+ * Source: c:\halo\SOURCE\bitmaps\bitmap_utilities.c, lines 0x361-0x37f.
+ */
+void bitmap_sharpen(void *bitmap, float amount)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_sharpen_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x361\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261814\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_sharpen_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lbitmap_sharpen_9\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x253f00\n\t"
-      "call *%[ftol]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .Lbitmap_sharpen_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lbitmap_sharpen_3\n\t"
-      ".Lbitmap_sharpen_2:\n\t"
-      "cmpw $0x64, %%ax\n\t"
-      "jle .Lbitmap_sharpen_3\n\t"
-      "movl $0x64, %%eax\n\t"
-      ".Lbitmap_sharpen_3:\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movl $0x64, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "cmpl $1, %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jge .Lbitmap_sharpen_4\n\t"
-      "movl $1, %%eax\n\t"
-      ".Lbitmap_sharpen_4:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl $0x100, -0x4(%%ebp)\n\t"
-      ".Lbitmap_sharpen_5:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%esi\n\t"
-      "addl $0x64, %%edi\n\t"
-      "addl $2, %%ecx\n\t"
-      "movw %%ax, 0x33435e(%%ecx)\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "cdq\n\t"
-      "andl $7, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "sarl $3, %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%esi\n\t"
-      "movw %%ax, 0x33415e(%%ecx)\n\t"
-      "addl -0x8(%%ebp), %%ebx\n\t"
-      "decl -0x4(%%ebp)\n\t"
-      "jne .Lbitmap_sharpen_5\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movswl 0xa(%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lbitmap_sharpen_8\n\t"
-      "decl %%eax\n\t"
-      "je .Lbitmap_sharpen_7\n\t"
-      "decl %%eax\n\t"
-      "je .Lbitmap_sharpen_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x37f\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261d30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_sharpen_6:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl $0x334160\n\t"
-      "pushl $0x334360\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c79180]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_sharpen_7:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl $0x334160\n\t"
-      "pushl $0x334360\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c790b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_sharpen_8:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0x334360\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x334160, %%esi\n\t"
-      "call *%[c78c30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lbitmap_sharpen_9:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b7b310_c7d470), [assert] "m"(b7b310_assert), [exitfn] "m"(b7b310_exitfn), [ftol] "m"(b7b310_ftol), [c79180] "m"(b7b310_c79180), [c790b0] "m"(b7b310_c790b0), [c78c30] "m"(b7b310_c78c30)
-      : "memory");
+  int scale;
+  int weight;
+  int i;
+  int acc_pos;
+  int acc_neg;
+  short *pos_table;
+  short *neg_table;
+  short type;
+  int amount_bits;
+  int tmp;
+
+  if (!bitmap_verify(bitmap, 1)) {
+    display_assert("bitmap_verify(bitmap, TRUE)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x361, 1);
+    system_exit(-1);
+  }
+  if (!(amount > *(float *)0x2533c0))
+    return;
+
+  /* ftol2(amount * 100.0f) */
+  scale = (int)(amount * *(float *)0x253f00);
+  if ((short)scale < 0)
+    scale = 0;
+  else if ((short)scale > 0x64)
+    scale = 0x64;
+  else
+    scale = (short)scale;
+  weight = 0x64 - scale;
+  if (weight < 1)
+    weight = 1;
+
+  pos_table = (short *)0x334360;
+  neg_table = (short *)0x334160;
+  acc_pos = 0;
+  acc_neg = 0;
+  /* 0x100 iterations; store via (ecx+0x33435e) with ecx+=2 each pass */
+  for (i = 0; i < 0x100; i++) {
+    pos_table[i] = (short)(acc_pos / weight);
+    acc_pos += 0x64;
+    tmp = acc_neg;
+    tmp = (tmp + (tmp >> 31 & 7)) >> 3; /* cdq; and edx,7; add; sar 3 */
+    neg_table[i] = (short)(tmp / weight);
+    acc_neg += scale;
+  }
+
+  type = *(short *)((char *)bitmap + 0xa);
+  amount_bits = *(int *)&amount;
+  if (type == 0) {
+    register short *esi_neg asm("esi") = neg_table;
+    bitmap_2d_sharpen(bitmap, amount, (int)pos_table);
+    (void)esi_neg;
+    return;
+  }
+  if (type == 1) {
+    FUN_000790b0(amount_bits, (int)pos_table, (int)neg_table, bitmap);
+    return;
+  }
+  if (type == 2) {
+    FUN_00079180(amount_bits, (int)pos_table, (int)neg_table, bitmap);
+    return;
+  }
+  display_assert("### ERROR unsupported bitmap type",
+                 "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x37f, 1);
+  system_exit(-1);
 }
-#else
-#error "bitmap_sharpen: clang naked draft required"
-#endif
 
 
 /* FUN_0007b510 (0x7b510) — XBE naked draft (batch 243). */
