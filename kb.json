@@ -27612,7 +27612,7 @@
         {
           "addr": "0xe9d40",
           "decl": "char FUN_000E9D40(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe9dd0",

@@ -2770,84 +2770,47 @@ char display_error_abort_to_dashboard(void *widget)
   return 1;
 }
 
-/* FUN_000E9D40 (0xe9d40) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void (*const be9d40_c12a2a0)(void) = (void *)dispose_global_network_game_server;
-static void (*const be9d40_ce0960)(void) = (void *)player_ui_clear_multiplayer_variant;
-static void (*const be9d40_c12a150)(char accept) = (void *)network_game_set_accept_remote_connections;
-static void * (*const be9d40_c12a1d0)(void) = (void *)network_game_server_get;
-static void (*const be9d40_cae750)(void) = (void *)game_engine_playlist_initialize;
-static bool (*const be9d40_c12a890)(void) = (void *)FUN_0012a890;
-static void (*const be9d40_c12d690)(void *server, char flag) = (void *)network_game_server_pause_countdown;
-static void (*const be9d40_ca8a70)(void) = (void *)game_engine_playlist_begin;
-static void (*const be9d40_cfff70)(short param) = (void *)set_game_connection;
-static void * (*const be9d40_c12a240)(void) = (void *)network_game_client_get;
-static bool (*const be9d40_c12a250)(void) = (void *)FUN_0012a250;
-static void (*const be9d40_c12a1e0)(void) = (void *)dispose_global_network_game_client;
-static void (*const be9d40_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* FUN_000E9D40 (0xe9d40) — readable C lift. */
 char FUN_000E9D40(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c12a2a0]\n\t"
-      "call *%[ce0960]\n\t"
-      "pushl $1\n\t"
-      "call *%[c12a150]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c12a1d0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000E9D40_2\n\t"
-      "call *%[cae750]\n\t"
-      "call *%[c12a890]\n\t"
-      "movb %%al, %%bl\n\t"
-      "cmpb $1, %%bl\n\t"
-      "jne .LFUN_000E9D40_1\n\t"
-      "pushl $1\n\t"
-      "call *%[c12a1d0]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12d690]\n\t"
-      "call *%[ca8a70]\n\t"
-      "pushl $2\n\t"
-      "call *%[cfff70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000E9D40_1:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_000E9D40_4\n\t"
-      ".LFUN_000E9D40_2:\n\t"
-      "call *%[c12a240]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000E9D40_3\n\t"
-      "call *%[c12a250]\n\t"
-      "movb %%al, %%bl\n\t"
-      ".LFUN_000E9D40_3:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_000E9D40_5\n\t"
-      ".LFUN_000E9D40_4:\n\t"
-      "call *%[c12a1e0]\n\t"
-      "call *%[c12a2a0]\n\t"
-      "pushl $0\n\t"
-      "call *%[c12a150]\n\t"
-      "call *%[ce0960]\n\t"
-      "pushl $0x2828ac\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000E9D40_5:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c12a2a0] "m"(be9d40_c12a2a0), [ce0960] "m"(be9d40_ce0960), [c12a150] "m"(be9d40_c12a150), [c12a1d0] "m"(be9d40_c12a1d0), [cae750] "m"(be9d40_cae750), [c12a890] "m"(be9d40_c12a890), [c12d690] "m"(be9d40_c12d690), [ca8a70] "m"(be9d40_ca8a70), [cfff70] "m"(be9d40_cfff70), [c12a240] "m"(be9d40_c12a240), [c12a250] "m"(be9d40_c12a250), [c12a1e0] "m"(be9d40_c12a1e0), [c8f390] "m"(be9d40_c8f390)
-      : "memory");
+  char ok;
+  void *server;
+
+  ok = 1;
+  dispose_global_network_game_server();
+  player_ui_clear_multiplayer_variant();
+  network_game_set_accept_remote_connections(1);
+  if (network_game_server_get() == 0) {
+    game_engine_playlist_initialize();
+    ok = FUN_0012a890();
+    if (ok == 1) {
+      server = network_game_server_get();
+      network_game_server_pause_countdown(server, 1);
+      game_engine_playlist_begin();
+      set_game_connection(2);
+    }
+    if (ok == 0) {
+      dispose_global_network_game_client();
+      dispose_global_network_game_server();
+      network_game_set_accept_remote_connections(0);
+      player_ui_clear_multiplayer_variant();
+      error(2, (const char *)0x2828ac);
+      return ok;
+    }
+  }
+  if (network_game_client_get() == 0) {
+    ok = FUN_0012a250();
+  }
+  if (ok != 0) {
+    return ok;
+  }
+  dispose_global_network_game_client();
+  dispose_global_network_game_server();
+  network_game_set_accept_remote_connections(0);
+  player_ui_clear_multiplayer_variant();
+  error(2, (const char *)0x2828ac);
+  return ok;
 }
-#else
-#error "FUN_000E9D40: clang naked draft required"
-#endif
-
-
 /* FUN_000e9fd0 (0xe9fd0) — readable C lift. */
 char FUN_000e9fd0(void *widget)
 {
