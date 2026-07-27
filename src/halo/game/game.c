@@ -1792,58 +1792,22 @@ void FUN_000B4800(void)
 #endif
 
 
-/* FUN_000b4a70 (0xb4a70) — XBE naked draft (batch 134). */
-#if defined(__clang__)
-static void *(*const bb4a70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_000b4a70(void)
+/* FUN_000b4a70 (0xb4a70) — readable C lift. */
+char FUN_000b4a70(int handle_b, int handle_a, int handle_c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "je .LFUN_000b4a70_1\n\t"
-      "cmpl 0x8(%%ebp), %%esi\n\t"
-      "je .LFUN_000b4a70_1\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0x20(%%eax), %%edx\n\t"
-      "cmpl 0x20(%%ecx), %%edx\n\t"
-      "je .LFUN_000b4a70_1\n\t"
-      "cmpl $-1, 0x34(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "jne .LFUN_000b4a70_2\n\t"
-      ".LFUN_000b4a70_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".LFUN_000b4a70_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bb4a70_dget)
-      : "memory");
+  void *pa = datum_get(*(data_t **)0x5aa6d4, handle_a);
+  void *pb = datum_get(*(data_t **)0x5aa6d4, handle_b);
+  if (handle_b == handle_a || handle_b == handle_c) {
+    return 0;
+  }
+  if (*(int *)((char *)pb + 0x20) == *(int *)((char *)pa + 0x20)) {
+    return 0;
+  }
+  if (*(int *)((char *)pb + 0x34) == -1) {
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_000b4a70: clang naked draft required"
-#endif
-
 
 /* FUN_000b4b10 (0xb4b10) — readable C lift. */
 void FUN_000b4b10(int datum_handle)

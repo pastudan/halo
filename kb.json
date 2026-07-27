@@ -8432,8 +8432,8 @@
         },
         {
           "addr": "0xb4a70",
-          "decl": "void FUN_000b4a70(void);",
-          "ported": false
+          "decl": "char FUN_000b4a70(int handle_b@<eax>, int handle_a@<edi>, int handle_c);",
+          "ported": true
         },
         {
           "addr": "0xb4b10",
@@ -17355,8 +17355,8 @@
         },
         {
           "addr": "0x8ac70",
-          "decl": "void FUN_0008ac70(void);",
-          "ported": false
+          "decl": "bool FUN_0008ac70(float scale, float *out_fraction, bool indoor, float *delta@<eax>, float *base@<ecx>, float *ray_origin@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x8acb0",
@@ -20352,7 +20352,7 @@
         },
         {
           "addr": "0xe1d00",
-          "decl": "void FUN_000e1d00(void);",
+          "decl": "void FUN_000e1d00(float x, float y, float z, float *out_x, float *out_y);",
           "ported": false
         },
         {
@@ -25085,7 +25085,7 @@
         },
         {
           "addr": "0x1cc440",
-          "decl": "int FUN_001cc440(int source);",
+          "decl": "int FUN_001cc440(int source@<edi>);",
           "ported": false,
           "name": "FUN_001cc440"
         },

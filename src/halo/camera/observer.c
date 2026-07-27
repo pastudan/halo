@@ -3189,48 +3189,15 @@ void FUN_0008ab10(void)
 #endif
 
 
-/* FUN_0008ac70 (0x8ac70) — XBE naked draft (batch 168). */
-#if defined(__clang__)
-static bool (*const b8ac70_c8ab90)(float *out_fraction, bool indoor, float *ray_origin, float *ray_endpoint) = FUN_0008ab90;
-
-__attribute__((naked, noinline))
-void FUN_0008ac70(void)
+/* FUN_0008ac70 (0x8ac70) — readable C lift. */
+bool FUN_0008ac70(float scale, float *out_fraction, bool indoor, float *delta, float *base, float *ray_origin)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "fmuls (%%eax)\n\t"
-      "leal -0xc(%%ebp), %%edi\n\t"
-      "fadds (%%ecx)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "fadds 0x4(%%ecx)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "fadds 0x8(%%ecx)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "call *%[c8ab90]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ab90] "m"(b8ac70_c8ab90)
-      : "memory");
+  float end[3];
+  end[0] = scale * delta[0] + base[0];
+  end[1] = scale * delta[1] + base[1];
+  end[2] = scale * delta[2] + base[2];
+  return FUN_0008ab90(out_fraction, indoor, ray_origin, end);
 }
-#else
-#error "FUN_0008ac70: clang naked draft required"
-#endif
-
 
 /* observer_set_camera (0x8acb0) — XBE naked draft (batch 110). */
 #if defined(__clang__)
