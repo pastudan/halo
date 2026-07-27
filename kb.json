@@ -7884,8 +7884,9 @@
         },
         {
           "addr": "0x1995c0",
-          "decl": "void file_printf(void);",
-          "ported": false
+          "decl": "void file_printf(file_ref_t *info, const char *format, ...);",
+          "ported": false,
+          "name": "file_printf"
         },
         {
           "addr": "0x1996d0",
@@ -8019,7 +8020,8 @@
         {
           "addr": "0x19aad0",
           "decl": "void file_set_eof(void);",
-          "ported": false
+          "ported": false,
+          "name": "file_set_eof"
         },
         {
           "addr": "0x19ab50",
@@ -15330,7 +15332,7 @@
           "addr": "0x11a2d0",
           "decl": "void FUN_0011a2d0(int *state, void *buffer, int buffer_size);",
           "name": "FUN_0011a2d0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a340",

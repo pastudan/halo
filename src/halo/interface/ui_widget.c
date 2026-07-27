@@ -2714,60 +2714,38 @@ void main_screen_shell_begin_fade(int fade_duration)
   }
 }
 
-/* ui_play_audio_feedback_sound (0xe5ab0) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static int (*const be5ab0_c1b9930)(int group_tag, const char *name, ...) = (void *)tag_loaded;
-static int (*const be5ab0_c1c7480)(int sound_tag_index, float scale) = (void *)sound_impulse_start;
-
-__attribute__((naked, noinline))
+/* ui_play_audio_feedback_sound (0xe5ab0) — readable C lift from XBE leaf. */
 void ui_play_audio_feedback_sound(int16_t sound_selector)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "decl %%eax\n\t"
-      "cmpl $3, %%eax\n\t"
-      "ja .Lui_play_audio_feedback_sound_6\n\t"
-      "jmp *.Lui_play_audio_feedback_sound_jt(,%%eax,4)\n\t"
-      ".Lui_play_audio_feedback_sound_1:\n\t"
-      "pushl $0x28380c\n\t"
-      "jmp .Lui_play_audio_feedback_sound_5\n\t"
-      ".Lui_play_audio_feedback_sound_2:\n\t"
-      "pushl $0x2837f4\n\t"
-      "jmp .Lui_play_audio_feedback_sound_5\n\t"
-      ".Lui_play_audio_feedback_sound_3:\n\t"
-      "pushl $0x2837e0\n\t"
-      "jmp .Lui_play_audio_feedback_sound_5\n\t"
-      ".Lui_play_audio_feedback_sound_4:\n\t"
-      "pushl $0x2837c4\n\t"
-      ".Lui_play_audio_feedback_sound_5:\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[c1b9930]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lui_play_audio_feedback_sound_6\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c7480]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lui_play_audio_feedback_sound_6:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lui_play_audio_feedback_sound_jt:\n\t"
-      ".long .Lui_play_audio_feedback_sound_1\n\t"
-      ".long .Lui_play_audio_feedback_sound_2\n\t"
-      ".long .Lui_play_audio_feedback_sound_3\n\t"
-      ".long .Lui_play_audio_feedback_sound_4\n\t"
-      ".text\n\t"
-      :
-      : [c1b9930] "m"(be5ab0_c1b9930), [c1c7480] "m"(be5ab0_c1c7480)
-      : "memory");
+  extern char DAT_0028380c[];
+  extern char DAT_002837f4[];
+  extern char DAT_002837e0[];
+  extern char DAT_002837c4[];
+  const char *name;
+  int tag_index;
+  unsigned int idx;
+
+  idx = (unsigned int)((int)sound_selector - 1);
+  if (idx > 3) {
+    return;
+  }
+  if (idx == 0) {
+    name = DAT_0028380c;
+  } else if (idx == 1) {
+    name = DAT_002837f4;
+  } else if (idx == 2) {
+    name = DAT_002837e0;
+  } else {
+    name = DAT_002837c4;
+  }
+  tag_index = tag_loaded(0x736e6421, name);
+  if (tag_index == -1) {
+    return;
+  }
+  sound_impulse_start(tag_index, 1.0f);
 }
-#else
-#error "ui_play_audio_feedback_sound: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_000e76b0 (0xe76b0) — XBE naked draft (batch 139). */
