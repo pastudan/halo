@@ -156,116 +156,37 @@ void FUN_001c1c00(int16_t local_player_index)
 
 
 
-/* FUN_001c1cc0 (0x1c1cc0) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static void (*const b1c1cc0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c1cc0_exitfn)(int) = system_exit;
-static int (*const b1c1cc0_c100860)(void) = main_get_current_solo_level;
-static int16_t (*const b1c1cc0_ca7460)(void) = game_difficulty_level_get;
-static void (*const b1c1cc0_ce09e0)(void) = (void *)player_ui_get_active_player_profile_index;
-static void (*const b1c1cc0_ce0980)(void) = (void (*)(void))player_ui_get_active_player_profile;
-static void (*const b1c1cc0_c1c1b00)(void) = (void (*)(void))FUN_001c1b00;
-static void (*const b1c1cc0_ce1490)(void) = (void (*)(void))player_ui_set_active_player_profile;
-static void (*const b1c1cc0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_001c1cc0(void)
+/* FUN_001c1cc0 (0x1c1cc0) - readable C lift. */
+void FUN_001c1cc0(int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jl .LFUN_001c1cc0_1\n\t"
-      "cmpw $4, %%bx\n\t"
-      "jl .LFUN_001c1cc0_2\n\t"
-      ".LFUN_001c1cc0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x197\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x282750\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c1cc0_2:\n\t"
-      "call *%[c100860]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[ca7460]\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jl .LFUN_001c1cc0_3\n\t"
-      "cmpw $0xa, %%si\n\t"
-      "jge .LFUN_001c1cc0_3\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_001c1cc0_3\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .LFUN_001c1cc0_4\n\t"
-      ".LFUN_001c1cc0_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x19d\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x2ba3b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c1cc0_4:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ce09e0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_001c1cc0_5\n\t"
-      "leal -0x30(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ce0980]\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movb $1, %%dl\n\t"
-      "shlb %%cl, %%dl\n\t"
-      "movb -0x14(%%ebp,%%eax,1), %%cl\n\t"
-      "leal -0x14(%%ebp,%%eax,1), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "orb %%dl, %%cl\n\t"
-      "leal -0x30(%%ebp), %%esi\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      "call *%[c1c1b00]\n\t"
-      "leal -0x30(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ce1490]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c1cc0_5:\n\t"
-      "pushl $0x2ba348\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c1cc0_assert), [exitfn] "m"(b1c1cc0_exitfn), [c100860] "m"(b1c1cc0_c100860), [ca7460] "m"(b1c1cc0_ca7460), [ce09e0] "m"(b1c1cc0_ce09e0), [ce0980] "m"(b1c1cc0_ce0980), [c1c1b00] "m"(b1c1cc0_c1c1b00), [ce1490] "m"(b1c1cc0_ce1490), [c8f390] "m"(b1c1cc0_c8f390)
-      : "memory");
+  int16_t solo_level;
+  int16_t difficulty;
+  int profile_handle;
+  char profile[0x30];
+  unsigned char mask;
+
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((const char *)0x282750, (const char *)0x2b9f70, 0x197, 1);
+    system_exit(-1);
+  }
+  solo_level = (int16_t)main_get_current_solo_level();
+  difficulty = game_difficulty_level_get();
+  if (solo_level < 0 || solo_level >= 10 || difficulty < 0 || difficulty >= 4) {
+    display_assert((const char *)0x2ba3b0, (const char *)0x2b9f70, 0x19d, 1);
+    system_exit(-1);
+  }
+  profile_handle = player_ui_get_active_player_profile_index(local_player_index);
+  if (profile_handle == -1) {
+    error(2, (const char *)0x2ba348);
+    return;
+  }
+  player_ui_get_active_player_profile(local_player_index, profile);
+  mask = (unsigned char)(1u << (unsigned char)difficulty);
+  profile[0x1c + solo_level] = (char)((unsigned char)profile[0x1c + solo_level] | mask);
+  __asm__ volatile("movl %0, %%esi" : : "r"((void *)profile) : "esi");
+  FUN_001c1b00(profile_handle, profile);
+  player_ui_set_active_player_profile(local_player_index, profile_handle, profile);
 }
-#else
-#error "FUN_001c1cc0: clang naked draft required"
-#endif
 
 
 /* FUN_001c1da0 (0x1c1da0) — readable C lift. */
@@ -1243,17 +1164,13 @@ void playlist_profile_get_display_name(int profile_index, game_variant_t *varian
 
 
 
-/* saved_game_file_close (0x1c2890) — readable C lift. */
+/* saved_game_file_close (0x1c2890) - readable C lift. */
 char saved_game_file_close(void *info, int packed)
 {
-  int slot;
-  int idx;
-  int kind;
-
+  int slot, idx, kind;
   kind = packed & 0xf;
   slot = (packed >> 8) & 0xff;
   idx = (packed >> 16) & 0xfff;
-
   if (slot != 0) {
     display_assert((const char *)0x2ba8c0, (const char *)0x2ba8e8, 0x25b, true);
     system_exit(-1);
@@ -1425,7 +1342,7 @@ void saved_game_files_release_mutex(void)
   release_mutex(*(int **)0x4eacbc);
 }
 
-/* saved_game_perform_file_system_checks (0x1c2b20) — readable C lift. */
+/* saved_game_perform_file_system_checks (0x1c2b20) - readable C lift. */
 int saved_game_perform_file_system_checks(void)
 {
   char ascii[8];
@@ -1436,12 +1353,14 @@ int saved_game_perform_file_system_checks(void)
   char *path;
   int handle;
   unsigned int count;
-  int __attribute__((stdcall)) (*get_free)(char *, void *, void *, void *) =
-      (int __attribute__((stdcall)) (*)(char *, void *, void *, void *))(void *)FUN_001d3739;
-  int __attribute__((stdcall)) (*find_first)(char *, void *) =
-      (int __attribute__((stdcall)) (*)(char *, void *))(void *)FUN_001d3254;
-  int __attribute__((stdcall)) (*find_next)(int, void *) =
-      (int __attribute__((stdcall)) (*)(int, void *))(void *)FUN_001d335b;
+  int __attribute__((stdcall)) (*const get_free)(char *, void *, void *, void *) =
+      (int __attribute__((stdcall)) (*)(char *, void *, void *, void *))FUN_001d3739;
+  int __attribute__((stdcall)) (*const find_first)(char *, void *) =
+      (int __attribute__((stdcall)) (*)(char *, void *))FUN_001d3254;
+  char __attribute__((stdcall)) (*const find_next)(int, void *) =
+      (char __attribute__((stdcall)) (*)(int, void *))FUN_001d335b;
+  int __attribute__((stdcall)) (*const find_close)(int) =
+      (int __attribute__((stdcall)) (*)(int))FUN_001d33a2;
 
   path = wide_to_ascii((const wchar_t *)*(void **)0x32eb94, ascii, 8);
   if (get_free(path, avail, total, free_bytes)) {
@@ -1456,10 +1375,10 @@ int saved_game_perform_file_system_checks(void)
     return 0;
   while (count < 100u) {
     count++;
-    if (!find_next(handle, find_data))
+    if (find_next(handle, find_data) != 1)
       break;
   }
-  if (!((int __attribute__((stdcall)) (*)(int))(void *)FUN_001d33a2)(handle))
+  if (!find_close(handle))
     error(2, (const char *)0x2ba984);
   if (count >= 100u)
     return 2;

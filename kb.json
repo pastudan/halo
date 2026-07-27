@@ -23738,7 +23738,7 @@
         {
           "addr": "0x1c1cc0",
           "decl": "void FUN_001c1cc0(int16_t local_player_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001c1cc0"
         },
         {
@@ -23827,7 +23827,7 @@
         },
         {
           "addr": "0x1c2890",
-          "decl": "void saved_game_file_close(void);",
+          "decl": "char saved_game_file_close(void *info, int packed);",
           "ported": true,
           "name": "saved_game_file_close"
         },
@@ -23860,7 +23860,7 @@
         {
           "addr": "0x1c2b20",
           "decl": "int saved_game_perform_file_system_checks(void);",
-          "ported": false,
+          "ported": true,
           "name": "saved_game_perform_file_system_checks"
         },
         {
