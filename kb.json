@@ -37698,7 +37698,7 @@
           "decl": "int FUN_00064cd0(char *prop, int tag, void *out);",
           "name": "FUN_00064cd0",
           "source_path": "src/halo/ai/props.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x64ec0",

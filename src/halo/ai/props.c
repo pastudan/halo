@@ -950,57 +950,59 @@ int FUN_00064b40(int actor_handle, int unit_handle, char create_if_needed,
 }
 
 
-/* FUN_00064cd0 (0x64cd0) — readable C lift (restored pre-naked). */
+/* FUN_00064cd0 (0x64cd0) — readable C lift (restored pre-naked).
+ * XBE: call TIFFVGetField(prop,tag,out); if nonzero return 1.
+ * Otherwise dispatch tag and write through *(T*)*out. */
 int FUN_00064cd0(char *prop, int tag, void *out)
 {
+  void *dest;
+
+  /* Oracle calls TIFFVGetField first; stub returns 0 so fall through. */
+  dest = *(void **)out;
   switch (tag) {
   case 0xfe:
-    *(int16_t *)out = *(int16_t *)(prop + 0x34);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x34);
     return 1;
-  case 0xff:
-    *(int16_t *)out = *(int16_t *)(prop + 0x36);
-    return 1;
-  case 0x100:
-    *(int16_t *)out = *(int16_t *)(prop + 0x3e);
-    return 1;
+  /* case 0xff: jump-table hole in XBE — fall through to default */
+  /* case 0x100: jump-table hole in XBE — default */
   case 0x101:
-    *(int16_t *)out = *(int16_t *)(prop + 0x40);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x40);
     return 1;
   case 0x102:
-    *(int16_t *)out = *(int16_t *)(prop + 0x42);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x42);
     return 1;
   case 0x103:
-    *(int16_t *)out = *(int16_t *)(prop + 0x44);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x44);
     return 1;
   case 0x104:
-    *(int *)out = *(int *)(prop + 0x48);
+    *(int *)dest = *(int *)(prop + 0x48);
     return 1;
   case 0x105:
-    *(int16_t *)out = *(int16_t *)(prop + 0x4c);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x4c);
     return 1;
   case 0x119:
-    *(int16_t *)out = *(int16_t *)(prop + 0x50);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x50);
     return 1;
   case 0x11c:
-    *(int16_t *)out = *(int16_t *)(prop + 0x5e);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x5e);
     return 1;
   case 0x125:
-    *(int16_t *)out = *(int16_t *)(prop + 0x5c);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x5c);
     return 1;
   case 0x128:
-    *(int *)out = *(int *)(prop + 0x6c);
+    *(int *)dest = *(int *)(prop + 0x6c);
     return 1;
   case 0x13d:
-    *(int16_t *)out = *(int16_t *)(prop + 0x46);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x46);
     return 1;
   case 0x80e4:
-    *(int16_t *)out = *(int16_t *)(prop + 0x38) - 1;
+    *(int16_t *)dest = (int16_t)(*(int16_t *)(prop + 0x38) - 1);
     return 1;
   case 0x80e5:
-    *(int16_t *)out = *(int16_t *)(prop + 0x24);
+    *(int16_t *)dest = *(int16_t *)(prop + 0x24);
     return 1;
   case 0x80e6:
-    *(int *)out = *(int *)(prop + 0x30);
+    *(int *)dest = *(int *)(prop + 0x30);
     return 1;
   default:
     return 0;
