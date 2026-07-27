@@ -4028,101 +4028,47 @@ int FUN_000c95f0(void)
   return list_handle;
 }
 
-/* FUN_000c9650 (0xc9650) — XBE naked draft (batch 138). */
-#if defined(__clang__)
-static int (*const bc9650_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static char (*const bc9650_c18ef00)(int cluster_index, int object_handle) = FUN_0018ef00;
-static int (*const bc9650_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-char FUN_000c9650(int16_t game_flag __attribute__((unused)), int list_handle __attribute__((unused)), char set_flag __attribute__((unused)))
+/* FUN_000c9650 (0xc9650) — readable C lift: scan list; set/clear game flag bit. */
+char FUN_000c9650(int16_t game_flag, int list_handle, char set_flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movb 0x10(%%ebp), %%bl\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cce450]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c9650_4\n\t"
-      ".LFUN_000c9650_1:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18ef00]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000c9650_2\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_000c9650_3\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_000c9650_5\n\t"
-      ".LFUN_000c9650_2:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_000c9650_6\n\t"
-      ".LFUN_000c9650_3:\n\t"
-      "leal 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cce320]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000c9650_1\n\t"
-      ".LFUN_000c9650_4:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_000c9650_7\n\t"
-      ".LFUN_000c9650_5:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "sarl $5, %%edx\n\t"
-      "leal 0x5aa6a0(,%%edx,4), %%eax\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c9650_6:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_000c9650_7:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "sarl $5, %%eax\n\t"
-      "movl 0x5aa6a0(,%%eax,4), %%ecx\n\t"
-      "leal 0x5aa6a0(,%%eax,4), %%eax\n\t"
-      "notl %%edx\n\t"
-      "popl %%edi\n\t"
-      "andl %%edx, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(bc9650_cce450), [c18ef00] "m"(bc9650_c18ef00), [cce320] "m"(bc9650_cce320)
-      : "memory");
-}
-#else
-#error "FUN_000c9650: clang naked draft required"
-#endif
+  int obj;
+  int iter;
+  char flag;
+  int idx;
+  unsigned int *slot;
+  unsigned int bit;
 
+  flag = set_flag;
+  obj = FUN_000ce450(list_handle, &iter);
+  while (obj != -1) {
+    if (FUN_0018ef00((int)game_flag, obj)) {
+      if (!flag) {
+        flag = 1;
+        goto set_bit;
+      }
+    } else {
+      if (flag) {
+        flag = 0;
+        goto clear_bit;
+      }
+    }
+    obj = FUN_000ce320(list_handle, &iter);
+  }
+  if (!flag)
+    goto clear_bit;
+set_bit:
+  idx = (int)(int16_t)game_flag;
+  slot = (unsigned int *)0x5aa6a0 + (idx >> 5);
+  bit = 1u << (idx & 0x1f);
+  *slot |= bit;
+  return flag;
+clear_bit:
+  idx = (int)(int16_t)game_flag;
+  slot = (unsigned int *)0x5aa6a0 + (idx >> 5);
+  bit = 1u << (idx & 0x1f);
+  *slot &= ~bit;
+  return flag;
+}
 
 /* FUN_000c9700 (0xc9700) — readable C lift: unit facing point within angle. */
 char FUN_000c9700(int object_handle, int unused, float distance)
@@ -4171,96 +4117,26 @@ void FUN_000c97f0(int object_handle, int16_t scenario_index, float distance)
   FUN_001aa430(object_handle, (float *)((char *)elem + 0x24),
                distance * *(float *)0x253d4c);
 }
-/* FUN_000c9840 (0xc9840) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static int (*const bc9840_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static void *(*const bc9840_tryget)(int, int) = object_try_and_get_and_verify_type;
-static scenario_t * (*const bc9840_c18e380)(void) = global_scenario_get;
-static void *(*const bc9840_elem)(void *, int, int) = tag_block_get_element;
-static char (*const bc9840_c1aa430)(int unit_handle, float *point, float half_angle) = FUN_001aa430;
-static int (*const bc9840_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-char FUN_000c9840(int list_handle __attribute__((unused)), int16_t scenario_index __attribute__((unused)), float distance __attribute__((unused)))
+/* FUN_000c9840 (0xc9840) — readable C lift: any list unit near scenario flag. */
+char FUN_000c9840(int list_handle, int16_t scenario_index, float distance)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cce450]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c9840_3\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      ".LFUN_000c9840_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c9840_2\n\t"
-      "testw %%di, %%di\n\t"
-      "je .LFUN_000c9840_2\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fmuls 0x253d4c\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x24, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1aa430]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000c9840_4\n\t"
-      ".LFUN_000c9840_2:\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cce320]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000c9840_1\n\t"
-      ".LFUN_000c9840_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c9840_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(bc9840_cce450), [tryget] "m"(bc9840_tryget), [c18e380] "m"(bc9840_c18e380), [elem] "m"(bc9840_elem), [c1aa430] "m"(bc9840_c1aa430), [cce320] "m"(bc9840_cce320)
-      : "memory");
-}
-#else
-#error "FUN_000c9840: clang naked draft required"
-#endif
+  int obj;
+  int iter;
+  void *elem;
 
+  obj = FUN_000ce450(list_handle, &iter);
+  while (obj != -1) {
+    if (object_try_and_get_and_verify_type(obj, 3) && scenario_index != 0) {
+      elem = tag_block_get_element(
+          (char *)global_scenario_get() + 0x4e4, (int)scenario_index, 0x5c);
+      if (FUN_001aa430(obj, (float *)((char *)elem + 0x24),
+                       distance * *(float *)0x253d4c))
+        return 1;
+    }
+    obj = FUN_000ce320(list_handle, &iter);
+  }
+  return 0;
+}
 
 /* FUN_000c9a50 (0xc9a50) — XBE naked draft (batch 137). */
 #if defined(__clang__)

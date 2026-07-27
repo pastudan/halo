@@ -421,9 +421,8 @@
         },
         {
           "addr": "0x104950",
-          "decl": "void FUN_00104950(const char *fmt, ...);",
-          "ported": true,
-          "name": "FUN_00104950"
+          "decl": "void FUN_00104950(void);",
+          "ported": true
         },
         {
           "addr": "0x1049d0",
@@ -442,7 +441,7 @@
         },
         {
           "addr": "0x132e20",
-          "decl": "void FUN_00132e20(int object_handle, int widget_datum, void *arg2, void *arg3);",
+          "decl": "void FUN_00132e20(void);",
           "ported": true,
           "name": "FUN_00132e20"
         },
@@ -712,9 +711,8 @@
         },
         {
           "addr": "0x1bb5a0",
-          "decl": "void acquire_read_request(void *base, int16_t *slot);",
-          "ported": true,
-          "name": "acquire_read_request"
+          "decl": "void acquire_read_request(void);",
+          "ported": true
         },
         {
           "addr": "0x1bb640",
@@ -12300,7 +12298,8 @@
         {
           "addr": "0xc9650",
           "decl": "char FUN_000c9650(int16_t game_flag, int list_handle, char set_flag);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c9650"
         },
         {
           "addr": "0xc9700",
@@ -12320,7 +12319,8 @@
         {
           "addr": "0xc9840",
           "decl": "char FUN_000c9840(int list_handle, int16_t scenario_index, float distance);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_000c9840"
         },
         {
           "addr": "0xc98e0",
