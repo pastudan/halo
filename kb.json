@@ -12216,7 +12216,7 @@
         {
           "addr": "0xc88b0",
           "decl": "char FUN_000c88b0(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc89c0",
@@ -12363,7 +12363,7 @@
         {
           "addr": "0xc9c80",
           "decl": "void FUN_000c9c80(int object_handle, int region_name, int variant);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9d40",
@@ -12487,7 +12487,7 @@
         {
           "addr": "0xca700",
           "decl": "void FUN_000ca700(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xca800",
@@ -27726,7 +27726,7 @@
         {
           "addr": "0xea900",
           "decl": "char FUN_000ea900(void *widget, void *event_data);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xeaa10",

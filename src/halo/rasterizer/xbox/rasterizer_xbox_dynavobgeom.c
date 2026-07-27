@@ -2890,27 +2890,28 @@ void FUN_00160dc0(void *bitmap)
     rasterizer_set_texture_bitmap_data(2, bitmap);
     D3DDevice_SetTextureStageState(2, 0xa, 3);
     D3DDevice_SetTextureStageState(2, 0xb, 3);
-    v = (*(unsigned char *)0x3256ed != 0) ? 1u : 0u;
-    D3DDevice_SetTextureStageState(2, 0xd, v + 1);
-    v = (*(unsigned char *)0x3256ed != 0) ? 1u : 0u;
-    D3DDevice_SetTextureStageState(2, 0xe, v + 1);
-    v = (*(unsigned char *)0x3256ed != 0) ? 1u : 0u;
-    D3DDevice_SetTextureStageState(2, 0xf, v + 1);
+    v = (*(unsigned char *)0x3256ed != 0) ? 2u : 1u;
+    D3DDevice_SetTextureStageState(2, 0xd, v);
+    v = (*(unsigned char *)0x3256ed != 0) ? 2u : 1u;
+    D3DDevice_SetTextureStageState(2, 0xe, v);
+    v = (*(unsigned char *)0x3256ed != 0) ? 2u : 1u;
+    D3DDevice_SetTextureStageState(2, 0xf, v);
     *(unsigned char *)0x47dca4 = 0;
   } else {
     D3DDevice_SetTexture(2, 0);
     *(unsigned char *)0x47dca4 = 1;
   }
 
-  if (*(short *)0x3256b0 <= 0)
+  mode = *(short *)0x3256b0;
+  if (mode <= 0)
     return;
-  if (*(short *)0x3256b0 == 2) {
+  if (mode == 2) {
     *(float *)0x47dca0 = *(float *)0x3256e4;
     *(float *)0x47dc9c = *(float *)0x3256e4;
     *(float *)0x47dc98 = *(float *)0x3256e4;
     return;
   }
-  seed = (unsigned int)(unsigned long)bitmap;
+  seed = (unsigned int)bitmap;
   *(float *)0x47dc98 = random_math_real(&seed);
   *(float *)0x47dc9c = random_math_real(&seed);
   *(float *)0x47dca0 = random_math_real(&seed);

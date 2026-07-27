@@ -7070,124 +7070,51 @@ char network_game_join_game_from_server_list(void *widget)
 #endif
 
 
-/* FUN_000ea900 (0xea900) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void (*const bea900_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bea900_exitfn)(int) = (void *)system_exit;
-static void * (*const bea900_c12a240)(void) = (void *)network_game_client_get;
-static int16_t (*const bea900_c124a30)(void *server, void *out_param) = (void *)network_game_client_get_state;
-static int (*const bea900_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static short (*const bea900_c12a690)(void) = (void *)network_game_client_get_local_machine_index;
-static bool (*const bea900_c12ac80)(void *client) = (void *)network_player_is_valid;
-static char (*const bea900_c1258a0)(void *client, int16_t local_player_index) = (void *)network_game_client_add_player;
-static void (*const bea900_c12b650)(const char *fmt, ...) = (void *)network_game_log;
-
-__attribute__((naked, noinline))
+/* FUN_000ea900 (0xea900) — readable C lift: join network game from event. */
 char FUN_000ea900(void *widget, void *event_data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_000ea900_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x652\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286184\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ea900_1:\n\t"
-      "call *%[c12a240]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_000ea900_7\n\t"
-      "leal 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c124a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .LFUN_000ea900_7\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12a0a0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c12a690]\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jne .LFUN_000ea900_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x65b\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2861a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ea900_2:\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_000ea900_5\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      ".LFUN_000ea900_3:\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "shll $5, %%edx\n\t"
-      "leal 0x226(%%edx,%%esi,1), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ac80]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ea900_4\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "shll $5, %%edx\n\t"
-      "leal (%%edx,%%esi,1), %%eax\n\t"
-      "movsbw 0x242(%%eax), %%dx\n\t"
-      "cmpw %%di, %%dx\n\t"
-      "jne .LFUN_000ea900_4\n\t"
-      "movsbw 0x243(%%eax), %%ax\n\t"
-      "cmpw 0x2(%%ebx), %%ax\n\t"
-      "je .LFUN_000ea900_6\n\t"
-      ".LFUN_000ea900_4:\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $0x10, %%cx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "jl .LFUN_000ea900_3\n\t"
-      ".LFUN_000ea900_5:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2(%%ebx), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1258a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000ea900_6\n\t"
-      "pushl $0x28618c\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000ea900_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000ea900_7:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bea900_assert), [exitfn] "m"(bea900_exitfn), [c12a240] "m"(bea900_c12a240), [c124a30] "m"(bea900_c124a30), [c12a0a0] "m"(bea900_c12a0a0), [c12a690] "m"(bea900_c12a690), [c12ac80] "m"(bea900_c12ac80), [c1258a0] "m"(bea900_c1258a0), [c12b650] "m"(bea900_c12b650)
-      : "memory");
-}
-#else
-#error "FUN_000ea900: clang naked draft required"
-#endif
+  void *client;
+  void *ev;
+  void *state_out;
+  int16_t state;
+  void *players;
+  short local_idx;
+  int i;
+  char *base;
 
+  (void)widget;
+  ev = event_data;
+  if (!ev) {
+    display_assert((const char *)0x286184, (const char *)0x2859a4, 0x652, 1);
+    system_exit(-1);
+  }
+  client = network_game_client_get();
+  if (!client)
+    return 1;
+  state_out = ev;
+  state = network_game_client_get_state(client, &state_out);
+  if (state != 2)
+    return 1;
+  players = (void *)FUN_0012a0a0();
+  local_idx = network_game_client_get_local_machine_index();
+  if (!players) {
+    display_assert((const char *)0x2861a8, (const char *)0x2859a4, 0x65b, 1);
+    system_exit(-1);
+  }
+  if (local_idx != -1) {
+    for (i = 0; i < 0x10; i++) {
+      base = (char *)players + i * 0x20;
+      if (network_player_is_valid(base + 0x226) &&
+          (short)*(signed char *)(base + 0x242) == local_idx &&
+          (short)*(signed char *)(base + 0x243) ==
+              *(short *)((char *)ev + 2))
+        return 1;
+    }
+  }
+  if (!network_game_client_add_player(client, *(int16_t *)((char *)ev + 2)))
+    network_game_log((const char *)0x28618c);
+  return 1;
+}
 
 /* FUN_000eaa10 (0xeaa10) — XBE naked draft (batch 124). */
 #if defined(__clang__)
