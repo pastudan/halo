@@ -358,72 +358,27 @@ void FUN_000dce00(int16_t local_player_index)
   *(int16_t *)(fp + 0x12) = 0x1e;
 }
 
-/* first_person_weapon_get_local_index (0xdd110) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void (*const bdd110_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bdd110_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* first_person_weapon_get_local_index (0xdd110) — readable C lift. */
 int first_person_weapon_get_local_index(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lfirst_person_weapon_get_local_index_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lfirst_person_weapon_get_local_index_2\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lfirst_person_weapon_get_local_index_3\n\t"
-      ".Lfirst_person_weapon_get_local_index_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x599\n\t"
-      "pushl $0x282294\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfirst_person_weapon_get_local_index_3:\n\t"
-      "movl 0x46bea8, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x1ea0, %%eax, %%eax\n\t"
-      "movl 0x8(%%eax,%%edx,1), %%ecx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "jne .Lfirst_person_weapon_get_local_index_4\n\t"
-      "cmpb $0, (%%eax)\n\t"
-      "jne .Lfirst_person_weapon_get_local_index_5\n\t"
-      ".Lfirst_person_weapon_get_local_index_4:\n\t"
-      "incl %%esi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lfirst_person_weapon_get_local_index_1\n\t"
-      ".Lfirst_person_weapon_get_local_index_5:\n\t"
-      "cmpw $4, %%si\n\t"
-      "jne .Lfirst_person_weapon_get_local_index_6\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lfirst_person_weapon_get_local_index_6:\n\t"
-      "popl %%edi\n\t"
-      "movswl %%si, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bdd110_assert), [exitfn] "m"(bdd110_exitfn)
-      : "memory");
-}
-#else
-#error "first_person_weapon_get_local_index: clang naked draft required"
-#endif
+  int i;
+  char *base;
+  char *fp;
+  int *slot;
 
+  for (i = 0; i < 4; i++) {
+    if ((int16_t)i < 0 || (int16_t)i >= 4) {
+      display_assert((const char *)0x266fc0, (const char *)0x282294, 0x599, 1);
+      system_exit(-1);
+    }
+    base = *(char **)0x46bea8;
+    fp = base + i * 0x1ea0;
+    slot = (int *)(fp + 8);
+    if (*slot == object_handle && *fp != 0)
+      return i;
+  }
+  return -1;
+}
 
 /* Return a pointer to the node transform for a given node in the local
  * player's first-person weapon animation state (0xdd410).

@@ -2141,74 +2141,31 @@ void ui_set_next_level(int16_t level_index)
   main_disallow_persistent_storage();
 }
 
-/* display_error_deferred (0xe4500) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void (*const be4500_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be4500_exitfn)(int) = (void *)system_exit;
-static void (*const be4500_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* display_error_deferred (0xe4500) — readable C lift. */
 void display_error_deferred(int16_t error_handle, int16_t local_player_index, char a3, char a4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "cmpw $-1, %%di\n\t"
-      "jne .Ldisplay_error_deferred_1\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "jmp .Ldisplay_error_deferred_3\n\t"
-      ".Ldisplay_error_deferred_1:\n\t"
-      "movswl %%di, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .Ldisplay_error_deferred_2\n\t"
-      "cmpl $4, %%esi\n\t"
-      "jl .Ldisplay_error_deferred_3\n\t"
-      ".Ldisplay_error_deferred_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8f0\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283424\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldisplay_error_deferred_3:\n\t"
-      "leal (%%esi,%%esi,2), %%eax\n\t"
-      "shll $1, %%eax\n\t"
-      "cmpw $-1, 0x46cc50(%%eax)\n\t"
-      "jne .Ldisplay_error_deferred_4\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "movb 0x10(%%ebp), %%dl\n\t"
-      "movw %%cx, 0x46cc50(%%eax)\n\t"
-      "movb 0x14(%%ebp), %%cl\n\t"
-      "movw %%di, 0x46cc52(%%eax)\n\t"
-      "popl %%edi\n\t"
-      "movb %%dl, 0x46cc54(%%eax)\n\t"
-      "movb %%cl, 0x46cc55(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldisplay_error_deferred_4:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2833d0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be4500_assert), [exitfn] "m"(be4500_exitfn), [c8f390] "m"(be4500_c8f390)
-      : "memory");
-}
-#else
-#error "display_error_deferred: clang naked draft required"
-#endif
+  int slot;
+  int idx;
 
+  if (local_player_index == (int16_t)-1)
+    slot = 0;
+  else {
+    slot = (int)local_player_index;
+    if (slot < 0 || slot >= 4) {
+      display_assert((const char *)0x283424, (const char *)0x283280, 0x8f0, 1);
+      system_exit(-1);
+    }
+  }
+  idx = slot * 6;
+  if (*(int16_t *)(0x46cc50 + idx) != (int16_t)-1) {
+    error(2, (const char *)0x2833d0, slot);
+    return;
+  }
+  *(int16_t *)(0x46cc50 + idx) = error_handle;
+  *(int16_t *)(0x46cc52 + idx) = local_player_index;
+  *(char *)(0x46cc54 + idx) = a3;
+  *(char *)(0x46cc55 + idx) = a4;
+}
 
 /* display_error_abort_to_dashboard_deferred (0xe4590) — readable C lift. */
 void display_error_abort_to_dashboard_deferred(short error_handle, char flag)

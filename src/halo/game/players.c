@@ -2560,69 +2560,26 @@ void placement_data_set_change_color(void *placement, float *color)
     dst += 3;
   }
 }
-/* players_handle_deleted_object (0xbb220) — XBE naked draft (batch 154). */
-#if defined(__clang__)
-static void *(*const bbb220_get)(int, int) = object_get_and_verify_type;
-static void (*const bbb220_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const bbb220_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const bbb220_cba550)(int) = player_died;
-
-__attribute__((naked, noinline))
-void players_handle_deleted_object(int object_handle __attribute__((unused)))
+/* players_handle_deleted_object (0xbb220) — readable C lift. */
+void players_handle_deleted_object(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movb 0x64(%%eax), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $3, %%dl\n\t"
-      "je .Lplayers_handle_deleted_object_3\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayers_handle_deleted_object_3\n\t"
-      ".Lplayers_handle_deleted_object_1:\n\t"
-      "cmpl %%esi, 0x34(%%eax)\n\t"
-      "jne .Lplayers_handle_deleted_object_2\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cba550]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lplayers_handle_deleted_object_2:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lplayers_handle_deleted_object_1\n\t"
-      ".Lplayers_handle_deleted_object_3:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bbb220_get), [c1197b0] "m"(bbb220_c1197b0), [c119810] "m"(bbb220_c119810), [cba550] "m"(bbb220_cba550)
-      : "memory");
-}
-#else
-#error "players_handle_deleted_object: clang naked draft required"
-#endif
+  void *obj;
+  unsigned char type_bits;
+  unsigned int mask;
+  data_iter_t iter;
+  void *player;
 
+  obj = object_get_and_verify_type(object_handle, -1);
+  type_bits = *(unsigned char *)((char *)obj + 0x64);
+  mask = 1u << type_bits;
+  if ((mask & 3) == 0)
+    return;
+  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
+  for (player = data_iterator_next(&iter); player != 0; player = data_iterator_next(&iter)) {
+    if (*(int *)((char *)player + 0x34) == object_handle)
+      player_died(*(int *)((char *)&iter + 8));
+  }
+}
 
 /* players_set_local_player_unit (0xba5f0) — XBE naked draft (batch 142). */
 #if defined(__clang__)
