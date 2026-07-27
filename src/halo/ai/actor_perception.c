@@ -748,7 +748,8 @@ void actor_get_vision_distances(int actor_handle, float p1, float p2,
   actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
   meta = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
 
-  if (!(range_param <= *(float *)(meta + 0x28))) {
+  /* FPU ja-style: only strict above takes the early exit (NaN continues). */
+  if (range_param > *(float *)(meta + 0x28)) {
     *out_b = *(float *)0x2533c0;
     *out_a = *(float *)0x2533c0;
     return;
@@ -758,10 +759,10 @@ void actor_get_vision_distances(int actor_handle, float p1, float p2,
   mid = p2 * *(float *)(meta + 0x2c);
   base07 = *(float *)0x2533c4 * base;
   hi = mid * *(float *)0x2533c4;
-  if (!(hi <= *(float *)0x253f30))
+  if (hi > *(float *)0x253f30)
     hi = 3.5f;
 
-  if (!(range_param <= *(float *)(meta + 0x20))) {
+  if (range_param > *(float *)(meta + 0x20)) {
     *out_b = mid;
     *out_a = hi;
     return;

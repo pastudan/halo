@@ -34614,7 +34614,7 @@
         {
           "addr": "0x2f470",
           "decl": "void actor_get_vision_distances(int actor_handle, float p1, float p2, float range_param, float *out_a, float *out_b);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2f5b0",
