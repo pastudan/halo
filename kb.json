@@ -35239,7 +35239,7 @@
         {
           "addr": "0x46530",
           "decl": "void FUN_00046530(int unit_handle, uint16_t priority, uint16_t type, int unk, int unk2, void *comm_data);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00046530"
         },
         {
