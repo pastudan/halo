@@ -28807,7 +28807,7 @@
         {
           "addr": "0x1a6d10",
           "decl": "char *FUN_001a6d10(int unit_handle, char full_path, int16_t max_len, char *output);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a6e20",

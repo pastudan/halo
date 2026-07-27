@@ -648,144 +648,50 @@ int16_t FUN_001a6cd0(const char *name)
   return 0;
 }
 
-/* FUN_001a6d10 (0x1a6d10) — XBE naked draft (batch 61). */
-#if defined(__clang__)
-static void *(*const b1a6d10_get)(int, int) = object_get_and_verify_type;
-static int (*const b1a6d10_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
-static const char * (*const b1a6d10_c1ba1f0)(int tag_index) = tag_get_name;
-static char * (*const b1a6d10_c1d95d0)(const char *str, int c) = crt_strchr;
-static char * (*const b1a6d10_c1d9710)(const char *str, int c) = strrchr;
-static char * (*const b1a6d10_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
-
-__attribute__((naked, noinline))
-char * FUN_001a6d10(int unit_handle __attribute__((unused)), char full_path __attribute__((unused)), int16_t max_len __attribute__((unused)), char *output __attribute__((unused)))
+/* FUN_001a6d10 (0x1a6d10) — readable C lift. */
+char *FUN_001a6d10(int unit_handle, char full_path, int16_t max_len, char *output)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x338(%%edi)\n\t"
-      "jne .LFUN_001a6d10_1\n\t"
-      "movswl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "pushl $0x25ad08\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9179]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a6d10_1:\n\t"
-      "movl 0x33c(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl $0x25ad08, %%esi\n\t"
-      "je .LFUN_001a6d10_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".LFUN_001a6d10_2:\n\t"
-      "pushl %%ebx\n\t"
-      "movb 0xc(%%ebp), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001a6d10_4\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".LFUN_001a6d10_3:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001a6d10_5\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d95d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001a6d10_5\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jmp .LFUN_001a6d10_3\n\t"
-      ".LFUN_001a6d10_4:\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9710]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001a6d10_5\n\t"
-      "leal 0x1(%%eax), %%esi\n\t"
-      ".LFUN_001a6d10_5:\n\t"
-      "movw 0x33a(%%edi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .LFUN_001a6d10_6\n\t"
-      "movswl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "pushl $0x257984\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9179]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a6d10_6:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001a6d10_7\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a67b0]\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0x10(%%ebp), %%eax\n\t"
-      "pushl $0x259f40\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9179]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001a6d10_7:\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a67b0]\n\t"
-      "movswl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x257984\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9179]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a6d10_get), [c1d9179] "m"(b1a6d10_c1d9179), [c1ba1f0] "m"(b1a6d10_c1ba1f0), [c1d95d0] "m"(b1a6d10_c1d95d0), [c1d9710] "m"(b1a6d10_c1d9710), [c1a67b0] "m"(b1a6d10_c1a67b0)
-      : "memory");
-}
-#else
-#error "FUN_001a6d10: clang naked draft required"
-#endif
+  char *unit;
+  const char *name;
+  char *p;
+  char *slash;
+  char *seat_name;
 
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  if (*(int16_t *)(unit + 0x338) == 0) {
+    snprintf(output, (unsigned int)(int)max_len, (const char *)0x25ad08);
+    return output;
+  }
+  name = (const char *)0x25ad08;
+  if (*(int *)(unit + 0x33c) != -1)
+    name = tag_get_name(*(int *)(unit + 0x33c));
+  if (full_path) {
+    p = (char *)name;
+    while (p != NULL) {
+      slash = crt_strchr(p, 0x5c);
+      if (slash == NULL)
+        break;
+      p = slash + 1;
+    }
+    name = p;
+  } else {
+    slash = strrchr(name, 0x5c);
+    if (slash != NULL)
+      name = slash + 1;
+  }
+  if (*(uint16_t *)(unit + 0x33a) == 0xffff) {
+    snprintf(output, (unsigned int)(int)max_len, (const char *)0x257984, name);
+    return output;
+  }
+  if (full_path) {
+    seat_name = FUN_001a67b0(*(int16_t *)(unit + 0x33a), 0);
+    snprintf(output, (unsigned int)(int)max_len, (const char *)0x259f40, seat_name, name);
+    return output;
+  }
+  seat_name = FUN_001a67b0(*(int16_t *)(unit + 0x33a), 0);
+  snprintf(output, (unsigned int)(int)max_len, (const char *)0x257984, seat_name);
+  return output;
+}
 
 /* FUN_001a6e20 (0x1a6e20) — XBE naked draft (batch 57). */
 #if defined(__clang__)
