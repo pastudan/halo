@@ -421,145 +421,42 @@ __attribute__((noinline, used)) char FUN_001547d0(float *accum, float *rate,
 }
 
 
-/* point_physics_definition_interpolate (0x1548c0) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-static void (*const b1548c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1548c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void point_physics_definition_interpolate(float *definition_a __attribute__((unused)), float *definition_b __attribute__((unused)), float t __attribute__((unused)), float *definition_out __attribute__((unused)))
+/* point_physics_definition_interpolate (0x1548c0) — readable C lift from XBE leaf.
+ * Lerp selected point-physics definition fields; assert on null/out-of-range t. */
+void point_physics_definition_interpolate(float *definition_a, float *definition_b,
+                                          float t, float *definition_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x2533c8\n\t"
-      "pushl %%ebx\n\t"
-      "fsubs 0x10(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jne .Lpoint_physics_definition_interpolate_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14c\n\t"
-      "pushl $0x29d984\n\t"
-      "pushl $0x29d978\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpoint_physics_definition_interpolate_1:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .Lpoint_physics_definition_interpolate_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14d\n\t"
-      "pushl $0x29d984\n\t"
-      "pushl $0x29d96c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpoint_physics_definition_interpolate_2:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lpoint_physics_definition_interpolate_3\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lpoint_physics_definition_interpolate_4\n\t"
-      ".Lpoint_physics_definition_interpolate_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14e\n\t"
-      "pushl $0x29d984\n\t"
-      "pushl $0x29d958\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpoint_physics_definition_interpolate_4:\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lpoint_physics_definition_interpolate_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14f\n\t"
-      "pushl $0x29d984\n\t"
-      "pushl $0x25f120\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpoint_physics_definition_interpolate_5:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "fmuls 0x20(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movl %%esi, %%eax\n\t"
-      "fmuls 0x20(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x20(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x8(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0xc(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0xc(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0xc(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x4(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x24(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x24(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x24(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x28(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x28(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x28(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x2c(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x2c(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x2c(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x30(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x30(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x30(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1548c0_assert), [exitfn] "m"(b1548c0_exitfn)
-      : "memory");
-}
-#else
-#error "point_physics_definition_interpolate: clang naked draft required"
-#endif
+  float s;
 
+  s = 1.0f - t;
+  if (!definition_a) {
+    display_assert((const char *)0x29d978, (const char *)0x29d984, 0x14c, 1);
+    system_exit(-1);
+  }
+  if (!definition_b) {
+    display_assert((const char *)0x29d96c, (const char *)0x29d984, 0x14d, 1);
+    system_exit(-1);
+  }
+  /* NaN fails both compares → treat as out of range (matches XBE). */
+  if (!(t >= 0.0f && t <= 1.0f)) {
+    display_assert((const char *)0x29d958, (const char *)0x29d984, 0x14e, 1);
+    system_exit(-1);
+  }
+  if (!definition_out) {
+    display_assert((const char *)0x25f120, (const char *)0x29d984, 0x14f, 1);
+    system_exit(-1);
+  }
+
+  *(int *)definition_out = *(int *)definition_a;
+  definition_out[8] = s * definition_a[8] + t * definition_b[8];
+  definition_out[2] = s * definition_a[2] + t * definition_b[2];
+  definition_out[3] = s * definition_a[3] + t * definition_b[3];
+  definition_out[1] = s * definition_a[1] + t * definition_b[1];
+  definition_out[9] = s * definition_a[9] + t * definition_b[9];
+  definition_out[10] = s * definition_a[10] + t * definition_b[10];
+  definition_out[11] = s * definition_a[11] + t * definition_b[11];
+  definition_out[12] = s * definition_a[12] + t * definition_b[12];
+}
 
 /* FUN_00154a20 (0x154a20) — readable C lift: debug-draw particle by media flag.
  * XBE: particle@eax, position@edx, scale on stack. */
