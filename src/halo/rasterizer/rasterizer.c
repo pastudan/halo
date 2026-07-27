@@ -10105,30 +10105,15 @@ void FUN_00174bd0(char flag)
 #endif
 
 
-/* FUN_00174cc0 (0x174cc0) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-static uint32_t __stdcall (*const b174cc0_c1ed930)(void *resource) = (void *)D3DResource_Release;
-
-__attribute__((naked, noinline))
+/* FUN_00174cc0 (0x174cc0) — readable C lift. */
 void FUN_00174cc0(void)
 {
-  __asm__ volatile(
-      "movl 0x47e4bc, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00174cc0_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, 0x47e4bc\n\t"
-      ".LFUN_00174cc0_1:\n\t"
-      "ret\n\t"
-      :
-      : [c1ed930] "m"(b174cc0_c1ed930)
-      : "memory");
+  void *resource = *(void **)0x47e4bc;
+  if (resource) {
+    D3DResource_Release(resource);
+    *(void **)0x47e4bc = 0;
+  }
 }
-#else
-#error "FUN_00174cc0: clang naked draft required"
-#endif
-
 
 /* FUN_00174ce0 (0x174ce0) — XBE naked draft (batch 402). */
 #if defined(__clang__)

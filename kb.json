@@ -20967,7 +20967,7 @@
         {
           "addr": "0x174cc0",
           "decl": "void FUN_00174cc0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x174ce0",
