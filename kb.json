@@ -29352,9 +29352,9 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle@<esi>, int unused);",
+          "decl": "char *unit_get_weapon_name(int unit_handle /* @<esi> */);",
           "name": "unit_get_weapon_name",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
