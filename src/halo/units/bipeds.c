@@ -6194,3 +6194,10 @@ char FUN_001a0db0(int unit_handle)
   }
   return 0;
 }
+
+/* FUN_001a4a50 (0x1a4a50) — readable C lift from XBE leaf. */
+void FUN_001a4a50(int unit_handle)
+{
+  FUN_001a2800(unit_handle, (const char *)0x2b5160);
+}
+

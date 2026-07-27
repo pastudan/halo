@@ -27238,29 +27238,8 @@ char FUN_001a4990(int unit_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_001a4a50 (0x1a4a50) — XBE naked draft (batch 388). */
-#if defined(__clang__)
-static void (*const b1a4a50_c1a2800)(int unit_handle, const char *failure_kind) = (void *)FUN_001a2800;
+/* FUN_001a4a50 moved to units/bipeds.c */
 
-__attribute__((naked, noinline))
-void FUN_001a4a50(void)
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x2b5160\n\t"
-      "call *%[c1a2800]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1a2800] "m"(b1a4a50_c1a2800)
-      : "memory");
-}
-#else
-#error "FUN_001a4a50: clang naked draft required"
-#endif
 
 
 /* FUN_001a4a70 (0x1a4a70) — XBE naked draft (batch 235). */

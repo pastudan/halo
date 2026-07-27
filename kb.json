@@ -674,11 +674,6 @@
           "ported": false
         },
         {
-          "addr": "0x1a4a50",
-          "decl": "void FUN_001a4a50(void);",
-          "ported": false
-        },
-        {
           "addr": "0x1a4c50",
           "decl": "void FUN_001a4c50(int unit_handle, unsigned char *state);",
           "ported": false
@@ -28648,6 +28643,12 @@
           "addr": "0x1a2f40",
           "decl": "void FUN_001a2f40(void *physics@<esi>);",
           "ported": false
+        },
+        {
+          "addr": "0x1a4a50",
+          "decl": "void FUN_001a4a50(int unit_handle);",
+          "ported": true,
+          "name": "FUN_001a4a50"
         }
       ],
       "name": "bipeds.obj",
