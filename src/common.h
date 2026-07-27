@@ -23,8 +23,7 @@ double __cdecl sin(double);
 double __cdecl cos(double);
 double __cdecl sqrt(double);
 double __cdecl fabs(double);
-/* Match HFUNC/dllexport from decl.h so freestanding -Werror TUs compile. */
-__declspec(dllexport) void __cdecl qsort(void *base, unsigned nmemb, unsigned size, int (__cdecl *compar)(const void *, const void *));
+void __cdecl qsort(void *base, unsigned nmemb, unsigned size, int (__cdecl *compar)(const void *, const void *));
 #include "types.h"
 #define XBOX_REPLACE_STANDARD_NAMES
 #include "inlines.h"
