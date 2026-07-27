@@ -2701,7 +2701,7 @@
         {
           "addr": "0x1dd40",
           "decl": "char actor_action_handle_panic_transition(int actor_handle, short param_2, char param_3, short param_4);",
-          "ported": true,
+          "ported": false,
           "name": "actor_action_handle_panic_transition"
         },
         {
@@ -7096,12 +7096,14 @@
         {
           "addr": "0x86900",
           "decl": "void director_load_camera(void);",
-          "ported": true
+          "ported": true,
+          "name": "director_load_camera"
         },
         {
           "addr": "0x86a50",
           "decl": "void FUN_00086a50(void);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_00086a50"
         },
         {
           "addr": "0x86b80",
@@ -7212,7 +7214,8 @@
         {
           "addr": "0x87f20",
           "decl": "void editor_camera_update(void);",
-          "ported": true
+          "ported": true,
+          "name": "editor_camera_update"
         },
         {
           "addr": "0x88050",
@@ -22590,7 +22593,8 @@
         {
           "addr": "0x10ce10",
           "decl": "float vector_to_line_distance_squared3d(float *p1, float *p2, float *p3, float *p4);",
-          "ported": true
+          "ported": true,
+          "name": "vector_to_line_distance_squared3d"
         },
         {
           "addr": "0x10d380",
@@ -23481,7 +23485,8 @@
         {
           "addr": "0x186480",
           "decl": "int render_camera_build_clipped_frustum_bounds(camera_t *camera, float *in_bounds, float *out_bounds);",
-          "ported": true
+          "ported": true,
+          "name": "render_camera_build_clipped_frustum_bounds"
         },
         {
           "addr": "0x1865e0",
@@ -26755,7 +26760,8 @@
         {
           "addr": "0x131a20",
           "decl": "void FUN_00131a20(void);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_00131a20"
         },
         {
           "addr": "0x131b40",
@@ -31054,13 +31060,13 @@
         {
           "addr": "0x183c00",
           "decl": "void rasterizer_text_draw_cached_char(void *arg0, void *font, void *font_character, unsigned int color, short x, short y, int screen_x, int screen_y, short width, short height);",
-          "ported": true,
+          "ported": false,
           "name": "rasterizer_text_draw_cached_char"
         },
         {
           "addr": "0x183cf0",
           "decl": "void rasterizer_text_draw_cached_chars(void *arg0, void *font, void *font_character, unsigned int color, short x, short y, int offset_x, int offset_y, short width, short height);",
-          "ported": true,
+          "ported": false,
           "name": "rasterizer_text_draw_cached_chars"
         },
         {
@@ -34587,7 +34593,7 @@
         {
           "addr": "0x2b720",
           "decl": "char actor_path_3d_available(int actor_handle, float *dest_pos, float *dist_out);",
-          "ported": true,
+          "ported": false,
           "name": "actor_path_3d_available"
         },
         {
@@ -34612,7 +34618,7 @@
           "addr": "0x2a610",
           "decl": "void actor_get_stopping_distances(int actor_handle, float *param_2, float *param_3);",
           "name": "actor_get_stopping_distances",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x2a7e0",
@@ -34629,20 +34635,20 @@
         {
           "addr": "0x2a8f0",
           "decl": "char actor_move_try_evasion_vector(int actor_handle, float *evasion_vector, float scale, float param_4, char *out_flag, void *result);",
-          "ported": true,
+          "ported": false,
           "name": "actor_move_try_evasion_vector"
         },
         {
           "addr": "0x2ab40",
           "decl": "char actor_move_try_evasion_direction(int actor_handle, float *alignment_vector, float param_3, unsigned short *evade_direction_reference, float param_5, char *out_flag, void *result);",
-          "ported": true,
+          "ported": false,
           "name": "actor_move_try_evasion_direction"
         },
         {
           "addr": "0x2ace0",
           "decl": "int actor_aim_jump(int actor_handle, int a2, char param_3, float param_4, float *param_5);",
           "name": "actor_aim_jump",
-          "ported": true,
+          "ported": false,
           "source_path": "halo/ai/actor_moving.c"
         },
         {
@@ -34660,7 +34666,7 @@
         {
           "addr": "0x2b310",
           "decl": "char FUN_0002b310(float *direction, short count, int records, float *values, float *out_index, float *out_value);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0002b310"
         },
         {
@@ -34672,7 +34678,7 @@
         {
           "addr": "0x2b490",
           "decl": "void actor_move_get_avoidance_vector(int matrix, float dir_index, float *out_vec);",
-          "ported": true,
+          "ported": false,
           "name": "actor_move_get_avoidance_vector"
         },
         {
@@ -40751,7 +40757,7 @@
           "addr": "0x1477f0",
           "decl": "float collision_surface_area(int bsp, int surface_index);",
           "name": "collision_surface_area",
-          "ported": true,
+          "ported": false,
           "source_path": "src/halo/physics/collision_bsp.c"
         },
         {
@@ -40772,7 +40778,7 @@
         {
           "addr": "0x147d10",
           "decl": "int collision_surface_test_line2d(int bsp, int surface_index, int param3, int param4, float *point, float *direction, float *out_result);",
-          "ported": true,
+          "ported": false,
           "name": "collision_surface_test_line2d",
           "source_path": "src/halo/physics/collision_bsp.c"
         },
