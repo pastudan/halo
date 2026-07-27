@@ -1556,55 +1556,24 @@ short FUN_00135f20(int group_tag)
   return result;
 }
 
-/* FUN_00136100 (0x136100) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void (*const b136100_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b136100_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_00136100 (0x136100) — readable C lift. */
+extern char DAT_0029ae0c[];
+extern char DAT_0029ade4[];
 void FUN_00136100(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x32353c, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00136100_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00136100_2\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_00136100_3\n\t"
-      ".LFUN_00136100_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96\n\t"
-      "pushl $0x29ae0c\n\t"
-      "pushl $0x29ade4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00136100_3:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00136100_4\n\t"
-      "call *%%eax\n\t"
-      ".LFUN_00136100_4:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x28, %%edi\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_00136100_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b136100_assert), [exitfn] "m"(b136100_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_00136100: clang naked draft required"
-#endif
+  int16_t i;
+  void (**slot)(void);
 
+  for (i = 0; i < 5; i++) {
+    if (i < 0 || i >= 5) {
+      display_assert(DAT_0029ade4, DAT_0029ae0c, 0x96, true);
+      system_exit(-1);
+    }
+    slot = (void (**)(void))(0x32353c + (int)i * 0x28);
+    if (*slot != NULL)
+      (*slot)();
+  }
+}
 
 /* FUN_00136150 (0x136150) — XBE naked draft (batch 60). */
 #if defined(__clang__)

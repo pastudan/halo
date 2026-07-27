@@ -16255,7 +16255,7 @@
         {
           "addr": "0x136100",
           "decl": "void FUN_00136100(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x136150",
