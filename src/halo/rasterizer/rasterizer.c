@@ -8892,12 +8892,12 @@ void FUN_00173090(void)
 #endif
 
 
-/* 0x173ae0 */
+/* FUN_00173ae0 (0x173ae0) — readable C lift. */
 void FUN_00173ae0(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
 }
+
+
 
 /* FUN_00173af0 (0x173af0) — XBE naked draft (batch 381). */
 #if defined(__clang__)

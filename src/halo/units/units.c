@@ -8222,83 +8222,28 @@ void FUN_001a7d80(int datum_handle, char flag)
   }
 }
 
-/* FUN_001a7df0 (0x1a7df0) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static int (*const b1a7df0_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static void *(*const b1a7df0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static char (*const b1a7df0_c1ac180)(int actor, int anim_tag, void *entry, int do_flag) = FUN_001ac180;
-static int (*const b1a7df0_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
-
-__attribute__((naked, noinline))
-char FUN_001a7df0(int datum_handle __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)), int param_4 __attribute__((unused)))
+/* FUN_001a7df0 (0x1a7df0) — readable C lift. */
+char FUN_001a7df0(int parent_handle, int param_2, int param_3, int param_4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[cce450]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_001a7df0_4\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      ".LFUN_001a7df0_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001a7df0_3\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001a7df0_2\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1ac180]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001a7df0_2\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001a7df0_3\n\t"
-      ".LFUN_001a7df0_2:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_001a7df0_3:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cce320]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_001a7df0_1\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_001a7df0_4:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cce450] "m"(b1a7df0_cce450), [tryget] "m"(b1a7df0_tryget), [c1ac180] "m"(b1a7df0_c1ac180), [cce320] "m"(b1a7df0_cce320)
-      : "memory");
-}
-#else
-#error "FUN_001a7df0: clang naked draft required"
-#endif
+  int iter_state;
+  int child;
+  char ok;
 
+  ok = 1;
+  child = FUN_000ce450(parent_handle, &iter_state);
+  while (child != -1) {
+    if (object_try_and_get_and_verify_type(child, 3) != NULL) {
+      if (!ok)
+        ok = 0;
+      else if (!FUN_001ac180(child, param_2, (void *)param_3, param_4))
+        ok = 0;
+      else
+        ok = 1;
+    }
+    child = FUN_000ce320(parent_handle, &iter_state);
+  }
+  return ok;
+}
 
 /* FUN_001a7ea0 (0x1a7ea0) — readable C lift. */
 char FUN_001a7ea0(int unit_handle, int weapon_def_tag)

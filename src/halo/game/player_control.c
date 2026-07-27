@@ -337,95 +337,32 @@ int player_control_get_target_object_index(int16_t local_player_index)
   return -1;
 }
 
-/* player_control_get_field_of_view (0xb6690) — XBE naked draft (batch 146). */
-#if defined(__clang__)
-static void (*const bb6690_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb6690_exitfn)(int) = system_exit;
-static void *(*const bb6690_get)(int, int) = object_get_and_verify_type;
-static void *(*const bb6690_tag)(int, int) = tag_get;
-static int (*const bb6690_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static float (*const bb6690_cfc8e0)(int weapon_handle, float base_fov, int16_t zoom_level) = weapon_get_field_of_view;
-
-__attribute__((naked, noinline))
-float player_control_get_field_of_view(int16_t local_player_index __attribute__((unused)))
+/* player_control_get_field_of_view (0xb6690) — readable C lift. */
+float player_control_get_field_of_view(int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lplayer_control_get_field_of_view_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayer_control_get_field_of_view_2\n\t"
-      ".Lplayer_control_get_field_of_view_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_control_get_field_of_view_2:\n\t"
-      "movl 0x457090, %%ecx\n\t"
-      "flds 0x26e270\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $6, %%eax\n\t"
-      "leal 0x10(%%eax,%%ecx,1), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lplayer_control_get_field_of_view_4\n\t"
-      "pushl %%ebx\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2a2(%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1adeb0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lplayer_control_get_field_of_view_3\n\t"
-      "movl 0x1a0(%%ebx), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x24(%%esi), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cfc8e0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_control_get_field_of_view_3:\n\t"
-      "flds 0x1a0(%%ebx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lplayer_control_get_field_of_view_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bb6690_assert), [exitfn] "m"(bb6690_exitfn), [get] "m"(bb6690_get), [tag] "m"(bb6690_tag), [c1adeb0] "m"(bb6690_c1adeb0), [cfc8e0] "m"(bb6690_cfc8e0)
-      : "memory");
-}
-#else
-#error "player_control_get_field_of_view: clang naked draft required"
-#endif
+  unsigned char *slot;
+  int unit_handle;
+  char *unit;
+  char *unit_tag;
+  int weapon_handle;
+  float base_fov;
 
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((const char *)0x266fc0, (const char *)0x26e1e8, 0xb1, true);
+    system_exit(-1);
+  }
+  slot = *(unsigned char **)0x457090 + (((int)local_player_index) << 6) + 0x10;
+  unit_handle = *(int *)slot;
+  if (unit_handle == -1)
+    return *(float *)0x26e270;
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  unit_tag = (char *)tag_get(0x756e6974, *(int *)unit);
+  weapon_handle = unit_get_weapon(unit_handle, *(int16_t *)(unit + 0x2a2));
+  base_fov = *(float *)(unit_tag + 0x1a0);
+  if (weapon_handle == -1)
+    return base_fov;
+  return weapon_get_field_of_view(weapon_handle, base_fov, *(int16_t *)(slot + 0x24));
+}
 
 /* player_control_get_unit_camera_info (0xb6740) — XBE naked draft (batch 130). */
 #if defined(__clang__)
