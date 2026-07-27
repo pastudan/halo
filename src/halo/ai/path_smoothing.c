@@ -507,137 +507,56 @@ void FUN_00062ba0(float *point __attribute__((unused)), float *anchor __attribut
 #endif
 
 
-/* FUN_00062cf0 (0x62cf0) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00062cf0(float *corner __attribute__((unused)), float *packed_b __attribute__((unused)), float *a __attribute__((unused)), float scale __attribute__((unused)), float *out __attribute__((unused)))
+/* FUN_00062cf0 (0x62cf0) — readable C lift.
+ * corner@edi, packed_b@edx, a@ecx, out@esi; stack: scale. */
+void FUN_00062cf0(float *corner, float *packed_b, float *a, float scale, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "flds (%%edx)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x8(%%edx)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0xc(%%edx)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062cf0_1\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fdivr %%st(1), %%st(0)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fsubs -0x10(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds 0x4(%%ecx)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fsubrs (%%ecx)\n\t"
-      "fstps (%%esi)\n\t"
-      "fsts 0x4(%%esi)\n\t"
-      "flds (%%esi)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fstp %%st(1)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fxch %%st(2)\n\t"
-      "fmuls 0x2533d8\n\t"
-      "fxch %%st(2)\n\t"
-      "fxch %%st(1)\n\t"
-      "fxch %%st(2)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00062cf0_5\n\t"
-      ".LFUN_00062cf0_1:\n\t"
-      "flds (%%edx)\n\t"
-      "fsubs (%%edi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062cf0_2\n\t"
-      "flds 0x2533c8\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00062cf0_4\n\t"
-      "jmp .LFUN_00062cf0_3\n\t"
-      ".LFUN_00062cf0_2:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00062cf0_3:\n\t"
-      "movl 0x31fc10, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_00062cf0_4:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fadds (%%edx)\n\t"
-      "fstps (%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fadds 0x4(%%edx)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      ".LFUN_00062cf0_5:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00062cf0: clang naked draft required"
-#endif
+  float d0, d1, d2, d3;
+  float cross;
+  float t;
+  float ox, oy;
+  float dx, dy;
+  float dist2;
+  float len;
+  float inv;
+  float *def_dir;
 
+  d0 = packed_b[0] - a[0];
+  d1 = packed_b[1] - a[1];
+  d2 = packed_b[2] - a[0];
+  d3 = packed_b[3] - a[1];
+  cross = d3 * d0 - d1 * d2;
+
+  if (fabs((double)cross) >= *(double *)0x2533d0) {
+    t = (scale * scale) / cross;
+    oy = (d0 - d2) * t + a[1];
+    ox = a[0] - (d1 - d3) * t;
+    out[0] = ox;
+    out[1] = oy;
+    dx = ox - a[0];
+    dy = oy - a[1];
+    dist2 = dx * dx + dy * dy;
+    if (!(dist2 < *(float *)0x2533d8 * scale * scale))
+      return;
+  }
+
+  dx = packed_b[0] - corner[0];
+  dy = packed_b[1] - corner[1];
+  len = sqrtf(dx * dx + dy * dy);
+  if (fabs((double)len) >= *(double *)0x2533d0) {
+    inv = *(float *)0x2533c8 / len;
+    dx = dx * inv;
+    dy = dy * inv;
+    out[0] = dx * scale + packed_b[0];
+    out[1] = dy * scale + packed_b[1];
+    return;
+  }
+  def_dir = *(float **)0x31fc10;
+  dx = def_dir[0];
+  dy = def_dir[1];
+  out[0] = dx * scale + packed_b[0];
+  out[1] = dy * scale + packed_b[1];
+}
 
 /* FUN_00062e10 (0x62e10) — XBE naked draft (batch 230). */
 #if defined(__clang__)
@@ -1236,7 +1155,7 @@ static char (*const b633b0_c63e90)(int scenario, unsigned char bsp_idx, float *o
 static char (*const b633b0_c63030)(void *scenario, float *point, float scale, int *surface_index, unsigned char expected_side, unsigned char path_surface_flag, float *out_point) = find_turning_point;
 static char (*const b633b0_c62e10)(float *work, float *prev_step, float *next_step, float *turn_a, float *turn_b, float *out) = FUN_00062e10;
 static void (*const b633b0_c62ba0)(float *point, float *anchor, float scale, char pick_alt, float *out_point) = FUN_00062ba0;
-static void (*const b633b0_c62cf0)(float *corner, float *packed_b, float *a, float scale, float *out) = FUN_00062cf0;
+static void (*const b633b0_c62cf0)(float *corner, float *packed_b, float *a, float scale, float *out) = (void *)FUN_00062cf0;
 static int (*const b633b0_c63e30)(int scenario, unsigned char bsp_idx, float *origin, int surface_index, float *out_point) = FUN_00063e30;
 static void *(*const b633b0_elem)(void *, int, int) = tag_block_get_element;
 static int (*const b633b0_c147990)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_project_point2d;

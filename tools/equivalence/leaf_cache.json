@@ -1430,6 +1430,11 @@
     "confidence": "high",
     "coverage_pct": 100.0
   },
+  "0x62cf0": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 55.4
+  },
   "0x64": {
     "confidence": "high",
     "coverage_pct": 68.6

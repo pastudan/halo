@@ -40959,8 +40959,9 @@
         },
         {
           "addr": "0x62cf0",
-          "decl": "void FUN_00062cf0(float *corner, float *packed_b, float *a, float scale, float *out);",
-          "ported": false
+          "decl": "void FUN_00062cf0(float *corner@<edi>, float *packed_b@<edx>, float *a@<ecx>, float scale, float *out@<esi>);",
+          "ported": true,
+          "name": "FUN_00062cf0"
         },
         {
           "addr": "0x62e10",
