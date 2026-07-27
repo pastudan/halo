@@ -3822,95 +3822,45 @@ void FUN_000ca620(int16_t type, int value, char *buffer)
   }
   crt_sprintf(buffer, (const char *)0x257984, (const char *)value);
 }
-/* FUN_000c98e0 (0xc98e0) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static void *(*const bc98e0_get)(int, int) = object_get_and_verify_type;
-static int (*const bc98e0_cba500)(int) = player_index_from_unit_index;
-static char (*const bc98e0_cc98e0)(int object_handle) = FUN_000c98e0;
-
-__attribute__((naked, noinline))
-char FUN_000c98e0(int object_handle __attribute__((unused)))
+/* FUN_000c98e0 (0xc98e0) — readable C lift: object/player ownership walk. */
+char FUN_000c98e0(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[cba500]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "setne %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "jne .LFUN_000c98e0_6\n\t"
-      "movl 0xc8(%%ebx), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c98e0_2\n\t"
-      ".LFUN_000c98e0_1:\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[cc98e0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000c98e0_5\n\t"
-      "movl 0xc4(%%edi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000c98e0_1\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      ".LFUN_000c98e0_2:\n\t"
-      "movl 0xcc(%%ebx), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000c98e0_4\n\t"
-      ".LFUN_000c98e0_3:\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[cba500]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000c98e0_5\n\t"
-      "movl 0xcc(%%edi), %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jne .LFUN_000c98e0_3\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      ".LFUN_000c98e0_4:\n\t"
-      "movb 0x64(%%ebx), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "testb $0x1c, %%dl\n\t"
-      "je .LFUN_000c98e0_6\n\t"
-      "testb $2, 0x1a4(%%ebx)\n\t"
-      "je .LFUN_000c98e0_6\n\t"
-      ".LFUN_000c98e0_5:\n\t"
-      "movb $1, %%al\n\t"
-      ".LFUN_000c98e0_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bc98e0_get), [cba500] "m"(bc98e0_cba500), [cc98e0] "m"(bc98e0_cc98e0)
-      : "memory");
-}
-#else
-#error "FUN_000c98e0: clang naked draft required"
-#endif
+  char *obj;
+  int player;
+  char result;
+  int child;
+  char *child_obj;
+  unsigned int bit;
 
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  player = player_index_from_unit_index(object_handle);
+  result = (char)(player != -1);
+  if (result)
+    return result;
+
+  child = *(int *)(obj + 0xc8);
+  while (child != -1) {
+    child_obj = (char *)object_get_and_verify_type(child, -1);
+    if (FUN_000c98e0(child))
+      return 1;
+    child = *(int *)(child_obj + 0xc4);
+  }
+
+  child = *(int *)(obj + 0xcc);
+  while (child != -1) {
+    child_obj = (char *)object_get_and_verify_type(child, -1);
+    if (player_index_from_unit_index(child) != -1)
+      return 1;
+    child = *(int *)(child_obj + 0xcc);
+  }
+
+  bit = 1u << (unsigned char)obj[0x64];
+  if ((bit & 0x1cu) == 0)
+    return result;
+  if ((obj[0x1a4] & 2) == 0)
+    return result;
+  return 1;
+}
 
 /* FUN_000c99e0 (0xc99e0) — readable C lift. */
 void FUN_000c99e0(int object_handle)
@@ -4320,7 +4270,7 @@ static int (*const bc9a50_c13d7f0)(int object_handle) = object_get_root_parent;
 static void (*const bc9a50_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
 static void (*const bc9a50_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
 static void * (*const bc9a50_c13d730)(void *iter) = object_iterator_next;
-static char (*const bc9a50_cc98e0)(int object_handle) = FUN_000c98e0;
+static char (*const bc9a50_cc98e0)(int object_handle) = (void *)FUN_000c98e0;
 static void (*const bc9a50_odel)(int) = object_delete;
 
 __attribute__((naked, noinline))
