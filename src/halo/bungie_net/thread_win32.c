@@ -521,64 +521,23 @@ void FUN_00081300(void)
 #endif
 
 
-/* FUN_00081410 (0x81410) — XBE naked draft (batch 360). */
-#if defined(__clang__)
-static unsigned int (*const b81410_c1d9d28)(int *timer) = (void *)crt_time;
-static void (*const b81410_c1d9cf9)(void) = (void *)FUN_001d9cf9;
-static int (*const b81410_c1d9d06)(void) = (void *)rand;
-static void (*const b81410_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_00081410(void)
+/* FUN_00081410 (0x81410) — readable C lift: seeded rand in [lo, lo+hi*r/32767]. */
+unsigned int FUN_00081410(unsigned int lo, unsigned int hi)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movb 0x334980, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00081410_1\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d9d28]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9cf9]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, 0x334980\n\t"
-      ".LFUN_00081410_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9d06]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "testl %%eax, %%eax\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "jge .LFUN_00081410_2\n\t"
-      "faddl 0x265d40\n\t"
-      ".LFUN_00081410_2:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "testl %%esi, %%esi\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "jge .LFUN_00081410_3\n\t"
-      "faddl 0x265d40\n\t"
-      ".LFUN_00081410_3:\n\t"
-      "faddl 0x265eb0\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "call *%[ftol]\n\t"
-      "addl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d9d28] "m"(b81410_c1d9d28), [c1d9cf9] "m"(b81410_c1d9cf9), [c1d9d06] "m"(b81410_c1d9d06), [ftol] "m"(b81410_ftol)
-      : "memory");
+  unsigned int r;
+  double num;
+  double den;
+
+  if (*(unsigned char *)0x334980 == 0) {
+    r = crt_time(0);
+    ((void (*)(unsigned int))FUN_001d9cf9)(r);
+    *(unsigned char *)0x334980 = 1;
+  }
+  r = (unsigned int)rand();
+  num = (double)r * (double)hi;
+  den = (double)lo + *(double *)0x265eb0;
+  return lo + (unsigned int)(int)(num / den);
 }
-#else
-#error "FUN_00081410: clang naked draft required"
-#endif
-
-
 /* FUN_00081480 (0x81480) — XBE naked draft (batch 317). */
 #if defined(__clang__)
 static void (*const b81480_assert)(const char *, const char *, int, bool) = display_assert;
