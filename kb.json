@@ -27780,7 +27780,8 @@
         {
           "addr": "0xead60",
           "decl": "char multiplayer_level_select(void *widget, void *event_data);",
-          "ported": false
+          "ported": true,
+          "name": "multiplayer_level_select"
         },
         {
           "addr": "0xeaec0",

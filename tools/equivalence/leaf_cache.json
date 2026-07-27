@@ -2355,6 +2355,10 @@
     "confidence": "moderate",
     "coverage_pct": 32.0
   },
+  "0xc1bc789b": {
+    "confidence": "weak",
+    "coverage_pct": 23.5
+  },
   "0xc25228f6": {
     "confidence": "high",
     "coverage_pct": 74.0
@@ -2577,6 +2581,9 @@
     "class": "non_leaf",
     "confidence": "weak",
     "coverage_pct": 25.6
+  },
+  "0xead60": {
+    "class": "non_leaf"
   },
   "0xeaec0": {
     "class": "non_leaf",

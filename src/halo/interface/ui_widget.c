@@ -7234,159 +7234,54 @@ char FUN_000eaba0(void *widget, void *event_data, char *out_flag)
 }
 
 
-/* multiplayer_level_select (0xead60) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void (*const bead60_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bead60_exitfn)(int) = (void *)system_exit;
-static void *(*const bead60_tag)(int, int) = (void *)tag_get;
-static void (*const bead60_ce4500)(int16_t error_handle, int16_t local_player_index, char a3, char a4) = (void *)display_error_deferred;
-static void (*const bead60_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
-static void (*const bead60_c1c18f0)(void) = (void *)player_profile_new;
-static void (*const bead60_ce1490)(void) = (void *)player_ui_set_active_player_profile;
-static void (*const bead60_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* multiplayer_level_select (0xead60) — readable C lift from XBE leaf. */
 char multiplayer_level_select(void *widget, void *event_data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lmultiplayer_level_select_1\n\t"
-      "cmpw $-1, 0x2(%%esi)\n\t"
-      "jne .Lmultiplayer_level_select_2\n\t"
-      ".Lmultiplayer_level_select_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x72a\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2863b4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmultiplayer_level_select_2:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0x2(%%esi), %%bx\n\t"
-      "movl 0x34(%%eax), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lmultiplayer_level_select_4\n\t"
-      ".Lmultiplayer_level_select_3:\n\t"
-      "cmpw $2, 0xe(%%esi)\n\t"
-      "je .Lmultiplayer_level_select_5\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lmultiplayer_level_select_3\n\t"
-      ".Lmultiplayer_level_select_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x72e\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286498\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmultiplayer_level_select_5:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lmultiplayer_level_select_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x735\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286440\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmultiplayer_level_select_6:\n\t"
-      "movw 0x3c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lmultiplayer_level_select_7\n\t"
-      "movzwl 0x44(%%esi), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .Lmultiplayer_level_select_8\n\t"
-      ".Lmultiplayer_level_select_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x73b\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2863f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmultiplayer_level_select_8:\n\t"
-      "movswl 0x3c(%%esi), %%ecx\n\t"
-      "movl 0x40(%%esi), %%edi\n\t"
-      "movl (%%edi,%%ecx,4), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "js .Lmultiplayer_level_select_9\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x1f\n\t"
-      "call *%[ce4500]\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmultiplayer_level_select_9:\n\t"
-      "leal -0x30(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c18f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lmultiplayer_level_select_10\n\t"
-      "movswl 0x3c(%%esi), %%ecx\n\t"
-      "movl (%%edi,%%ecx,4), %%edx\n\t"
-      "leal -0x30(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ce1490]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmultiplayer_level_select_10:\n\t"
-      "pushl $0x286264\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bead60_assert), [exitfn] "m"(bead60_exitfn), [tag] "m"(bead60_tag), [ce4500] "m"(bead60_ce4500), [ce5ab0] "m"(bead60_ce5ab0), [c1c18f0] "m"(bead60_c1c18f0), [ce1490] "m"(bead60_ce1490), [c8f390] "m"(bead60_c8f390)
-      : "memory");
+  short controller;
+  void *child;
+  void *tag;
+  short sel;
+  int handle;
+  char profile[0x30];
+
+  if (event_data == 0 || *(short *)((char *)event_data + 2) == -1) {
+    display_assert((const char *)0x2863b4, (const char *)0x2859a4, 0x72a, 1);
+    system_exit(-1);
+  }
+  controller = *(short *)((char *)event_data + 2);
+  child = *(void **)((char *)widget + 0x34);
+  while (child != 0) {
+    if (*(short *)((char *)child + 0xe) == 2)
+      break;
+    child = *(void **)((char *)child + 0x2c);
+  }
+  if (child == 0) {
+    display_assert((const char *)0x286498, (const char *)0x2859a4, 0x72e, 1);
+    system_exit(-1);
+  }
+  tag = tag_get(0x44654c61, *(int *)child);
+  if (*(int *)((char *)tag + 0x3e0) != 0) {
+    display_assert((const char *)0x286440, (const char *)0x2859a4, 0x735, 1);
+    system_exit(-1);
+  }
+  sel = *(short *)((char *)child + 0x3c);
+  if (sel < 0 || (int)sel >= (int)*(unsigned short *)((char *)child + 0x44)) {
+    display_assert((const char *)0x2863f0, (const char *)0x2859a4, 0x73b, 1);
+    system_exit(-1);
+  }
+  handle = ((int *)*(void **)((char *)child + 0x40))[sel];
+  if (handle >= 0) {
+    display_error_deferred(0x1f, controller, 1, 0);
+    ui_play_audio_feedback_sound(4);
+    return 0;
+  }
+  if (!player_profile_new(handle, profile)) {
+    error(2, (const char *)0x286264);
+    return 0;
+  }
+  player_ui_set_active_player_profile(controller, handle, profile);
+  return 1;
 }
-#else
-#error "multiplayer_level_select: clang naked draft required"
-#endif
 
 
 /* FUN_000eaec0 (0xeaec0) — readable C lift from XBE leaf. */
