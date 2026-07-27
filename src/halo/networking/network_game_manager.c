@@ -33,89 +33,32 @@ wchar_t *network_game_get_random_player_name(void)
   return (wchar_t *)0x26cdf0;
 }
 
-/* network_game_generate_local_machine_name (0x12aaf0) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-static int __stdcall (*const b12aaf0_c1d29eb)(int param_1, void *param_2, int param_3) = FUN_001d29eb;
-static wchar_t * (*const b12aaf0_c12b5e0)(void) = network_game_get_random_player_name;
-static wchar_t * (*const b12aaf0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static int __stdcall (*const b12aaf0_c1d26f3)(void *param_1, int param_2) = XSetNicknameW;
-static char * (*const b12aaf0_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
-static void (*const b12aaf0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void __stdcall (*const b12aaf0_c1d33a2)(int param_1) = FUN_001d33a2;
-
-__attribute__((naked, noinline))
-void network_game_generate_local_machine_name(void *name_buffer __attribute__((unused)))
+/* network_game_generate_local_machine_name (0x12aaf0) — readable C lift. */
+void network_game_generate_local_machine_name(void *name_buffer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d29eb]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lnetwork_game_generate_local_machine_name_2\n\t"
-      "pushl $0x20\n\t"
-      "call *%[c12b5e0]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19dc90]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "movw %%di, 0x3e(%%esi)\n\t"
-      "call *%[c1d26f3]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_game_generate_local_machine_name_1\n\t"
-      "pushl $0x20\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19f3a0]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x29596c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movw %%di, 0x3e(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_generate_local_machine_name_1:\n\t"
-      "pushl $0x29593c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%di, 0x3e(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_generate_local_machine_name_2:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d33a2]\n\t"
-      "movw %%di, 0x3e(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d29eb] "m"(b12aaf0_c1d29eb), [c12b5e0] "m"(b12aaf0_c12b5e0), [c19dc90] "m"(b12aaf0_c19dc90), [c1d26f3] "m"(b12aaf0_c1d26f3), [c19f3a0] "m"(b12aaf0_c19f3a0), [c8f390] "m"(b12aaf0_c8f390), [c1d33a2] "m"(b12aaf0_c1d33a2)
-      : "memory");
-}
-#else
-#error "network_game_generate_local_machine_name: clang naked draft required"
-#endif
+  int handle;
+  wchar_t *rand_name;
+  char ascii[0x20];
+  char *converted;
 
+  handle = FUN_001d29eb(0, name_buffer, 0x20);
+  if (handle != -1) {
+    FUN_001d33a2(handle);
+    *(unsigned short *)((char *)name_buffer + 0x3e) = 0;
+    return;
+  }
+  rand_name = network_game_get_random_player_name();
+  ustrncpy((wchar_t *)name_buffer, rand_name, 0x20);
+  *(unsigned short *)((char *)name_buffer + 0x3e) = 0;
+  if (XSetNicknameW(name_buffer, 1) == 0) {
+    error(2, (const char *)0x29593c);
+    *(unsigned short *)((char *)name_buffer + 0x3e) = 0;
+    return;
+  }
+  converted = wide_to_ascii((const wchar_t *)name_buffer, ascii, 0x20);
+  error(2, (const char *)0x29596c, converted);
+  *(unsigned short *)((char *)name_buffer + 0x3e) = 0;
+}
 
 void network_game_log(const char *format, ...)
 {

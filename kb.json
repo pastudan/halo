@@ -38501,7 +38501,8 @@
         {
           "addr": "0x12aaf0",
           "decl": "void network_game_generate_local_machine_name(void *name_buffer);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_generate_local_machine_name"
         },
         {
           "addr": "0x12ab80",
