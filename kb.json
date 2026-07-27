@@ -7700,7 +7700,7 @@
         {
           "addr": "0xdade0",
           "decl": "void tiny_point2d_set(float *in@<esi>, unsigned char *out@<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "tiny_point2d_set"
         },
         {
@@ -16344,7 +16344,7 @@
         {
           "addr": "0x139810",
           "decl": "void FUN_00139810(float *color@<ecx>, float scale);",
-          "ported": false,
+          "ported": true,
           "reg_args": {
             "color": "ecx"
           },
@@ -22954,7 +22954,8 @@
         {
           "addr": "0x94020",
           "decl": "void FUN_00094020(int *out, int a, int *cursor, int c);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00094020"
         },
         {
           "addr": "0x94060",
@@ -27258,7 +27259,7 @@
         {
           "addr": "0xe4770",
           "decl": "void ui_widget_pending_load_pop(int *head@<edi>, void *record@<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "ui_widget_pending_load_pop"
         },
         {
@@ -32375,7 +32376,7 @@
           "addr": "0x11da30",
           "decl": "bool lruv_block_touched(void *lruv, int block_index);",
           "name": "lruv_block_touched",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11da60",
