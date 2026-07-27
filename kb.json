@@ -22678,7 +22678,7 @@
         {
           "addr": "0x111770",
           "decl": "void FUN_00111770(int state @<esi>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x111910",
