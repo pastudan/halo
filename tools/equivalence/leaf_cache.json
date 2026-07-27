@@ -1606,7 +1606,7 @@
   "0x43740": {
     "class": "non_leaf",
     "confidence": "weak",
-    "coverage_pct": 0.0
+    "coverage_pct": 31.8
   },
   "0x43f20": {
     "class": "non_leaf",

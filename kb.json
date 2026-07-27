@@ -25306,7 +25306,7 @@
         },
         {
           "addr": "0x1cbc40",
-          "decl": "char FUN_001cbc40(int sound_handle /* @<ebx> */);",
+          "decl": "char FUN_001cbc40(int sound_handle@<ebx>);",
           "ported": true,
           "name": "FUN_001cbc40"
         },
@@ -26671,7 +26671,7 @@
         },
         {
           "addr": "0x131700",
-          "decl": "void FUN_00131700(int object_handle, int antenna_handle);",
+          "decl": "void FUN_00131700(void);",
           "ported": true,
           "name": "FUN_00131700"
         },
@@ -35026,7 +35026,8 @@
         {
           "addr": "0x43740",
           "decl": "int FUN_00043740(int16_t conversation_index, char allow_finish);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00043740"
         },
         {
           "addr": "0x43870",

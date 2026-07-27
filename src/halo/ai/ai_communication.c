@@ -881,141 +881,57 @@ void ai_conversation_finish(int handle, char param_b, char param_c)
   datum_delete(*(data_t **)0x6324ec, handle);
 }
 
-/* FUN_00043740 (0x43740) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static int (*const b43740_c119610)(data_t *data) = data_new_at_index;
-static void (*const b43740_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b43740_c119810)(data_iter_t *iterator) = data_iterator_next;
-static scenario_t * (*const b43740_c18e380)(void) = global_scenario_get;
-static void *(*const b43740_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b43740_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b43740_c435b0)(int handle, char param_b, char param_c) = (void *)ai_conversation_finish;
-static int (*const b43740_c119570)(data_t *data, int handle) = data_new_datum;
-static void *(*const b43740_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b43740_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-int FUN_00043740(int16_t conversation_index __attribute__((unused)), char allow_finish __attribute__((unused)))
+/* FUN_00043740 (0x43740) — readable C lift from XBE leaf. */
+int FUN_00043740(int16_t conversation_index, char allow_finish)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "movl 0x6324ec, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00043740_5\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00043740_6\n\t"
-      "movl 0x6324ec, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movb $1, %%bl\n\t"
-      "movl $0x7fffffff, %%edi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00043740_7\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_00043740_1:\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "cmpb %%bl, %%cl\n\t"
-      "jb .LFUN_00043740_2\n\t"
-      "cmpl %%edi, 0xc(%%eax)\n\t"
-      "jge .LFUN_00043740_3\n\t"
-      ".LFUN_00043740_2:\n\t"
-      "movl 0xc(%%eax), %%edi\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      "movb %%cl, %%bl\n\t"
-      ".LFUN_00043740_3:\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00043740_1\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_00043740_7\n\t"
-      "movb 0x5aca5f, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00043740_4\n\t"
-      "movswl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x259b08\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_00043740_4:\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c435b0]\n\t"
-      "movl 0x6324ec, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119570]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_00043740_7\n\t"
-      "movl %%eax, %%edi\n\t"
-      ".LFUN_00043740_5:\n\t"
-      "movl 0x6324ec, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%dx, 0x2(%%esi)\n\t"
-      "movw $0xffff, 0x48(%%esi)\n\t"
-      "movb %%al, 0x4(%%esi)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      ".LFUN_00043740_6:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00043740_7:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119610] "m"(b43740_c119610), [c1197b0] "m"(b43740_c1197b0), [c119810] "m"(b43740_c119810), [c18e380] "m"(b43740_c18e380), [elem] "m"(b43740_elem), [cff4d0] "m"(b43740_cff4d0), [c435b0] "m"(b43740_c435b0), [c119570] "m"(b43740_c119570), [dget] "m"(b43740_dget), [gtime] "m"(b43740_gtime)
-      : "memory");
-}
-#else
-#error "FUN_00043740: clang naked draft required"
-#endif
+  int handle;
+  data_iter_t iter;
+  char *rec;
+  char best_pri;
+  int best_time;
+  int best_handle;
+  char *conv;
+  void *elem;
 
+  handle = data_new_at_index(*(data_t **)0x6324ec);
+  if (handle == -1) {
+    if (!allow_finish)
+      return -1;
+
+    best_pri = 1;
+    best_time = 0x7fffffff;
+    best_handle = -1;
+    data_iterator_new(&iter, *(data_t **)0x6324ec);
+    for (rec = (char *)data_iterator_next(&iter); rec != 0;
+         rec = (char *)data_iterator_next(&iter)) {
+      if ((unsigned char)rec[4] < (unsigned char)best_pri ||
+          *(int *)(rec + 0xc) < best_time) {
+        best_time = *(int *)(rec + 0xc);
+        best_handle = (int)iter.datum_handle;
+        best_pri = rec[4];
+      }
+    }
+    if (best_handle == -1)
+      return -1;
+
+    if (*(char *)0x5aca5f) {
+      elem = tag_block_get_element(
+          (char *)global_scenario_get() + 0x468, (int)conversation_index, 0x74);
+      console_printf(0, (const char *)0x259b08, elem);
+    }
+    ai_conversation_finish(best_handle, 0, 0);
+    handle = data_new_datum(*(data_t **)0x6324ec, best_handle);
+    if (handle == -1)
+      return -1;
+  }
+
+  conv = (char *)datum_get(*(data_t **)0x6324ec, handle);
+  *(short *)(conv + 2) = conversation_index;
+  *(short *)(conv + 0x48) = (short)0xffff;
+  conv[4] = allow_finish;
+  *(int *)(conv + 0xc) = game_time_get();
+  return handle;
+}
 
 /* ai_conversation_line_begin (0x43870) — XBE naked draft (batch 120). */
 #if defined(__clang__)
