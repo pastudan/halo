@@ -275,7 +275,7 @@
         {
           "addr": "0x680a0",
           "decl": "void FUN_000680a0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000680a0"
         },
         {
@@ -35210,7 +35210,8 @@
         {
           "addr": "0x46530",
           "decl": "void FUN_00046530(int unit_handle, uint16_t priority, uint16_t type, int unk, int unk2, void *comm_data);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00046530"
         },
         {
           "addr": "0x46b60",
@@ -35377,7 +35378,7 @@
         {
           "addr": "0x49d60",
           "decl": "void FUN_00049d60(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00049d60"
         },
         {
@@ -35389,7 +35390,8 @@
         {
           "addr": "0x4a030",
           "decl": "void FUN_0004a030(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0004a030"
         },
         {
           "addr": "0x4a220",
@@ -35440,7 +35442,7 @@
         {
           "addr": "0x4a770",
           "decl": "void FUN_0004a770(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004a770"
         },
         {
@@ -35519,7 +35521,8 @@
         {
           "addr": "0x4bc70",
           "decl": "void FUN_0004bc70(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0004bc70"
         },
         {
           "addr": "0x4c0f0",
@@ -35541,7 +35544,8 @@
         {
           "addr": "0x4c560",
           "decl": "void FUN_0004c560(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0004c560"
         },
         {
           "addr": "0x4c890",
@@ -35566,7 +35570,8 @@
         {
           "addr": "0x52bb0",
           "decl": "void FUN_00052bb0(int clump_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00052bb0"
         },
         {
           "addr": "0x534d0",
@@ -36718,7 +36723,8 @@
         {
           "addr": "0x63e90",
           "decl": "char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, float param_7, int param_8, unsigned int *result);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00063e90"
         },
         {
           "addr": "0x64170",
@@ -41086,12 +41092,14 @@
         {
           "addr": "0x604e0",
           "decl": "void FUN_000604e0(void *path, int16_t heap_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000604e0"
         },
         {
           "addr": "0x60670",
           "decl": "void FUN_00060670(void *path, int16_t heap_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00060670"
         },
         {
           "addr": "0x60910",
@@ -44129,13 +44137,13 @@
         {
           "addr": "0x67760",
           "decl": "int FUN_00067760(void *out@<edi>, void *typeinfo@<ebx>, void *data);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00067760"
         },
         {
           "addr": "0x679f0",
           "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000679f0"
         },
         {
