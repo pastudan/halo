@@ -31440,8 +31440,9 @@
         },
         {
           "addr": "0x107d40",
-          "decl": "void FUN_00107d40(void);",
-          "ported": false
+          "decl": "char FUN_00107d40(int a0, int a1, int a2, int a3, int a4, int a5, int16_t count, float *dir, float *planes);",
+          "ported": true,
+          "name": "FUN_00107d40"
         },
         {
           "addr": "0x107db0",

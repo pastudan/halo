@@ -155,71 +155,32 @@ void FUN_00107c30(void)
 #endif
 
 
-/* FUN_00107d40 (0x107d40) — XBE naked draft (batch 250). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00107d40(void)
+/* FUN_00107d40 (0x107d40) — readable C lift from XBE leaf. */
+char FUN_00107d40(int a0, int a1, int a2, int a3, int a4, int a5, int16_t count, float *dir, float *planes)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x20(%%ebp), %%di\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testw %%di, %%di\n\t"
-      "movb $1, %%bl\n\t"
-      "jle .LFUN_00107d40_3\n\t"
-      "movl 0x28(%%ebp), %%edx\n\t"
-      "movl 0x24(%%ebp), %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00107d40_1:\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "imull $0x1c, %%eax, %%eax\n\t"
-      "addl %%esi, %%eax\n\t"
-      "cmpb $0, (%%eax)\n\t"
-      "je .LFUN_00107d40_2\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls (%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x10(%%eax)\n\t"
-      "fcomps 0x31fb40\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00107d40_4\n\t"
-      ".LFUN_00107d40_2:\n\t"
-      "incl %%ecx\n\t"
-      "cmpw %%di, %%cx\n\t"
-      "jl .LFUN_00107d40_1\n\t"
-      ".LFUN_00107d40_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00107d40_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t i;
+  char ok;
+  float *plane;
+  float d;
+
+  (void)a0; (void)a1; (void)a2; (void)a3; (void)a4; (void)a5;
+  ok = 1;
+  if (count <= 0) {
+    return ok;
+  }
+  for (i = 0; i < count; i++) {
+    plane = (float *)((char *)planes + (int)i * 0x1c);
+    if (*(unsigned char *)plane == 0) {
+      continue;
+    }
+    d = plane[3] * dir[2] + plane[2] * dir[1] + plane[1] * dir[0] - plane[4];
+    if (d > *(float *)0x31fb40) {
+      return 0;
+    }
+  }
+  return ok;
 }
-#else
-#error "FUN_00107d40: clang naked draft required"
-#endif
+
 
 
 /* FUN_00107db0 (0x107db0) — XBE naked draft (batch 243). */
