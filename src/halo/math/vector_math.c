@@ -1209,117 +1209,53 @@ void FUN_000129f0(int datum_index)
   *(unsigned char *)(obj + 0x425) = 0;
 }
 
-/* FUN_00012ad0 (0x12ad0) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void *(*const b12ad0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static bool (*const b12ad0_c3b320)(int actor_handle) = actor_has_ranged_weapon;
-static void *(*const b12ad0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-float FUN_00012ad0(int actor_handle __attribute__((unused)), int action_type __attribute__((unused)), void *charge_state __attribute__((unused)))
+/* FUN_00012ad0 (0x12ad0) — readable C lift from XBE leaf.
+ * Charge / ranged fire range lookup from actor + weapon tag. */
+float FUN_00012ad0(int actor_handle, int action_type, void *charge_state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%si\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "je .LFUN_00012ad0_2\n\t"
-      "cmpw $3, %%si\n\t"
-      "je .LFUN_00012ad0_2\n\t"
-      "cmpw $4, %%si\n\t"
-      "je .LFUN_00012ad0_1\n\t"
-      "testw %%si, %%si\n\t"
-      "jne .LFUN_00012ad0_6\n\t"
-      ".LFUN_00012ad0_1:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c3b320]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00012ad0_6\n\t"
-      "cmpw $7, 0x268(%%edi)\n\t"
-      "jl .LFUN_00012ad0_6\n\t"
-      "flds 0x2533c0\n\t"
-      "fcomps 0x608(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00012ad0_6\n\t"
-      "movl 0x608(%%edi), %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00012ad0_2:\n\t"
-      "movl 0x58(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $3, %%si\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "jne .LFUN_00012ad0_3\n\t"
-      "flds 0x2533c0\n\t"
-      "fcomps 0x388(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00012ad0_3\n\t"
-      "movl 0x388(%%ecx), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_00012ad0_3:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movb 0x30(%%eax), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .LFUN_00012ad0_4\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x37c(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00012ad0_6\n\t"
-      "movl 0x37c(%%ecx), %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00012ad0_4:\n\t"
-      "flds 0x37c(%%ecx)\n\t"
-      "fadds 0x34(%%eax)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00012ad0_5\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00012ad0_5:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00012ad0_6:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b12ad0_dget), [c3b320] "m"(b12ad0_c3b320), [tag] "m"(b12ad0_tag)
-      : "memory");
+  void *actor;
+  void *weapon_tag;
+  float result;
+  unsigned char charged;
+
+  actor = datum_get(*(data_t **)0x6325a4, actor_handle);
+  result = 0.0f;
+
+  if ((short)action_type != 2 && (short)action_type != 3) {
+    if ((short)action_type != 4 && (short)action_type != 0)
+      return result;
+    if (!actor_has_ranged_weapon(actor_handle))
+      return result;
+    if (*(short *)((char *)actor + 0x268) < 7)
+      return result;
+    if (!(*(float *)0x2533c0 <= *(float *)((char *)actor + 0x608)))
+      return result;
+    return *(float *)((char *)actor + 0x608);
+  }
+
+  weapon_tag = tag_get(0x61637472, *(int *)((char *)actor + 0x58));
+  if ((short)action_type == 3) {
+    if (*(float *)0x2533c0 <= *(float *)((char *)weapon_tag + 0x388))
+      result = *(float *)((char *)weapon_tag + 0x388);
+  }
+
+  charged = *((unsigned char *)charge_state + 0x30);
+  if (charged) {
+    if (!(result <= *(float *)((char *)weapon_tag + 0x37c)))
+      return result;
+    return *(float *)((char *)weapon_tag + 0x37c);
+  }
+
+  {
+    float capped;
+    capped = *(float *)((char *)weapon_tag + 0x37c) +
+             *(float *)((char *)charge_state + 0x34);
+    if (result <= capped)
+      return capped;
+  }
+  return result;
 }
-#else
-#error "FUN_00012ad0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00012be0 (0x12be0) — readable C lift. */

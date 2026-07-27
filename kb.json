@@ -22038,8 +22038,9 @@
         },
         {
           "addr": "0x12ad0",
-          "decl": "float FUN_00012ad0(int actor_handle @<ebx>, int action_type @<esi>, void *charge_state);",
-          "ported": false
+          "decl": "float FUN_00012ad0(int actor_handle@<ebx>, int action_type@<esi>, void *charge_state);",
+          "ported": true,
+          "name": "FUN_00012ad0"
         },
         {
           "addr": "0x12be0",
