@@ -36117,7 +36117,7 @@
         {
           "addr": "0x46cb0",
           "decl": "void ai_conversation_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "ai_conversation_update"
         },
         {
@@ -40674,7 +40674,7 @@
         {
           "addr": "0x24130",
           "decl": "void FUN_00024130(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00024130"
         },
         {

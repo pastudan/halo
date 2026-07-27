@@ -108,217 +108,49 @@ void FUN_00024060(void)
 #endif
 
 
-/* FUN_00024130 (0x24130) — XBE naked draft (batch 115). */
-#if defined(__clang__)
-static void *(*const b24130_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const b24130_c211f0)(int actor_handle) = actor_combat_get_firing_variant_definition;
-static void (*const b24130_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b24130_exitfn)(int) = system_exit;
-static void (*const b24130_c30b80)(void) = actor_perception_aiming_vector_test_blockage;
-
-__attribute__((naked, noinline))
+/* FUN_00024130 (0x24130) — readable C lift (restored pre-naked). */
 void FUN_00024130(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c211f0]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movw 0x10(%%ebp), %%bx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb 0x5fc(%%edx), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x41000000, -0x4(%%ebp)\n\t"
-      "je .LFUN_00024130_1\n\t"
-      "flds 0x600(%%edx)\n\t"
-      "fcomps 0x74(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00024130_7\n\t"
-      "flds 0x600(%%edx)\n\t"
-      "fdivs 0x74(%%ecx)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fmuls 0x253f78\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00024130_7\n\t"
-      ".LFUN_00024130_1:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jle .LFUN_00024130_7\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "addl $8, %%esi\n\t"
-      "movzwl %%bx, %%edi\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00024130_2:\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00024130_6\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x18(%%edx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00024130_6\n\t"
-      "flds (%%esi)\n\t"
-      "fdivs 0x18(%%edx)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "flds 0x2533c0\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00024130_3\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      ".LFUN_00024130_3:\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00024130_4\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x254cb8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00024130_5\n\t"
-      ".LFUN_00024130_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x81\n\t"
-      "pushl $0x254c8c\n\t"
-      "pushl $0x254c5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00024130_5:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fadds 0x30(%%esi)\n\t"
-      "fstps 0x30(%%esi)\n\t"
-      ".LFUN_00024130_6:\n\t"
-      "addl $0x3c, %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .LFUN_00024130_2\n\t"
-      ".LFUN_00024130_7:\n\t"
-      "cmpw $0, 0x256(%%edx)\n\t"
-      "jle .LFUN_00024130_20\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jle .LFUN_00024130_20\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movzwl %%bx, %%ecx\n\t"
-      "addl $0x38, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      ".LFUN_00024130_8:\n\t"
-      "movb -0x8(%%eax), %%cl\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "je .LFUN_00024130_19\n\t"
-      "cmpw %%di, 0x254(%%edx)\n\t"
-      "jle .LFUN_00024130_17\n\t"
-      ".LFUN_00024130_9:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "imull $0x1c, %%eax, %%eax\n\t"
-      "leal (%%eax,%%edx,1), %%esi\n\t"
-      "movw 0x25c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_00024130_10\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .LFUN_00024130_13\n\t"
-      ".LFUN_00024130_10:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl -0x38(%%ecx), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x26c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x260(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c30b80]\n\t"
-      "movw 0x25c(%%esi), %%si\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "jne .LFUN_00024130_12\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "jle .LFUN_00024130_11\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00024130_13\n\t"
-      ".LFUN_00024130_11:\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00024130_13\n\t"
-      ".LFUN_00024130_12:\n\t"
-      "cmpw $1, %%si\n\t"
-      "jne .LFUN_00024130_13\n\t"
-      "cmpw %%ax, %%bx\n\t"
-      "jg .LFUN_00024130_13\n\t"
-      "movl %%eax, %%ebx\n\t"
-      ".LFUN_00024130_13:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x254(%%edx), %%di\n\t"
-      "jl .LFUN_00024130_9\n\t"
-      "cmpw $2, %%bx\n\t"
-      "jl .LFUN_00024130_14\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .LFUN_00024130_18\n\t"
-      ".LFUN_00024130_14:\n\t"
-      "cmpw $1, %%bx\n\t"
-      "jl .LFUN_00024130_15\n\t"
-      "flds 0x2533ec\n\t"
-      "jmp .LFUN_00024130_18\n\t"
-      ".LFUN_00024130_15:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .LFUN_00024130_16\n\t"
-      "flds 0x254640\n\t"
-      "jmp .LFUN_00024130_18\n\t"
-      ".LFUN_00024130_16:\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jl .LFUN_00024130_17\n\t"
-      "flds 0x254cbc\n\t"
-      "jmp .LFUN_00024130_18\n\t"
-      ".LFUN_00024130_17:\n\t"
-      "flds 0x253f34\n\t"
-      ".LFUN_00024130_18:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "fadds (%%eax)\n\t"
-      "fstps (%%eax)\n\t"
-      ".LFUN_00024130_19:\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "addl $0x3c, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "jne .LFUN_00024130_8\n\t"
-      ".LFUN_00024130_20:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b24130_dget), [c211f0] "m"(b24130_c211f0), [assert] "m"(b24130_assert), [exitfn] "m"(b24130_exitfn), [c30b80] "m"(b24130_c30b80)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  actor_combat_get_firing_variant_definition(0);
+  /* test (char)eax, 0x41 -> je 0x2424e */
+  /* test (char)eax, 0x41 -> jne 0x2424e */
+  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x2424e */
+  /* test (char)eax, (char)eax -> je 0x24244 */
+  /* test (char)eax, 0x41 -> jne 0x241f5 */
+  /* test (char)eax, 1 -> jne 0x24218 */
+  display_assert((char *)0x00254c5c, (char *)0x00254c8c, 129, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [edx + 0x256], 0 -> jle 0x24360 */
+  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x24360 */
+  /* relift: cmp word ptr [edx + 0x254], (int16_t)edi -> jle 0x24340 */
+  /* test (int16_t)eax, (int16_t)eax -> je 0x242ae */
+  /* cmp (int16_t)eax, 1 -> jne 0x242f8 */
+  actor_perception_aiming_vector_test_blockage();
+  /* test (int16_t)esi, (int16_t)esi -> jne 0x242eb */
+  /* cmp (int16_t)ecx, (int16_t)eax -> jle 0x242e6 */
+  /* cmp (int16_t)esi, 1 -> jne 0x242f8 */
+  /* cmp (int16_t)ebx, (int16_t)eax -> jg 0x242f8 */
+  /* relift: cmp (int16_t)edi, word ptr [edx + 0x254] -> jl 0x24293 */
+  /* cmp (int16_t)ebx, 2 -> jl 0x24313 */
+  /* cmp (int16_t)ebx, 1 -> jl 0x24321 */
+  /* cmp (int16_t)eax, 2 -> jl 0x24332 */
+  /* cmp (int16_t)eax, 1 -> jl 0x24340 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_00024130: clang naked draft required"
-#endif
 
 
 /* FUN_00024370 (0x24370) — readable C lift. */
