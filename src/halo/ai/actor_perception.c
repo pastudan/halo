@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* actor_perception.c — AI actor perception and prop evaluation.
  *
  * Corresponds to actor_perception.obj.
@@ -729,145 +730,63 @@ done_vision:
          local_c;
 }/* --- actor_perception.obj batch drafts (2026-07-26) --- */
 
-/* actor_get_vision_distances (0x2f470) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static void *(*const b2f470_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b2f470_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void actor_get_vision_distances(void)
+/* actor_get_vision_distances (0x2f470) — readable C lift. */
+void actor_get_vision_distances(int actor_handle, float p1, float p2,
+                                float range_param, float *out_a, float *out_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x58(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "fcomps 0x28(%%ecx)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_get_vision_distances_1\n\t"
-      "flds 0x2533c0\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "flds 0x2533c0\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps (%%eax)\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_get_vision_distances_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x2c(%%ecx)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x2533c4\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x2533c4\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fcomps 0x253f30\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_get_vision_distances_2\n\t"
-      "movl $0x40600000, -0xc(%%ebp)\n\t"
-      ".Lactor_get_vision_distances_2:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fcomps 0x20(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_get_vision_distances_3\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps (%%eax)\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_get_vision_distances_3:\n\t"
-      "flds 0x1c(%%ecx)\n\t"
-      "flds 0x2533f0\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_get_vision_distances_4\n\t"
-      "fstp %%st(0)\n\t"
-      "jmp .Lactor_get_vision_distances_5\n\t"
-      ".Lactor_get_vision_distances_4:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "flds 0x20(%%ecx)\n\t"
-      ".byte 0xd8, 0xe2\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fstp %%st(1)\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      ".byte 0xde, 0xca\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".Lactor_get_vision_distances_5:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_get_vision_distances_6\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps (%%eax)\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_get_vision_distances_6:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      "flds 0x20(%%ecx)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps (%%eax)\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2f470_dget), [tag] "m"(b2f470_tag)
-      : "memory");
-}
-#else
-#error "actor_get_vision_distances: clang naked draft required"
-#endif
+  char *actor;
+  char *meta;
+  float base;
+  float mid;
+  float hi;
+  float base07;
+  float near_thr;
+  float primary;
+  float t;
+  float blended;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  meta = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
+
+  if (!(range_param <= *(float *)(meta + 0x28))) {
+    *out_b = *(float *)0x2533c0;
+    *out_a = *(float *)0x2533c0;
+    return;
+  }
+
+  base = p1 * p2;
+  mid = p2 * *(float *)(meta + 0x2c);
+  base07 = *(float *)0x2533c4 * base;
+  hi = mid * *(float *)0x2533c4;
+  if (!(hi <= *(float *)0x253f30))
+    hi = 3.5f;
+
+  if (!(range_param <= *(float *)(meta + 0x20))) {
+    *out_b = mid;
+    *out_a = hi;
+    return;
+  }
+
+  near_thr = *(float *)(meta + 0x1c) * *(float *)0x2533f0;
+  if (range_param < *(float *)(meta + 0x1c)) {
+    primary = base;
+  } else {
+    t = (range_param - *(float *)(meta + 0x1c)) /
+        (*(float *)(meta + 0x20) - *(float *)(meta + 0x1c));
+    primary = (*(float *)0x2533c8 - t) * base + t * mid;
+  }
+
+  if (range_param < near_thr) {
+    *out_b = primary;
+    *out_a = base07;
+    return;
+  }
+
+  t = (range_param - near_thr) / (*(float *)(meta + 0x20) - near_thr);
+  blended = (*(float *)0x2533c8 - t) * base07 + t * hi;
+  *out_b = primary;
+  *out_a = blended;
+}
 
 /* FUN_0002f5f0 (0x2f5f0) — readable C lift.
  * actor @eax, unit @edi; stack: scale, visibility, field_60, dz_flag. */
@@ -2254,154 +2173,61 @@ void actor_perception_aiming_vector_test_blockage(void)
 #endif
 
 
-/* FUN_00030d10 (0x30d10) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void *(*const b30d10_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b30d10_c64540)(int *out, int actor_handle) = FUN_00064540;
-static int (*const b30d10_c64570)(int *iter) = FUN_00064570;
-
-__attribute__((naked, noinline))
-unsigned int FUN_00030d10(int actor_handle __attribute__((unused)), float *chance_inout __attribute__((unused)))
+/* FUN_00030d10 (0x30d10) — readable C lift: nearby-actor chance scale. */
+unsigned int FUN_00030d10(int actor_handle, float *chance_inout)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00030d10_6\n\t"
-      "nop\n\t"
-      ".LFUN_00030d10_1:\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .LFUN_00030d10_4\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .LFUN_00030d10_4\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00030d10_4\n\t"
-      "movw 0x10(%%esi), %%ax\n\t"
-      "cmpw 0x4(%%ebx), %%ax\n\t"
-      "jne .LFUN_00030d10_4\n\t"
-      "movl 0x1c(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00030d10_4\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x308(%%eax)\n\t"
-      "jg .LFUN_00030d10_3\n\t"
-      "cmpw $4, 0x6c(%%eax)\n\t"
-      "jne .LFUN_00030d10_2\n\t"
-      "cmpw $0, 0xa8(%%eax)\n\t"
-      "jg .LFUN_00030d10_3\n\t"
-      ".LFUN_00030d10_2:\n\t"
-      "movb 0x12c(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00030d10_4\n\t"
-      "incl %%edi\n\t"
-      "jmp .LFUN_00030d10_4\n\t"
-      ".LFUN_00030d10_3:\n\t"
-      "incl -0x4(%%ebp)\n\t"
-      ".LFUN_00030d10_4:\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00030d10_1\n\t"
-      "cmpw $1, -0x4(%%ebp)\n\t"
-      "jle .LFUN_00030d10_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00030d10_5:\n\t"
-      "cmpw $1, %%di\n\t"
-      "jle .LFUN_00030d10_6\n\t"
-      "movswl %%di, %%eax\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x25337c\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "jmp .LFUN_00030d10_7\n\t"
-      ".LFUN_00030d10_6:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x253398\n\t"
-      "fadds 0x2533c8\n\t"
-      ".LFUN_00030d10_7:\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00030d10_8\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%edi\n\t"
-      "fmuls (%%eax)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "fstps (%%eax)\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00030d10_8:\n\t"
-      "fcoms 0x253f40\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00030d10_9\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x253f40\n\t"
-      ".LFUN_00030d10_9:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fmuls (%%eax)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "fstps (%%eax)\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b30d10_dget), [c64540] "m"(b30d10_c64540), [c64570] "m"(b30d10_c64570)
-      : "memory");
-}
-#else
-#error "FUN_00030d10: clang naked draft required"
-#endif
+  char *actor;
+  char *prop;
+  char *other;
+  int iter[2];
+  int count_combat;
+  int count_other;
+  float scale;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  count_other = 0;
+  count_combat = 0;
+  FUN_00064540(iter, actor_handle);
+  prop = (char *)FUN_00064570(iter);
+  if (!prop)
+    goto scale_few;
+
+  while (prop) {
+    if (*(short *)(prop + 0x24) >= 2 && *(short *)(prop + 0x24) <= 3 &&
+        !prop[0x60] &&
+        *(short *)(prop + 0x10) == *(short *)(actor + 4) &&
+        *(int *)(prop + 0x1c) != -1) {
+      other = (char *)datum_get(*(data_t **)0x6325a4, *(int *)(prop + 0x1c));
+      if (*(short *)(other + 0x308) > 0 ||
+          (*(short *)(other + 0x6c) == 4 && *(short *)(other + 0xa8) > 0)) {
+        count_combat++;
+      } else if (prop[0x12c]) {
+        count_other++;
+      }
+    }
+    prop = (char *)FUN_00064570(iter);
+  }
+
+  if ((short)count_combat > 1)
+    return 1;
+
+  if ((short)count_other > 1) {
+    scale = *(float *)0x2533c8 -
+            (float)(count_other - 1) * *(float *)0x25337c;
+  } else {
+scale_few:
+    scale = *(float *)0x2533c8 +
+            (float)(1 - count_other) * *(float *)0x253398;
+  }
+
+  if (scale < *(float *)0x2533c0)
+    scale = *(float *)0x2533c0;
+  else if (!(scale <= *(float *)0x253f40))
+    scale = *(float *)0x253f40;
+
+  *chance_inout *= scale;
+  return 0;
+}
 
 /* FUN_00030e60 (0x30e60) — readable C lift. */
 int16_t FUN_00030e60(int unused, int16_t *count, int16_t max_count, void *array, int key)
@@ -2915,7 +2741,7 @@ static void (*const b314f0_assert)(const char *, const char *, int, bool) = disp
 static void (*const b314f0_exitfn)(int) = system_exit;
 static float (*const b314f0_c18e690)(void) = FUN_0018e690;
 static int (*const b314f0_gtime)(void) = game_time_get;
-static void (*const b314f0_c2f470)(void) = actor_get_vision_distances;
+static void (*const b314f0_c2f470)(void) = (void *)actor_get_vision_distances;
 
 __attribute__((naked, noinline))
 int16_t actor_visibility_at_point(int actor_handle __attribute__((unused)), float *out_pos __attribute__((unused)), float *head_pos __attribute__((unused)), char vis_type __attribute__((unused)), int16_t los_result __attribute__((unused)), char flag __attribute__((unused)), int param_7 __attribute__((unused)), int16_t engagement __attribute__((unused)))
@@ -3459,157 +3285,71 @@ int actor_audibility_at_point(int actor_handle __attribute__((unused)), void *in
 #endif
 
 
-/* actor_perception_find_sense_position (0x31a90) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-static void *(*const b31a90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b31a90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b31a90_exitfn)(int) = system_exit;
-static void (*const b31a90_c3bde0)(int actor_handle, int unit_handle, char *input_block) = FUN_0003bde0;
-
-__attribute__((naked, noinline))
-void actor_perception_find_sense_position(int actor_handle __attribute__((unused)), float *position __attribute__((unused)), int param_3 __attribute__((unused)), void *input_block_out __attribute__((unused)))
+/* actor_perception_find_sense_position (0x31a90) — readable C lift. */
+void actor_perception_find_sense_position(int actor_handle, float *position,
+                                          int param_3, void *input_block_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_find_sense_position_8\n\t"
-      "movl 0x28(%%esi), %%edx\n\t"
-      "movl 0x6325a0, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x1e(%%esi)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl $0x7f7fffff, -0xc(%%ebp)\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "jg .Lactor_perception_find_sense_position_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x665\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256190\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_find_sense_position_1:\n\t"
-      "cmpl %%edi, 0x24(%%esi)\n\t"
-      "jne .Lactor_perception_find_sense_position_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x666\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256168\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_find_sense_position_2:\n\t"
-      "cmpw $0, 0x2(%%ebx)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jle .Lactor_perception_find_sense_position_6\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "jmp .Lactor_perception_find_sense_position_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lactor_perception_find_sense_position_3:\n\t"
-      "movswl -0x4(%%ebp), %%edi\n\t"
-      "movl 0x58(%%ebx,%%edi,4), %%ecx\n\t"
-      "movl 0x63259c, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "addl $4, %%eax\n\t"
-      "flds (%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fsubs (%%eax)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fcoms -0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_perception_find_sense_position_4\n\t"
-      "movl 0x18(%%ebx,%%edi,4), %%eax\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jmp .Lactor_perception_find_sense_position_5\n\t"
-      ".Lactor_perception_find_sense_position_4:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lactor_perception_find_sense_position_5:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw 0x2(%%ebx), %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .Lactor_perception_find_sense_position_3\n\t"
-      "cmpl $-1, -0x8(%%ebp)\n\t"
-      "jne .Lactor_perception_find_sense_position_7\n\t"
-      ".Lactor_perception_find_sense_position_6:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x677\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256150\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_find_sense_position_7:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c3bde0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_perception_find_sense_position_8:\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "addl $0x120, %%esi\n\t"
-      "movl $0xe, %%ecx\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b31a90_dget), [assert] "m"(b31a90_assert), [exitfn] "m"(b31a90_exitfn), [c3bde0] "m"(b31a90_c3bde0)
-      : "memory");
-}
-#else
-#error "actor_perception_find_sense_position: clang naked draft required"
-#endif
+  char *actor;
+  char *swarm;
+  char *prop;
+  float *pp;
+  int best;
+  float best_d2;
+  int i;
+  int n;
+  float dx, dy, dz, d2;
+  unsigned int *src;
+  unsigned int *dst;
+  int k;
 
+  (void)param_3;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (!actor[6]) {
+    src = (unsigned int *)(actor + 0x120);
+    dst = (unsigned int *)input_block_out;
+    for (k = 0; k < 0xe; k++)
+      dst[k] = src[k];
+    return;
+  }
+
+  swarm = (char *)datum_get(*(data_t **)0x6325a0, *(int *)(actor + 0x28));
+  best = -1;
+  {
+    unsigned int maxf = 0x7f7fffffu;
+    best_d2 = *(float *)&maxf;
+  }
+
+  if (*(short *)(actor + 0x1e) <= 0) {
+    display_assert((const char *)0x256190, (const char *)0x255fb0, 0x665, true);
+    system_exit(-1);
+  }
+  if (*(int *)(actor + 0x24) == -1) {
+    display_assert((const char *)0x256168, (const char *)0x255fb0, 0x666, true);
+    system_exit(-1);
+  }
+  n = *(short *)(swarm + 2);
+  if (n <= 0) {
+    display_assert((const char *)0x256150, (const char *)0x255fb0, 0x677, true);
+    system_exit(-1);
+  }
+  for (i = 0; i < n; i++) {
+    prop = (char *)datum_get(*(data_t **)0x63259c, *(int *)(swarm + 0x58 + i * 4));
+    pp = (float *)(prop + 4);
+    dx = position[0] - pp[0];
+    dy = position[1] - pp[1];
+    dz = position[2] - pp[2];
+    d2 = dx * dx + dy * dy + dz * dz;
+    if (d2 < best_d2) {
+      best_d2 = d2;
+      best = *(int *)(swarm + 0x18 + i * 4);
+    }
+  }
+  if (best == -1) {
+    display_assert((const char *)0x256150, (const char *)0x255fb0, 0x677, true);
+    system_exit(-1);
+  }
+  FUN_0003bde0(actor_handle, best, (char *)input_block_out);
+}
 
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(1)))
@@ -3828,7 +3568,7 @@ static void (*const b31df0_c1a9520)(int object_handle, float *out_position) = FU
 static int (*const b31df0_c13d7f0)(int object_handle) = object_get_root_parent;
 static bool (*const b31df0_c18f3e0)(void *location, void *position, int16_t *out_sky_index) = FUN_0018f3e0;
 static char (*const b31df0_c1b55c0)(int vehicle_handle) = vehicle_hover;
-static void (*const b31df0_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = actor_perception_find_sense_position;
+static void (*const b31df0_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = (void *)actor_perception_find_sense_position;
 static float (*const b31df0_norm)(float *) = normalize3d;
 
 __attribute__((naked, noinline))
@@ -4139,7 +3879,7 @@ static void *(*const b32170_dget)(void *, int) = (void *(*)(void *, int))datum_g
 static void *(*const b32170_get)(int, int) = object_get_and_verify_type;
 static void *(*const b32170_tag)(int, int) = tag_get;
 static vector3_t * (*const b32170_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b32170_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = actor_perception_find_sense_position;
+static void (*const b32170_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = (void *)actor_perception_find_sense_position;
 static void *(*const b32170_memset)(void *, int, unsigned int) = csmemset;
 static bool (*const b32170_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
 
@@ -4337,7 +4077,7 @@ static void *(*const b32380_tryget)(int, int) = object_try_and_get_and_verify_ty
 static void (*const b32380_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b32380_exitfn)(int) = system_exit;
 static vector3_t * (*const b32380_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b32380_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = actor_perception_find_sense_position;
+static void (*const b32380_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = (void *)actor_perception_find_sense_position;
 static void *(*const b32380_tag)(int, int) = tag_get;
 static float (*const b32380_c12170)(float *vector) = FUN_00012170;
 static int (*const b32380_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
@@ -6956,7 +6696,7 @@ static void *(*const b342a0_dget)(void *, int) = (void *(*)(void *, int))datum_g
 static void *(*const b342a0_get)(int, int) = object_get_and_verify_type;
 static int (*const b342a0_c13ec50)(int object_handle) = object_mark;
 static vector3_t * (*const b342a0_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b342a0_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = actor_perception_find_sense_position;
+static void (*const b342a0_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = (void *)actor_perception_find_sense_position;
 static int (*const b342a0_c31c00)(int owner_handle, int unit_handle, char verify_flag, float *swarm_origin) = actor_perception_unit_from_swarm;
 static void *(*const b342a0_tag)(int, int) = tag_get;
 static bool (*const b342a0_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;

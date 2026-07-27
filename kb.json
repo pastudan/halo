@@ -34613,7 +34613,7 @@
         },
         {
           "addr": "0x2f470",
-          "decl": "void actor_get_vision_distances(void);",
+          "decl": "void actor_get_vision_distances(int actor_handle, float p1, float p2, float range_param, float *out_a, float *out_b);",
           "ported": false
         },
         {
@@ -34754,7 +34754,7 @@
           "decl": "void actor_perception_find_sense_position(int actor_handle, float *position, int param_3, void *input_block_out);",
           "name": "actor_perception_find_sense_position",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x31c00",
