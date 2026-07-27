@@ -3415,74 +3415,29 @@ void FUN_001008a0(int num_players /* @<ebx> */, int *horizontal_out, int *vertic
 }
 
 
-/* main_movie_start (0x101bc0) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static void (*const b101bc0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b101bc0_exitfn)(int) = system_exit;
-static void * (*const b101bc0_c7e0b0)(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format) = bitmap_2d_new;
-static void (*const b101bc0_c199a60)(void) = (void (*)(void))directory_create_or_delete_contents;
-static void (*const b101bc0_cb5d00)(float) = game_time_set_speed;
-
-__attribute__((naked, noinline))
-void main_movie_start(float frame_rate __attribute__((unused)))
+/* main_movie_start (0x101bc0) — readable C lift. */
+void main_movie_start(float frame_rate)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x46da10, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_movie_start_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa6b\n\t"
-      "pushl $0x28b0b4\n\t"
-      "pushl $0x28b58c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmain_movie_start_1:\n\t"
-      "pushl $0xa\n\t"
-      "pushl $0\n\t"
-      "pushl $0x1e0\n\t"
-      "pushl $0x280\n\t"
-      "call *%[c7e0b0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x46da10\n\t"
-      "je .Lmain_movie_start_3\n\t"
-      "pushl $0x28b584\n\t"
-      "call *%[c199a60]\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x253f44\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x46da1c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lmain_movie_start_2\n\t"
-      "flds 0x2533c8\n\t"
-      "pushl $0x3f800000\n\t"
-      "fdivs 0x8(%%ebp)\n\t"
-      "fstps 0x46da20\n\t"
-      "call *%[cb5d00]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_movie_start_2:\n\t"
-      "pushl $0x3f800000\n\t"
-      "movl $0x3d088889, 0x46da20\n\t"
-      "call *%[cb5d00]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lmain_movie_start_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b101bc0_assert), [exitfn] "m"(b101bc0_exitfn), [c7e0b0] "m"(b101bc0_c7e0b0), [c199a60] "m"(b101bc0_c199a60), [cb5d00] "m"(b101bc0_cb5d00)
-      : "memory");
-}
-#else
-#error "main_movie_start: clang naked draft required"
-#endif
+  void *bmp;
 
+  if (*(int *)0x46da10 != 0) {
+    display_assert((const char *)0x28b58c, (const char *)0x28b0b4, 0xa6b, true);
+    system_exit(-1);
+  }
+  bmp = bitmap_2d_new(0x280, 0x1e0, 0, 0xa);
+  *(void **)0x46da10 = bmp;
+  if (!bmp)
+    return;
+  directory_create_or_delete_contents((const char *)0x28b584);
+  *(int *)0x46da1c = 0;
+  if (!(frame_rate <= *(float *)0x253f44)) {
+    *(float *)0x46da20 = *(float *)0x2533c8 / frame_rate;
+    game_time_set_speed(1.0f);
+    return;
+  }
+  *(unsigned int *)0x46da20 = 0x3d088889u;
+  game_time_set_speed(1.0f);
+}
 
 /* --- main.obj batch2 drafts (2026-07-26) --- */
 

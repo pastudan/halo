@@ -14574,7 +14574,7 @@
         {
           "addr": "0x101bc0",
           "decl": "void main_movie_start(float frame_rate);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x101c90",
