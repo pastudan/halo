@@ -23413,8 +23413,9 @@
         },
         {
           "addr": "0x185830",
-          "decl": "void render_camera_hack_frustum_z(void);",
-          "ported": false
+          "decl": "void render_camera_hack_frustum_z(void *camera, float z_near, float z_far);",
+          "ported": true,
+          "name": "render_camera_hack_frustum_z"
         },
         {
           "addr": "0x185950",

@@ -583,104 +583,38 @@ void render_camera_new(void *camera)
   csmemset(camera, 0, 0x54);
 }
 
-/* render_camera_hack_frustum_z (0x185830) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void (*const b185830_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b185830_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void render_camera_hack_frustum_z(void)
+/* render_camera_hack_frustum_z (0x185830) — readable C lift from XBE leaf. */
+void render_camera_hack_frustum_z(void *camera, float z_near, float z_far)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lrender_camera_hack_frustum_z_1\n\t"
-      "movb 0x140(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrender_camera_hack_frustum_z_2\n\t"
-      ".Lrender_camera_hack_frustum_z_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x10f\n\t"
-      "pushl $0x2b12b4\n\t"
-      "pushl $0x2b12dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_camera_hack_frustum_z_2:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrender_camera_hack_frustum_z_3\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrender_camera_hack_frustum_z_3\n\t"
-      "movl 0x14c(%%esi), %%eax\n\t"
-      "movl %%eax, 0x4d0d08\n\t"
-      "movl 0x15c(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x4d0d0c\n\t"
-      "movl 0x16c(%%esi), %%edx\n\t"
-      "movl %%edx, 0x4d0d10\n\t"
-      "movl 0x17c(%%esi), %%eax\n\t"
-      "movl %%eax, 0x4d0d14\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrender_camera_hack_frustum_z_3:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrender_camera_hack_frustum_z_4\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrender_camera_hack_frustum_z_4\n\t"
-      "movl 0x4d0d08, %%ecx\n\t"
-      "movl %%ecx, 0x14c(%%esi)\n\t"
-      "movl 0x4d0d0c, %%edx\n\t"
-      "movl %%edx, 0x15c(%%esi)\n\t"
-      "movl 0x4d0d10, %%eax\n\t"
-      "movl %%eax, 0x16c(%%esi)\n\t"
-      "movl 0x4d0d14, %%ecx\n\t"
-      "movl %%ecx, 0x17c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrender_camera_hack_frustum_z_4:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movl $0, 0x14c(%%esi)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "movl $0, 0x15c(%%esi)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds 0x10(%%ebp)\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fchs\n\t"
-      "fstps 0x16c(%%esi)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      "fmuls 0x25eeac\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fstps 0x17c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b185830_assert), [exitfn] "m"(b185830_exitfn)
-      : "memory");
-}
-#else
-#error "render_camera_hack_frustum_z: clang naked draft required"
-#endif
+  float denom;
 
+  if (camera == 0 || *(unsigned char *)((char *)camera + 0x140) == 0) {
+    display_assert((const char *)0x2b12dc, (const char *)0x2b12b4, 0x10f, 1);
+    system_exit(-1);
+  }
+
+  if (z_near == -1.0f && z_far == -1.0f) {
+    *(unsigned int *)0x4d0d08 = *(unsigned int *)((char *)camera + 0x14c);
+    *(unsigned int *)0x4d0d0c = *(unsigned int *)((char *)camera + 0x15c);
+    *(unsigned int *)0x4d0d10 = *(unsigned int *)((char *)camera + 0x16c);
+    *(unsigned int *)0x4d0d14 = *(unsigned int *)((char *)camera + 0x17c);
+    return;
+  }
+
+  if (z_near == 0.0f && z_far == 0.0f) {
+    *(unsigned int *)((char *)camera + 0x14c) = *(unsigned int *)0x4d0d08;
+    *(unsigned int *)((char *)camera + 0x15c) = *(unsigned int *)0x4d0d0c;
+    *(unsigned int *)((char *)camera + 0x16c) = *(unsigned int *)0x4d0d10;
+    *(unsigned int *)((char *)camera + 0x17c) = *(unsigned int *)0x4d0d14;
+    return;
+  }
+
+  denom = z_far - z_near;
+  *(unsigned int *)((char *)camera + 0x14c) = 0;
+  *(unsigned int *)((char *)camera + 0x15c) = 0;
+  *(float *)((char *)camera + 0x16c) = -((z_near + z_far) / denom);
+  *(float *)((char *)camera + 0x17c) = (z_near * z_far * -2.0f) / denom;
+}
 
 /* render_camera_build_frustum_bounds (0x185950) — XBE naked draft (batch 128). */
 #if defined(__clang__)
