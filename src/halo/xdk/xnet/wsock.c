@@ -589,6 +589,16 @@ int xnet_bind(int socket, void *name, int namelen)
   (void)ebp;
 }
 
+
+/* 0x2251ad */
+int xnet_accept(int socket, void *addr, int *addrlen)
+{
+  (void)socket;
+  (void)addr;
+  (void)addrlen;
+  return -1;
+}
+
 /* 0x225bb6 */
 int xnet_recv(int socket, void *buf, int len, int flags)
 {

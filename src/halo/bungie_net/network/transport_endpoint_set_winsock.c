@@ -2622,108 +2622,37 @@ short FUN_000843a0(int endpoint __attribute__((unused)))
 #endif
 
 
-/* FUN_00084450 (0x84450) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static void (*const b84450_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b84450_exitfn)(int) = system_exit;
-static void b84450_c2251ad_tgt(void) { return; }
-static void (*const b84450_c2251ad)(void) = b84450_c2251ad_tgt;
-static void *(*const b84450_c82d70)(int type) = get_next_endpoint_from_set;
-static void (*const b84450_c2235c4)(void) = GetLastError;
-static const char * (*const b84450_c83310)(int error_code) = winsock_error_report;
-
-__attribute__((naked, noinline))
-int FUN_00084450(int listening_endpoint __attribute__((unused)))
+/* FUN_00084450 (0x84450) — readable C lift: accept into new endpoint. */
+void *FUN_00084450(int *listening_endpoint)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x10, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00084450_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2d1\n\t"
-      "pushl $0x266618\n\t"
-      "pushl $0x266d20\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00084450_1:\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00084450_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2d2\n\t"
-      "pushl $0x266618\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00084450_2:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c2251ad]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00084450_4\n\t"
-      "movsbl 0x5(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c82d70]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00084450_3\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "movl %%edi, (%%eax)\n\t"
-      "popl %%edi\n\t"
-      "orb $1, %%cl\n\t"
-      "popl %%esi\n\t"
-      "movb %%cl, 0x4(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00084450_3:\n\t"
-      "popl %%edi\n\t"
-      "movw $0xfff7, 0x6(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00084450_4:\n\t"
-      "call *%[c2235c4]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c83310]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movw $0xffff, 0x6(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b84450_assert), [exitfn] "m"(b84450_exitfn), [c2251ad] "m"(b84450_c2251ad), [c82d70] "m"(b84450_c82d70), [c2235c4] "m"(b84450_c2235c4), [c83310] "m"(b84450_c83310)
-      : "memory");
+  int sa_len;
+  uint8_t sa[0x10];
+  int sock;
+  void *ep;
+  uint8_t flags;
+
+  sa_len = 0x10;
+  assert_halt(listening_endpoint != 0);
+  assert_halt(*(uint8_t *)0x335090);
+
+  sock = xnet_accept(*listening_endpoint, sa, &sa_len);
+  if (sock == -1) {
+    winsock_error_report(xapi_GetLastError());
+    *(int16_t *)((char *)listening_endpoint + 6) = -1;
+    return 0;
+  }
+
+  ep = get_next_endpoint_from_set(*(int8_t *)((char *)listening_endpoint + 5));
+  if (ep == 0) {
+    *(int16_t *)((char *)listening_endpoint + 6) = -9;
+    return 0;
+  }
+
+  flags = *(uint8_t *)((char *)ep + 4);
+  *(int *)ep = sock;
+  *(uint8_t *)((char *)ep + 4) = (uint8_t)(flags | 1);
+  return ep;
 }
-#else
-#error "FUN_00084450: clang naked draft required"
-#endif
-
-
 /* FUN_00084740 (0x84740) — XBE naked draft (batch 248). */
 #if defined(__clang__)
 static void (*const b84740_assert)(const char *, const char *, int, bool) = display_assert;

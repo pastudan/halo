@@ -27144,8 +27144,9 @@
         },
         {
           "addr": "0x84450",
-          "decl": "int FUN_00084450(int listening_endpoint);",
-          "ported": false
+          "decl": "void *FUN_00084450(int *listening_endpoint);",
+          "ported": true,
+          "name": "FUN_00084450"
         },
         {
           "addr": "0x84740",
@@ -33717,6 +33718,11 @@
           "decl": "int __stdcall FUN_00222de0(void *a, void *b);",
           "ported": false,
           "name": "FUN_00222de0"
+        },
+        {
+          "addr": "0x2251ad",
+          "decl": "int __stdcall xnet_accept(int socket, void *addr, int *addrlen);",
+          "ported": false
         }
       ],
       "name": "XNET:wsock.obj",
