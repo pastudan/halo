@@ -720,120 +720,61 @@ wchar_t *FUN_000b42d0(int param_1, wchar_t *dst)
   return dst;
 }
 
-/* FUN_000b45c0 (0xb45c0) — XBE naked draft (batch 132). */
-#if defined(__clang__)
-static scenario_t * (*const bb45c0_c18e380)(void) = global_scenario_get;
-static void (*const bb45c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb45c0_exitfn)(int) = system_exit;
-static int *(*const bb45c0_gseed)(void) = get_global_random_seed_address;
-static int16_t (*const bb45c0_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
-static void *(*const bb45c0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int FUN_000b45c0(int param_1 __attribute__((unused)))
+/* FUN_000b45c0 (0xb45c0) — readable C lift. */
+int FUN_000b45c0(int exclude_team)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x456f10, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".LFUN_000b45c0_1:\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "testl %%edx, %%eax\n\t"
-      "je .LFUN_000b45c0_2\n\t"
-      "incl %%esi\n\t"
-      ".LFUN_000b45c0_2:\n\t"
-      "incl %%ecx\n\t"
-      "cmpl $0x20, %%ecx\n\t"
-      "jl .LFUN_000b45c0_1\n\t"
-      "cmpl %%edi, 0x8(%%ebp)\n\t"
-      "je .LFUN_000b45c0_3\n\t"
-      "decl %%esi\n\t"
-      ".LFUN_000b45c0_3:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jg .LFUN_000b45c0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a7\n\t"
-      "pushl $0x26d8f4\n\t"
-      "pushl $0x26db9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b45c0_4:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10b2d0]\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      "addl $0x378, %%esi\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000b45c0_7\n\t"
-      ".LFUN_000b45c0_5:\n\t"
-      "pushl $0x94\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $3, 0x10(%%eax)\n\t"
-      "jne .LFUN_000b45c0_6\n\t"
-      "movswl 0x12(%%eax), %%ecx\n\t"
-      "cmpl 0x8(%%ebp), %%ecx\n\t"
-      "je .LFUN_000b45c0_6\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_000b45c0_10\n\t"
-      "decl %%ebx\n\t"
-      ".LFUN_000b45c0_6:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "incl %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jl .LFUN_000b45c0_5\n\t"
-      ".LFUN_000b45c0_7:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      ".LFUN_000b45c0_8:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2bc\n\t"
-      "pushl $0x26d8f4\n\t"
-      "pushl $0x26db88\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000b45c0_9:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000b45c0_10:\n\t"
-      "movswl 0x12(%%eax), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000b45c0_9\n\t"
-      "jmp .LFUN_000b45c0_8\n\t"
-      :
-      : [c18e380] "m"(bb45c0_c18e380), [assert] "m"(bb45c0_assert), [exitfn] "m"(bb45c0_exitfn), [gseed] "m"(bb45c0_gseed), [c10b2d0] "m"(bb45c0_c10b2d0), [elem] "m"(bb45c0_elem)
-      : "memory");
+  extern char DAT_0026d8f4[];
+  extern char DAT_0026db9c[];
+  extern char DAT_0026db88[];
+  char *scenario;
+  char *block;
+  char *elem;
+  int team_mask;
+  int count;
+  int i;
+  int team;
+  int16_t pick;
+
+  scenario = (char *)global_scenario_get();
+  team_mask = *(int *)0x456f10;
+  count = 0;
+  for (i = 0; i < 0x20; i++) {
+    if (team_mask & (1 << i)) {
+      count++;
+    }
+  }
+  if (exclude_team != -1) {
+    count--;
+  }
+  if (count <= 0) {
+    display_assert(DAT_0026db9c, DAT_0026d8f4, 0x2a7, true);
+    system_exit(-1);
+  }
+  pick = random_range((unsigned int *)get_global_random_seed_address(), 0, (int16_t)count);
+  block = scenario + 0x378;
+  for (i = 0; i < *(int *)block; i++) {
+    elem = (char *)tag_block_get_element(block, i, 0x94);
+    if (*(int16_t *)(elem + 0x10) != 3) {
+      continue;
+    }
+    team = (int)*(int16_t *)(elem + 0x12);
+    if (team == exclude_team) {
+      continue;
+    }
+    if (pick == 0) {
+      if (team != -1) {
+        return team;
+      }
+      display_assert(DAT_0026db88, DAT_0026d8f4, 0x2bc, true);
+      system_exit(-1);
+      return -1;
+    }
+    pick--;
+  }
+  display_assert(DAT_0026db88, DAT_0026d8f4, 0x2bc, true);
+  system_exit(-1);
+  return -1;
 }
-#else
-#error "FUN_000b45c0: clang naked draft required"
-#endif
 
 
 /* FUN_000b4960 (0xb4960) — XBE naked draft (batch 130). */

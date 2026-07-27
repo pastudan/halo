@@ -8454,7 +8454,7 @@
         {
           "addr": "0xb45c0",
           "decl": "int FUN_000b45c0(int param_1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb46b0",
