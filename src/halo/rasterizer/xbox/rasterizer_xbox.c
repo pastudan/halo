@@ -397,45 +397,27 @@ void _rasterizer_windows_begin(void)
 
 
 
-/* _rasterizer_window_get_fog (0x155a00) — XBE naked draft (batch 380). */
-#if defined(__clang__)
-static void (*const b155a00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b155a00_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void _rasterizer_window_get_fog(void)
+/* _rasterizer_window_get_fog (0x155a00) — readable C lift from XBE leaf. */
+void _rasterizer_window_get_fog(void *out_fog)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .L_rasterizer_window_get_fog_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5a0\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dc54\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".L_rasterizer_window_get_fog_1:\n\t"
-      "movl $0x14, %%ecx\n\t"
-      "movl $0x5a5da8, %%esi\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b155a00_assert), [exitfn] "m"(b155a00_exitfn)
-      : "memory");
+  extern char DAT_0029dc54[];
+  extern char DAT_0029dc0c[];
+  int i;
+  uint32_t *dst;
+  const uint32_t *src;
+
+  if (out_fog == 0) {
+    display_assert(DAT_0029dc54, DAT_0029dc0c, 0x5a0, true);
+    system_exit(-1);
+  }
+  dst = (uint32_t *)out_fog;
+  src = (const uint32_t *)0x5a5da8;
+  for (i = 0; i < 0x14; i++) {
+    dst[i] = src[i];
+  }
 }
-#else
-#error "_rasterizer_window_get_fog: clang naked draft required"
-#endif
+
+
 
 
 /* _rasterizer_windows_end (0x155a40) — readable C lift from XBE leaf. */

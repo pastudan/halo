@@ -21654,8 +21654,9 @@
         },
         {
           "addr": "0x155a00",
-          "decl": "void _rasterizer_window_get_fog(void);",
-          "ported": false
+          "decl": "void _rasterizer_window_get_fog(void *out_fog);",
+          "ported": true,
+          "name": "_rasterizer_window_get_fog"
         },
         {
           "addr": "0x155a40",
