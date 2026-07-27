@@ -1102,25 +1102,9 @@ typedef struct {
   float looking_z; /* +0x3c */
 } unit_control_t;
 
-/* player_action_t layout as filled by player_control_get_current_actions:
- *   +0x00  buttons (uint32 flags, bit 6 = binoculars, bit 14 = zoom, bit 7 =
- * alt_attack) +0x04  desired_facing_yaw (float) +0x08  desired_facing_pitch
- * (float) +0x0c  throttle_x (float) +0x10  throttle_y (float) +0x14
- * primary_trigger (float) +0x18  desired_weapon_index (int16) +0x1a
- * desired_grenade_index (int16) +0x1c  desired_zoom_level (int16) +0x1e  pad
- * Total: 0x20 bytes per action entry. */
-typedef struct {
-  uint32_t buttons;
-  float desired_facing_yaw;
-  float desired_facing_pitch;
-  float throttle_x;
-  float throttle_y;
-  float primary_trigger;
-  int16_t desired_weapon_index;
-  int16_t desired_grenade_index;
-  int16_t desired_zoom_level;
-  char pad[2];
-} player_action_t;
+/* player_action_t lives in types.h (consolidated from this former local
+ * typedef). Layout: buttons, desired_facing yaw/pitch, throttle x/y,
+ * primary_trigger, weapon/grenade/zoom indices — 0x20 bytes. */
 
 /* Apply a powerup timer to a player. Despite the kb.json name "respawn_timer",
  * the binary assert and source path show this sets the powerup countdown at
@@ -1336,119 +1320,52 @@ bool players_respawn_coop(void)
   return bVar2;
 }
 
-/* FUN_000bbfe0 (0xbbfe0) — XBE naked draft (batch 130). */
-#if defined(__clang__)
-static void *(*const bbbfe0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const bbbfe0_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_000bbfe0(int player_handle __attribute__((unused)), int16_t action_result_type __attribute__((unused)), int object_handle __attribute__((unused)), int16_t seat_index __attribute__((unused)))
+/* FUN_000bbfe0 (0xbbfe0) — readable C lift from XBE leaf.
+ * Update player action-result object when type is 11, strictly greater than
+ * the stored type, or equal with candidate distance >= current distance. */
+void FUN_000bbfe0(int player_handle, int16_t action_result_type,
+                  int object_handle, int16_t seat_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xb, %%ax\n\t"
-      "je .LFUN_000bbfe0_1\n\t"
-      "movw 0x28(%%ebx), %%cx\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "jne .LFUN_000bbfe0_3\n\t"
-      "movl 0x34(%%ebx), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x24(%%ebx), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "addl $0xc, %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0xc, %%edi\n\t"
-      "call *%[get]\n\t"
-      "flds (%%edi)\n\t"
-      "fsubs (%%esi)\n\t"
-      "addl $0xc, %%eax\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "fsubs 0x8(%%esi)\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fxch %%st(1)\n\t"
-      "fxch %%st(1)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000bbfe0_2\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      ".LFUN_000bbfe0_1:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movw %%ax, 0x28(%%ebx)\n\t"
-      "movw 0x10(%%ebp), %%ax\n\t"
-      "movl %%edx, 0x24(%%ebx)\n\t"
-      "movw %%ax, 0x2a(%%ebx)\n\t"
-      ".LFUN_000bbfe0_2:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000bbfe0_3:\n\t"
-      "jle .LFUN_000bbfe0_2\n\t"
-      "jmp .LFUN_000bbfe0_1\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [dget] "m"(bbbfe0_dget), [get] "m"(bbbfe0_get)
-      : "memory");
+  char *player;
+  int16_t existing;
+  float *ref_pos;
+  float *cur_pos;
+  float *cand_pos;
+  float ax, ay, az, bx, by, bz;
+  float dist_cur, dist_cand;
+
+  player = (char *)datum_get(*(void **)0x5aa6d4, player_handle);
+  existing = *(int16_t *)(player + 0x28);
+
+  if (action_result_type != 11) {
+    if (action_result_type == existing) {
+      ref_pos = (float *)((char *)object_get_and_verify_type(
+                              *(int *)(player + 0x34), -1) +
+                          0xc);
+      cur_pos = (float *)((char *)object_get_and_verify_type(
+                              *(int *)(player + 0x24), -1) +
+                          0xc);
+      cand_pos = (float *)((char *)object_get_and_verify_type(object_handle, -1) +
+                           0xc);
+      ax = cur_pos[0] - ref_pos[0];
+      ay = cur_pos[1] - ref_pos[1];
+      az = cur_pos[2] - ref_pos[2];
+      bx = cand_pos[0] - ref_pos[0];
+      by = cand_pos[1] - ref_pos[1];
+      bz = cand_pos[2] - ref_pos[2];
+      dist_cur = __builtin_sqrtf(ax * ax + ay * ay + az * az);
+      dist_cand = __builtin_sqrtf(bx * bx + by * by + bz * bz);
+      if (dist_cand < dist_cur)
+        return;
+    } else if (action_result_type <= existing) {
+      return;
+    }
+  }
+
+  *(int16_t *)(player + 0x28) = action_result_type;
+  *(int *)(player + 0x24) = object_handle;
+  *(int16_t *)(player + 0x2a) = seat_index;
 }
-#else
-#error "FUN_000bbfe0: clang naked draft required"
-#endif
 
 
 void player_update_nearby_biped(int datum_handle, int object_handle)

@@ -7224,7 +7224,7 @@
         },
         {
           "addr": "0x88c80",
-          "decl": "void FUN_00088c80(int unit_handle, float *out_pos, float *out_forward);",
+          "decl": "void FUN_00088c80(int unit_handle, float *out_a, float *out_b);",
           "ported": true,
           "name": "FUN_00088c80"
         }
@@ -18843,7 +18843,7 @@
         {
           "addr": "0xbbfe0",
           "decl": "void FUN_000bbfe0(int player_handle@<eax>, int16_t action_result_type, int object_handle, int16_t seat_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xbc0d0",
@@ -35447,7 +35447,7 @@
         },
         {
           "addr": "0x4b670",
-          "decl": "void FUN_0004b670(int unit_handle /* @<edi> */, int color /* @<ebx> */, char flag);",
+          "decl": "void FUN_0004b670(int object_handle@<edi>, void *color@<ebx>, char flag);",
           "ported": true,
           "name": "FUN_0004b670"
         },
