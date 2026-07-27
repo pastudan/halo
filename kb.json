@@ -12769,7 +12769,8 @@
         {
           "addr": "0xcdf70",
           "decl": "void FUN_000cdf70(void *header, void *src, int size);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000cdf70"
         },
         {
           "addr": "0xce050",
