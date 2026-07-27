@@ -1,6 +1,8 @@
 #include <stdint.h>
 void FUN_0016f910(int16_t profile);
 void FUN_0016fa40(int16_t profile);
+void FUN_00174ce0(void);
+void FUN_00158ae0(int mode);
 /*
  * rasterizer_xbox_dynavobgeom.c
  *
@@ -2977,6 +2979,13 @@ void _rasterizer_hud_begin(void)
   FUN_0016fa40(5);
 }
 
+/* FUN_00160950 (0x160950) — readable C lift (profile thunk). */
+void FUN_00160950(void)
+{
+  FUN_00158ae0(2);
+  FUN_0016fa40(8);
+}
+
 /* _rasterizer_dynamic_lit_geometry_draw (0x1609a0) — readable C lift (profile thunk). */
 void _rasterizer_dynamic_lit_geometry_draw(void)
 {
@@ -3005,6 +3014,13 @@ void FUN_00160c00(void)
 void FUN_00160bd0(void)
 {
   FUN_0016f910(0xe);
+}
+
+/* FUN_00160c10 (0x160c10) — readable C lift (profile thunk). */
+void FUN_00160c10(void)
+{
+  FUN_0016f910(0x10);
+  FUN_00174ce0();
 }
 
 /* FUN_00160c20 (0x160c20) — readable C lift. */
