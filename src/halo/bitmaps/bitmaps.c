@@ -1034,227 +1034,130 @@ float *FUN_0007c490(float *out_color, uint32_t flags, float *lower_bound,
 }
 
 
-/* bitmap_format_to_a8r8g8b8 (0x7d0d0) — XBE naked draft (batch 244). */
-#if defined(__clang__)
-static void (*const b7d0d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7d0d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void bitmap_format_to_a8r8g8b8(void)
+/* bitmap_format_to_a8r8g8b8 — expand a pixel to A8R8G8B8. */
+unsigned int bitmap_format_to_a8r8g8b8(short format, void *mipmap_address,
+                                       int pixel_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lbitmap_format_to_a8r8g8b8_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22b\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x264cfc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_1:\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $0x11, %%eax\n\t"
-      "ja .Lbitmap_format_to_a8r8g8b8_12\n\t"
-      "movzbl 0x7d2dc(%%eax), %%eax\n\t"
-      "jmp *.Lbitmap_format_to_a8r8g8b8_jt(,%%eax,4)\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_2:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movzwl (%%esi,%%ecx,2), %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "andl $0xfffff800, %%eax\n\t"
-      "orl $0xffff0000, %%eax\n\t"
-      "shll $3, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7e0, %%edx\n\t"
-      "orl %%edx, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0xffffe01f, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "orl %%edx, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "shrl $1, %%edx\n\t"
-      "andl $0xe, %%edx\n\t"
-      "andl $0x600, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "shll $3, %%eax\n\t"
-      "shrl $1, %%edx\n\t"
-      "orl %%edx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_3:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movzwl (%%esi,%%eax,2), %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "andl $0x7c00, %%eax\n\t"
-      "shll $3, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x3e0, %%edx\n\t"
-      "orl %%edx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7000, %%edx\n\t"
-      "orl %%edx, %%eax\n\t"
-      "shll $1, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x1f, %%edx\n\t"
-      "orl %%edx, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x380, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "orl %%edx, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "shrl $0xf, %%ecx\n\t"
-      "shrl $2, %%edx\n\t"
-      "shll $1, %%eax\n\t"
-      "andl $7, %%edx\n\t"
-      "negl %%ecx\n\t"
-      "orl %%edx, %%eax\n\t"
-      "shll $0x18, %%ecx\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_4:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movzwl (%%esi,%%eax,2), %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $8, %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "andl $0xfffffff0, %%eax\n\t"
-      "shll $0xc, %%eax\n\t"
-      "orl %%edx, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "andl $0xf, %%esi\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "movl %%edx, %%edi\n\t"
-      "andl $0xfffff000, %%eax\n\t"
-      "movl %%esi, %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "orl %%esi, %%edx\n\t"
-      "shrl $4, %%ecx\n\t"
-      "shll $4, %%edx\n\t"
-      "orl %%edx, %%eax\n\t"
-      "andl $0xf, %%ecx\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "andl $0xf, %%edi\n\t"
-      "shll $4, %%eax\n\t"
-      "orl %%edi, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "orl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_5:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl (%%esi,%%eax,4), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_6:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl (%%esi,%%ecx,4), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_7:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movzbl (%%esi,%%edx,1), %%eax\n\t"
-      "shll $0x18, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_8:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movzbl (%%esi,%%eax,1), %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "orl $0xffffff00, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_9:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movzbl (%%esi,%%ecx,1), %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_10:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movw (%%esi,%%edx,2), %%ax\n\t"
-      "movzbl %%al, %%ecx\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "andl $0xffffff00, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_11:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movzbl (%%esi,%%eax,1), %%ecx\n\t"
-      "movl 0x2ee0a0(,%%ecx,4), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_12:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x254\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x261888\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lbitmap_format_to_a8r8g8b8_jt:\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_7\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_8\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_9\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_10\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_2\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_3\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_4\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_5\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_6\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_11\n\t"
-      ".long .Lbitmap_format_to_a8r8g8b8_12\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b7d0d0_assert), [exitfn] "m"(b7d0d0_exitfn)
-      : "memory");
-}
-#else
-#error "bitmap_format_to_a8r8g8b8: clang naked draft required"
-#endif
+  unsigned int pixel;
+  unsigned int result;
+  unsigned int tmp;
+  unsigned int nibble;
+  unsigned char *bytes;
+  unsigned short *words;
+  unsigned int *dwords;
 
+  if (mipmap_address == NULL) {
+    display_assert("mipmap_address", "c:\\halo\\SOURCE\\bitmaps\\bitmaps.c",
+                   0x22b, true);
+    system_exit(-1);
+  }
+
+  bytes = (unsigned char *)mipmap_address;
+  words = (unsigned short *)mipmap_address;
+  dwords = (unsigned int *)mipmap_address;
+
+  if ((unsigned int)(int)format > 0x11u) {
+    display_assert("### ERROR unsupported bitmap format",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmaps.c", 0x254, true);
+    system_exit(-1);
+    return (unsigned int)*(unsigned int *)(void *)&format;
+  }
+
+  switch (format) {
+  case 0: /* a8 */
+    return (unsigned int)bytes[pixel_index] << 24;
+
+  case 1: /* y8 */
+    pixel = bytes[pixel_index];
+    result = pixel | 0xffffff00u;
+    result = (result << 8) | pixel;
+    result = (result << 8) | pixel;
+    return result;
+
+  case 2: /* ay8 */
+    pixel = bytes[pixel_index];
+    result = pixel;
+    result = (result << 8) | pixel;
+    result = (result << 8) | pixel;
+    result = (result << 8) | pixel;
+    return result;
+
+  case 3: /* a8y8 */
+    pixel = words[pixel_index];
+    tmp = pixel & 0xffu;
+    result = (pixel & 0xffffff00u) | tmp;
+    result = (result << 8) | tmp;
+    result = (result << 8) | tmp;
+    return result;
+
+  case 6: /* r5g6b5 */
+    pixel = words[pixel_index];
+    result = pixel & 0xfffff800u;
+    result |= 0xffff0000u;
+    result <<= 3;
+    result |= pixel & 0x7e0u;
+    tmp = pixel & 0xffffe01fu;
+    result <<= 2;
+    result |= tmp;
+    tmp = (pixel >> 1) & 0xeu;
+    pixel &= 0x600u;
+    tmp |= pixel;
+    result <<= 3;
+    tmp >>= 1;
+    result |= tmp;
+    return result;
+
+  case 8: /* a1r5g5b5 */
+    pixel = words[pixel_index];
+    result = (pixel & 0x7c00u) << 3;
+    result |= pixel & 0x3e0u;
+    result <<= 2;
+    result |= pixel & 0x7000u;
+    result <<= 1;
+    result |= pixel & 0x1fu;
+    tmp = pixel & 0x380u;
+    result <<= 2;
+    result |= tmp;
+    tmp = (pixel >> 2) & 7u;
+    pixel >>= 15;
+    result <<= 1;
+    result |= tmp;
+    result |= ((unsigned int)(-(int)pixel)) << 24;
+    return result;
+
+  case 9: /* a4r4g4b4 */
+    pixel = words[pixel_index];
+    result = pixel >> 8;
+    nibble = result & 0xfu;
+    result &= 0xfffffff0u;
+    result <<= 12;
+    result |= pixel;
+    result &= 0xfffff000u;
+    tmp = (nibble << 4) | nibble;
+    tmp <<= 4;
+    result |= tmp;
+    tmp = (pixel >> 4) & 0xfu;
+    result |= tmp;
+    result = (result << 4) | tmp;
+    tmp = pixel & 0xfu;
+    result = (result << 4) | tmp;
+    result = (result << 4) | tmp;
+    return result;
+
+  case 10: /* a8r8g8b8 */
+  case 11: /* x8r8g8b8 */
+    return dwords[pixel_index];
+
+  case 17: /* p8 */
+    return ((unsigned int *)0x2ee0a0)[bytes[pixel_index]];
+
+  default:
+    display_assert("### ERROR unsupported bitmap format",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmaps.c", 0x254, true);
+    system_exit(-1);
+    return (unsigned int)*(unsigned int *)(void *)&format;
+  }
+}
 
 /* palette_find_closest_match (0x7d300) — readable C lift from XBE leaf. */
 unsigned int palette_find_closest_match(unsigned int *palette, unsigned int color)
