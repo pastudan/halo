@@ -4884,7 +4884,7 @@
         {
           "addr": "0x145660",
           "decl": "void FUN_00145660(int object_handle @<eax>, int a1, const char *a2, int16_t a3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x145740",

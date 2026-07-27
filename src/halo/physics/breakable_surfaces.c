@@ -996,115 +996,12 @@ char FUN_00145610(int object_handle)
   return 1;
 }
 
-/* 0x145660 — bind an animation permutation onto a device/machine object.
- * object_handle arrives in EAX; tag/name/frame are cdecl stack args. */
-#if defined(__clang__)
-static void *(*const FUN_00145660_get)(int, int) = object_get_and_verify_type;
-static void *(*const FUN_00145660_tag)(int, int) = tag_get;
-static short (*const FUN_00145660_find)(int, const char *) = FUN_00120cb0;
-static void *(*const FUN_00145660_elem)(void *, int, int) = tag_block_get_element;
-static void (*const FUN_00145660_warn)(const char *, ...) = console_warning;
-static const char *(*const FUN_00145660_name)(int) = tag_get_name;
-
-__attribute__((naked, noinline))
-void FUN_00145660(int object_handle __attribute__((unused)), int a1 __attribute__((unused)), const char *a2 __attribute__((unused)), int16_t a3 __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je 9f\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je 8f\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x616e7472\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[find]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je 7f\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "pushl $0xb4\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x74, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x1a4(%%esi), %%ecx\n\t"
-      "movl 4(%%esi), %%ebx\n\t"
-      "orl $1, %%ecx\n\t"
-      "movl %%ecx, 0x1a4(%%esi)\n\t"
-      "movw 0x10(%%ebp), %%cx\n\t"
-      "andl $0xffffff7f, %%ebx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movl %%ebx, 4(%%esi)\n\t"
-      "movw %%di, 0x80(%%esi)\n\t"
-      "jge 1f\n\t"
-      "movl 8(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x82(%%esi)\n\t"
-      "movl %%edx, 0x7c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "1:\n\t"
-      "movswl 0x22(%%eax), %%eax\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jg 2f\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "2:\n\t"
-      "movl 8(%%ebp), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x82(%%esi)\n\t"
-      "movl %%edx, 0x7c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "7:\n\t"
-      "movl 8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[name]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x29c71c\n\t"
-      "call *%[warn]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "9:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(FUN_00145660_get), [tag] "m"(FUN_00145660_tag),
-        [find] "m"(FUN_00145660_find), [elem] "m"(FUN_00145660_elem),
-        [warn] "m"(FUN_00145660_warn), [name] "m"(FUN_00145660_name)
-      : "memory");
-}
-#else
-void FUN_00145660(int object_handle , int animation_graph_tag,
+/* FUN_00145660 (0x145660) — readable C lift: bind animation onto device/machine.
+ * object_handle arrives in EAX (@<eax>); tag/name/frame are cdecl stack args. */
+void FUN_00145660(int object_handle, int animation_graph_tag,
                   const char *anim_name, int16_t frame)
 {
+  extern char DAT_0029c71c[];
   char *obj;
   char *antr;
   char *anim;
@@ -1121,8 +1018,7 @@ void FUN_00145660(int object_handle , int animation_graph_tag,
   antr = (char *)tag_get(0x616e7472, animation_graph_tag); /* 'antr' */
   anim_index = FUN_00120cb0(animation_graph_tag, anim_name);
   if (anim_index == -1) {
-    console_warning((char *)0x0029c71c, anim_name,
-                    tag_get_name(animation_graph_tag));
+    console_warning(DAT_0029c71c, anim_name, tag_get_name(animation_graph_tag));
     return;
   }
 
@@ -1144,7 +1040,6 @@ void FUN_00145660(int object_handle , int animation_graph_tag,
   *(int16_t *)(obj + 0x82) = frame;
   *(int *)(obj + 0x7c) = animation_graph_tag;
 }
-#endif
 
 /* FUN_00145740 (0x145740) — readable C lift. */
 int FUN_00145740(int object_handle)
