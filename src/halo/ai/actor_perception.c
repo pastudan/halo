@@ -882,191 +882,37 @@ float arctangent(float y, float x)
   return x87_fatan2f(y, x);
 }
 
-/* actor_situation_update_target_status (0x300b0) — XBE naked draft (batch 118). */
-#if defined(__clang__)
-static void *(*const b300b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b300b0_get)(int, int) = object_get_and_verify_type;
-static void (*const b300b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b300b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void actor_situation_update_target_status(int actor_handle __attribute__((unused)))
+/* actor_situation_update_target_status (0x300b0) — readable C lift (restored pre-naked). */
+void actor_situation_update_target_status(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x270(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lactor_situation_update_target_status_1\n\t"
-      "movw $0, 0x268(%%edi)\n\t"
-      "movl %%eax, 0x26c(%%edi)\n\t"
-      "movb $0, 0x27c(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_situation_update_target_status_1:\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_situation_update_target_status_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x10c3\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x25601c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_situation_update_target_status_2:\n\t"
-      "movswl 0x24(%%esi), %%eax\n\t"
-      "cmpl $5, %%eax\n\t"
-      "ja .Lactor_situation_update_target_status_14\n\t"
-      "jmp *.Lactor_situation_update_target_status_jt(,%%eax,4)\n\t"
-      ".Lactor_situation_update_target_status_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $0xffffffff, 0x270(%%edi)\n\t"
-      "movl $0xffffffff, 0x26c(%%edi)\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_4:\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_5:\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_situation_update_target_status_6\n\t"
-      "movl $2, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_6:\n\t"
-      "movb 0x74(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_situation_update_target_status_7\n\t"
-      "movl $0xb, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_7:\n\t"
-      "cmpw $2, 0x32(%%esi)\n\t"
-      "jl .Lactor_situation_update_target_status_8\n\t"
-      "movl $0xa, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_8:\n\t"
-      "movw 0x38(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lactor_situation_update_target_status_9\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .Lactor_situation_update_target_status_9\n\t"
-      "movl $7, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_9:\n\t"
-      "cmpb $2, 0x122(%%esi)\n\t"
-      "jg .Lactor_situation_update_target_status_10\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x254640\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_situation_update_target_status_10\n\t"
-      "movl $9, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_10:\n\t"
-      "movl $8, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_11:\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_situation_update_target_status_12\n\t"
-      "movl $2, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_12:\n\t"
-      "movb 0xbb(%%esi), %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $4, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_13:\n\t"
-      "movb 0xb8(%%esi), %%dl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%dl, %%dl\n\t"
-      "setne %%al\n\t"
-      "addl $5, %%eax\n\t"
-      "jmp .Lactor_situation_update_target_status_15\n\t"
-      ".Lactor_situation_update_target_status_14:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x110a\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_situation_update_target_status_15:\n\t"
-      "movw %%ax, 0x268(%%edi)\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lactor_situation_update_target_status_16\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lactor_situation_update_target_status_16\n\t"
-      "movb 0x127(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%cl\n\t"
-      "movb %%cl, 0x27c(%%edi)\n\t"
-      "cmpw $0, 0x32(%%esi)\n\t"
-      "jle .Lactor_situation_update_target_status_17\n\t"
-      "movl 0x8c(%%esi), %%edx\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x26c(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_situation_update_target_status_16:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movb 0xb6(%%eax), %%cl\n\t"
-      "shrb $2, %%cl\n\t"
-      "notb %%cl\n\t"
-      "andb $1, %%cl\n\t"
-      "movb %%cl, 0x27c(%%edi)\n\t"
-      ".Lactor_situation_update_target_status_17:\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lactor_situation_update_target_status_jt:\n\t"
-      ".long .Lactor_situation_update_target_status_3\n\t"
-      ".long .Lactor_situation_update_target_status_4\n\t"
-      ".long .Lactor_situation_update_target_status_5\n\t"
-      ".long .Lactor_situation_update_target_status_5\n\t"
-      ".long .Lactor_situation_update_target_status_13\n\t"
-      ".long .Lactor_situation_update_target_status_11\n\t"
-      ".text\n\t"
-      :
-      : [dget] "m"(b300b0_dget), [get] "m"(b300b0_get), [assert] "m"(b300b0_assert), [exitfn] "m"(b300b0_exitfn)
-      : "memory");
+  int eax = 0;
+  int esi = 0;
+
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
+  /* cmp eax, -1 -> jne 0x300f0 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
+  object_get_and_verify_type(0, 3);
+  /* test (char)eax, (char)eax -> jne 0x30138 */
+  display_assert((char *)0x0025601c, (char *)0x00255fb0, 4291, 1);
+  system_exit(-1);
+  /* cmp eax, 5 -> ja 0x30219 */
+  /* test (char)eax, (char)eax -> je 0x30185 */
+  /* test (char)eax, (char)eax -> je 0x30196 */
+  /* relift: cmp word ptr [esi + 0x32], 2 -> jl 0x301a7 */
+  /* test (int16_t)eax, (int16_t)eax -> je 0x301bd */
+  /* cmp (int16_t)eax, 1 -> je 0x301bd */
+  /* relift: cmp byte ptr [esi + 0x122], 2 -> jg 0x301e0 */
+  /* relift: relift: fcomp dword ptr [0x254640] */
+  /* test (char)eax, (char)eax -> je 0x301f8 */
+  display_assert((char *)0, (char *)0x00255fb0, 4362, 1);
+  system_exit(-1);
+  /* cmp (int16_t)eax, 2 -> jl 0x3027a */
+  /* cmp (int16_t)eax, 3 -> jg 0x3027a */
+  /* relift: cmp word ptr [esi + 0x32], 0 -> jle 0x30291 */
+
+  (void)eax;
+  (void)esi;
 }
-#else
-#error "actor_situation_update_target_status: clang naked draft required"
-#endif
 
 
 /* actor_situation_combat_status_update (0x302b0) — readable C lift. */

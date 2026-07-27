@@ -35668,7 +35668,7 @@
         {
           "addr": "0x300b0",
           "decl": "void actor_situation_update_target_status(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_situation_update_target_status"
         },
         {
@@ -36832,7 +36832,7 @@
         {
           "addr": "0x58d40",
           "decl": "void FUN_00058d40(int a0);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00058d40"
         }
       ],
