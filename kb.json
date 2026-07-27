@@ -3760,7 +3760,7 @@
           "addr": "0x15eb0",
           "decl": "void actor_reset_action_state(int actor_handle);",
           "name": "actor_reset_action_state",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x15f30",
@@ -3836,7 +3836,7 @@
         },
         {
           "addr": "0x16d40",
-          "decl": "void actor_look_compute_prop_interest(void);",
+          "decl": "void actor_look_compute_prop_interest(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5);",
           "ported": false,
           "name": "actor_look_compute_prop_interest"
         },
@@ -12956,7 +12956,7 @@
         {
           "addr": "0xd1540",
           "decl": "int FUN_000d1540(void);",
-          "ported": true,
+          "ported": false,
           "src": "src/halo/interface/hud.c"
         },
         {
@@ -14111,7 +14111,7 @@
           "addr": "0xf6860",
           "decl": "bool item_begin_garbage_collection(int item_handle);",
           "name": "item_begin_garbage_collection",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf68b0",
@@ -14159,7 +14159,7 @@
           "addr": "0xf6d00",
           "decl": "char valid_real_matrix4x3(float *mat);",
           "name": "valid_real_matrix4x3",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6d60",
@@ -29351,7 +29351,7 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle, int unused);",
+          "decl": "char *unit_get_weapon_name(int unit_handle@<esi>);",
           "name": "unit_get_weapon_name",
           "ported": true,
           "obj": "units.obj"
@@ -29464,7 +29464,7 @@
           "addr": "0x1b13a0",
           "decl": "char unit_has_night_vision_weapon(int unit_handle@<esi>);",
           "name": "unit_has_night_vision_weapon",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
@@ -29554,7 +29554,7 @@
           "addr": "0x1b2740",
           "decl": "void unit_select_weapon_after_vehicle_exit(int unit_handle@<eax>);",
           "name": "unit_select_weapon_after_vehicle_exit",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
@@ -33644,7 +33644,7 @@
           "addr": "0xfae30",
           "decl": "void weapon_preprocess_node_orientations(int weapon_handle);",
           "name": "weapon_preprocess_node_orientations",
-          "ported": false,
+          "ported": true,
           "source_path": "halo/items/weapons.c"
         },
         {
@@ -34306,7 +34306,7 @@
         },
         {
           "addr": "0x2f5b0",
-          "decl": "int FUN_0002f5b0(int param_1, int param_2);",
+          "decl": "int FUN_0002f5b0(float *a, float *b);",
           "name": "FUN_0002f5b0",
           "source_path": "src/halo/ai/actor_perception.c",
           "ported": true
@@ -34486,12 +34486,12 @@
         {
           "addr": "0x32b50",
           "decl": "void actor_perception_tried_to_uncover(int actor_handle, int prop_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32bb0",
           "decl": "void actor_perception_tried_to_search(int actor_handle, int prop_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32c10",
@@ -34827,7 +34827,7 @@
           "addr": "0x48fa0",
           "decl": "void ai_debug_dispose_from_old_map(void);",
           "name": "ai_debug_dispose_from_old_map",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/ai_debug.c"
         },
         {

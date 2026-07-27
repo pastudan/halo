@@ -5087,112 +5087,42 @@ void actor_perception_unreachable(int actor_handle __attribute__((unused)), int 
 #endif
 
 
-/* actor_perception_tried_to_uncover (0x32b50) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static void *(*const b32b50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b32b50_c300b0)(int actor_handle) = actor_situation_update_target_status;
-static void (*const b32b50_c302b0)(int actor_handle) = actor_situation_combat_status_update;
-
-__attribute__((naked, noinline))
-void actor_perception_tried_to_uncover(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)))
+/* actor_perception_tried_to_uncover (0x32b50) — readable C lift. */
+void actor_perception_tried_to_uncover(int actor_handle, int prop_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lactor_perception_tried_to_uncover_2\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[dget]\n\t"
-      "movb $1, 0xb9(%%eax)\n\t"
-      "movl 0x270(%%edi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jne .Lactor_perception_tried_to_uncover_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c300b0]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c302b0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lactor_perception_tried_to_uncover_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lactor_perception_tried_to_uncover_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b32b50_dget), [c300b0] "m"(b32b50_c300b0), [c302b0] "m"(b32b50_c302b0)
-      : "memory");
+  unsigned char *actor;
+  unsigned char *prop;
+
+  if (prop_handle == -1)
+    return;
+  actor = (unsigned char *)datum_get(*(void **)0x6325a4, actor_handle);
+  prop = (unsigned char *)datum_get(*(void **)0x5ab23c, prop_handle);
+  prop[0xb9] = 1;
+  if (*(int *)(actor + 0x270) == prop_handle) {
+    actor_situation_update_target_status(actor_handle);
+    actor_situation_combat_status_update(actor_handle);
+  }
 }
-#else
-#error "actor_perception_tried_to_uncover: clang naked draft required"
-#endif
 
 
-/* actor_perception_tried_to_search (0x32bb0) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static void *(*const b32bb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b32bb0_c300b0)(int actor_handle) = actor_situation_update_target_status;
-static void (*const b32bb0_c302b0)(int actor_handle) = actor_situation_combat_status_update;
 
-__attribute__((naked, noinline))
-void actor_perception_tried_to_search(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)))
+/* actor_perception_tried_to_search (0x32bb0) — readable C lift. */
+void actor_perception_tried_to_search(int actor_handle, int prop_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lactor_perception_tried_to_search_2\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[dget]\n\t"
-      "movb $1, 0xba(%%eax)\n\t"
-      "movl 0x270(%%edi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jne .Lactor_perception_tried_to_search_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c300b0]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c302b0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lactor_perception_tried_to_search_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lactor_perception_tried_to_search_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b32bb0_dget), [c300b0] "m"(b32bb0_c300b0), [c302b0] "m"(b32bb0_c302b0)
-      : "memory");
+  unsigned char *actor;
+  unsigned char *prop;
+
+  if (prop_handle == -1)
+    return;
+  actor = (unsigned char *)datum_get(*(void **)0x6325a4, actor_handle);
+  prop = (unsigned char *)datum_get(*(void **)0x5ab23c, prop_handle);
+  prop[0xba] = 1;
+  if (*(int *)(actor + 0x270) == prop_handle) {
+    actor_situation_update_target_status(actor_handle);
+    actor_situation_combat_status_update(actor_handle);
+  }
 }
-#else
-#error "actor_perception_tried_to_search: clang naked draft required"
-#endif
+
 
 
 /* actor_perception_abandoned_search (0x32c10) — XBE naked draft (batch 147). */

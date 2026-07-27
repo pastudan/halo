@@ -2948,53 +2948,26 @@ void FUN_00015cf0(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_reset_action_state (0x15eb0) — XBE naked draft (batch 95). */
-#if defined(__clang__)
-static void *(*const b15eb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void actor_reset_action_state(int actor_handle __attribute__((unused)))
+/* actor_reset_action_state (0x15eb0) — readable C lift. */
+void actor_reset_action_state(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xa4(%%eax), %%cl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb %%dl, %%cl\n\t"
-      "je .Lactor_reset_action_state_1\n\t"
-      "cmpw $3, 0xc0(%%eax)\n\t"
-      "jne .Lactor_reset_action_state_1\n\t"
-      "movb %%dl, 0xa4(%%eax)\n\t"
-      "movw %%dx, 0xa8(%%eax)\n\t"
-      "movb %%dl, 0xa6(%%eax)\n\t"
-      ".Lactor_reset_action_state_1:\n\t"
-      "movw 0xc0(%%eax), %%cx\n\t"
-      "cmpw $3, %%cx\n\t"
-      "je .Lactor_reset_action_state_2\n\t"
-      "cmpw $1, %%cx\n\t"
-      "jne .Lactor_reset_action_state_3\n\t"
-      "cmpb %%dl, 0x160(%%eax)\n\t"
-      "jne .Lactor_reset_action_state_3\n\t"
-      ".Lactor_reset_action_state_2:\n\t"
-      "movw %%dx, 0xc0(%%eax)\n\t"
-      "movw $0xffff, 0xc4(%%eax)\n\t"
-      "movb $1, 0xaa(%%eax)\n\t"
-      ".Lactor_reset_action_state_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b15eb0_dget)
-      : "memory");
+  unsigned char *actor;
+  int16_t state;
+
+  actor = (unsigned char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (actor[0xa4] != 0 && *(int16_t *)(actor + 0xc0) == 3) {
+    actor[0xa4] = 0;
+    *(int16_t *)(actor + 0xa8) = 0;
+    actor[0xa6] = 0;
+  }
+  state = *(int16_t *)(actor + 0xc0);
+  if (state == 3 || (state == 1 && actor[0x160] == 0)) {
+    *(int16_t *)(actor + 0xc0) = 0;
+    *(int16_t *)(actor + 0xc4) = (int16_t)0xffff;
+    actor[0xaa] = 1;
+  }
 }
-#else
-#error "actor_reset_action_state: clang naked draft required"
-#endif
+
 
 
 /* actor_clear_flee_target (0x15f30) — readable C lift. */

@@ -18,49 +18,24 @@ void ai_debug_dispose(void)
   }
 }
 
-/* ai_debug_dispose_from_old_map (0x48fa0) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void * (*const b48fa0_c18e3b0)(void) = FUN_0018e3b0;
-static void *(*const b48fa0_elem)(void *, int, int) = tag_block_get_element;
-static void * (*const b48fa0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-static char * (*const b48fa0_c8dff0)(char *destination, const char *source) = csstrcpy;
-
-__attribute__((naked, noinline))
+/* ai_debug_dispose_from_old_map (0x48fa0) — readable C lift. */
 void ai_debug_dispose_from_old_map(void)
 {
-  __asm__ volatile(
-      "call *%[c18e3b0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_debug_dispose_from_old_map_1\n\t"
-      "movl 0x5ac9f4, %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lai_debug_dispose_from_old_map_1\n\t"
-      "pushl $0xb0\n\t"
-      "andl $0xffff, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x5ac9d2\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movb $0, 0x5ac9f1\n\t"
-      "ret\n\t"
-      ".Lai_debug_dispose_from_old_map_1:\n\t"
-      "pushl $0x25386f\n\t"
-      "pushl $0x5ac9d2\n\t"
-      "call *%[c8dff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3b0] "m"(b48fa0_c18e3b0), [elem] "m"(b48fa0_elem), [c8de70] "m"(b48fa0_c8de70), [c8dff0] "m"(b48fa0_c8dff0)
-      : "memory");
+  unsigned char *scenario;
+  void *elem;
+  int index;
+
+  scenario = (unsigned char *)FUN_0018e3b0();
+  index = *(int *)0x5ac9f4;
+  if (scenario == 0 || index == -1) {
+    csstrcpy((char *)0x5ac9d2, (const char *)0x25386f);
+    return;
+  }
+  elem = tag_block_get_element(scenario + 0x42c, index & 0xffff, 0xb0);
+  csstrncpy((char *)0x5ac9d2, (const char *)elem, 0x20);
+  *(unsigned char *)0x5ac9f1 = 0;
 }
-#else
-#error "ai_debug_dispose_from_old_map: clang naked draft required"
-#endif
+
 
 
 /* ai_debug_clear_storage (0x49000) — readable C lift from XBE leaf. */

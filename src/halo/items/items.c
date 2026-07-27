@@ -872,52 +872,21 @@ char item_new(int item_handle)
   return ok;
 }
 
-/* item_begin_garbage_collection (0xf6860) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-static void *(*const bf6860_get)(int, int) = object_get_and_verify_type;
-static void (*const bf6860_garb)(int, int) = object_set_garbage_flag;
-static int *(*const bf6860_gseed)(void) = get_global_random_seed_address;
-static int16_t (*const bf6860_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
 
-__attribute__((naked, noinline))
-bool item_begin_garbage_collection(int item_handle __attribute__((unused)))
+/* item_begin_garbage_collection (0xf6860) — readable C lift. */
+bool item_begin_garbage_collection(int item_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[garb]\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "orl $0xc0000, %%ecx\n\t"
-      "pushl $0x258\n\t"
-      "pushl $0x12c\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10b2d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw %%ax, 0x1dc(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bf6860_get), [garb] "m"(bf6860_garb), [gseed] "m"(bf6860_gseed), [c10b2d0] "m"(bf6860_c10b2d0)
-      : "memory");
+  int *obj;
+  int16_t ttl;
+
+  obj = (int *)object_get_and_verify_type(item_handle, 0x10);
+  object_set_garbage_flag(item_handle, 1);
+  obj[1] = obj[1] | 0xc0000;
+  ttl = random_range((unsigned int *)get_global_random_seed_address(), 0x12c, 0x258);
+  *(int16_t *)((char *)obj + 0x1dc) = ttl;
+  return true;
 }
-#else
-#error "item_begin_garbage_collection: clang naked draft required"
-#endif
+
 
 
 /* FUN_000f68b0 (0xf68b0) — readable C lift from XBE leaf. */
@@ -1126,57 +1095,21 @@ char valid_real_vector3d_axes3(float *a, float *b, float *c)
   return '\0';
 }
 
-/* valid_real_matrix4x3 (0xf6d00) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static char (*const bf6d00_cf6c40)(float *a, float *b, float *c) = valid_real_vector3d_axes3;
-static bool (*const bf6d00_ca16b0)(float *point) = valid_real_point3d;
-
-__attribute__((naked, noinline))
-char valid_real_matrix4x3(float *mat __attribute__((unused)))
+/* valid_real_matrix4x3 (0xf6d00) — readable C lift. */
+char valid_real_matrix4x3(float *mat)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x7f800000, %%ecx\n\t"
-      "cmpl $0x7f800000, %%ecx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "je .Lvalid_real_matrix4x3_1\n\t"
-      "leal 0x1c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x10(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x4(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cf6c40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lvalid_real_matrix4x3_1\n\t"
-      "addl $0x28, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca16b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lvalid_real_matrix4x3_1\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lvalid_real_matrix4x3_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cf6c40] "m"(bf6d00_cf6c40), [ca16b0] "m"(bf6d00_ca16b0)
-      : "memory");
+  unsigned int bits;
+
+  bits = *(unsigned int *)mat;
+  if ((bits & 0x7f800000) == 0x7f800000)
+    return 0;
+  if (!valid_real_vector3d_axes3(mat + 1, mat + 4, mat + 7))
+    return 0;
+  if (!valid_real_point3d(mat + 10))
+    return 0;
+  return 1;
 }
-#else
-#error "valid_real_matrix4x3: clang naked draft required"
-#endif
+
 
 
 /* item_set_position (0xf6d60) — XBE naked draft (batch 49). */

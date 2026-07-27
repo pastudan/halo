@@ -5606,55 +5606,20 @@ void object_list_delete(int list_handle)
   datum_delete(*(data_t **)0x5aa698, list_handle);
 }
 
-/* FUN_000ce3c0 (0xce3c0) — XBE naked draft (batch 177). */
-#if defined(__clang__)
-static int (*const bce3c0_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const bce3c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bce3c0_cce240)(int list_handle) = object_list_delete;
-
-__attribute__((naked, noinline))
+/* FUN_000ce3c0 (0xce3c0) — readable C lift. */
 void FUN_000ce3c0(void)
 {
-  __asm__ volatile(
-      "movl 0x5aa698, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000ce3c0_3\n\t"
-      ".LFUN_000ce3c0_1:\n\t"
-      "movl 0x5aa698, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x4(%%eax)\n\t"
-      "jne .LFUN_000ce3c0_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cce240]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000ce3c0_2:\n\t"
-      "movl 0x5aa698, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_000ce3c0_1\n\t"
-      ".LFUN_000ce3c0_3:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(bce3c0_c1198f0), [dget] "m"(bce3c0_dget), [cce240] "m"(bce3c0_cce240)
-      : "memory");
+  int index;
+  short *datum;
+
+  for (index = data_next_index(*(data_t **)0x5aa698, -1); index != -1;
+       index = data_next_index(*(data_t **)0x5aa698, index)) {
+    datum = (short *)datum_get(*(void **)0x5aa698, index);
+    if (datum[2] == 0)
+      object_list_delete(index);
+  }
 }
-#else
-#error "FUN_000ce3c0: clang naked draft required"
-#endif
+
 
 
 /* FUN_000c8720 (0xc8720) — XBE naked draft (batch 122). */

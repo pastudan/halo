@@ -11111,59 +11111,28 @@ char *unit_get_weapon_name(int unit_handle /* @<esi> */, int unused __attribute_
   return weapon_get_label(weapon_handle);
 }
 
-/* unit_has_night_vision_weapon (0x1b13a0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b1b13a0_get)(int, int) = object_get_and_verify_type;
-static int (*const b1b13a0_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static void *(*const b1b13a0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-char unit_has_night_vision_weapon(int unit_handle __attribute__((unused)))
+/* unit_has_night_vision_weapon (0x1b13a0) — readable C lift. */
+char unit_has_night_vision_weapon(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[get]\n\t"
-      "movb 0x2d0(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb $0xff, %%cl\n\t"
-      "je .Lunit_has_night_vision_weapon_1\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x2a2(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1adeb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lunit_has_night_vision_weapon_1\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x308(%%eax), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb $0x40, %%ch\n\t"
-      "movb $1, %%al\n\t"
-      "jne .Lunit_has_night_vision_weapon_2\n\t"
-      ".Lunit_has_night_vision_weapon_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".Lunit_has_night_vision_weapon_2:\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1b13a0_get), [c1adeb0] "m"(b1b13a0_c1adeb0), [tag] "m"(b1b13a0_tag)
-      : "memory");
+  unsigned char *unit;
+  int weapon_handle;
+  int *weapon;
+  unsigned int *tag;
+  int16_t weapon_index;
+
+  unit = (unsigned char *)object_get_and_verify_type(unit_handle, 3);
+  if (unit[0x2d0] == 0xff)
+    return 0;
+  unit = (unsigned char *)object_get_and_verify_type(unit_handle, 3);
+  weapon_index = *(int16_t *)(unit + 0x2a2);
+  weapon_handle = unit_get_weapon(unit_handle, weapon_index);
+  if (weapon_handle == -1)
+    return 0;
+  weapon = (int *)object_get_and_verify_type(weapon_handle, 4);
+  tag = (unsigned int *)tag_get(0x77656170, *weapon);
+  return (char)((tag[0x308 / 4] >> 14) & 1);
 }
-#else
-#error "unit_has_night_vision_weapon: clang naked draft required"
-#endif
+
 
 
 /* unit_solo_player_integrated_night_vision_is_active (0x1b2610)
@@ -11205,45 +11174,20 @@ void scripting_magic_melee_attack(void)
   unit_melee_attack_begin(*(int *)(player + 0x34), 0, 0);
 }
 
-/* unit_select_weapon_after_vehicle_exit (0x1b2740) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void *(*const b1b2740_get)(int, int) = object_get_and_verify_type;
-static int16_t (*const b1b2740_c1ae490)(int unit_handle, int16_t current_index, int16_t direction) = FUN_001ae490;
-static void (*const b1b2740_c1b1ee0)(int unit_handle, int flag) = unit_update_weapon_readiness;
-
-__attribute__((naked, noinline))
-void unit_select_weapon_after_vehicle_exit(int unit_handle __attribute__((unused)))
+/* unit_select_weapon_after_vehicle_exit (0x1b2740) — readable C lift. */
+void unit_select_weapon_after_vehicle_exit(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2a2(%%edi), %%ax\n\t"
-      "pushl $0\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ae490]\n\t"
-      "pushl $1\n\t"
-      "movw %%ax, 0x2a4(%%edi)\n\t"
-      "call *%[c1b1ee0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1b2740_get), [c1ae490] "m"(b1b2740_c1ae490), [c1b1ee0] "m"(b1b2740_c1b1ee0)
-      : "memory");
+  unsigned char *unit;
+  int16_t current;
+  int16_t next;
+
+  unit = (unsigned char *)object_get_and_verify_type(unit_handle, 3);
+  current = *(int16_t *)(unit + 0x2a2);
+  next = FUN_001ae490(unit_handle, current, 0);
+  *(int16_t *)(unit + 0x2a4) = next;
+  unit_update_weapon_readiness(unit_handle, 1);
 }
-#else
-#error "unit_select_weapon_after_vehicle_exit: clang naked draft required"
-#endif
+
 
 
 /* FUN_001abd10 (0x1abd10) — XBE naked draft (batch 68). */
