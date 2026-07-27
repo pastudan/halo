@@ -11074,7 +11074,7 @@ static void (*const b149ce0_c189cb0)(char flag, void *position, void *string, in
 static void (*const b149ce0_c109e90)(float *out, float yaw, float pitch, float roll) = FUN_00109e90;
 static void (*const b149ce0_mscale)(float *, float *, float *) = matrix_scale_transform_vector;
 static void (*const b149ce0_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-static char (*const b149ce0_c4dc30)(int, float *, int) = FUN_0014dc30;
+static char (*const b149ce0_c4dc30)(int, float *, int) = (void *)FUN_0014dc30;
 static void (*const b149ce0_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
 static char (*const b149ce0_c4dab0)(int, int) = FUN_0014dab0;
 static void (*const b149ce0_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
@@ -11091,7 +11091,7 @@ static void (*const b149ce0_c1506d0)(void) = FUN_001506d0;
 static int (*const b149ce0_c150550)(void *out_point, float *direction, float *origin, int arg4, int arg5, int arg6, float *out_point2, void *out_arg8, int max_results, void *results) = FUN_00150550;
 static void (*const b149ce0_c8dae0)(void *dest, const void *src, unsigned int size) = csmemmove;
 static void *(*const b149ce0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b149ce0_c185f80)(void *param_1, void *param_2) = render_frustum_get_projection_bounds;
+static void (*const b149ce0_c185f80)(void *param_1, void *param_2) = (void *)render_frustum_get_projection_bounds;
 static void (*const b149ce0_c14c7b0)(int16_t *features) = FUN_0014c7b0;
 
 __attribute__((naked, noinline))
@@ -12950,96 +12950,32 @@ char FUN_001509c0(int *out __attribute__((unused)), int obj_idx __attribute__((u
 #endif
 
 
-/* FUN_00150ac0 (0x150ac0) — XBE naked draft (batch 340). */
-#if defined(__clang__)
-static void (*const b150ac0_m3x3pt)(void *, float *, float *) = real_matrix3x3_transform_point;
-static void *(*const b150ac0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-char FUN_00150ac0(int *data __attribute__((unused)), int *point __attribute__((unused)))
+/* FUN_00150ac0 (0x150ac0) — readable C lift from XBE leaf.
+ * Transform point by phys matrix; true if inside any sphere feature. */
+char FUN_00150ac0(int *data, int *point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x8(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[m3x3pt]\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl 0x74(%%eax), %%ecx\n\t"
-      "addl $0x74, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00150ac0_2\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".LFUN_00150ac0_1:\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "flds 0x68(%%eax)\n\t"
-      "flds 0x38(%%eax)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "flds 0x3c(%%eax)\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      "flds 0x40(%%eax)\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(4)\n\t"
-      "fmul %%st(5), %%st(0)\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "je .LFUN_00150ac0_3\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl 0x74(%%eax), %%edx\n\t"
-      "incl %%esi\n\t"
-      "addl $0x74, %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .LFUN_00150ac0_1\n\t"
-      ".LFUN_00150ac0_2:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00150ac0_3:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [m3x3pt] "m"(b150ac0_m3x3pt), [elem] "m"(b150ac0_elem)
-      : "memory");
-}
-#else
-#error "FUN_00150ac0: clang naked draft required"
-#endif
+  float local[3];
+  float *feat;
+  float dx, dy, dz;
+  float r;
+  int count;
+  short i;
+  void *block;
 
+  real_matrix3x3_transform_point((void *)(data + 2), (float *)point, local);
+  block = (char *)data[1] + 0x74;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    feat = (float *)tag_block_get_element(block, i, 0x80);
+    r = feat[0x68 / 4];
+    dx = feat[0x38 / 4] - local[0];
+    dy = feat[0x3c / 4] - local[1];
+    dz = feat[0x40 / 4] - local[2];
+    if (dx * dx + dy * dy + dz * dz <= r * r)
+      return 1;
+  }
+  return 0;
+}
 
 /* FUN_00150b60 (0x150b60) — XBE naked draft (batch 328). */
 #if defined(__clang__)

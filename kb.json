@@ -559,7 +559,7 @@
         {
           "addr": "0x150ac0",
           "decl": "char FUN_00150ac0(int *data, int *point);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x150b60",
@@ -23442,7 +23442,7 @@
         },
         {
           "addr": "0x185f80",
-          "decl": "void render_frustum_get_projection_bounds(void *param_1, void *param_2);",
+          "decl": "void render_frustum_get_projection_bounds(void *frustum, float *bounds);",
           "ported": false
         },
         {
@@ -23498,7 +23498,7 @@
         {
           "addr": "0x186c70",
           "decl": "char render_camera_world_to_screen(void *cam1, void *cam2, void *world_pos, float *screen_out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x186d40",
@@ -25698,8 +25698,8 @@
       "functions": [
         {
           "addr": "0x1929a0",
-          "decl": "void FUN_001929a0(int unused_a, short *type_a, short *type_b, char lit);",
-          "ported": false
+          "decl": "void FUN_001929a0(void *face@<eax>, void *leaf_map@<ecx>, short vertex_index, float *out_point);",
+          "ported": true
         },
         {
           "addr": "0x192a50",
@@ -26816,8 +26816,8 @@
         },
         {
           "addr": "0x7f570",
-          "decl": "void tiff_get_bounds(void);",
-          "ported": false
+          "decl": "char tiff_get_bounds(void *file_ref, void *width_out, void *height_out);",
+          "ported": true
         },
         {
           "addr": "0x7f5e0",
@@ -39956,7 +39956,7 @@
         {
           "addr": "0x1d0336",
           "decl": "int __stdcall WaitForSingleObject(int handle, int timeout_ms);",
-          "ported": false,
+          "ported": true,
           "name": "WaitForSingleObject"
         },
         {
@@ -40796,7 +40796,7 @@
         },
         {
           "addr": "0x14e940",
-          "decl": "char FUN_0014e940(int unused, float *origin, float *direction, float radius, int pad0, int pad1, void *result);",
+          "decl": "char FUN_0014e940(int unused, float *origin, float *direction, float radius, int pad0, void *result);",
           "ported": false
         },
         {

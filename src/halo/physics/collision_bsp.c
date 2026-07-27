@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* collision_bsp.obj (physics/collision_bsp.c)
  *
  * Declarations for tag_block_get_element, display_assert and system_exit come
@@ -2652,94 +2653,35 @@ void FUN_00147ed0(void *state /* */ __attribute__((unused)), int surface_index _
 #endif
 
 
-/* FUN_001486e0 (0x1486e0) — XBE naked draft (batch 230). */
-#if defined(__clang__)
-static void *(*const b1486e0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1486e0_c1486e0)(void *state, int node_index) = FUN_001486e0;
-static void (*const b1486e0_c147ed0)(void *state /* */, int surface_index) = FUN_00147ed0;
-
-__attribute__((naked, noinline))
-void FUN_001486e0(void *state __attribute__((unused)), int node_index __attribute__((unused)))
+/* FUN_001486e0 (0x1486e0) — readable C lift from XBE leaf.
+ * 2D BSP walk for sphere test; leaf → FUN_00147ed0. */
+void FUN_001486e0(void *state, int node_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "js .LFUN_001486e0_7\n\t"
-      ".LFUN_001486e0_1:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl $0x14\n\t"
-      "addl $0x30, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fmuls 0x224(%%edi)\n\t"
-      "flds 0x220(%%edi)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x8(%%esi)\n\t"
-      "fcoms 0x10(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_001486e0_2\n\t"
-      "movb $1, %%cl\n\t"
-      "jmp .LFUN_001486e0_3\n\t"
-      ".LFUN_001486e0_2:\n\t"
-      "xorb %%cl, %%cl\n\t"
-      ".LFUN_001486e0_3:\n\t"
-      "flds 0x10(%%edi)\n\t"
-      "fchs\n\t"
-      "fxch %%st(1)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001486e0_4\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001486e0_5\n\t"
-      ".LFUN_001486e0_4:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_001486e0_5:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_001486e0_6\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1486e0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001486e0_6:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001486e0_8\n\t"
-      "movl 0x10(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jns .LFUN_001486e0_1\n\t"
-      ".LFUN_001486e0_7:\n\t"
-      "andl $0x7fffffff, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c147ed0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001486e0_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1486e0_elem), [c1486e0] "m"(b1486e0_c1486e0), [c147ed0] "m"(b1486e0_c147ed0)
-      : "memory");
-}
-#else
-#error "FUN_001486e0: clang naked draft required"
-#endif
+  float *node;
+  float d;
+  float radius;
+  char side_pos;
+  char side_neg;
 
+  for (;;) {
+    if (node_index < 0) {
+      FUN_00147ed0(state, node_index & 0x7fffffff);
+      return;
+    }
+    node = (float *)tag_block_get_element(
+        (char *)*(void **)state + 0x30, node_index, 0x14);
+    radius = *(float *)((char *)state + 0x10);
+    d = node[1] * *(float *)((char *)state + 0x224) +
+        *(float *)((char *)state + 0x220) * node[0] - node[2];
+    side_pos = (d <= radius);
+    side_neg = (d >= -radius);
+    if (side_pos)
+      FUN_001486e0(state, ((int *)node)[3]);
+    if (!side_neg)
+      return;
+    node_index = ((int *)node)[4];
+  }
+}
 
 /* bsp3d_test_sphere_recursive (0x148b90) — XBE naked draft (batch 225). */
 #if defined(__clang__)
@@ -2748,7 +2690,7 @@ static void (*const b148b90_assert)(const char *, const char *, int, bool) = dis
 static void (*const b148b90_exitfn)(int) = system_exit;
 static void (*const b148b90_c148b90)(void *state, int node_index) = bsp3d_test_sphere_recursive;
 static void (*const b148b90_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
-static void (*const b148b90_c1486e0)(void *state, int node_index) = FUN_001486e0;
+static void (*const b148b90_c1486e0)(void *state, int node_index) = (void *)FUN_001486e0;
 
 __attribute__((naked, noinline))
 void bsp3d_test_sphere_recursive(void *state __attribute__((unused)), int node_index __attribute__((unused)))
@@ -4258,100 +4200,41 @@ char FUN_00149680(void *state __attribute__((unused)), int node_index __attribut
  * ported:false until verified.
  * ------------------------------------------------------------------------- */
 
-/* FUN_0014dc30 (0x14dc30) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static void * (*const b14dc30_c18e420)(void) = FUN_0018e420;
-static uint32_t (*const b14dc30_c146db0)(void *bsp3d, int root, void *point) = bsp3d_find_leaf;
-static void * (*const b14dc30_c18e3c0)(void) = scenario_get;
-static void *(*const b14dc30_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b14dc30_c13d5b0)(int *state, int16_t cluster_idx) = cluster_partition_object_iter_first;
-static char (*const b14dc30_c14db10)(int param_1, int param_2, int param_3, int param_4) = FUN_0014db10;
-static int (*const b14dc30_c13d5d0)(int *state) = cluster_partition_object_iter_next;
-
-__attribute__((naked, noinline))
-char FUN_0014dc30(int flags __attribute__((unused)), float *pos __attribute__((unused)), int param_3 __attribute__((unused)))
+/* FUN_0014dc30 (0x14dc30) — readable C lift from XBE leaf.
+ * Point-in-structure / cluster object collision probe. */
+char FUN_0014dc30(int flags, float *pos, int param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testb $0xe0, %%bl\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_0014dc30_3\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c18e420]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c146db0]\n\t"
-      "movb 0x4761f8, %%dl\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "shrl $7, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "andb $1, %%cl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .LFUN_0014dc30_1\n\t"
-      "xorb %%cl, %%cl\n\t"
-      ".LFUN_0014dc30_1:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0014dc30_4\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_0014dc30_3\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e3c0]\n\t"
-      "addl $0xe0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x8(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d5b0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0014dc30_3\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      ".LFUN_0014dc30_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c14db10]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0014dc30_4\n\t"
-      "leal 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d5d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_0014dc30_2\n\t"
-      ".LFUN_0014dc30_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0014dc30_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e420] "m"(b14dc30_c18e420), [c146db0] "m"(b14dc30_c146db0), [c18e3c0] "m"(b14dc30_c18e3c0), [elem] "m"(b14dc30_elem), [c13d5b0] "m"(b14dc30_c13d5b0), [c14db10] "m"(b14dc30_c14db10), [c13d5d0] "m"(b14dc30_c13d5d0)
-      : "memory");
-}
-#else
-#error "FUN_0014dc30: clang naked draft required"
-#endif
+  uint32_t leaf;
+  char check_objects;
+  int cluster;
+  int obj;
+  int flags_save;
+  int iter;
 
+  if ((flags & 0xe0) == 0)
+    return 0;
+  flags_save = flags;
+  leaf = bsp3d_find_leaf(FUN_0018e420(), 0, pos);
+  check_objects = (char)((flags_save >> 7) & 1);
+  if (*(unsigned char *)0x4761f8)
+    check_objects = 0;
+  if ((int)leaf == -1)
+    return 1;
+  if (!check_objects)
+    return 0;
+  leaf &= 0x7fffffffu;
+  cluster = *(short *)((char *)tag_block_get_element(
+                           (char *)scenario_get() + 0xe0, (int)leaf, 0x10) +
+                       8);
+  iter = flags_save;
+  obj = cluster_partition_object_iter_first(&iter, (int16_t)cluster);
+  while (obj != -1) {
+    if (FUN_0014db10(obj, flags_save, (int)pos, param_3))
+      return 1;
+    obj = cluster_partition_object_iter_next(&iter);
+  }
+  return 0;
+}
 
 /* FUN_0014e7d0 (0x14e7d0) — XBE naked draft (batch 232). */
 #if defined(__clang__)

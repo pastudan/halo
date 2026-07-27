@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Return pointer to a cluster's sound bit-vector data (0x193550).
  * Computes BIT_VECTOR_SIZE_IN_LONGS from clusters.count, then indexes
  * into cluster_data.elements by cluster_index * that stride. */
@@ -96,105 +97,34 @@ uint8_t structure_bsp_cluster_sound_encoding(void *bsp, int16_t from_cluster,
 }
 /* --- structure_bsp_definitions.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001929a0 (0x1929a0) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void *(*const b1929a0_elem)(void *, int, int) = tag_block_get_element;
-static uint8_t (*const b1929a0_c99270)(float *plane, uint32_t basis) = FUN_00099270;
-static void (*const b1929a0_c992d0)(float *point_2d, float *plane, int16_t projection, uint8_t sign, float *out_point) = project_point2d;
-
-__attribute__((naked, noinline))
-void FUN_001929a0(int unused_a __attribute__((unused)), short *type_a __attribute__((unused)), short *type_b __attribute__((unused)), char lit __attribute__((unused)))
+/* FUN_001929a0 (0x1929a0) — readable C lift from XBE leaf.
+ * Project leaf-face vertex (EAX=face, ECX=leaf_map) onto plane basis. */
+void FUN_001929a0(void *face /*@<eax>*/, void *leaf_map /*@<ecx>*/,
+                  short vertex_index, float *out_point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%edx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "flds (%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fabs\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fabs\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fabs\n\t"
-      ".byte 0xd8, 0xd1\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001929a0_1\n\t"
-      "fcomp %%st(2)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001929a0_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $2, %%edi\n\t"
-      "fstp %%st(0)\n\t"
-      "jmp .LFUN_001929a0_4\n\t"
-      ".LFUN_001929a0_1:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_001929a0_2:\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001929a0_3\n\t"
-      "movl $1, %%edi\n\t"
-      "jmp .LFUN_001929a0_4\n\t"
-      ".LFUN_001929a0_3:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".LFUN_001929a0_4:\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c99270]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%ecx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $8\n\t"
-      "pushl %%eax\n\t"
-      "addl $4, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c992d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1929a0_elem), [c99270] "m"(b1929a0_c99270), [c992d0] "m"(b1929a0_c992d0)
-      : "memory");
-}
-#else
-#error "FUN_001929a0: clang naked draft required"
-#endif
+  float *plane;
+  float ax, ay, az;
+  int proj;
+  uint8_t sign;
+  int *node;
 
+  node = (int *)tag_block_get_element(*(void **)leaf_map, *(int *)face, 0xc);
+  plane = (float *)tag_block_get_element((char *)*(void **)leaf_map + 0xc,
+                                         node[0], 0x10);
+  ax = fabsf(plane[0]);
+  ay = fabsf(plane[1]);
+  az = fabsf(plane[2]);
+  if (!(az < ay) && !(az < ax))
+    proj = 2;
+  else if (!(ay < ax))
+    proj = 1;
+  else
+    proj = 0;
+  sign = FUN_00099270(plane, (uint32_t)proj);
+  project_point2d(
+      (float *)tag_block_get_element((char *)face + 4, vertex_index, 8), plane,
+      (int16_t)proj, sign, out_point);
+}
 
 /* render_debug_leaf_faces (0x192a50) — XBE naked draft (batch 123). */
 #if defined(__clang__)
@@ -373,7 +303,7 @@ float FUN_00192bb0(float *v)
 #if defined(__clang__)
 static void (*const b192c30_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b192c30_exitfn)(int) = system_exit;
-static float (*const b192c30_c192bb0)(float *) = FUN_00192bb0;
+static float (*const b192c30_c192bb0)(float *) = (void *)FUN_00192bb0;
 static uint8_t (*const b192c30_c99270)(float *plane, uint32_t basis) = FUN_00099270;
 static void (*const b192c30_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
 
