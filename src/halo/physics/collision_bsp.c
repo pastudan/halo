@@ -687,128 +687,38 @@ float *collision_surface_project_point2d(void *bsp, int surface_index, int proje
   return out_point;
 }
 
-/* collision_surface_test_point2d (0x1479e0) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static void *(*const b1479e0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1479e0_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
-
-__attribute__((naked, noinline))
-char collision_surface_test_point2d(int bsp __attribute__((unused)), int surface_index __attribute__((unused)), int projection __attribute__((unused)), int sign __attribute__((unused)), float *point __attribute__((unused)))
+/* collision_surface_test_point2d (0x1479e0) — readable C lift from XBE leaf.
+ * Winged-edge walk: project edge endpoints to 2D; reject if 2D cross > 0. */
+char collision_surface_test_point2d(int bsp, int surface_index, int projection, int sign, float *point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x3c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "leal 0x48(%%edi), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x54, %%edi\n\t"
-      "movl %%edi, 0x8(%%ebp)\n\t"
-      "movl 0x18(%%ebp), %%edi\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      ".Lcollision_surface_test_point2d_1:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl %%ecx, 0x14(%%esi)\n\t"
-      "sete %%bl\n\t"
-      "movzbl %%bl, %%eax\n\t"
-      "movl (%%esi,%%eax,4), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%bl, %%bl\n\t"
-      "sete %%cl\n\t"
-      "pushl $0x10\n\t"
-      "movl %%eax, 0x18(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%esi,%%ecx,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c61df0]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c61df0]\n\t"
-      "flds (%%edi)\n\t"
-      "fsubs -0x14(%%ebp)\n\t"
-      "addl $0x44, %%esp\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fsubs -0x10(%%ebp)\n\t"
-      "flds (%%edi)\n\t"
-      "fsubs -0x1c(%%ebp)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fsubs -0x18(%%ebp)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "je .Lcollision_surface_test_point2d_2\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x8(%%esi,%%edx,4), %%esi\n\t"
-      "cmpl -0xc(%%ebp), %%esi\n\t"
-      "jne .Lcollision_surface_test_point2d_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_surface_test_point2d_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1479e0_elem), [c61df0] "m"(b1479e0_c61df0)
-      : "memory");
+  int *surface;
+  int first_edge;
+  int edge;
+  float a[2];
+  float b[2];
+  void *surfaces = (char *)bsp + 0x3c;
+  void *edges = (char *)bsp + 0x48;
+  void *vertices = (char *)bsp + 0x54;
+
+  surface = (int *)tag_block_get_element(surfaces, surface_index, 0xc);
+  first_edge = surface[1];
+  edge = first_edge;
+  do {
+    int *edge_el = (int *)tag_block_get_element(edges, edge, 0x18);
+    int side = (edge_el[5] == surface_index);
+    float *v0 = (float *)tag_block_get_element(vertices, edge_el[side], 0x10);
+    float *v1 = (float *)tag_block_get_element(vertices, edge_el[1 - side], 0x10);
+    float cross;
+
+    FUN_00061df0(v0, (short)projection, (unsigned char)sign, a);
+    FUN_00061df0(v1, (short)projection, (unsigned char)sign, b);
+    cross = (point[1] - b[1]) * (point[0] - a[0]) - (point[0] - b[0]) * (point[1] - a[1]);
+    if (cross > *(float *)0x2533c0)
+      return 0;
+    edge = edge_el[2 + side];
+  } while (edge != first_edge);
+  return 1;
 }
-#else
-#error "collision_surface_test_point2d: clang naked draft required"
-#endif
 
 
 

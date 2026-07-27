@@ -40480,7 +40480,7 @@
         {
           "addr": "0x1479e0",
           "decl": "char collision_surface_test_point2d(int bsp, int surface_index, int projection, int sign, float *point);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x147ae0",
