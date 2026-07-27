@@ -13643,64 +13643,23 @@ void FUN_0017bf20(void)
 #endif
 
 
-/* FUN_0017c000 (0x17c000) — XBE naked draft (batch 348). */
-#if defined(__clang__)
-static void (*const b17c000_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17c000_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_0017c000(void)
+/* FUN_0017c000 (0x17c000) — readable C lift. */
+int FUN_0017c000(short stage /*@<esi>*/, short index /*@<edi>*/)
 {
-  __asm__ volatile(
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0017c000_1\n\t"
-      "cmpw $0x19, %%si\n\t"
-      "jl .LFUN_0017c000_2\n\t"
-      ".LFUN_0017c000_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x10a\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2aeca8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017c000_2:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_0017c000_3\n\t"
-      "cmpw $8, %%di\n\t"
-      "jl .LFUN_0017c000_4\n\t"
-      ".LFUN_0017c000_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x10b\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2aec48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017c000_4:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl 0x2aea88(,%%eax,4), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .LFUN_0017c000_5\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "leal (%%ecx,%%eax,8), %%edx\n\t"
-      "movl 0x2aeb30(,%%edx,4), %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_0017c000_5:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "movl 0x2aeb0c(,%%eax,4), %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17c000_assert), [exitfn] "m"(b17c000_exitfn)
-      : "memory");
+  int base;
+  if ((short)stage < 0 || (short)stage >= 0x19) {
+    display_assert((const char *)0x2aeca8, (const char *)0x2aed00, 0x10a, 1);
+    system_exit(-1);
+  }
+  if ((short)index < 0 || (short)index >= 8) {
+    display_assert((const char *)0x2aec48, (const char *)0x2aed00, 0x10b, 1);
+    system_exit(-1);
+  }
+  base = ((int *)0x2aea88)[(int)(short)stage];
+  if (base != -1)
+    return ((int *)0x2aeb0c)[(int)(short)index] | base;
+  return ((int *)0x2aeb30)[(int)(short)index + (int)(short)stage * 8];
 }
-#else
-#error "FUN_0017c000: clang naked draft required"
-#endif
-
 
 /* FUN_0017c140 (0x17c140) — XBE naked draft (batch 362). */
 #if defined(__clang__)

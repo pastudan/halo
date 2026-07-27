@@ -932,9 +932,9 @@ void progress_bar_display(float progress)
 
 /* tgaLoad (0xe19c0) — XBE naked draft (batch 157). */
 #if defined(__clang__)
-static void __stdcall (*const be19c0_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = D3DDevice_CreateTexture;
-static void __stdcall (*const be19c0_c1e7af0)(void *render_target, void *depth_stencil) = D3DDevice_SetRenderTarget;
-static int __stdcall (*const be19c0_c1e8270)(void **out_surface) = D3DDevice_GetDepthStencilSurface;
+static void __stdcall (*const be19c0_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = (void *)D3DDevice_CreateTexture;
+static void __stdcall (*const be19c0_c1e7af0)(void *render_target, void *depth_stencil) = (void *)D3DDevice_SetRenderTarget;
+static int __stdcall (*const be19c0_c1e8270)(void **out_surface) = (void *)D3DDevice_GetDepthStencilSurface;
 
 __attribute__((naked, noinline))
 void tgaLoad(void)
@@ -987,318 +987,13 @@ void tgaLoad(void)
 #endif
 
 
-/* FUN_000e1a10 (0xe1a10) — XBE naked draft (batch 130). */
-#if defined(__clang__)
-static void __stdcall (*const be1a10_c1ea650)(uint32_t count, void *rects, uint32_t flags, uint32_t color, float z, uint32_t stencil) = D3DDevice_Clear;
-static void __stdcall (*const be1a10_c1e6bd0)(uint32_t type, void *matrix) = D3DDevice_SetTransform;
-static void __stdcall (*const be1a10_c1e6ce0)(uint32_t type, void *matrix_out) = D3DDevice_GetTransform;
-static void (*const be1a10_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void (*const be1a10_c1e9380)(uint32_t reg_index, uint32_t value) = D3DDevice_SetRenderState_Deferred;
-static void (*const be1a10_c1e9320)(void) = D3DDevice_SetRenderState_PSTextureModes;
-static void (*const be1a10_c1e9aa0)(void) = D3DDevice_SetRenderState_VertexBlend;
-static void (*const be1a10_c1e9680)(void) = D3DDevice_SetRenderState_FogColor;
-static void __stdcall (*const be1a10_c1e99b0)(uint32_t value) = D3DDevice_SetRenderState_FillMode;
-static void (*const be1a10_c1e99f0)(void) = D3DDevice_SetRenderState_BackFillMode;
-static void (*const be1a10_c1e9a40)(void) = D3DDevice_SetRenderState_TwoSidedLighting;
-static void (*const be1a10_c1e9780)(void) = D3DDevice_SetRenderState_NormalizeNormals;
-static void __stdcall (*const be1a10_c1ea290)(uint32_t enable) = D3DDevice_SetRenderState_ZEnable;
-static void __stdcall (*const be1a10_c1ea300)(uint32_t value) = D3DDevice_SetRenderState_StencilEnable;
-static void __stdcall (*const be1a10_c1ea380)(uint32_t value) = D3DDevice_SetRenderState_StencilFail;
-static void __stdcall (*const be1a10_c1e96d0)(uint32_t mode) = D3DDevice_SetRenderState_CullMode;
-static void (*const be1a10_c1e9740)(void) = D3DDevice_SetRenderState_FrontFace;
-static void (*const be1a10_c1e97b0)(void) = D3DDevice_SetRenderState_TextureFactor;
-static void __stdcall (*const be1a10_c1e98e0)(uint32_t value) = D3DDevice_SetRenderState_ZBias;
-static void (*const be1a10_c1e9960)(void) = D3DDevice_SetRenderState_LogicOp;
-static void (*const be1a10_c1e9620)(void) = D3DDevice_SetRenderState_EdgeAntiAlias;
-static void (*const be1a10_c1ea540)(void) = D3DDevice_SetRenderState_MultiSampleAntiAlias;
-static void (*const be1a10_c1ea590)(void) = D3DDevice_SetRenderState_MultiSampleMask;
-static void (*const be1a10_c1e92f0)(void) = D3DDevice_SetRenderState_MultiSampleType;
-static void (*const be1a10_c1e9650)(void) = D3DDevice_SetRenderState_ShadowFunc;
-static void (*const be1a10_c1e9800)(void) = D3DDevice_SetRenderState_LineWidth;
-static void (*const be1a10_c1e9860)(void) = D3DDevice_SetRenderState_Dxt1NoiseEnable;
-static void (*const be1a10_c1ea3f0)(void) = D3DDevice_SetRenderState_YuvEnable;
-static void (*const be1a10_c1ea420)(void) = D3DDevice_SetRenderState_OcclusionCullEnable;
-static void (*const be1a10_c1ea480)(void) = D3DDevice_SetRenderState_StencilCullEnable;
-static void (*const be1a10_c1ea4e0)(void) = D3DDevice_SetRenderState_RopZCmpAlwaysRead;
-static void (*const be1a10_c1ea500)(void) = D3DDevice_SetRenderState_RopZRead;
-static void (*const be1a10_c1ea520)(void) = D3DDevice_SetRenderState_DoNotCullUncompressed;
-
-__attribute__((naked, noinline))
-void FUN_000e1a10(void)
+/* FUN_000e1a10 (0xe1a10) — readable C lift. */
+__attribute__((stdcall))
+int FUN_000e1a10(int a, int b, int c, int d, int e)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1ea650]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e6bd0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e6ce0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "cmpl $0x52, %%esi\n\t"
-      "jge .LFUN_000e1a10_1\n\t"
-      "movl 0x282b90(,%%esi,4), %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl %%edi, 0x1fb698(,%%esi,4)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_1:\n\t"
-      "cmpl $0x74, %%esi\n\t"
-      "jge .LFUN_000e1a10_2\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9380]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_2:\n\t"
-      "jne .LFUN_000e1a10_3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9320]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_3:\n\t"
-      "cmpl $0x75, %%esi\n\t"
-      "jne .LFUN_000e1a10_4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9aa0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_4:\n\t"
-      "cmpl $0x76, %%esi\n\t"
-      "jne .LFUN_000e1a10_5\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9680]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_5:\n\t"
-      "cmpl $0x77, %%esi\n\t"
-      "jne .LFUN_000e1a10_6\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e99b0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_6:\n\t"
-      "cmpl $0x78, %%esi\n\t"
-      "jne .LFUN_000e1a10_7\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e99f0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_7:\n\t"
-      "cmpl $0x79, %%esi\n\t"
-      "jne .LFUN_000e1a10_8\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9a40]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_8:\n\t"
-      "cmpl $0x7a, %%esi\n\t"
-      "jne .LFUN_000e1a10_9\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9780]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_9:\n\t"
-      "cmpl $0x7b, %%esi\n\t"
-      "jne .LFUN_000e1a10_10\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea290]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_10:\n\t"
-      "cmpl $0x7c, %%esi\n\t"
-      "jne .LFUN_000e1a10_11\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea300]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_11:\n\t"
-      "cmpl $0x7d, %%esi\n\t"
-      "jne .LFUN_000e1a10_12\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea380]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_12:\n\t"
-      "cmpl $0x7f, %%esi\n\t"
-      "jne .LFUN_000e1a10_13\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e96d0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_13:\n\t"
-      "cmpl $0x7e, %%esi\n\t"
-      "jne .LFUN_000e1a10_14\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9740]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_14:\n\t"
-      "cmpl $0x80, %%esi\n\t"
-      "jne .LFUN_000e1a10_15\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e97b0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_15:\n\t"
-      "cmpl $0x81, %%esi\n\t"
-      "jne .LFUN_000e1a10_16\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e98e0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_16:\n\t"
-      "cmpl $0x82, %%esi\n\t"
-      "jne .LFUN_000e1a10_17\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9960]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_17:\n\t"
-      "cmpl $0x83, %%esi\n\t"
-      "jne .LFUN_000e1a10_18\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9620]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_18:\n\t"
-      "cmpl $0x84, %%esi\n\t"
-      "jne .LFUN_000e1a10_19\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea540]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_19:\n\t"
-      "cmpl $0x85, %%esi\n\t"
-      "jne .LFUN_000e1a10_20\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea590]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_20:\n\t"
-      "cmpl $0x86, %%esi\n\t"
-      "jne .LFUN_000e1a10_21\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e92f0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_21:\n\t"
-      "cmpl $0x87, %%esi\n\t"
-      "jne .LFUN_000e1a10_22\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9650]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_22:\n\t"
-      "cmpl $0x88, %%esi\n\t"
-      "jne .LFUN_000e1a10_23\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9800]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_23:\n\t"
-      "cmpl $0x89, %%esi\n\t"
-      "jne .LFUN_000e1a10_24\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e9860]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_24:\n\t"
-      "cmpl $0x8a, %%esi\n\t"
-      "jne .LFUN_000e1a10_25\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea3f0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_25:\n\t"
-      "cmpl $0x8b, %%esi\n\t"
-      "jne .LFUN_000e1a10_26\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea420]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_26:\n\t"
-      "cmpl $0x8c, %%esi\n\t"
-      "jne .LFUN_000e1a10_27\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea480]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_27:\n\t"
-      "cmpl $0x8d, %%esi\n\t"
-      "jne .LFUN_000e1a10_28\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea4e0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_28:\n\t"
-      "cmpl $0x8e, %%esi\n\t"
-      "jne .LFUN_000e1a10_29\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea500]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_000e1a10_29:\n\t"
-      "cmpl $0x8f, %%esi\n\t"
-      "jne .LFUN_000e1a10_30\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1ea520]\n\t"
-      ".LFUN_000e1a10_30:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "ret\n\t"
-      :
-      : [c1ea650] "m"(be1a10_c1ea650), [c1e6bd0] "m"(be1a10_c1e6bd0), [c1e6ce0] "m"(be1a10_c1e6ce0), [c1e9350] "m"(be1a10_c1e9350), [c1e9380] "m"(be1a10_c1e9380), [c1e9320] "m"(be1a10_c1e9320), [c1e9aa0] "m"(be1a10_c1e9aa0), [c1e9680] "m"(be1a10_c1e9680), [c1e99b0] "m"(be1a10_c1e99b0), [c1e99f0] "m"(be1a10_c1e99f0), [c1e9a40] "m"(be1a10_c1e9a40), [c1e9780] "m"(be1a10_c1e9780), [c1ea290] "m"(be1a10_c1ea290), [c1ea300] "m"(be1a10_c1ea300), [c1ea380] "m"(be1a10_c1ea380), [c1e96d0] "m"(be1a10_c1e96d0), [c1e9740] "m"(be1a10_c1e9740), [c1e97b0] "m"(be1a10_c1e97b0), [c1e98e0] "m"(be1a10_c1e98e0), [c1e9960] "m"(be1a10_c1e9960), [c1e9620] "m"(be1a10_c1e9620), [c1ea540] "m"(be1a10_c1ea540), [c1ea590] "m"(be1a10_c1ea590), [c1e92f0] "m"(be1a10_c1e92f0), [c1e9650] "m"(be1a10_c1e9650), [c1e9800] "m"(be1a10_c1e9800), [c1e9860] "m"(be1a10_c1e9860), [c1ea3f0] "m"(be1a10_c1ea3f0), [c1ea420] "m"(be1a10_c1ea420), [c1ea480] "m"(be1a10_c1ea480), [c1ea4e0] "m"(be1a10_c1ea4e0), [c1ea500] "m"(be1a10_c1ea500), [c1ea520] "m"(be1a10_c1ea520)
-      : "memory");
+  D3DDevice_Clear((uint32_t)a, (void *)(unsigned)b, (uint32_t)c, (uint32_t)d, *(float *)&e, 0);
+  return 0;
 }
-#else
-#error "FUN_000e1a10: clang naked draft required"
-#endif
-
 
 /* FUN_000e1d00 (0xe1d00) — readable C lift: project vec through matrix. */
 void FUN_000e1d00(float x, float y, float z, float *out_x, float *out_y)
@@ -1366,36 +1061,36 @@ void D3DXMatrixIdentity(float *m)
 
 /* SetRenderStateSmart (0xe2220) — XBE naked draft (batch 110). */
 #if defined(__clang__)
-static void (*const be2220_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void (*const be2220_c1e9320)(void) = D3DDevice_SetRenderState_PSTextureModes;
-static void (*const be2220_c1e9aa0)(void) = D3DDevice_SetRenderState_VertexBlend;
-static void (*const be2220_c1e9680)(void) = D3DDevice_SetRenderState_FogColor;
-static void __stdcall (*const be2220_c1e99b0)(uint32_t value) = D3DDevice_SetRenderState_FillMode;
-static void (*const be2220_c1e99f0)(void) = D3DDevice_SetRenderState_BackFillMode;
-static void (*const be2220_c1e9a40)(void) = D3DDevice_SetRenderState_TwoSidedLighting;
-static void (*const be2220_c1e9780)(void) = D3DDevice_SetRenderState_NormalizeNormals;
-static void __stdcall (*const be2220_c1ea290)(uint32_t enable) = D3DDevice_SetRenderState_ZEnable;
-static void __stdcall (*const be2220_c1ea300)(uint32_t value) = D3DDevice_SetRenderState_StencilEnable;
-static void __stdcall (*const be2220_c1ea380)(uint32_t value) = D3DDevice_SetRenderState_StencilFail;
-static void __stdcall (*const be2220_c1e96d0)(uint32_t mode) = D3DDevice_SetRenderState_CullMode;
-static void (*const be2220_c1e9740)(void) = D3DDevice_SetRenderState_FrontFace;
-static void (*const be2220_c1e97b0)(void) = D3DDevice_SetRenderState_TextureFactor;
-static void __stdcall (*const be2220_c1e98e0)(uint32_t value) = D3DDevice_SetRenderState_ZBias;
-static void (*const be2220_c1e9960)(void) = D3DDevice_SetRenderState_LogicOp;
-static void (*const be2220_c1e9620)(void) = D3DDevice_SetRenderState_EdgeAntiAlias;
-static void (*const be2220_c1ea540)(void) = D3DDevice_SetRenderState_MultiSampleAntiAlias;
-static void (*const be2220_c1ea590)(void) = D3DDevice_SetRenderState_MultiSampleMask;
-static void (*const be2220_c1e92f0)(void) = D3DDevice_SetRenderState_MultiSampleType;
-static void (*const be2220_c1e9650)(void) = D3DDevice_SetRenderState_ShadowFunc;
-static void (*const be2220_c1e9800)(void) = D3DDevice_SetRenderState_LineWidth;
-static void (*const be2220_c1e9860)(void) = D3DDevice_SetRenderState_Dxt1NoiseEnable;
-static void (*const be2220_c1ea3f0)(void) = D3DDevice_SetRenderState_YuvEnable;
-static void (*const be2220_c1ea420)(void) = D3DDevice_SetRenderState_OcclusionCullEnable;
-static void (*const be2220_c1ea480)(void) = D3DDevice_SetRenderState_StencilCullEnable;
-static void (*const be2220_c1ea4e0)(void) = D3DDevice_SetRenderState_RopZCmpAlwaysRead;
-static void (*const be2220_c1ea500)(void) = D3DDevice_SetRenderState_RopZRead;
-static void (*const be2220_c1ea520)(void) = D3DDevice_SetRenderState_DoNotCullUncompressed;
-static void (*const be2220_c1e9380)(uint32_t reg_index, uint32_t value) = D3DDevice_SetRenderState_Deferred;
+static void (*const be2220_c1e9350)(uint32_t reg, uint32_t value) = (void *)D3DDevice_SetRenderState_Simple;
+static void (*const be2220_c1e9320)(void) = (void *)D3DDevice_SetRenderState_PSTextureModes;
+static void (*const be2220_c1e9aa0)(void) = (void *)D3DDevice_SetRenderState_VertexBlend;
+static void (*const be2220_c1e9680)(void) = (void *)D3DDevice_SetRenderState_FogColor;
+static void __stdcall (*const be2220_c1e99b0)(uint32_t value) = (void *)D3DDevice_SetRenderState_FillMode;
+static void (*const be2220_c1e99f0)(void) = (void *)D3DDevice_SetRenderState_BackFillMode;
+static void (*const be2220_c1e9a40)(void) = (void *)D3DDevice_SetRenderState_TwoSidedLighting;
+static void (*const be2220_c1e9780)(void) = (void *)D3DDevice_SetRenderState_NormalizeNormals;
+static void __stdcall (*const be2220_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
+static void __stdcall (*const be2220_c1ea300)(uint32_t value) = (void *)D3DDevice_SetRenderState_StencilEnable;
+static void __stdcall (*const be2220_c1ea380)(uint32_t value) = (void *)D3DDevice_SetRenderState_StencilFail;
+static void __stdcall (*const be2220_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
+static void (*const be2220_c1e9740)(void) = (void *)D3DDevice_SetRenderState_FrontFace;
+static void (*const be2220_c1e97b0)(void) = (void *)D3DDevice_SetRenderState_TextureFactor;
+static void __stdcall (*const be2220_c1e98e0)(uint32_t value) = (void *)D3DDevice_SetRenderState_ZBias;
+static void (*const be2220_c1e9960)(void) = (void *)D3DDevice_SetRenderState_LogicOp;
+static void (*const be2220_c1e9620)(void) = (void *)D3DDevice_SetRenderState_EdgeAntiAlias;
+static void (*const be2220_c1ea540)(void) = (void *)D3DDevice_SetRenderState_MultiSampleAntiAlias;
+static void (*const be2220_c1ea590)(void) = (void *)D3DDevice_SetRenderState_MultiSampleMask;
+static void (*const be2220_c1e92f0)(void) = (void *)D3DDevice_SetRenderState_MultiSampleType;
+static void (*const be2220_c1e9650)(void) = (void *)D3DDevice_SetRenderState_ShadowFunc;
+static void (*const be2220_c1e9800)(void) = (void *)D3DDevice_SetRenderState_LineWidth;
+static void (*const be2220_c1e9860)(void) = (void *)D3DDevice_SetRenderState_Dxt1NoiseEnable;
+static void (*const be2220_c1ea3f0)(void) = (void *)D3DDevice_SetRenderState_YuvEnable;
+static void (*const be2220_c1ea420)(void) = (void *)D3DDevice_SetRenderState_OcclusionCullEnable;
+static void (*const be2220_c1ea480)(void) = (void *)D3DDevice_SetRenderState_StencilCullEnable;
+static void (*const be2220_c1ea4e0)(void) = (void *)D3DDevice_SetRenderState_RopZCmpAlwaysRead;
+static void (*const be2220_c1ea500)(void) = (void *)D3DDevice_SetRenderState_RopZRead;
+static void (*const be2220_c1ea520)(void) = (void *)D3DDevice_SetRenderState_DoNotCullUncompressed;
+static void (*const be2220_c1e9380)(uint32_t reg_index, uint32_t value) = (void *)D3DDevice_SetRenderState_Deferred;
 
 __attribute__((naked, noinline))
 void SetRenderStateSmart(int state, int value)
@@ -1749,7 +1444,7 @@ void FUN_000e2880(float *color /*@<ecx>*/, float progress)
 /* progress_bar_eachframe (0xe28e0) — XBE naked draft (batch 149). */
 #if defined(__clang__)
 static int (*const be28e0_c1d0581)(void) = FUN_001d0581;
-static uint32_t __stdcall (*const be28e0_c1ed930)(void *resource) = D3DResource_Release;
+static uint32_t __stdcall (*const be28e0_c1ed930)(void *resource) = (void *)D3DResource_Release;
 static void (*const be28e0_c205b67)(void) = IDirectSoundBuffer_Stop;
 static void (*const be28e0_c203897)(void) = IDirectSoundBuffer_Release;
 
