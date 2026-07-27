@@ -3127,10 +3127,8 @@ char ui_widget_event_handler_set_difficulty(void *widget, void *event_data, bool
 /* display_error_abort_to_dashboard (0xe9cb0) — readable C lift. */
 extern char DAT_002859a4[];
 extern char DAT_00285b10[];
-char display_error_abort_to_dashboard(void *widget, void *event_data, bool *widget_deleted)
+char display_error_abort_to_dashboard(void *widget)
 {
-  (void)event_data;
-  (void)widget_deleted;
   if (*(int16_t *)((char *)widget + 8) == -1) {
     display_assert(DAT_00285b10, DAT_002859a4, 0x369, true);
     system_exit(-1);
