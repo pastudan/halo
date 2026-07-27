@@ -8211,7 +8211,7 @@
         {
           "addr": "0xdd580",
           "decl": "void first_person_weapon_update(int16_t local_player_index@<ax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xddae0",
@@ -8241,7 +8241,7 @@
         {
           "addr": "0xde560",
           "decl": "void FUN_000de560(int local_player_index);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "first_person_weapons.obj",
@@ -14004,12 +14004,12 @@
         {
           "addr": "0xf4b60",
           "decl": "void FUN_000f4b60(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf4cf0",
           "decl": "void FUN_000f4cf0(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf4ea0",
@@ -14206,7 +14206,7 @@
         {
           "addr": "0xf7340",
           "decl": "void item_update(int item_handle);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "items.obj",
@@ -28555,7 +28555,7 @@
         {
           "addr": "0x1a0b30",
           "decl": "char FUN_001a0b30(int unit_handle@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a0be0",
@@ -29817,7 +29817,7 @@
         {
           "addr": "0x1b4dc0",
           "decl": "void FUN_001b4dc0(int handle, void *damage_data, unsigned int flags, float body_vitality, float shield_vitality, int param_6, int param_7);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b5400",
@@ -29938,12 +29938,12 @@
         {
           "addr": "0x1b72b0",
           "decl": "void FUN_001b72b0(int vehicle_handle, void *contact_point, void *wheel_state);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b74d0",
           "decl": "char FUN_001b74d0(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b77f0",
@@ -29953,7 +29953,7 @@
         {
           "addr": "0x1b79c0",
           "decl": "void vehicle_export_function_values(int vehicle_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b7ee0",
@@ -29968,7 +29968,7 @@
         {
           "addr": "0x1b81d0",
           "decl": "void FUN_001b81d0(int object_handle, void *unused_scratch, void *force_buffer);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b8570",
@@ -34170,7 +34170,7 @@
         {
           "addr": "0xfd570",
           "decl": "void FUN_000fd570(int weapon_handle, int16_t trigger_index);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "weapons.obj",
@@ -39573,7 +39573,7 @@
         {
           "addr": "0x138fd0",
           "decl": "void FUN_00138fd0(int material, int lightmap, unsigned short *vertex_indices, float u, float v, float *out_rgb);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1390d0",
