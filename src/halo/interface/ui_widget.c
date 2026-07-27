@@ -4173,6 +4173,7 @@ int FUN_000e5180(wchar_t *text, wchar_t *replacement, void **pool_block)
 #endif
 
 
+/* FUN_000e5b10 (0xe5b10) — readable C lift (restored pre-naked). */
 
 void FUN_000e5b10(void *widget, void *draw_state)
 {
@@ -4202,7 +4203,6 @@ void FUN_000e5b10(void *widget, void *draw_state)
   if (*(int *)((char *)tag + 0x54) <= 0)
     error(2, (char *)0x283818);
 }
-
 
 /* draw_string_and_hack_in_icons (0xe5de0) — XBE naked draft (batch 109). */
 #if defined(__clang__)
