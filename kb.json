@@ -44039,7 +44039,7 @@
         {
           "addr": "0x679f0",
           "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000679f0"
         }
       ],
