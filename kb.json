@@ -20914,8 +20914,8 @@
         },
         {
           "addr": "0x173af0",
-          "decl": "void FUN_00173af0(float *a, float *b, float *out);",
-          "ported": false
+          "decl": "int FUN_00173af0(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x173b40",
@@ -21017,8 +21017,8 @@
         },
         {
           "addr": "0x179570",
-          "decl": "void FUN_00179570(void);",
-          "ported": false
+          "decl": "int FUN_00179570(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x1795c0",
@@ -21037,8 +21037,8 @@
         },
         {
           "addr": "0x17ad20",
-          "decl": "void FUN_0017ad20(void);",
-          "ported": false
+          "decl": "int FUN_0017ad20(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x17ad40",
