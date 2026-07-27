@@ -27209,7 +27209,8 @@
         {
           "addr": "0xe4d40",
           "decl": "char ui_widget_player_prefers_metric_units(int16_t player_index@<ax>);",
-          "ported": false
+          "ported": true,
+          "name": "ui_widget_player_prefers_metric_units"
         },
         {
           "addr": "0xe4da0",

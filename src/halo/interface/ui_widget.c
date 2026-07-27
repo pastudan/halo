@@ -2094,58 +2094,24 @@ int widget_instance_get_child_index_from_parent(void *widget)
   }
 }
 
-/* widget_instance_set_visibility_recursive (0xe4370) — XBE naked draft (batch 162). */
-#if defined(__clang__)
-static void (*const be4370_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be4370_exitfn)(int) = (void *)system_exit;
-static void (*const be4370_ce4370)(void *widget, char visible) = (void *)widget_instance_set_visibility_recursive;
-
-__attribute__((naked, noinline))
+/* widget_instance_set_visibility_recursive (0xe4370) — readable C lift from XBE leaf. */
 void widget_instance_set_visibility_recursive(void *widget, char visible)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lwidget_instance_set_visibility_recursive_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x743\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x2832a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lwidget_instance_set_visibility_recursive_1:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movb %%bl, 0x10(%%esi)\n\t"
-      "movl 0x34(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lwidget_instance_set_visibility_recursive_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lwidget_instance_set_visibility_recursive_2:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce4370]\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lwidget_instance_set_visibility_recursive_2\n\t"
-      ".Lwidget_instance_set_visibility_recursive_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be4370_assert), [exitfn] "m"(be4370_exitfn), [ce4370] "m"(be4370_ce4370)
-      : "memory");
+  extern char DAT_002832a8[];
+  extern char DAT_00283280[];
+  void *child;
+
+  if (widget == 0) {
+    display_assert(DAT_002832a8, DAT_00283280, 0x743, true);
+    system_exit(-1);
+  }
+  *((unsigned char *)widget + 0x10) = (unsigned char)visible;
+  for (child = *(void **)((char *)widget + 0x34); child != 0;
+       child = *(void **)((char *)child + 0x2c)) {
+    widget_instance_set_visibility_recursive(child, visible);
+  }
 }
-#else
-#error "widget_instance_set_visibility_recursive: clang naked draft required"
-#endif
+
 
 
 void main_menu_active(char active)
@@ -2592,64 +2558,27 @@ char ui_widget_match_localized_substring(wchar_t *text)
 #endif
 
 
-/* ui_widget_player_prefers_metric_units (0xe4d40) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static __int16 (*const be4d40_cba4c0)(__int16 a1) = (void *)local_player_get_next;
-static void *(*const be4d40_memset)(void *, int, unsigned int) = (void *)csmemset;
-static void (*const be4d40_cce6c0)(short local_player_index, void *preferences_out) = (void *)input_abstraction_get_local_player_preferences;
-
-__attribute__((naked, noinline))
+/* ui_widget_player_prefers_metric_units (0xe4d40) — readable C lift from XBE leaf. */
 char ui_widget_player_prefers_metric_units(int16_t player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "jne .Lui_widget_player_prefers_metric_units_1\n\t"
-      "pushl $-1\n\t"
-      "call *%[cba4c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lui_widget_player_prefers_metric_units_1:\n\t"
-      "pushl $0x18\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lui_widget_player_prefers_metric_units_2\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cce6c0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lui_widget_player_prefers_metric_units_2:\n\t"
-      "movswl -0x4(%%ebp), %%eax\n\t"
-      "decl %%eax\n\t"
-      "popl %%esi\n\t"
-      "je .Lui_widget_player_prefers_metric_units_3\n\t"
-      "subl $2, %%eax\n\t"
-      "je .Lui_widget_player_prefers_metric_units_3\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lui_widget_player_prefers_metric_units_3:\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cba4c0] "m"(be4d40_cba4c0), [memset] "m"(be4d40_memset), [cce6c0] "m"(be4d40_cce6c0)
-      : "memory");
+  char prefs[0x18];
+  short v;
+
+  if (player_index == -1)
+    player_index = local_player_get_next(-1);
+  csmemset(prefs, 0, 0x18);
+  if (player_index != -1)
+    input_abstraction_get_local_player_preferences(player_index, prefs);
+  v = *(short *)(prefs + 0x14);
+  v = (short)(v - 1);
+  if (v == 0)
+    return 1;
+  v = (short)(v - 2);
+  if (v == 0)
+    return 1;
+  return 0;
 }
-#else
-#error "ui_widget_player_prefers_metric_units: clang naked draft required"
-#endif
+
 
 
 /* get_ui_rgb_white (0xe54e0) — readable C lift. */
@@ -11488,53 +11417,25 @@ void ui_widget_pending_load_push_internal(int *head, void *record)
 #endif
 
 
-/* ui_widget_pending_load_pop (0xe4770) — XBE naked draft (batch 145). */
-#if defined(__clang__)
-static void (*const be4770_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be4770_exitfn)(int) = (void *)system_exit;
-static void (*const be4770_c11f620)(void *pool, void *block) = (void *)stack_memory_pool_deallocate;
-
-__attribute__((naked, noinline))
+/* ui_widget_pending_load_pop (0xe4770) — readable C lift from XBE leaf. */
 void ui_widget_pending_load_pop(int *head, void *record)
 {
-  __asm__ volatile(
-      "testl %%edi, %%edi\n\t"
-      "je .Lui_widget_pending_load_pop_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_pending_load_pop_2\n\t"
-      ".Lui_widget_pending_load_pop_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9fc\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283560\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_pending_load_pop_2:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, (%%edi)\n\t"
-      "movl 0x31e04c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11f620]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be4770_assert), [exitfn] "m"(be4770_exitfn), [c11f620] "m"(be4770_c11f620)
-      : "memory");
+  extern char DAT_00283560[];
+  extern char DAT_00283280[];
+  int *node;
+
+  if (head == 0 || record == 0) {
+    display_assert(DAT_00283560, DAT_00283280, 0x9fc, true);
+    system_exit(-1);
+  }
+  node = (int *)*head;
+  ((int *)record)[0] = node[0];
+  ((int *)record)[1] = node[1];
+  ((int *)record)[2] = node[2];
+  *head = node[3];
+  stack_memory_pool_deallocate(*(void **)0x31e04c, node);
 }
-#else
-#error "ui_widget_pending_load_pop: clang naked draft required"
-#endif
+
 
 
 /* ui_widget_pending_load_apply (0xe5090) — XBE naked draft (batch 239). */
