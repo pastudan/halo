@@ -13829,7 +13829,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcf3e0",
@@ -15496,7 +15496,7 @@
           "addr": "0x11be10",
           "decl": "int FUN_0011be10(short *table /* @<eax> */, void *key);",
           "name": "FUN_0011be10",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11beb0",
@@ -24967,13 +24967,13 @@
           "addr": "0x1ccbe0",
           "comment": "Compute listener distance squared for a channel/source pair.",
           "decl": "float FUN_001ccbe0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1ccca0",
           "comment": "Compute distance for random scale checks.",
           "decl": "float FUN_001ccca0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1ccd70",
@@ -39182,7 +39182,7 @@
         {
           "addr": "0x1b9de0",
           "decl": "bool cache_files_give_time_to_precache(const char *name);",
-          "ported": true,
+          "ported": false,
           "name": "cache_files_give_time_to_precache"
         },
         {
@@ -39199,7 +39199,7 @@
         {
           "addr": "0x1b98d0",
           "decl": "void tag_groups_checksum(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1b9ce0",
