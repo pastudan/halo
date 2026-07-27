@@ -762,63 +762,38 @@ void * FUN_0011a770(int *state __attribute__((unused)), int element_size_type __
 #endif
 
 
-/* FUN_0011a8e0 (0x11a8e0) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char * FUN_0011a8e0(int *state __attribute__((unused)), unsigned short max_length __attribute__((unused)))
+/* FUN_0011a8e0 (0x11a8e0) — readable C lift. */
+char *FUN_0011a8e0(int *state, unsigned short max_length)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl 0x8(%%ecx), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x4(%%ecx), %%edi\n\t"
-      "addl %%edi, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl %%edx, %%edi\n\t"
-      "jge .LFUN_0011a8e0_2\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "jmp .LFUN_0011a8e0_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0011a8e0_1:\n\t"
-      "cmpb $0, (%%edx,%%eax,1)\n\t"
-      "je .LFUN_0011a8e0_3\n\t"
-      "movl 0x4(%%ecx), %%ebx\n\t"
-      "incl %%esi\n\t"
-      "movswl %%si, %%edx\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "cmpl 0x8(%%ecx), %%ebx\n\t"
-      "jl .LFUN_0011a8e0_1\n\t"
-      ".LFUN_0011a8e0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, 0xc(%%ecx)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a8e0_3:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "leal 0x1(%%edx,%%edi,1), %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *result;
+  int size;
+  int offset;
+  short len;
+  int idx;
+
+  (void)max_length;
+  offset = state[1];
+  size = state[2];
+  result = (char *)state[0] + offset;
+  len = 0;
+  if (offset >= size) {
+    *((unsigned char *)state + 0xc) = 1;
+    return 0;
+  }
+  idx = 0;
+  for (;;) {
+    if (result[idx] == 0) {
+      state[1] = offset + (int)len + 1;
+      return result;
+    }
+    len++;
+    idx = (int)len;
+    if (offset + idx >= size) {
+      *((unsigned char *)state + 0xc) = 1;
+      return 0;
+    }
+  }
 }
-#else
-#error "FUN_0011a8e0: clang naked draft required"
-#endif
 
 
 /* ========================================================================

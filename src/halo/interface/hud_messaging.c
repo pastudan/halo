@@ -2036,130 +2036,66 @@ void FUN_000d5350(int param_1)
 #error "FUN_000d5350: clang naked draft required"
 #endif
 
-/* hud_find_nav_point_by_name (0xd5ec0) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void *(*const bd5ec0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const bd5ec0_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static void (*const bd5ec0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* hud_find_nav_point_by_name (0xd5ec0) — readable C lift. */
 short hud_find_nav_point_by_name(const char *param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x46bd0c, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "je .Lhud_find_nav_point_by_name_3\n\t"
-      "movl 0x160(%%eax), %%ecx\n\t"
-      "addl $0x160, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .Lhud_find_nav_point_by_name_3\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".Lhud_find_nav_point_by_name_1:\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lhud_find_nav_point_by_name_2\n\t"
-      "movl 0x46bd0c, %%eax\n\t"
-      "movl 0x160(%%eax), %%edx\n\t"
-      "incl %%esi\n\t"
-      "addl $0x160, %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .Lhud_find_nav_point_by_name_1\n\t"
-      "jmp .Lhud_find_nav_point_by_name_3\n\t"
-      ".Lhud_find_nav_point_by_name_2:\n\t"
-      "cmpw $-1, %%si\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "jne .Lhud_find_nav_point_by_name_4\n\t"
-      ".Lhud_find_nav_point_by_name_3:\n\t"
-      "pushl $0x281d14\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lhud_find_nav_point_by_name_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(bd5ec0_elem), [c1dd801] "m"(bd5ec0_c1dd801), [c8f390] "m"(bd5ec0_c8f390)
-      : "memory");
+  extern char DAT_00281d14[];
+  void *tag;
+  void *block;
+  int count;
+  short i;
+  short found;
+  void *elem;
+
+  found = (short)-1;
+  tag = *(void **)0x46bd0c;
+  if (tag == 0)
+    goto not_found;
+  count = *(int *)((char *)tag + 0x160);
+  block = (char *)tag + 0x160;
+  i = 0;
+  if (count <= 0)
+    goto not_found;
+  for (;;) {
+    elem = tag_block_get_element(block, (int)i, 0x68);
+    if (crt_stricmp(param_1, (const char *)elem) == 0) {
+      found = i;
+      if (found != (short)-1)
+        return found;
+      break;
+    }
+    tag = *(void **)0x46bd0c;
+    count = *(int *)((char *)tag + 0x160);
+    block = (char *)tag + 0x160;
+    i++;
+    if ((int)i >= count)
+      break;
+  }
+not_found:
+  error(2, DAT_00281d14);
+  return found;
 }
-#else
-#error "hud_find_nav_point_by_name: clang naked draft required"
-#endif
 
 
-/* hud_get_nav_point_data (0xd5f40) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static void (*const bd5f40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bd5f40_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* hud_get_nav_point_data (0xd5f40) — readable C lift. */
 int hud_get_nav_point_data(short param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lhud_get_nav_point_data_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lhud_get_nav_point_data_2\n\t"
-      ".Lhud_get_nav_point_data_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5f\n\t"
-      "pushl $0x281d8c\n\t"
-      "pushl $0x281d40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhud_get_nav_point_data_2:\n\t"
-      "movl 0x46bd1c, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lhud_get_nav_point_data_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0x281d8c\n\t"
-      "pushl $0x281d30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhud_get_nav_point_data_3:\n\t"
-      "movl 0x46bd1c, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bd5f40_assert), [exitfn] "m"(bd5f40_exitfn)
-      : "memory");
+  extern char DAT_00281d40[];
+  extern char DAT_00281d8c[];
+  extern char DAT_00281d30[];
+  char *base;
+
+  if (param_1 < 0 || param_1 >= 4) {
+    display_assert(DAT_00281d40, DAT_00281d8c, 0x5f, 1);
+    system_exit(-1);
+  }
+  base = *(char **)0x46bd1c;
+  if (base == 0) {
+    display_assert(DAT_00281d30, DAT_00281d8c, 0x60, 1);
+    system_exit(-1);
+  }
+  return (int)(base + (int)param_1 * 48);
 }
-#else
-#error "hud_get_nav_point_data: clang naked draft required"
-#endif
 
 
 /* hud_nav_points_initialize (0xd5fb0) — readable C lift. */
