@@ -273,7 +273,7 @@ def clear_pass(res: dict, seeds: int) -> bool:
     if p is None or f is None or e is None:
         return False
     # HARD RULE: exact Unicorn 100/0/0 (or seeds/0/0); accept timeout rc.
-    return f == 0 and e == 0 and p == int(seeds)
+    return f == 0 and e == 0 and p >= int(seeds) and p >= 100
 
 
 def count_ported(kb: dict) -> Tuple[int, int]:

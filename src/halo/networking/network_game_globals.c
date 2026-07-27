@@ -755,49 +755,22 @@ void FUN_0012a7a0(void)
   }
 }
 
-/* network_game_get_number_of_games_played (0x12a830) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static int (*const b12a830_c12d570)(void *server) = network_game_server_get_game;
-static void (*const b12a830_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12a830_exitfn)(int) = system_exit;
-static void (*const b12a830_c12a86e)(void) = (void (*)(void))FUN_0012a890;
-
-__attribute__((naked, noinline))
+/* network_game_get_number_of_games_played (0x12a830) — readable C lift. */
 int network_game_get_number_of_games_played(void)
 {
-  __asm__ volatile(
-      "movl 0x46e8bc, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "je .Lnetwork_game_get_number_of_games_played_10000\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12d570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_game_get_number_of_games_played_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x73\n\t"
-      "pushl $0x2955e0\n\t"
-      "pushl $0x2861a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_get_number_of_games_played_1:\n\t"
-      "movl 0x428(%%esi), %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_get_number_of_games_played_10000:\n\t"
-      "jmp *%[c12a86e]\n\t"
-      :
-      : [c12d570] "m"(b12a830_c12d570), [assert] "m"(b12a830_assert), [exitfn] "m"(b12a830_exitfn), [c12a86e] "m"(b12a830_c12a86e)
-      : "memory");
-}
-#else
-#error "network_game_get_number_of_games_played: clang naked draft required"
-#endif
+  void *server;
+  int game;
 
+  server = *(void **)0x46e8bc;
+  if (server == 0)
+    return (int)FUN_0012a890();
+  game = network_game_server_get_game(server);
+  if (game == 0) {
+    display_assert((const char *)0x2861a8, (const char *)0x2955e0, 0x73, 1);
+    system_exit(-1);
+  }
+  return *(int *)((char *)game + 0x428);
+}
 
 /* Create and initialize the global network game server.
  * Asserts the server slot is empty, allocates via FUN_0012eef0,
@@ -834,7 +807,7 @@ bool FUN_0012a890(void)
 /* network_player_reset (0x12a920) — readable C lift. */
 extern char DAT_00295874[];
 extern char DAT_002569f0[];
-void network_player_reset(char *player)
+void network_player_reset(uint8_t *player)
 {
   if (player == NULL) {
     display_assert(DAT_002569f0, DAT_00295874, 0x58, true);

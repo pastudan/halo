@@ -14918,7 +14918,7 @@
           "addr": "0x12a830",
           "decl": "int network_game_get_number_of_games_played(void);",
           "name": "network_game_get_number_of_games_played",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x12a890",
@@ -15518,7 +15518,7 @@
           "addr": "0x11c480",
           "decl": "void FUN_0011c480(int cache);",
           "name": "FUN_0011c480",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c4d0",
@@ -27030,7 +27030,8 @@
         {
           "addr": "0xe3da0",
           "decl": "char ui_widgets_active_for_local_player(int16_t local_player_index);",
-          "ported": false
+          "ported": false,
+          "name": "ui_widgets_active_for_local_player"
         },
         {
           "addr": "0xe3e10",
@@ -27265,12 +27266,14 @@
         {
           "addr": "0xe59e0",
           "decl": "void ui_widgets_pop_stack(int16_t player_index);",
-          "ported": false
+          "ported": false,
+          "name": "ui_widgets_pop_stack"
         },
         {
           "addr": "0xe5a40",
           "decl": "void main_screen_shell_begin_fade(int fade_duration);",
-          "ported": false
+          "ported": false,
+          "name": "main_screen_shell_begin_fade"
         },
         {
           "addr": "0xe5ab0",
@@ -40007,7 +40010,7 @@
           "addr": "0x80c20",
           "decl": "void byte_swap_message_header(unsigned short *header, int byte_order);",
           "name": "byte_swap_message_header",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80ca0",

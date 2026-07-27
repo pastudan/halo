@@ -3123,8 +3123,6 @@ void FUN_0011c480(int cache)
   *(int *)(c + 0x2c) = 0;
 }
 
-
-
 /* FUN_0011c4d0 (0x11c4d0) — XBE naked draft (batch 94). */
 #if defined(__clang__)
 static void (*const b11c4d0_assert)(const char *, const char *, int, bool) = display_assert;

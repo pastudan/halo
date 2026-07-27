@@ -236,70 +236,25 @@ void build_message_header(unsigned short *header __attribute__((unused)), unsign
 #endif
 
 
-/* byte_swap_message_header (0x80c20) — XBE naked draft (batch 78). */
-#if defined(__clang__)
-static void (*const b80c20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80c20_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void byte_swap_message_header(unsigned short *header __attribute__((unused)), int byte_order __attribute__((unused)))
+/* byte_swap_message_header (0x80c20) — readable C lift. */
+void byte_swap_message_header(unsigned short *header, int byte_order)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lbyte_swap_message_header_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x50\n\t"
-      "pushl $0x265ccc\n\t"
-      "pushl $0x265d1c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbyte_swap_message_header_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpl $1, %%eax\n\t"
-      "jne .Lbyte_swap_message_header_2\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "movzbw %%ah, %%cx\n\t"
-      "movb %%al, %%ch\n\t"
-      "movw %%cx, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbyte_swap_message_header_2:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lbyte_swap_message_header_3\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "movzbw %%ah, %%dx\n\t"
-      "movb %%al, %%dh\n\t"
-      "movw %%dx, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbyte_swap_message_header_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5e\n\t"
-      "pushl $0x265ccc\n\t"
-      "pushl $0x265d00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80c20_assert), [exitfn] "m"(b80c20_exitfn)
-      : "memory");
-}
-#else
-#error "byte_swap_message_header: clang naked draft required"
-#endif
+  unsigned short v;
+  unsigned short swapped;
 
+  if (header == 0) {
+    display_assert((const char *)0x265d1c, (const char *)0x265ccc, 0x50, 1);
+    system_exit(-1);
+  }
+  if (byte_order == 1 || byte_order == 0) {
+    v = *header;
+    swapped = (unsigned short)(((v & 0xff) << 8) | (v >> 8));
+    *header = swapped;
+    return;
+  }
+  display_assert((const char *)0x265d00, (const char *)0x265ccc, 0x5e, 1);
+  system_exit(-1);
+}
 
 /* create_message (0x80ca0) — XBE naked draft (batch 77). */
 #if defined(__clang__)
@@ -1066,7 +1021,7 @@ unsigned short *FUN_000804e0(int buffer, unsigned short buffer_size, void *key_p
 static void (*const b805a0_c81170)(void) = FUN_00081170;
 static void (*const b805a0_c81250)(void) = FUN_00081250;
 static void (*const b805a0_c80470)(void) = (void *)FUN_00080470;
-static void (*const b805a0_c80c20)(unsigned short *header, int byte_order) = byte_swap_message_header;
+static void (*const b805a0_c80c20)(unsigned short *header, int byte_order) = (void *)byte_swap_message_header;
 static int (*const b805a0_c82f50)(int *ep, const char *buf, int len) = send_endpoint;
 
 __attribute__((naked, noinline))
@@ -1150,7 +1105,7 @@ static void (*const b80620_c81300)(void) = FUN_00081300;
 static void (*const b80620_c81410)(void) = FUN_00081410;
 static void (*const b80620_c81250)(void) = FUN_00081250;
 static void (*const b80620_c804e0)(void) = (void *)FUN_000804e0;
-static void (*const b80620_c80c20)(unsigned short *header, int byte_order) = byte_swap_message_header;
+static void (*const b80620_c80c20)(unsigned short *header, int byte_order) = (void *)byte_swap_message_header;
 static int (*const b80620_c82f50)(int *ep, const char *buf, int len) = send_endpoint;
 
 __attribute__((naked, noinline))
