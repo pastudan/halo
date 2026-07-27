@@ -5980,104 +5980,42 @@ void render_debug_trigger_volumes(void)
 #endif
 
 
-/* hs_evaluate_wake (0xcc0e0) — XBE naked draft (batch 136). */
-#if defined(__clang__)
-static void *(*const bcc0e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bcc0e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bcc0e0_exitfn)(int) = system_exit;
-static int (*const bcc0e0_ccada0)(int16_t script_index) = FUN_000cada0;
-static void (*const bcc0e0_ccacf0)(int thread_index) = FUN_000cacf0;
-static void (*const bcc0e0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void hs_evaluate_wake(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* hs_evaluate_wake (0xcc0e0) — readable C lift.
+ * Resolve wake script node from thread stack; start/cleanup target thread. */
+void hs_evaluate_wake(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6c4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "cmpw $0x15, 0x8(%%ebp)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "je .Lhs_evaluate_wake_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22c\n\t"
-      "pushl $0x280478\n\t"
-      "pushl $0x27d1bc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_evaluate_wake_1:\n\t"
-      "testb $1, 0x6(%%esi)\n\t"
-      "jne .Lhs_evaluate_wake_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22d\n\t"
-      "pushl $0x280478\n\t"
-      "pushl $0x2809a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_evaluate_wake_2:\n\t"
-      "cmpw $0xa, 0x4(%%esi)\n\t"
-      "je .Lhs_evaluate_wake_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22e\n\t"
-      "pushl $0x280478\n\t"
-      "pushl $0x280978\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_evaluate_wake_3:\n\t"
-      "movw 0x10(%%esi), %%di\n\t"
-      "call *%[ccada0]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lhs_evaluate_wake_4\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[ccacf0]\n\t"
-      ".Lhs_evaluate_wake_4:\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bcc0e0_dget), [assert] "m"(bcc0e0_assert), [exitfn] "m"(bcc0e0_exitfn), [ccada0] "m"(bcc0e0_ccada0), [ccacf0] "m"(bcc0e0_ccacf0), [ccbf80] "m"(bcc0e0_ccbf80)
-      : "memory");
-}
-#else
-#error "hs_evaluate_wake: clang naked draft required"
-#endif
+  char *thread;
+  int *stack;
+  char *expr;
+  char *arg_expr;
+  char *script_node;
+  int woke;
 
+  (void)init;
+  thread = (char *)datum_get(*(data_t **)0x5aa6c4, thread_datum);
+  stack = *(int **)(thread + 0x10);
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, stack[1]);
+  arg_expr = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
+  script_node = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(arg_expr + 8));
+
+  if (function_index != 0x15) {
+    display_assert((const char *)0x27d1bc, (const char *)0x280478, 0x22c, true);
+    system_exit(-1);
+  }
+  if ((*(unsigned char *)(script_node + 6) & 1) == 0) {
+    display_assert((const char *)0x2809a0, (const char *)0x280478, 0x22d, true);
+    system_exit(-1);
+  }
+  if (*(int16_t *)(script_node + 4) != 0xa) {
+    display_assert((const char *)0x280978, (const char *)0x280478, 0x22e, true);
+    system_exit(-1);
+  }
+
+  woke = FUN_000cada0(*(int16_t *)(script_node + 0x10));
+  if (woke != -1)
+    FUN_000cacf0(woke);
+  hs_return(thread_datum, 0);
+}
 
 /* FUN_000cdf70 (0xcdf70) — readable C lift. */
 void FUN_000cdf70(void *header, void *src, int size)

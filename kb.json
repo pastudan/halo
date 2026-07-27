@@ -12678,7 +12678,8 @@
         {
           "addr": "0xcc0e0",
           "decl": "void hs_evaluate_wake(int16_t function_index, int thread_datum, char init);",
-          "ported": false
+          "ported": true,
+          "name": "hs_evaluate_wake"
         },
         {
           "addr": "0xcc1d0",

@@ -2022,8 +2022,8 @@
     "coverage_pct": 25.2
   },
   "0x8": {
-    "confidence": "weak",
-    "coverage_pct": 34.7
+    "confidence": "high",
+    "coverage_pct": 64.0
   },
   "0x80070": {
     "class": "non_leaf",
@@ -2355,6 +2355,9 @@
   "0xcc": {
     "confidence": "high",
     "coverage_pct": 75.6
+  },
+  "0xcc0e0": {
+    "class": "non_leaf"
   },
   "0xcdf70": {
     "class": "non_leaf",
