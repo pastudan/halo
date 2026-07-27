@@ -20164,7 +20164,8 @@
         {
           "addr": "0x91ba0",
           "decl": "void FUN_00091ba0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00091ba0"
         },
         {
           "addr": "0x91c10",

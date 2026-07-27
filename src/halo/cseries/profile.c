@@ -2924,56 +2924,24 @@ void FUN_00091b70(void)
   *(uint32_t *)0x449cb4 = hi;
 }
 
-/* FUN_00091ba0 (0x91ba0) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_00091ba0 (0x91ba0) — readable C lift. */
 void FUN_00091ba0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      ".byte 0x0f, 0x31\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "popl %%edx\n\t"
-      "popl %%eax\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x449cb0, %%edx\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x449cb8\n\t"
-      "subl %%edx, %%eax\n\t"
-      "movl 0x449cb4, %%edx\n\t"
-      "movl %%ecx, 0x449cbc\n\t"
-      "sbbl %%edx, %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "fmuls 0x254cb8\n\t"
-      "fildl 0x3361a0\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "flds 0x449cc0\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps 0x449cc0\n\t"
-      "flds 0x449cc4\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps 0x449cc4\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00091ba0: clang naked draft required"
-#endif
+  uint32_t lo, hi, diff_lo, diff_hi;
+  float elapsed;
 
+  RDTSC(lo, hi);
+  *(uint32_t *)0x449cb8 = lo;
+  *(uint32_t *)0x449cbc = hi;
+
+  diff_lo = lo - *(uint32_t *)0x449cb0;
+  diff_hi = hi - *(uint32_t *)0x449cb4 - (lo < *(uint32_t *)0x449cb0);
+  (void)diff_hi;
+  elapsed = (float)(int32_t)diff_lo * *(float *)0x254cb8 / (float)*(int32_t *)0x3361a0;
+
+  *(float *)0x449cc0 += elapsed;
+  *(float *)0x449cc4 += elapsed;
+}
 
 /* FUN_00091c10 (0x91c10) — readable C lift. */
 void FUN_00091c10(void *dst, void *src, const char *name, int field)
