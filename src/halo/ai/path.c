@@ -1274,9 +1274,9 @@ float FUN_0005f1d0(void *base, float *dst, float *src, int surface_index)
 
   bsp = tag_block_get_element((char *)base + 0xb0, 0, 0x60);
   collision_surface_find_closest_point2d(
-      (int)bsp, surface_index, 2, 1, dst, scratch);
+      (int)(uintptr_t)bsp, surface_index, 2, 1, dst, scratch);
   collision_surface_project_point2d(
-      (int)bsp, surface_index, 2, 1, src, scratch);
+      bsp, surface_index, 2, 1, src, scratch);
   dx = src[0] - dst[0];
   dy = src[1] - dst[1];
   dz = src[2] - dst[2];
@@ -2734,7 +2734,6 @@ void FUN_000604e0(void *path, int16_t heap_index)
   }
 }
 
-
 /* 0x60670 — sift heap entry down from heap_index */
 void FUN_00060670(void *path, int16_t heap_index)
 {
@@ -2799,7 +2798,6 @@ void FUN_00060670(void *path, int16_t heap_index)
   }
 }
 
-
 /* FUN_00060910 (0x60910) — readable C lift. */
 char FUN_00060910(void *path, int16_t step_index)
 {
@@ -2843,7 +2841,7 @@ int16_t FUN_00060970(void *path)
 /* FUN_000609e0 (0x609e0) — XBE naked draft (batch 113). */
 #if defined(__clang__)
 static void *(*const b609e0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b609e0_c147990)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_project_point2d;
+static float *(*const b609e0_c147990)(void *bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_project_point2d;
 static void (*const b609e0_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
 static void *(*const b609e0_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b609e0_assert)(const char *, const char *, int, bool) = display_assert;
