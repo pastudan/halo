@@ -7880,113 +7880,29 @@ char FUN_000eaec0(void *widget)
 #endif
 
 
-/* FUN_000eb020 (0xeb020) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static void *(*const beb020_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
-static void (*const beb020_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const beb020_exitfn)(int) = (void *)system_exit;
-static void (*const beb020_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void *(*const beb020_memset)(void *, int, unsigned int) = (void *)csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_000eb020 (0xeb020) — readable C lift: write playlist game mode from widget. */
 char FUN_000eb020(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ce0ec0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x30(%%eax), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movb $1, %%bl\n\t"
-      "je .LFUN_000eb020_1\n\t"
-      "cmpw $3, 0xe(%%esi)\n\t"
-      "je .LFUN_000eb020_2\n\t"
-      ".LFUN_000eb020_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7a6\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2865a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eb020_2:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000eb020_11\n\t"
-      "movswl 0x3c(%%esi), %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "ja .LFUN_000eb020_8\n\t"
-      "jmp *.LFUN_000eb020_jt(,%%eax,4)\n\t"
-      ".LFUN_000eb020_3:\n\t"
-      "movl $1, %%esi\n\t"
-      "jmp .LFUN_000eb020_9\n\t"
-      ".LFUN_000eb020_4:\n\t"
-      "movl $4, %%esi\n\t"
-      "jmp .LFUN_000eb020_9\n\t"
-      ".LFUN_000eb020_5:\n\t"
-      "movl $2, %%esi\n\t"
-      "jmp .LFUN_000eb020_9\n\t"
-      ".LFUN_000eb020_6:\n\t"
-      "movl $3, %%esi\n\t"
-      "jmp .LFUN_000eb020_9\n\t"
-      ".LFUN_000eb020_7:\n\t"
-      "movl $5, %%esi\n\t"
-      "jmp .LFUN_000eb020_9\n\t"
-      ".LFUN_000eb020_8:\n\t"
-      "pushl $0x28657c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movl 0x18(%%edi), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000eb020_9:\n\t"
-      "cmpl 0x18(%%edi), %%esi\n\t"
-      "je .LFUN_000eb020_10\n\t"
-      "pushl $0x18\n\t"
-      "leal 0x4c(%%edi), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000eb020_10:\n\t"
-      "movl %%esi, 0x18(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000eb020_11:\n\t"
-      "pushl $0x286550\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000eb020_jt:\n\t"
-      ".long .LFUN_000eb020_3\n\t"
-      ".long .LFUN_000eb020_4\n\t"
-      ".long .LFUN_000eb020_5\n\t"
-      ".long .LFUN_000eb020_6\n\t"
-      ".long .LFUN_000eb020_7\n\t"
-      ".text\n\t"
-      :
-      : [ce0ec0] "m"(beb020_ce0ec0), [assert] "m"(beb020_assert), [exitfn] "m"(beb020_exitfn), [c8f390] "m"(beb020_c8f390), [memset] "m"(beb020_memset)
-      : "memory");
+  extern char DAT_002859a4[];
+  extern char DAT_002865a0[];
+  extern char DAT_0028657c[];
+  extern char DAT_00286550[];
+  void *profile; void *parent; int mode; char ok = 1;
+  profile = player_ui_get_edit_playlist_profile();
+  parent = *(void **)((char *)widget + 0x30);
+  if (parent == 0 || *(short *)((char *)parent + 0xe) != 3) {
+    display_assert(DAT_002865a0, DAT_002859a4, 0x7a6, true); system_exit(-1);
+  }
+  if (profile == 0) { error(2, DAT_00286550); return 0; }
+  switch (*(short *)((char *)parent + 0x3c)) {
+  case 0: mode = 1; break; case 1: mode = 4; break; case 2: mode = 2; break;
+  case 3: mode = 3; break; case 4: mode = 5; break;
+  default: error(2, DAT_0028657c); mode = *(int *)((char *)profile + 0x18); break;
+  }
+  if (mode != *(int *)((char *)profile + 0x18)) csmemset((char *)profile + 0x4c, 0, 0x18u);
+  *(int *)((char *)profile + 0x18) = mode;
+  return ok;
 }
-#else
-#error "FUN_000eb020: clang naked draft required"
-#endif
-
 
 /* FUN_000eb150 (0xeb150) — XBE naked draft (batch 109). */
 #if defined(__clang__)
