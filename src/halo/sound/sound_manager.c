@@ -3925,112 +3925,29 @@ char FUN_001cc1c0(int looping_handle, int unused, void *out)
   }
   return 1;
 }
-/* FUN_001cc200 (0x1cc200) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static int (*const b1cc200_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
-
-__attribute__((naked, noinline))
-char FUN_001cc200(int looping_handle __attribute__((unused)), void *source __attribute__((unused)), void *position __attribute__((unused)))
+/* FUN_001cc200 (0x1cc200) — readable C lift: fill sound position from looping datum. */
+char FUN_001cc200(int looping_handle, void *source, void *position)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4fdba0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119270]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%cl, %%cl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001cc200_4\n\t"
-      "movl 0x44(%%eax), %%edx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x38(%%ecx)\n\t"
-      "movl 0x48(%%eax), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edx, 0x3c(%%ecx)\n\t"
-      "cmpw $0, 0xc(%%eax)\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_001cc200_1\n\t"
-      "leal 0x30(%%eax), %%edx\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "leal 0x24(%%ecx), %%esi\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "movl 0x4(%%edx), %%edi\n\t"
-      "movl %%edi, 0x4(%%esi)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "leal 0x24(%%eax), %%edx\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "leal 0x18(%%ecx), %%esi\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "movl 0x4(%%edx), %%edi\n\t"
-      "movl %%edi, 0x4(%%esi)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "movl 0x3c(%%eax), %%edx\n\t"
-      "movl %%edx, 0x30(%%ecx)\n\t"
-      "movl 0x40(%%eax), %%edx\n\t"
-      "movl %%edx, 0x34(%%ecx)\n\t"
-      "jmp .LFUN_001cc200_2\n\t"
-      ".LFUN_001cc200_1:\n\t"
-      "movl 0x31fc3c, %%esi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "leal 0x18(%%ecx), %%edx\n\t"
-      "movl %%edi, (%%edx)\n\t"
-      "movl 0x4(%%esi), %%edi\n\t"
-      "movl %%edi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "movl %%esi, 0x8(%%edx)\n\t"
-      "movl 0x31fc38, %%esi\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "leal 0x24(%%ecx), %%edx\n\t"
-      "movl %%edi, (%%edx)\n\t"
-      "movl 0x4(%%esi), %%edi\n\t"
-      "movl %%edi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "movl %%esi, 0x8(%%edx)\n\t"
-      ".LFUN_001cc200_2:\n\t"
-      "cmpw $1, (%%ecx)\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%ebx\n\t"
-      "leal 0xc(%%ecx), %%edx\n\t"
-      "movl %%edx, %%edi\n\t"
-      "movl %%ebx, (%%edi)\n\t"
-      "movl 0x4(%%esi), %%ebx\n\t"
-      "movl %%ebx, 0x4(%%edi)\n\t"
-      "movl 0x8(%%esi), %%esi\n\t"
-      "movl %%esi, 0x8(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "jne .LFUN_001cc200_3\n\t"
-      "flds 0x18(%%eax)\n\t"
-      "fadds (%%edx)\n\t"
-      "fstps (%%edx)\n\t"
-      "flds 0x1c(%%eax)\n\t"
-      "fadds 0x10(%%ecx)\n\t"
-      "fstps 0x10(%%ecx)\n\t"
-      "flds 0x20(%%eax)\n\t"
-      "fadds 0x14(%%ecx)\n\t"
-      "fstps 0x14(%%ecx)\n\t"
-      ".LFUN_001cc200_3:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001cc200_4:\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119270] "m"(b1cc200_c119270)
-      : "memory");
+  char *entry; char *pos=(char*)position; char *src=(char*)source; float *v;
+  entry=(char*)datum_absolute_index_to_index(*(data_t**)0x4fdba0, looping_handle);
+  if (!entry) return 0;
+  *(int*)(pos+0x38)=*(int*)(entry+0x44); *(int*)(pos+0x3c)=*(int*)(entry+0x48);
+  if (*(short*)(entry+0xc)!=0) {
+    *(int*)(pos+0x24)=*(int*)(entry+0x30); *(int*)(pos+0x28)=*(int*)(entry+0x34); *(int*)(pos+0x2c)=*(int*)(entry+0x38);
+    *(int*)(pos+0x18)=*(int*)(entry+0x24); *(int*)(pos+0x1c)=*(int*)(entry+0x28); *(int*)(pos+0x20)=*(int*)(entry+0x2c);
+    *(int*)(pos+0x30)=*(int*)(entry+0x3c); *(int*)(pos+0x34)=*(int*)(entry+0x40);
+  } else {
+    v=*(float**)0x31fc3c; *(int*)(pos+0x18)=*(int*)&v[0]; *(int*)(pos+0x1c)=*(int*)&v[1]; *(int*)(pos+0x20)=*(int*)&v[2];
+    v=*(float**)0x31fc38; *(int*)(pos+0x24)=*(int*)&v[0]; *(int*)(pos+0x28)=*(int*)&v[1]; *(int*)(pos+0x2c)=*(int*)&v[2];
+  }
+  *(int*)(pos+0xc)=*(int*)(src+0); *(int*)(pos+0x10)=*(int*)(src+4); *(int*)(pos+0x14)=*(int*)(src+8);
+  if (*(short*)pos==1) {
+    *(float*)(pos+0xc)+=*(float*)(entry+0x18);
+    *(float*)(pos+0x10)+=*(float*)(entry+0x1c);
+    *(float*)(pos+0x14)+=*(float*)(entry+0x20);
+  }
+  return 1;
 }
-#else
-#error "FUN_001cc200: clang naked draft required"
-#endif
 
 
 /* FUN_001cc2f0 (0x1cc2f0) — readable C lift. */

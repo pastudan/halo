@@ -473,99 +473,26 @@ void FUN_0017d150(float *a, float *b, float t, float *color)
 
 
 
-/* FUN_0017d1a0 (0x17d1a0) — XBE naked draft (batch 334). */
-#if defined(__clang__)
-static void (*const b17d1a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17d1a0_exitfn)(int) = system_exit;
-static bool (*const b17d1a0_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
-static void (*const b17d1a0_c16b180)(void) = FUN_0016b180;
-
-__attribute__((naked, noinline))
-void FUN_0017d1a0(int param_1 __attribute__((unused)))
+/* FUN_0017d1a0 (0x17d1a0) — readable C lift: optional debug ray, then FUN_0016b180. */
+void FUN_0017d1a0(int flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x5c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_0017d1a0_4\n\t"
-      "cmpw $0x20, 0x4761d8\n\t"
-      "jl .LFUN_0017d1a0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e4\n\t"
-      "pushl $0x2af1ec\n\t"
-      "pushl $0x253440\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017d1a0_1:\n\t"
-      "movw 0x4761d8, %%ax\n\t"
-      "flds 0x5a5bd4\n\t"
-      "fmuls 0x2af240\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "incw %%ax\n\t"
-      "movw %%ax, 0x4761d8\n\t"
-      "movswl 0x506548, %%eax\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls 0x2af240\n\t"
-      "leal -0x5c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "flds 0x5a5bdc\n\t"
-      "movw $0x15, 0x5a8c80(,%%ecx,2)\n\t"
-      "fmuls 0x2af240\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x5a5bc8\n\t"
-      "pushl $0xfff80\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "call *%[ray]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0017d1a0_2\n\t"
-      "movl -0x24(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x47e4cc\n\t"
-      ".LFUN_0017d1a0_2:\n\t"
-      "cmpw $1, 0x4761d8\n\t"
-      "jg .LFUN_0017d1a0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f4\n\t"
-      "pushl $0x2af1ec\n\t"
-      "pushl $0x253418\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017d1a0_3:\n\t"
-      "decw 0x4761d8\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c16b180]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017d1a0_4:\n\t"
-      "pushl %%ebx\n\t"
-      "movl $0xffffffff, 0x47e4cc\n\t"
-      "call *%[c16b180]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17d1a0_assert), [exitfn] "m"(b17d1a0_exitfn), [ray] "m"(b17d1a0_ray), [c16b180] "m"(b17d1a0_c16b180)
-      : "memory");
+  short depth; float dir[3]; unsigned char hit[0x5c];
+  if ((char)flag != 0) { *(int *)0x47e4cc = -1; FUN_0016b180(flag); return; }
+  if (*(short *)0x4761d8 >= 0x20) {
+    display_assert((const char *)0x253440,(const char *)0x2af1ec,0x2e4,1); system_exit(-1);
+  }
+  depth=*(short *)0x4761d8; *(short *)0x4761d8=(short)(depth+1);
+  dir[0]=*(float *)0x5a5bd4 * *(float *)0x2af240;
+  dir[1]=*(float *)0x5a5bd8 * *(float *)0x2af240;
+  dir[2]=*(float *)0x5a5bdc * *(float *)0x2af240;
+  *(short *)(0x5a8c80+(int)depth*2)=0x15;
+  if (FUN_0014df70(0xfff80u,(float *)0x5a5bc8,dir,(int)*(short *)0x506548,(short *)hit))
+    *(int *)0x47e4cc=*(int *)(hit+0x38);
+  if (*(short *)0x4761d8<=1) {
+    display_assert((const char *)0x253418,(const char *)0x2af1ec,0x2f4,1); system_exit(-1);
+  }
+  (*(short *)0x4761d8)--; FUN_0016b180(flag);
 }
-#else
-#error "FUN_0017d1a0: clang naked draft required"
-#endif
 
 
 /* FUN_0017d2b0 (0x17d2b0) — XBE naked draft (batch 298). */

@@ -2001,7 +2001,7 @@ static void (*const b89940_assert)(const char *, const char *, int, bool) = disp
 static void (*const b89940_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_00089940(void)
+float FUN_00089940(float a __attribute__((unused)), float b __attribute__((unused)), float c __attribute__((unused)), float d __attribute__((unused)), float t0 __attribute__((unused)), float t1 __attribute__((unused)), float t2 __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2089,89 +2089,13 @@ void FUN_00089940(void)
 #endif
 
 
-/* FUN_00089a20 (0x89a20) — XBE naked draft (batch 139). */
-#if defined(__clang__)
-static void (*const b89a20_c89940)(void) = FUN_00089940;
-
-__attribute__((naked, noinline))
-void FUN_00089a20(void)
+/* FUN_00089a20 (0x89a20) — readable C lift: component-wise FUN_00089940. */
+void FUN_00089a20(float *out, float *a, float *b, float *c, float *d, float t0, float t1, float t2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x1c(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x24(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x20(%%ebp), %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c89940]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "fstps (%%edx)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c89940]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "fstps 0x4(%%edx)\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0x8(%%edx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ecx), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c89940]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "addl $0x54, %%esp\n\t"
-      "fstps 0x8(%%edx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c89940] "m"(b89a20_c89940)
-      : "memory");
+  out[0]=FUN_00089940(a[0],b[0],c[0],d[0],t0,t1,t2);
+  out[1]=FUN_00089940(a[1],b[1],c[1],d[1],t0,t1,t2);
+  out[2]=FUN_00089940(a[2],b[2],c[2],d[2],t0,t1,t2);
 }
-#else
-#error "FUN_00089a20: clang naked draft required"
-#endif
 
 
 /* camera_track_splut (0x89ab0) — XBE naked draft (batch 122). */
