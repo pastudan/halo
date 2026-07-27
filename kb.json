@@ -7090,7 +7090,7 @@
         {
           "addr": "0x86900",
           "decl": "void director_load_camera(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x86a50",
@@ -13936,7 +13936,7 @@
           "addr": "0xdfdc0",
           "decl": "void interface_draw_splitscreen_dividers(void);",
           "name": "interface_draw_splitscreen_dividers",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xdff00",
@@ -23469,7 +23469,7 @@
         {
           "addr": "0x186480",
           "decl": "int render_camera_build_clipped_frustum_bounds(camera_t *camera, float *in_bounds, float *out_bounds);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1865e0",
@@ -23504,7 +23504,7 @@
         {
           "addr": "0x186d40",
           "decl": "void render_camera_debug_frustum(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x186ef0",
@@ -26018,7 +26018,7 @@
         {
           "addr": "0x191440",
           "decl": "void reference_list_copy(void *result, void *source);",
-          "ported": true,
+          "ported": false,
           "name": "reference_list_copy",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -27136,7 +27136,7 @@
         {
           "addr": "0x82bd0",
           "decl": "void FUN_00082bd0(void *xnaddr, uint32_t *key, uint32_t *nonce, uint16_t port, void *addr);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00082bd0"
         },
         {
