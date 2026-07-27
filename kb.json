@@ -28081,7 +28081,7 @@
         {
           "addr": "0xf2390",
           "decl": "void FUN_000f2390(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf24b0",
