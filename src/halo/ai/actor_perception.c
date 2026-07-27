@@ -674,6 +674,7 @@ char FUN_0002f5f0(float scale, float visibility, char field_60, char dz_flag,
 }
 
 /* 0x2f6e0 — decide whether an actor wants a prop acknowledgement. */
+/* actor_perception_desire_prop (0x2f6e0) — readable C lift (restored pre-naked). */
 char actor_perception_desire_prop(
     int actor_handle, int existing_prop, int unit_handle, int owner_handle,
     char field_63, char field_12e, char friendly, char field_127,
@@ -716,7 +717,8 @@ char actor_perception_desire_prop(
       goto finish;
     }
   }
-  if (visibility < *(float *)0x255fe0) {
+  /* XBE: fcomp 0x255fe0; test ah,0x41; jne continue — clear desire when vis > thresh */
+  if (visibility > *(float *)0x255fe0) {
     desire = 0;
     goto finish;
   }
@@ -744,12 +746,14 @@ char actor_perception_desire_prop(
         else
           hidden = 1;
         if (hidden != 0) {
-          if (visibility <= *(float *)0x255fdc) {
+          /* vis < 0x255fdc → desire=1 finish */
+          if (visibility < *(float *)0x255fdc) {
             desire = 1;
             goto finish;
           }
         } else if (field_127 != 0) {
-          if (visibility <= *(float *)0x2533c0) {
+          /* scale/visibility vs 0 — asm fld scale; fcomp 0; desire=1 if scale > 0 */
+          if (scale > *(float *)0x2533c0) {
             desire = 1;
             goto finish;
           }
@@ -759,6 +763,8 @@ char actor_perception_desire_prop(
           }
         }
       }
+    } else {
+      desire = 1;
     }
     if (actor_action_try_to_panic(actor_handle) > 1) {
       desire = 0;
@@ -777,18 +783,20 @@ char actor_perception_desire_prop(
     goto finish;
   }
 
-  if (field_127 != 0) {
-    if (visibility > *(float *)0x255fd8) {
-      desire = 1;
+  /* desire == 0 (field_127 == 0) tail — LAB_0002f8a0 */
+  if (friendly != 0) {
+    desire = 1;
+    if (visibility > *(float *)0x255fd8)
       out_desire = 1;
-    } else if (visibility <= *(float *)0x255fdc) {
-      desire = 1;
+    else
       out_desire = 0;
-    } else {
-      desire = 0;
-    }
     goto finish;
   }
+
+  if (visibility < *(float *)0x255fdc)
+    desire = 1;
+  else
+    desire = 0;
 
   if (*(int16_t *)(actor + 0x6e) >= 4) {
     out_desire = 1;
@@ -808,6 +816,7 @@ finish:
     *out_flag = out_desire;
   return desire;
 }
+
 /* arctangent (0x2fb60) — readable C lift from XBE leaf (x87 fpatan). */
 float arctangent(float y, float x)
 {

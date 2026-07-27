@@ -35615,7 +35615,7 @@
           "decl": "char actor_perception_desire_prop(int actor_handle, int existing_prop, int unit_handle, int owner_handle, char field_63, char field_12e, char friendly, char field_127, int16_t field_76, int16_t scale, float visibility, int sense, char *out_flag);",
           "name": "actor_perception_desire_prop",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2f910",
