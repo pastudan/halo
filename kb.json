@@ -12064,7 +12064,7 @@
         {
           "addr": "0xc66d0",
           "decl": "bool FUN_000c66d0(int datum_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000c66d0"
         },
         {
