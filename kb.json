@@ -30063,7 +30063,7 @@
         {
           "addr": "0xa4a00",
           "decl": "int16_t FUN_000a4a00(int16_t *out_buf, float radius);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xa4ab0",

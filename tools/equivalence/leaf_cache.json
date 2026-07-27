@@ -20,6 +20,10 @@
   "0x1b5890": {
     "class": "non_leaf"
   },
+  "0x1c0": {
+    "confidence": "weak",
+    "coverage_pct": 23.5
+  },
   "0x1c7230": {
     "class": "non_leaf",
     "confidence": "weak",
@@ -81,6 +85,9 @@
     "coverage_pct": 100.0
   },
   "0xa4200": {
+    "class": "non_leaf"
+  },
+  "0xa4a00": {
     "class": "non_leaf"
   },
   "0xe0ee0": {

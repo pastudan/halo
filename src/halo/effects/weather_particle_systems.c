@@ -885,94 +885,40 @@ void FUN_000a48c0(float *out __attribute__((unused)), float scale __attribute__(
 #endif
 
 
-/* FUN_000a4a00 (0xa4a00) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static void * (*const ba4a00_c18e3c0)(void) = scenario_get;
-static void *(*const ba4a00_elem)(void *, int, int) = tag_block_get_element;
-static void (*const ba4a00_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-int FUN_000a4a00(void *out_buf __attribute__((unused)), int particle_handle __attribute__((unused)))
+/* FUN_000a4a00 (0xa4a00) — readable C lift. */
+int16_t FUN_000a4a00(int16_t *out_buf, float radius)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "leal 0x1c0(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000a4a00_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_000a4a00_1:\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs 0x506550\n\t"
-      "addl $0xc, %%esp\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x506554\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x506558\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds 0xc(%%eax)\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_000a4a00_3\n\t"
-      "cmpw $8, %%bx\n\t"
-      "jge .LFUN_000a4a00_2\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "movw %%di, (%%ecx,%%eax,2)\n\t"
-      "incl %%ebx\n\t"
-      "jmp .LFUN_000a4a00_3\n\t"
-      ".LFUN_000a4a00_2:\n\t"
-      "pushl $0x26b02c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000a4a00_3:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_000a4a00_1\n\t"
-      ".LFUN_000a4a00_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(ba4a00_c18e3c0), [elem] "m"(ba4a00_elem), [c8f390] "m"(ba4a00_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_000a4a00: clang naked draft required"
-#endif
+  char *scenario;
+  char *block;
+  int16_t found;
+  int16_t i;
+  int n;
+  char *elem;
+  float dx, dy, dz, r, d2, r2;
 
+  scenario = (char *)scenario_get();
+  block = scenario + 0x1c0;
+  found = 0;
+  n = *(int *)block;
+  for (i = 0; i < n; i++) {
+    elem = (char *)tag_block_get_element(block, (int)i, 0x20);
+    dx = *(float *)elem - *(float *)0x506550;
+    dy = *(float *)(elem + 4) - *(float *)0x506554;
+    dz = *(float *)(elem + 8) - *(float *)0x506558;
+    r = radius + *(float *)(elem + 0xc);
+    d2 = dx * dx + dy * dy + dz * dz;
+    r2 = r * r;
+    if (d2 > r2) {
+      if (found >= 8)
+        error(2, (const char *)0x26b02c);
+      else {
+        out_buf[found] = i;
+        found++;
+      }
+    }
+  }
+  return found;
+}
 
 /* FUN_000a4ab0 (0xa4ab0) — XBE naked draft (batch 127). */
 #if defined(__clang__)
@@ -1339,7 +1285,7 @@ static void *(*const ba4e20_tag)(int, int) = tag_get;
 static void * (*const ba4e20_c18e3c0)(void) = scenario_get;
 static void (*const ba4e20_ca4be0)(int16_t weather_index) = FUN_000a4be0;
 static void *(*const ba4e20_elem)(void *, int, int) = tag_block_get_element;
-static int (*const ba4e20_ca4a00)(void *out_buf, int particle_handle) = FUN_000a4a00;
+static int (*const ba4e20_ca4a00)(void *out_buf, int particle_handle) = (void *)FUN_000a4a00;
 static void (*const ba4e20_ca48c0)(float *out, float scale) = FUN_000a48c0;
 static void (*const ba4e20_ca4000)(float *dst, float *src, float scale) = (void *)FUN_000a4000;
 static short (*const ba4e20_c1867f0)(void *param_1, int param_2, int param_3) = render_frustum_cube_visible;
