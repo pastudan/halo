@@ -310,12 +310,18 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
                        globals_base: int = GLOBALS_BASE,
                        return_slots: bool = False,
                        rdata_map: dict = None,
-                       snapshot_regions: dict = None):
+                       snapshot_regions: dict = None,
+                       preset_slots: dict = None):
     """Rewrite DIR32 relocations to point into the globals memory region.
 
     Each unique external DIR32 symbol gets a 256-byte slot in the globals
     region (enough for most scalar/struct globals).  Section-relative
     relocations (.text, .rdata prefixed) are left untouched.
+
+    preset_slots: optional {symbol_name: slot_addr} to reuse (e.g. oracle DAT_
+    slots for a candidate's `_DAT_` / `DAT_` of the same XBE address).  When
+    taking the address of a global, oracle and candidate must store the same
+    pointer value — non-overlapping slot ranges break that.
 
     Symbols in rdata_map (intra-object cross-section references like .rdata
     constants) also get globals slots, seeded with actual section data.
@@ -337,9 +343,14 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
     import re as _re
     patched = bytearray(code)
     slot_size = 256
-    symbol_slots = {}
+    symbol_slots = dict(preset_slots or {})
     rdata_seeds = {}
+    # Continue allocating after the highest preset slot (if any).
     next_slot = 0
+    if symbol_slots:
+        max_off = max(addr - globals_base for addr in symbol_slots.values())
+        if max_off >= 0:
+            next_slot = (max_off // slot_size) + 1
     if rdata_map is None:
         rdata_map = {}
 
@@ -356,11 +367,24 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
                 return orig
         return None
 
+    def _canon_sym(sym_name: str) -> str:
+        """Strip cdecl '_' so oracle DAT_X and candidate _DAT_X share a slot."""
+        return sym_name[1:] if sym_name.startswith("_") else sym_name
+
+    # addr-keyed aliases from preset (oracle) slots for DAT_/PTR_/FLOAT_
+    preset_by_addr = {}
+    for sn, sa in list(symbol_slots.items()):
+        m = _re.match(r'(?:DAT|PTR|PTR_DAT|FLOAT)_([0-9a-fA-F]{4,})$',
+                      _canon_sym(sn))
+        if m:
+            preset_by_addr[int(m.group(1), 16)] = sa
+
     for r in relocs:
         if r.reloc_type != IMAGE_REL_I386_DIR32:
             continue
         sym = r.symbol_name
-        is_rdata_ref = sym in rdata_map
+        canon = _canon_sym(sym)
+        is_rdata_ref = sym in rdata_map or canon in rdata_map
         if ((sym.startswith(".text") or sym.startswith(".rdata"))
                 and not is_rdata_ref):
             continue
@@ -368,25 +392,32 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
             continue
 
         if not is_rdata_ref:
-            _ident = _snapshot_identity_addr(sym)
+            _ident = _snapshot_identity_addr(canon) or _snapshot_identity_addr(sym)
             if _ident is not None:
                 off = r.virtual_address
                 if off + 4 <= len(patched):
                     struct.pack_into('<I', patched, off, _ident)
                 continue
 
-        if sym not in symbol_slots:
-            symbol_slots[sym] = globals_base + next_slot * slot_size
-            next_slot += 1
+        slot_key = canon
+        if slot_key not in symbol_slots:
+            m = _re.match(r'(?:DAT|PTR|PTR_DAT|FLOAT)_([0-9a-fA-F]{4,})$', canon)
+            if m and int(m.group(1), 16) in preset_by_addr:
+                symbol_slots[slot_key] = preset_by_addr[int(m.group(1), 16)]
+            else:
+                symbol_slots[slot_key] = globals_base + next_slot * slot_size
+                next_slot += 1
             if is_rdata_ref:
-                rdata_seeds[symbol_slots[sym]] = rdata_map[sym][:slot_size]
+                src = rdata_map.get(sym) or rdata_map.get(canon)
+                if src:
+                    rdata_seeds[symbol_slots[slot_key]] = src[:slot_size]
 
         off = r.virtual_address
         if off + 4 <= len(patched):
             addend = 0
             if is_rdata_ref:
                 addend = struct.unpack_from('<I', patched, off)[0]
-            addr = symbol_slots[sym] + addend
+            addr = symbol_slots[slot_key] + addend
             struct.pack_into('<I', patched, off, addr)
 
     if return_slots:

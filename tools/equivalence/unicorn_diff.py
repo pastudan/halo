@@ -1747,12 +1747,16 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
             return_slots=True, rdata_map=orc_rdata,
             snapshot_regions=snapshot_overrides)
         oracle_code_patched = bytes(oracle_code_patched)
+        # Reuse oracle DAT_/PTR_ slot addresses for the candidate so
+        # address-of-global stores (`*out = DAT_x`) compare equal.  New
+        # non-matching symbols still allocate after the oracle range.
         lft_globals_base = GLOBALS_BASE + len(orc_data_slots) * 256
         lifted_code_patched, lft_data_slots, lft_rdata_seeds = patch_dir32_relocs(
             lifted_slice.code, lifted_slice.relocs, lft_defined,
             globals_base=lft_globals_base,
             return_slots=True, rdata_map=lft_rdata,
-            snapshot_regions=snapshot_overrides)
+            snapshot_regions=snapshot_overrides,
+            preset_slots=orc_data_slots)
         lifted_code_patched = bytes(lifted_code_patched)
 
         globals_seeds = _build_globals_seeds(orc_data_slots, lft_data_slots,

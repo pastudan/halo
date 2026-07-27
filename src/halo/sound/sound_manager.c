@@ -6767,9 +6767,11 @@ void FUN_001cf360(void)
 #endif
 
 
+/* FUN_001cf820 (0x1cf820) — readable C lift. */
 void FUN_001cf820(void **out)
 {
-  *out = (void *)0x32fce4;
+  extern char DAT_0032fce4[];
+  *out = DAT_0032fce4;
 }
 /* --- sound_manager.obj orphan shells (2026-07-26) --- */
 

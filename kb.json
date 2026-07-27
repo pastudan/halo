@@ -25303,7 +25303,7 @@
         {
           "addr": "0x1cf820",
           "decl": "void FUN_001cf820(void **out);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "sound_manager.obj",
