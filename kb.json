@@ -13224,7 +13224,7 @@
           "addr": "0xd4e30",
           "decl": "void hud_set_state_message_icon(short player_index, short slot_index, int icon);",
           "name": "hud_set_state_message_icon",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd4e90",
