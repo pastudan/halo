@@ -20220,7 +20220,7 @@
         {
           "addr": "0x921c0",
           "decl": "int FUN_000921c0(const char *name, int *table);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000921c0"
         },
         {
