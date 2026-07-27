@@ -15197,7 +15197,8 @@
         {
           "addr": "0x125b90",
           "decl": "char FUN_00125b90(void *client, short request_type);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00125b90"
         },
         {
           "addr": "0x125c60",
@@ -15302,7 +15303,8 @@
         {
           "addr": "0x127710",
           "decl": "char FUN_00127710(void *client /* @<esi> */, void *source_address /* @<edi> */, void *message, int message_size);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00127710"
         }
       ],
       "name": "network_client_manager.obj",
@@ -24846,8 +24848,9 @@
         },
         {
           "addr": "0x1c9bf0",
-          "decl": "void FUN_001c9bf0(void);",
-          "ported": false
+          "decl": "void FUN_001c9bf0(short vchannel_index);",
+          "ported": true,
+          "name": "FUN_001c9bf0"
         },
         {
           "addr": "0x1c9c80",
