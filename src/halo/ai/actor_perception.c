@@ -2174,8 +2174,9 @@ void actor_perception_aiming_vector_test_blockage(void)
 #endif
 
 
-/* FUN_00030d10 (0x30d10) — readable C lift: nearby-actor chance scale. */
-unsigned int FUN_00030d10(int actor_handle, float *chance_inout)
+/* FUN_00030d10 (0x30d10) — readable C lift: nearby-actor chance scale.
+ * Returns in AL only (MSVC byte return); decl is char for Unicorn mask. */
+char FUN_00030d10(int actor_handle, float *chance_inout)
 {
   char *actor;
   char *prop;
@@ -2223,7 +2224,7 @@ scale_few:
 
   if (scale < *(float *)0x2533c0)
     scale = *(float *)0x2533c0;
-  else if (!(scale <= *(float *)0x253f40))
+  else if (scale > *(float *)0x253f40)
     scale = *(float *)0x253f40;
 
   *chance_inout *= scale;
