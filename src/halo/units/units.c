@@ -66,17 +66,17 @@ void FUN_00123470(void *mode_tag, void *animation, int animation_index,
 static void (*const b1234b0_chkstk)(void) = FUN_001d90e0;
 static void (*const b1234b0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1234b0_exitfn)(int) = system_exit;
-static void (*const b1234b0_c121d60)(void *mode_tag, void *animation, int animation_index, void *out_node_data) = FUN_00121d60;
+static void (*const b1234b0_c121d60)(void *mode_tag, void *animation, int animation_index, void *out_node_data) = (void *)FUN_00121d60;
 static void *(*const b1234b0_elem)(void *, int, int) = tag_block_get_element;
 static void *(*const b1234b0_tag)(int, int) = tag_get;
 static void (*const b1234b0_c190a50)(void) = (void *)shader_type_is_valid_for_model;
-static char (*const b1234b0_c1909d0)(int16_t shader_type) = shader_type_is_transparent;
+static char (*const b1234b0_c1909d0)(int16_t shader_type) = (void *)shader_type_is_transparent;
 static void (*const b1234b0_xfrmpt)(float *, float *, float *) = matrix_transform_point;
-static void (*const b1234b0_c17cbd0)(int shader, int p2, int p3, int widget_handle, int p5, int p6, int zbuf_handle, float *position, int p9) = FUN_0017cbd0;
-static void * (*const b1234b0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-static void (*const b1234b0_c17cbc0)(int shader, int p2, int p3, int widget_handle, int p5, int p6, int zbuf_handle) = FUN_0017cbc0;
-static void (*const b1234b0_c17ccd0)(void *decal, int param_2, void *param_3, void *param_4) = FUN_0017ccd0;
-static void (*const b1234b0_c17d2b0)(void) = FUN_0017d2b0;
+static void (*const b1234b0_c17cbd0)(int shader, int p2, int p3, int widget_handle, int p5, int p6, int zbuf_handle, float *position, int p9) = (void *)FUN_0017cbd0;
+static void * (*const b1234b0_c1906b0)(void *shader, int shader_type) = (void *)FUN_001906b0;
+static void (*const b1234b0_c17cbc0)(int shader, int p2, int p3, int widget_handle, int p5, int p6, int zbuf_handle) = (void *)FUN_0017cbc0;
+static void (*const b1234b0_c17ccd0)(void *decal, int param_2, void *param_3, void *param_4) = (void *)FUN_0017ccd0;
+static void (*const b1234b0_c17d2b0)(void) = (void *)FUN_0017d2b0;
 
 __attribute__((naked, noinline))
 void FUN_001234b0(void *mode_tag __attribute__((unused)), void *animation __attribute__((unused)), int frame_index __attribute__((unused)), float *out_delta __attribute__((unused)))
@@ -699,10 +699,10 @@ static void *(*const b1a6e20_get)(int, int) = object_get_and_verify_type;
 static void (*const b1a6e20_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1a6e20_exitfn)(int) = system_exit;
 static void *(*const b1a6e20_tag)(int, int) = tag_get;
-static char * (*const b1a6e20_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
-static const char * (*const b1a6e20_c1ba1f0)(int tag_index) = tag_get_name;
-static char * (*const b1a6e20_c1d9710)(const char *str, int c) = strrchr;
-static void (*const b1a6e20_cff4d0)(int channel, const char *format, ...) = console_printf;
+static char * (*const b1a6e20_c1a67b0)(short param_1, unsigned char param_2) = (void *)FUN_001a67b0;
+static const char * (*const b1a6e20_c1ba1f0)(int tag_index) = (void *)tag_get_name;
+static char * (*const b1a6e20_c1d9710)(const char *str, int c) = (void *)strrchr;
+static void (*const b1a6e20_cff4d0)(int channel, const char *format, ...) = (void *)console_printf;
 
 __attribute__((naked, noinline))
 void FUN_001a6e20(int unit_handle __attribute__((unused)), void *speech_item __attribute__((unused)), short priority __attribute__((unused)))
@@ -798,9 +798,9 @@ void FUN_001a6e20(int unit_handle __attribute__((unused)), void *speech_item __a
 static void *(*const b1a6ef0_get)(int, int) = object_get_and_verify_type;
 static void (*const b1a6ef0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1a6ef0_exitfn)(int) = system_exit;
-static void (*const b1a6ef0_c1a6e20)(int unit_handle, void *speech_item, short priority) = FUN_001a6e20;
+static void (*const b1a6ef0_c1a6e20)(int unit_handle, void *speech_item, short priority) = (void *)FUN_001a6e20;
 static void *(*const b1a6ef0_tag)(int, int) = tag_get;
-static short (*const b1a6ef0_cfff80)(void) = game_connection;
+static short (*const b1a6ef0_cfff80)(void) = (void *)game_connection;
 
 __attribute__((naked, noinline))
 void FUN_001a6ef0(int actor __attribute__((unused)), short count __attribute__((unused)), void *comm_buf __attribute__((unused)))
@@ -962,11 +962,11 @@ static void *(*const b1a71c0_tag)(int, int) = tag_get;
 static void *(*const b1a71c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static int *(*const b1a71c0_gseed)(void) = get_global_random_seed_address;
 static float (*const b1a71c0_rmreal)(unsigned int *) = random_math_real;
-static short (*const b1a71c0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
+static short (*const b1a71c0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = (void *)FUN_001a68d0;
 static void *(*const b1a71c0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1a71c0_c42d20)(void *packet) = ai_communication_packet_new;
-static void (*const b1a71c0_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
-static void (*const b1a71c0_c40860)(int unit_handle, int effect_type, int priority) = ai_handle_unit_effect;
+static void (*const b1a71c0_c42d20)(void *packet) = (void *)ai_communication_packet_new;
+static void (*const b1a71c0_c1a6ef0)(int actor, short count, void *comm_buf) = (void *)FUN_001a6ef0;
+static void (*const b1a71c0_c40860)(int unit_handle, int effect_type, int priority) = (void *)ai_handle_unit_effect;
 
 __attribute__((naked, noinline))
 char FUN_001a71c0(int unit_handle __attribute__((unused)), int *param_2 __attribute__((unused)), char param_3 __attribute__((unused)), char param_4 __attribute__((unused)), float param_5 __attribute__((unused)))
@@ -1255,10 +1255,10 @@ static void (*const b1a74d0_exitfn)(int) = system_exit;
 static int *(*const b1a74d0_gseed)(void) = get_global_random_seed_address;
 static float (*const b1a74d0_rmreal)(unsigned int *) = random_math_real;
 static void *(*const b1a74d0_tag)(int, int) = tag_get;
-static short (*const b1a74d0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
+static short (*const b1a74d0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = (void *)FUN_001a68d0;
 static void *(*const b1a74d0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1a74d0_c42d20)(void *packet) = ai_communication_packet_new;
-static void (*const b1a74d0_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
+static void (*const b1a74d0_c42d20)(void *packet) = (void *)ai_communication_packet_new;
+static void (*const b1a74d0_c1a6ef0)(int actor, short count, void *comm_buf) = (void *)FUN_001a6ef0;
 
 __attribute__((naked, noinline))
 char FUN_001a74d0(int unit_handle __attribute__((unused)), int scream_type __attribute__((unused)))
@@ -1415,7 +1415,7 @@ char FUN_001a74d0(int unit_handle __attribute__((unused)), int scream_type __att
 #if defined(__clang__)
 static void *(*const b1a7650_elem)(void *, int, int) = tag_block_get_element;
 static int *(*const b1a7650_gseed)(void) = get_global_random_seed_address;
-static int16_t (*const b1a7650_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = random_range;
+static int16_t (*const b1a7650_c10b2d0)(unsigned int *seed, int16_t min, int16_t max) = (void *)random_range;
 static void *(*const b1a7650_tag)(int, int) = tag_get;
 static void (*const b1a7650_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1a7650_exitfn)(int) = system_exit;
@@ -1842,8 +1842,8 @@ char FUN_001a8550(void *plan __attribute__((unused)), float delta_time __attribu
 static void *(*const b1a8990_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1a8990_tag)(int, int) = tag_get;
 static void *(*const b1a8990_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1a8990_c140160)(int object_handle, int16_t region_count) = object_set_region_count;
-static int (*const b1a8990_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
+static void (*const b1a8990_c140160)(int object_handle, int16_t region_count) = (void *)object_set_region_count;
+static int (*const b1a8990_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = (void *)model_animation_choose_random;
 
 __attribute__((naked, noinline))
 void unit_animation_start_action(int object_handle __attribute__((unused)), int16_t state __attribute__((unused)))
@@ -2008,10 +2008,10 @@ void unit_animation_start_action(int object_handle __attribute__((unused)), int1
 static void *(*const b1a8b20_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1a8b20_tag)(int, int) = tag_get;
 static void *(*const b1a8b20_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1a8b20_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
-static const char * (*const b1a8b20_c1205f0)(void *string_table, int16_t index) = FUN_001205f0;
-static const char * (*const b1a8b20_c19b0d0)(const char *tag_name) = tag_name_strip_path;
-static void (*const b1a8b20_cff550)(const char* format, ...) = console_warning;
+static int (*const b1a8b20_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = (void *)model_animation_choose_random;
+static const char * (*const b1a8b20_c1205f0)(void *string_table, int16_t index) = (void *)FUN_001205f0;
+static const char * (*const b1a8b20_c19b0d0)(const char *tag_name) = (void *)tag_name_strip_path;
+static void (*const b1a8b20_cff550)(const char* format, ...) = (void *)console_warning;
 
 __attribute__((naked, noinline))
 void FUN_001a8b20(int object_handle __attribute__((unused)), int16_t state __attribute__((unused)))
@@ -2296,10 +2296,10 @@ static void *(*const b1a8ee0_get)(int, int) = object_get_and_verify_type;
 static int (*const b1a8ee0_gtime)(void) = game_time_get;
 static void (*const b1a8ee0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1a8ee0_exitfn)(int) = system_exit;
-static bool (*const b1a8ee0_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
+static bool (*const b1a8ee0_ca7a30)(int16_t team_a, int16_t team_b) = (void *)game_allegiance_get_team_is_friendly;
 static void *(*const b1a8ee0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void *(*const b1a8ee0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static char (*const b1a8ee0_c3ff40)(int unit_handle, short killing_spree_count) = ai_handle_killing_spree;
+static char (*const b1a8ee0_c3ff40)(int unit_handle, short killing_spree_count) = (void *)ai_handle_killing_spree;
 
 __attribute__((naked, noinline))
 void unit_record_damage(int unit_handle __attribute__((unused)), float damage_amount __attribute__((unused)), int16_t damage_type __attribute__((unused)), char notify_ai __attribute__((unused)), int attacker_object __attribute__((unused)), int16_t attacker_team __attribute__((unused)), int killing_object __attribute__((unused)))
@@ -2544,182 +2544,121 @@ void unit_get_head_position(int object_handle, float *out_position)
   out_position[2] = *(float *)(marker_buf + 0x68);
 }
 
-/* unit_set_seat_state (0x1a9240) — XBE naked draft (batch 59). */
-#if defined(__clang__)
-static void *(*const b1a9240_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a9240_tag)(int, int) = tag_get;
-static void (*const b1a9240_c1a1140)(int unit_handle, int16_t estimate_mode, vector3_t *estimated_body_position, vector3_t *desired_facing, vector3_t *desired_gun_offset, vector3_t *out_position) = biped_estimate_position;
-static short (*const b1a9240_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
-static void *(*const b1a9240_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void unit_set_seat_state(int unit_handle __attribute__((unused)), float *position __attribute__((unused)))
+/* unit_set_seat_state (0x1a9240) — readable C lift (restored pre-naked)
+ *
+ * Computes a 3D position representing the unit's current seat state and writes
+ * it into the caller-supplied float[3].
+ *
+ * Three major paths:
+ *
+ * 1. Unit has a parent (parent_object_index != -1):
+ *    Copies the parent object's world position (offset 0x0C). If the parent's
+ *    object type is 0 or 1 (biped/vehicle) and the unit has a valid seat
+ *    definition index (unk_672 != -1), looks up the seat's marker name (at
+ *    seat_def + 0x84) and resolves it on the parent via
+ *    object_get_markers_by_string_id. For seat type 1, skips if the marker
+ *    name byte at seat_def + 0x84 is zero.
+ *
+ * 2. Unit has no parent and no special flags:
+ *    If unit flags byte (0xB6) bit 2 is clear AND object type is 0 (biped),
+ *    delegates to biped_estimate_position with zeroed optional parameters.
+ *
+ * 3. Unit has no parent but has flags/non-zero type:
+ *    If unk_728 is NONE, gets the "head" marker on the unit itself. Otherwise,
+ *    resolves unk_728 as a unit, reads its seat index (unk_672), looks up the
+ *    seat definition's marker name (seat_def + 0x24) from the original unit's
+ *    tag, and resolves it on the original unit via
+ * object_get_markers_by_string_id.
+ */
+void unit_set_seat_state(int unit_handle, float *position)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x6c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lunit_set_seat_state_3\n\t"
-      "testb $4, 0xb6(%%esi)\n\t"
-      "jne .Lunit_set_seat_state_1\n\t"
-      "cmpw $0, 0x64(%%esi)\n\t"
-      "jne .Lunit_set_seat_state_1\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a1140]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lunit_set_seat_state_1:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lunit_set_seat_state_3\n\t"
-      "movl 0x2d8(%%esi), %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jne .Lunit_set_seat_state_2\n\t"
-      "pushl $1\n\t"
-      "leal -0x6c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x2909e4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[markers]\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lunit_set_seat_state_2:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x2a0(%%eax), %%edx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x2e4, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "pushl $1\n\t"
-      "leal -0x6c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x24, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[markers]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "addl $0x24, %%esp\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lunit_set_seat_state_3:\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "leal 0xc(%%edi), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movb 0x64(%%edi), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $3, %%dl\n\t"
-      "je .Lunit_set_seat_state_5\n\t"
-      "cmpw $-1, 0x2a0(%%esi)\n\t"
-      "je .Lunit_set_seat_state_5\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x2a0(%%esi), %%ecx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $1, 0x64(%%edi)\n\t"
-      "jne .Lunit_set_seat_state_4\n\t"
-      "movb 0x84(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lunit_set_seat_state_5\n\t"
-      ".Lunit_set_seat_state_4:\n\t"
-      "pushl $1\n\t"
-      "leal -0x6c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x84, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[markers]\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl %%ecx, (%%ebx)\n\t"
-      "movl %%edx, 0x4(%%ebx)\n\t"
-      "movl %%eax, 0x8(%%ebx)\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lunit_set_seat_state_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a9240_get), [tag] "m"(b1a9240_tag), [c1a1140] "m"(b1a9240_c1a1140), [markers] "m"(b1a9240_markers), [elem] "m"(b1a9240_elem)
-      : "memory");
+  char *unit;
+  char *unit_tag;
+  int seat_index;
+  char *seat_object;
+  char *parent_unit;
+  char *seat_def;
+  int16_t seat_def_index;
+  uint8_t seat_type;
+  uint32_t type_mask;
+  char marker_buf[0x6c];
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  unit_tag = (char *)tag_get(0x756e6974, *(int *)unit);
+  seat_index = *(int *)(unit + 0xcc);
+
+  if (seat_index == -1) {
+    /* Unit is not in a seat */
+    if (!(*(uint8_t *)(unit + 0xb6) & 0x04) && *(int16_t *)(unit + 0x64) == 0) {
+      /* Simple biped with no special flags — delegate to
+       * biped_estimate_position */
+      biped_estimate_position(unit_handle, 0, (vector3_t *)0,
+                              (vector3_t *)0, /* dup-args-ok */
+                              (vector3_t *)0, (vector3_t *)position);
+      return;
+    }
+
+    /* Has flags or non-zero type: check unk_728 */
+    if (*(int *)(unit + 0x2d8) == -1) {
+      /* No related unit — find "head" marker on this unit */
+      object_get_markers_by_string_id(unit_handle, (void *)0x2909e4, marker_buf,
+                                      1);
+      position[0] = *(float *)(marker_buf + 0x60);
+      position[1] = *(float *)(marker_buf + 0x64);
+      position[2] = *(float *)(marker_buf + 0x68);
+      return;
+    }
+
+    /* Related unit exists — get its seat definition */
+    parent_unit = (char *)object_get_and_verify_type(*(int *)(unit + 0x2d8), 3);
+    seat_def_index = *(int16_t *)(parent_unit + 0x2a0);
+    seat_def = (char *)tag_block_get_element(unit_tag + 0x2e4,
+                                             (int)seat_def_index, 0x11c);
+    object_get_markers_by_string_id(unit_handle, seat_def + 0x24, marker_buf,
+                                    1);
+    position[0] = *(float *)(marker_buf + 0x60);
+    position[1] = *(float *)(marker_buf + 0x64);
+    position[2] = *(float *)(marker_buf + 0x68);
+    return;
+  }
+
+  /* Unit IS in a seat — seat_index is the parent object handle */
+  seat_object = (char *)object_get_and_verify_type(seat_index, -1);
+
+  /* Copy seat object's world position */
+  position[0] = *(float *)(seat_object + 0x0c);
+  position[1] = *(float *)(seat_object + 0x10);
+  position[2] = *(float *)(seat_object + 0x14);
+
+  /* Check if seat type is biped (0) or vehicle (1) */
+  seat_type = *(uint8_t *)(seat_object + 0x64);
+  type_mask = 1 << seat_type;
+  if (!(type_mask & 0x03))
+    return;
+
+  /* Seat type is 0 or 1 — refine position from seat marker */
+  if (*(int16_t *)(unit + 0x2a0) == -1)
+    return;
+
+  /* Get the seat definition from the parent's unit tag */
+  unit_tag = (char *)tag_get(0x756e6974, *(int *)seat_object);
+  seat_def_index = *(int16_t *)(unit + 0x2a0);
+  seat_def =
+    (char *)tag_block_get_element(unit_tag + 0x2e4, (int)seat_def_index, 0x11c);
+
+  /* For seat type 1 (vehicle), skip if marker name at +0x84 is empty */
+  if (*(int16_t *)(seat_object + 0x64) == 1) {
+    if (*(uint8_t *)(seat_def + 0x84) == 0)
+      return;
+  }
+
+  /* Look up the seat marker on the parent object */
+  object_get_markers_by_string_id(*(int *)(unit + 0xcc), seat_def + 0x84,
+                                  marker_buf, 1);
+  position[0] = *(float *)(marker_buf + 0x60);
+  position[1] = *(float *)(marker_buf + 0x64);
+  position[2] = *(float *)(marker_buf + 0x68);
 }
-#else
-#error "unit_set_seat_state: clang naked draft required"
-#endif
 
 
 /* unit_estimate_position (0x1a93e0)
@@ -4553,14 +4492,14 @@ bool unit_try_animation_state(int unit_handle, int seat_label, int weapon_label,
 static void *(*const b1ad260_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1ad260_tag)(int, int) = tag_get;
 static void *(*const b1ad260_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1ad260_c1ab110)(int unit_handle, char flag) = FUN_001ab110;
-static const char * (*const b1ad260_c1205f0)(void *string_table, int16_t index) = FUN_001205f0;
-static const char * (*const b1ad260_c19b0d0)(const char *tag_name) = tag_name_strip_path;
-static void (*const b1ad260_cff550)(const char* format, ...) = console_warning;
-static int (*const b1ad260_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
-static void (*const b1ad260_c1ab7c0)(int unit_handle, int anim_graph_tag_index, int16_t animation_index) = unit_set_animation;
-static int (*const b1ad260_c1a88b0)(int16_t anim_state) = FUN_001a88b0;
-static void (*const b1ad260_c140160)(int object_handle, int16_t region_count) = object_set_region_count;
+static void (*const b1ad260_c1ab110)(int unit_handle, char flag) = (void *)FUN_001ab110;
+static const char * (*const b1ad260_c1205f0)(void *string_table, int16_t index) = (void *)FUN_001205f0;
+static const char * (*const b1ad260_c19b0d0)(const char *tag_name) = (void *)tag_name_strip_path;
+static void (*const b1ad260_cff550)(const char* format, ...) = (void *)console_warning;
+static int (*const b1ad260_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = (void *)model_animation_choose_random;
+static void (*const b1ad260_c1ab7c0)(int unit_handle, int anim_graph_tag_index, int16_t animation_index) = (void *)unit_set_animation;
+static int (*const b1ad260_c1a88b0)(int16_t anim_state) = (void *)FUN_001a88b0;
+static void (*const b1ad260_c140160)(int object_handle, int16_t region_count) = (void *)object_set_region_count;
 
 __attribute__((naked, noinline))
 char FUN_001ad260(int unit_handle __attribute__((unused)), int16_t anim_state __attribute__((unused)))
@@ -5080,10 +5019,10 @@ char FUN_001ad260(int unit_handle __attribute__((unused)), int16_t anim_state __
 static void *(*const b1ad800_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1ad800_tag)(int, int) = tag_get;
 static void *(*const b1ad800_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1ad800_c1a8200)(int unit_handle, int target_unit_handle, int16_t seat_index, float *out_pos_a, float *out_pos_b, float *out_pos_c) = unit_get_seat_enter_position;
-static char (*const b1ad800_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static bool (*const b1ad800_c1a8ce0)(int unit_handle, int target_unit_handle, int16_t seat_index, int *out_unit_handle) = unit_find_nearby_seat;
-static bool (*const b1ad800_c3fdc0)(int ai_handle, int unit_handle, bool flag) = ai_handle_unit_approach;
+static int (*const b1ad800_c1a8200)(int unit_handle, int target_unit_handle, int16_t seat_index, float *out_pos_a, float *out_pos_b, float *out_pos_c) = (void *)unit_get_seat_enter_position;
+static char (*const b1ad800_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static bool (*const b1ad800_c1a8ce0)(int unit_handle, int target_unit_handle, int16_t seat_index, int *out_unit_handle) = (void *)unit_find_nearby_seat;
+static bool (*const b1ad800_c3fdc0)(int ai_handle, int unit_handle, bool flag) = (void *)ai_handle_unit_approach;
 static void (*const b1ad800_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1ad800_exitfn)(int) = system_exit;
 
@@ -5343,16 +5282,16 @@ uint16_t unit_find_best_enter_seat(int unit_handle __attribute__((unused)), int 
 /* unit_clip_to_aiming_bounds (0x1ada90) — XBE naked draft (batch 52). */
 #if defined(__clang__)
 static void *(*const b1ada90_get)(int, int) = object_get_and_verify_type;
-static bool (*const b1ada90_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b1ada90_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static bool (*const b1ada90_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b1ada90_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b1ada90_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1ada90_exitfn)(int) = system_exit;
-static void (*const b1ada90_c141360)(int object_handle, float *out_forward, float *out_up) = object_get_orientation;
-static void (*const b1ada90_c1097f0)(void *matrix, void *point, void *out) = real_matrix4x3_transform_point;
-static int (*const b1ada90_c84a10)(float *vector) = real_vector3d_valid;
-static void (*const b1ada90_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const b1ada90_c10cc40)(float *out, float *angles) = angles_to_vector;
-static void (*const b1ada90_c109680)(float *matrix, float *in, float *out) = matrix_transform_vector;
+static void (*const b1ada90_c141360)(int object_handle, float *out_forward, float *out_up) = (void *)object_get_orientation;
+static void (*const b1ada90_c1097f0)(void *matrix, void *point, void *out) = (void *)real_matrix4x3_transform_point;
+static int (*const b1ada90_c84a10)(float *vector) = (void *)real_vector3d_valid;
+static void (*const b1ada90_c10cc00)(float *out_angles, float *in_vector) = (void *)vector_to_angles;
+static void (*const b1ada90_c10cc40)(float *out, float *angles) = (void *)angles_to_vector;
+static void (*const b1ada90_c109680)(float *matrix, float *in, float *out) = (void *)matrix_transform_vector;
 
 __attribute__((naked, noinline))
 char unit_clip_to_aiming_bounds(int unit_handle __attribute__((unused)), float *vector __attribute__((unused)), char flag __attribute__((unused)))
@@ -6265,10 +6204,10 @@ bool unit_verify_vectors(int unit_handle)
 
 /* unit_control_trace (0x1af6b0) — XBE naked draft (batch 53). */
 #if defined(__clang__)
-static bool (*const b1af6b0_c1af620)(int unit_handle) = unit_verify_vectors;
+static bool (*const b1af6b0_c1af620)(int unit_handle) = (void *)unit_verify_vectors;
 static void *(*const b1af6b0_get)(int, int) = object_get_and_verify_type;
-static char * (*const b1af6b0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
-static void (*const b1af6b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static char * (*const b1af6b0_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = (void *)ai_debug_describe_actor;
+static void (*const b1af6b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 static void (*const b1af6b0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1af6b0_exitfn)(int) = system_exit;
 
@@ -6496,9 +6435,9 @@ void unit_control_trace(int unit_handle __attribute__((unused)), const char *lab
 static void *(*const b1af990_get)(int, int) = object_get_and_verify_type;
 static void (*const b1af990_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1af990_exitfn)(int) = system_exit;
-static bool (*const b1af990_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b1af990_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1af990_c1af6b0)(int unit_handle, const char *label) = unit_control_trace;
+static bool (*const b1af990_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b1af990_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
+static void (*const b1af990_c1af6b0)(int unit_handle, const char *label) = (void *)unit_control_trace;
 
 __attribute__((naked, noinline))
 void unit_set_control(int unit_handle __attribute__((unused)), void *unit_control __attribute__((unused)))
@@ -7241,18 +7180,18 @@ void unit_update_weapon_readiness(int unit_handle, int flag)
 static void *(*const b1b2780_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1b2780_tag)(int, int) = tag_get;
 static void *(*const b1b2780_memset)(void *, int, unsigned int) = csmemset;
-static bool (*const b1b2780_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b1b2780_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static bool (*const b1b2780_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b1b2780_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b1b2780_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b2780_exitfn)(int) = system_exit;
-static void (*const b1b2780_c1a6bf0)(int unit_handle) = FUN_001a6bf0;
+static void (*const b1b2780_c1a6bf0)(int unit_handle) = (void *)FUN_001a6bf0;
 static int *(*const b1b2780_gseed)(void) = get_global_random_seed_address;
 static float (*const b1b2780_rmreal)(unsigned int *) = random_math_real;
 static bool (*const b1b2780_gerun)(void) = game_engine_running;
-static char (*const b1b2780_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static void (*const b1b2780_c1b2660)(int unit_handle) = unit_create_initial_weapons;
+static char (*const b1b2780_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static void (*const b1b2780_c1b2660)(int unit_handle) = (void *)unit_create_initial_weapons;
 static void *(*const b1b2780_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1b2780_c40690)(int param_1) = ai_create_mounted_weapons_for_unit;
+static void (*const b1b2780_c40690)(int param_1) = (void *)ai_create_mounted_weapons_for_unit;
 
 __attribute__((naked, noinline))
 char FUN_001b2780(int unit_handle __attribute__((unused)))
@@ -7556,29 +7495,29 @@ char FUN_001b2780(int unit_handle __attribute__((unused)))
 
 /* unit_board_vehicle (0x1b2b80) — XBE naked draft (batch 53). */
 #if defined(__clang__)
-static bool (*const b1b2b80_c1a8ce0)(int unit_handle, int target_unit_handle, int16_t seat_index, int *out_unit_handle) = unit_find_nearby_seat;
+static bool (*const b1b2b80_c1a8ce0)(int unit_handle, int target_unit_handle, int16_t seat_index, int *out_unit_handle) = (void *)unit_find_nearby_seat;
 static void *(*const b1b2b80_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1b2b80_tag)(int, int) = tag_get;
 static void *(*const b1b2b80_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b1b2b80_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b2b80_exitfn)(int) = system_exit;
-static vector3_t * (*const b1b2b80_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static vector3_t * (*const b1b2b80_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
 static short (*const b1b2b80_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
 static void (*const b1b2b80_m3x3v)(void *, float *, float *) = (void (*)(void *, float *, float *))real_matrix3x3_transform_vector;
-static void (*const b1b2b80_c144860)(int parent_handle, void *marker_name, int child_handle, void *child_marker_name) = object_attach_to_marker;
-static void (*const b1b2b80_c1aa890)(int vehicle_handle) = unit_update_seat_occupancy;
-static int16_t (*const b1b2b80_c1ae490)(int unit_handle, int16_t current_index, int16_t direction) = FUN_001ae490;
-static void (*const b1b2b80_c1b1ee0)(int unit_handle, int flag) = unit_update_weapon_readiness;
-static int (*const b1b2b80_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static char * (*const b1b2b80_cfae80)(int weapon_handle) = weapon_get_label;
-static char (*const b1b2b80_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static void (*const b1b2b80_c140160)(int object_handle, int16_t region_count) = object_set_region_count;
-static int (*const b1b2b80_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
-static void (*const b1b2b80_c1ab7c0)(int unit_handle, int anim_graph_tag_index, int16_t animation_index) = unit_set_animation;
-static void (*const b1b2b80_c140230)(int object_handle, vector3_t *delta) = object_adjust_interpolation_position;
-static void (*const b1b2b80_c1446a0)(int object_handle) = object_update_children_recursive;
-static void (*const b1b2b80_c409a0)(int unit_handle, int vehicle_handle) = unit_vehicle_board_notify;
-static void (*const b1b2b80_c1b1290)(int unit_handle) = unit_reset_weapon_state;
+static void (*const b1b2b80_c144860)(int parent_handle, void *marker_name, int child_handle, void *child_marker_name) = (void *)object_attach_to_marker;
+static void (*const b1b2b80_c1aa890)(int vehicle_handle) = (void *)unit_update_seat_occupancy;
+static int16_t (*const b1b2b80_c1ae490)(int unit_handle, int16_t current_index, int16_t direction) = (void *)FUN_001ae490;
+static void (*const b1b2b80_c1b1ee0)(int unit_handle, int flag) = (void *)unit_update_weapon_readiness;
+static int (*const b1b2b80_c1adeb0)(int unit_handle, int16_t weapon_index) = (void *)unit_get_weapon;
+static char * (*const b1b2b80_cfae80)(int weapon_handle) = (void *)weapon_get_label;
+static char (*const b1b2b80_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static void (*const b1b2b80_c140160)(int object_handle, int16_t region_count) = (void *)object_set_region_count;
+static int (*const b1b2b80_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = (void *)model_animation_choose_random;
+static void (*const b1b2b80_c1ab7c0)(int unit_handle, int anim_graph_tag_index, int16_t animation_index) = (void *)unit_set_animation;
+static void (*const b1b2b80_c140230)(int object_handle, vector3_t *delta) = (void *)object_adjust_interpolation_position;
+static void (*const b1b2b80_c1446a0)(int object_handle) = (void *)object_update_children_recursive;
+static void (*const b1b2b80_c409a0)(int unit_handle, int vehicle_handle) = (void *)unit_vehicle_board_notify;
+static void (*const b1b2b80_c1b1290)(int unit_handle) = (void *)unit_reset_weapon_state;
 
 __attribute__((naked, noinline))
 bool unit_board_vehicle(int unit_handle __attribute__((unused)), int vehicle_handle __attribute__((unused)), int16_t seat_index __attribute__((unused)))
@@ -7885,10 +7824,10 @@ int FUN_001a9ef0(int unit_handle)
 static void *(*const b1a9f20_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1a9f20_tag)(int, int) = tag_get;
 static void *(*const b1a9f20_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1a9f20_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b1a9f20_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b1a9f20_c136750)(void *damage_params, int tag_index) = damage_data_new;
-static void (*const b1a9f20_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static void (*const b1a9f20_c1197b0)(data_iter_t *iter, data_t *data) = (void *)data_iterator_new;
+static void * (*const b1a9f20_c119810)(data_iter_t *iterator) = (void *)data_iterator_next;
+static void (*const b1a9f20_c136750)(void *damage_params, int tag_index) = (void *)damage_data_new;
+static void (*const b1a9f20_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = (void *)object_cause_damage;
 
 __attribute__((naked, noinline))
 void FUN_001a9f20(int unit_handle __attribute__((unused)))
@@ -8421,11 +8360,11 @@ void unit_scripting_suspended(int unit_index, char suspended)
 static void *(*const b1a9c90_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1a9c90_tag)(int, int) = tag_get;
 static void *(*const b1a9c90_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1a9c90_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static void (*const b1a9c90_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
-static void * (*const b1a9c90_c13d730)(void *iter) = object_iterator_next;
-static int (*const b1a9c90_cce450)(int parent_handle, int *iter_state) = FUN_000ce450;
-static int (*const b1a9c90_cce320)(int parent_handle, int *iter_state) = FUN_000ce320;
+static int (*const b1a9c90_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
+static void (*const b1a9c90_c13d6f0)(void *iter, int type_mask, int flags) = (void *)object_iterator_new;
+static void * (*const b1a9c90_c13d730)(void *iter) = (void *)object_iterator_next;
+static int (*const b1a9c90_cce450)(int parent_handle, int *iter_state) = (void *)FUN_000ce450;
+static int (*const b1a9c90_cce320)(int parent_handle, int *iter_state) = (void *)FUN_000ce320;
 
 __attribute__((naked, noinline))
 char FUN_001a9c90(int unit_handle __attribute__((unused)), const char *seat_name __attribute__((unused)), int object_list __attribute__((unused)))
@@ -9250,8 +9189,8 @@ void FUN_001a7ad0(int parent_handle, int param_2, int param_3)
 /* FUN_001a7b50 (0x1a7b50) — XBE naked draft (batch 62). */
 #if defined(__clang__)
 static void *(*const b1a7b50_get)(int, int) = object_get_and_verify_type;
-static void (*const b1a7b50_c136b40)(int object_handle) = FUN_00136b40;
-static void (*const b1a7b50_c137540)(int object_handle) = object_deplete_body;
+static void (*const b1a7b50_c136b40)(int object_handle) = (void *)FUN_00136b40;
+static void (*const b1a7b50_c137540)(int object_handle) = (void *)object_deplete_body;
 
 __attribute__((naked, noinline))
 void FUN_001a7b50(int datum_handle __attribute__((unused)), float body_damage __attribute__((unused)), float shield_damage __attribute__((unused)))
@@ -9401,15 +9340,15 @@ void scripting_set_magic_base_seat(const char *param_1)
 /* FUN_001a7790 (0x1a7790) — XBE naked draft (batch 53). */
 #if defined(__clang__)
 static void *(*const b1a7790_get)(int, int) = object_get_and_verify_type;
-static void (*const b1a7790_c1a7730)(int unit_handle) = FUN_001a7730;
+static void (*const b1a7790_c1a7730)(int unit_handle) = (void *)FUN_001a7730;
 static short (*const b1a7790_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
-static int (*const b1a7790_c1c7e70)(int object_handle, int tag_index, int16_t marker, float *position, float *forward, float scale) = object_impulse_sound_new;
-static void (*const b1a7790_c44fd0)(int unit_handle, uint16_t priority, uint16_t type, void *comm_data) = FUN_00044fd0;
+static int (*const b1a7790_c1c7e70)(int object_handle, int tag_index, int16_t marker, float *position, float *forward, float scale) = (void *)object_impulse_sound_new;
+static void (*const b1a7790_c44fd0)(int unit_handle, uint16_t priority, uint16_t type, void *comm_data) = (void *)FUN_00044fd0;
 static void (*const b1a7790_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1a7790_exitfn)(int) = system_exit;
-static void (*const b1a7790_c46530)(int unit_handle, uint16_t priority, uint16_t type, int unk, int unk2, void *comm_data) = FUN_00046530;
-static void (*const b1a7790_c45290)(int unit_handle, uint16_t priority, uint16_t type, void *comm_data) = FUN_00045290;
-static void (*const b1a7790_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
+static void (*const b1a7790_c46530)(int unit_handle, uint16_t priority, uint16_t type, int unk, int unk2, void *comm_data) = (void *)FUN_00046530;
+static void (*const b1a7790_c45290)(int unit_handle, uint16_t priority, uint16_t type, void *comm_data) = (void *)FUN_00045290;
+static void (*const b1a7790_c1a6ef0)(int actor, short count, void *comm_buf) = (void *)FUN_001a6ef0;
 
 __attribute__((naked, noinline))
 void FUN_001a7790(int param_1 __attribute__((unused)))
@@ -9696,13 +9635,13 @@ void FUN_001a6bf0(int unit_handle)
 /* FUN_001a70d0 (0x1a70d0) — XBE naked draft (batch 63). */
 #if defined(__clang__)
 static void *(*const b1a70d0_get)(int, int) = object_get_and_verify_type;
-static short (*const b1a70d0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
+static short (*const b1a70d0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = (void *)FUN_001a68d0;
 static void *(*const b1a70d0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1a70d0_c42d20)(void *packet) = ai_communication_packet_new;
-static void (*const b1a70d0_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
+static void (*const b1a70d0_c42d20)(void *packet) = (void *)ai_communication_packet_new;
+static void (*const b1a70d0_c1a6ef0)(int actor, short count, void *comm_buf) = (void *)FUN_001a6ef0;
 static void (*const b1a70d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1a70d0_exitfn)(int) = system_exit;
-static void (*const b1a70d0_c44fd0)(int unit_handle, uint16_t priority, uint16_t type, void *comm_data) = FUN_00044fd0;
+static void (*const b1a70d0_c44fd0)(int unit_handle, uint16_t priority, uint16_t type, void *comm_data) = (void *)FUN_00044fd0;
 
 __attribute__((naked, noinline))
 void FUN_001a70d0(int unit_handle __attribute__((unused)), int sound_tag __attribute__((unused)), int sound_handle __attribute__((unused)))
@@ -10338,10 +10277,10 @@ void unit_flame_to_death(int unit_handle)
 #if defined(__clang__)
 static void *(*const b1ab110_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1ab110_tag)(int, int) = tag_get;
-static void (*const b1ab110_c1411c0)(int object_handle) = object_detach_from_parent;
-static vector3_t * (*const b1ab110_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static int (*const b1ab110_c22ba0)(int actor_handle, void *aim_params, float *out_aim_vector) = actor_aim_grenade;
-static void * (*const b1ab110_c18e450)(void) = game_globals_get;
+static void (*const b1ab110_c1411c0)(int object_handle) = (void *)object_detach_from_parent;
+static vector3_t * (*const b1ab110_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
+static int (*const b1ab110_c22ba0)(int actor_handle, void *aim_params, float *out_aim_vector) = (void *)actor_aim_grenade;
+static void * (*const b1ab110_c18e450)(void) = (void *)game_globals_get;
 static void *(*const b1ab110_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b1ab110_cross)(float *, float *, float *) = cross_product3d;
 static float (*const b1ab110_norm)(float *) = normalize3d;
@@ -10349,7 +10288,7 @@ static void (*const b1ab110_useat)(int, float *) = unit_set_seat_state;
 static void (*const b1ab110_otrans)(int, float *, void *) = object_translate;
 static int *(*const b1ab110_gseed)(void) = get_global_random_seed_address;
 static float (*const b1ab110_rrange)(int *, float, float) = random_real_range;
-static void (*const b1ab110_cf8ee0)(int projectile_handle, float *acceleration) = projectile_accelerate;
+static void (*const b1ab110_cf8ee0)(int projectile_handle, float *acceleration) = (void *)projectile_accelerate;
 static bool (*const b1ab110_oplace)(int, float *) = object_try_place;
 static void (*const b1ab110_odel)(int) = object_delete;
 
@@ -10626,10 +10565,10 @@ void FUN_001ab110(int unit_handle __attribute__((unused)), char flag __attribute
 #if defined(__clang__)
 static void *(*const b1a6280_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1a6280_tag)(int, int) = tag_get;
-static char (*const b1a6280_c1a0680)(int unit_handle) = FUN_001a0680;
-static void (*const b1a6280_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
-static void (*const b1a6280_c1a2160)(int unit_handle) = FUN_001a2160;
-static void (*const b1a6280_c1a4440)(int unit_handle) = FUN_001a4440;
+static char (*const b1a6280_c1a0680)(int unit_handle) = (void *)FUN_001a0680;
+static void (*const b1a6280_c1a2800)(int unit_handle, const char *failure_kind) = (void *)FUN_001a2800;
+static void (*const b1a6280_c1a2160)(int unit_handle) = (void *)FUN_001a2160;
+static void (*const b1a6280_c1a4440)(int unit_handle) = (void *)FUN_001a4440;
 
 __attribute__((naked, noinline))
 void FUN_001a6280(int unit_handle __attribute__((unused)), char *state_out __attribute__((unused)))
@@ -10716,10 +10655,10 @@ static int (*const b1a68d0_gtime)(void) = game_time_get;
 static void (*const b1a68d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1a68d0_exitfn)(int) = system_exit;
 static void *(*const b1a68d0_tag)(int, int) = tag_get;
-static short (*const b1a68d0_cfff80)(void) = game_connection;
+static short (*const b1a68d0_cfff80)(void) = (void *)game_connection;
 static void (*const b1a68d0_ftol)(void) = FUN_001d9068;
 static void *(*const b1a68d0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1a68d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
+static void (*const b1a68d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
 __attribute__((naked, noinline))
 short FUN_001a68d0(int unit_handle __attribute__((unused)), short priority __attribute__((unused)), char param_3 __attribute__((unused)), char param_4 __attribute__((unused)), int *param_5 __attribute__((unused)), short *vocalization_type_ref __attribute__((unused)), int *sound_definition_index_ref __attribute__((unused)))
@@ -11094,7 +11033,7 @@ short FUN_001a68d0(int unit_handle __attribute__((unused)), short priority __att
 
 /* FUN_001ac680 (0x1ac680) — XBE naked draft (batch 50). */
 #if defined(__clang__)
-static void (*const b1ac680_c1ac680)(float initial_p, float initial_v, float max_v, float max_a, int plan) = FUN_001ac680;
+static void (*const b1ac680_c1ac680)(float initial_p, float initial_v, float max_v, float max_a, int plan) = (void *)FUN_001ac680;
 static void (*const b1ac680_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1ac680_exitfn)(int) = system_exit;
 
@@ -11725,7 +11664,7 @@ void FUN_001ac680(float initial_p __attribute__((unused)), float initial_v __att
 #if defined(__clang__)
 static void *(*const b1acf90_get)(int, int) = object_get_and_verify_type;
 static void (*const b1acf90_useat)(int, float *) = unit_set_seat_state;
-static void (*const b1acf90_c140070)(int object_handle, float *position_out, float *direction_out) = object_get_root_location;
+static void (*const b1acf90_c140070)(int object_handle, float *position_out, float *direction_out) = (void *)object_get_root_location;
 
 __attribute__((naked, noinline))
 void unit_adjust_projectile_ray(int unit_handle __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), float *velocity_out __attribute__((unused)), char adjust_origin __attribute__((unused)), char use_unit_forward __attribute__((unused)))
@@ -11826,15 +11765,15 @@ void unit_adjust_projectile_ray(int unit_handle __attribute__((unused)), float *
 static void *(*const b1ad060_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1ad060_tag)(int, int) = tag_get;
 static void (*const b1ad060_useat)(int, float *) = unit_set_seat_state;
-static vector3_t * (*const b1ad060_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b1ad060_c189320)(int flag, float *point, float *vector, float scale, void *color) = FUN_00189320;
-static int (*const b1ad060_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static vector3_t * (*const b1ad060_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
+static void (*const b1ad060_c189320)(int flag, float *point, float *vector, float scale, void *color) = (void *)FUN_00189320;
+static int (*const b1ad060_cba3c0)(int16_t local_player_index) = (void *)local_player_get_player_index;
 static void *(*const b1ad060_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b1ad060_c1a8200)(int unit_handle, int target_unit_handle, int16_t seat_index, float *out_pos_a, float *out_pos_b, float *out_pos_c) = unit_get_seat_enter_position;
-static void (*const b1ad060_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
+static int (*const b1ad060_c1a8200)(int unit_handle, int target_unit_handle, int16_t seat_index, float *out_pos_a, float *out_pos_b, float *out_pos_c) = (void *)unit_get_seat_enter_position;
+static void (*const b1ad060_c189150)(char flag, float *position, float scale, void *color) = (void *)FUN_00189150;
 static short (*const b1ad060_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
-static char * (*const b1ad060_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1ad060_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
+static char * (*const b1ad060_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
+static void (*const b1ad060_c189cb0)(char flag, void *position, void *string, int color) = (void *)FUN_00189cb0;
 
 __attribute__((naked, noinline))
 void unit_render_debug(int unit_handle __attribute__((unused)))
@@ -12144,8 +12083,8 @@ int16_t vehicle_scripting_find_available_seats(int unit_handle,
 /* unit_leap_begin (0x1b1c70) — XBE naked draft (batch 67). */
 #if defined(__clang__)
 static void *(*const b1b1c70_get)(int, int) = object_get_and_verify_type;
-static char (*const b1b1c70_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
-static void (*const b1b1c70_c1af180)(int unit_handle, float *alignment_vector) = unit_apply_alignment_vector;
+static char (*const b1b1c70_c1ad260)(int unit_handle, int16_t anim_state) = (void *)FUN_001ad260;
+static void (*const b1b1c70_c1af180)(int unit_handle, float *alignment_vector) = (void *)unit_apply_alignment_vector;
 
 __attribute__((naked, noinline))
 char unit_leap_begin(int unit_handle __attribute__((unused)), float *forward __attribute__((unused)))
@@ -12215,19 +12154,19 @@ char unit_leap_begin(int unit_handle __attribute__((unused)), float *forward __a
 #if defined(__clang__)
 static void *(*const b1b2090_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1b2090_tag)(int, int) = tag_get;
-static int (*const b1b2090_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static int16_t (*const b1b2090_c1aaee0)(int unit_handle) = unit_get_current_grenade_type;
-static int16_t (*const b1b2090_c1aae70)(int unit_handle, int16_t grenade_type) = unit_get_grenade_count;
-static int (*const b1b2090_cfb0f0)(int weapon_handle) = weapon_prevents_grenade_throwing;
-static void (*const b1b2090_cfd510)(int weapon_handle) = weapon_stop_reload;
-static void (*const b1b2090_c1a0950)(int unit_handle) = biped_stop_melee_attack;
-static char (*const b1b2090_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
+static int (*const b1b2090_c1adeb0)(int unit_handle, int16_t weapon_index) = (void *)unit_get_weapon;
+static int16_t (*const b1b2090_c1aaee0)(int unit_handle) = (void *)unit_get_current_grenade_type;
+static int16_t (*const b1b2090_c1aae70)(int unit_handle, int16_t grenade_type) = (void *)unit_get_grenade_count;
+static int (*const b1b2090_cfb0f0)(int weapon_handle) = (void *)weapon_prevents_grenade_throwing;
+static void (*const b1b2090_cfd510)(int weapon_handle) = (void *)weapon_stop_reload;
+static void (*const b1b2090_c1a0950)(int unit_handle) = (void *)biped_stop_melee_attack;
+static char (*const b1b2090_c1ad260)(int unit_handle, int16_t anim_state) = (void *)FUN_001ad260;
 static void *(*const b1b2090_elem)(void *, int, int) = tag_block_get_element;
 static float (*const b1b2090_mag)(float *) = magnitude3d;
-static void (*const b1b2090_c1af180)(int unit_handle, float *alignment_vector) = unit_apply_alignment_vector;
-static void (*const b1b2090_cde360)(int unit_handle, int message_type) = first_person_weapon_message_from_unit;
-static void (*const b1b2090_cb6a20)(int unit_handle) = player_clear_aim_assist;
-static void * (*const b1b2090_c18e450)(void) = game_globals_get;
+static void (*const b1b2090_c1af180)(int unit_handle, float *alignment_vector) = (void *)unit_apply_alignment_vector;
+static void (*const b1b2090_cde360)(int unit_handle, int message_type) = (void *)first_person_weapon_message_from_unit;
+static void (*const b1b2090_cb6a20)(int unit_handle) = (void *)player_clear_aim_assist;
+static void * (*const b1b2090_c18e450)(void) = (void *)game_globals_get;
 static int (*const b1b2090_o9ec30)(int, int, int, short, float, float, int, int) = FUN_0009ec30;
 
 __attribute__((naked, noinline))
@@ -12614,15 +12553,15 @@ next_weapon:
 
 /* unit_scripting_enter_vehicle (0x1b32d0) — XBE naked draft (batch 59). */
 #if defined(__clang__)
-static int (*const b1b32d0_c8df60)(const char *s1) = csstrlen;
+static int (*const b1b32d0_c8df60)(const char *s1) = (void *)csstrlen;
 static void *(*const b1b32d0_get)(int, int) = object_get_and_verify_type;
-static void (*const b1b32d0_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
+static void (*const b1b32d0_c1b2dd0)(int unit_handle) = (void *)unit_exit_seat_end;
 static void *(*const b1b32d0_tag)(int, int) = tag_get;
 static void *(*const b1b32d0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1b32d0_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static char (*const b1b32d0_c1aa700)(int unit_handle, int16_t seat_index) = unit_seat_filled;
-static char (*const b1b32d0_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static bool (*const b1b32d0_c1b2b80)(int unit_handle, int vehicle_handle, int16_t seat_index) = unit_board_vehicle;
+static int (*const b1b32d0_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
+static char (*const b1b32d0_c1aa700)(int unit_handle, int16_t seat_index) = (void *)unit_seat_filled;
+static char (*const b1b32d0_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static bool (*const b1b32d0_c1b2b80)(int unit_handle, int vehicle_handle, int16_t seat_index) = (void *)unit_board_vehicle;
 
 __attribute__((naked, noinline))
 void unit_scripting_enter_vehicle(int unit_handle __attribute__((unused)), int vehicle_handle __attribute__((unused)), char *seat_name __attribute__((unused)))
@@ -13508,10 +13447,10 @@ void unit_exit_seat_end(int unit_handle)
 #if defined(__clang__)
 static void *(*const b1aaf40_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1aaf40_tag)(int, int) = tag_get;
-static void * (*const b1aaf40_c18e450)(void) = game_globals_get;
+static void * (*const b1aaf40_c18e450)(void) = (void *)game_globals_get;
 static void *(*const b1aaf40_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b1aaf40_ca9570)(int param_1) = FUN_000a9570;
-static bool (*const b1aaf40_c3b6f0)(void) = actor_has_unlimited_grenades;
+static char (*const b1aaf40_ca9570)(int param_1) = (void *)FUN_000a9570;
+static bool (*const b1aaf40_c3b6f0)(void) = (void *)actor_has_unlimited_grenades;
 static void (*const b1aaf40_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1aaf40_exitfn)(int) = system_exit;
 static short (*const b1aaf40_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
@@ -13519,7 +13458,7 @@ static void (*const b1aaf40_opnew)(void *, int, int) = object_placement_data_new
 static void (*const b1aaf40_perp)(float *, float *) = perpendicular3d;
 static float (*const b1aaf40_norm)(float *) = normalize3d;
 static int (*const b1aaf40_onew)(void *) = object_new;
-static void (*const b1aaf40_c144240)(int parent_handle, int child_handle, int parent_node_index) = object_attach_to_parent;
+static void (*const b1aaf40_c144240)(int parent_handle, int child_handle, int parent_node_index) = (void *)object_attach_to_parent;
 
 __attribute__((naked, noinline))
 void FUN_001aaf40(int unit_handle __attribute__((unused)))
@@ -13684,14 +13623,14 @@ static void *(*const b1abd90_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1abd90_tag)(int, int) = tag_get;
 static void (*const b1abd90_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1abd90_exitfn)(int) = system_exit;
-static int (*const b1abd90_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
-static vector3_t * (*const b1abd90_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static int (*const b1abd90_c14c8e0)(int *out, int object_handle) = (void *)FUN_0014c8e0;
+static vector3_t * (*const b1abd90_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
 static float *(*const b1abd90_vsca)(float *, float *, float, float *) = vector3d_scale_add;
-static char (*const b1abd90_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = FUN_0014cb00;
-static void (*const b1abd90_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = FUN_0010a1c0;
-static void (*const b1abd90_c994d0)(float *plane_in, float *plane_out) = plane_negate;
-static void (*const b1abd90_c136750)(void *damage_params, int tag_index) = damage_data_new;
-static void (*const b1abd90_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = object_cause_damage;
+static char (*const b1abd90_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = (void *)FUN_0014cb00;
+static void (*const b1abd90_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = (void *)FUN_0010a1c0;
+static void (*const b1abd90_c994d0)(float *plane_in, float *plane_out) = (void *)plane_negate;
+static void (*const b1abd90_c136750)(void *damage_params, int tag_index) = (void *)damage_data_new;
+static void (*const b1abd90_c137d20)(void *damage_params, int object_handle, short node_index, short region_index, short permutation_index, unsigned int flags) = (void *)object_cause_damage;
 
 __attribute__((naked, noinline))
 void FUN_001abd90(int unit_handle __attribute__((unused)))
@@ -14034,15 +13973,15 @@ void unit_adjust_plan_overlap(void *plan_a_ptr, void *plan_b_ptr, int dummy,
 /* unit_update_running_blind (0x1af340) — XBE naked draft (batch 52). */
 #if defined(__clang__)
 static void *(*const b1af340_get)(int, int) = object_get_and_verify_type;
-static char (*const b1af340_c3ce40)(int actor_handle, float *vector_out) = actor_get_running_blind_vector;
-static bool (*const b1af340_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b1af340_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static char (*const b1af340_c3ce40)(int actor_handle, float *vector_out) = (void *)actor_get_running_blind_vector;
+static bool (*const b1af340_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b1af340_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b1af340_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1af340_exitfn)(int) = system_exit;
 static int *(*const b1af340_gseed)(void) = get_global_random_seed_address;
 static float (*const b1af340_rrange)(int *, float, float) = random_real_range;
 static void (*const b1af340_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
-static bool (*const b1af340_c84a70)(float *a, float *b) = valid_real_normal3d_perpendicular;
+static bool (*const b1af340_c84a70)(float *a, float *b) = (void *)valid_real_normal3d_perpendicular;
 
 __attribute__((naked, noinline))
 void unit_update_running_blind(int unit_handle __attribute__((unused)), float *run_vector __attribute__((unused)))
@@ -14355,8 +14294,8 @@ void unit_update_running_blind(int unit_handle __attribute__((unused)), float *r
 static void *(*const b1acd70_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1acd70_tag)(int, int) = tag_get;
 static void *(*const b1acd70_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1acd70_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static int (*const b1acd70_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
+static int (*const b1acd70_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
+static int (*const b1acd70_c8dcb0)(const char *s1, const char *s2) = (void *)csstrcmp;
 
 __attribute__((naked, noinline))
 char FUN_001acd70(int unit_handle __attribute__((unused)), const char *seat_label __attribute__((unused)), const char *weapon_name __attribute__((unused)), char apply_state __attribute__((unused)))
@@ -14581,11 +14520,11 @@ char FUN_001acd70(int unit_handle __attribute__((unused)), const char *seat_labe
 static void *(*const b1ae490_get)(int, int) = object_get_and_verify_type;
 static void (*const b1ae490_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1ae490_exitfn)(int) = system_exit;
-static int (*const b1ae490_c1ae290)(int unit_handle) = unit_get_seat_label;
-static char * (*const b1ae490_cfae80)(int weapon_handle) = weapon_get_label;
-static char (*const b1ae490_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static bool (*const b1ae490_ca8b30)(int unit_handle, int weapon_handle) = game_engine_allow_weapon_pick_up;
-static int (*const b1ae490_cfb090)(int weapon_handle) = weapon_must_be_readied;
+static int (*const b1ae490_c1ae290)(int unit_handle) = (void *)unit_get_seat_label;
+static char * (*const b1ae490_cfae80)(int weapon_handle) = (void *)weapon_get_label;
+static char (*const b1ae490_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static bool (*const b1ae490_ca8b30)(int unit_handle, int weapon_handle) = (void *)game_engine_allow_weapon_pick_up;
+static int (*const b1ae490_cfb090)(int weapon_handle) = (void *)weapon_must_be_readied;
 
 __attribute__((naked, noinline))
 int16_t FUN_001ae490(int unit_handle __attribute__((unused)), int16_t current_index __attribute__((unused)), int16_t direction __attribute__((unused)))
@@ -14738,10 +14677,10 @@ int16_t FUN_001ae490(int unit_handle __attribute__((unused)), int16_t current_in
 static void *(*const b1b04b0_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1b04b0_tag)(int, int) = tag_get;
 static void *(*const b1b04b0_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b1b04b0_c1a8850)(void *anim_state) = FUN_001a8850;
-static void (*const b1b04b0_c1414e0)(int param_1, int param_2, int param_3, int param_4, int param_5) = FUN_001414e0;
-static char (*const b1b04b0_c1a87f0)(void *anim_state) = FUN_001a87f0;
-static int (*const b1b04b0_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
+static char (*const b1b04b0_c1a8850)(void *anim_state) = (void *)FUN_001a8850;
+static void (*const b1b04b0_c1414e0)(int param_1, int param_2, int param_3, int param_4, int param_5) = (void *)FUN_001414e0;
+static char (*const b1b04b0_c1a87f0)(void *anim_state) = (void *)FUN_001a87f0;
+static int (*const b1b04b0_c1adeb0)(int unit_handle, int16_t weapon_index) = (void *)unit_get_weapon;
 
 __attribute__((naked, noinline))
 void FUN_001b04b0(int unit_handle __attribute__((unused)), int node_matrices __attribute__((unused)))
@@ -15100,16 +15039,16 @@ void FUN_00122a50(int animation, float frame_pos, float blend_weight,
 #if defined(__clang__)
 static char (*const b122e50_c120620)(int animation) = (void *)FUN_00120620;
 static void (*const b122e50_ftol)(void) = FUN_001d9068;
-static void (*const b122e50_c1daf7e)(void) = FUN_001daf7e;
-static char * (*const b122e50_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b122e50_c1daf7e)(void) = (void *)FUN_001daf7e;
+static char * (*const b122e50_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b122e50_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b122e50_exitfn)(int) = system_exit;
-static void * (*const b122e50_c120500)(void *animation, short frame_index) = FUN_00120500;
-static void (*const b122e50_c121330)(void *animation, float frame, unsigned short rotation_count, short node_index, void *out_rotation) = FUN_00121330;
-static void (*const b122e50_c120810)(short *src, float *dest) = quaternion_decompress_8byte;
-static void (*const b122e50_c10cb60)(float *q1, float *q2, float t, float *out) = quaternions_interpolate_and_normalize;
-static void (*const b122e50_c10b9c0)(float *q1, float *q2, float *out) = FUN_0010b9c0;
-static void (*const b122e50_c121640)(void *animation, float frame, unsigned short translation_count, short node_index, void *out_translation) = animation_get_node_orientations;
+static void * (*const b122e50_c120500)(void *animation, short frame_index) = (void *)FUN_00120500;
+static void (*const b122e50_c121330)(void *animation, float frame, unsigned short rotation_count, short node_index, void *out_rotation) = (void *)FUN_00121330;
+static void (*const b122e50_c120810)(short *src, float *dest) = (void *)quaternion_decompress_8byte;
+static void (*const b122e50_c10cb60)(float *q1, float *q2, float t, float *out) = (void *)quaternions_interpolate_and_normalize;
+static void (*const b122e50_c10b9c0)(float *q1, float *q2, float *out) = (void *)FUN_0010b9c0;
+static void (*const b122e50_c121640)(void *animation, float frame, unsigned short translation_count, short node_index, void *out_translation) = (void *)animation_get_node_orientations;
 
 __attribute__((naked, noinline))
 void FUN_00122e50(int animation __attribute__((unused)), float *blend_params __attribute__((unused)), float direction __attribute__((unused)), float throttle __attribute__((unused)), int node_output __attribute__((unused)))
@@ -16216,21 +16155,21 @@ got_damage_effect:
 static void *(*const b1afd30_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1afd30_tag)(int, int) = tag_get;
 static void *(*const b1afd30_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1afd30_c122060)(void) = replacement_animation_apply;
-static void (*const b1afd30_c122240)(void *animation, int frame, void *node_output) = overlay_animation_apply;
-static void (*const b1afd30_c1af6b0)(int unit_handle, const char *label) = unit_control_trace;
-static void (*const b1afd30_c122450)(void *animation, int frame, float scale, void *node_output) = overlay_animation_apply_scaled;
-static void (*const b1afd30_c122690)(void *animation, float frame, void *node_data) = FUN_00122690;
-static bool (*const b1afd30_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b1afd30_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b1afd30_c122060)(void) = (void *)replacement_animation_apply;
+static void (*const b1afd30_c122240)(void *animation, int frame, void *node_output) = (void *)overlay_animation_apply;
+static void (*const b1afd30_c1af6b0)(int unit_handle, const char *label) = (void *)unit_control_trace;
+static void (*const b1afd30_c122450)(void *animation, int frame, float scale, void *node_output) = (void *)overlay_animation_apply_scaled;
+static void (*const b1afd30_c122690)(void *animation, float frame, void *node_data) = (void *)FUN_00122690;
+static bool (*const b1afd30_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b1afd30_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b1afd30_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1afd30_exitfn)(int) = system_exit;
-static void (*const b1afd30_c141360)(int object_handle, float *out_forward, float *out_up) = object_get_orientation;
+static void (*const b1afd30_c141360)(int object_handle, float *out_forward, float *out_up) = (void *)object_get_orientation;
 static void (*const b1afd30_cross)(float *, float *, float *) = cross_product3d;
-static void (*const b1afd30_c1097f0)(void *matrix, void *point, void *out) = real_matrix4x3_transform_point;
-static int (*const b1afd30_c84a10)(float *vector) = real_vector3d_valid;
-static void (*const b1afd30_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const b1afd30_c122e50)(int animation, float *blend_params, float direction, float throttle, int node_output) = FUN_00122e50;
+static void (*const b1afd30_c1097f0)(void *matrix, void *point, void *out) = (void *)real_matrix4x3_transform_point;
+static int (*const b1afd30_c84a10)(float *vector) = (void *)real_vector3d_valid;
+static void (*const b1afd30_c10cc00)(float *out_angles, float *in_vector) = (void *)vector_to_angles;
+static void (*const b1afd30_c122e50)(int animation, float *blend_params, float direction, float throttle, int node_output) = (void *)FUN_00122e50;
 
 __attribute__((naked, noinline))
 void FUN_001afd30(int unit_handle __attribute__((unused)), int node_output __attribute__((unused)))
@@ -16855,18 +16794,18 @@ void FUN_001afd30(int unit_handle __attribute__((unused)), int node_output __att
 #if defined(__clang__)
 static void (*const b1b0630_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b0630_exitfn)(int) = system_exit;
-static void (*const b1b0630_c1097f0)(void *matrix, void *point, void *out) = real_matrix4x3_transform_point;
-static void (*const b1b0630_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const b1b0630_c10cc40)(float *out, float *angles) = angles_to_vector;
-static void (*const b1b0630_c109680)(float *matrix, float *in, float *out) = matrix_transform_vector;
+static void (*const b1b0630_c1097f0)(void *matrix, void *point, void *out) = (void *)real_matrix4x3_transform_point;
+static void (*const b1b0630_c10cc00)(float *out_angles, float *in_vector) = (void *)vector_to_angles;
+static void (*const b1b0630_c10cc40)(float *out, float *angles) = (void *)angles_to_vector;
+static void (*const b1b0630_c109680)(float *matrix, float *in, float *out) = (void *)matrix_transform_vector;
 static float (*const b1b0630_norm)(float *) = normalize3d;
 static void (*const b1b0630_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
-static void (*const b1b0630_c1ac680)(float initial_p, float initial_v, float max_v, float max_a, int plan) = FUN_001ac680;
-static void (*const b1b0630_c1acb70)(void *plan_a, void *plan_b, int dummy, float delta_time) = unit_adjust_plan_overlap;
-static char (*const b1b0630_c1a8550)(void *plan, float delta_time, float position, float *out_position, float velocity, float *out_velocity) = FUN_001a8550;
-static void (*const b1b0630_c1d94f0)(void) = FUN_001d94f0;
-static bool (*const b1b0630_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b1b0630_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b1b0630_c1ac680)(float initial_p, float initial_v, float max_v, float max_a, int plan) = (void *)FUN_001ac680;
+static void (*const b1b0630_c1acb70)(void *plan_a, void *plan_b, int dummy, float delta_time) = (void *)unit_adjust_plan_overlap;
+static char (*const b1b0630_c1a8550)(void *plan, float delta_time, float position, float *out_position, float velocity, float *out_velocity) = (void *)FUN_001a8550;
+static void (*const b1b0630_c1d94f0)(void) = (void *)FUN_001d94f0;
+static bool (*const b1b0630_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b1b0630_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 
 __attribute__((naked, noinline))
 void FUN_001b0630(int transform_matrix __attribute__((unused)), float *aiming_vector __attribute__((unused)), float *desired_vector __attribute__((unused)), float *angular_velocity __attribute__((unused)), float *aiming_bounds __attribute__((unused)), float angular_velocity_limit __attribute__((unused)), float angular_acceleration_limit __attribute__((unused)))
@@ -17504,26 +17443,26 @@ static void *(*const b1b0d90_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1b0d90_tag)(int, int) = tag_get;
 static void (*const b1b0d90_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b0d90_exitfn)(int) = system_exit;
-static char (*const b1b0d90_c1a86b0)(void *anim_state, int16_t target_state) = FUN_001a86b0;
+static char (*const b1b0d90_c1a86b0)(void *anim_state, int16_t target_state) = (void *)FUN_001a86b0;
 static char * (*const b1b0d90_c1ae700)(int unit_handle, int unused) = (void *)unit_get_weapon_name;
-static const char * (*const b1b0d90_c1ab6e0)(int16_t base_seat_index) = FUN_001ab6e0;
-static char (*const b1b0d90_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static int16_t (*const b1b0d90_c1ab870)(void *animation_state, int animation_graph_tag_index, int unit_handle) = FUN_001ab870;
-static void (*const b1b0d90_c1ab110)(int unit_handle, char flag) = FUN_001ab110;
-static void (*const b1b0d90_c1ae840)(int unit_handle, char melee_hit, int target_handle, int param_4, int param_5, int param_6, int param_7) = unit_cause_melee_damage;
-static void (*const b1b0d90_c1a91e0)(int unit_handle) = unit_destroy;
-static void (*const b1b0d90_c1a0970)(int unit_handle) = biped_start_limp_body_physics;
+static const char * (*const b1b0d90_c1ab6e0)(int16_t base_seat_index) = (void *)FUN_001ab6e0;
+static char (*const b1b0d90_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static int16_t (*const b1b0d90_c1ab870)(void *animation_state, int animation_graph_tag_index, int unit_handle) = (void *)FUN_001ab870;
+static void (*const b1b0d90_c1ab110)(int unit_handle, char flag) = (void *)FUN_001ab110;
+static void (*const b1b0d90_c1ae840)(int unit_handle, char melee_hit, int target_handle, int param_4, int param_5, int param_6, int param_7) = (void *)unit_cause_melee_damage;
+static void (*const b1b0d90_c1a91e0)(int unit_handle) = (void *)unit_destroy;
+static void (*const b1b0d90_c1a0970)(int unit_handle) = (void *)biped_start_limp_body_physics;
 static void *(*const b1b0d90_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1b0d90_c1234b0)(void *mode_tag, void *animation, int frame_index, float *out_delta) = FUN_001234b0;
-static void * (*const b1b0d90_c141480)(int object_handle, void *out_matrix) = object_get_world_matrix;
+static void (*const b1b0d90_c1234b0)(void *mode_tag, void *animation, int frame_index, float *out_delta) = (void *)FUN_001234b0;
+static void * (*const b1b0d90_c141480)(int object_handle, void *out_matrix) = (void *)object_get_world_matrix;
 static void (*const b1b0d90_mscale)(float *, float *, float *) = matrix_scale_transform_vector;
-static void (*const b1b0d90_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
-static void (*const b1b0d90_c213c0)(float *a, float *b, float *out) = vector3d_add;
-static void (*const b1b0d90_c13ffc0)(int object_handle, int flag) = object_set_garbage;
-static void (*const b1b0d90_c1ae180)(int unit_handle) = unit_close;
-static char (*const b1b0d90_c1a8790)(void *anim_state) = FUN_001a8790;
-static void (*const b1b0d90_c140160)(int object_handle, int16_t region_count) = object_set_region_count;
-static char (*const b1b0d90_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
+static void (*const b1b0d90_c1b2dd0)(int unit_handle) = (void *)unit_exit_seat_end;
+static void (*const b1b0d90_c213c0)(float *a, float *b, float *out) = (void *)vector3d_add;
+static void (*const b1b0d90_c13ffc0)(int object_handle, int flag) = (void *)object_set_garbage;
+static void (*const b1b0d90_c1ae180)(int unit_handle) = (void *)unit_close;
+static char (*const b1b0d90_c1a8790)(void *anim_state) = (void *)FUN_001a8790;
+static void (*const b1b0d90_c140160)(int object_handle, int16_t region_count) = (void *)object_set_region_count;
+static char (*const b1b0d90_c1ad260)(int unit_handle, int16_t anim_state) = (void *)FUN_001ad260;
 
 __attribute__((naked, noinline))
 short FUN_001b0d90(int unit_handle __attribute__((unused)), char *anim_state __attribute__((unused)))
@@ -17965,19 +17904,19 @@ short FUN_001b0d90(int unit_handle __attribute__((unused)), char *anim_state __a
 static void *(*const b1b1400_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1b1400_tag)(int, int) = tag_get;
 static bool (*const b1b1400_gerun)(void) = game_engine_running;
-static void (*const b1b1400_c120670)(void) = build_damage_animation_index;
-static int (*const b1b1400_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = model_animation_choose_random;
+static void (*const b1b1400_c120670)(void) = (void *)build_damage_animation_index;
+static int (*const b1b1400_c120f20)(int update_kind, int animation_graph_tag_index, int16_t animation_index) = (void *)model_animation_choose_random;
 static char * (*const b1b1400_c1ae700)(int unit_handle, int unused) = (void *)unit_get_weapon_name;
-static char (*const b1b1400_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static char (*const b1b1400_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
-static char (*const b1b1400_c1a86b0)(void *anim_state, int16_t target_state) = FUN_001a86b0;
-static void (*const b1b1400_c1ab110)(int unit_handle, char flag) = FUN_001ab110;
-static void (*const b1b1400_c140160)(int object_handle, int16_t region_count) = object_set_region_count;
-static void (*const b1b1400_c1ab7c0)(int unit_handle, int anim_graph_tag_index, int16_t animation_index) = unit_set_animation;
+static char (*const b1b1400_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static char (*const b1b1400_c1ad260)(int unit_handle, int16_t anim_state) = (void *)FUN_001ad260;
+static char (*const b1b1400_c1a86b0)(void *anim_state, int16_t target_state) = (void *)FUN_001a86b0;
+static void (*const b1b1400_c1ab110)(int unit_handle, char flag) = (void *)FUN_001ab110;
+static void (*const b1b1400_c140160)(int object_handle, int16_t region_count) = (void *)object_set_region_count;
+static void (*const b1b1400_c1ab7c0)(int unit_handle, int anim_graph_tag_index, int16_t animation_index) = (void *)unit_set_animation;
 static void *(*const b1b1400_elem)(void *, int, int) = tag_block_get_element;
-static int16_t (*const b1b1400_c17940)(int16_t min, int16_t max) = FUN_00017940;
-static void (*const b1b1400_c1a91e0)(int unit_handle) = unit_destroy;
-static void (*const b1b1400_c1af180)(int unit_handle, float *alignment_vector) = unit_apply_alignment_vector;
+static int16_t (*const b1b1400_c17940)(int16_t min, int16_t max) = (void *)FUN_00017940;
+static void (*const b1b1400_c1a91e0)(int unit_handle) = (void *)unit_destroy;
+static void (*const b1b1400_c1af180)(int unit_handle, float *alignment_vector) = (void *)unit_apply_alignment_vector;
 static void (*const b1b1400_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b1400_exitfn)(int) = system_exit;
 
@@ -18550,52 +18489,52 @@ void FUN_001b1400(int unit_handle __attribute__((unused)), char is_melee __attri
 #if defined(__clang__)
 static void *(*const b1b3690_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1b3690_tag)(int, int) = tag_get;
-static char (*const b1b3690_cab9e0)(void) = FUN_000ab9e0;
+static char (*const b1b3690_cab9e0)(void) = (void *)FUN_000ab9e0;
 static void (*const b1b3690_penter)(void *) = profile_enter_private;
-static void (*const b1b3690_c1af6b0)(int unit_handle, const char *label) = unit_control_trace;
-static void (*const b1b3690_c1af340)(int unit_handle, float *run_vector) = unit_update_running_blind;
-static bool (*const b1b3690_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const b1b3690_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b1b3690_c1af6b0)(int unit_handle, const char *label) = (void *)unit_control_trace;
+static void (*const b1b3690_c1af340)(int unit_handle, float *run_vector) = (void *)unit_update_running_blind;
+static bool (*const b1b3690_c21fb0)(float *v) = (void *)valid_real_normal3d;
+static char * (*const b1b3690_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 static void (*const b1b3690_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b3690_exitfn)(int) = system_exit;
 static bool (*const b1b3690_gerun)(void) = game_engine_running;
-static int (*const b1b3690_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static bool (*const b1b3690_c1ae600)(int unit_handle, bool flag) = unit_set_in_vehicle;
-static void (*const b1b3690_c1adf10)(int unit_handle, char param_2) = unit_set_actively_controlled;
-static char (*const b1b3690_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = FUN_001acd70;
-static char (*const b1b3690_c1ad260)(int unit_handle, int16_t anim_state) = FUN_001ad260;
-static void (*const b1b3690_c1a09f0)(int unit_handle) = biped_stop_limp_body_physics;
-static char (*const b1b3690_c1a74d0)(int unit_handle, int scream_type) = FUN_001a74d0;
-static void (*const b1b3690_c1b3060)(int unit_handle, char feign_death) = unit_died;
-static char (*const b1b3690_c1a8730)(void *anim_state) = FUN_001a8730;
-static bool (*const b1b3690_c1ae370)(int unit_handle, int seat_object_handle) = unit_can_enter_seat;
-static void (*const b1b3690_c1b1ee0)(int unit_handle, int flag) = unit_update_weapon_readiness;
-static int16_t (*const b1b3690_c1a9980)(int unit_handle, int current_index, int16_t direction) = unit_inventory_next_grenade;
-static int (*const b1b3690_cba500)(int) = player_index_from_unit_index;
+static int (*const b1b3690_c1adeb0)(int unit_handle, int16_t weapon_index) = (void *)unit_get_weapon;
+static bool (*const b1b3690_c1ae600)(int unit_handle, bool flag) = (void *)unit_set_in_vehicle;
+static void (*const b1b3690_c1adf10)(int unit_handle, char param_2) = (void *)unit_set_actively_controlled;
+static char (*const b1b3690_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
+static char (*const b1b3690_c1ad260)(int unit_handle, int16_t anim_state) = (void *)FUN_001ad260;
+static void (*const b1b3690_c1a09f0)(int unit_handle) = (void *)biped_stop_limp_body_physics;
+static char (*const b1b3690_c1a74d0)(int unit_handle, int scream_type) = (void *)FUN_001a74d0;
+static void (*const b1b3690_c1b3060)(int unit_handle, char feign_death) = (void *)unit_died;
+static char (*const b1b3690_c1a8730)(void *anim_state) = (void *)FUN_001a8730;
+static bool (*const b1b3690_c1ae370)(int unit_handle, int seat_object_handle) = (void *)unit_can_enter_seat;
+static void (*const b1b3690_c1b1ee0)(int unit_handle, int flag) = (void *)unit_update_weapon_readiness;
+static int16_t (*const b1b3690_c1a9980)(int unit_handle, int current_index, int16_t direction) = (void *)unit_inventory_next_grenade;
+static int (*const b1b3690_cba500)(int) = (void *)player_index_from_unit_index;
 static void *(*const b1b3690_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b1b3690_c1c7480)(int sound_tag_index, float scale) = sound_impulse_start;
-static char (*const b1b3690_c1ada90)(int unit_handle, float *vector, char flag) = unit_clip_to_aiming_bounds;
-static void (*const b1b3690_c141360)(int object_handle, float *out_forward, float *out_up) = object_get_orientation;
-static void (*const b1b3690_c1b0630)(int transform_matrix, float *aiming_vector, float *desired_vector, float *angular_velocity, float *aiming_bounds, float angular_velocity_limit, float angular_acceleration_limit) = FUN_001b0630;
-static void (*const b1b3690_c10f770)(float *facing, float *target_facing, float *ang_vel, float max_ang_speed, float ang_accel) = angular_accelerate_to_position;
-static float (*const b1b3690_c10c510)(float *v1, float *v2) = FUN_0010c510;
+static int (*const b1b3690_c1c7480)(int sound_tag_index, float scale) = (void *)sound_impulse_start;
+static char (*const b1b3690_c1ada90)(int unit_handle, float *vector, char flag) = (void *)unit_clip_to_aiming_bounds;
+static void (*const b1b3690_c141360)(int object_handle, float *out_forward, float *out_up) = (void *)object_get_orientation;
+static void (*const b1b3690_c1b0630)(int transform_matrix, float *aiming_vector, float *desired_vector, float *angular_velocity, float *aiming_bounds, float angular_velocity_limit, float angular_acceleration_limit) = (void *)FUN_001b0630;
+static void (*const b1b3690_c10f770)(float *facing, float *target_facing, float *ang_vel, float max_ang_speed, float ang_accel) = (void *)angular_accelerate_to_position;
+static float (*const b1b3690_c10c510)(float *v1, float *v2) = (void *)FUN_0010c510;
 static void (*const b1b3690_ftol)(void) = FUN_001d9068;
-static char (*const b1b3690_c1b2090)(int unit_handle, float *alignment_vector) = unit_throw_grenade_begin;
-static void (*const b1b3690_c1aaf40)(int unit_handle) = FUN_001aaf40;
-static void (*const b1b3690_c1ab110)(int unit_handle, char flag) = FUN_001ab110;
-static void (*const b1b3690_cfaeb0)(int weapon_handle, int light_power) = weapon_set_integrated_light_power;
-static void (*const b1b3690_cfc4b0)(int weapon_handle, int16_t owner_state, float t) = weapon_owner_update;
-static bool (*const b1b3690_c84a70)(float *a, float *b) = valid_real_normal3d_perpendicular;
-static void (*const b1b3690_c1ab410)(int unit_handle) = unit_aiming_vector;
+static char (*const b1b3690_c1b2090)(int unit_handle, float *alignment_vector) = (void *)unit_throw_grenade_begin;
+static void (*const b1b3690_c1aaf40)(int unit_handle) = (void *)FUN_001aaf40;
+static void (*const b1b3690_c1ab110)(int unit_handle, char flag) = (void *)FUN_001ab110;
+static void (*const b1b3690_cfaeb0)(int weapon_handle, int light_power) = (void *)weapon_set_integrated_light_power;
+static void (*const b1b3690_cfc4b0)(int weapon_handle, int16_t owner_state, float t) = (void *)weapon_owner_update;
+static bool (*const b1b3690_c84a70)(float *a, float *b) = (void *)valid_real_normal3d_perpendicular;
+static void (*const b1b3690_c1ab410)(int unit_handle) = (void *)unit_aiming_vector;
 static void *(*const b1b3690_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1b3690_c40460)(int victim_handle, int source_handle, int16_t damage_type, float damage_amount, int param_4, char skip_provoke) = ai_handle_damage;
-static void (*const b1b3690_c1abd90)(int unit_handle) = FUN_001abd90;
-static void (*const b1b3690_c1a7790)(int unit_handle) = FUN_001a7790;
-static void (*const b1b3690_c1ab8c0)(int unit_handle) = FUN_001ab8c0;
+static void (*const b1b3690_c40460)(int victim_handle, int source_handle, int16_t damage_type, float damage_amount, int param_4, char skip_provoke) = (void *)ai_handle_damage;
+static void (*const b1b3690_c1abd90)(int unit_handle) = (void *)FUN_001abd90;
+static void (*const b1b3690_c1a7790)(int unit_handle) = (void *)FUN_001a7790;
+static void (*const b1b3690_c1ab8c0)(int unit_handle) = (void *)FUN_001ab8c0;
 static int (*const b1b3690_gtime)(void) = game_time_get;
-static void (*const b1b3690_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1b3690_c1ac550)(int unit_handle) = unit_flame_to_death;
-static void * (*const b1b3690_c18e450)(void) = game_globals_get;
+static void (*const b1b3690_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
+static void (*const b1b3690_c1ac550)(int unit_handle) = (void *)unit_flame_to_death;
+static void * (*const b1b3690_c18e450)(void) = (void *)game_globals_get;
 static int (*const b1b3690_o9ec30)(int, int, int, short, float, float, int, int) = FUN_0009ec30;
 static void (*const b1b3690_pexit)(void *) = profile_exit_private;
 
@@ -20376,30 +20315,30 @@ char FUN_001b3690(int unit_handle __attribute__((unused)))
 static void *(*const b1a6350_get)(int, int) = object_get_and_verify_type;
 static void *(*const b1a6350_tag)(int, int) = tag_get;
 static void (*const b1a6350_penter)(void *) = profile_enter_private;
-static void (*const b1a6350_c1a2800)(int unit_handle, const char *failure_kind) = FUN_001a2800;
-static void (*const b1a6350_c1a1fb0)(int unit_handle) = FUN_001a1fb0;
-static char (*const b1a6350_c1b3580)(int unit_handle) = unit_try_and_exit_seat;
-static void (*const b1a6350_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
-static void (*const b1a6350_c1a4440)(int unit_handle) = FUN_001a4440;
+static void (*const b1a6350_c1a2800)(int unit_handle, const char *failure_kind) = (void *)FUN_001a2800;
+static void (*const b1a6350_c1a1fb0)(int unit_handle) = (void *)FUN_001a1fb0;
+static char (*const b1a6350_c1b3580)(int unit_handle) = (void *)unit_try_and_exit_seat;
+static void (*const b1a6350_c1b2dd0)(int unit_handle) = (void *)unit_exit_seat_end;
+static void (*const b1a6350_c1a4440)(int unit_handle) = (void *)FUN_001a4440;
 static float (*const b1a6350_norm)(float *) = normalize3d;
-static void (*const b1a6350_c1a4c50)(int unit_handle, unsigned char *state) = FUN_001a4c50;
-static void (*const b1a6350_c1a5300)(int unit_handle, unsigned char *state) = FUN_001a5300;
-static void (*const b1a6350_c1a6280)(int unit_handle, char *state_out) = FUN_001a6280;
-static void (*const b1a6350_c1a2900)(int unit_handle, char *state) = FUN_001a2900;
-static void (*const b1a6350_c1a2a60)(int unit_handle, char *state) = FUN_001a2a60;
-static void (*const b1a6350_c1a2b10)(int unit_handle) = FUN_001a2b10;
-static int (*const b1a6350_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static char (*const b1a6350_cfc930)(int weapon_handle) = weapon_prevents_melee_attack;
-static void (*const b1a6350_c1a8990)(int object_handle, int16_t state) = unit_animation_start_action;
-static void (*const b1a6350_cfd510)(int weapon_handle) = weapon_stop_reload;
-static void (*const b1a6350_cde360)(int unit_handle, int message_type) = first_person_weapon_message_from_unit;
-static int16_t (*const b1a6350_cfb140)(int weapon_handle, int16_t param_2, int16_t param_3, int16_t param_4) = weapon_get_animation_frame;
-static void (*const b1a6350_c1aea90)(int unit_handle) = unit_cause_player_melee_damage;
-static void (*const b1a6350_c1a2440)(int unit_handle) = FUN_001a2440;
-static void (*const b1a6350_c1a1e70)(int unit_handle) = FUN_001a1e70;
-static char (*const b1a6350_c1a0b30)(int unit_handle) = FUN_001a0b30;
-static short (*const b1a6350_c1b0d90)(int unit_handle, char *anim_state) = FUN_001b0d90;
-static char (*const b1a6350_c1a2290)(int unit_handle) = FUN_001a2290;
+static void (*const b1a6350_c1a4c50)(int unit_handle, unsigned char *state) = (void *)FUN_001a4c50;
+static void (*const b1a6350_c1a5300)(int unit_handle, unsigned char *state) = (void *)FUN_001a5300;
+static void (*const b1a6350_c1a6280)(int unit_handle, char *state_out) = (void *)FUN_001a6280;
+static void (*const b1a6350_c1a2900)(int unit_handle, char *state) = (void *)FUN_001a2900;
+static void (*const b1a6350_c1a2a60)(int unit_handle, char *state) = (void *)FUN_001a2a60;
+static void (*const b1a6350_c1a2b10)(int unit_handle) = (void *)FUN_001a2b10;
+static int (*const b1a6350_c1adeb0)(int unit_handle, int16_t weapon_index) = (void *)unit_get_weapon;
+static char (*const b1a6350_cfc930)(int weapon_handle) = (void *)weapon_prevents_melee_attack;
+static void (*const b1a6350_c1a8990)(int object_handle, int16_t state) = (void *)unit_animation_start_action;
+static void (*const b1a6350_cfd510)(int weapon_handle) = (void *)weapon_stop_reload;
+static void (*const b1a6350_cde360)(int unit_handle, int message_type) = (void *)first_person_weapon_message_from_unit;
+static int16_t (*const b1a6350_cfb140)(int weapon_handle, int16_t param_2, int16_t param_3, int16_t param_4) = (void *)weapon_get_animation_frame;
+static void (*const b1a6350_c1aea90)(int unit_handle) = (void *)unit_cause_player_melee_damage;
+static void (*const b1a6350_c1a2440)(int unit_handle) = (void *)FUN_001a2440;
+static void (*const b1a6350_c1a1e70)(int unit_handle) = (void *)FUN_001a1e70;
+static char (*const b1a6350_c1a0b30)(int unit_handle) = (void *)FUN_001a0b30;
+static short (*const b1a6350_c1b0d90)(int unit_handle, char *anim_state) = (void *)FUN_001b0d90;
+static char (*const b1a6350_c1a2290)(int unit_handle) = (void *)FUN_001a2290;
 static void (*const b1a6350_pexit)(void *) = profile_exit_private;
 
 __attribute__((naked, noinline))

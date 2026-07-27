@@ -2035,6 +2035,10 @@
     "confidence": "weak",
     "coverage_pct": 16.0
   },
+  "0x2a0": {
+    "confidence": "moderate",
+    "coverage_pct": 51.9
+  },
   "0x2a470": {
     "class": "non_leaf"
   },
