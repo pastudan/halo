@@ -34717,8 +34717,8 @@
         },
         {
           "addr": "0x30d10",
-          "decl": "unsigned int FUN_00030d10(int actor_handle, float *chance_inout);",
-          "ported": false
+          "decl": "char FUN_00030d10(int actor_handle, float *chance_inout);",
+          "ported": true
         },
         {
           "addr": "0x30e60",
