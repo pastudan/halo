@@ -23744,8 +23744,9 @@
         },
         {
           "addr": "0x1c31f0",
-          "decl": "void FUN_001c31f0(void);",
-          "ported": false
+          "decl": "char FUN_001c31f0(const char *path@<eax>);",
+          "ported": true,
+          "name": "FUN_001c31f0"
         },
         {
           "addr": "0x1c3250",
@@ -28568,7 +28569,8 @@
         {
           "addr": "0x8dc30",
           "decl": "char *FUN_0008dc30(char *destination, const char *source);",
-          "ported": false
+          "ported": true,
+          "name": "*FUN_0008dc30"
         },
         {
           "addr": "0x122a50",

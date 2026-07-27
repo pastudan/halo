@@ -2566,60 +2566,26 @@ void saved_game_file_generate_checksum(void)
 #endif
 
 
-/* FUN_001c31f0 (0x1c31f0) — XBE naked draft (batch 283). */
-#if defined(__clang__)
-static file_ref_t * (*const b1c31f0_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static bool (*const b1c31f0_c19a640)(file_ref_t *info) = file_exists;
-static bool (*const b1c31f0_c19a490)(file_ref_t *info) = FUN_0019a490;
-
-__attribute__((naked, noinline))
-void FUN_001c31f0(void)
+/* FUN_001c31f0 (0x1c31f0) — readable C lift from XBE leaf. */
+char FUN_001c31f0(const char *path)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c31f0_1\n\t"
-      "leal -0x10c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19a640]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c31f0_2\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a490]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c31f0_2\n\t"
-      ".LFUN_001c31f0_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c31f0_2:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1999f0] "m"(b1c31f0_c1999f0), [c19a640] "m"(b1c31f0_c19a640), [c19a490] "m"(b1c31f0_c19a490)
-      : "memory");
+  unsigned char ref[0x10c];
+  file_ref_t *created;
+
+  created = file_reference_create_from_path((file_ref_t *)ref, path, true);
+  if (created == 0) {
+    return 0;
+  }
+  if (file_exists((file_ref_t *)ref)) {
+    return 1;
+  }
+  if (FUN_0019a490((file_ref_t *)ref)) {
+    return 1;
+  }
+  return 0;
 }
-#else
-#error "FUN_001c31f0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001c3250 (0x1c3250) — XBE naked draft (batch 260). */

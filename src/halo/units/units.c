@@ -11,74 +11,44 @@
 #define MAXIMUM_WEAPONS_PER_UNIT 4
 #define MAXIMUM_COLLISION_USER_STACK_DEPTH 32
 
-/* FUN_0008dc30 (0x8dc30) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static char (*const b8dc30_c92d60)(int16_t a1) = stack_walk;
-static void (*const b8dc30_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b8dc30_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char * FUN_0008dc30(char *destination __attribute__((unused)), const char *source __attribute__((unused)))
+/* FUN_0008dc30 (0x8dc30) — readable C lift from XBE leaf. */
+char *FUN_0008dc30(char *destination, const char *source)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0008dc30_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0008dc30_2\n\t"
-      ".LFUN_0008dc30_1:\n\t"
-      "pushl $0\n\t"
-      "call *%[c92d60]\n\t"
-      "pushl $0x267908\n\t"
-      "pushl $0x122\n\t"
-      "pushl $0x267878\n\t"
-      "pushl $0x267834\n\t"
-      "pushl $0x267810\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x20, %%esp\n\t"
-      ".LFUN_0008dc30_2:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      ".LFUN_0008dc30_3:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "incl %%eax\n\t"
-      "testb %%dl, %%dl\n\t"
-      "jne .LFUN_0008dc30_3\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "decl %%edi\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "leal 0x1(%%edi), %%edx\n\t"
-      ".LFUN_0008dc30_4:\n\t"
-      "movb 0x1(%%edi), %%cl\n\t"
-      "incl %%edi\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_0008dc30_4\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "shrl $2, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $3, %%ecx\n\t"
-      "rep movsb\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c92d60] "m"(b8dc30_c92d60), [c8f390] "m"(b8dc30_c8f390), [exitfn] "m"(b8dc30_exitfn)
-      : "memory");
+  extern char DAT_00267810[];
+  extern char DAT_00267834[];
+  extern char DAT_00267878[];
+  extern char DAT_00267908[];
+  char *dst;
+  const char *src;
+  size_t len;
+
+  if (destination == 0 || source == 0) {
+    stack_walk(0);
+    error(2, DAT_00267810, DAT_00267834, DAT_00267878, 0x122, DAT_00267908);
+    system_exit(-1);
+  }
+  for (src = source; *src != 0; src++) {
+  }
+  /* Binary strlen includes the terminating NUL (rep movs copies it). */
+  len = (size_t)(src - source) + 1;
+  dst = destination;
+  while (*dst != 0) {
+    dst++;
+  }
+  src = source;
+  while (len >= 4) {
+    *(unsigned int *)dst = *(const unsigned int *)src;
+    dst += 4;
+    src += 4;
+    len -= 4;
+  }
+  while (len--) {
+    *dst++ = *src++;
+  }
+  return destination;
 }
-#else
-#error "FUN_0008dc30: clang naked draft required"
-#endif
+
+
 
 
 void FUN_00123470(void *mode_tag, void *animation, int animation_index,
