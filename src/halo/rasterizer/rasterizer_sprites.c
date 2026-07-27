@@ -524,26 +524,11 @@ void FUN_0017d020(void)
   (void)eax;
 }
 
-/* FUN_0017d040 (0x17d040) — XBE naked draft (batch 400). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_0017d040 (0x17d040) — readable C lift. */
 void FUN_0017d040(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x77, 0xdd, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0017adc0();
 }
-#else
-#error "FUN_0017d040: clang naked draft required"
-#endif
-
 
 /* 0x17d050 */
 void FUN_0017d050(void)
@@ -560,47 +545,17 @@ void FUN_0017d050(void)
   (void)ebx;
 }
 
-/* FUN_0017d060 (0x17d060) — XBE naked draft (batch 400). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_0017d060 (0x17d060) — readable C lift. */
 void FUN_0017d060(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xf7, 0x10, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0016e160();
 }
-#else
-#error "FUN_0017d060: clang naked draft required"
-#endif
 
-
-/* FUN_0017d070 (0x17d070) — XBE naked draft (batch 400). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_0017d070 (0x17d070) — readable C lift. */
 void FUN_0017d070(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x67, 0x12, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0016e2e0();
 }
-#else
-#error "FUN_0017d070: clang naked draft required"
-#endif
-
 
 /* FUN_0017d080 (0x17d080) — XBE naked draft (batch 356). */
 #if defined(__clang__)

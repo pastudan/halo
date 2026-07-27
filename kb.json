@@ -31247,7 +31247,7 @@
         {
           "addr": "0x17d040",
           "decl": "void FUN_0017d040(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d050",
@@ -31257,12 +31257,12 @@
         {
           "addr": "0x17d060",
           "decl": "void FUN_0017d060(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d070",
           "decl": "void FUN_0017d070(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d080",
