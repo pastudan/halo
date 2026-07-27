@@ -30506,7 +30506,7 @@
         {
           "addr": "0x1bf080",
           "decl": "void texture_cache_new(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bf130",

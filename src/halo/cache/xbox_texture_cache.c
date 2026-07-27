@@ -416,7 +416,7 @@ static void (*const b1bed90_exitfn)(int) = system_exit;
 static void (*const b1bed90_c1196d0)(data_t *data, int datum_handle) = datum_delete;
 
 __attribute__((naked, noinline))
-void FUN_001bed90(void)
+void FUN_001bed90(int cache_handle)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -565,78 +565,33 @@ void FUN_001bef80(void)
 #endif
 
 
-/* texture_cache_new (0x1bf080) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static data_t * (*const b1bf080_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
-static void (*const b1bf080_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bf080_exitfn)(int) = system_exit;
-static void * (*const b1bf080_c11dd60)(int name, int page_count, int page_size_bits, int maximum_block_count, void (*delete_cb)(int), int (*query_cb)(int)) = lruv_new;
-static void * (*const b1bf080_c1bdd60)(void) = FUN_001bdd60;
-
-__attribute__((naked, noinline))
+/* texture_cache_new (0x1bf080) — readable C lift. */
 void texture_cache_new(void)
 {
-  __asm__ volatile(
-      "pushl $0x20\n\t"
-      "pushl $0x580\n\t"
-      "pushl $0x2b983c\n\t"
-      "call *%[c1194d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4ea978\n\t"
-      "jne .Ltexture_cache_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x62\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b9818\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltexture_cache_new_1:\n\t"
-      "pushl $0x1bed50\n\t"
-      "pushl $0x1bed90\n\t"
-      "pushl $0x580\n\t"
-      "pushl $0xe\n\t"
-      "pushl $0x580\n\t"
-      "pushl $0x2b9804\n\t"
-      "call *%[c11dd60]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4ea980\n\t"
-      "jne .Ltexture_cache_new_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b97e0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltexture_cache_new_2:\n\t"
-      "call *%[c1bdd60]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4ea97c\n\t"
-      "jne .Ltexture_cache_new_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b97b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltexture_cache_new_3:\n\t"
-      "ret\n\t"
-      :
-      : [c1194d0] "m"(b1bf080_c1194d0), [assert] "m"(b1bf080_assert), [exitfn] "m"(b1bf080_exitfn), [c11dd60] "m"(b1bf080_c11dd60), [c1bdd60] "m"(b1bf080_c1bdd60)
-      : "memory");
+  void *data;
+  void *lruv;
+  void *predicted;
+
+  data = data_new((char *)0x2b983c, 0x580, 0x20);
+  *(void **)0x4ea978 = data;
+  if (data == NULL) {
+    display_assert((const char *)0x2b9818, (const char *)0x2b96d8, 0x62, true);
+    system_exit(-1);
+  }
+  lruv = lruv_new((int)0x2b9804, 0x580, 0xe, 0x580,
+                  (void (*)(int))FUN_001bed90, (int (*)(int))0x1bed50);
+  *(void **)0x4ea980 = lruv;
+  if (lruv == NULL) {
+    display_assert((const char *)0x2b97e0, (const char *)0x2b96d8, 0x66, true);
+    system_exit(-1);
+  }
+  predicted = FUN_001bdd60();
+  *(void **)0x4ea97c = predicted;
+  if (predicted == NULL) {
+    display_assert((const char *)0x2b97b8, (const char *)0x2b96d8, 0x69, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "texture_cache_new: clang naked draft required"
-#endif
-
-
 
 /* texture_cache_close (0x1bf130) — readable C lift. */
 void texture_cache_close(void)
@@ -660,10 +615,10 @@ static void (*const b1bf260_c1bef80)(void) = FUN_001bef80;
 static void (*const b1bf260_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
 static void (*const b1bf260_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
 static void * (*const b1bf260_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b1bf260_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = FUN_00091ef0;
+static void (*const b1bf260_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = (void *)FUN_00091ef0;
 static int (*const b1bf260_cdeca0)(int interface_tag_index) = interface_get_tag_index;
 static void (*const b1bf260_c19b560)(void *stops, short count) = draw_string_set_tab_stops;
-static void (*const b1bf260_c19b7e0)(void) = FUN_0019B7E0;
+static void (*const b1bf260_c19b7e0)(void) = (void *)FUN_0019B7E0;
 static bool (*const b1bf260_c11da30)(void *lruv, int block_index) = lruv_block_touched;
 static const char * (*const b1bf260_c1ba1f0)(int tag_index) = tag_get_name;
 static int (*const b1bf260_c183290)(void *bitmap) = FUN_00183290;
