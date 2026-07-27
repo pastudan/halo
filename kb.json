@@ -31053,13 +31053,13 @@
         {
           "addr": "0x183c00",
           "decl": "void rasterizer_text_draw_cached_char(void *arg0, void *font, void *font_character, unsigned int color, short x, short y, int screen_x, int screen_y, short width, short height);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_draw_cached_char"
         },
         {
           "addr": "0x183cf0",
           "decl": "void rasterizer_text_draw_cached_chars(void *arg0, void *font, void *font_character, unsigned int color, short x, short y, int offset_x, int offset_y, short width, short height);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_draw_cached_chars"
         },
         {
@@ -34586,7 +34586,7 @@
         {
           "addr": "0x2b720",
           "decl": "char actor_path_3d_available(int actor_handle, float *dest_pos, float *dist_out);",
-          "ported": false,
+          "ported": true,
           "name": "actor_path_3d_available"
         },
         {
@@ -34611,7 +34611,7 @@
           "addr": "0x2a610",
           "decl": "void actor_get_stopping_distances(int actor_handle, float *param_2, float *param_3);",
           "name": "actor_get_stopping_distances",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2a7e0",
@@ -34628,20 +34628,20 @@
         {
           "addr": "0x2a8f0",
           "decl": "char actor_move_try_evasion_vector(int actor_handle, float *evasion_vector, float scale, float param_4, char *out_flag, void *result);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_try_evasion_vector"
         },
         {
           "addr": "0x2ab40",
           "decl": "char actor_move_try_evasion_direction(int actor_handle, float *alignment_vector, float param_3, unsigned short *evade_direction_reference, float param_5, char *out_flag, void *result);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_try_evasion_direction"
         },
         {
           "addr": "0x2ace0",
           "decl": "int actor_aim_jump(int actor_handle, int a2, char param_3, float param_4, float *param_5);",
           "name": "actor_aim_jump",
-          "ported": false,
+          "ported": true,
           "source_path": "halo/ai/actor_moving.c"
         },
         {
@@ -34671,7 +34671,7 @@
         {
           "addr": "0x2b490",
           "decl": "void actor_move_get_avoidance_vector(int matrix, float dir_index, float *out_vec);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_get_avoidance_vector"
         },
         {

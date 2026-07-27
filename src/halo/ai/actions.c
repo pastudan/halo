@@ -823,102 +823,59 @@ done_clear:
   return result;
 }
 
-/* actor_action_allow_cover_seeking (0x1ccc0) — XBE naked draft (batch 87). */
-#if defined(__clang__)
-static void *(*const b1ccc0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1ccc0_tag)(int, int) = tag_get;
-static void (*const b1ccc0_ftol)(void) = FUN_001d9068;
-static int (*const b1ccc0_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-char actor_action_allow_cover_seeking(int actor_handle __attribute__((unused)), char param_2 __attribute__((unused)))
+/* actor_action_allow_cover_seeking (0x1ccc0) — readable C lift (restored pre-naked)
+ * Gating predicate: may the actor begin seeking cover this frame? Result starts
+ * true. Only when param_2 == 0 AND the actor+0x1ca suppress byte is clear, two
+ * actr-tag cooldown/threshold checks may clear it. Two unconditional overrides
+ * follow: actor+0x378 forces deny; actor+0x160 hard-denies (returns 0) ignoring
+ * everything above.
+ * Confirmed: datum_get(actor_data, actor_handle) at 0x1ccd6.
+ * Confirmed: tag_get(0x61637472, actor+0x58) loads the actr tag.
+ *   actr_tag+0x2d8 = cover cooldown in seconds (*30 -> ticks @30Hz).
+ *   actr_tag+0x324 = threat threshold (float).
+ *   actor+0x6e     = short state counter; >= 7 denies.
+ *   actor+0x26c    = last cover-seek game time (-1 = none).
+ *   actor+0x1c0    = current threat scalar (float).
+ * Note: the ftol2 result is spilled and reloaded via MOVSX word (0x1cd9a), so
+ * the cooldown tick count is truncated to int16 before being added to
+ * actor+0x26c. The (short) cast preserves that. */
+char actor_action_allow_cover_seeking(int actor_handle, char param_2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x58(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, %%bl\n\t"
-      "jne .Lactor_action_allow_cover_seeking_3\n\t"
-      "movb 0x1ca(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_allow_cover_seeking_3\n\t"
-      "flds 0x2d8(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_allow_cover_seeking_2\n\t"
-      "cmpw $7, 0x6e(%%esi)\n\t"
-      "jge .Lactor_action_allow_cover_seeking_1\n\t"
-      "flds 0x2d8(%%edi)\n\t"
-      "fmuls 0x253394\n\t"
-      "call *%[ftol]\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "cmpl $-1, 0x26c(%%esi)\n\t"
-      "je .Lactor_action_allow_cover_seeking_2\n\t"
-      "call *%[gtime]\n\t"
-      "movswl 0xc(%%ebp), %%ecx\n\t"
-      "addl 0x26c(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lactor_action_allow_cover_seeking_2\n\t"
-      ".Lactor_action_allow_cover_seeking_1:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lactor_action_allow_cover_seeking_2:\n\t"
-      "flds 0x324(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_allow_cover_seeking_3\n\t"
-      "flds 0x1c0(%%esi)\n\t"
-      "fcomps 0x324(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_action_allow_cover_seeking_3\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lactor_action_allow_cover_seeking_3:\n\t"
-      "movb 0x378(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_allow_cover_seeking_4\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lactor_action_allow_cover_seeking_4:\n\t"
-      "movb 0x160(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_allow_cover_seeking_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_allow_cover_seeking_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1ccc0_dget), [tag] "m"(b1ccc0_tag), [ftol] "m"(b1ccc0_ftol), [gtime] "m"(b1ccc0_gtime)
-      : "memory");
+  char *actor;
+  int actr_tag;
+  short cooldown_ticks;
+  char result;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  actr_tag = (int)tag_get(0x61637472, *(int *)(actor + 0x58));
+  result = 1;
+  if ((param_2 == '\0') && (*(char *)(actor + 0x1ca) == '\0')) {
+    if (*(float *)(actr_tag + 0x2d8) > 0.0f) {
+      if (*(short *)(actor + 0x6e) >= 7) {
+        result = 0;
+      } else {
+        cooldown_ticks = (short)(int)(*(float *)(actr_tag + 0x2d8) * 30.0f);
+        if (*(int *)(actor + 0x26c) != -1) {
+          if (game_time_get() < (int)cooldown_ticks + *(int *)(actor + 0x26c)) {
+            result = 0;
+          }
+        }
+      }
+    }
+    if (*(float *)(actr_tag + 0x324) > 0.0f) {
+      if (*(float *)(actor + 0x1c0) < *(float *)(actr_tag + 0x324)) {
+        result = 0;
+      }
+    }
+  }
+  if (*(char *)(actor + 0x378) != '\0') {
+    result = 0;
+  }
+  if (*(char *)(actor + 0x160) != '\0') {
+    return 0;
+  }
+  return result;
 }
-#else
-#error "actor_action_allow_cover_seeking: clang naked draft required"
-#endif
 
 
 /* actor_action_can_stop_guarding (0x1cf10)
@@ -2107,121 +2064,61 @@ char actor_action_handle_exit_pursuit(int actor_handle)
   }
 }
 
-/* actor_action_try_to_throw_grenade (0x1fa60) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static void *(*const b1fa60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1fa60_get)(int, int) = object_get_and_verify_type;
-static bool (*const b1fa60_c1a9ad0)(int unit_handle) = unit_is_busy;
-static char (*const b1fa60_c1d180)(int actor_handle) = actor_action_test_grenade;
-static float (*const b1fa60_mag)(float *) = magnitude3d;
-static int (*const b1fa60_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-char actor_action_try_to_throw_grenade(int actor_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* actor_action_try_to_throw_grenade (0x1fa60) — readable C lift (restored pre-naked) — Attempts to commit the actor
+ * to a grenade throw this tick. Returns 1 if the throw was committed, 0
+ * otherwise.
+ *
+ * Resolves the actor and its unit object (actor+0x18, type 3). Bails
+ * (returns 0) if the unit is busy (unit_is_busy) or the object's throw
+ * cooldown timer (object+0x9c) has not expired (i.e. is > 0.0). When flag==0,
+ * re-tests grenade viability via actor_action_test_grenade and clears the
+ * pending flag (actor+0x6a0) if that test fails. If the pending flag is set,
+ * computes the horizontal offset from self position (0x12c/0x130) to the
+ * grenade target (0x6a8/0x6ac), normalizes it in place (magnitude3d, 2 floats),
+ * and requires a nonzero magnitude. Then checks the target lies within the
+ * throw arc: the normalized direction dotted with the actor facing
+ * (0x174/0x178) must be >= *(float*)0x2533dc (cos(30 deg) = 0.866025388;
+ * referenced as the exact global constant, NOT a rounded literal). On success
+ * sets the throw-commit flag (actor+0x45c), clears the pending flag, and — if
+ * the actor has a valid encounter handle (actor+0x34 != NONE) — stamps that
+ * encounter record (encounter+0x5c) with the current game time. */
+char actor_action_try_to_throw_grenade(int actor_handle, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1a9ad0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_try_to_throw_grenade_3\n\t"
-      "flds 0x9c(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lactor_action_try_to_throw_grenade_3\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_try_to_throw_grenade_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d180]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_try_to_throw_grenade_1\n\t"
-      "movb %%al, 0x6a0(%%esi)\n\t"
-      ".Lactor_action_try_to_throw_grenade_1:\n\t"
-      "movb 0x6a0(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_try_to_throw_grenade_3\n\t"
-      "flds 0x6a8(%%esi)\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "fsubs 0x12c(%%esi)\n\t"
-      "pushl %%edx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x6ac(%%esi)\n\t"
-      "fsubs 0x130(%%esi)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "call *%[mag]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_try_to_throw_grenade_3\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x178(%%esi)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x174(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x2533dc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lactor_action_try_to_throw_grenade_3\n\t"
-      "movb $1, 0x45c(%%esi)\n\t"
-      "movb $0, 0x6a0(%%esi)\n\t"
-      "movl 0x34(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lactor_action_try_to_throw_grenade_2\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x5c(%%esi)\n\t"
-      ".Lactor_action_try_to_throw_grenade_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_try_to_throw_grenade_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1fa60_dget), [get] "m"(b1fa60_get), [c1a9ad0] "m"(b1fa60_c1a9ad0), [c1d180] "m"(b1fa60_c1d180), [mag] "m"(b1fa60_mag), [gtime] "m"(b1fa60_gtime)
-      : "memory");
+  char *actor;
+  char *object;
+  char *encounter;
+  float delta[2];
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  object = (char *)object_get_and_verify_type(*(int *)(actor + 0x18), 3);
+  if (unit_is_busy(*(int *)(actor + 0x18)) == 0) {
+    if (*(float *)(object + 0x9c) <= *(float *)0x2533c0) {
+      if (flag == '\0') {
+        if (actor_action_test_grenade(actor_handle) == '\0') {
+          *(char *)(actor + 0x6a0) = 0;
+        }
+      }
+      if (*(char *)(actor + 0x6a0) != '\0') {
+        delta[0] = *(float *)(actor + 0x6a8) - *(float *)(actor + 0x12c);
+        delta[1] = *(float *)(actor + 0x6ac) - *(float *)(actor + 0x130);
+        if (*(float *)0x2533c0 < magnitude3d(delta)) {
+          if (*(float *)0x2533dc <= delta[0] * *(float *)(actor + 0x174) +
+                                      delta[1] * *(float *)(actor + 0x178)) {
+            *(char *)(actor + 0x45c) = 1;
+            *(char *)(actor + 0x6a0) = 0;
+            if (*(int *)(actor + 0x34) != -1) {
+              encounter =
+                (char *)datum_get(*(data_t **)0x5ab270, *(int *)(actor + 0x34));
+              *(int *)(encounter + 0x5c) = game_time_get();
+            }
+            return 1;
+          }
+        }
+      }
+    }
+  }
+  return 0;
 }
-#else
-#error "actor_action_try_to_throw_grenade: clang naked draft required"
-#endif
 
 
 /* actors_searching_same_position (0x20140) — Returns true when two actors are
@@ -2297,210 +2194,106 @@ bool actors_searching_same_position(int actor_handle, int param_2)
   return result;
 }
 
-/* actor_pursuit_find_nearby_actors (0x20280) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void *(*const b20280_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b20280_c64540)(int *out, int actor_handle) = FUN_00064540;
-static int (*const b20280_c64570)(int *iter) = FUN_00064570;
-static char (*const b20280_c1d530)(int actor_handle, char param_1, int actor_index) = FUN_0001d530;
-static void (*const b20280_c59a00)(int *iter, int clump_handle) = encounter_actor_iterator_new;
-static int (*const b20280_c59a50)(int *iter) = encounter_actor_iterator_next;
-static int (*const b20280_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
-static int (*const b20280_c64b40)(int actor_handle, int unit_handle, char create_if_needed, char refresh_flag) = FUN_00064b40;
-
-__attribute__((naked, noinline))
-int actor_pursuit_find_nearby_actors(int actor_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* actor_pursuit_find_nearby_actors (0x20280) — readable C lift (restored pre-naked) — Scans the actor's own clump and
+ * (when still under-satisfied) its encounter for eligible pursuit targets,
+ * counts the qualifiers, records the nearest one's index at actor+0x1d0, and
+ * returns the qualifier count.
+ *
+ * Pass 1 walks the clump-actor iterator (FUN_00064540/FUN_00064570): each
+ * record must have flag bytes at +0x60 and +0x127 clear, a valid unit index at
+ * +0x1c, and (when flag != 0) a type word at +0x24 in [2,4). FUN_0001d530
+ * (actor_handle in EAX) is the category-differs predicate. Each qualifier
+ * increments the count; the record with the smallest key at +0x11c becomes the
+ * best, its index taken from the iterator cursor iter1[0].
+ *
+ * threshold = (flag != 0) + 1  (1 or 2). If the count is still below threshold
+ * and the actor's encounter handle (+0x34) is valid, Pass 2 walks the encounter
+ * iterator (encounter_actor_iterator_new/next). For each element with a valid
+ * unit index at +0x18 passing FUN_0001d530, it resolves an active-prop index
+ * via prop_get_active_by_unit_index, falling back to FUN_00064b40(...,1,0); on
+ * a valid index it counts the element and, when the 3D distance (record
+ * +0x12c..) to the actor's own position is closer, records that index. Stops
+ * once the count reaches threshold.
+ *
+ * Confirmed: EDI = actor_handle preserved as the @<eax> arg to both
+ * FUN_0001d530 sites (MOV EAX,EDI at 0x20309 and 0x203a2); cdecl pushes are
+ * (char)flag then the actor index, one ADD ESP,0x8 each. Confirmed: FLT_MAX
+ * seed 0x7f7fffff at 0x202b9; both distance compares are '<' (TEST AH,5;JP).
+ * Pass-2 magnitude is FSQRT over +0x12c/+0x130/+0x134 deltas. Confirmed: iter1
+ * = 8-byte clump iterator (FUN_00064540 writes +4, FUN_00064570 walks +0/+4);
+ * iter2 = 12-byte encounter iterator, current handle at iter2[1] (EBP-0x20).
+ * Final store *(int*)(actor+0x1d0) = best_index at 0x2045d. */
+int actor_pursuit_find_nearby_actors(int actor_handle, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testb %%cl, %%cl\n\t"
-      "setne %%bl\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "movl $0xffffffff, -0xc(%%ebp)\n\t"
-      "incl %%ebx\n\t"
-      "movl $0x7f7fffff, -0x8(%%ebp)\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_4\n\t"
-      ".Lactor_pursuit_find_nearby_actors_1:\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_pursuit_find_nearby_actors_3\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_pursuit_find_nearby_actors_3\n\t"
-      "movl 0x1c(%%esi), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_3\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_2\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lactor_pursuit_find_nearby_actors_3\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lactor_pursuit_find_nearby_actors_3\n\t"
-      ".Lactor_pursuit_find_nearby_actors_2:\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c1d530]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_3\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_pursuit_find_nearby_actors_3\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "movl 0x11c(%%esi), %%ecx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      ".Lactor_pursuit_find_nearby_actors_3:\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lactor_pursuit_find_nearby_actors_1\n\t"
-      ".Lactor_pursuit_find_nearby_actors_4:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "movl -0x10(%%ebp), %%ebx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "jge .Lactor_pursuit_find_nearby_actors_10\n\t"
-      "movl 0x34(%%ebx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_10\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59a00]\n\t"
-      "leal -0x24(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59a50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_10\n\t"
-      "nop\n\t"
-      ".Lactor_pursuit_find_nearby_actors_5:\n\t"
-      "cmpl $-1, 0x18(%%esi)\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_9\n\t"
-      "movl -0x20(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c1d530]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_9\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c64ab0]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .Lactor_pursuit_find_nearby_actors_6\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c64b40]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lactor_pursuit_find_nearby_actors_9\n\t"
-      ".Lactor_pursuit_find_nearby_actors_6:\n\t"
-      "flds 0x12c(%%esi)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "fsubs 0x12c(%%ebx)\n\t"
-      "incl %%eax\n\t"
-      "flds 0x130(%%esi)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fsubs 0x130(%%ebx)\n\t"
-      "flds 0x134(%%esi)\n\t"
-      "fsubs 0x134(%%ebx)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fxch %%st(2)\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(2)\n\t"
-      "fstp %%st(0)\n\t"
-      "fcoms -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_pursuit_find_nearby_actors_7\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "jmp .Lactor_pursuit_find_nearby_actors_8\n\t"
-      ".Lactor_pursuit_find_nearby_actors_7:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lactor_pursuit_find_nearby_actors_8:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpl -0x14(%%ebp), %%eax\n\t"
-      "jge .Lactor_pursuit_find_nearby_actors_10\n\t"
-      ".Lactor_pursuit_find_nearby_actors_9:\n\t"
-      "leal -0x24(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59a50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lactor_pursuit_find_nearby_actors_5\n\t"
-      ".Lactor_pursuit_find_nearby_actors_10:\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x1d0(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b20280_dget), [c64540] "m"(b20280_c64540), [c64570] "m"(b20280_c64570), [c1d530] "m"(b20280_c1d530), [c59a00] "m"(b20280_c59a00), [c59a50] "m"(b20280_c59a50), [c64ab0] "m"(b20280_c64ab0), [c64b40] "m"(b20280_c64b40)
-      : "memory");
+  int actor;
+  int rec;
+  int count;
+  int best_index;
+  float best_dist;
+  int threshold;
+  int threshold_raw;
+  int mapped;
+  float dx;
+  float dy;
+  float dz;
+  float dist;
+  int iter1[2];
+  int iter2[3];
+
+  actor = (int)datum_get(actor_data, actor_handle);
+  count = 0;
+  best_index = -1;
+  best_dist = 3.4028235e+38f;
+  FUN_00064540(iter1, actor_handle);
+  threshold_raw = (flag != '\0') + 1;
+  rec = FUN_00064570(iter1);
+  while (rec != 0) {
+    if (*(char *)(rec + 0x60) == '\0' && *(char *)(rec + 0x127) == '\0' &&
+        *(int *)(rec + 0x1c) != -1 &&
+        (flag == '\0' ||
+         (1 < *(short *)(rec + 0x24) && *(short *)(rec + 0x24) < 4)) &&
+        FUN_0001d530(actor_handle, flag, *(int *)(rec + 0x1c)) != '\0') {
+      count++;
+      if (*(float *)(rec + 0x11c) < best_dist) {
+        best_dist = *(float *)(rec + 0x11c);
+        best_index = iter1[0];
+      }
+    }
+    rec = FUN_00064570(iter1);
+  }
+  threshold = (short)threshold_raw;
+  if (count < threshold && *(int *)(actor + 0x34) != -1) {
+    encounter_actor_iterator_new(iter2, *(int *)(actor + 0x34));
+    rec = encounter_actor_iterator_next(iter2);
+    while (rec != 0) {
+      if (*(int *)(rec + 0x18) != -1 &&
+          FUN_0001d530(actor_handle, flag, iter2[1]) != '\0') {
+        mapped =
+          prop_get_active_by_unit_index(actor_handle, *(int *)(rec + 0x18));
+        if (mapped == -1) {
+          mapped = FUN_00064b40(actor_handle, *(int *)(rec + 0x18), 1, 0);
+        }
+        if (mapped != -1) {
+          count++;
+          dx = *(float *)(rec + 0x12c) - *(float *)(actor + 0x12c);
+          dy = *(float *)(rec + 0x130) - *(float *)(actor + 0x130);
+          dz = *(float *)(rec + 0x134) - *(float *)(actor + 0x134);
+          dist = sqrtf(dx * dx + dy * dy + dz * dz);
+          if (dist < best_dist) {
+            best_index = mapped;
+            best_dist = dist;
+          }
+          if (threshold <= count) {
+            break;
+          }
+        }
+      }
+      rec = encounter_actor_iterator_next(iter2);
+    }
+  }
+  *(int *)(actor + 0x1d0) = best_index;
+  return count;
 }
-#else
-#error "actor_pursuit_find_nearby_actors: clang naked draft required"
-#endif
 
 
 /* actor_action_consider_grenade (0x1fb80) — Probabilistically decides whether

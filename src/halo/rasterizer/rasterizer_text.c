@@ -3238,246 +3238,142 @@ void rasterizer_text_cache_character(void *font_character, void *font)
 }
 
 
-/* rasterizer_text_draw_cached_char (0x183c00) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void (*const b183c00_c183880)(void *font_character, void *font) = rasterizer_text_cache_character;
-static void (*const b183c00_c183770)(short index, short *out_y, short *out_x) = rasterizer_text_get_character_position;
-static void (*const b183c00_c1741d0)(float *quad) = FUN_001741d0;
-
-__attribute__((naked, noinline))
-void rasterizer_text_draw_cached_char(void *arg0 __attribute__((unused)), void *font __attribute__((unused)), void *font_character __attribute__((unused)), unsigned int color __attribute__((unused)), short x __attribute__((unused)), short y __attribute__((unused)), int screen_x __attribute__((unused)), int screen_y __attribute__((unused)), short width __attribute__((unused)), short height __attribute__((unused)))
+/* rasterizer_text_draw_cached_char (0x183c00) — readable C lift (restored pre-naked). */
+void rasterizer_text_draw_cached_char(void *arg0, void *font,
+                                      void *font_character, unsigned int color,
+                                      short x, short y, int cache_offset_x,
+                                      int cache_offset_y, short width,
+                                      short height)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x54, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c183880]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0xc(%%edi), %%ax\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lrasterizer_text_draw_cached_char_1\n\t"
-      "pushl %%ebx\n\t"
-      "leal 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x4(%%ebp), %%ebx\n\t"
-      "call *%[c183770]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x24(%%ebp), %%esi\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x20(%%ebp), %%edi\n\t"
-      "addl %%esi, %%edx\n\t"
-      "movswl 0x18(%%ebp), %%esi\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "movl %%eax, -0x30(%%ebp)\n\t"
-      "movl %%eax, -0x44(%%ebp)\n\t"
-      "movswl 0x28(%%ebp), %%eax\n\t"
-      "movl %%esi, 0x10(%%ebp)\n\t"
-      "addl %%eax, %%esi\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "addl %%edi, %%ecx\n\t"
-      "movswl 0x1c(%%ebp), %%edi\n\t"
-      "fsts -0x18(%%ebp)\n\t"
-      "fstps -0x54(%%ebp)\n\t"
-      "movl %%esi, 0x10(%%ebp)\n\t"
-      "movswl 0x2c(%%ebp), %%esi\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%edi, 0x10(%%ebp)\n\t"
-      "fsts -0x2c(%%ebp)\n\t"
-      "addl %%esi, %%edi\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%edi, 0x10(%%ebp)\n\t"
-      "fsts -0x3c(%%ebp)\n\t"
-      "fstps -0x50(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "fsts -0x14(%%ebp)\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "fsts -0x10(%%ebp)\n\t"
-      "fstps -0x4c(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "addl %%esi, %%eax\n\t"
-      "fsts -0x24(%%ebp)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "fsts -0x34(%%ebp)\n\t"
-      "fstps -0x48(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "call *%[c1741d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lrasterizer_text_draw_cached_char_1:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c183880] "m"(b183c00_c183880), [c183770] "m"(b183c00_c183770), [c1741d0] "m"(b183c00_c1741d0)
-      : "memory");
+  float quad_verts[20];
+  short cache_x;
+  short cache_y;
+  short tx;
+  short ty;
+
+  rasterizer_text_cache_character(font_character, font);
+
+  if (*(short *)((int)font_character + 0xc) != -1) {
+    rasterizer_text_get_character_position(
+      *(short *)((int)font_character + 0xc), &cache_y, &cache_x);
+    tx = (short)(cache_x + (short)cache_offset_x);
+    ty = (short)(cache_y + (short)cache_offset_y);
+
+    /* vert0 TL */
+    quad_verts[0] = (float)x;
+    quad_verts[1] = (float)y;
+    quad_verts[2] = (float)tx;
+    quad_verts[3] = (float)ty;
+    *(unsigned int *)&quad_verts[4] = color;
+    /* vert1 TR */
+    quad_verts[5] = (float)(x + width);
+    quad_verts[6] = (float)y;
+    quad_verts[7] = (float)(tx + width);
+    quad_verts[8] = (float)ty;
+    *(unsigned int *)&quad_verts[9] = color;
+    /* vert2 BR */
+    quad_verts[10] = (float)(x + width);
+    quad_verts[11] = (float)(y + height);
+    quad_verts[12] = (float)(tx + width);
+    quad_verts[13] = (float)(ty + height);
+    *(unsigned int *)&quad_verts[14] = color;
+    /* vert3 BL */
+    quad_verts[15] = (float)x;
+    quad_verts[16] = (float)(y + height);
+    quad_verts[17] = (float)tx;
+    quad_verts[18] = (float)(ty + height);
+    *(unsigned int *)&quad_verts[19] = color;
+
+    FUN_001741d0(quad_verts);
+  }
 }
-#else
-#error "rasterizer_text_draw_cached_char: clang naked draft required"
-#endif
 
 
-/* rasterizer_text_draw_cached_chars (0x183cf0) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-static void (*const b183cf0_c183880)(void *font_character, void *font) = rasterizer_text_cache_character;
-static void (*const b183cf0_c183770)(short index, short *out_y, short *out_x) = rasterizer_text_get_character_position;
-static void (*const b183cf0_c1741d0)(float *quad) = FUN_001741d0;
-
-__attribute__((naked, noinline))
-void rasterizer_text_draw_cached_chars(void *arg0 __attribute__((unused)), void *font __attribute__((unused)), void *font_character __attribute__((unused)), unsigned int color __attribute__((unused)), short x __attribute__((unused)), short y __attribute__((unused)), int offset_x __attribute__((unused)), int offset_y __attribute__((unused)), short width __attribute__((unused)), short height __attribute__((unused)))
+/* rasterizer_text_draw_cached_chars (0x183cf0) — readable C lift (restored pre-naked). */
+void rasterizer_text_draw_cached_chars(void *arg0, void *font,
+                                       void *font_character, unsigned int color,
+                                       short x, short y, int cache_offset_x,
+                                       int cache_offset_y, short width,
+                                       short height)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x7c, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c183880]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $-1, 0xc(%%edi)\n\t"
-      "je .Lrasterizer_text_draw_cached_chars_5\n\t"
-      "movl 0x4d0cb0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0x3f800000, -0x14(%%ebp)\n\t"
-      "movl $0x3f800000, -0x10(%%ebp)\n\t"
-      "jne .Lrasterizer_text_draw_cached_chars_1\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "andl $0xff000000, %%eax\n\t"
-      ".Lrasterizer_text_draw_cached_chars_1:\n\t"
-      "movswl 0x2c(%%ebp), %%edi\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movswl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movswl 0x28(%%ebp), %%esi\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "leal (%%esi,%%eax,1), %%ecx\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "movswl 0x1c(%%ebp), %%eax\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "leal (%%edi,%%eax,1), %%edx\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      ".Lrasterizer_text_draw_cached_chars_2:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movw 0xc(%%ecx), %%ax\n\t"
-      "leal -0xc(%%ebp), %%ebx\n\t"
-      "call *%[c183770]\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "movl 0x24(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "movb -0x1(%%ebp), %%bl\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "jne .Lrasterizer_text_draw_cached_chars_3\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      ".Lrasterizer_text_draw_cached_chars_3:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "movl %%eax, -0x30(%%ebp)\n\t"
-      "fadds -0x14(%%ebp)\n\t"
-      "movl %%eax, -0x44(%%ebp)\n\t"
-      "movl %%eax, -0x58(%%ebp)\n\t"
-      "movl %%eax, -0x6c(%%ebp)\n\t"
-      "fsts -0x40(%%ebp)\n\t"
-      "movswl -0x8(%%ebp), %%eax\n\t"
-      "fstps -0x7c(%%ebp)\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "addl %%esi, %%eax\n\t"
-      "fadds -0x14(%%ebp)\n\t"
-      "leal -0x7c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "fsts -0x54(%%ebp)\n\t"
-      "fstps -0x68(%%ebp)\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fadds -0x10(%%ebp)\n\t"
-      "fsts -0x64(%%ebp)\n\t"
-      "fstps -0x78(%%ebp)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fadds -0x10(%%ebp)\n\t"
-      "fsts -0x3c(%%ebp)\n\t"
-      "fstps -0x50(%%ebp)\n\t"
-      "fildl -0x2c(%%ebp)\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "movswl -0xc(%%ebp), %%eax\n\t"
-      "fsts -0x38(%%ebp)\n\t"
-      "fstps -0x74(%%ebp)\n\t"
-      "fildl -0x2c(%%ebp)\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "addl %%edi, %%eax\n\t"
-      "fsts -0x4c(%%ebp)\n\t"
-      "fstps -0x60(%%ebp)\n\t"
-      "fildl -0x2c(%%ebp)\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "fsts -0x5c(%%ebp)\n\t"
-      "fstps -0x70(%%ebp)\n\t"
-      "fildl -0x2c(%%ebp)\n\t"
-      "fsts -0x34(%%ebp)\n\t"
-      "fstps -0x48(%%ebp)\n\t"
-      "call *%[c1741d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lrasterizer_text_draw_cached_chars_4\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "jmp .Lrasterizer_text_draw_cached_chars_2\n\t"
-      ".Lrasterizer_text_draw_cached_chars_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lrasterizer_text_draw_cached_chars_5:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c183880] "m"(b183cf0_c183880), [c183770] "m"(b183cf0_c183770), [c1741d0] "m"(b183cf0_c1741d0)
-      : "memory");
+  float quad_verts[20];
+  short cache_x;
+  short cache_y;
+  short tx;
+  short ty;
+  unsigned int draw_color;
+  unsigned int shadow_color;
+  float x_base;
+  float x_right;
+  float y_base;
+  float y_bottom;
+  float shadow_off_x;
+  float shadow_off_y;
+  int first_pass;
+  int was_first;
+
+  rasterizer_text_cache_character(font_character, font);
+
+  if (*(short *)((int)font_character + 0xc) != -1) {
+    shadow_off_x = 1.0f;
+    shadow_off_y = 1.0f;
+    shadow_color = *(unsigned int *)0x4d0cb0;
+    if (*(unsigned int *)0x4d0cb0 == 0) {
+      shadow_color = color & 0xff000000;
+    }
+    x_base = (float)x;
+    x_right = (float)(width + x);
+    y_base = (float)y;
+    y_bottom = (float)(height + y);
+    first_pass = 1;
+
+    while (1) {
+      rasterizer_text_get_character_position(
+        *(short *)((int)font_character + 0xc), &cache_y, &cache_x);
+      was_first = first_pass;
+      tx = (short)(cache_x + (short)cache_offset_x);
+      ty = (short)(cache_y + (short)cache_offset_y);
+      draw_color = shadow_color;
+      if (first_pass == 0) {
+        draw_color = color;
+      }
+
+      /* vert0 TL */
+      quad_verts[0] = x_base + shadow_off_x;
+      quad_verts[1] = y_base + shadow_off_y;
+      quad_verts[2] = (float)tx;
+      quad_verts[3] = (float)ty;
+      *(unsigned int *)&quad_verts[4] = draw_color;
+      /* vert1 TR */
+      quad_verts[5] = x_right + shadow_off_x;
+      quad_verts[6] = y_base + shadow_off_y;
+      quad_verts[7] = (float)(tx + width);
+      quad_verts[8] = (float)ty;
+      *(unsigned int *)&quad_verts[9] = draw_color;
+      /* vert2 BR */
+      quad_verts[10] = x_right + shadow_off_x;
+      quad_verts[11] = y_bottom + shadow_off_y;
+      quad_verts[12] = (float)(tx + width);
+      quad_verts[13] = (float)(ty + height);
+      *(unsigned int *)&quad_verts[14] = draw_color;
+      /* vert3 BL */
+      quad_verts[15] = x_base + shadow_off_x;
+      quad_verts[16] = y_bottom + shadow_off_y;
+      quad_verts[17] = (float)tx;
+      quad_verts[18] = (float)(ty + height);
+      *(unsigned int *)&quad_verts[19] = draw_color;
+
+      FUN_001741d0(quad_verts);
+
+      if (was_first == 0) {
+        break;
+      }
+      first_pass = 0;
+      shadow_off_x = 0.0f;
+      shadow_off_y = 0.0f;
+    }
+  }
 }
-#else
-#error "rasterizer_text_draw_cached_chars: clang naked draft required"
-#endif
 
 
 /* rasterizer_text_draw: draw ASCII string (0x183e60) */

@@ -518,112 +518,63 @@ char FUN_000142a0(int actor_handle, int action_handle, int *state_data)
   return 1;
 }
 
-/* actor_update_prop_desire (0x14360) — XBE naked draft (batch 87). */
-#if defined(__clang__)
-static void *(*const b14360_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b14360_c64b40)(int actor_handle, int unit_handle, char create_if_needed, char refresh_flag) = FUN_00064b40;
-static void (*const b14360_c2f1a0)(int actor_handle) = FUN_0002f1a0;
-static char (*const b14360_c2d9b0)(int actor_handle, int encounter_handle, float distance) = actor_move_to_prop;
-
-__attribute__((naked, noinline))
-char actor_update_prop_desire(int actor_handle __attribute__((unused)))
+/* actor_update_prop_desire (0x14360) — readable C lift (restored pre-naked)
+ * Update actor's desire to reach its prop target.
+ *
+ * If the actor has no current prop (field_ac == -1) but has a follow-prop
+ * handle (field_a8 != -1), acquires a prop near the follow target via
+ * FUN_00064b40.  Then, if a prop is held, checks whether the prop's type
+ * qualifies (field_32 >= 2) and its distance (field_11c) is within the
+ * actor's tolerance (field_a4), or the prop distance is less than 0.7f; if
+ * so, marks the actor as ready (field_a1 = 1).  When ready, calls
+ * FUN_0002f1a0 (perception acknowledge) and returns the current state byte
+ * (field_a0).  Otherwise tries to move toward the prop via
+ * actor_move_to_prop; sets field_a0 = 1 if no prop at all, or if
+ * actor_move_to_prop returns 0.
+ *
+ * Confirmed: EBX = 1 set at 0x1438c; used as literal arg to FUN_00064b40
+ *   and as byte written to field_a1 at 0x14408 and field_a0 at 0x14447.
+ * Confirmed: actor_move_to_prop pushes [ESI+0xa4] raw (float bits) as 3rd arg.
+ * Confirmed: field_32 comparison is signed short CMP vs 2 (JL 0x143f5).
+ * Confirmed: float threshold at 0x2533c4 = 0.7f (0x3f333333).
+ * Confirmed: early return at 0x1441e returns field_a0 without setting it. */
+char actor_update_prop_desire(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x4c(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_update_prop_desire_7\n\t"
-      "cmpl $-1, 0xac(%%esi)\n\t"
-      "movl $1, %%ebx\n\t"
-      "jne .Lactor_update_prop_desire_1\n\t"
-      "movl 0xa8(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_update_prop_desire_1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c64b40]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, 0xac(%%esi)\n\t"
-      ".Lactor_update_prop_desire_1:\n\t"
-      "movl 0xac(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_update_prop_desire_6\n\t"
-      "movb 0xa1(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lactor_update_prop_desire_4\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, 0x32(%%ecx)\n\t"
-      "jl .Lactor_update_prop_desire_2\n\t"
-      "flds 0x11c(%%ecx)\n\t"
-      "fcomps 0xa4(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lactor_update_prop_desire_3\n\t"
-      ".Lactor_update_prop_desire_2:\n\t"
-      "flds 0x11c(%%ecx)\n\t"
-      "fcomps 0x2533c4\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_update_prop_desire_4\n\t"
-      ".Lactor_update_prop_desire_3:\n\t"
-      "movb %%bl, 0xa1(%%esi)\n\t"
-      ".Lactor_update_prop_desire_4:\n\t"
-      "movb 0xa1(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_update_prop_desire_5\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2f1a0]\n\t"
-      "movb 0xa0(%%esi), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_update_prop_desire_5:\n\t"
-      "movl 0xa4(%%esi), %%edx\n\t"
-      "movl 0xac(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2d9b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_update_prop_desire_7\n\t"
-      ".Lactor_update_prop_desire_6:\n\t"
-      "movb %%bl, 0xa0(%%esi)\n\t"
-      ".Lactor_update_prop_desire_7:\n\t"
-      "movb 0xa0(%%esi), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b14360_dget), [c64b40] "m"(b14360_c64b40), [c2f1a0] "m"(b14360_c2f1a0), [c2d9b0] "m"(b14360_c2d9b0)
-      : "memory");
+  char *actor;
+  char *prop;
+  char a1_flag;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 0x4c) == '\0') {
+    return *(char *)(actor + 0xa0);
+  }
+  if ((*(int *)(actor + 0xac) == -1) && (*(int *)(actor + 0xa8) != -1)) {
+    *(int *)(actor + 0xac) =
+      FUN_00064b40(actor_handle, *(int *)(actor + 0xa8), 1, 1);
+  }
+  if (*(int *)(actor + 0xac) == -1) {
+    *(char *)(actor + 0xa0) = 1;
+    return *(char *)(actor + 0xa0);
+  }
+  a1_flag = *(char *)(actor + 0xa1);
+  if (a1_flag == '\0') {
+    prop = (char *)datum_get(prop_data, *(int *)(actor + 0xac));
+    if ((*(short *)(prop + 0x32) >= 2 &&
+         *(float *)(prop + 0x11c) < *(float *)(actor + 0xa4)) ||
+        (*(float *)(prop + 0x11c) < *(float *)0x2533c4)) {
+      *(char *)(actor + 0xa1) = 1;
+    }
+  }
+  if (*(char *)(actor + 0xa1) != '\0') {
+    FUN_0002f1a0(actor_handle);
+    return *(char *)(actor + 0xa0);
+  }
+  if (actor_move_to_prop(actor_handle, *(int *)(actor + 0xac),
+                         *(float *)(actor + 0xa4)) == '\0') {
+    *(char *)(actor + 0xa0) = 1;
+  }
+  return *(char *)(actor + 0xa0);
 }
-#else
-#error "actor_update_prop_desire: clang naked draft required"
-#endif
 
 
 /* FUN_00014460 (0x14460)
@@ -3865,140 +3816,60 @@ void FUN_00016cf0(int param_1, int param_2, short param_3, int param_4, int para
 
 
 
-/* actor_look_compute_prop_interest (0x16d40) — XBE naked draft (batch 78). */
-#if defined(__clang__)
-static void *(*const b16d40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b16d40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b16d40_exitfn)(int) = system_exit;
-static void *(*const b16d40_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void actor_look_compute_prop_interest(int actor_handle __attribute__((unused)), int param_2 __attribute__((unused)), short *param_3 __attribute__((unused)), void (*callback)(void) __attribute__((unused)), int param_5 __attribute__((unused)))
+/* actor_look_compute_prop_interest (0x16d40) — readable C lift (restored pre-naked)
+ * Iterate an actor's prop list (or each swarm unit's list for swarm actors)
+ * and invoke the callback for each active entry.
+ *
+ * For swarm actors (actor+6 != 0): iterates swarm units via swarm_data and
+ * swarm_component_data. For each unit with the "active" bit set, calls
+ * callback(actor_handle, unit_handle, *prop_state, component+0x1c, 0, param_5).
+ * For non-swarm: calls callback once with the actor's own unit handle.
+ * If param_2 != 0: resets each component's state (csmemset + set bit 3).
+ *
+ * Confirmed: datum_get(actor_data, actor_handle) at 0x16d4e.
+ * Confirmed: CALL 0x16d40 from FUN_00017090 at 0x170b2.
+ * Confirmed: swarm_data=DAT_006325a0, swarm_component_data=DAT_0063259c. */
+void actor_look_compute_prop_interest(int actor_handle, int param_2,
+                                      short *param_3, void (*callback)(void),
+                                      int param_5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_look_compute_prop_interest_5\n\t"
-      "cmpl $-1, 0x28(%%esi)\n\t"
-      "jne .Lactor_look_compute_prop_interest_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x611\n\t"
-      "pushl $0x253758\n\t"
-      "pushl $0x253778\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_look_compute_prop_interest_1:\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_look_compute_prop_interest_5\n\t"
-      "movl 0x28(%%esi), %%ecx\n\t"
-      "movl 0x6325a0, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x2(%%ebx)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jle .Lactor_look_compute_prop_interest_6\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lactor_look_compute_prop_interest_2:\n\t"
-      "movswl -0x4(%%ebp), %%edi\n\t"
-      "movl 0x58(%%ebx,%%edi,4), %%eax\n\t"
-      "movl 0x63259c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_look_compute_prop_interest_3\n\t"
-      "pushl $0x24\n\t"
-      "leal 0x1c(%%esi), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[memset]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2(%%esi), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      "orl $8, %%eax\n\t"
-      "movw %%ax, 0x2(%%esi)\n\t"
-      ".Lactor_look_compute_prop_interest_3:\n\t"
-      "testb $8, 0x2(%%esi)\n\t"
-      "je .Lactor_look_compute_prop_interest_4\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x18(%%ebx,%%edi,4), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%edx), %%ax\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "addl $0x1c, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *0x14(%%ebp)\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".Lactor_look_compute_prop_interest_4:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw 0x2(%%ebx), %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .Lactor_look_compute_prop_interest_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_look_compute_prop_interest_5:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "leal 0x2c(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "leal 0x8(%%eax), %%edx\n\t"
-      "movswl (%%eax), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *0x14(%%ebp)\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".Lactor_look_compute_prop_interest_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b16d40_dget), [assert] "m"(b16d40_assert), [exitfn] "m"(b16d40_exitfn), [memset] "m"(b16d40_memset)
-      : "memory");
+  char *actor;
+  char *swarm;
+  char *component;
+  short i;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 6) != '\0') {
+    if (*(int *)(actor + 0x28) == -1) {
+      display_assert(
+        "!actor->meta.swarm || (actor->meta.swarm_cache_index != NONE)",
+        "c:\\halo\\SOURCE\\ai\\action_obey.c", 0x611, 1);
+      system_exit(-1);
+    }
+    swarm = (char *)datum_get(swarm_data, *(int *)(actor + 0x28));
+    if (*(short *)(swarm + 2) < 1) {
+      return;
+    }
+    for (i = 0; i < *(short *)(swarm + 2); i++) {
+      component =
+        (char *)datum_get(swarm_component_data, *(int *)(swarm + 0x58 + i * 4));
+      if (param_2 != 0) {
+        csmemset(component + 0x1c, 0, 0x24);
+        *(unsigned short *)(component + 2) =
+          (*(unsigned short *)(component + 2) & ~4u) | 8;
+      }
+      if ((*(unsigned char *)(component + 2) & 8) != 0) {
+        ((void (*)(int, int, int, char *, int, int))callback)(
+          actor_handle, *(int *)(swarm + 0x18 + i * 4), (int)*param_3,
+          component + 0x1c, 0, param_5);
+      }
+    }
+    return;
+  }
+  ((void (*)(int, int, int, short *, short *, int))callback)(
+    actor_handle, *(int *)(actor + 0x18), (int)*param_3, param_3 + 4,
+    param_3 + 0x16, param_5);
 }
-#else
-#error "actor_look_compute_prop_interest: clang naked draft required"
-#endif
 
 
 /* FUN_00016e70 (0x16e70)
