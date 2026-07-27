@@ -180,120 +180,46 @@ void interpolate_scalar(float *value, float target, float max_delta)
   }
 }
 
-/* evaluate_piecewise_linear_function (0xb64c0) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void (*const bb64c0_ftol)(void) = FUN_001d9068;
-static void (*const bb64c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb64c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-float evaluate_piecewise_linear_function(int16_t count __attribute__((unused)), float *table __attribute__((unused)), float t __attribute__((unused)))
+/* evaluate_piecewise_linear_function (0xb64c0) — readable C lift. */
+float evaluate_piecewise_linear_function(int16_t count, float *table, float t)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Levaluate_piecewise_linear_function_1\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".Levaluate_piecewise_linear_function_1:\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "fabs\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x1(%%eax), %%esi\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "fimull -0x8(%%ebp)\n\t"
-      "fcoml 0x2602c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Levaluate_piecewise_linear_function_2\n\t"
-      "fstp %%st(0)\n\t"
-      "fldl 0x2602c0\n\t"
-      "jmp .Levaluate_piecewise_linear_function_3\n\t"
-      ".Levaluate_piecewise_linear_function_2:\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fsubs 0x2533c8\n\t"
-      "fsts 0x10(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Levaluate_piecewise_linear_function_3\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      ".Levaluate_piecewise_linear_function_3:\n\t"
-      "fsts 0x10(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .Levaluate_piecewise_linear_function_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Levaluate_piecewise_linear_function_5\n\t"
-      ".Levaluate_piecewise_linear_function_4:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "jle .Levaluate_piecewise_linear_function_5\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".Levaluate_piecewise_linear_function_5:\n\t"
-      "movswl %%ax, %%edi\n\t"
-      "leal 0x1(%%edi), %%ebx\n\t"
-      "cmpl %%esi, %%ebx\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "jle .Levaluate_piecewise_linear_function_6\n\t"
-      "movl %%esi, %%ebx\n\t"
-      ".Levaluate_piecewise_linear_function_6:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Levaluate_piecewise_linear_function_7\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Levaluate_piecewise_linear_function_7\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jg .Levaluate_piecewise_linear_function_7\n\t"
-      "cmpw 0x8(%%ebp), %%bx\n\t"
-      "jl .Levaluate_piecewise_linear_function_8\n\t"
-      ".Levaluate_piecewise_linear_function_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14b\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x26e228\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Levaluate_piecewise_linear_function_8:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "flds (%%esi,%%eax,4)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "fsubs (%%esi,%%edi,4)\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fsubrs 0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fadds (%%esi,%%edi,4)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "je .Levaluate_piecewise_linear_function_9\n\t"
-      "fchs\n\t"
-      ".Levaluate_piecewise_linear_function_9:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(bb64c0_ftol), [assert] "m"(bb64c0_assert), [exitfn] "m"(bb64c0_exitfn)
-      : "memory");
-}
-#else
-#error "evaluate_piecewise_linear_function: clang naked draft required"
-#endif
+  char positive;
+  int last;
+  float x;
+  float hi;
+  int i0;
+  int i1;
+  float y;
 
+  if (t != t)
+    return t;
+  positive = (t >= 0.0f) ? 1 : 0;
+  last = (int)count - 1;
+  x = __builtin_fabsf(t) * (float)last;
+  if (!(x >= *(double *)0x2602c0)) {
+    x = (float)(*(double *)0x2602c0);
+  } else {
+    hi = (float)count - 1.0f;
+    if (x > hi)
+      x = hi;
+  }
+  i0 = (int)x;
+  if (i0 < 0)
+    i0 = 0;
+  else if (i0 > last)
+    i0 = last;
+  i1 = i0 + 1;
+  if (i1 > last)
+    i1 = last;
+  if (table == NULL || i0 < 0 || i0 > i1 || i1 >= (int)count) {
+    display_assert((const char *)0x26e228, (const char *)0x26e1e8, 0x14b, 1);
+    system_exit(-1);
+  }
+  y = (table[i1] - table[i0]) * (x - (float)i0) + table[i0];
+  if (positive)
+    return y;
+  return -y;
+}
 
 /* player_control_get_unit_index (0xb6870) — readable C lift. */
 int player_control_get_unit_index(int16_t local_player_index)
@@ -775,7 +701,7 @@ float *player_control_get_facing_direction(int16_t local_player_index,
 /* FUN_000b6bd0 (0xb6bd0) — XBE naked draft (batch 116). */
 #if defined(__clang__)
 static bool (*const bb6bd0_c92e60)(void) = cinematic_can_be_skipped;
-static void (*const bb6bd0_c1002e0)(void) = main_skip_cinematic;
+static void (*const bb6bd0_c1002e0)(void) = (void *)main_skip_cinematic;
 
 __attribute__((naked, noinline))
 void FUN_000b6bd0(char *input __attribute__((unused)))
@@ -1235,7 +1161,7 @@ static void *(*const bb70b0_tag)(int, int) = tag_get;
 static bool (*const bb70b0_cb5c30)(void) = game_time_get_paused;
 static void (*const bb70b0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const bb70b0_exitfn)(int) = system_exit;
-static float (*const bb70b0_cb64c0)(int16_t count, float *table, float t) = evaluate_piecewise_linear_function;
+static float (*const bb70b0_cb64c0)(int16_t count, float *table, float t) = (void *)evaluate_piecewise_linear_function;
 static float (*const bb70b0_c1b1350)(int unit_handle, int zoom_level) = unit_get_zoom_magnification;
 static int (*const bb70b0_ca6470)(int16_t local_player_index, float *field_2c, float *field_30, float *scratch_a, float *scratch_b) = FUN_000a6470;
 static float (*const bb70b0_cb5cc0)(void) = game_time_get_speed;
