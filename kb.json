@@ -12222,22 +12222,22 @@
         {
           "addr": "0xc8b90",
           "decl": "char FUN_000c8b90(int16_t node_type, int datum_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc8c50",
           "decl": "char FUN_000c8c50(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc8d30",
           "decl": "char FUN_000c8d30(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc8e00",
           "decl": "char FUN_000c8e00(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc8ec0",

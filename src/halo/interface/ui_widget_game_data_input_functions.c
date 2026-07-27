@@ -6883,98 +6883,63 @@ void get_editable_playlist_profile_display_name(void *widget)
 }
 
 /* 0xf3690 — collect up to 3 child widget text handles for item UI sync. */
-/* FUN_000f3690 (0xf3690) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000f3690(int *out_handles /*  */, void *widget /*  */)
+/* FUN_000f3690 (0xf3690) — readable C lift. */
+void FUN_000f3690(int *out_handles /*@<eax>*/, void *widget /*@<ecx>*/)
 {
-  __asm__ volatile(
-      "movl 0x38(%%ecx), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x34(%%ecx), %%esi\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_000f3690_2\n\t"
-      "movswl 0x3c(%%ecx), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "incl %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movzwl 0x44(%%ecx), %%esi\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jne .LFUN_000f3690_1\n\t"
-      "movl $0, 0x4(%%eax)\n\t"
-      ".LFUN_000f3690_1:\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "incl %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movzwl 0x44(%%ecx), %%esi\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jne .LFUN_000f3690_5\n\t"
-      "movl $0, 0x8(%%eax)\n\t"
-      "jmp .LFUN_000f3690_5\n\t"
-      ".LFUN_000f3690_2:\n\t"
-      "cmpl 0x2c(%%esi), %%edx\n\t"
-      "movswl 0x3c(%%ecx), %%edx\n\t"
-      "jne .LFUN_000f3690_3\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "decl %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "jge .LFUN_000f3690_1\n\t"
-      "movzwl 0x44(%%ecx), %%edx\n\t"
-      "decl %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "jmp .LFUN_000f3690_1\n\t"
-      ".LFUN_000f3690_3:\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "decl %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "jge .LFUN_000f3690_4\n\t"
-      "movzwl 0x44(%%ecx), %%edx\n\t"
-      "decl %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      ".LFUN_000f3690_4:\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "decl %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "jge .LFUN_000f3690_5\n\t"
-      "movzwl 0x44(%%ecx), %%edx\n\t"
-      "decl %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      ".LFUN_000f3690_5:\n\t"
-      "movzwl 0x44(%%ecx), %%esi\n\t"
-      "movl (%%eax), %%edi\n\t"
-      "orl $0xffffffff, %%edx\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jl .LFUN_000f3690_6\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      ".LFUN_000f3690_6:\n\t"
-      "movzwl 0x44(%%ecx), %%esi\n\t"
-      "cmpl %%esi, 0x4(%%eax)\n\t"
-      "jl .LFUN_000f3690_7\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      ".LFUN_000f3690_7:\n\t"
-      "movzwl 0x44(%%ecx), %%ecx\n\t"
-      "movl 0x8(%%eax), %%esi\n\t"
-      "popl %%edi\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "popl %%esi\n\t"
-      "jl .LFUN_000f3690_8\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      ".LFUN_000f3690_8:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_000f3690: clang naked draft required"
-#endif
+  void *child;
+  int idx;
+  unsigned int count;
+  int sentinel;
 
+  child = *(void **)((char *)widget + 0x34);
+  if (*(void **)((char *)widget + 0x38) == child) {
+    idx = *(short *)((char *)widget + 0x3c);
+    out_handles[0] = idx;
+    idx++;
+    out_handles[1] = idx;
+    count = *(unsigned short *)((char *)widget + 0x44);
+    if ((unsigned int)idx == count)
+      out_handles[1] = 0;
+    idx = out_handles[1] + 1;
+    out_handles[2] = idx;
+    count = *(unsigned short *)((char *)widget + 0x44);
+    if ((unsigned int)idx == count)
+      out_handles[2] = 0;
+  } else if (*(void **)((char *)widget + 0x38) ==
+             *(void **)((char *)child + 0x2c)) {
+    idx = *(short *)((char *)widget + 0x3c);
+    out_handles[1] = idx;
+    idx--;
+    out_handles[0] = idx;
+    if (idx < 0)
+      out_handles[0] = *(unsigned short *)((char *)widget + 0x44) - 1;
+    idx = out_handles[1] + 1;
+    out_handles[2] = idx;
+    count = *(unsigned short *)((char *)widget + 0x44);
+    if ((unsigned int)idx == count)
+      out_handles[2] = 0;
+  } else {
+    idx = *(short *)((char *)widget + 0x3c);
+    out_handles[2] = idx;
+    idx--;
+    out_handles[1] = idx;
+    if (idx < 0)
+      out_handles[1] = *(unsigned short *)((char *)widget + 0x44) - 1;
+    idx = out_handles[1] - 1;
+    out_handles[0] = idx;
+    if (idx < 0)
+      out_handles[0] = *(unsigned short *)((char *)widget + 0x44) - 1;
+  }
+
+  sentinel = -1;
+  count = *(unsigned short *)((char *)widget + 0x44);
+  if ((unsigned int)out_handles[0] >= count)
+    out_handles[0] = sentinel;
+  if ((unsigned int)out_handles[1] >= count)
+    out_handles[1] = sentinel;
+  if ((unsigned int)out_handles[2] >= count)
+    out_handles[2] = sentinel;
+}
 
 /* multiplayer_game_set_text_box_for_game_ruleset (0xf3740) — XBE naked draft (batch 129). */
 #if defined(__clang__)
