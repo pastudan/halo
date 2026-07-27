@@ -40178,9 +40178,9 @@
         },
         {
           "addr": "0x807d0",
-          "decl": "void key_message_xor_keystream(int msg, int len, int keystream, int key_len);",
+          "decl": "void key_message_xor_keystream(unsigned char *msg, int len, unsigned char *keystream, int key_len);",
           "name": "key_message_xor_keystream",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80820",

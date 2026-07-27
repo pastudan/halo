@@ -36,7 +36,8 @@ int key_agreement_peek_packet_type(unsigned char *msgptr, unsigned short msg_siz
 
 
 /* key_message_xor_keystream (0x807d0) — readable C lift from XBE leaf. */
-void key_message_xor_keystream(int msg, int len, int keystream, int key_len)
+__attribute__((noinline))
+void key_message_xor_keystream(unsigned char *msg, int len, unsigned char *keystream, int key_len)
 {
   int i;
   int k;
@@ -48,10 +49,10 @@ void key_message_xor_keystream(int msg, int len, int keystream, int key_len)
   k = 0;
   dir = 1;
   for (i = 0; i < len; i++) {
-    b = *(unsigned char *)(keystream + k);
-    b = (unsigned char)(b ^ *(unsigned char *)(msg + i));
+    b = keystream[k];
+    b = (unsigned char)(b ^ msg[i]);
     b = (unsigned char)~b;
-    *(unsigned char *)(msg + i) = b;
+    msg[i] = b;
     k += dir;
     if (k == key_len || k < 0) {
       dir = -dir;
@@ -221,7 +222,7 @@ unsigned short *key_agreement_build_message(short type, void *data, int buffer, 
 static void (*const b80940_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b80940_exitfn)(int) = system_exit;
 static void (*const b80940_c80820)(unsigned int *v, unsigned int *w, int *key) = (void *)tea_encrypt;
-static void (*const b80940_c807d0)(int msg, int len, int keystream, int key_len) = (void *)key_message_xor_keystream;
+static void (*const b80940_c807d0)(unsigned char *msg, int len, unsigned char *keystream, int key_len) = key_message_xor_keystream;
 
 __attribute__((naked, noinline))
 void message_encrypt(unsigned short *msgptr __attribute__((unused)), unsigned int *key __attribute__((unused)))
@@ -339,7 +340,7 @@ void message_encrypt(unsigned short *msgptr __attribute__((unused)), unsigned in
 static void (*const b80a40_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b80a40_exitfn)(int) = system_exit;
 static void (*const b80a40_c808b0)(unsigned int *v, unsigned int *w, int *key) = (void *)tea_decrypt;
-static void (*const b80a40_c807d0)(int msg, int len, int keystream, int key_len) = (void *)key_message_xor_keystream;
+static void (*const b80a40_c807d0)(unsigned char *msg, int len, unsigned char *keystream, int key_len) = key_message_xor_keystream;
 
 __attribute__((naked, noinline))
 void message_decrypt(unsigned short *msgptr __attribute__((unused)), unsigned int *key __attribute__((unused)))

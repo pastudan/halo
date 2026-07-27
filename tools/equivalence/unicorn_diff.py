@@ -1701,6 +1701,20 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
     if record_leaf:
         _record_leaf_classification(addr, is_leaf)
 
+    # Leaves skip the stub/DIR32 path below; still honor --state-snapshot
+    # arg_overrides (e.g. clamp buffer lens) so size-like corners do not
+    # infinite-loop pure buffer walks.
+    if is_leaf and state_snapshot:
+        from state_snapshot import load_snapshot
+        _leaf_mem, snapshot_arg_overrides, snapshot_stub_returns = \
+            load_snapshot(str(state_snapshot))
+        if snapshot_overrides is None:
+            snapshot_overrides = {}
+        snapshot_overrides.update(_leaf_mem)
+        info(f"  snapshot (leaf): {len(_leaf_mem)} region(s) from {state_snapshot.name}")
+        if snapshot_arg_overrides:
+            info(f"  arg overrides: {list(snapshot_arg_overrides.keys())}")
+
     # Non-leaf: try stubs if allowed
     use_stubs = False
     stub_manager = None
