@@ -4,64 +4,27 @@
  * from the generated decl.h via kb.json.
  */
 
-/* collision_surface_edge_count (0x1473b0) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static void *(*const b1473b0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-short collision_surface_edge_count(int bsp __attribute__((unused)), int surface_index __attribute__((unused)))
+/* collision_surface_edge_count (0x1473b0) — readable C lift from XBE leaf. */
+short collision_surface_edge_count(int bsp, int surface_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0xc\n\t"
-      "addl $0x3c, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x4(%%eax), %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x48, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "jmp .Lcollision_surface_edge_count_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lcollision_surface_edge_count_1:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x14(%%eax), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%edi\n\t"
-      "cmpl %%ebx, %%edx\n\t"
-      "sete %%cl\n\t"
-      "movzbl %%cl, %%edx\n\t"
-      "movl 0x8(%%eax,%%edx,4), %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "jne .Lcollision_surface_edge_count_1\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1473b0_elem)
-      : "memory");
-}
-#else
-#error "collision_surface_edge_count: clang naked draft required"
-#endif
+  int *surface;
+  int first_edge;
+  int edge;
+  int count = 0;
+  void *surfaces = (char *)bsp + 0x3c;
+  void *edges = (char *)bsp + 0x48;
 
+  surface = (int *)tag_block_get_element(surfaces, surface_index, 0xc);
+  first_edge = surface[1];
+  edge = first_edge;
+  do {
+    int *edge_el = (int *)tag_block_get_element(edges, edge, 0x18);
+    int next_is_right = (edge_el[5] == surface_index);
+    edge = edge_el[2 + next_is_right];
+    count++;
+  } while (edge != first_edge);
+  return (short)count;
+}
 
 /* 0x147410 - collision_surface_polygon
  *
@@ -268,51 +231,15 @@ void render_debug_collision_surface(int bsp, int surface_index,
   } while (edge_index != first_edge);
 }
 
-/* render_debug_collision_bsp (0x147660) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-static void (*const b147660_c147570)(int bsp, int edge_index, int matrix_or_flag, void *color) = render_debug_collision_edge;
-
-__attribute__((naked, noinline))
-void render_debug_collision_bsp(int bsp __attribute__((unused)), int matrix_or_flag __attribute__((unused)))
+/* render_debug_collision_bsp (0x147660) — readable C lift from XBE leaf. */
+void render_debug_collision_bsp(int bsp, int matrix_or_flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lrender_debug_collision_bsp_2\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      ".Lrender_debug_collision_bsp_1:\n\t"
-      "movl 0x2ee6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c147570]\n\t"
-      "movl 0x48(%%edi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incl %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .Lrender_debug_collision_bsp_1\n\t"
-      "popl %%ebx\n\t"
-      ".Lrender_debug_collision_bsp_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c147570] "m"(b147660_c147570)
-      : "memory");
+  int count = *(int *)(bsp + 0x48);
+  int i;
+  for (i = 0; i < count; i++) {
+    render_debug_collision_edge(bsp, i, matrix_or_flag, *(void **)0x2ee6d4);
+  }
 }
-#else
-#error "render_debug_collision_bsp: clang naked draft required"
-#endif
-
 
 /* 0x1476a0 - collision_edge_length
  *
@@ -3519,48 +3446,14 @@ int collision_bsp_test_sphere(int bsp __attribute__((unused)), short flags __att
 
 
 
-/* FUN_00147380 (0x147380) — XBE naked draft (batch 227). */
-#if defined(__clang__)
-static int (*const b147380_c1470b0)(int tag_base, uint32_t node_index, uint32_t flags, float *verts, int counts, float epsilon, void (*callback)(float *, int, unsigned int, unsigned int, void *), void *ctx) = FUN_001470b0;
-
-__attribute__((naked, noinline))
+/* FUN_00147380 (0x147380) — readable C lift; thin wrapper (node_flags=-1). */
 int FUN_00147380(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1470b0]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c1470b0] "m"(b147380_c1470b0)
-      : "memory");
+  return FUN_001470b0(a0, (uint32_t)a1, (uint32_t)-1, (float *)a2, a3,
+                      *(float *)&a4,
+                      (void (*)(float *, int, unsigned int, unsigned int, void *))a5,
+                      (void *)a6);
 }
-#else
-#error "FUN_00147380: clang naked draft required"
-#endif
-
 
 /* -------------------------------------------------------------------------
  * Pill path: collision_bsp_test_pill_new (0x148b20) + FUN_00148440 (0x148440)
