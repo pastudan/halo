@@ -15,6 +15,11 @@
     "confidence": "weak",
     "coverage_pct": 100.0
   },
+  "0x1e6831": {
+    "class": "leaf",
+    "confidence": "weak",
+    "coverage_pct": 100.0
+  },
   "0x2": {
     "confidence": "weak",
     "coverage_pct": 89.7
