@@ -818,82 +818,22 @@ void FUN_001bac70(int index)
   QueryPerformanceCounter(counter);
   *(int *)(0x4e5610 + index * 4) += (int)counter[0] - *(int *)(0x4e5638 + index * 8);
 }
-/* FUN_001baca0 (0x1baca0) — XBE naked draft (batch 246). */
-#if defined(__clang__)
-static void (*const b1baca0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_001baca0 (0x1baca0) — readable C lift. */
 void FUN_001baca0(void)
 {
-  __asm__ volatile(
-      "pushl $0x2b87ac\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e5614\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b878c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e5618\n\t"
-      "addl $8, %%esp\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b876c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e561c\n\t"
-      "addl $8, %%esp\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b8750\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e5620\n\t"
-      "addl $8, %%esp\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b8724\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e5624\n\t"
-      "addl $8, %%esp\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b8700\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e5628\n\t"
-      "addl $8, %%esp\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b86d4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e562c\n\t"
-      "addl $8, %%esp\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b86a4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "fildl 0x4e5630\n\t"
-      "addl $8, %%esp\n\t"
-      "fidivl 0x32ea9c\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2b8684\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c8f390] "m"(b1baca0_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_001baca0: clang naked draft required"
-#endif
+  static const unsigned int fmts[8] = {
+    0x2b878c, 0x2b876c, 0x2b8750, 0x2b8724,
+    0x2b8700, 0x2b86d4, 0x2b86a4, 0x2b8684
+  };
+  int i;
+  double v;
 
+  error(2, (const char *)0x2b87ac);
+  for (i = 0; i < 8; i++) {
+    v = (double)*(int *)(0x4e5614 + 4 * i) / (double)*(int *)0x32ea9c;
+    error(2, (const char *)fmts[i], v);
+  }
+}
 
 /* cache_copy_get_status (0x1badc0) — XBE naked draft (batch 247). */
 #if defined(__clang__)
