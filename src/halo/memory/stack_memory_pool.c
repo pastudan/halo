@@ -1072,70 +1072,28 @@ void *FUN_0011ee50(void *pool)
   return (char *)pool + 0x1c;
 }
 
-/* FUN_0011f140 (0x11f140) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static int (*const b11f140_c11ef50)(void *block_hdr, void *pool) = stack_memory_pool_valid_block;
-static int (*const b11f140_c11ecf0)(void *block_hdr) = memory_block_valid;
-static void (*const b11f140_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11f140_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_0011f140(void)
+/* FUN_0011f140 (0x11f140) — readable C lift from XBE leaf. */
+void FUN_0011f140(void *pool, void *block_hdr)
 {
-  __asm__ volatile(
-      "movl %%esi, %%eax\n\t"
-      "call *%[c11ef50]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0011f140_2\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c11ecf0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0011f140_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x215\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x290254\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011f140_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "testb $1, %%al\n\t"
-      "jne .LFUN_0011f140_3\n\t"
-      ".LFUN_0011f140_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f0\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x290328\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011f140_3:\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c11ecf0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0011f140_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x20c\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x290254\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011f140_4:\n\t"
-      "andl $0x7fffffff, (%%esi)\n\t"
-      "ret\n\t"
-      :
-      : [c11ef50] "m"(b11f140_c11ef50), [c11ecf0] "m"(b11f140_c11ecf0), [assert] "m"(b11f140_assert), [exitfn] "m"(b11f140_exitfn)
-      : "memory");
+  if (stack_memory_pool_valid_block(block_hdr, pool) & 0xff) {
+    if (!(memory_block_valid(block_hdr) & 0xff)) {
+      display_assert((const char *)0x290254, (const char *)0x29018c, 0x215, 1);
+      system_exit(-1);
+    }
+    if ((*(unsigned int *)block_hdr >> 31) & 1) {
+      goto unlock;
+    }
+  }
+  display_assert((const char *)0x290328, (const char *)0x29018c, 0x2f0, 1);
+  system_exit(-1);
+unlock:
+  if (!(memory_block_valid(block_hdr) & 0xff)) {
+    display_assert((const char *)0x290254, (const char *)0x29018c, 0x20c, 1);
+    system_exit(-1);
+  }
+  *(unsigned int *)block_hdr &= 0x7fffffff;
 }
-#else
-#error "FUN_0011f140: clang naked draft required"
-#endif
+
 
 
 /* dispose_handle (0x11f460) — readable C lift from XBE leaf. */

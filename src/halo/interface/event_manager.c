@@ -2489,70 +2489,30 @@ void FUN_000dabf0(int param_1)
 #endif
 
 
-/* tiny_point2d_set (0xdade0) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void (*const bdade0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bdade0_exitfn)(int) = system_exit;
-static void (*const bdade0_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void tiny_point2d_set(void)
+/* tiny_point2d_set (0xdade0) — readable C lift from XBE leaf. */
+void tiny_point2d_set(float *in, unsigned char *out)
 {
-  __asm__ volatile(
-      "flds (%%esi)\n\t"
-      "movl 0x46bd0c, %%eax\n\t"
-      "fabs\n\t"
-      "flds 0x2d0(%%eax)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Ltiny_point2d_set_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69\n\t"
-      "pushl $0x282094\n\t"
-      "pushl $0x282054\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltiny_point2d_set_1:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "movl 0x46bd0c, %%ecx\n\t"
-      "fabs\n\t"
-      "flds 0x2d0(%%ecx)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Ltiny_point2d_set_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a\n\t"
-      "pushl $0x282094\n\t"
-      "pushl $0x282014\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltiny_point2d_set_2:\n\t"
-      "movl 0x46bd0c, %%edx\n\t"
-      "flds (%%esi)\n\t"
-      "fdivs 0x2d0(%%edx)\n\t"
-      "fmuls 0x2602cc\n\t"
-      "call *%[ftol]\n\t"
-      "movb %%al, (%%edi)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "movl 0x46bd0c, %%eax\n\t"
-      "fdivs 0x2d0(%%eax)\n\t"
-      "fmuls 0x2602cc\n\t"
-      "call *%[ftol]\n\t"
-      "movb %%al, 0x1(%%edi)\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bdade0_assert), [exitfn] "m"(bdade0_exitfn), [ftol] "m"(bdade0_ftol)
-      : "memory");
+  float limit;
+  float scale;
+  int x;
+  int y;
+
+  limit = *(float *)(*(unsigned char **)0x46bd0c + 0x2d0);
+  scale = *(float *)0x2602cc;
+  if (!((in[0] < 0 ? -in[0] : in[0]) <= limit)) {
+    display_assert((const char *)0x282054, (const char *)0x282094, 0x69, 1);
+    system_exit(-1);
+  }
+  if (!((in[1] < 0 ? -in[1] : in[1]) <= limit)) {
+    display_assert((const char *)0x282014, (const char *)0x282094, 0x6a, 1);
+    system_exit(-1);
+  }
+  x = (int)((in[0] / limit) * scale);
+  y = (int)((in[1] / limit) * scale);
+  out[0] = (unsigned char)x;
+  out[1] = (unsigned char)y;
 }
-#else
-#error "tiny_point2d_set: clang naked draft required"
-#endif
+
 
 
 /* FUN_000dae90 (0xdae90) — readable C lift. */

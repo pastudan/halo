@@ -6319,8 +6319,9 @@
         },
         {
           "addr": "0x11f140",
-          "decl": "void FUN_0011f140(void);",
-          "ported": false
+          "decl": "void FUN_0011f140(void *pool@<ecx>, void *block_hdr@<esi>);",
+          "ported": false,
+          "name": "FUN_0011f140"
         },
         {
           "addr": "0x11f460",
@@ -7696,8 +7697,9 @@
         },
         {
           "addr": "0xdade0",
-          "decl": "void tiny_point2d_set(void);",
-          "ported": false
+          "decl": "void tiny_point2d_set(float *in@<esi>, unsigned char *out@<edi>);",
+          "ported": false,
+          "name": "tiny_point2d_set"
         },
         {
           "addr": "0xdae90",
