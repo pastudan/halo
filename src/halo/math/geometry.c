@@ -51,140 +51,71 @@ float convex_hull2d_perimeter(int16_t vertex_count, float *vertices)
   return perimeter;
 }
 
-/* convex_hull2d_test_vector (0x1063f0) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-bool convex_hull2d_test_vector(int16_t num_verts __attribute__((unused)), float *polygon2d __attribute__((unused)), float *ray_origin __attribute__((unused)), float *ray_dir __attribute__((unused)), float *out_tmin __attribute__((unused)), float *out_tmax __attribute__((unused)))
+/* convex_hull2d_test_vector (0x1063f0) — readable C lift (restored pre-naked).
+ * Intermediates use long double to approximate x87 80-bit temps that the
+ * original keeps live across the Liang-Barsky select (seed[60] 99/1 miss). */
+bool convex_hull2d_test_vector(int16_t num_verts, float *polygon2d,
+                               float *ray_origin, float *ray_dir,
+                               float *out_tmin, float *out_tmax)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0xff7fffff, -0x4(%%ebp)\n\t"
-      "movl $0x7f7fffff, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "jle .Lconvex_hull2d_test_vector_8\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movswl %%cx, %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      ".Lconvex_hull2d_test_vector_1:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "leal 0x1(%%eax), %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "setge %%dl\n\t"
-      "decl %%edx\n\t"
-      "andl %%esi, %%edx\n\t"
-      "flds (%%ecx,%%edx,8)\n\t"
-      "leal 0x4(%%ecx,%%eax,8), %%esi\n\t"
-      "fsubs (%%ecx,%%eax,8)\n\t"
-      "flds 0x4(%%ecx,%%edx,8)\n\t"
-      "fsubs (%%esi)\n\t"
-      "flds (%%edi)\n\t"
-      "fsubs (%%ecx,%%eax,8)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls (%%eax)\n\t"
-      "fld %%st(4)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xea\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lconvex_hull2d_test_vector_6\n\t"
-      "fdivs -0xc(%%ebp)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_hull2d_test_vector_2\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_hull2d_test_vector_3\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jmp .Lconvex_hull2d_test_vector_4\n\t"
-      ".Lconvex_hull2d_test_vector_2:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_hull2d_test_vector_3\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jmp .Lconvex_hull2d_test_vector_4\n\t"
-      ".Lconvex_hull2d_test_vector_3:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lconvex_hull2d_test_vector_4:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_hull2d_test_vector_7\n\t"
-      ".Lconvex_hull2d_test_vector_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lconvex_hull2d_test_vector_6:\n\t"
-      "fcomps 0x253f44\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lconvex_hull2d_test_vector_5\n\t"
-      ".Lconvex_hull2d_test_vector_7:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw 0x8(%%ebp), %%ax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "jl .Lconvex_hull2d_test_vector_1\n\t"
-      ".Lconvex_hull2d_test_vector_8:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lconvex_hull2d_test_vector_9\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".Lconvex_hull2d_test_vector_9:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lconvex_hull2d_test_vector_10\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      ".Lconvex_hull2d_test_vector_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "convex_hull2d_test_vector: clang naked draft required"
-#endif
+  long double tmin;
+  long double tmax;
+  long double dx;
+  long double dy;
+  long double denom;
+  long double num;
+  long double t;
+  float *pts_iy;
+  int16_t i;
+  int cur;
+  int next;
 
+  tmin = (long double)(-3.4028235e38f);
+  tmax = (long double)(3.4028235e38f);
+
+  if (num_verts > 0) {
+    i = 0;
+    do {
+      cur = (int)i;
+      next = (((int)num_verts <= i + 1) - 1) & (i + 1);
+
+      pts_iy = polygon2d + cur * 2 + 1;
+      dx = (long double)polygon2d[next * 2] - (long double)polygon2d[cur * 2];
+      dy = (long double)polygon2d[next * 2 + 1] - (long double)(*pts_iy);
+
+      denom = dy * (long double)ray_dir[0] - dx * (long double)ray_dir[1];
+      num = ((long double)ray_origin[1] - (long double)(*pts_iy)) * dx -
+            ((long double)ray_origin[0] - (long double)polygon2d[cur * 2]) * dy;
+
+      if (__builtin_fabsl(denom) < *(double *)0x2533d0) {
+        if ((float)num < *(float *)0x253f44) {
+          return 0;
+        }
+      } else {
+        t = num / denom;
+        if ((float)denom <= *(float *)0x2533c0) {
+          if (!(tmax <= t))
+            tmax = t;
+        } else {
+          if (!(t <= tmin))
+            tmin = t;
+        }
+        if ((float)tmax < (float)tmin) {
+          return 0;
+        }
+      }
+      i = i + 1;
+    } while (i < num_verts);
+  }
+
+  if (out_tmin != NULL) {
+    *out_tmin = (float)tmin;
+  }
+  if (out_tmax != NULL) {
+    *out_tmax = (float)tmax;
+  }
+  return 1;
+}
 
 /* convex_polygon2d_clip_to_plane (0x106510) — XBE naked draft (batch 259). */
 #if defined(__clang__)

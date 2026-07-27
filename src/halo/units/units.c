@@ -11660,104 +11660,52 @@ void FUN_001ac680(float initial_p __attribute__((unused)), float initial_v __att
 
 
 
-/* unit_adjust_projectile_ray (0x1acf90) — XBE naked draft (batch 57). */
-#if defined(__clang__)
-static void *(*const b1acf90_get)(int, int) = object_get_and_verify_type;
-static void (*const b1acf90_useat)(int, float *) = unit_set_seat_state;
-static void (*const b1acf90_c140070)(int object_handle, float *position_out, float *direction_out) = (void *)object_get_root_location;
-
-__attribute__((naked, noinline))
-void unit_adjust_projectile_ray(int unit_handle __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), float *velocity_out __attribute__((unused)), char adjust_origin __attribute__((unused)), char use_unit_forward __attribute__((unused)))
+/* unit_adjust_projectile_ray (0x1acf90) — readable C lift (restored pre-naked) — adjust projectile ray origin
+ * and direction based on unit state.
+ *
+ * If use_unit_forward is true, copies the unit's forward vector (+0x1ec)
+ * into direction. If adjust_origin is true, projects the origin onto the
+ * unit's aim position along the direction vector. Finally computes
+ * velocity_out as the dot product of the root location's direction with
+ * the forward direction.
+ *
+ * Source: units.c
+ */
+void unit_adjust_projectile_ray(int unit_handle, float *origin,
+                                float *direction, float *velocity_out,
+                                char adjust_origin, char use_unit_forward)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movb 0x1c(%%ebp), %%cl\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lunit_adjust_projectile_ray_1\n\t"
-      "addl $0x1ec, %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      ".Lunit_adjust_projectile_ray_1:\n\t"
-      "movb 0x18(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lunit_adjust_projectile_ray_2\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[useat]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "fxch %%st(2)\n\t"
-      "fmuls (%%esi)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "faddp %%st(1)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "faddp %%st(1)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstp %%st(0)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%esi)\n\t"
-      "fadds -0xc(%%ebp)\n\t"
-      "fstps (%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      ".Lunit_adjust_projectile_ray_2:\n\t"
-      "pushl $0\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c140070]\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "faddp %%st(1)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "faddp %%st(1)\n\t"
-      "fstps (%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1acf90_get), [useat] "m"(b1acf90_useat), [c140070] "m"(b1acf90_c140070)
-      : "memory");
+  char *unit;
+  float aim_pos[3];
+  float dot;
+  float root_dir[3];
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+
+  /* Copy unit forward vector as direction if requested */
+  if (use_unit_forward != '\0') {
+    direction[0] = *(float *)(unit + 0x1ec);
+    direction[1] = *(float *)(unit + 0x1f0);
+    direction[2] = *(float *)(unit + 0x1f4);
+  }
+
+  /* Project origin onto aim position along direction */
+  if (adjust_origin != '\0') {
+    unit_set_seat_state(unit_handle, aim_pos);
+    dot = (origin[0] - aim_pos[0]) * direction[0] +
+          (origin[1] - aim_pos[1]) * direction[1] +
+          (origin[2] - aim_pos[2]) * direction[2];
+    origin[0] = dot * direction[0] + aim_pos[0];
+    origin[1] = dot * direction[1] + aim_pos[1];
+    origin[2] = dot * direction[2] + aim_pos[2];
+  }
+
+  /* Compute velocity as dot(root_direction, direction) */
+  object_get_root_location(unit_handle, root_dir, 0);
+  *velocity_out = root_dir[0] * direction[0] +
+                  root_dir[2] * direction[2] +
+                  root_dir[1] * direction[1];
 }
-#else
-#error "unit_adjust_projectile_ray: clang naked draft required"
-#endif
 
 
 /* unit_render_debug (0x1ad060) — XBE naked draft (batch 55). */
@@ -12080,255 +12028,166 @@ int16_t vehicle_scripting_find_available_seats(int unit_handle,
 }
 
 
-/* unit_leap_begin (0x1b1c70) — XBE naked draft (batch 67). */
-#if defined(__clang__)
-static void *(*const b1b1c70_get)(int, int) = object_get_and_verify_type;
-static char (*const b1b1c70_c1ad260)(int unit_handle, int16_t anim_state) = (void *)FUN_001ad260;
-static void (*const b1b1c70_c1af180)(int unit_handle, float *alignment_vector) = (void *)unit_apply_alignment_vector;
-
-__attribute__((naked, noinline))
-char unit_leap_begin(int unit_handle __attribute__((unused)), float *forward __attribute__((unused)))
+/* unit_leap_begin (0x1b1c70) — readable C lift (restored pre-naked) — start a leap animation.
+ *
+ * Checks the unit's animation state via a switch; if the state is not one
+ * of the dying/dead/special states, and either the unit has a vehicle
+ * or melee is not active, requests animation state 0x27 (leap). If the
+ * forward vector is non-NULL, applies it as the unit's alignment vector.
+ *
+ * Returns 1 on success, 0 if the state blocks leaping.
+ *
+ * Source: units.c
+ */
+char unit_leap_begin(int unit_handle, float *forward)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movsbl 0x253(%%eax), %%ecx\n\t"
-      "addl $-0x17, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $0x12, %%ecx\n\t"
-      "ja .Lunit_leap_begin_1\n\t"
-      "movzbl 0x1b1ce8(%%ecx), %%ecx\n\t"
-      "jmp *.Lunit_leap_begin_jt(,%%ecx,4)\n\t"
-      ".Lunit_leap_begin_1:\n\t"
-      "cmpw $0, 0x64(%%eax)\n\t"
-      "jne .Lunit_leap_begin_2\n\t"
-      "movb 0x424(%%eax), %%dl\n\t"
-      "andb $1, %%dl\n\t"
-      "movb %%dl, -0x1(%%ebp)\n\t"
-      "jne .Lunit_leap_begin_4\n\t"
-      ".Lunit_leap_begin_2:\n\t"
-      "pushl $0x27\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1ad260]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lunit_leap_begin_4\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lunit_leap_begin_3\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1af180]\n\t"
-      ".Lunit_leap_begin_3:\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lunit_leap_begin_4:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lunit_leap_begin_jt:\n\t"
-      ".long .Lunit_leap_begin_4\n\t"
-      ".long .Lunit_leap_begin_1\n\t"
-      ".text\n\t"
-      :
-      : [get] "m"(b1b1c70_get), [c1ad260] "m"(b1b1c70_c1ad260), [c1af180] "m"(b1b1c70_c1af180)
-      : "memory");
+  char *unit;
+  char result;
+  char anim_ok;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  result = 0;
+
+  switch (*(uint8_t *)(unit + 0x253)) {
+  case 0x17: case 0x18: case 0x19: case 0x1a: case 0x1b:
+  case 0x1d: case 0x1e: case 0x1f: case 0x20: case 0x21:
+  case 0x22: case 0x23: case 0x27: case 0x29:
+    /* These states block leaping */
+    break;
+  default:
+    if (*(short *)(unit + 0x64) != 0 ||
+        (*(uint8_t *)(unit + 0x424) & 1) == 0) {
+      anim_ok = FUN_001ad260(unit_handle, 0x27);
+      if (anim_ok != '\0') {
+        if (forward != 0) {
+          unit_apply_alignment_vector(unit_handle, forward);
+        }
+        result = 1;
+      }
+    }
+    break;
+  }
+  return result;
 }
-#else
-#error "unit_leap_begin: clang naked draft required"
-#endif
 
 
-/* unit_throw_grenade_begin (0x1b2090) — XBE naked draft (batch 51). */
-#if defined(__clang__)
-static void *(*const b1b2090_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1b2090_tag)(int, int) = tag_get;
-static int (*const b1b2090_c1adeb0)(int unit_handle, int16_t weapon_index) = (void *)unit_get_weapon;
-static int16_t (*const b1b2090_c1aaee0)(int unit_handle) = (void *)unit_get_current_grenade_type;
-static int16_t (*const b1b2090_c1aae70)(int unit_handle, int16_t grenade_type) = (void *)unit_get_grenade_count;
-static int (*const b1b2090_cfb0f0)(int weapon_handle) = (void *)weapon_prevents_grenade_throwing;
-static void (*const b1b2090_cfd510)(int weapon_handle) = (void *)weapon_stop_reload;
-static void (*const b1b2090_c1a0950)(int unit_handle) = (void *)biped_stop_melee_attack;
-static char (*const b1b2090_c1ad260)(int unit_handle, int16_t anim_state) = (void *)FUN_001ad260;
-static void *(*const b1b2090_elem)(void *, int, int) = tag_block_get_element;
-static float (*const b1b2090_mag)(float *) = magnitude3d;
-static void (*const b1b2090_c1af180)(int unit_handle, float *alignment_vector) = (void *)unit_apply_alignment_vector;
-static void (*const b1b2090_cde360)(int unit_handle, int message_type) = (void *)first_person_weapon_message_from_unit;
-static void (*const b1b2090_cb6a20)(int unit_handle) = (void *)player_clear_aim_assist;
-static void * (*const b1b2090_c18e450)(void) = (void *)game_globals_get;
-static int (*const b1b2090_o9ec30)(int, int, int, short, float, float, int, int) = FUN_0009ec30;
-
-__attribute__((naked, noinline))
-char unit_throw_grenade_begin(int unit_handle __attribute__((unused)), float *alignment_vector __attribute__((unused)))
+/* unit_throw_grenade_begin (0x1b2090) — readable C lift (restored pre-naked) — begin grenade throw animation.
+ *
+ * Checks grenade availability, animation state eligibility, weapon state,
+ * and initiates the grenade throw animation (state 0x21). Sets up
+ * animation frame counts, applies alignment vector, triggers first-person
+ * weapon message and player aim assist clear, and creates the grenade
+ * throw effect if one is defined in the game globals.
+ *
+ * Returns 1 on success, 0 if throw cannot begin.
+ *
+ * Source: units.c
+ */
+char unit_throw_grenade_begin(int unit_handle, float *alignment_vector)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[get]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2a2(%%eax), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1adeb0]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c1aaee0]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1aae70]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lunit_throw_grenade_begin_6\n\t"
-      "movsbl 0x253(%%esi), %%eax\n\t"
-      "addl $-0x17, %%eax\n\t"
-      "cmpl $0x12, %%eax\n\t"
-      "ja .Lunit_throw_grenade_begin_1\n\t"
-      "movzbl 0x1b2244(%%eax), %%edx\n\t"
-      "jmp *.Lunit_throw_grenade_begin_jt(,%%edx,4)\n\t"
-      ".Lunit_throw_grenade_begin_1:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cfb0f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lunit_throw_grenade_begin_6\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lunit_throw_grenade_begin_2\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cfd510]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lunit_throw_grenade_begin_2:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a0950]\n\t"
-      "pushl $0x21\n\t"
-      "pushl %%edi\n\t"
-      "movb $0, 0x254(%%esi)\n\t"
-      "movw $0xffff, 0x25a(%%esi)\n\t"
-      "call *%[c1ad260]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lunit_throw_grenade_begin_6\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movb $1, 0x23d(%%esi)\n\t"
-      "movw $0, 0x23e(%%esi)\n\t"
-      "movl 0x44(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x616e7472\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x80(%%esi), %%edx\n\t"
-      "pushl $0xb4\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x74, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x34(%%eax), %%eax\n\t"
-      "subw 0x82(%%esi), %%ax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "incl %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movw %%ax, 0x240(%%esi)\n\t"
-      "jne .Lunit_throw_grenade_begin_3\n\t"
-      "movl 0x1ec(%%esi), %%ecx\n\t"
-      "movl 0x1f0(%%esi), %%edx\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "call *%[mag]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lunit_throw_grenade_begin_4\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      ".Lunit_throw_grenade_begin_3:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c1af180]\n\t"
-      ".Lunit_throw_grenade_begin_4:\n\t"
-      "pushl $0x11\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cde360]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cb6a20]\n\t"
-      "movsbl 0x2cc(%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x44\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18e450]\n\t"
-      "addl $0x128, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x10(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lunit_throw_grenade_begin_5\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[o9ec30]\n\t"
-      "addl $0x20, %%esp\n\t"
-      ".Lunit_throw_grenade_begin_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lunit_throw_grenade_begin_6:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lunit_throw_grenade_begin_jt:\n\t"
-      ".long .Lunit_throw_grenade_begin_6\n\t"
-      ".long .Lunit_throw_grenade_begin_1\n\t"
-      ".text\n\t"
-      :
-      : [get] "m"(b1b2090_get), [tag] "m"(b1b2090_tag), [c1adeb0] "m"(b1b2090_c1adeb0), [c1aaee0] "m"(b1b2090_c1aaee0), [c1aae70] "m"(b1b2090_c1aae70), [cfb0f0] "m"(b1b2090_cfb0f0), [cfd510] "m"(b1b2090_cfd510), [c1a0950] "m"(b1b2090_c1a0950), [c1ad260] "m"(b1b2090_c1ad260), [elem] "m"(b1b2090_elem), [mag] "m"(b1b2090_mag), [c1af180] "m"(b1b2090_c1af180), [cde360] "m"(b1b2090_cde360), [cb6a20] "m"(b1b2090_cb6a20), [c18e450] "m"(b1b2090_c18e450), [o9ec30] "m"(b1b2090_o9ec30)
-      : "memory");
+  char *unit;
+  int unit_tag;
+  int weapon_handle;
+  char result;
+  int16_t grenade_type;
+  int16_t grenade_count;
+  char anim_ok;
+  int antr_tag;
+  int anim_element;
+  int gg;
+  int gg_element;
+  int effect_tag;
+  float local_buf[3]; /* alignment_vector scratch; z uninitialized per original */
+  char weapon_blocks;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  unit_tag = (int)tag_get(0x756e6974, *(int *)unit);
+
+  /* Get the current weapon handle */
+  {
+    int temp_unit;
+    temp_unit = (int)object_get_and_verify_type(unit_handle, 3);
+    weapon_handle = unit_get_weapon(unit_handle,
+      *(int16_t *)(temp_unit + 0x2a2));
+  }
+
+  result = 0;
+
+  /* Check grenade availability */
+  grenade_type = unit_get_current_grenade_type(unit_handle);
+  grenade_count = unit_get_grenade_count(unit_handle, grenade_type);
+  if (grenade_count < 1) {
+    return result;
+  }
+
+  /* Check animation state */
+  switch (*(uint8_t *)(unit + 0x253)) {
+  case 0x17: case 0x18: case 0x19: case 0x1a: case 0x1b:
+  case 0x1d: case 0x1e: case 0x1f: case 0x20: case 0x21:
+  case 0x22: case 0x23: case 0x27: case 0x29:
+    return result;
+  }
+
+  /* Check if weapon prevents grenade throwing */
+  weapon_blocks = (char)weapon_prevents_grenade_throwing(weapon_handle);
+  if (weapon_blocks != '\0') {
+    return result;
+  }
+
+  /* Stop weapon reload and melee attack */
+  if (weapon_handle != NONE) {
+    weapon_stop_reload(weapon_handle);
+  }
+  biped_stop_melee_attack(unit_handle);
+
+  /* Clear some unit state */
+  *(uint8_t *)(unit + 0x254) = 0;
+  *(int16_t *)(unit + 0x25a) = -1;
+
+  /* Request grenade throw animation */
+  anim_ok = FUN_001ad260(unit_handle, 0x21);
+  if (anim_ok == '\0') {
+    return result;
+  }
+
+  /* Set up animation timing */
+  *(uint8_t *)(unit + 0x23d) = 1;
+  *(int16_t *)(unit + 0x23e) = 0;
+  antr_tag = (int)tag_get(0x616e7472, *(int *)(unit_tag + 0x44));
+  anim_element = (int)tag_block_get_element(
+    (void *)(antr_tag + 0x74),
+    (int)*(int16_t *)(unit + 0x80), 0xb4);
+  *(int16_t *)(unit + 0x240) =
+    (int16_t)(*(int16_t *)(anim_element + 0x34) -
+              *(int16_t *)(unit + 0x82) + 1);
+
+  /* Apply alignment vector */
+  if (alignment_vector != NULL) {
+    unit_apply_alignment_vector(unit_handle, alignment_vector);
+  } else {
+    /* Compute alignment from unit forward direction if magnitude > 0 */
+    local_buf[0] = *(float *)(unit + 0x1ec);
+    local_buf[1] = *(float *)(unit + 0x1f0);
+    if (magnitude3d(local_buf) > 0.0f) {
+      unit_apply_alignment_vector(unit_handle, local_buf);
+    }
+  }
+  /* Trigger first-person weapon messages and player aim assist */
+  first_person_weapon_message_from_unit(unit_handle, 0x11);
+  player_clear_aim_assist(unit_handle);
+
+  /* Create grenade throw effect */
+  gg = (int)game_globals_get();
+  gg_element = (int)tag_block_get_element(
+    (void *)(gg + 0x128),
+    (int)*(int8_t *)(unit + 0x2cc), 0x44);
+  effect_tag = *(int *)(gg_element + 0x10);
+  if (effect_tag != NONE) {
+    FUN_0009ec30(effect_tag, unit_handle, unit_handle, (short)-1,
+                 0.0f, 0.0f, 0, 0);
+  }
+  return 1;
 }
-#else
-#error "unit_throw_grenade_begin: clang naked draft required"
-#endif
 
 
 /* unit_melee_attack_begin (0x1b1b60) — begin a melee attack animation.
@@ -12551,144 +12410,91 @@ next_weapon:
 }
 
 
-/* unit_scripting_enter_vehicle (0x1b32d0) — XBE naked draft (batch 59). */
-#if defined(__clang__)
-static int (*const b1b32d0_c8df60)(const char *s1) = (void *)csstrlen;
-static void *(*const b1b32d0_get)(int, int) = object_get_and_verify_type;
-static void (*const b1b32d0_c1b2dd0)(int unit_handle) = (void *)unit_exit_seat_end;
-static void *(*const b1b32d0_tag)(int, int) = tag_get;
-static void *(*const b1b32d0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1b32d0_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
-static char (*const b1b32d0_c1aa700)(int unit_handle, int16_t seat_index) = (void *)unit_seat_filled;
-static char (*const b1b32d0_c1acd70)(int unit_handle, const char *seat_label, const char *weapon_name, char apply_state) = (void *)FUN_001acd70;
-static bool (*const b1b32d0_c1b2b80)(int unit_handle, int vehicle_handle, int16_t seat_index) = (void *)unit_board_vehicle;
-
-__attribute__((naked, noinline))
-void unit_scripting_enter_vehicle(int unit_handle __attribute__((unused)), int vehicle_handle __attribute__((unused)), char *seat_name __attribute__((unused)))
+/* unit_scripting_enter_vehicle (0x1b32d0) — readable C lift (restored pre-naked) — scripted vehicle entry.
+ *
+ * Makes a unit enter a specific seat of a vehicle by seat name.
+ * Validates both handles, checks the seat name length, verifies the
+ * unit is not dying/dead, handles existing vehicle occupancy by
+ * calling unit_exit_seat_end, then iterates the vehicle's seats
+ * tag block looking for a matching seat name. Checks seat availability
+ * and type compatibility before calling unit_board_vehicle.
+ *
+ * Source: units.c
+ */
+void unit_scripting_enter_vehicle(int unit_handle, int vehicle_handle,
+                                  char *seat_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lunit_scripting_enter_vehicle_7\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lunit_scripting_enter_vehicle_6\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jbe .Lunit_scripting_enter_vehicle_6\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0xb6(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $4, %%al\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jne .Lunit_scripting_enter_vehicle_6\n\t"
-      "movl 0xcc(%%esi), %%ecx\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .Lunit_scripting_enter_vehicle_2\n\t"
-      "cmpw %%ax, 0x2a0(%%esi)\n\t"
-      "je .Lunit_scripting_enter_vehicle_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1b2dd0]\n\t"
-      "addl $4, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      ".Lunit_scripting_enter_vehicle_1:\n\t"
-      "cmpl %%eax, 0xcc(%%esi)\n\t"
-      "jne .Lunit_scripting_enter_vehicle_6\n\t"
-      ".Lunit_scripting_enter_vehicle_2:\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "leal 0x2e4(%%eax), %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lunit_scripting_enter_vehicle_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lunit_scripting_enter_vehicle_3:\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "leal 0x4(%%eax), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lunit_scripting_enter_vehicle_4\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1aa700]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lunit_scripting_enter_vehicle_4\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "cmpw $1, 0x64(%%ecx)\n\t"
-      "je .Lunit_scripting_enter_vehicle_5\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1acd70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lunit_scripting_enter_vehicle_5\n\t"
-      ".Lunit_scripting_enter_vehicle_4:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lunit_scripting_enter_vehicle_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lunit_scripting_enter_vehicle_5:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1b2b80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lunit_scripting_enter_vehicle_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".Lunit_scripting_enter_vehicle_7:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8df60] "m"(b1b32d0_c8df60), [get] "m"(b1b32d0_get), [c1b2dd0] "m"(b1b32d0_c1b2dd0), [tag] "m"(b1b32d0_tag), [elem] "m"(b1b32d0_elem), [c1dd801] "m"(b1b32d0_c1dd801), [c1aa700] "m"(b1b32d0_c1aa700), [c1acd70] "m"(b1b32d0_c1acd70), [c1b2b80] "m"(b1b32d0_c1b2b80)
-      : "memory");
+  char *unit_data;
+  char *vehicle_unit;
+  int vehicle_tag;
+  int *seats_block;
+  int seat_idx;
+  int seat_element;
+  int stricmp_result;
+  char seat_filled;
+
+  if (unit_handle == NONE) {
+    return;
+  }
+  if (vehicle_handle == NONE) {
+    return;
+  }
+  /* Validate seat name is a non-empty string */
+  if (csstrlen(seat_name) == 0) {
+    return;
+  }
+
+  unit_data = (char *)object_get_and_verify_type(unit_handle, 3);
+  /* Check if unit is dying/dead (bit 2 of byte at +0xb6) */
+  if ((*(uint8_t *)(unit_data + 0xb6) & 4) != 0) {
+    return;
+  }
+
+  /* If unit is already in a vehicle, try to exit first */
+  if (*(int *)(unit_data + 0xcc) != NONE) {
+    if (*(short *)(unit_data + 0x2a0) != -1) {
+      unit_exit_seat_end(unit_handle);
+    }
+    /* If still in a vehicle after attempting exit, abort */
+    if (*(int *)(unit_data + 0xcc) != NONE) {
+      return;
+    }
+  }
+
+  /* Get the vehicle's unit tag and iterate seats */
+  vehicle_unit = (char *)object_get_and_verify_type(vehicle_handle, 3);
+  vehicle_tag = (int)tag_get(0x756e6974, *(int *)vehicle_unit);
+  seats_block = (int *)(vehicle_tag + 0x2e4);
+  seat_idx = 0;
+
+  if (*seats_block > 0) {
+    seat_element = 0;
+    while (1) {
+      seat_element = (int)tag_block_get_element(seats_block, seat_element, 0x11c);
+      stricmp_result = csstricmp(seat_name, (char *)(seat_element + 4));
+
+      if (stricmp_result == 0) {
+        /* Seat name matches - check availability */
+        seat_filled = unit_seat_filled(vehicle_handle, (int16_t)seat_idx);
+        if (seat_filled == '\0') {
+          /* Seat is available - check type compatibility */
+          if (*(short *)(unit_data + 0x64) == 1 ||
+              FUN_001acd70(unit_handle, (const char *)(seat_element + 4), 0, 0) != '\0') {
+            /* Compatible - board the vehicle */
+            unit_board_vehicle(unit_handle, vehicle_handle, (int16_t)seat_idx);
+            return;
+          }
+        }
+      }
+
+      seat_idx = seat_idx + 1;
+      seat_element = (int)(short)seat_idx;
+      if (seat_element >= *seats_block) {
+        return;
+      }
+    }
+  }
 }
-#else
-#error "unit_scripting_enter_vehicle: clang naked draft required"
-#endif
 
 
 /* vehicle_scripting_load_magic (0x1b3400) — load units into vehicle seats.
