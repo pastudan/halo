@@ -15429,7 +15429,7 @@
           "addr": "0x11a770",
           "decl": "void *FUN_0011a770(int *state, int element_size_type, unsigned int *element_count_ref, int maximum_element_count, void *bs_definition);",
           "name": "FUN_0011a770",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a8e0",
@@ -15446,7 +15446,7 @@
           "addr": "0x11aa40",
           "decl": "bool FUN_0011aa40(int group, void *decoded_packet, char *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);",
           "name": "FUN_0011aa40",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b2a0",
@@ -15469,7 +15469,7 @@
           "addr": "0x11b750",
           "decl": "bool FUN_0011b750(int definition, int encoded_packet, short encoded_packet_size, int decoded_packet, unsigned short *version_out, short *bytes_consumed_out);",
           "name": "FUN_0011b750",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b850",
@@ -15511,7 +15511,7 @@
           "addr": "0x11bc20",
           "decl": "void FUN_0011bc20(short *table, void *key);",
           "name": "FUN_0011bc20",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11be10",
@@ -15523,13 +15523,13 @@
           "addr": "0x11beb0",
           "decl": "int FUN_0011beb0(short *table, short growth_bits);",
           "name": "FUN_0011beb0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c0f0",
           "decl": "int FUN_0011c0f0(short *table, void *key);",
           "name": "FUN_0011c0f0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c1b0",
@@ -21360,7 +21360,7 @@
           "addr": "0x157e40",
           "decl": "void rasterizer_present(void *screenshot_bitmap, short *point);",
           "name": "rasterizer_present",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1580b0",
@@ -27576,7 +27576,7 @@
         {
           "addr": "0xe5b10",
           "decl": "void FUN_000e5b10(void *widget /* @<ebx> */, void *draw_state /* @<esi> */);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e5b10"
         },
         {
@@ -35403,7 +35403,7 @@
         {
           "addr": "0x49d60",
           "decl": "void FUN_00049d60(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00049d60"
         },
         {
@@ -35415,7 +35415,7 @@
         {
           "addr": "0x4a030",
           "decl": "void FUN_0004a030(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004a030"
         },
         {
@@ -35467,7 +35467,7 @@
         {
           "addr": "0x4a770",
           "decl": "void FUN_0004a770(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004a770"
         },
         {
@@ -35546,7 +35546,7 @@
         {
           "addr": "0x4bc70",
           "decl": "void FUN_0004bc70(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004bc70"
         },
         {
@@ -36748,7 +36748,7 @@
         {
           "addr": "0x63e90",
           "decl": "char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, float param_7, int param_8, unsigned int *result);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00063e90"
         },
         {
@@ -41120,13 +41120,13 @@
         {
           "addr": "0x604e0",
           "decl": "void FUN_000604e0(void *path, int16_t heap_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000604e0"
         },
         {
           "addr": "0x60670",
           "decl": "void FUN_00060670(void *path, int16_t heap_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00060670"
         },
         {
