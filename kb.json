@@ -13731,7 +13731,7 @@
         {
           "addr": "0xce5c0",
           "decl": "void input_open_state_file(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xcf500",
@@ -21700,7 +21700,7 @@
         {
           "addr": "0x155580",
           "decl": "void *rasterizer_get_default_hardware_format(void *bitmap_data);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x155880",
@@ -22495,7 +22495,7 @@
         {
           "addr": "0x10cd40",
           "decl": "float FUN_0010cd40(float *p1, float *p2, float *p3);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x10ce10",
@@ -25661,7 +25661,7 @@
         {
           "addr": "0x193870",
           "decl": "uint8_t structure_bsp_cluster_sound_encoding(void *bsp, int16_t from_cluster, int16_t to_cluster);",
-          "ported": true
+          "ported": false
         }
       ],
       "name": "structure_bsp_definitions.obj",
@@ -31130,12 +31130,12 @@
         {
           "addr": "0x17cec0",
           "decl": "void FUN_0017cec0(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17ced0",
           "decl": "void FUN_0017ced0(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17cee0",
@@ -31171,7 +31171,7 @@
         {
           "addr": "0x17cf40",
           "decl": "void FUN_0017cf40(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17cf50",
@@ -31310,12 +31310,12 @@
         {
           "addr": "0x17d980",
           "decl": "void FUN_0017d980(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17d990",
           "decl": "void FUN_0017d990(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17d9a0",
@@ -33425,7 +33425,7 @@
         {
           "addr": "0x1d0bb3",
           "decl": "void FUN_001d0bb3(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1d0bb9",
@@ -38518,12 +38518,12 @@
         {
           "addr": "0x14ad60",
           "decl": "void render_debug_collision_sphere(void *sphere, void *color);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x14ad80",
           "decl": "void render_debug_collision_cylinder(void *cylinder, void *color);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x14adb0",
@@ -38735,7 +38735,7 @@
         {
           "addr": "0x160970",
           "decl": "void _rasterizer_hud_end(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x160980",
@@ -39329,7 +39329,7 @@
         {
           "addr": "0x106390",
           "decl": "float convex_hull2d_perimeter(int16_t vertex_count, float *vertices);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1063f0",
