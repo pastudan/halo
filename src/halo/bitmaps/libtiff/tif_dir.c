@@ -1816,37 +1816,15 @@ void FUN_000668a0(void)
 #endif
 
 
-/* FUN_00066900 (0x66900) — XBE naked draft (batch 361). */
-#if defined(__clang__)
-static void (*const b66900_c66550)(void) = (void *)FUN_00066550;
-
-__attribute__((naked, noinline))
-void FUN_00066900(void)
+/* FUN_00066900 (0x66900) — readable C lift. */
+int FUN_00066900(void *out, void *obj)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "cmpl $1, 0x4(%%esi)\n\t"
-      "jne .LFUN_00066900_1\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_00066900_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c66550]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c66550] "m"(b66900_c66550)
-      : "memory");
+  if (*(int *)((char *)obj + 4) == 1) {
+    *(int *)out = *(int *)((char *)obj + 8);
+    return 1;
+  }
+  return ((int (*)(void *))FUN_00066550)(out);
 }
-#else
-#error "FUN_00066900: clang naked draft required"
-#endif
-
 
 /* FUN_00066920 (0x66920) — XBE naked draft (batch 368). */
 #if defined(__clang__)

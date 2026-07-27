@@ -36512,8 +36512,8 @@
         },
         {
           "addr": "0x66900",
-          "decl": "void FUN_00066900(void);",
-          "ported": false
+          "decl": "int FUN_00066900(void *out@<eax>, void *obj@<ecx>);",
+          "ported": true
         },
         {
           "addr": "0x66920",
