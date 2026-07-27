@@ -15145,7 +15145,8 @@
         {
           "addr": "0x124f40",
           "decl": "void network_game_client_accepted_into_game(void *client, void *source, void *message);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_accepted_into_game"
         },
         {
           "addr": "0x125050",
