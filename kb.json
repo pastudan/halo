@@ -6319,7 +6319,7 @@
         },
         {
           "addr": "0x11f140",
-          "decl": "void FUN_0011f140(void *pool@<ecx>, void *block_hdr@<esi>);",
+          "decl": "void FUN_0011f140(void *pool, void *block_hdr);",
           "ported": true,
           "name": "FUN_0011f140"
         },
@@ -13827,7 +13827,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcf3e0",
@@ -20264,9 +20264,8 @@
         },
         {
           "addr": "0xf7e60",
-          "decl": "void FUN_000f7e60(float scale_a, float scale_b, void *tag_def@<eax>, float *marker_points@<edx>, float *marker_forwards@<ecx>, int effect_tag_index@<esi>, int object_index@<edi>);",
-          "ported": true,
-          "name": "FUN_000f7e60"
+          "decl": "void FUN_000f7e60(int effect_tag_index, int object_index, void *tag_def, float *marker_points, float *marker_forwards, float scale_a, float scale_b);",
+          "ported": true
         },
         {
           "addr": "0xf7ec0",
