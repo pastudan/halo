@@ -19217,7 +19217,7 @@
         {
           "addr": "0xbb670",
           "decl": "char FUN_000bb670(int player_handle, void *a, void *b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000bb670"
         },
         {
@@ -19265,7 +19265,7 @@
         {
           "addr": "0xbc520",
           "decl": "void players_debug_render(void);",
-          "ported": false,
+          "ported": true,
           "name": "players_debug_render"
         },
         {
@@ -19287,7 +19287,7 @@
         {
           "addr": "0xbca60",
           "decl": "void players_reconnect_to_structure_bsp(void);",
-          "ported": false,
+          "ported": true,
           "name": "players_reconnect_to_structure_bsp"
         },
         {
