@@ -1988,56 +1988,25 @@ void FUN_00082bd0(void)
 #endif
 
 
-/* FUN_00082c90 (0x82c90) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00082c90(void)
+/* FUN_00082c90 (0x82c90) — readable C lift. */
+unsigned char FUN_00082c90(void *endpoint)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x3350a0, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_00082c90_2\n\t"
-      "nop\n\t"
-      ".LFUN_00082c90_1:\n\t"
-      "cmpl $0x40, %%eax\n\t"
-      "jge .LFUN_00082c90_3\n\t"
-      "movl 0x3350a8(,%%eax,8), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .LFUN_00082c90_1\n\t"
-      "cmpl $0x40, %%eax\n\t"
-      "jge .LFUN_00082c90_3\n\t"
-      ".LFUN_00082c90_2:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "setne %%dl\n\t"
-      "movl %%ecx, 0x3350a0(,%%eax,8)\n\t"
-      "movb $0, 0x3350a4(,%%eax,8)\n\t"
-      "movb %%dl, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00082c90_3:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "setne %%dl\n\t"
-      "movb %%dl, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int i;
+  i = 0;
+  if (*(void **)0x3350a0 != 0) {
+    while (i < 0x40) {
+      if (*(void **)(0x3350a8 + i * 8) == 0)
+        break;
+      i++;
+    }
+    if (i >= 0x40) {
+      return 0;
+    }
+  }
+  *(void **)(0x3350a0 + i * 8) = endpoint;
+  *(unsigned char *)(0x3350a4 + i * 8) = 0;
+  return 1;
 }
-#else
-#error "FUN_00082c90: clang naked draft required"
-#endif
-
 
 /* FUN_00082cf0 (0x82cf0) — readable C lift. */
 void FUN_00082cf0(void *endpoint)

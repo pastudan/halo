@@ -26861,8 +26861,8 @@
         },
         {
           "addr": "0x82c90",
-          "decl": "void FUN_00082c90(void);",
-          "ported": false
+          "decl": "unsigned char FUN_00082c90(void *endpoint);",
+          "ported": true
         },
         {
           "addr": "0x82cf0",
