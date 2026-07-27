@@ -2163,52 +2163,20 @@ void FUN_001398d0(int *param_1)
   cluster_partition_iter_next((void *)0x5a90b0, param_1);
 }
 
-/* FUN_00139930 (0x139930) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-static void *(*const b139930_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b139930_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b139930_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_00139930(int param_1 __attribute__((unused)))
+/* FUN_00139930 (0x139930) — readable C lift. */
+extern char DAT_0029b324[];
+extern char DAT_0029b4ac[];
+char FUN_00139930(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5a90bc, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x5a8d60, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00139930_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66f\n\t"
-      "pushl $0x29b324\n\t"
-      "pushl $0x29b4ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00139930_1:\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "cmpl 0x5a8d64, %%edx\n\t"
-      "setne %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b139930_dget), [assert] "m"(b139930_assert), [exitfn] "m"(b139930_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_00139930: clang naked draft required"
-#endif
+  char *obj;
 
+  obj = (char *)datum_get(*(void **)0x5a90bc, object_handle);
+  if (*(uint8_t *)0x5a8d60 == 0) {
+    display_assert(DAT_0029b4ac, DAT_0029b324, 0x66f, true);
+    system_exit(-1);
+  }
+  return *(int *)(obj + 0xc) != *(int *)0x5a8d64;
+}
 
 /* FUN_00139990 (0x139990) — XBE naked draft (batch 65). */
 #if defined(__clang__)

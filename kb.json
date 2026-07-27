@@ -16317,8 +16317,8 @@
         {
           "name": "FUN_00139930",
           "addr": "0x139930",
-          "decl": "int FUN_00139930(int param_1);",
-          "ported": false
+          "decl": "char FUN_00139930(int object_handle);",
+          "ported": true
         },
         {
           "addr": "0x139990",
