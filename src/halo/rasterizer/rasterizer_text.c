@@ -1382,32 +1382,15 @@ void FUN_00180d10(short type __attribute__((unused)), int count __attribute__((u
 
 /* rasterizer_lights.c */
 
-/* FUN_00181150 (0x181150) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static void *(*const b181150_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* FUN_00181150 (0x181150) — readable C lift from XBE leaf. */
 void FUN_00181150(void)
 {
-  __asm__ volatile(
-      "pushl $0x7722\n\t"
-      "pushl $0\n\t"
-      "pushl $0x4bed80\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x40020\n\t"
-      "pushl $0\n\t"
-      "pushl $0x47ed60\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl $0, 0x4d0480\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b181150_memset)
-      : "memory");
+  csmemset((void *)0x4bed80, 0, 0x7722);
+  csmemset((void *)0x47ed60, 0, 0x40020);
+  *(int *)0x4d0480 = 0;
 }
-#else
-#error "FUN_00181150: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_lights_reset_stat: zero stat counter at 0x5a37e0 (0x1812b0) */
@@ -1423,7 +1406,7 @@ void FUN_00181410(void)
 
 /* FUN_00181900 (0x181900) — XBE naked draft (batch 369). */
 #if defined(__clang__)
-static void * (*const b181900_c18e3c0)(void) = (void *)scenario_get;
+static void * (*const b181900_c18e3c0)(void) = (void *)global_scenario_get;
 static void *(*const b181900_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b181900_perp)(float *, float *) = perpendicular3d;
 static float (*const b181900_norm)(float *) = normalize3d;
@@ -2621,36 +2604,21 @@ void FUN_001825d0(void)
 {
 }
 
-/* rasterizer_memory_pool_delete (0x1825e0) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static void (*const b1825e0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
+/* rasterizer_memory_pool_delete (0x1825e0) — readable C lift from XBE leaf. */
 void rasterizer_memory_pool_delete(void)
 {
-  __asm__ volatile(
-      "movl 0x4d0488, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .Lrasterizer_memory_pool_delete_1\n\t"
-      "pushl $0x50\n\t"
-      "pushl $0x2b077c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lrasterizer_memory_pool_delete_1:\n\t"
-      "movl %%esi, 0x4d0488\n\t"
-      "movl %%esi, 0x4d048c\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b1825e0_c8ef70)
-      : "memory");
+  extern char DAT_002b077c[];
+  void *pool;
+
+  pool = *(void **)0x4d0488;
+  if (pool != 0) {
+    debug_free(pool, DAT_002b077c, 0x50);
+  }
+  *(void **)0x4d0488 = 0;
+  *(void **)0x4d048c = 0;
 }
-#else
-#error "rasterizer_memory_pool_delete: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_swizzle.c */
@@ -3235,33 +3203,17 @@ void rasterizer_text_cache_flush(void)
   }
 }
 
-/* rasterizer_text_cache_dispose (0x183720) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static void (*const b183720_c1836f0)(void) = rasterizer_text_cache_flush;
-static void (*const b183720_c7c8f0)(void *) = bitmap_delete;
-
-__attribute__((naked, noinline))
+/* rasterizer_text_cache_dispose (0x183720) — readable C lift from XBE leaf. */
 void rasterizer_text_cache_dispose(void)
 {
-  __asm__ volatile(
-      "movb 0x4d04a0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_text_cache_dispose_1\n\t"
-      "call *%[c1836f0]\n\t"
-      "movl 0x4d04ac, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7c8f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $0, 0x4d04a0\n\t"
-      ".Lrasterizer_text_cache_dispose_1:\n\t"
-      "ret\n\t"
-      :
-      : [c1836f0] "m"(b183720_c1836f0), [c7c8f0] "m"(b183720_c7c8f0)
-      : "memory");
+  if (*(unsigned char *)0x4d04a0 != 0) {
+    rasterizer_text_cache_flush();
+    bitmap_delete(*(void **)0x4d04ac);
+    *(unsigned char *)0x4d04a0 = 0;
+  }
 }
-#else
-#error "rasterizer_text_cache_dispose: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_text.c — hardware character cache and text rendering.
@@ -4169,30 +4121,16 @@ int rasterizer_transparent_geometry_new(void)
 #endif
 
 
-/* rasterizer_transparent_geometry_begin (0x184300) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static void *(*const b184300_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* rasterizer_transparent_geometry_begin (0x184300) — readable C lift from XBE leaf. */
 void rasterizer_transparent_geometry_begin(void)
 {
-  __asm__ volatile(
-      "pushl $0x30\n\t"
-      "pushl $0\n\t"
-      "pushl $0x4d0cbc\n\t"
-      "movl $0, 0x4d0cf4\n\t"
-      "movw $0, 0x4d0d00\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0, 0x4d0cf8\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b184300_memset)
-      : "memory");
+  *(int *)0x4d0cf4 = 0;
+  *(short *)0x4d0d00 = 0;
+  csmemset((void *)0x4d0cbc, 0, 0x30);
+  *(int *)0x4d0cf8 = 0;
 }
-#else
-#error "rasterizer_transparent_geometry_begin: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_transparent_geometry_group_new (0x184330) — readable C lift. */

@@ -30630,7 +30630,7 @@
           "addr": "0x1825e0",
           "decl": "void rasterizer_memory_pool_delete(void);",
           "name": "rasterizer_memory_pool_delete",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x182610",
@@ -30717,7 +30717,7 @@
         {
           "addr": "0x183720",
           "decl": "void rasterizer_text_cache_dispose(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_cache_dispose"
         },
         {
@@ -30770,7 +30770,7 @@
           "addr": "0x184300",
           "name": "rasterizer_transparent_geometry_begin",
           "decl": "void rasterizer_transparent_geometry_begin(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x184330",
@@ -30787,7 +30787,7 @@
         {
           "addr": "0x184390",
           "name": "rasterizer_secondary_geometry_groups_get",
-          "decl": "void *rasterizer_secondary_geometry_groups_get(short *out_count);",
+          "decl": "void *rasterizer_secondary_geometry_groups_get(uint16_t *out_count);",
           "ported": true
         },
         {

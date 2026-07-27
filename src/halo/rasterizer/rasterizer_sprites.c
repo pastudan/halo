@@ -4935,18 +4935,4 @@ int FUN_0017d030(float *position __attribute__((unused)), int vis_index __attrib
 #error "FUN_0017d030: clang naked draft required"
 #endif
 
-((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xd7, 0xe9, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0017d030: clang naked draft required"
-#endif
 
