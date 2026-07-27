@@ -40773,7 +40773,8 @@
         {
           "addr": "0x1486e0",
           "decl": "void FUN_001486e0(void *state, int node_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001486e0"
         },
         {
           "addr": "0x148780",

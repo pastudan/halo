@@ -99,6 +99,11 @@ def _random_ints(rng: random.Random, n: int) -> list[int]:
     return result
 
 
+def _is_tree_node_index(name: str) -> bool:
+    """BSP/tree walkers terminate on negative node indices (leaf encoding)."""
+    return name.lower() in ('node_index', 'node', 'bsp_node_index')
+
+
 def _is_size_like_param(name: str) -> bool:
     lower = name.lower()
     tokens = (
@@ -124,6 +129,10 @@ def _sanitize_int(name: str, value: int) -> int:
             return 0
         if value > 128:
             return 128
+    if _is_tree_node_index(name):
+        # Force leaf encoding — positive indices walk random BSP scratch forever.
+        if value >= 0:
+            return -1 - (value & 0x3FF)
     if value > 0x7FFFFFFF:
         return 0x7FFFFFFF
     if value < -0x80000000:
@@ -217,8 +226,12 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
                 break
             # Always sanitize size-like ints from Z3 — unconstrained branch
             # seeds often set count=INT_MAX and burn the insn budget.
-            if safe_mode or any(_is_size_like_param(p.name) and not p.is_pointer
-                                for p in params):
+            if safe_mode or any(
+                (not p.is_pointer) and (
+                    _is_size_like_param(p.name) or _is_tree_node_index(p.name)
+                )
+                for p in params
+            ):
                 all_seeds.append(_sanitize_seed_vec(params, sv))
             else:
                 all_seeds.append(sv)
@@ -252,14 +265,23 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
                 # --allow-stubs (safe_mode off) and block 100/0/0.
                 if _is_size_like_param(p.name):
                     vec.append(SAFE_SIZE_CORNERS[ci % len(SAFE_SIZE_CORNERS)])
+                elif _is_tree_node_index(p.name):
+                    # Prefer leaf encoding (negative) so BSP walkers terminate.
+                    leaf_corners = [-1, -2, -3, -8, -16, 0x80000000, -100, -1]
+                    vec.append(leaf_corners[ci % len(leaf_corners)])
                 else:
                     vec.append(int_corners[ci % len(int_corners)])
         if safe_mode:
             all_seeds.append(_sanitize_seed_vec(params, vec))
         else:
             all_seeds.append(_sanitize_seed_vec(params, vec)
-                             if any(_is_size_like_param(p.name) and not p.is_pointer
-                                    for p in params)
+                             if any(
+                                    (not p.is_pointer) and (
+                                        _is_size_like_param(p.name)
+                                        or _is_tree_node_index(p.name)
+                                    )
+                                    for p in params
+                                )
                              else vec)
         if len(all_seeds) >= num_seeds:
             break
@@ -295,6 +317,8 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
             else:
                 if _is_size_like_param(p.name):
                     vec.append(rng.randint(0, 128))
+                elif _is_tree_node_index(p.name):
+                    vec.append(-1 - rng.randint(0, 1024))
                 elif safe_mode:
                     vec.append(rng.randint(-128, 255))
                 else:
@@ -303,8 +327,13 @@ def generate_seeds(params: list, num_seeds: int = 100, base_seed: int = 0,
             all_seeds.append(_sanitize_seed_vec(params, vec))
         else:
             all_seeds.append(_sanitize_seed_vec(params, vec)
-                             if any(_is_size_like_param(p.name) and not p.is_pointer
-                                    for p in params)
+                             if any(
+                                    (not p.is_pointer) and (
+                                        _is_size_like_param(p.name)
+                                        or _is_tree_node_index(p.name)
+                                    )
+                                    for p in params
+                                )
                              else vec)
         ri += 1
 
