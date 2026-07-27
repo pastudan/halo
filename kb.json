@@ -28489,7 +28489,7 @@
         {
           "addr": "0x19fa20",
           "decl": "void FUN_0019fa20(int unit_handle, void *node_block);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "unicode.obj",
