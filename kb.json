@@ -39188,8 +39188,8 @@
         },
         {
           "addr": "0x168370",
-          "decl": "char FUN_00168370(void *bitmap);",
-          "ported": false
+          "decl": "unsigned char FUN_00168370(void *bitmap);",
+          "ported": true
         },
         {
           "addr": "0x168500",
@@ -39245,8 +39245,8 @@
         },
         {
           "addr": "0x168cd0",
-          "decl": "void FUN_00168cd0(int a0, float a1, float a2, float a3);",
-          "ported": false
+          "decl": "unsigned char FUN_00168cd0(void *out, short type, int count, void *src, int nbytes);",
+          "ported": true
         },
         {
           "addr": "0x168e40",

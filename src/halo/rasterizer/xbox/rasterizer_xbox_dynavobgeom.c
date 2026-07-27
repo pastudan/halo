@@ -10593,180 +10593,94 @@ int FUN_00168340(int a, int b, int c)
 
 
 
-/* FUN_00168370 (0x168370) — XBE naked draft (batch 317). */
-#if defined(__clang__)
-static void (*const b168370_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b168370_exitfn)(int) = system_exit;
-static int16_t (*const b168370_c183120)(void *bitmap) = FUN_00183120;
-static void (*const b168370_c1e6b40)(void) = (void *)D3DDevice_CreateCubeTexture;
-static void (*const b168370_c1e6b10)(void) = (void *)D3DDevice_CreateVolumeTexture;
-static void __stdcall (*const b168370_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = (void *)D3DDevice_CreateTexture;
-static void (*const b168370_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void (*const b168370_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-char FUN_00168370(void *bitmap __attribute__((unused)))
+/* FUN_00168370 (0x168370) — readable C lift: create D3D texture for bitmap. */
+unsigned char FUN_00168370(void *bitmap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl $1, %%ebx\n\t"
-      "jne .LFUN_00168370_1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x33\n\t"
-      "pushl $0x2a27a8\n\t"
-      "pushl $0x263768\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00168370_1:\n\t"
-      "testb %%bl, 0xe(%%esi)\n\t"
-      "jne .LFUN_00168370_2\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x34\n\t"
-      "pushl $0x2a27a8\n\t"
-      "pushl $0x2a2760\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00168370_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c183120]\n\t"
-      "movw %%ax, 0x14(%%esi)\n\t"
-      "movl 0x476ab0, %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_00168370_13\n\t"
-      "movswl 0xa(%%esi), %%ecx\n\t"
-      "subl $0, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_00168370_6\n\t"
-      "decl %%ecx\n\t"
-      "je .LFUN_00168370_4\n\t"
-      "decl %%ecx\n\t"
-      "je .LFUN_00168370_3\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x5b\n\t"
-      "pushl $0x2a27a8\n\t"
-      "pushl $0x261d30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_00168370_9\n\t"
-      ".LFUN_00168370_3:\n\t"
-      "movswl 0xc(%%esi), %%ecx\n\t"
-      "movl 0x2a2428(,%%ecx,4), %%ecx\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "leal 0x28(%%esi), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "incl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1e6b40]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .LFUN_00168370_9\n\t"
-      "pushl $0x2a2688\n\t"
-      "jmp .LFUN_00168370_8\n\t"
-      ".LFUN_00168370_4:\n\t"
-      "movswl 0xc(%%esi), %%edx\n\t"
-      "movl 0x2a2428(,%%edx,4), %%ecx\n\t"
-      "movswl 0x8(%%esi), %%edx\n\t"
-      "movswl 0x6(%%esi), %%edi\n\t"
-      "leal 0x28(%%esi), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl $0\n\t"
-      "incl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0x4(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e6b10]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_00168370_5\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00168370_9\n\t"
-      ".LFUN_00168370_5:\n\t"
-      "pushl $0x2a2590\n\t"
-      "jmp .LFUN_00168370_8\n\t"
-      ".LFUN_00168370_6:\n\t"
-      "movswl 0xc(%%esi), %%ecx\n\t"
-      "movl 0x2a2428(,%%ecx,4), %%ecx\n\t"
-      "movswl 0x6(%%esi), %%edx\n\t"
-      "movswl 0x4(%%esi), %%edi\n\t"
-      "leal 0x28(%%esi), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl $0\n\t"
-      "incl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1e6ae0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_00168370_7\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00168370_9\n\t"
-      ".LFUN_00168370_7:\n\t"
-      "pushl $0x2a24b0\n\t"
-      ".LFUN_00168370_8:\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00168370_9:\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "jne .LFUN_00168370_10\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .LFUN_00168370_11\n\t"
-      ".LFUN_00168370_10:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00168370_12\n\t"
-      ".LFUN_00168370_11:\n\t"
-      "pushl $0x2a247c\n\t"
-      "pushl $2\n\t"
-      "movl $0, 0x28(%%esi)\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00168370_12:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00168370_13:\n\t"
-      "movl $0, 0x28(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b168370_assert), [exitfn] "m"(b168370_exitfn), [c183120] "m"(b168370_c183120), [c1e6b40] "m"(b168370_c1e6b40), [c1e6b10] "m"(b168370_c1e6b10), [c1e6ae0] "m"(b168370_c1e6ae0), [c167ff0] "m"(b168370_c167ff0), [c8f390] "m"(b168370_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_00168370: clang naked draft required"
-#endif
+  short levels;
+  short kind;
+  unsigned int fmt;
+  int hr;
+  unsigned char ok;
+  void **out_tex;
 
+  ok = 1;
+  if (!bitmap) {
+    display_assert((const char *)0x263768, (const char *)0x2a27a8, 0x33, 1);
+    system_exit(-1);
+  }
+  if (!(*(unsigned char *)((char *)bitmap + 0xe) & 1)) {
+    display_assert((const char *)0x2a2760, (const char *)0x2a27a8, 0x34, 1);
+    system_exit(-1);
+  }
+  levels = FUN_00183120(bitmap);
+  *(short *)((char *)bitmap + 0x14) = levels;
+  if (!*(int *)0x476ab0) {
+    *(void **)((char *)bitmap + 0x28) = 0;
+    return ok;
+  }
+  kind = *(short *)((char *)bitmap + 0xa);
+  out_tex = (void **)((char *)bitmap + 0x28);
+  if (kind == 0) {
+    fmt = *(unsigned int *)(0x2a2428 + (int)*(short *)((char *)bitmap + 0xc) * 4);
+    hr = ((int (__stdcall *)(int, int, int, int, int, int, void **))(void *)D3DDevice_CreateTexture)(
+        (int)*(short *)((char *)bitmap + 4),
+        (int)*(short *)((char *)bitmap + 6),
+        (int)levels + 1,
+        0,
+        (int)fmt,
+        1,
+        out_tex);
+    if (hr < 0) {
+      ok = 0;
+      FUN_00167ff0(hr, (const char *)0x2a24b0);
+    } else {
+      ok = 1;
+    }
+  } else if (kind == 1) {
+    fmt = *(unsigned int *)(0x2a2428 + (int)*(short *)((char *)bitmap + 0xc) * 4);
+    hr = ((int (__stdcall *)(int, int, int, int, int, int, int, void **))(void *)D3DDevice_CreateVolumeTexture)(
+        (int)*(short *)((char *)bitmap + 4),
+        (int)*(short *)((char *)bitmap + 6),
+        (int)*(short *)((char *)bitmap + 8),
+        (int)levels + 1,
+        0,
+        (int)fmt,
+        1,
+        out_tex);
+    if (hr < 0) {
+      ok = 0;
+      FUN_00167ff0(hr, (const char *)0x2a2590);
+    } else {
+      ok = 1;
+    }
+  } else if (kind == 2) {
+    fmt = *(unsigned int *)(0x2a2428 + (int)*(short *)((char *)bitmap + 0xc) * 4);
+    hr = ((int (__stdcall *)(int, int, int, int, int, void **))(void *)D3DDevice_CreateCubeTexture)(
+        (int)*(short *)((char *)bitmap + 4),
+        (int)levels + 1,
+        0,
+        (int)fmt,
+        1,
+        out_tex);
+    if (hr < 0) {
+      ok = 0;
+      FUN_00167ff0(hr, (const char *)0x2a2688);
+    }
+  } else {
+    display_assert((const char *)0x261d30, (const char *)0x2a27a8, 0x5b, 1);
+    system_exit(-1);
+  }
+  if (!*out_tex) {
+    ok = 0;
+  } else if (!ok) {
+    /* keep texture null path below */
+  }
+  if (!ok || !*out_tex) {
+    *out_tex = 0;
+    error(2, (const char *)0x2a247c);
+  }
+  return ok;
+}
 
 /* FUN_00168500 (0x168500) — XBE naked draft (batch 314). */
 #if defined(__clang__)
@@ -11505,180 +11419,74 @@ int FUN_00168ca0(void *obj, int *out, int addend)
   return 0;
 }
 
-/* FUN_00168cd0 (0x168cd0) — XBE naked draft (batch 322). */
-#if defined(__clang__)
-static int (*const b168cd0_c180050)(short param_1) = FUN_00180050;
-static void (*const b168cd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b168cd0_exitfn)(int) = system_exit;
-static int __stdcall (*const b168cd0_c1ef0a0)(uint32_t length, uint32_t usage, uint32_t fvf, uint32_t pool, void **ppVertexBuffer) = (void *)D3DDevice_CreateVertexBuffer;
-static void (*const b168cd0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void (*const b168cd0_c1ef100)(void) = (void *)D3DVertexBuffer_Lock;
-static void * (*const b168cd0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void *(*const b168cd0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b168cd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_00168cd0(int a0, float a1, float a2, float a3)
+/* FUN_00168cd0 (0x168cd0) — readable C lift: create/fill dynamic VB. */
+unsigned char FUN_00168cd0(void *out, short type, int count, void *src, int nbytes)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c180050]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jne .LFUN_00168cd0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18\n\t"
-      "pushl $0x2a2b58\n\t"
-      "pushl $0x2a19cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00168cd0_1:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "imull %%edi, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_00168cd0_2\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00168cd0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x19\n\t"
-      "pushl $0x2a2b58\n\t"
-      "pushl $0x2a2b2c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00168cd0_2:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00168cd0_3\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_00168cd0_3:\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00168cd0_4\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .LFUN_00168cd0_9\n\t"
-      ".LFUN_00168cd0_4:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00168cd0_9\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ef0a0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_00168cd0_5\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00168cd0_6\n\t"
-      ".LFUN_00168cd0_5:\n\t"
-      "pushl $0x2a2a90\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00168cd0_6:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00168cd0_7\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "jmp .LFUN_00168cd0_8\n\t"
-      ".LFUN_00168cd0_7:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00168cd0_9\n\t"
-      ".LFUN_00168cd0_8:\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      ".LFUN_00168cd0_9:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00168cd0_11\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00168cd0_12\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movw $2, 0x325652\n\t"
-      "call *%[c1ef100]\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "movw %%di, 0x325652\n\t"
-      "jne .LFUN_00168cd0_10\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_00168cd0_12\n\t"
-      ".LFUN_00168cd0_10:\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%edi, 0x8(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, 0xc(%%esi)\n\t"
-      "movw %%cx, (%%esi)\n\t"
-      "movl %%edx, 0x10(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00168cd0_11:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00168cd0_13\n\t"
-      ".LFUN_00168cd0_12:\n\t"
-      "pushl $0x14\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x2a2a54\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00168cd0_13:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c180050] "m"(b168cd0_c180050), [assert] "m"(b168cd0_assert), [exitfn] "m"(b168cd0_exitfn), [c1ef0a0] "m"(b168cd0_c1ef0a0), [c167ff0] "m"(b168cd0_c167ff0), [c1ef100] "m"(b168cd0_c1ef100), [c8e0b0] "m"(b168cd0_c8e0b0), [memset] "m"(b168cd0_memset), [c8f390] "m"(b168cd0_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_00168cd0: clang naked draft required"
-#endif
+  short stride;
+  int need;
+  unsigned char ok;
+  void *vb;
+  int hr;
+  void *locked;
 
+  stride = (short)FUN_00180050(type);
+  if (!out) {
+    display_assert((const char *)0x2a19cc, (const char *)0x2a2b58, 0x18, 1);
+    system_exit(-1);
+  }
+  need = (int)stride * count;
+  if (need != nbytes && src) {
+    display_assert((const char *)0x2a2b2c, (const char *)0x2a2b58, 0x19, 1);
+    system_exit(-1);
+  }
+  ok = count != 0;
+  vb = 0;
+  if (!*(int *)0x476ab0) {
+    ok = 0;
+  } else if (ok) {
+    hr = ((int (__stdcall *)(unsigned int, unsigned int, unsigned int, unsigned int, void **))(
+        void *)D3DDevice_CreateVertexBuffer)((unsigned int)nbytes, 8, 0, 1, &vb);
+    if (hr < 0) {
+      ok = 0;
+      FUN_00167ff0(hr, (const char *)0x2a2a90);
+    } else {
+      ok = 1;
+    }
+    if (!vb)
+      ok = 0;
+    else if (!ok)
+      vb = 0;
+  }
+  if (!src) {
+    if (!ok) {
+      csmemset(out, 0, 0x14);
+      error(2, (const char *)0x2a2a54);
+    }
+    return ok;
+  }
+  if (!ok) {
+    csmemset(out, 0, 0x14);
+    error(2, (const char *)0x2a2a54);
+    return ok;
+  }
+  *(short *)0x325652 = 2;
+  locked = 0;
+  ((void (__stdcall *)(void *, unsigned int, unsigned int, void **, unsigned int))(void *)D3DVertexBuffer_Lock)(
+      vb, 0, (unsigned int)nbytes, &locked, 0);
+  *(short *)0x325652 = 0;
+  if (!locked) {
+    csmemset(out, 0, 0x14);
+    error(2, (const char *)0x2a2a54);
+    return 0;
+  }
+  csmemcpy(locked, src, (unsigned int)nbytes);
+  *(int *)((char *)out + 4) = count;
+  *(int *)((char *)out + 8) = 0;
+  *(void **)((char *)out + 0xc) = src;
+  *(short *)out = type;
+  *(void **)((char *)out + 0x10) = vb;
+  return 1;
+}
 
 /* FUN_00168e40 (0x168e40) — readable C lift. */
 void FUN_00168e40(void *obj)
