@@ -573,50 +573,19 @@ void FUN_001806e0(int param_1, float *param_2)
 
 extern double floor(double);
 
-/* FUN_001807d0 (0x1807d0) — XBE naked draft (batch 354). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-unsigned char FUN_001807d0(float param_1 __attribute__((unused)))
+/* FUN_001807d0 (0x1807d0) — readable C lift from XBE leaf. */
+unsigned char FUN_001807d0(float param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001807d0_1\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .LFUN_001807d0_3\n\t"
-      ".LFUN_001807d0_1:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001807d0_2\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .LFUN_001807d0_3\n\t"
-      ".LFUN_001807d0_2:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".LFUN_001807d0_3:\n\t"
-      "fmuls 0x2602c8\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fistps -0x4(%%ebp)\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float v;
+
+  v = param_1;
+  if (v < *(float *)0x2533c0)
+    v = *(float *)0x2533c0;
+  else if (v > *(float *)0x2533c8)
+    v = *(float *)0x2533c8;
+  v = v * *(float *)0x2602c8;
+  return (unsigned char)(int)(v + 0.5f);
 }
-#else
-#error "FUN_001807d0: clang naked draft required"
-#endif
 
 
 /* FUN_001808f0 (0x1808f0) — XBE naked draft (batch 317). */
@@ -4165,54 +4134,21 @@ short rasterizer_transparent_geometry_group_to_presorted_index(unsigned int grou
 
 /* --- rasterizer_text.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00180770 (0x180770) — XBE naked draft (batch 374). */
-#if defined(__clang__)
-static void (*const b180770_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b180770_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-unsigned char FUN_00180770(float alpha __attribute__((unused)))
+/* FUN_00180770 (0x180770) — readable C lift from XBE leaf. */
+unsigned char FUN_00180770(float alpha)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00180770_1\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_00180770_2\n\t"
-      ".LFUN_00180770_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2b00a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00180770_2:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fistps -0x4(%%ebp)\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b180770_assert), [exitfn] "m"(b180770_exitfn)
-      : "memory");
+  extern char DAT_002b00a0[];
+  extern char DAT_002afe38[];
+  float scaled;
+
+  if (alpha < *(float *)0x2533c0 || alpha > *(float *)0x2533c8) {
+    display_assert(DAT_002b00a0, DAT_002afe38, 0x2a, true);
+    system_exit(-1);
+  }
+  scaled = alpha * *(float *)0x2602c8;
+  /* fistp uses RC=round-nearest (FPCW=0x027f). */
+  return (unsigned char)(int)(scaled + 0.5f);
 }
-#else
-#error "FUN_00180770: clang naked draft required"
-#endif
 
 
 /* compress_real_to_int16 (0x180820) — readable C lift from XBE leaf. */
@@ -4234,57 +4170,23 @@ int16_t compress_real_to_int16(float value)
   return (int16_t)tmp;
 }
 
+>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
 
 
-
-/* FUN_00180890 (0x180890) — XBE naked draft (batch 365). */
-#if defined(__clang__)
-static double (*const b180890_c1d9c2b)(double x) = (void *)floor;
-
-__attribute__((naked, noinline))
-short FUN_00180890(float f __attribute__((unused)))
+/* FUN_00180890 (0x180890) — readable C lift from XBE leaf. */
+short FUN_00180890(float f)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00180890_1\n\t"
-      "flds 0x255e94\n\t"
-      "jmp .LFUN_00180890_3\n\t"
-      ".LFUN_00180890_1:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00180890_2\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .LFUN_00180890_3\n\t"
-      ".LFUN_00180890_2:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".LFUN_00180890_3:\n\t"
-      "fmuls 0x2b00b4\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "call *%[c1d9c2b]\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fistps -0x4(%%ebp)\n\t"
-      "movw -0x4(%%ebp), %%ax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d9c2b] "m"(b180890_c1d9c2b)
-      : "memory");
+  float v;
+  float scaled;
+
+  v = f;
+  if (v < *(float *)0x255e94)
+    v = *(float *)0x255e94;
+  else if (v > *(float *)0x2533c8)
+    v = *(float *)0x2533c8;
+  scaled = (float)floor((double)(v * *(float *)0x2b00b4));
+  return (short)(int)scaled;
 }
-#else
-#error "FUN_00180890: clang naked draft required"
-#endif
 
 
 /* 0x181060 */

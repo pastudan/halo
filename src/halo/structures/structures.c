@@ -1,3 +1,6 @@
+/* 0x18e3c0 is structure-BSP getter (kb: FUN_0018e3c0); Capstone named it scenario_get. */
+#define scenario_get FUN_0018e3c0
+
 #include "x87_math.h" /* x87_fatan2f: inline FPATAN atan2, matches original */
 
 /* MSVC 7.1 FABS intrinsic: declared+pragma here so fabs() inlines to a single
@@ -166,7 +169,7 @@ int FUN_00061e80(float *p0, float *p1, float radius)
   return (dx * dx + dy * dy) <= (radius * radius);
 }
 
-
+>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
 
 
 /* 0x61ec0 — 3D point-in-radius test.
@@ -2838,7 +2841,7 @@ void cluster_partition_copy(void *destination, void *source)
 
   scenario = global_scenario_get();
   count = *(int *)((char *)scenario + 0x134);
-  csmemcpy(*(void **)destination, *(void **)source, (size_t)count * 4);
+  csmemcpy(*(void **)destination, *(void **)source, (size_t)count * 4);>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
   reference_list_copy(*(void **)((char *)destination + 8),
                       *(void **)((char *)source + 8));
   reference_list_copy(*(void **)((char *)destination + 4),
@@ -2848,7 +2851,7 @@ void cluster_partition_copy(void *destination, void *source)
 
 
 
-/* FUN_00191750 (0x191750) — readable C lift from XBE leaf. */
+/* FUN_00191750 (0x191750) — readable C lift from XBE leaf. */>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
 int *FUN_00191750(short cluster_index, int **partition)
 {
   extern char DAT_002b2668[];
@@ -2860,14 +2863,14 @@ int *FUN_00191750(short cluster_index, int **partition)
   }
   scenario = global_scenario_get();
   if ((int)cluster_index >= *(int *)((char *)scenario + 0x134)) {
-bad:
+bad:>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
     display_assert(DAT_002b2668, DAT_002b26b8, 0xd5, true);
     system_exit(-1);
   }
   return *partition + (int)cluster_index;
 }
 
-
+>>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
 
 
 /* cluster_partition_add_object (0x1917a0) — XBE naked draft (batch 82). */

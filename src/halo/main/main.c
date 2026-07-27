@@ -2886,143 +2886,60 @@ void FUN_00103de0(char *source)
   }
 }
 
-/* ui_widget_display_deferred_errors (0xe8db0) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static bool (*const be8db0_c930a0)(void) = cinematic_in_progress;
-static void (*const be8db0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const be8db0_exitfn)(int) = system_exit;
-static void (*const be8db0_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
-
-__attribute__((naked, noinline))
+/* ui_widget_display_deferred_errors (0xe8db0) — readable C lift from XBE leaf. */
 void ui_widget_display_deferred_errors(void)
 {
-  __asm__ volatile(
-      "call *%[c930a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lui_widget_display_deferred_errors_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x93f\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x284750\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_display_deferred_errors_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x46cc6c, %%esi\n\t"
-      ".Lui_widget_display_deferred_errors_2:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lui_widget_display_deferred_errors_3\n\t"
-      "cmpw $0x28, %%ax\n\t"
-      "jge .Lui_widget_display_deferred_errors_3\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x3(%%esi), %%cl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x2(%%esi), %%dl\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce8910]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lui_widget_display_deferred_errors_3:\n\t"
-      "movw $0xffff, (%%esi)\n\t"
-      "incl %%edi\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .Lui_widget_display_deferred_errors_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c930a0] "m"(be8db0_c930a0), [assert] "m"(be8db0_assert), [exitfn] "m"(be8db0_exitfn), [ce8910] "m"(be8db0_ce8910)
-      : "memory");
+  extern char DAT_00284750[];
+  extern char DAT_00283280[];
+  short *slot;
+  int i;
+  short err;
+
+  if (cinematic_in_progress()) {
+    display_assert(DAT_00284750, DAT_00283280, 0x93f, true);
+    system_exit(-1);
+  }
+  slot = (short *)0x46cc6c;
+  for (i = 0; i < 4; i++) {
+    err = slot[0];
+    if (err >= 0 && err < 0x28) {
+      ui_widget_display_error(err, (int16_t)i, (char)((unsigned char *)slot)[2],
+                              (char)((unsigned char *)slot)[3]);
+    }
+    slot[0] = (short)0xffff;
+    slot = (short *)((char *)slot + 4);
+  }
 }
-#else
-#error "ui_widget_display_deferred_errors: clang naked draft required"
-#endif
+
 
 /* --- main.obj batch1 drafts (2026-07-26) --- */
 
 bool cache_files_give_time_to_precache(const char *name);
 void main_menu_active(char active);
 
-/* gamepad_button_is_down (0xffef0) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const bffef0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bffef0_exitfn)(int) = system_exit;
-static bool (*const bffef0_ccf6c0)(int16_t gamepad_index) = input_has_gamepad;
-static void * (*const bffef0_ccf710)(int gamepad_index) = input_get_gamepad_state;
-
-__attribute__((naked, noinline))
-char gamepad_button_is_down(int16_t button __attribute__((unused)))
+/* gamepad_button_is_down (0xffef0) — readable C lift from XBE leaf. */
+char gamepad_button_is_down(int16_t button)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x8(%%ebp), %%di\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lgamepad_button_is_down_1\n\t"
-      "cmpw $0x10, %%di\n\t"
-      "jl .Lgamepad_button_is_down_2\n\t"
-      ".Lgamepad_button_is_down_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf5\n\t"
-      "pushl $0x28b0b4\n\t"
-      "pushl $0x28b078\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgamepad_button_is_down_2:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lgamepad_button_is_down_3:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccf6c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgamepad_button_is_down_5\n\t"
-      "incl %%esi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lgamepad_button_is_down_3\n\t"
-      ".Lgamepad_button_is_down_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgamepad_button_is_down_5:\n\t"
-      "cmpw $4, %%si\n\t"
-      "jge .Lgamepad_button_is_down_4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccf710]\n\t"
-      "addl $4, %%esp\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movb 0x10(%%ecx,%%eax,1), %%dl\n\t"
-      "popl %%edi\n\t"
-      "testb %%dl, %%dl\n\t"
-      "popl %%esi\n\t"
-      "seta %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bffef0_assert), [exitfn] "m"(bffef0_exitfn), [ccf6c0] "m"(bffef0_ccf6c0), [ccf710] "m"(bffef0_ccf710)
-      : "memory");
+  extern char DAT_0028b078[];
+  extern char DAT_0028b0b4[];
+  int i;
+  void *state;
+  unsigned char v;
+
+  if (button < 0 || button >= 0x10) {
+    display_assert(DAT_0028b078, DAT_0028b0b4, 0xf5, true);
+    system_exit(-1);
+  }
+  for (i = 0; i < 4; i++) {
+    if (input_has_gamepad((int16_t)i))
+      break;
+  }
+  if (i >= 4)
+    return 0;
+  state = input_get_gamepad_state(i);
+  v = *((unsigned char *)state + 0x10 + (int)button);
+  return v > 0;
 }
-#else
-#error "gamepad_button_is_down: clang naked draft required"
-#endif
 
 
 void main_disallow_persistent_storage(void)

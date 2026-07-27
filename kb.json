@@ -14224,7 +14224,7 @@
           "addr": "0xe8db0",
           "decl": "void FUN_000e8db0(int16_t difficulty);",
           "name": "ui_widget_display_deferred_errors",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe8e20",
@@ -14265,7 +14265,7 @@
         {
           "addr": "0xffef0",
           "decl": "char gamepad_button_is_down(int16_t button);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfff70",
@@ -30469,7 +30469,7 @@
         {
           "addr": "0x17ffc0",
           "decl": "float *FUN_0017ffc0(float *param_1, unsigned int param_2);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x180050",
@@ -30513,12 +30513,12 @@
         {
           "addr": "0x180770",
           "decl": "unsigned char FUN_00180770(float alpha);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1807d0",
           "decl": "unsigned char FUN_001807d0(float param_1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x180820",
@@ -30529,7 +30529,7 @@
         {
           "addr": "0x180890",
           "decl": "short FUN_00180890(float f);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1808f0",
@@ -30619,7 +30619,7 @@
           "addr": "0x182520",
           "decl": "void rasterizer_memory_pool_reset(void);",
           "name": "rasterizer_memory_pool_reset",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x182530",
@@ -30636,7 +30636,7 @@
         {
           "addr": "0x1825d0",
           "decl": "void FUN_001825d0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1825e0",
