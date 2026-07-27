@@ -12226,7 +12226,7 @@
         {
           "addr": "0xc89c0",
           "decl": "char FUN_000c89c0(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc8b90",
