@@ -39498,7 +39498,7 @@
         {
           "addr": "0x1b9ce0",
           "decl": "bool cache_file_header_verify(void *header, const char *path, int report_errors);",
-          "ported": false,
+          "ported": true,
           "name": "cache_file_header_verify"
         },
         {
