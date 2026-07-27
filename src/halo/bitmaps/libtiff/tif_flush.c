@@ -263,46 +263,17 @@ void FUN_00068970(void)
 #endif
 
 
-/* FUN_000689c0 (0x689c0) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-static int (*const b689c0_c1d98ad)(void *stream, const char *format, ...) = (void *)crt_fprintf;
-static void (*const b689c0_c1d9850)(void) = (void *)FUN_001d9850;
-
-__attribute__((naked, noinline))
-void FUN_000689c0(void)
+/* FUN_000689c0 (0x689c0) — readable C lift. */
+void FUN_000689c0(const char *msg, void *a1, void *a2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000689c0_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x259f68\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000689c0_1:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d9850]\n\t"
-      "pushl $0x260020\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d98ad] "m"(b689c0_c1d98ad), [c1d9850] "m"(b689c0_c1d9850)
-      : "memory");
+  extern char DAT_00259f68[];
+  extern char DAT_00260020[];
+  if (msg) {
+    crt_fprintf((void *)0x331070, DAT_00259f68, msg);
+  }
+  ((void (*)(void *, void *, void *))FUN_001d9850)((void *)0x331070, a1, a2);
+  crt_fprintf((void *)0x331070, DAT_00260020);
 }
-#else
-#error "FUN_000689c0: clang naked draft required"
-#endif
-
 
 /* FUN_00068a10 (0x68a10) — readable C lift: swap global handler. */
 void *FUN_00068a10(void *handler)

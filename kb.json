@@ -36570,8 +36570,8 @@
         },
         {
           "addr": "0x689c0",
-          "decl": "void FUN_000689c0(void);",
-          "ported": false
+          "decl": "void FUN_000689c0(const char *msg, void *a1, void *a2);",
+          "ported": true
         },
         {
           "addr": "0x68a10",
