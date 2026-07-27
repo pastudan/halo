@@ -6109,7 +6109,7 @@
           "addr": "0x8e500",
           "decl": "const char *system_exception_name(uint32_t code@<ecx>);",
           "name": "system_exception_name",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "cseries_windows.obj",

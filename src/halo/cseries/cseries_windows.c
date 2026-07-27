@@ -132,105 +132,42 @@ void FUN_0008e480(uint32_t *output)
   output[1] = status[2];
 }
 
-/* system_exception_name (0x8e500) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-const char * system_exception_name(uint32_t code __attribute__((unused)))
+/* system_exception_name (0x8e500) — readable C lift. */
+const char *system_exception_name(unsigned int code /* @<ecx> */)
 {
-  __asm__ volatile(
-      "xorl %%eax, %%eax\n\t"
-      "cmpl $0xc000008f, %%ecx\n\t"
-      "ja .Lsystem_exception_name_9\n\t"
-      "je .Lsystem_exception_name_8\n\t"
-      "cmpl $0xc0000025, %%ecx\n\t"
-      "ja .Lsystem_exception_name_5\n\t"
-      "je .Lsystem_exception_name_4\n\t"
-      "cmpl $0x80000004, %%ecx\n\t"
-      "ja .Lsystem_exception_name_3\n\t"
-      "je .Lsystem_exception_name_2\n\t"
-      "cmpl $0x80000002, %%ecx\n\t"
-      "je .Lsystem_exception_name_1\n\t"
-      "cmpl $0x80000003, %%ecx\n\t"
-      "jne .Lsystem_exception_name_17\n\t"
-      "movl $0x267c40, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_1:\n\t"
-      "movl $0x267c20, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_2:\n\t"
-      "movl $0x267c08, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_3:\n\t"
-      "cmpl $0xc0000005, %%ecx\n\t"
-      "jne .Lsystem_exception_name_17\n\t"
-      "movl $0x267bec, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_4:\n\t"
-      "movl $0x267bc8, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_5:\n\t"
-      "cmpl $0xc000008c, %%ecx\n\t"
-      "je .Lsystem_exception_name_7\n\t"
-      "cmpl $0xc000008d, %%ecx\n\t"
-      "je .Lsystem_exception_name_6\n\t"
-      "cmpl $0xc000008e, %%ecx\n\t"
-      "jne .Lsystem_exception_name_17\n\t"
-      "movl $0x267ba8, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_6:\n\t"
-      "movl $0x267b88, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_7:\n\t"
-      "movl $0x267b68, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_8:\n\t"
-      "movl $0x267b48, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_9:\n\t"
-      "addl $0x3fffff70, %%ecx\n\t"
-      "cmpl $6, %%ecx\n\t"
-      "ja .Lsystem_exception_name_17\n\t"
-      "jmp *.Lsystem_exception_name_jt(,%%ecx,4)\n\t"
-      ".Lsystem_exception_name_10:\n\t"
-      "movl $0x267b28, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_11:\n\t"
-      "movl $0x267b10, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_12:\n\t"
-      "movl $0x267af4, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_13:\n\t"
-      "movl $0x267adc, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_14:\n\t"
-      "movl $0x267abc, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_15:\n\t"
-      "movl $0x267aa4, %%eax\n\t"
-      "ret\n\t"
-      ".Lsystem_exception_name_16:\n\t"
-      "movl $0x267a88, %%eax\n\t"
-      ".Lsystem_exception_name_17:\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lsystem_exception_name_jt:\n\t"
-      ".long .Lsystem_exception_name_10\n\t"
-      ".long .Lsystem_exception_name_11\n\t"
-      ".long .Lsystem_exception_name_12\n\t"
-      ".long .Lsystem_exception_name_13\n\t"
-      ".long .Lsystem_exception_name_14\n\t"
-      ".long .Lsystem_exception_name_15\n\t"
-      ".long .Lsystem_exception_name_16\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  unsigned int idx;
+
+  if (code == 0x80000003u)
+    return (const char *)0x267c40;
+  if (code == 0x80000002u)
+    return (const char *)0x267c20;
+  if (code == 0x80000004u)
+    return (const char *)0x267c08;
+  if (code == 0xc0000005u)
+    return (const char *)0x267bec;
+  if (code == 0xc0000025u)
+    return (const char *)0x267bc8;
+  if (code == 0xc000008eu)
+    return (const char *)0x267ba8;
+  if (code == 0xc000008du)
+    return (const char *)0x267b88;
+  if (code == 0xc000008cu)
+    return (const char *)0x267b68;
+  if (code == 0xc000008fu)
+    return (const char *)0x267b48;
+  /* codes 0xc0000090 .. 0xc0000096 */
+  idx = code + 0x3fffff70u;
+  if (idx > 6u)
+    return 0;
+  switch (idx) {
+  case 0: return (const char *)0x267b28;
+  case 1: return (const char *)0x267b10;
+  case 2: return (const char *)0x267af4;
+  case 3: return (const char *)0x267adc;
+  case 4: return (const char *)0x267abc;
+  case 5: return (const char *)0x267aa4;
+  case 6: return (const char *)0x267a88;
+  default: return 0;
+  }
 }
-#else
-#error "system_exception_name: clang naked draft required"
-#endif
 
