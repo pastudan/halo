@@ -67,6 +67,7 @@ char FUN_00107c30(int16_t point_count, float *points, int16_t vertices_capacity,
 }
 
 
+
 /* FUN_00107d40 (0x107d40) — readable C lift from XBE leaf. */
 char FUN_00107d40(int a0, int a1, int a2, int a3, int a4, int a5, int16_t count, float *dir, float *planes)
 {
@@ -156,6 +157,7 @@ char FUN_00107db0(int a0, int a1, int a2, int a3, int a4, int a5,
     *out_t_pos = t_pos;
   return 1;
 }
+
 
 
 /* get_edge_vertex (0x107ec0) — XBE naked draft (batch 246). */
