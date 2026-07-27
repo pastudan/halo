@@ -15852,7 +15852,7 @@
           "addr": "0x11bc20",
           "decl": "void FUN_0011bc20(short *table, void *key);",
           "name": "FUN_0011bc20",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11be10",
@@ -16074,7 +16074,7 @@
         {
           "addr": "0x12e750",
           "decl": "bool FUN_0012e750(int server@<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0012e750"
         },
         {
