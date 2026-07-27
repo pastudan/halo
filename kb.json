@@ -39218,7 +39218,7 @@
         {
           "addr": "0x1b98d0",
           "decl": "void tag_groups_checksum(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b9ce0",
