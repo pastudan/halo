@@ -490,112 +490,41 @@ char rasterizer_set_texture_direct(short stage, int bitmap_tag_index, short fram
 }
 
 
-/* rasterizer_set_texture_direct_non_blocking (0x155da0) — XBE naked draft (batch 335). */
-#if defined(__clang__)
-static void (*const b155da0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b155da0_exitfn)(int) = system_exit;
-static void *(*const b155da0_tag)(int, int) = tag_get;
-static void * (*const b155da0_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
-static void *(*const b155da0_xtex)(void *, bool, bool) = xbox_texture_cache_get_hardware_format;
-static void (*const b155da0_c155c20)(int stage, void *bitmap_data) = rasterizer_set_texture_bitmap_data;
-static void (*const b155da0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void rasterizer_set_texture_direct_non_blocking(void)
+/* rasterizer_set_texture_direct_non_blocking (0x155da0) — readable C lift. */
+char rasterizer_set_texture_direct_non_blocking(int stage, int bitmap_tag_index, int frame_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lrasterizer_set_texture_direct_non_blocking_1\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .Lrasterizer_set_texture_direct_non_blocking_2\n\t"
-      ".Lrasterizer_set_texture_direct_non_blocking_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7d3\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dda4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_set_texture_direct_non_blocking_2:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lrasterizer_set_texture_direct_non_blocking_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x6269746d\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x60(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .Lrasterizer_set_texture_direct_non_blocking_4\n\t"
-      "movswl 0x10(%%ebp), %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c76ff0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lrasterizer_set_texture_direct_non_blocking_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[xtex]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_set_texture_direct_non_blocking_3\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_set_texture_direct_non_blocking_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_set_texture_direct_non_blocking_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7f3\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29de10\n\t"
-      "call *%[assert]\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x29dd38\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b155da0_assert), [exitfn] "m"(b155da0_exitfn), [tag] "m"(b155da0_tag), [c76ff0] "m"(b155da0_c76ff0), [xtex] "m"(b155da0_xtex), [c155c20] "m"(b155da0_c155c20), [c8f390] "m"(b155da0_c8f390)
-      : "memory");
+  void *tag;
+  int count;
+  void *bitmap;
+  void *hw;
+  char ok = 0;
+  int frame;
+  int rem;
+
+  if ((short)stage < 0 || (short)stage >= 4) {
+    display_assert((char *)0x29dda4, (char *)0x29dc0c, 0x7d3, 1);
+    system_exit(-1);
+  }
+  if (bitmap_tag_index != -1) {
+    tag = tag_get(0x6269746d, bitmap_tag_index);
+    count = *(int *)((char *)tag + 0x60);
+    if (count > 0) {
+      frame = (int)(short)frame_index;
+      rem = frame % count;
+      bitmap = FUN_00076ff0(bitmap_tag_index, (short)rem);
+      if (bitmap) {
+        hw = xbox_texture_cache_get_hardware_format(bitmap, 0, 1);
+        if (!hw)
+          return 1;
+        rasterizer_set_texture_bitmap_data((short)stage, bitmap);
+        return ok;
+      }
+    }
+  }
+  display_assert((char *)0x29de10, (char *)0x29dc0c, 0x7f3, 1);
+  error(2, (const char *)0x29dd38, (int)(short)stage);
+  return ok;
 }
-#else
-#error "rasterizer_set_texture_direct_non_blocking: clang naked draft required"
-#endif
-
-
 /* rasterizer_set_texture (0x155e80) — XBE naked draft (batch 312). */
 #if defined(__clang__)
 static void (*const b155e80_assert)(const char *, const char *, int, bool) = display_assert;

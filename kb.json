@@ -21813,8 +21813,9 @@
         },
         {
           "addr": "0x155da0",
-          "decl": "void rasterizer_set_texture_direct_non_blocking(void);",
-          "ported": false
+          "decl": "char rasterizer_set_texture_direct_non_blocking(int stage, int bitmap_tag_index, int frame_index);",
+          "ported": true,
+          "name": "rasterizer_set_texture_direct_non_blocking"
         },
         {
           "addr": "0x155e80",
