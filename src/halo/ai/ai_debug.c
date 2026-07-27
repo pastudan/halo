@@ -1,42 +1,22 @@
 #include <stdint.h>
 
-/* ai_debug_dispose (0x48f50) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-static void (*const b48f50_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
+/* ai_debug_dispose (0x48f50) — readable C lift. */
+extern char DAT_0025ab74[];
 void ai_debug_dispose(void)
 {
-  __asm__ volatile(
-      "movl 0x331f58, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_debug_dispose_1\n\t"
-      "pushl $0xa0\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0, 0x331f58\n\t"
-      ".Lai_debug_dispose_1:\n\t"
-      "movl 0x331f5c, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_debug_dispose_2\n\t"
-      "pushl $0xa6\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0, 0x331f5c\n\t"
-      ".Lai_debug_dispose_2:\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b48f50_c8ef70)
-      : "memory");
-}
-#else
-#error "ai_debug_dispose: clang naked draft required"
-#endif
+  void *p;
 
+  p = *(void **)0x331f58;
+  if (p != NULL) {
+    debug_free(p, DAT_0025ab74, 0xa0);
+    *(void **)0x331f58 = NULL;
+  }
+  p = *(void **)0x331f5c;
+  if (p != NULL) {
+    debug_free(p, DAT_0025ab74, 0xa6);
+    *(void **)0x331f5c = NULL;
+  }
+}
 
 /* ai_debug_dispose_from_old_map (0x48fa0) — XBE naked draft (batch 97). */
 #if defined(__clang__)

@@ -34821,7 +34821,7 @@
           "addr": "0x48f50",
           "decl": "void ai_debug_dispose(void);",
           "name": "ai_debug_dispose",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/ai_debug.c"
         },
         {
