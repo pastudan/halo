@@ -20051,7 +20051,8 @@
         {
           "addr": "0x901d0",
           "decl": "int compare_profile_sections(const void *a, const void *b);",
-          "ported": false
+          "ported": true,
+          "name": "compare_profile_sections"
         },
         {
           "addr": "0x902f0",
