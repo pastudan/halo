@@ -9266,7 +9266,7 @@
         {
           "addr": "0xabc80",
           "decl": "bool game_engine_game_over(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xabca0",
@@ -23927,7 +23927,7 @@
         {
           "addr": "0x18e4d0",
           "decl": "void scenario_location_reset(int *location);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x18e500",
@@ -30577,7 +30577,7 @@
         {
           "addr": "0x181410",
           "decl": "void FUN_00181410(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x181420",
@@ -32094,7 +32094,7 @@
         {
           "addr": "0x11c790",
           "decl": "void FUN_0011c790(short *param_1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c7a0",
@@ -32192,7 +32192,7 @@
         {
           "addr": "0x11d300",
           "decl": "int FUN_0011d300(int cache);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11d320",
@@ -39057,7 +39057,7 @@
         {
           "addr": "0x1b9920",
           "decl": "int FUN_001b9920(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b9bf0",

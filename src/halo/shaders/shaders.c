@@ -1084,18 +1084,16 @@ int numeric_countdown_timer_get(int a0 __attribute__((unused)))
 #endif
 
 
-/* 0x190d90 */
+/* numeric_countdown_timer_stop (0x190d90) — readable C lift. */
 void numeric_countdown_timer_stop(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *(unsigned char *)0x4d8a7c = 0;
 }
 
-/* 0x190da0 */
+/* numeric_countdown_timer_restart (0x190da0) — readable C lift. */
 void numeric_countdown_timer_restart(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *(unsigned char *)0x4d8a7c = 1;
 }
 
 /* FUN_00190e10 (0x190e10) — XBE naked draft (batch 243). */
