@@ -35051,8 +35051,9 @@
         },
         {
           "addr": "0x43870",
-          "decl": "char ai_conversation_line_begin(int conversation_handle);",
-          "ported": false
+          "decl": "char ai_conversation_line_begin(int conversation_handle@<eax>);",
+          "ported": true,
+          "name": "ai_conversation_line_begin"
         },
         {
           "addr": "0x43a20",

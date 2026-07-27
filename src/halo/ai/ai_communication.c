@@ -933,176 +933,81 @@ int FUN_00043740(int16_t conversation_index, char allow_finish)
   return handle;
 }
 
-/* ai_conversation_line_begin (0x43870) — XBE naked draft (batch 120). */
-#if defined(__clang__)
-static void *(*const b43870_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static scenario_t * (*const b43870_c18e380)(void) = global_scenario_get;
-static void *(*const b43870_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b43870_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b43870_exitfn)(int) = system_exit;
-static void (*const b43870_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-char ai_conversation_line_begin(int conversation_handle __attribute__((unused)))
+/* ai_conversation_line_begin (0x43870) — readable C lift.
+ * ABI: conversation_handle@<eax>. Begin current conversation line. */
+char ai_conversation_line_begin(int conversation_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x6324ec, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl 0x2(%%esi), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movswl 0x48(%%esi), %%eax\n\t"
-      "pushl $0x7c\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x5c(%%ebx), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x2(%%edi), %%cx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lai_conversation_line_begin_9\n\t"
-      "leal 0x50(%%ebx), %%edx\n\t"
-      "movl (%%edx), %%ebx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jge .Lai_conversation_line_begin_9\n\t"
-      "movl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "testl %%ebx, 0x14(%%esi)\n\t"
-      "je .Lai_conversation_line_begin_9\n\t"
-      "pushl $0x54\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl 0x28(%%esi,%%edx,4), %%ebx\n\t"
-      "movw %%ax, 0x4a(%%esi)\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jne .Lai_conversation_line_begin_1\n\t"
-      "movl %%eax, 0x50(%%esi)\n\t"
-      "movl %%eax, 0x54(%%esi)\n\t"
-      "movl %%eax, 0x58(%%esi)\n\t"
-      "movb $1, 0x60(%%esi)\n\t"
-      "jmp .Lai_conversation_line_begin_6\n\t"
-      ".Lai_conversation_line_begin_1:\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%ebx, 0x50(%%esi)\n\t"
-      "movl 0x18(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x54(%%esi)\n\t"
-      "movl $0xffffffff, 0x58(%%esi)\n\t"
-      "movswl 0x4(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "decl %%eax\n\t"
-      "je .Lai_conversation_line_begin_2\n\t"
-      "decl %%eax\n\t"
-      "jne .Lai_conversation_line_begin_3\n\t"
-      "movw 0x6(%%edi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lai_conversation_line_begin_3\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lai_conversation_line_begin_3\n\t"
-      "movl 0x28(%%esi,%%eax,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_conversation_line_begin_3\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x18(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, 0x58(%%esi)\n\t"
-      "jmp .Lai_conversation_line_begin_3\n\t"
-      ".Lai_conversation_line_begin_2:\n\t"
-      "movl 0x10(%%esi), %%edx\n\t"
-      "movl %%edx, 0x58(%%esi)\n\t"
-      ".Lai_conversation_line_begin_3:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movw 0x4(%%eax), %%ax\n\t"
-      "cmpw $6, %%ax\n\t"
-      "je .Lai_conversation_line_begin_4\n\t"
-      "cmpw $7, %%ax\n\t"
-      "je .Lai_conversation_line_begin_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lai_conversation_line_begin_5\n\t"
-      ".Lai_conversation_line_begin_4:\n\t"
-      "movl $1, %%eax\n\t"
-      ".Lai_conversation_line_begin_5:\n\t"
-      "movb %%al, 0x60(%%esi)\n\t"
-      ".Lai_conversation_line_begin_6:\n\t"
-      "movswl 0x2(%%edi), %%ecx\n\t"
-      "movw 0x18(%%esi,%%ecx,2), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lai_conversation_line_begin_7\n\t"
-      "cmpw $6, %%ax\n\t"
-      "jl .Lai_conversation_line_begin_8\n\t"
-      ".Lai_conversation_line_begin_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x146b\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x259b50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_conversation_line_begin_8:\n\t"
-      "movswl 0x2(%%edi), %%edx\n\t"
-      "movswl 0x18(%%esi,%%edx,2), %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "movl 0x28(%%eax,%%edi,1), %%ecx\n\t"
-      "movl %%ecx, 0x5c(%%esi)\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fmuls 0x253394\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x4c(%%esi)\n\t"
-      "movw (%%edi), %%dx\n\t"
-      "movw %%dx, 0x4e(%%esi)\n\t"
-      "movb $0, 0x63(%%esi)\n\t"
-      "movb $0, 0x62(%%esi)\n\t"
-      "movb $0, 0x61(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      ".Lai_conversation_line_begin_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b43870_dget), [c18e380] "m"(b43870_c18e380), [elem] "m"(b43870_elem), [assert] "m"(b43870_assert), [exitfn] "m"(b43870_exitfn), [ftol] "m"(b43870_ftol)
-      : "memory");
-}
-#else
-#error "ai_conversation_line_begin: clang naked draft required"
-#endif
+  char *rec;
+  char *conv;
+  char *line;
+  char *participant;
+  void *addressee_block;
+  int16_t speaker;
+  int actor_handle;
+  int other;
+  int16_t addressee_kind;
+  int16_t slot;
+  short delay;
 
+  rec = (char *)datum_get(*(data_t **)0x6324ec, conversation_handle);
+  conv = (char *)tag_block_get_element(
+      (char *)global_scenario_get() + 0x468, *(int16_t *)(rec + 2), 0x74);
+  line = (char *)tag_block_get_element(
+      (char *)conv + 0x5c, *(int16_t *)(rec + 0x48), 0x7c);
+  speaker = *(int16_t *)(line + 2);
+  if (speaker < 0)
+    return 0;
+  addressee_block = (char *)conv + 0x50;
+  if ((int)speaker >= *(int *)addressee_block)
+    return 0;
+  if ((*(int *)(rec + 0x14) & (1 << speaker)) == 0)
+    return 0;
+
+  participant = (char *)tag_block_get_element(addressee_block, speaker, 0x54);
+  actor_handle = *(int *)(rec + 0x28 + (int)speaker * 4);
+  *(int16_t *)(rec + 0x4a) = speaker;
+  if (actor_handle == -1) {
+    *(int *)(rec + 0x50) = -1;
+    *(int *)(rec + 0x54) = -1;
+    *(int *)(rec + 0x58) = -1;
+    rec[0x60] = 1;
+  } else {
+    char *actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+    *(int *)(rec + 0x50) = actor_handle;
+    *(int *)(rec + 0x54) = *(int *)(actor + 0x18);
+    *(int *)(rec + 0x58) = -1;
+    addressee_kind = *(int16_t *)(line + 4);
+    if (addressee_kind == 1) {
+      *(int *)(rec + 0x58) = *(int *)(rec + 0x10);
+    } else if (addressee_kind == 2) {
+      int16_t other_idx = *(int16_t *)(line + 6);
+      if (other_idx >= 0 && (int)other_idx < *(int *)addressee_block) {
+        other = *(int *)(rec + 0x28 + (int)other_idx * 4);
+        if (other != -1) {
+          actor = (char *)datum_get(*(data_t **)0x6325a4, other);
+          *(int *)(rec + 0x58) = *(int *)(actor + 0x18);
+        }
+      }
+    }
+    slot = *(int16_t *)(participant + 4);
+    rec[0x60] = (char)(slot == 6 || slot == 7);
+  }
+
+  slot = *(int16_t *)(rec + 0x18 + (int)speaker * 2);
+  if (slot < 0 || slot >= 6) {
+    display_assert((const char *)0x259b50, (const char *)0x2599b4, 0x146b, true);
+    system_exit(-1);
+  }
+  *(int *)(rec + 0x5c) =
+      *(int *)(line + 0x28 + ((int)slot << 4));
+  delay = (short)(int)(*(float *)(line + 0xc) * *(float *)0x253394);
+  *(int16_t *)(rec + 0x4c) = delay;
+  *(int16_t *)(rec + 0x4e) = *(int16_t *)line;
+  rec[0x63] = 0;
+  rec[0x62] = 0;
+  rec[0x61] = 0;
+  return 1;
+}
 
 /* FUN_00043a20 (0x43a20) — XBE naked draft (batch 111). */
 #if defined(__clang__)
@@ -5671,7 +5576,7 @@ static char (*const b46cb0_c45a10)(int conversation_handle, char *flag_out) = ai
 static void (*const b46cb0_c435b0)(int handle, char param_b, char param_c) = (void *)ai_conversation_finish;
 static char (*const b46cb0_c43a20)(int conversation_handle) = FUN_00043a20;
 static void *(*const b46cb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const b46cb0_c43870)(int conversation_handle) = ai_conversation_line_begin;
+static char (*const b46cb0_c43870)(int conversation_handle) = (void *)ai_conversation_line_begin;
 
 __attribute__((naked, noinline))
 void ai_conversation_update(void)
