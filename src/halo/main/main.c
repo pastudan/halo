@@ -3387,73 +3387,32 @@ void main_roll_credits(void)
   FUN_000dc110();
 }
 
-/* FUN_001008a0 (0x1008a0) — XBE naked draft (batch 150). */
-#if defined(__clang__)
-static void (*const b1008a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1008a0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001008a0(int num_players __attribute__((unused)), int *horizontal_out __attribute__((unused)), int *vertical_out __attribute__((unused)))
+/* FUN_001008a0 (0x1008a0) — readable C lift from XBE leaf.
+ * Smallest (h, v) grid with h*v >= num_players (num_players in EBX). */
+void FUN_001008a0(int num_players /* @<ebx> */, int *horizontal_out, int *vertical_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl $1, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%edi\n\t"
-      "jg .LFUN_001008a0_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x51c\n\t"
-      "pushl $0x28b0b4\n\t"
-      "pushl $0x28b294\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001008a0_1:\n\t"
-      "cmpl $1, %%ebx\n\t"
-      "jle .LFUN_001008a0_5\n\t"
-      ".LFUN_001008a0_2:\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "setl %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001008a0_3\n\t"
-      "incl %%esi\n\t"
-      "jmp .LFUN_001008a0_4\n\t"
-      ".LFUN_001008a0_3:\n\t"
-      "movl $1, %%esi\n\t"
-      "incl %%edi\n\t"
-      ".LFUN_001008a0_4:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "imull %%esi, %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jl .LFUN_001008a0_2\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%esi, (%%ecx)\n\t"
-      "movl %%edi, (%%edx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001008a0_5:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%esi, (%%eax)\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1008a0_assert), [exitfn] "m"(b1008a0_exitfn)
-      : "memory");
+  extern char DAT_0028b294[];
+  extern char DAT_0028b0b4[];
+  int h = 1;
+  int v = 1;
+
+  if (num_players <= 0) {
+    display_assert(DAT_0028b294, DAT_0028b0b4, 0x51c, true);
+    system_exit(-1);
+  }
+  if (num_players > 1) {
+    while (v * h < num_players) {
+      if (h < v)
+        h++;
+      else {
+        h = 1;
+        v++;
+      }
+    }
+  }
+  *horizontal_out = h;
+  *vertical_out = v;
 }
-#else
-#error "FUN_001008a0: clang naked draft required"
-#endif
 
 
 /* main_movie_start (0x101bc0) — XBE naked draft (batch 143). */

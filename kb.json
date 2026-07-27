@@ -6074,13 +6074,13 @@
           "addr": "0x8e3b0",
           "decl": "void *system_calloc(int count, int size);",
           "name": "system_calloc",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8e3d0",
           "decl": "void *system_malloc(int size);",
           "name": "system_malloc",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8e3e0",
@@ -23839,7 +23839,7 @@
         },
         {
           "addr": "0x1c3250",
-          "decl": "char FUN_001c3250(int16_t slot_index@<ax>);",
+          "decl": "char FUN_001c3250(int16_t slot_index @<eax>);",
           "ported": true,
           "name": "FUN_001c3250"
         },
@@ -23857,7 +23857,7 @@
         },
         {
           "addr": "0x1c3430",
-          "decl": "char FUN_001c3430(int16_t slot_index@<ax>);",
+          "decl": "char FUN_001c3430(int16_t slot_index @<eax>);",
           "ported": true,
           "name": "FUN_001c3430"
         },
@@ -26944,7 +26944,8 @@
         {
           "addr": "0x82310",
           "decl": "int create_endpoint_set(int count);",
-          "ported": false
+          "ported": true,
+          "name": "create_endpoint_set"
         },
         {
           "addr": "0x82410",
@@ -33064,7 +33065,7 @@
         },
         {
           "addr": "0x1d2f22",
-          "decl": "int __stdcall FUN_001d2f22(char *prefix, wchar_t *name, int a, int b, char *buf, int buflen);",
+          "decl": "int FUN_001d2f22(char *prefix, wchar_t *name, int a, int b, char *buf, int size);",
           "ported": false
         },
         {
@@ -33440,7 +33441,7 @@
         },
         {
           "addr": "0x1d0c48",
-          "decl": "void *FUN_001d0c48(int flags, int size);",
+          "decl": "void * __stdcall FUN_001d0c48(uint32_t flags, uint32_t size);",
           "ported": false,
           "name": "FUN_001d0c48"
         },

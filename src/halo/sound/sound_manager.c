@@ -2968,7 +2968,7 @@ void FUN_001be2b0(void *perm_entry __attribute__((unused)))
 
 /* FUN_001c7b40 (0x1c7b40) — XBE naked draft (batch 264). */
 #if defined(__clang__)
-static void * (*const b1c7b40_c18e3c0)(void) = scenario_get;
+static void * (*const b1c7b40_c18e3c0)(void) = global_scenario_get;
 static void *(*const b1c7b40_memset)(void *, int, unsigned int) = csmemset;
 static int (*const b1c7b40_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
 static void * (*const b1c7b40_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;

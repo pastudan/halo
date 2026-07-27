@@ -1119,100 +1119,47 @@ void *transport_get_key(void *dst)
   return dst;
 }
 
-/* create_endpoint_set (0x82310) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void (*const b82310_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82310_exitfn)(int) = system_exit;
-static void * (*const b82310_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b82310_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-int create_endpoint_set(int count __attribute__((unused)))
+/* create_endpoint_set (0x82310) — readable C lift from XBE leaf. */
+int create_endpoint_set(int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lcreate_endpoint_set_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x196\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcreate_endpoint_set_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x8(%%ebp), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jg .Lcreate_endpoint_set_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x197\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2665c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcreate_endpoint_set_2:\n\t"
-      "pushl $0x199\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0\n\t"
-      "pushl $0x118\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lcreate_endpoint_set_3\n\t"
-      "cmpw $0x40, %%di\n\t"
-      "jg .Lcreate_endpoint_set_5\n\t"
-      "pushl $0x1a2\n\t"
-      "movswl %%di, %%edi\n\t"
-      "pushl $0x266458\n\t"
-      "leal (,%%edi,4), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "movl $0, 0x114(%%esi)\n\t"
-      "movl $0, (%%esi)\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x104(%%esi)\n\t"
-      "je .Lcreate_endpoint_set_4\n\t"
-      "movl %%edi, 0x108(%%esi)\n\t"
-      "movl $0xffffffff, 0x10c(%%esi)\n\t"
-      "movl $0, 0x110(%%esi)\n\t"
-      ".Lcreate_endpoint_set_3:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcreate_endpoint_set_4:\n\t"
-      "pushl $0x1aa\n\t"
-      "jmp .Lcreate_endpoint_set_6\n\t"
-      ".Lcreate_endpoint_set_5:\n\t"
-      "pushl $0x1b0\n\t"
-      ".Lcreate_endpoint_set_6:\n\t"
-      "pushl $0x266458\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82310_assert), [exitfn] "m"(b82310_exitfn), [c8ee60] "m"(b82310_c8ee60), [c8ef70] "m"(b82310_c8ef70)
-      : "memory");
+  extern char DAT_00265fe4[];
+  extern char DAT_00266458[];
+  extern char DAT_002665c0[];
+  char *set;
+  void *entries;
+  int16_t n16 = (int16_t)count;
+  int n;
+
+  /* Flag at 0x335090 — absolute load matches XBE / Unicorn auto-map path. */
+  if (*(unsigned char *)0x335090 == 0) {
+    display_assert(DAT_00265fe4, DAT_00266458, 0x196, true);
+    system_exit(-1);
+  }
+  if (n16 <= 0) {
+    display_assert(DAT_002665c0, DAT_00266458, 0x197, true);
+    system_exit(-1);
+  }
+  set = (char *)debug_malloc(0x118, 0, DAT_00266458, 0x199);
+  if (set == 0)
+    return 0;
+  if (n16 > 0x40) {
+    debug_free(set, DAT_00266458, 0x1b0);
+    return 0;
+  }
+  n = (int)n16;
+  *(int *)(set + 0x114) = 0;
+  *(int *)set = 0;
+  entries = debug_malloc((uint32_t)(n * 4), 1, DAT_00266458, 0x1a2);
+  *(void **)(set + 0x104) = entries;
+  if (entries == 0) {
+    debug_free(set, DAT_00266458, 0x1aa);
+    return 0;
+  }
+  *(int *)(set + 0x108) = n;
+  *(int *)(set + 0x10c) = -1;
+  *(int *)(set + 0x110) = 0;
+  return (int)(uintptr_t)set;
 }
-#else
-#error "create_endpoint_set: clang naked draft required"
-#endif
 
 
 /* delete_endpoint_set (0x82410) — readable C lift from XBE leaf. */

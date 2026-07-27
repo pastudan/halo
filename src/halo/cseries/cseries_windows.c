@@ -84,7 +84,7 @@ void *system_calloc(int count, int size)
 
 void *system_malloc(int size)
 {
-  return ((void *(__stdcall *)(uint32_t, uint32_t))0x1d0c48)(0, size);
+  return FUN_001d0c48(0, (uint32_t)size);
 }
 
 void system_free(void *ptr)

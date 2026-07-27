@@ -2266,6 +2266,28 @@ char widget_instance_is_visible_in_parent_chain(void *widget)
 }
 
 
+  node = (unsigned char *)widget;
+  if (node[0x12] != 0)
+    return 0;
+  parent = *(void **)(node + 0x30);
+  if (parent == 0)
+    return 1;
+  tag = (char *)tag_get(0x44654c61, *(int *)parent);
+  ok = 1;
+  node = (unsigned char *)parent;
+  while (node != 0 && ok) {
+    next_tag = (char *)tag_get(0x44654c61, *(int *)node);
+    if ((tag[0x2c] & 1) == 0) {
+      kind = *(int16_t *)(node + 0xe);
+      ok = (kind == 2 || kind == 3);
+    } else {
+      ok = 1;
+    }
+    node = *(unsigned char **)(node + 0x30);
+    tag = next_tag;
+  }
+  return ok;
+}
 
 /* widget_instance_parent_allows_focus (0xe4a40) — readable C lift from XBE leaf. */
 char widget_instance_parent_allows_focus(void *widget /* @<eax> */)
