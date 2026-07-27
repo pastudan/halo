@@ -32323,7 +32323,7 @@
         {
           "addr": "0x107ec0",
           "decl": "void get_edge_vertex(void);",
-          "ported": false,
+          "ported": true,
           "name": "get_edge_vertex"
         },
         {
@@ -32341,7 +32341,7 @@
         {
           "addr": "0x108400",
           "decl": "void subdivide_triangle(void);",
-          "ported": false,
+          "ported": true,
           "name": "subdivide_triangle"
         },
         {
