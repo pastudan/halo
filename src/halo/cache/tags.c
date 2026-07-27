@@ -731,57 +731,24 @@ void cache_copy_initialize_and_fill_with_garbage(void)
 #endif
 
 
-/* FUN_001ba8b0 (0x1ba8b0) — XBE naked draft (batch 270). */
-#if defined(__clang__)
-static void (*const b1ba8b0_c1d00b9)(void) = FUN_001d00b9;
-static void (*const b1ba8b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1ba8b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001ba8b0(void)
+/* FUN_001ba8b0 (0x1ba8b0) — readable C lift. */
+void FUN_001ba8b0(char *base)
 {
-  __asm__ volatile(
-      "movl 0x950(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1388\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d00b9]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x994(%%esi), %%eax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_001ba8b0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5ca\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b84a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba8b0_1:\n\t"
-      "cmpl $0xc0, %%edi\n\t"
-      "popl %%edi\n\t"
-      "je .LFUN_001ba8b0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5cb\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8488\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba8b0_2:\n\t"
-      "andl $0xfffffeff, 0x994(%%esi)\n\t"
-      "ret\n\t"
-      :
-      : [c1d00b9] "m"(b1ba8b0_c1d00b9), [assert] "m"(b1ba8b0_assert), [exitfn] "m"(b1ba8b0_exitfn)
-      : "memory");
+  extern char DAT_002b84a8[];
+  extern char DAT_002b839c[];
+  extern char DAT_002b8488[];
+  int status;
+  status = FUN_001d00b9(*(void **)(base + 0x950), 0x1388, 1);
+  if ((*(unsigned int *)(base + 0x994) >> 8) & 1) {
+    display_assert(DAT_002b84a8, DAT_002b839c, 0x5ca, 1);
+    system_exit(-1);
+  }
+  if (status != 0xc0) {
+    display_assert(DAT_002b8488, DAT_002b839c, 0x5cb, 1);
+    system_exit(-1);
+  }
+  *(unsigned int *)(base + 0x994) &= 0xfffffeffu;
 }
-#else
-#error "FUN_001ba8b0: clang naked draft required"
-#endif
-
 
 /* FUN_001ba930 (0x1ba930) — XBE naked draft (batch 266). */
 #if defined(__clang__)
