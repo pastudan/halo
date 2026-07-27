@@ -33436,8 +33436,9 @@
         },
         {
           "addr": "0x1d0c16",
-          "decl": "void *__stdcall LocalFree(void *ptr);",
-          "ported": false
+          "decl": "void __stdcall FUN_001d0c16(void *ptr);",
+          "ported": false,
+          "name": "FUN_001d0c16"
         },
         {
           "addr": "0x1d0c48",
@@ -33447,8 +33448,9 @@
         },
         {
           "addr": "0x1d0c65",
-          "decl": "void FUN_001d0c65(void);",
-          "ported": false
+          "decl": "void *__stdcall FUN_001d0c65(void *ptr, uint32_t size, uint32_t flags);",
+          "ported": false,
+          "name": "FUN_001d0c65"
         },
         {
           "addr": "0x1d0c91",

@@ -1,3 +1,4 @@
+#include <stdint.h>
 
 /* system_stristr (0x8e250) — readable C lift. */
 char *system_stristr(const char *str, const char *substr)
@@ -92,75 +93,26 @@ void system_free(void *ptr)
   ((void *(__stdcall *)(void *))0x1d0c16)(ptr);
 }
 
-/* system_realloc (0x8e3f0) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void (*const b8e3f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b8e3f0_c1029a0)(void) = halt_and_catch_fire;
-static void (*const b8e3f0_c1d0c48)(void) = FUN_001d0c48;
-static void (*const b8e3f0_c1d0c65)(void) = FUN_001d0c65;
-static void *__stdcall (*const b8e3f0_c1d0c16)(void *ptr) = LocalFree;
-
-__attribute__((naked, noinline))
-void * system_realloc(void *ptr __attribute__((unused)), int size __attribute__((unused)))
+/* system_realloc (0x8e3f0) — readable C lift. */
+void *system_realloc(void *ptr, int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jge .Lsystem_realloc_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9c\n\t"
-      "pushl $0x267a3c\n\t"
-      "pushl $0x267a80\n\t"
-      "call *%[assert]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "call *%[c1029a0]\n\t"
-      ".Lsystem_realloc_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsystem_realloc_3\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lsystem_realloc_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9d\n\t"
-      "pushl $0x267a3c\n\t"
-      "pushl $0x267a70\n\t"
-      "call *%[assert]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "call *%[c1029a0]\n\t"
-      ".Lsystem_realloc_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d0c48]\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsystem_realloc_3:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lsystem_realloc_4\n\t"
-      "pushl $2\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d0c65]\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsystem_realloc_4:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d0c16]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b8e3f0_assert), [c1029a0] "m"(b8e3f0_c1029a0), [c1d0c48] "m"(b8e3f0_c1d0c48), [c1d0c65] "m"(b8e3f0_c1d0c65), [c1d0c16] "m"(b8e3f0_c1d0c16)
-      : "memory");
+  if (size < 0) {
+    display_assert((const char *)0x267a80, (const char *)0x267a3c, 0x9c, 1);
+    halt_and_catch_fire();
+  }
+  if (ptr == NULL) {
+    if (size == 0) {
+      display_assert((const char *)0x267a70, (const char *)0x267a3c, 0x9d, 1);
+      halt_and_catch_fire();
+    }
+    return FUN_001d0c48(0, (uint32_t)size);
+  }
+  if (size == 0) {
+    LocalFree(ptr);
+    return NULL;
+  }
+  return FUN_001d0c65(ptr, (uint32_t)size, 2);
 }
-#else
-#error "system_realloc: clang naked draft required"
-#endif
 
 
 uint32_t system_get_used_memory_size(uint32_t *output)
