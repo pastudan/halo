@@ -4124,57 +4124,21 @@ void FUN_001cc2f0(int tag_index /*@<esi>*/, int sound_handle /*@<eax>*/)
     *(int *)(sound + 0x98) = tag_index;
 }
 
-/* FUN_001cc440 (0x1cc440) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static int (*const b1cc440_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const b1cc440_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int FUN_001cc440(int source __attribute__((unused)))
+/* FUN_001cc440 (0x1cc440) — readable C lift: find sound datum by source@edi. */
+int FUN_001cc440(int source)
 {
-  __asm__ volatile(
-      "movl 0x4fdba0, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_001cc440_2\n\t"
-      ".LFUN_001cc440_1:\n\t"
-      "movl 0x4fdba0, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "je .LFUN_001cc440_3\n\t"
-      "movl 0x4fdba0, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_001cc440_1\n\t"
-      ".LFUN_001cc440_2:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_001cc440_3:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b1cc440_c1198f0), [dget] "m"(b1cc440_dget)
-      : "memory");
-}
-#else
-#error "FUN_001cc440: clang naked draft required"
-#endif
+  int index;
+  char *datum;
 
+  index = data_next_index(*(data_t **)0x4fdba0, -1);
+  while (index != -1) {
+    datum = (char *)datum_get(*(data_t **)0x4fdba0, index);
+    if (*(int *)(datum + 8) == source)
+      return index;
+    index = data_next_index(*(data_t **)0x4fdba0, index);
+  }
+  return -1;
+}
 
 /* FUN_001cc4f0 (0x1cc4f0) — XBE naked draft (batch 255). */
 #if defined(__clang__)
@@ -5591,7 +5555,7 @@ static bool (*const b1ce550_c21fb0)(float *v) = valid_real_normal3d;
 static void (*const b1ce550_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1ce550_exitfn)(int) = system_exit;
 static void (*const b1ce550_c1cc5b0)(int sound_tag_index, void *source) = FUN_001cc5b0;
-static int (*const b1ce550_c1cc440)(int source) = FUN_001cc440;
+static int (*const b1ce550_c1cc440)(int source) = (void *)FUN_001cc440;
 static int (*const b1ce550_c1cd190)(int sound_tag_index, void *track, void *source) = FUN_001cd190;
 static void *(*const b1ce550_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void *(*const b1ce550_tag)(int, int) = tag_get;

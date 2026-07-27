@@ -838,41 +838,9 @@ void point_physics_definition_interpolate(float *definition_a __attribute__((unu
 #endif
 
 
-/* 0x154a20 — debug-draw a point-physics particle (color by media flag).
+/* FUN_00154a20 (0x154a20) — readable C lift: debug-draw particle by media flag.
  * XBE: particle@eax, position@edx, scale on stack. */
-#if defined(__clang__)
-static void (*const FUN_00154a20_fn)(char, float *, float, void *) =
-    FUN_00189150;
-
-__attribute__((naked, noinline))
-void FUN_00154a20(void *particle __attribute__((unused)) /* @eax */,
-                  float *position __attribute__((unused)) /* @edx */,
-                  float scale __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testb $2, (%%eax)\n\t"
-      "movl 0x2ee6d0, %%eax\n\t"
-      "jne 1f\n\t"
-      "movl 0x2ee6d4, %%eax\n\t"
-      "1:\n\t"
-      "movl 8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "call *%[f]\n\t"
-      "addl $16, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [f] "m"(FUN_00154a20_fn)
-      : "memory");
-}
-#else
-void FUN_00154a20(void *particle /* @eax */, float *position /* @edx */,
-                  float scale)
+void FUN_00154a20(void *particle, float *position, float scale)
 {
   void *color;
 
@@ -881,7 +849,6 @@ void FUN_00154a20(void *particle /* @eax */, float *position /* @edx */,
     color = *(void **)0x2ee6d4;
   FUN_00189150(1, position, scale, color);
 }
-#endif
 
 /* FUN_00154a50 (0x154a50) — XBE naked draft (batch 224). */
 #if defined(__clang__)

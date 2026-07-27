@@ -816,56 +816,19 @@ int collision_surface_test_line2d(int bsp __attribute__((unused)), int surface_i
 
 
 
-/* collision_surface_project_point2d (0x147990) — XBE naked draft (batch 237). */
-#if defined(__clang__)
-static void *(*const b147990_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b147990_c992d0)(float *point_2d, float *plane, int16_t projection, uint8_t sign, float *out_point) = project_point2d;
-
-__attribute__((naked, noinline))
-int collision_surface_project_point2d(int bsp __attribute__((unused)), int surface_index __attribute__((unused)), int projection __attribute__((unused)), int sign __attribute__((unused)), float *point __attribute__((unused)), float *out_point __attribute__((unused)))
+/* collision_surface_project_point2d (0x147990) — readable C lift. */
+float *collision_surface_project_point2d(void *bsp, int surface_index, int projection, int sign, float *point, float *out_point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x3c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "andl $0x7fffffff, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0xc, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c992d0]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b147990_elem), [c992d0] "m"(b147990_c992d0)
-      : "memory");
+  int *surface;
+  float *plane;
+  int plane_index;
+
+  surface = (int *)tag_block_get_element((char *)bsp + 0x3c, surface_index, 0xc);
+  plane_index = *surface & 0x7fffffff;
+  plane = (float *)tag_block_get_element((char *)bsp + 0xc, plane_index, 0x10);
+  project_point2d(point, plane, (int16_t)projection, (uint8_t)sign, out_point);
+  return out_point;
 }
-#else
-#error "collision_surface_project_point2d: clang naked draft required"
-#endif
-
-
 
 /* collision_surface_test_point2d (0x1479e0) — XBE naked draft (batch 232). */
 #if defined(__clang__)

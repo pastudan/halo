@@ -19796,7 +19796,7 @@
         {
           "addr": "0x154a20",
           "decl": "void FUN_00154a20(void *particle@<eax>, float *position@<edx>, float scale);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x154a50",
@@ -22847,12 +22847,12 @@
       "functions": [
         {
           "addr": "0x94020",
-          "decl": "void FUN_00094020(int *out, int *cursor_ptr, int a, int c);",
+          "decl": "void FUN_00094020(int *out, int a, int *cursor, int c);",
           "ported": false
         },
         {
           "addr": "0x94060",
-          "decl": "void FUN_00094060(int *out, int **stream, int *dest);",
+          "decl": "void FUN_00094060(int *out, void *dest64, int *cursor);",
           "ported": false
         },
         {
@@ -23068,14 +23068,14 @@
         },
         {
           "addr": "0x95be0",
-          "decl": "void FUN_00095be0(int object_handle, int unused);",
-          "ported": false,
+          "decl": "void FUN_00095be0(int object);",
+          "ported": true,
           "name": "FUN_00095be0"
         },
         {
           "addr": "0x95c10",
           "decl": "void FUN_00095c10(int object);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95c60",
@@ -40188,7 +40188,7 @@
         },
         {
           "addr": "0x147990",
-          "decl": "int collision_surface_project_point2d(int bsp, int surface_index, int projection, int sign, float *point, float *out_point);",
+          "decl": "float *collision_surface_project_point2d(void *bsp, int surface_index, int projection, int sign, float *point, float *out_point);",
           "ported": false
         },
         {
