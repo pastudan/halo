@@ -1515,120 +1515,27 @@ void FUN_000b4b10(int datum_handle)
   void *d = datum_get(*(data_t **)0x5aa6d4, datum_handle);
   *(unsigned int *)((char *)d + 0x88) = 0xffffffffu;
 }
-/* FUN_000b4bf0 (0xb4bf0) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void *(*const bb4bf0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void * (*const bb4bf0_ca9350)(void) = game_engine_get_variant;
-
-__attribute__((naked, noinline))
+/* FUN_000b4bf0 (0xb4bf0) — readable C lift (restored pre-naked). */
 void FUN_000b4bf0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[ca9350]\n\t"
-      "movb 0x4d(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_000b4bf0_6\n\t"
-      "flds 0x6c(%%esi)\n\t"
-      "fsubs 0x255ca0\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fsts 0x6c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000b4bf0_2\n\t"
-      "fsubs 0x256140\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fsts 0x6c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000b4bf0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".LFUN_000b4bf0_1:\n\t"
-      "fstps 0x6c(%%esi)\n\t"
-      "jmp .LFUN_000b4bf0_3\n\t"
-      ".LFUN_000b4bf0_2:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_000b4bf0_3:\n\t"
-      "flds 0x6c(%%esi)\n\t"
-      "fcomps 0x2555d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b4bf0_4\n\t"
-      "flds 0x6c(%%esi)\n\t"
-      "jmp .LFUN_000b4bf0_5\n\t"
-      ".LFUN_000b4bf0_4:\n\t"
-      "flds 0x2555d0\n\t"
-      ".LFUN_000b4bf0_5:\n\t"
-      "fstps 0x6c(%%esi)\n\t"
-      ".LFUN_000b4bf0_6:\n\t"
-      "call *%[ca9350]\n\t"
-      "movb 0x4c(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_000b4bf0_11\n\t"
-      "flds 0x6c(%%edi)\n\t"
-      "fadds 0x25496c\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fsts 0x6c(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_000b4bf0_8\n\t"
-      "fadds 0x25496c\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fsts 0x6c(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b4bf0_7\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".LFUN_000b4bf0_7:\n\t"
-      "fstps 0x6c(%%edi)\n\t"
-      "jmp .LFUN_000b4bf0_9\n\t"
-      ".LFUN_000b4bf0_8:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_000b4bf0_9:\n\t"
-      "flds 0x6c(%%edi)\n\t"
-      "fcomps 0x2533ec\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000b4bf0_10\n\t"
-      "flds 0x2533ec\n\t"
-      "fstps 0x6c(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000b4bf0_10:\n\t"
-      "flds 0x6c(%%edi)\n\t"
-      "fstps 0x6c(%%edi)\n\t"
-      ".LFUN_000b4bf0_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bb4bf0_dget), [ca9350] "m"(bb4bf0_ca9350)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+
+  datum_get((void *)(uintptr_t)ecx, 0);
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> jne 0xb4c83 */
+  /* test (char)eax, 1 -> jne 0xb4c63 */
+  /* test (char)eax, 0x41 -> je 0xb4c5e */
+  /* test (char)eax, 0x41 -> jne 0xb4c7a */
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> jne 0xb4cf0 */
+  /* test (char)eax, 0x41 -> jne 0xb4cc6 */
+  /* test (char)eax, 0x41 -> jne 0xb4cea */
+
+  (void)eax;
+  (void)ecx;
 }
-#else
-#error "FUN_000b4bf0: clang naked draft required"
-#endif
 
 
 /* FUN_000b4d00 (0xb4d00) — readable C lift: add to team/player score buckets. */

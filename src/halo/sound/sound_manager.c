@@ -2789,128 +2789,31 @@ void *FUN_001be270(int cache_handle)
   return (void *)0x4e9268;
 }
 
-/* FUN_001be2b0 (0x1be2b0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static int (*const b1be2b0_c11de10)(void *cache, unsigned int size) = FUN_0011de10;
-static int (*const b1be2b0_c11da00)(void *lruv, int block_index) = lruv_block_get_address;
-static int (*const b1be2b0_c119570)(data_t *data, int handle) = data_new_datum;
-static void *(*const b1be2b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1be2b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1be2b0_exitfn)(int) = system_exit;
-static short (*const b1be2b0_c1bc9e0)(int param_1, int offset, unsigned int size, int buffer, char *completion_flag, char async_flag) = cache_file_read;
-static unsigned int (*const b1be2b0_c8e370)(void) = system_milliseconds;
-static void (*const b1be2b0_ce3a10)(void *color, const char *format, const char *text) = terminal_output;
-static void (*const b1be2b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1be2b0_c11db90)(const char *path, const char *tag_name, int a3, void *cache, void *fn1, void *fn2) = FUN_0011db90;
+/* FUN_001be2b0 (0x1be2b0) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-void FUN_001be2b0(void *perm_entry __attribute__((unused)))
+
+void FUN_001be2b0(void *perm_entry /* @<esi> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x40(%%esi), %%eax\n\t"
-      "movl 0x4e9370, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c11de10]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_001be2b0_2\n\t"
-      "movl 0x4e9370, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c11da00]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl 0x4e936c, %%ebx\n\t"
-      "movl 0x4e9368, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119570]\n\t"
-      "movl 0x4e9368, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "je .LFUN_001be2b0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x170\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b94cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001be2b0_1:\n\t"
-      "pushl $0\n\t"
-      "movl %%edi, 0x2c(%%esi)\n\t"
-      "movl %%ebx, 0x30(%%esi)\n\t"
-      "movl %%esi, 0x8(%%eax)\n\t"
-      "movl 0x40(%%esi), %%edx\n\t"
-      "movl 0x34(%%esi), %%ecx\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1bc9e0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001be2b0_2:\n\t"
-      "call *%[c8e370]\n\t"
-      "subl 0x4e9374, %%eax\n\t"
-      "cmpl $0x2710, %%eax\n\t"
-      "jbe .LFUN_001be2b0_3\n\t"
-      "movl 0x2ee6f4, %%edx\n\t"
-      "pushl $0x2b9488\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ce3a10]\n\t"
-      "pushl $0x2b9440\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movl 0x2ee6f4, %%eax\n\t"
-      "pushl $0x2b9488\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce3a10]\n\t"
-      "movl 0x4e9370, %%ecx\n\t"
-      "movl 0x40(%%esi), %%edx\n\t"
-      "pushl $0x1be270\n\t"
-      "pushl $0x18ef30\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2b942c\n\t"
-      "call *%[c11db90]\n\t"
-      "addl $0x30, %%esp\n\t"
-      "call *%[c8e370]\n\t"
-      "movl %%eax, 0x4e9374\n\t"
-      ".LFUN_001be2b0_3:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11de10] "m"(b1be2b0_c11de10), [c11da00] "m"(b1be2b0_c11da00), [c119570] "m"(b1be2b0_c119570), [dget] "m"(b1be2b0_dget), [assert] "m"(b1be2b0_assert), [exitfn] "m"(b1be2b0_exitfn), [c1bc9e0] "m"(b1be2b0_c1bc9e0), [c8e370] "m"(b1be2b0_c8e370), [ce3a10] "m"(b1be2b0_ce3a10), [c8f390] "m"(b1be2b0_c8f390), [c11db90] "m"(b1be2b0_c11db90)
-      : "memory");
+  char *perm = (char *)perm_entry;
+  int block_index = FUN_0011de10(*(void **)0x4e9370, *(unsigned int *)(perm + 0x40));
+  if (block_index == -1)
+    return;
+  {
+    int addr = lruv_block_get_address(*(void **)0x4e9370, block_index);
+    int cache_handle = data_new_datum(*(data_t **)0x4e9368, block_index);
+    char *entry = (char *)datum_get(*(data_t **)0x4e9368, block_index);
+    if (cache_handle != block_index) {
+      display_assert((char *)0x2b9288, "c:\\halo\\SOURCE\\cache\\xbox_sound_cache.c",
+                     0x170, 1);
+      system_exit(-1);
+    }
+    *(int *)(perm + 0x2c) = block_index;
+    *(int *)(perm + 0x30) = addr + *(int *)0x4e936c;
+    *(char **)(entry + 8) = perm;
+    cache_file_read(*(int *)(perm + 0x40), *(int *)(perm + 0x34),
+                    *(unsigned int *)(perm + 0x48), (int)(entry + 2), perm, 0);
+  }
 }
-#else
-#error "FUN_001be2b0: clang naked draft required"
-#endif
 
 
 /* FUN_001c7b40 (0x1c7b40) — readable C lift: build audible-cluster bitfield. */

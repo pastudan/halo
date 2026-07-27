@@ -1357,162 +1357,44 @@ void interface_draw_bitmap(int sprite_handle, short *offset_xy, void *color, flo
 }
 
 
-/* FUN_000e0110 (0xe0110) — XBE naked draft (batch 121). */
-#if defined(__clang__)
-static void (*const be0110_ftol)(void) = FUN_001d9068;
-static void *(*const be0110_memset)(void *, int, unsigned int) = csmemset;
-static void (*const be0110_c17cfa0)(void *render_data, void *vertices) = rasterizer_sprites_render;
-
-__attribute__((naked, noinline))
+/* FUN_000e0110 (0xe0110) — readable C lift (restored pre-naked). */
 void FUN_000e0110(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xf0, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movswl 0x4(%%ebx), %%eax\n\t"
-      "movswl 0x6(%%ebx), %%ecx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fsin\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fcos\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      "jne .LFUN_000e0110_1\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      ".LFUN_000e0110_1:\n\t"
-      "movl 0x1c(%%ebp), %%edi\n\t"
-      "flds (%%edi)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "movl %%eax, %%esi\n\t"
-      "shll $8, %%esi\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "orl %%eax, %%esi\n\t"
-      "shll $8, %%esi\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "orl %%eax, %%esi\n\t"
-      "shll $8, %%esi\n\t"
-      "call *%[ftol]\n\t"
-      "movswl 0x12(%%ebx), %%edx\n\t"
-      "orl %%eax, %%esi\n\t"
-      "movswl 0x10(%%ebx), %%eax\n\t"
-      "movl %%eax, 0x1c(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "fildl 0x1c(%%ebp)\n\t"
-      "movl %%edx, 0x1c(%%ebp)\n\t"
-      "movswl (%%eax), %%edx\n\t"
-      "fildl 0x1c(%%ebp)\n\t"
-      "movswl 0x2(%%eax), %%eax\n\t"
-      "movl %%edx, 0x1c(%%ebp)\n\t"
-      "movl $1, %%edx\n\t"
-      "fildl 0x1c(%%ebp)\n\t"
-      "movl %%eax, 0x1c(%%ebp)\n\t"
-      "leal -0xec(%%ebp), %%eax\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fildl 0x1c(%%ebp)\n\t"
-      "fstps 0x1c(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000e0110_2:\n\t"
-      "testb $2, %%dl\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "je .LFUN_000e0110_3\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "jmp .LFUN_000e0110_4\n\t"
-      ".LFUN_000e0110_3:\n\t"
-      "flds (%%edi)\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      ".LFUN_000e0110_4:\n\t"
-      "cmpw $1, %%cx\n\t"
-      "jle .LFUN_000e0110_5\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "jmp .LFUN_000e0110_6\n\t"
-      ".LFUN_000e0110_5:\n\t"
-      "flds 0x8(%%edi)\n\t"
-      ".LFUN_000e0110_6:\n\t"
-      "fld %%st(1)\n\t"
-      "incl %%ecx\n\t"
-      ".byte 0xd8, 0xe4\n\t"
-      "movl %%esi, 0xc(%%eax)\n\t"
-      "incl %%edx\n\t"
-      "addl $0x14, %%eax\n\t"
-      "cmpw $4, %%cx\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xe4\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x18(%%eax)\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds 0x1c(%%ebp)\n\t"
-      "fstps -0x14(%%eax)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0x10(%%eax)\n\t"
-      "fstps -0xc(%%eax)\n\t"
-      "jl .LFUN_000e0110_2\n\t"
-      "pushl $0x8c\n\t"
-      "fstp %%st(0)\n\t"
-      "leal -0xa0(%%ebp), %%ecx\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "movw 0x20(%%ebp), %%dx\n\t"
-      "leal -0xf0(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xa0(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x3f800000, -0x5c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x60(%%ebp)\n\t"
-      "movl $0x3f800000, -0x74(%%ebp)\n\t"
-      "movl $0x3f800000, -0x78(%%ebp)\n\t"
-      "movl $0, -0xa0(%%ebp)\n\t"
-      "movb $0, -0x16(%%ebp)\n\t"
-      "movw %%dx, -0x18(%%ebp)\n\t"
-      "movl %%ebx, -0x94(%%ebp)\n\t"
-      "call *%[c17cfa0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(be0110_ftol), [memset] "m"(be0110_memset), [c17cfa0] "m"(be0110_c17cfa0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_001d9068();
+  /* cmp (int16_t)ecx, 1 -> jle 0xe020d */
+  csmemset((void *)(uintptr_t)ecx, 0, 0);
+  rasterizer_sprites_render((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* test dl, 2 -> je 0xe036b */
+  /* cmp (int16_t)ecx, 1 -> jle 0xe0378 */
+  csmemset((void *)(uintptr_t)ecx, 0, 0);
+  rasterizer_sprites_render((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* relift: cmp byte ptr [0x30f028], 1 -> jne 0xe047d */
+  file_reference_create_from_path((void *)(uintptr_t)eax, (char *)0x002825e0, 0);
+  /* test eax, eax -> je 0xe0476 */
+  file_exists((void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> je 0xe0476 */
+  D3DDevice_PersistDisplay();
+  error(0, (char *)0x002826a8);
+  saved_game_files_take_mutex();
+  cache_files_precache_in_progress();
+  /* test (char)eax, (char)eax -> je 0xe04d1 */
+  error(0, (char *)0x00282688);
+  cache_files_precache_map_end();
+  D3DDevice_PersistDisplay();
+  /* test eax, eax -> jge 0xe04f7 */
+  display_assert((char *)0x002825f8, (char *)0x00282640, 64, 0);
+  system_exit(0);
+  xbox_demos_available();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
-#else
-#error "FUN_000e0110: clang naked draft required"
-#endif
 

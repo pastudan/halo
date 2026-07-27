@@ -811,1266 +811,514 @@ void FUN_000b6bd0(char *input)
   *(int *)(input + 0x1c) &= ~2;
 }
 
-/* get_local_player_input_blob (0xb70b0) — XBE naked draft (batch 104). */
-#if defined(__clang__)
-static int (*const bb70b0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const bb70b0_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const bb70b0_cb6380)(int16_t local_player_index) = player_control_get_data;
-static void *(*const bb70b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static bool (*const bb70b0_ccf6c0)(int16_t gamepad_index) = input_has_gamepad;
-static void * (*const bb70b0_c18e450)(void) = game_globals_get;
-static void *(*const bb70b0_elem)(void *, int, int) = tag_block_get_element;
-static void * (*const bb70b0_ccf710)(int gamepad_index) = input_get_gamepad_state;
-static void * (*const bb70b0_cce7f0)(int gamepad_index) = input_abstraction_get_input_state;
-static void *(*const bb70b0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bb70b0_tag)(int, int) = tag_get;
-static bool (*const bb70b0_cb5c30)(void) = game_time_get_paused;
-static void (*const bb70b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb70b0_exitfn)(int) = system_exit;
-static float (*const bb70b0_cb64c0)(int16_t count, float *table, float t) = (void *)evaluate_piecewise_linear_function;
-static float (*const bb70b0_c1b1350)(int unit_handle, int zoom_level) = unit_get_zoom_magnification;
-static int (*const bb70b0_ca6470)(int16_t local_player_index, float *field_2c, float *field_30, float *scratch_a, float *scratch_b) = FUN_000a6470;
-static float (*const bb70b0_cb5cc0)(void) = game_time_get_speed;
-static bool (*const bb70b0_ca7430)(void) = game_players_are_double_speed;
-static void *(*const bb70b0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static int (*const bb70b0_ccf690)(void) = FUN_000cf690;
-static bool (*const bb70b0_ccf560)(uint16_t) = input_key_is_down;
-static void (*const bb70b0_cb6bd0)(char *input) = FUN_000b6bd0;
-static char * (*const bb70b0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+/* get_local_player_input_blob (0xb70b0) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-void get_local_player_input_blob(int16_t local_player_index __attribute__((unused)), float delta_time __attribute__((unused)), char *out_blob __attribute__((unused)))
+void get_local_player_input_blob(int16_t local_player_index, float delta_time,
+                                 char *out_blob)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x48, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cba3c0]\n\t"
-      "pushl $0x20\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lget_local_player_input_blob_120\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cb6380]\n\t"
-      "movl 0x5aa6d4, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[dget]\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movw 0x2(%%eax), %%si\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw 0x457094, %%si\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "sete -0x1(%%ebp)\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lget_local_player_input_blob_81\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccf6c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lget_local_player_input_blob_81\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0\n\t"
-      "call *%[c18e450]\n\t"
-      "addl $0x110, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "call *%[ccf710]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, -0x24(%%ebp)\n\t"
-      "call *%[cce7f0]\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl $0, -0x18(%%ebp)\n\t"
-      "movl $0, -0x1c(%%ebp)\n\t"
-      "je .Lget_local_player_input_blob_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x457098(%%eax)\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x4570a8(%%eax)\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "je .Lget_local_player_input_blob_2\n\t"
-      "cmpw $-1, 0x2a0(%%esi)\n\t"
-      "je .Lget_local_player_input_blob_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x2a0(%%esi), %%edx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "flds 0x7c(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_1\n\t"
-      "flds 0x7c(%%ecx)\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_1:\n\t"
-      "flds 0x80(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_2\n\t"
-      "flds 0x80(%%ecx)\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_2:\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "movl %%eax, (%%ebx)\n\t"
-      "movl 0x10(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%ebx)\n\t"
-      "flds 0x18(%%esi)\n\t"
-      "fabs\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x14(%%esi)\n\t"
-      "fabs\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fcomps 0x25496c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_5\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x25496c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_5\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fcomps -0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_3\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fdivs -0x14(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lget_local_player_input_blob_4\n\t"
-      ".Lget_local_player_input_blob_3:\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fdivs -0xc(%%ebp)\n\t"
-      "movl $0x3f800000, -0xc(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_4:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(1)\n\t"
-      ".Lget_local_player_input_blob_5:\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x14(%%esi)\n\t"
-      "fcoms 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lget_local_player_input_blob_6\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0xbf800000, -0x14(%%ebp)\n\t"
-      "jmp .Lget_local_player_input_blob_8\n\t"
-      ".Lget_local_player_input_blob_6:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_7\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x14(%%ebp)\n\t"
-      "jmp .Lget_local_player_input_blob_8\n\t"
-      ".Lget_local_player_input_blob_7:\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_8:\n\t"
-      "fmuls 0x18(%%esi)\n\t"
-      "fcoms 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lget_local_player_input_blob_9\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0xbf800000, -0xc(%%ebp)\n\t"
-      "jmp .Lget_local_player_input_blob_11\n\t"
-      ".Lget_local_player_input_blob_9:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_10\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0xc(%%ebp)\n\t"
-      "jmp .Lget_local_player_input_blob_11\n\t"
-      ".Lget_local_player_input_blob_10:\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_11:\n\t"
-      "movl 0x457090, %%edx\n\t"
-      "testb $1, 0xc(%%edx)\n\t"
-      "jne .Lget_local_player_input_blob_38\n\t"
-      "call *%[cb5c30]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lget_local_player_input_blob_38\n\t"
-      "movb 0xb(%%esi), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .Lget_local_player_input_blob_12\n\t"
-      "movb 0x4570b9, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lget_local_player_input_blob_12\n\t"
-      "movb 0x4570ba, %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "jmp .Lget_local_player_input_blob_13\n\t"
-      ".Lget_local_player_input_blob_12:\n\t"
-      "movb 0x4570ba, %%cl\n\t"
-      "movzbl %%cl, %%eax\n\t"
-      ".Lget_local_player_input_blob_13:\n\t"
-      "incl %%eax\n\t"
-      "testb %%dl, %%dl\n\t"
-      "movl %%eax, -0x28(%%ebp)\n\t"
-      "fildl -0x28(%%ebp)\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "je .Lget_local_player_input_blob_14\n\t"
-      "movb 0x4570b9, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lget_local_player_input_blob_14\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "jmp .Lget_local_player_input_blob_15\n\t"
-      ".Lget_local_player_input_blob_14:\n\t"
-      "movzbl %%cl, %%eax\n\t"
-      ".Lget_local_player_input_blob_15:\n\t"
-      "movl -0x20(%%ebp), %%esi\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0x28(%%ebp)\n\t"
-      "fildl -0x28(%%ebp)\n\t"
-      "movl 0x74(%%esi), %%eax\n\t"
-      "cmpl $1, %%eax\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "jg .Lget_local_player_input_blob_16\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1c8\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x26e324\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lget_local_player_input_blob_16:\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "movl 0x78(%%esi), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x74(%%esi), %%dx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cb64c0]\n\t"
-      "fmuls -0x28(%%ebp)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl 0x78(%%esi), %%ecx\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x74(%%esi), %%dx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cb64c0]\n\t"
-      "fmuls -0x30(%%ebp)\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "je .Lget_local_player_input_blob_17\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x24(%%edi), %%cx\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .Lget_local_player_input_blob_17\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1b1350]\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "fmuls -0x38(%%ebp)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_17:\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "cmpl $-1, 0x34(%%ecx)\n\t"
-      "je .Lget_local_player_input_blob_18\n\t"
-      "pushl $0xf4\n\t"
-      "pushl $0\n\t"
-      "call *%[c18e450]\n\t"
-      "addl $0x170, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x30(%%ebp)\n\t"
-      "movl 0x34(%%edx), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "flds 0x3d4(%%eax)\n\t"
-      "movl -0x30(%%ebp), %%ecx\n\t"
-      "fmuls 0x84(%%ecx)\n\t"
-      "addl $0x14, %%esp\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "fmuls -0x38(%%ebp)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_18:\n\t"
-      "flds 0x40(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lget_local_player_input_blob_19\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e3\n\t"
-      "pushl $0x26e1e8\n\t"
-      "pushl $0x26e2fc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lget_local_player_input_blob_19:\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fabs\n\t"
-      "fstl -0x2c(%%ebp)\n\t"
-      "flds 0x48(%%esi)\n\t"
-      "fxch %%st(1)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_22\n\t"
-      "flds 0x34(%%edi)\n\t"
-      "fdivs 0x40(%%esi)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lget_local_player_input_blob_20\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lget_local_player_input_blob_21\n\t"
-      ".Lget_local_player_input_blob_20:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_21\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lget_local_player_input_blob_21:\n\t"
-      "flds 0x44(%%esi)\n\t"
-      "fsubs 0x2533c8\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls -0x3c(%%ebp)\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds 0x34(%%edi)\n\t"
-      "fstps 0x34(%%edi)\n\t"
-      "jmp .Lget_local_player_input_blob_23\n\t"
-      ".Lget_local_player_input_blob_22:\n\t"
-      "movl $0, 0x34(%%edi)\n\t"
-      ".Lget_local_player_input_blob_23:\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x44(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x30(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "leal 0x2c(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca6470]\n\t"
-      "movl %%eax, 0x28(%%edi)\n\t"
-      "movb 0x2f0291, %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lget_local_player_input_blob_36\n\t"
-      "flds 0x30(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_36\n\t"
-      "fldl -0x2c(%%ebp)\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lget_local_player_input_blob_24\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lget_local_player_input_blob_24\n\t"
-      "flds (%%ebx)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lget_local_player_input_blob_24\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_36\n\t"
-      ".Lget_local_player_input_blob_24:\n\t"
-      "call *%[cb5cc0]\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lget_local_player_input_blob_25\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lget_local_player_input_blob_27\n\t"
-      ".Lget_local_player_input_blob_25:\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_26\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lget_local_player_input_blob_27\n\t"
-      ".Lget_local_player_input_blob_26:\n\t"
-      "flds (%%esi)\n\t"
-      ".Lget_local_player_input_blob_27:\n\t"
-      "fmuls 0x30(%%edi)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lget_local_player_input_blob_28\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lget_local_player_input_blob_30\n\t"
-      ".Lget_local_player_input_blob_28:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_29\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lget_local_player_input_blob_30\n\t"
-      ".Lget_local_player_input_blob_29:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      ".Lget_local_player_input_blob_30:\n\t"
-      "fmuls 0x30(%%edi)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "call *%[ca7430]\n\t"
-      "testb %%al, %%al\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "je .Lget_local_player_input_blob_31\n\t"
-      "fmuls 0x253398\n\t"
-      ".Lget_local_player_input_blob_31:\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      "fmuls -0x30(%%ebp)\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fcomps 0x26e2f8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lget_local_player_input_blob_32\n\t"
-      "movl $0xbdd67750, -0x34(%%ebp)\n\t"
-      "jmp .Lget_local_player_input_blob_33\n\t"
-      ".Lget_local_player_input_blob_32:\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fcomps 0x26e2f4\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_33\n\t"
-      "movl $0x3dd67750, -0x34(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_33:\n\t"
-      "fcoms 0x26e2f0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lget_local_player_input_blob_34\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x26e2f0\n\t"
-      "jmp .Lget_local_player_input_blob_35\n\t"
-      ".Lget_local_player_input_blob_34:\n\t"
-      "fcoms 0x26e2ec\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_35\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x26e2ec\n\t"
-      ".Lget_local_player_input_blob_35:\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls -0x3c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls -0x38(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "jmp .Lget_local_player_input_blob_37\n\t"
-      ".Lget_local_player_input_blob_36:\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      ".Lget_local_player_input_blob_37:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x253394\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps 0xc(%%ebx)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps 0x10(%%ebx)\n\t"
-      "fstp %%st(0)\n\t"
-      "jmp .Lget_local_player_input_blob_39\n\t"
-      ".Lget_local_player_input_blob_38:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, 0xc(%%ebx)\n\t"
-      "movl %%eax, 0x10(%%ebx)\n\t"
-      ".Lget_local_player_input_blob_39:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb %%al, -0x3d(%%ebp)\n\t"
-      "movl %%eax, -0x47(%%ebp)\n\t"
-      "movl %%eax, -0x43(%%ebp)\n\t"
-      "movw %%ax, -0x3f(%%ebp)\n\t"
-      "movw 0xa(%%edi), %%ax\n\t"
-      "andw 0x8(%%edi), %%ax\n\t"
-      "movb $0, -0x48(%%ebp)\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lget_local_player_input_blob_47\n\t"
-      "movzwl %%ax, %%esi\n\t"
-      "movl %%esi, -0x1c(%%ebp)\n\t"
-      "movl $1, %%edx\n\t"
-      "jmp .Lget_local_player_input_blob_40\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lget_local_player_input_blob_40:\n\t"
-      "leal -0x1(%%edx), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testl %%eax, %%esi\n\t"
-      "je .Lget_local_player_input_blob_41\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb -0x1(%%ecx,%%edx,1), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lget_local_player_input_blob_41\n\t"
-      "movl $1, %%eax\n\t"
-      "leal -0x1(%%edx), %%ecx\n\t"
-      "shll %%cl, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andw %%ax, 0x8(%%edi)\n\t"
-      "andw %%ax, 0xa(%%edi)\n\t"
-      ".Lget_local_player_input_blob_41:\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testl %%eax, %%esi\n\t"
-      "je .Lget_local_player_input_blob_42\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "cmpb $0, (%%edx,%%ecx,1)\n\t"
-      "jne .Lget_local_player_input_blob_42\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "shll %%cl, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andw %%ax, 0x8(%%edi)\n\t"
-      "andw %%ax, 0xa(%%edi)\n\t"
-      ".Lget_local_player_input_blob_42:\n\t"
-      "leal 0x1(%%edx), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testl %%eax, %%esi\n\t"
-      "je .Lget_local_player_input_blob_43\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x1(%%edx,%%ecx,1), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lget_local_player_input_blob_43\n\t"
-      "movl $1, %%eax\n\t"
-      "leal 0x1(%%edx), %%ecx\n\t"
-      "shll %%cl, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andw %%ax, 0x8(%%edi)\n\t"
-      "andw %%ax, 0xa(%%edi)\n\t"
-      ".Lget_local_player_input_blob_43:\n\t"
-      "leal 0x2(%%edx), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testl %%eax, %%esi\n\t"
-      "je .Lget_local_player_input_blob_44\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x2(%%edx,%%ecx,1), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lget_local_player_input_blob_44\n\t"
-      "movl $1, %%eax\n\t"
-      "leal 0x2(%%edx), %%ecx\n\t"
-      "shll %%cl, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andw %%ax, 0x8(%%edi)\n\t"
-      "andw %%ax, 0xa(%%edi)\n\t"
-      ".Lget_local_player_input_blob_44:\n\t"
-      "leal 0x3(%%edx), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testl %%eax, %%esi\n\t"
-      "je .Lget_local_player_input_blob_45\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x3(%%edx,%%ecx,1), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lget_local_player_input_blob_45\n\t"
-      "movl $1, %%eax\n\t"
-      "leal 0x3(%%edx), %%ecx\n\t"
-      "shll %%cl, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andw %%ax, 0x8(%%edi)\n\t"
-      "andw %%ax, 0xa(%%edi)\n\t"
-      ".Lget_local_player_input_blob_45:\n\t"
-      "movl -0x1c(%%ebp), %%esi\n\t"
-      "leal 0x4(%%edx), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testl %%eax, %%esi\n\t"
-      "je .Lget_local_player_input_blob_46\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpb $0, 0x4(%%edx,%%eax,1)\n\t"
-      "jne .Lget_local_player_input_blob_46\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andw %%ax, 0x8(%%edi)\n\t"
-      "andw %%ax, 0xa(%%edi)\n\t"
-      ".Lget_local_player_input_blob_46:\n\t"
-      "addl $6, %%edx\n\t"
-      "leal -0x1(%%edx), %%ecx\n\t"
-      "cmpl $0xc, %%ecx\n\t"
-      "jl .Lget_local_player_input_blob_40\n\t"
-      ".Lget_local_player_input_blob_47:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "leal -0x48(%%ebp), %%eax\n\t"
-      "movl $1, %%esi\n\t"
-      "subl %%eax, %%esi\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "movl $2, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "movl $3, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "movl $4, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl $5, %%eax\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%esi, -0x30(%%ebp)\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "jmp .Lget_local_player_input_blob_49\n\t"
-      ".Lget_local_player_input_blob_48:\n\t"
-      "movl -0x30(%%ebp), %%esi\n\t"
-      "jmp .Lget_local_player_input_blob_49\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lget_local_player_input_blob_49:\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movzwl 0x8(%%edi), %%eax\n\t"
-      "testl %%ecx, %%eax\n\t"
-      "jne .Lget_local_player_input_blob_50\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "leal -0x48(%%ebp,%%edx,1), %%eax\n\t"
-      "movb (%%ecx,%%eax,1), %%cl\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      ".Lget_local_player_input_blob_50:\n\t"
-      "leal -0x48(%%ebp,%%edx,1), %%eax\n\t"
-      "leal (%%esi,%%eax,1), %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movzwl 0x8(%%edi), %%ecx\n\t"
-      "testl %%esi, %%ecx\n\t"
-      "jne .Lget_local_player_input_blob_51\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x1(%%edx,%%ecx,1), %%cl\n\t"
-      "movb %%cl, 0x1(%%eax)\n\t"
-      ".Lget_local_player_input_blob_51:\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movzwl 0x8(%%edi), %%ecx\n\t"
-      "testl %%esi, %%ecx\n\t"
-      "jne .Lget_local_player_input_blob_52\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x2(%%edx,%%ecx,1), %%cl\n\t"
-      "movb %%cl, 0x2(%%eax)\n\t"
-      ".Lget_local_player_input_blob_52:\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movzwl 0x8(%%edi), %%ecx\n\t"
-      "testl %%esi, %%ecx\n\t"
-      "jne .Lget_local_player_input_blob_53\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x3(%%edx,%%ecx,1), %%cl\n\t"
-      "movb %%cl, 0x3(%%eax)\n\t"
-      ".Lget_local_player_input_blob_53:\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movzwl 0x8(%%edi), %%ecx\n\t"
-      "testl %%esi, %%ecx\n\t"
-      "jne .Lget_local_player_input_blob_54\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x4(%%edx,%%ecx,1), %%cl\n\t"
-      "movb %%cl, 0x4(%%eax)\n\t"
-      ".Lget_local_player_input_blob_54:\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movzwl 0x8(%%edi), %%ecx\n\t"
-      "testl %%esi, %%ecx\n\t"
-      "jne .Lget_local_player_input_blob_55\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb 0x5(%%edx,%%ecx,1), %%cl\n\t"
-      "movb %%cl, 0x5(%%eax)\n\t"
-      ".Lget_local_player_input_blob_55:\n\t"
-      "addl $6, %%edx\n\t"
-      "cmpl $0xc, %%edx\n\t"
-      "jl .Lget_local_player_input_blob_48\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "movl 0x34(%%edx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lget_local_player_input_blob_59\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lget_local_player_input_blob_59\n\t"
-      "movb 0x4570b8, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lget_local_player_input_blob_56\n\t"
-      "testb $1, 0x424(%%eax)\n\t"
-      "jne .Lget_local_player_input_blob_56\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "flds (%%ebx)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x26e2e8\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jp .Lget_local_player_input_blob_59\n\t"
-      ".Lget_local_player_input_blob_56:\n\t"
-      "movb -0x3e(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_57\n\t"
-      "orl $1, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_58\n\t"
-      ".Lget_local_player_input_blob_57:\n\t"
-      "andl $0xfffffffe, %%eax\n\t"
-      ".Lget_local_player_input_blob_58:\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      ".Lget_local_player_input_blob_59:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movzbl 0x7(%%eax), %%ecx\n\t"
-      "movb -0x41(%%ebp), %%al\n\t"
-      "movl %%ecx, -0x38(%%ebp)\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "fildl -0x38(%%ebp)\n\t"
-      "fmuls 0x26e1e4\n\t"
-      "fstps 0x8(%%ebx)\n\t"
-      "je .Lget_local_player_input_blob_60\n\t"
-      "orl $0x800, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_61\n\t"
-      ".Lget_local_player_input_blob_60:\n\t"
-      "andl $0xfffff7ff, %%eax\n\t"
-      ".Lget_local_player_input_blob_61:\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "movb -0x42(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_62\n\t"
-      "orl $0x2000, %%eax\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "orl $0x1000, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_63\n\t"
-      ".Lget_local_player_input_blob_62:\n\t"
-      "andl $0xffffdfff, %%eax\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "andl $0xffffefff, %%eax\n\t"
-      ".Lget_local_player_input_blob_63:\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "cmpb $1, -0x3d(%%ebp)\n\t"
-      "movl 0x1c(%%ebx), %%eax\n\t"
-      "jne .Lget_local_player_input_blob_64\n\t"
-      "orl $4, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_65\n\t"
-      ".Lget_local_player_input_blob_64:\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      ".Lget_local_player_input_blob_65:\n\t"
-      "movl 0x18(%%ebx), %%ecx\n\t"
-      "movl %%eax, 0x1c(%%ebx)\n\t"
-      "movb -0x46(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lget_local_player_input_blob_66\n\t"
-      "orl $0x40, %%ecx\n\t"
-      "jmp .Lget_local_player_input_blob_67\n\t"
-      ".Lget_local_player_input_blob_66:\n\t"
-      "andl $0xffffffbf, %%ecx\n\t"
-      ".Lget_local_player_input_blob_67:\n\t"
-      "movzbl %%al, %%edx\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "movl %%ecx, 0x18(%%ebx)\n\t"
-      "cmpw 0x6c(%%eax), %%dx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "jl .Lget_local_player_input_blob_68\n\t"
-      "orl $0x4000, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_69\n\t"
-      ".Lget_local_player_input_blob_68:\n\t"
-      "andl $0xffffbfff, %%eax\n\t"
-      ".Lget_local_player_input_blob_69:\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "movb -0x43(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_70\n\t"
-      "orl $0x10, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_71\n\t"
-      ".Lget_local_player_input_blob_70:\n\t"
-      "andl $0xffffffef, %%eax\n\t"
-      ".Lget_local_player_input_blob_71:\n\t"
-      "movb -0x48(%%ebp), %%cl\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x18(%%ebx), %%ecx\n\t"
-      "movl $0xfffffffd, %%eax\n\t"
-      "je .Lget_local_player_input_blob_72\n\t"
-      "orl $2, %%ecx\n\t"
-      "jmp .Lget_local_player_input_blob_73\n\t"
-      ".Lget_local_player_input_blob_72:\n\t"
-      "andl %%eax, %%ecx\n\t"
-      ".Lget_local_player_input_blob_73:\n\t"
-      "movl %%ecx, 0x18(%%ebx)\n\t"
-      "movb -0x44(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x18(%%ebx), %%ecx\n\t"
-      "je .Lget_local_player_input_blob_74\n\t"
-      "orl $0x80, %%ecx\n\t"
-      "jmp .Lget_local_player_input_blob_75\n\t"
-      ".Lget_local_player_input_blob_74:\n\t"
-      "andl $0xffffff7f, %%ecx\n\t"
-      ".Lget_local_player_input_blob_75:\n\t"
-      "movl %%ecx, 0x18(%%ebx)\n\t"
-      "cmpb $1, -0x45(%%ebp)\n\t"
-      "movl 0x1c(%%ebx), %%ecx\n\t"
-      "jne .Lget_local_player_input_blob_76\n\t"
-      "orl $1, %%ecx\n\t"
-      "jmp .Lget_local_player_input_blob_77\n\t"
-      ".Lget_local_player_input_blob_76:\n\t"
-      "andl $0xfffffffe, %%ecx\n\t"
-      ".Lget_local_player_input_blob_77:\n\t"
-      "movl %%ecx, 0x1c(%%ebx)\n\t"
-      "cmpb $1, -0x47(%%ebp)\n\t"
-      "jne .Lget_local_player_input_blob_78\n\t"
-      "orl $2, 0x1c(%%ebx)\n\t"
-      "jmp .Lget_local_player_input_blob_79\n\t"
-      ".Lget_local_player_input_blob_78:\n\t"
-      "andl %%eax, 0x1c(%%ebx)\n\t"
-      ".Lget_local_player_input_blob_79:\n\t"
-      "testb $2, 0x9(%%edi)\n\t"
-      "jne .Lget_local_player_input_blob_80\n\t"
-      "movl -0x24(%%ebp), %%ecx\n\t"
-      "movb 0x11(%%ecx), %%dl\n\t"
-      "movb %%dl, 0x15(%%ebx)\n\t"
-      ".Lget_local_player_input_blob_80:\n\t"
-      "testb $4, 0x8(%%edi)\n\t"
-      "jne .Lget_local_player_input_blob_108\n\t"
-      "movl -0x24(%%ebp), %%eax\n\t"
-      "movb 0x10(%%eax), %%cl\n\t"
-      "movb %%cl, 0x14(%%ebx)\n\t"
-      "jmp .Lget_local_player_input_blob_108\n\t"
-      ".Lget_local_player_input_blob_81:\n\t"
-      "call *%[ccf690]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lget_local_player_input_blob_108\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lget_local_player_input_blob_108\n\t"
-      "call *%[ccf690]\n\t"
-      "pushl $0x2e\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[ccf560]\n\t"
-      "negb %%al\n\t"
-      "pushl $0x20\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "call *%[ccf560]\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "negb %%al\n\t"
-      "pushl $0x2f\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "fildl -0x38(%%ebp)\n\t"
-      "fstps (%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "negb %%al\n\t"
-      "pushl $0x2d\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "call *%[ccf560]\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "movl 0x457090, %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "fildl -0x38(%%ebp)\n\t"
-      "fstps 0x4(%%ebx)\n\t"
-      "movb 0xc(%%edx), %%al\n\t"
-      "testb $1, %%al\n\t"
-      "jne .Lget_local_player_input_blob_82\n\t"
-      "call *%[cb5c30]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lget_local_player_input_blob_82\n\t"
-      "fildl (%%edi)\n\t"
-      "fmuls 0x26e1dc\n\t"
-      "fchs\n\t"
-      "fstps 0xc(%%ebx)\n\t"
-      "fildl 0x4(%%edi)\n\t"
-      "fmuls 0x26e1e0\n\t"
-      "fchs\n\t"
-      "fstps 0x10(%%ebx)\n\t"
-      "jmp .Lget_local_player_input_blob_83\n\t"
-      ".Lget_local_player_input_blob_82:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, 0xc(%%ebx)\n\t"
-      "movl %%eax, 0x10(%%ebx)\n\t"
-      ".Lget_local_player_input_blob_83:\n\t"
-      "pushl $0x69\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_84\n\t"
-      "orl $0x100, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_85\n\t"
-      ".Lget_local_player_input_blob_84:\n\t"
-      "andl $0xfffffeff, %%eax\n\t"
-      ".Lget_local_player_input_blob_85:\n\t"
-      "pushl $0x6c\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_86\n\t"
-      "orl $0x200, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_87\n\t"
-      ".Lget_local_player_input_blob_86:\n\t"
-      "andl $0xfffffdff, %%eax\n\t"
-      ".Lget_local_player_input_blob_87:\n\t"
-      "pushl $0x6a\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_88\n\t"
-      "orl $1, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_89\n\t"
-      ".Lget_local_player_input_blob_88:\n\t"
-      "andl $0xfffffffe, %%eax\n\t"
-      ".Lget_local_player_input_blob_89:\n\t"
-      "pushl $0x48\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_90\n\t"
-      "orl $2, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_91\n\t"
-      ".Lget_local_player_input_blob_90:\n\t"
-      "andl $0xfffffffd, %%eax\n\t"
-      ".Lget_local_player_input_blob_91:\n\t"
-      "pushl $0x1f\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_92\n\t"
-      "orl $0x40, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_93\n\t"
-      ".Lget_local_player_input_blob_92:\n\t"
-      "andl $0xffffffbf, %%eax\n\t"
-      ".Lget_local_player_input_blob_93:\n\t"
-      "pushl $0x3b\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_94\n\t"
-      "orl $0x10, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_95\n\t"
-      ".Lget_local_player_input_blob_94:\n\t"
-      "andl $0xffffffef, %%eax\n\t"
-      ".Lget_local_player_input_blob_95:\n\t"
-      "pushl $0x22\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_96\n\t"
-      "orl $0x400, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_97\n\t"
-      ".Lget_local_player_input_blob_96:\n\t"
-      "andl $0xfffffbff, %%eax\n\t"
-      ".Lget_local_player_input_blob_97:\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "movb 0xc(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "movl $0x800, %%esi\n\t"
-      "je .Lget_local_player_input_blob_98\n\t"
-      "orl %%esi, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_99\n\t"
-      ".Lget_local_player_input_blob_98:\n\t"
-      "andl $0xfffff7ff, %%eax\n\t"
-      ".Lget_local_player_input_blob_99:\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "movb 0xe(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "je .Lget_local_player_input_blob_100\n\t"
-      "orl $0x2000, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_101\n\t"
-      ".Lget_local_player_input_blob_100:\n\t"
-      "andl $0xffffdfff, %%eax\n\t"
-      ".Lget_local_player_input_blob_101:\n\t"
-      "pushl $0x3a\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movl 0x1c(%%ebx), %%eax\n\t"
-      "jne .Lget_local_player_input_blob_102\n\t"
-      "orl $4, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_103\n\t"
-      ".Lget_local_player_input_blob_102:\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      ".Lget_local_player_input_blob_103:\n\t"
-      "pushl $0x21\n\t"
-      "movl %%eax, 0x1c(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movl 0x1c(%%ebx), %%eax\n\t"
-      "jne .Lget_local_player_input_blob_104\n\t"
-      "orl $1, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_105\n\t"
-      ".Lget_local_player_input_blob_104:\n\t"
-      "andl $0xfffffffe, %%eax\n\t"
-      ".Lget_local_player_input_blob_105:\n\t"
-      "movl %%eax, 0x1c(%%ebx)\n\t"
-      "testl %%esi, 0x18(%%ebx)\n\t"
-      "je .Lget_local_player_input_blob_106\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lget_local_player_input_blob_107\n\t"
-      ".Lget_local_player_input_blob_106:\n\t"
-      "flds 0x2533c0\n\t"
-      ".Lget_local_player_input_blob_107:\n\t"
-      "fstps 0x8(%%ebx)\n\t"
-      ".Lget_local_player_input_blob_108:\n\t"
-      "pushl $0x2b\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movl 0x1c(%%ebx), %%eax\n\t"
-      "movl $0xfffffff7, %%esi\n\t"
-      "movl $8, %%edi\n\t"
-      "jne .Lget_local_player_input_blob_109\n\t"
-      "orl %%edi, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_110\n\t"
-      ".Lget_local_player_input_blob_109:\n\t"
-      "andl %%esi, %%eax\n\t"
-      ".Lget_local_player_input_blob_110:\n\t"
-      "pushl $0x2a\n\t"
-      "movl %%eax, 0x1c(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movl 0x1c(%%ebx), %%eax\n\t"
-      "jne .Lget_local_player_input_blob_111\n\t"
-      "orl $0x10, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_112\n\t"
-      ".Lget_local_player_input_blob_111:\n\t"
-      "andl $0xffffffef, %%eax\n\t"
-      ".Lget_local_player_input_blob_112:\n\t"
-      "pushl $0x29\n\t"
-      "movl %%eax, 0x1c(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movl 0x1c(%%ebx), %%eax\n\t"
-      "jne .Lget_local_player_input_blob_113\n\t"
-      "orl $0x20, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_114\n\t"
-      ".Lget_local_player_input_blob_113:\n\t"
-      "andl $0xffffffdf, %%eax\n\t"
-      ".Lget_local_player_input_blob_114:\n\t"
-      "pushl $0x11\n\t"
-      "movl %%eax, 0x1c(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "jne .Lget_local_player_input_blob_115\n\t"
-      "orl $4, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_116\n\t"
-      ".Lget_local_player_input_blob_115:\n\t"
-      "andl $0xfffffffb, %%eax\n\t"
-      ".Lget_local_player_input_blob_116:\n\t"
-      "pushl $0x12\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "call *%[ccf560]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movl 0x18(%%ebx), %%eax\n\t"
-      "jne .Lget_local_player_input_blob_117\n\t"
-      "orl %%edi, %%eax\n\t"
-      "jmp .Lget_local_player_input_blob_118\n\t"
-      ".Lget_local_player_input_blob_117:\n\t"
-      "andl %%esi, %%eax\n\t"
-      ".Lget_local_player_input_blob_118:\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "movl %%eax, 0x18(%%ebx)\n\t"
-      "flds (%%ebx)\n\t"
-      "popl %%edi\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xde, 0xca\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xc2\n\t"
-      "fstp %%st(0)\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lget_local_player_input_blob_119\n\t"
-      "fsqrt\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%ebx)\n\t"
-      "fstps (%%ebx)\n\t"
-      "fmuls 0x4(%%ebx)\n\t"
-      "fstps 0x4(%%ebx)\n\t"
-      "jmp .Lget_local_player_input_blob_120\n\t"
-      ".Lget_local_player_input_blob_119:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lget_local_player_input_blob_120:\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "call *%[cb6bd0]\n\t"
-      "movl 0x8(%%ebx), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x7f800000, %%ecx\n\t"
-      "cmpl $0x7f800000, %%ecx\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "popl %%esi\n\t"
-      "jne .Lget_local_player_input_blob_121\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2b6\n\t"
-      "pushl $0x26e1e8\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "movl %%eax, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x26e2d0\n\t"
-      "pushl $0x25eb8c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lget_local_player_input_blob_121:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cba3c0] "m"(bb70b0_cba3c0), [memset] "m"(bb70b0_memset), [cb6380] "m"(bb70b0_cb6380), [dget] "m"(bb70b0_dget), [ccf6c0] "m"(bb70b0_ccf6c0), [c18e450] "m"(bb70b0_c18e450), [elem] "m"(bb70b0_elem), [ccf710] "m"(bb70b0_ccf710), [cce7f0] "m"(bb70b0_cce7f0), [get] "m"(bb70b0_get), [tag] "m"(bb70b0_tag), [cb5c30] "m"(bb70b0_cb5c30), [assert] "m"(bb70b0_assert), [exitfn] "m"(bb70b0_exitfn), [cb64c0] "m"(bb70b0_cb64c0), [c1b1350] "m"(bb70b0_c1b1350), [ca6470] "m"(bb70b0_ca6470), [cb5cc0] "m"(bb70b0_cb5cc0), [ca7430] "m"(bb70b0_ca7430), [tryget] "m"(bb70b0_tryget), [ccf690] "m"(bb70b0_ccf690), [ccf560] "m"(bb70b0_ccf560), [cb6bd0] "m"(bb70b0_cb6bd0), [c8d9d0] "m"(bb70b0_c8d9d0)
-      : "memory");
+  int player_index;
+  char *slot;
+  char *player;
+  int16_t gamepad_index;
+  char is_primary_player;
+  void *game_tag_elem;
+  void *abstract_input;
+  int unit_handle;
+  char *unit_obj;
+  float look_scale_x;
+  float look_scale_y;
+  float abs_look_x;
+  float abs_look_y;
+  float deadzone_scale;
+  float look_x;
+  float look_y;
+  float move_x;
+  float move_y;
+  float aim_speed;
+  float scratch_a;
+  float scratch_b;
+  float scratch_c;
+  float scratch_d;
+  uint32_t flags18;
+  uint32_t flags1c;
+  char action_bytes[0xc];
+  int i;
+  int bit;
+  uint16_t blocked;
+  uint16_t mask;
+  int edx;
+
+  player_index = local_player_get_player_index(local_player_index);
+  csmemset(out_blob, 0, 0x20);
+  if (player_index == NONE)
+    goto validate_trigger;
+
+  slot = (char *)player_control_get_data(local_player_index);
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
+  gamepad_index = *(int16_t *)(player + 0x2);
+  is_primary_player = (char)(gamepad_index == *(int16_t *)0x457094);
+
+  {
+    void *globals = game_globals_get();
+    game_tag_elem = tag_block_get_element((char *)globals + 0x110, 0, 0x80);
+  }
+
+  if (gamepad_index != (int16_t)NONE && input_has_gamepad(gamepad_index)) {
+    (void)input_get_gamepad_state((int)gamepad_index);
+    abstract_input = input_abstraction_get_input_state((int)gamepad_index);
+
+    look_scale_x = 0.0f;
+    look_scale_y = 0.0f;
+    /* XBE: unit comes from player datum +0x34 (not control-slot +0x24). */
+    unit_handle = *(int *)(player + 0x34);
+    if (unit_handle != NONE) {
+      unit_obj = (char *)object_get_and_verify_type(unit_handle, 3);
+      look_scale_x =
+        *(float *)((char *)0x457098 + (int)local_player_index * 4) *
+        *(float *)0x253d4c * *(float *)0x2546a4;
+      look_scale_y =
+        *(float *)((char *)0x4570a8 + (int)local_player_index * 4) *
+        *(float *)0x253d4c * *(float *)0x2546a4;
+      if (*(int *)(unit_obj + 0xcc) != NONE &&
+          *(int16_t *)(unit_obj + 0x2a0) != (int16_t)NONE) {
+        void *parent_obj;
+        void *unit_tag;
+        void *seat_elem;
+        parent_obj =
+          (char *)object_get_and_verify_type(*(int *)(unit_obj + 0xcc), 3);
+        unit_tag = tag_get(0x756e6974, *(int *)parent_obj);
+        seat_elem = tag_block_get_element((char *)unit_tag + 0x2e4,
+                                          *(int16_t *)(unit_obj + 0x2a0),
+                                          0x11c);
+        if (*(float *)((char *)seat_elem + 0x7c) != *(float *)0x2533c0)
+          look_scale_x = *(float *)((char *)seat_elem + 0x7c) *
+                         *(float *)0x253d4c * *(float *)0x2546a4;
+        if (*(float *)((char *)seat_elem + 0x80) != *(float *)0x2533c0)
+          look_scale_y = *(float *)((char *)seat_elem + 0x80) *
+                         *(float *)0x253d4c * *(float *)0x2546a4;
+      }
+    }
+
+    move_x = *(float *)((char *)abstract_input + 0xc);
+    move_y = *(float *)((char *)abstract_input + 0x10);
+    *(float *)out_blob = move_x;
+    *(float *)(out_blob + 4) = move_y;
+
+    abs_look_x = *(float *)((char *)abstract_input + 0x14);
+    if (abs_look_x < 0.0f)
+      abs_look_x = -abs_look_x;
+    abs_look_y = *(float *)((char *)abstract_input + 0x18);
+    if (abs_look_y < 0.0f)
+      abs_look_y = -abs_look_y;
+
+    deadzone_scale = *(float *)0x2533c8;
+    if (abs_look_x <= *(float *)0x25496c && abs_look_y <= *(float *)0x25496c) {
+      if (abs_look_y <= abs_look_x) {
+        if (abs_look_x > *(float *)0x2533c0)
+          abs_look_y = abs_look_y / abs_look_x;
+        else
+          abs_look_y = 1.0f;
+      } else {
+        if (abs_look_y > *(float *)0x2533c0)
+          abs_look_x = abs_look_x / abs_look_y;
+        abs_look_y = 1.0f;
+      }
+      deadzone_scale = sqrtf(abs_look_y * abs_look_y +
+                             *(float *)0x2533c8 * *(float *)0x2533c8);
+    }
+
+    look_x = deadzone_scale * *(float *)((char *)abstract_input + 0x14);
+    if (look_x <= *(float *)0x255e94)
+      look_x = -1.0f;
+    else if (look_x >= *(float *)0x2533c8)
+      look_x = 1.0f;
+
+    look_y = deadzone_scale * *(float *)((char *)abstract_input + 0x18);
+    if (look_y <= *(float *)0x255e94)
+      look_y = -1.0f;
+    else if (look_y >= *(float *)0x2533c8)
+      look_y = 1.0f;
+
+    if ((*(uint8_t *)((char *)player_control_globals + 0xc) & 1) ||
+        game_time_get_paused()) {
+      look_x = 0.0f;
+      look_y = 0.0f;
+    } else {
+      int southpaw_y;
+      int southpaw_x;
+      int16_t curve_count;
+      float *curve_table;
+      float y_curve_scale;
+      float x_curve_scale;
+
+      southpaw_y = (int)*(char *)0x4570ba + 1;
+      if (*(char *)((char *)abstract_input + 0xb) && *(char *)0x4570b9)
+        southpaw_y = (*(char *)0x4570ba == 0) + 1;
+      y_curve_scale = (float)southpaw_y;
+
+      southpaw_x = (int)*(char *)0x4570ba + 1;
+      if (*(char *)((char *)abstract_input + 0xb) && *(char *)0x4570b9)
+        southpaw_x = (*(char *)0x4570ba == 0) + 1;
+      x_curve_scale = (float)southpaw_x;
+
+      curve_count = *(int16_t *)((char *)game_tag_elem + 0x74);
+      curve_table = *(float **)((char *)game_tag_elem + 0x78);
+      if ((int)curve_count <= 1) {
+        display_assert("player_control->look_curve_node_count>1",
+                       "c:\\halo\\SOURCE\\game\\player_control.c", 0x1c8, 1);
+        system_exit(NONE);
+      }
+
+      look_x = evaluate_piecewise_linear_function(curve_count, curve_table,
+                                                 look_x);
+      look_x *= y_curve_scale;
+      look_x *= look_scale_x;
+
+      look_y = evaluate_piecewise_linear_function(curve_count, curve_table,
+                                                  look_y);
+      look_y *= x_curve_scale;
+      look_y *= look_scale_y;
+
+      if (unit_handle != NONE) {
+        int16_t zoom_weapon = *(int16_t *)(slot + 0x24);
+        if (zoom_weapon != (int16_t)NONE) {
+          float zoom = unit_get_zoom_magnification(unit_handle, zoom_weapon);
+          look_x = look_x * (zoom / *(float *)0x2533c8);
+          look_y = look_y * zoom;
+        }
+      }
+
+      if (unit_handle != NONE) {
+        void *player_settings;
+        void *unit_obj2;
+        player_settings =
+          tag_block_get_element((void *)((char *)game_globals_get() + 0x170), 0,
+                                0xf4);
+        unit_obj2 = object_get_and_verify_type(unit_handle, 3);
+        look_x = look_x * (*(float *)((char *)unit_obj2 + 0x3d4) *
+                           *(float *)((char *)player_settings + 0x84) -
+                           *(float *)0x2533c8);
+        look_y = look_y * look_scale_y;
+      }
+
+      if (*(float *)((char *)abstract_input + 0x40) != *(float *)0x2533c0) {
+        if (fabsf(look_x) <= (double)*(float *)((char *)abstract_input + 0x48)) {
+          float v =
+            *(float *)(slot + 0x34) / *(float *)((char *)abstract_input + 0x40);
+          if (v <= *(float *)0x2533c0)
+            v = *(float *)0x2533c0;
+          else if (v >= *(float *)0x2533c8)
+            v = *(float *)0x2533c8;
+          look_x = (*(float *)((char *)abstract_input + 0x44) -
+                    *(float *)0x2533c8) *
+                     v +
+                   *(float *)0x2533c8;
+          look_x *= look_scale_x;
+          *(float *)(slot + 0x34) += delta_time * *(float *)0x253394;
+        } else {
+          *(float *)(slot + 0x34) = 0.0f;
+        }
+      }
+
+      scratch_c = look_x;
+      scratch_d = look_y;
+      *(int *)(slot + 0x28) =
+        FUN_000a6470(local_player_index, (float *)(slot + 0x2c),
+                      (float *)(slot + 0x30), &scratch_a, &scratch_b);
+
+      if (*(char *)0x2f0291 && *(float *)(slot + 0x30) == *(float *)0x2533c0 &&
+          fabsf(look_x) > *(double *)0x2533d0 &&
+          fabsf(look_y) > *(double *)0x2533d0 &&
+          fabsf(move_x) > *(double *)0x2533d0 &&
+          fabsf(move_y) > *(double *)0x2533d0) {
+        look_x = scratch_d * delta_time * *(float *)0x253394;
+        look_y = scratch_c * delta_time * *(float *)0x253394;
+        look_x = scratch_c * look_x;
+        look_y = scratch_d * look_y;
+      } else {
+        aim_speed = game_time_get_speed();
+        if (*(float *)abstract_input != *(float *)0x2533c0) {
+          if (*(float *)abstract_input >= *(float *)0x2533c8)
+            look_x = *(float *)0x2533c8;
+          else
+            look_x = *(float *)abstract_input;
+        } else
+          look_x = *(float *)0x2533c0;
+        look_x = look_x * *(float *)(slot + 0x30) - *(float *)0x2533c8;
+
+        if (*(float *)((char *)abstract_input + 4) != *(float *)0x2533c0) {
+          if (*(float *)((char *)abstract_input + 4) >= *(float *)0x2533c8)
+            move_y = *(float *)0x2533c8;
+          else
+            move_y = *(float *)((char *)abstract_input + 4);
+        } else
+          move_y = *(float *)0x2533c0;
+        move_y *= *(float *)(slot + 0x30);
+
+        if (game_players_are_double_speed())
+          aim_speed *= *(float *)0x253398;
+
+        scratch_a *= aim_speed;
+        if (scratch_a <= *(float *)0x26e2f8)
+          scratch_a = *(float *)0xbdd67750;
+        else if (scratch_a >= *(float *)0x26e2f4)
+          scratch_a = *(float *)0x3dd67750;
+
+        if (aim_speed <= *(float *)0x26e2f0)
+          aim_speed = *(float *)0x26e2f0;
+        else if (aim_speed >= *(float *)0x26e2ec)
+          aim_speed = *(float *)0x26e2ec;
+
+        look_x = scratch_a * move_y + look_x * scratch_c;
+        look_y = aim_speed * move_y + look_y * scratch_d;
+      }
+
+      *(float *)(out_blob + 0xc) = look_x;
+      *(float *)(out_blob + 0x10) = look_y;
+    }
+
+    csmemset(action_bytes, 0, sizeof(action_bytes));
+    blocked = *(uint16_t *)(slot + 8) & *(uint16_t *)(slot + 0xa);
+    if (blocked) {
+      for (edx = 1; edx <= 0xc; edx++) {
+        mask = (uint16_t)(1 << (edx - 1));
+        if ((blocked & mask) && !((char *)abstract_input)[edx - 1]) {
+          blocked &= ~mask;
+          *(uint16_t *)(slot + 8) = blocked;
+          *(uint16_t *)(slot + 0xa) &= ~mask;
+        }
+      }
+    }
+
+    for (i = 0; i < 0xc; i += 6) {
+      for (bit = 0; bit < 6; bit++) {
+        mask = (uint16_t)(1 << (i + bit));
+        if ((*(uint16_t *)(slot + 8) & mask) == 0)
+          action_bytes[i + bit] = ((char *)abstract_input)[i + bit];
+      }
+    }
+
+    flags18 = 0;
+    flags1c = 0;
+
+    unit_handle = *(int *)(player + 0x34);
+    if (unit_handle != NONE &&
+        object_try_and_get_and_verify_type(unit_handle, 1)) {
+      char *checked = (char *)object_try_and_get_and_verify_type(unit_handle, 1);
+      if (!*(char *)0x4570b8 && !(*(char *)(checked + 0x424) & 1)) {
+        float mag_sq = move_y * move_y + move_x * move_x;
+        if (!(mag_sq > *(float *)0x26e2e8))
+          goto skip_fire_flag;
+      }
+      if (action_bytes[7])
+        flags18 |= 1;
+      else
+        flags18 &= ~1u;
+    }
+  skip_fire_flag:;
+
+    *(float *)(out_blob + 8) =
+      (float)(int)(*(char *)((char *)abstract_input + 7)) *
+      *(float *)0x26e1e4;
+
+    if (action_bytes[7])
+      flags18 |= 0x800;
+    else
+      flags18 &= ~0x800u;
+
+    if (action_bytes[6]) {
+      flags18 |= 0x2000;
+      flags18 |= 0x1000;
+    } else {
+      flags18 &= ~0x2000u;
+      flags18 &= ~0x1000u;
+    }
+
+    if (action_bytes[11] == 1)
+      flags1c |= 4;
+    else
+      flags1c &= ~4u;
+
+    if (action_bytes[2])
+      flags18 |= 0x40;
+    else
+      flags18 &= ~0x40u;
+
+    if ((int)(int16_t)action_bytes[2] >= *(int16_t *)((char *)game_tag_elem + 0x6c))
+      flags18 |= 0x4000;
+    else
+      flags18 &= ~0x4000u;
+
+    if (action_bytes[5])
+      flags18 |= 0x10;
+    else
+      flags18 &= ~0x10u;
+
+    if (action_bytes[0])
+      flags18 |= 2;
+    else
+      flags18 &= ~2u;
+
+    if (action_bytes[4])
+      flags18 |= 0x80;
+    else
+      flags18 &= ~0x80u;
+
+    if (action_bytes[3] == 1)
+      flags1c |= 1;
+    else
+      flags1c &= ~1u;
+
+    if (action_bytes[1] == 1)
+      flags1c |= 2;
+    else
+      flags1c &= ~2u;
+
+    *(int *)(out_blob + 0x18) = (int)flags18;
+    *(int *)(out_blob + 0x1c) = (int)flags1c;
+    if ((*(uint16_t *)(slot + 9) & 2) == 0) {
+      void *gp = input_get_gamepad_state((int)gamepad_index);
+      out_blob[0x15] = ((char *)gp)[0x11];
+    }
+    if ((*(uint16_t *)(slot + 8) & 4) == 0) {
+      void *gp = input_get_gamepad_state((int)gamepad_index);
+      out_blob[0x14] = ((char *)gp)[0x10];
+    }
+    goto normalize_move;
+
+  } else {
+    int kb_state;
+    kb_state = FUN_000cf690();
+    if (!kb_state || !is_primary_player)
+      goto finalize_flags;
+
+    kb_state = FUN_000cf690();
+    *(float *)out_blob =
+      (float)((int)input_key_is_down(0x2e) - (int)input_key_is_down(0x20));
+    *(float *)(out_blob + 4) =
+      (float)((int)input_key_is_down(0x2f) - (int)input_key_is_down(0x2d));
+
+    if (!((*(uint8_t *)((char *)player_control_globals + 0xc) & 1)) &&
+        !game_time_get_paused()) {
+      *(float *)(out_blob + 0xc) =
+        (float)(int)(*(float *)(slot + 0x2c) * *(float *)0x26e1dc * -1.0f);
+      *(float *)(out_blob + 0x10) =
+        (float)(int)(*(float *)(slot + 0x30) * *(float *)0x26e1e0 * -1.0f);
+    } else {
+      *(int *)(out_blob + 0xc) = 0;
+      *(int *)(out_blob + 0x10) = 0;
+    }
+
+    flags18 = 0;
+    flags1c = 0;
+    if (input_key_is_down(0x69))
+      flags18 |= 0x100;
+    else
+      flags18 &= ~0x100u;
+    if (input_key_is_down(0x6c))
+      flags18 |= 0x200;
+    else
+      flags18 &= ~0x200u;
+    if (input_key_is_down(0x48))
+      flags18 |= 1;
+    else
+      flags18 &= ~1u;
+    if (input_key_is_down(0x1f))
+      flags18 |= 2;
+    else
+      flags18 &= ~2u;
+    if (input_key_is_down(0x3b))
+      flags18 |= 0x40;
+    else
+      flags18 &= ~0x40u;
+    if (input_key_is_down(0x22))
+      flags18 |= 0x10;
+    else
+      flags18 &= ~0x10u;
+    if (input_key_is_down(0x6a))
+      flags18 |= 0x400;
+    else
+      flags18 &= ~0x400u;
+    if (*(char *)(slot + 0xc))
+      flags18 |= 0x800;
+    else
+      flags18 &= ~0x800u;
+    if (*(char *)(slot + 0xe))
+      flags18 |= 0x2000;
+    else
+      flags18 &= ~0x2000u;
+    if (input_key_is_down(0x3a) == 1)
+      flags1c |= 4;
+    else
+      flags1c &= ~4u;
+    if (input_key_is_down(0x21) == 1)
+      flags1c |= 1;
+    else
+      flags1c &= ~1u;
+
+    *(int *)(out_blob + 0x18) = (int)flags18;
+    *(int *)(out_blob + 0x1c) = (int)flags1c;
+  }
+
+finalize_flags:
+  flags18 = *(uint32_t *)(out_blob + 0x18);
+  flags1c = *(uint32_t *)(out_blob + 0x1c);
+
+  if (flags18 & 0x800)
+    *(float *)(out_blob + 8) = *(float *)0x2533c8;
+  else
+    *(float *)(out_blob + 8) = *(float *)0x2533c0;
+
+  if (input_key_is_down(0x2b) == 1)
+    flags1c |= 8;
+  else
+    flags1c &= ~8u;
+  if (input_key_is_down(0x2a) == 1)
+    flags1c |= 0x10;
+  else
+    flags1c &= ~0x10u;
+  if (input_key_is_down(0x29) == 1)
+    flags1c |= 0x20;
+  else
+    flags1c &= ~0x20u;
+  if (input_key_is_down(0x11) == 1)
+    flags18 |= 4;
+  else
+    flags18 &= ~4u;
+  if (input_key_is_down(0x12) == 1)
+    flags18 |= 8;
+  else
+    flags18 &= ~8u;
+
+  *(int *)(out_blob + 0x18) = (int)flags18;
+  *(int *)(out_blob + 0x1c) = (int)flags1c;
+
+normalize_move:
+  if (*(float *)(out_blob + 4) != 0.0f || *(float *)out_blob != 0.0f) {
+    float mag_sq = *(float *)(out_blob + 4) * *(float *)(out_blob + 4) +
+                   *(float *)out_blob * *(float *)out_blob;
+    if (mag_sq <= *(float *)0x2533c8) {
+      float scale = sqrtf(mag_sq) / *(float *)0x2533c8;
+      *(float *)out_blob *= scale;
+      *(float *)(out_blob + 4) *= scale;
+    }
+  }
+
+validate_trigger:
+  FUN_000b6bd0(out_blob);
+  {
+    uint32_t bits = *(uint32_t *)(out_blob + 8);
+    if ((bits & 0x7f800000u) == 0x7f800000u) {
+      char *msg =
+        csprintf((char *)0x5ab100, "%s: assert_valid_real(0x%08X %f)",
+                 "input->primary_trigger", bits,
+                 (double)*(float *)(out_blob + 8));
+      display_assert(msg, "c:\\halo\\SOURCE\\game\\player_control.c", 0x2b6,
+                     1);
+      system_exit(NONE);
+    }
+  }
 }
-#else
-#error "get_local_player_input_blob: clang naked draft required"
-#endif
 
 
 

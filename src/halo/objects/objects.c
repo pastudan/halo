@@ -17235,139 +17235,69 @@ void objects_dump_memory(void)
  * Source: objects.c
  * No params. EBX is set locally to -1 (not a register arg).
  */
-/* objects_reconnect_to_structure_bsp (0x1417c0) — XBE naked draft (batch 59). */
-#if defined(__clang__)
-static void (*const b1417c0_chkstk)(void) = FUN_001d90e0;
-static void (*const b1417c0_c1193f0)(data_t *data) = data_verify;
-static void * (*const b1417c0_c13d730)(void *iter) = object_iterator_next;
-static void *(*const b1417c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1417c0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-static void *(*const b1417c0_gbsp)(void) = global_collision_bsp_get;
-static int (*const b1417c0_c1493b0)(int bsp, short flags, int breakable_surfaces, int origin, float radius, int *results) = collision_bsp_test_sphere;
-static void * (*const b1417c0_c18e3c0)(void) = global_scenario_get;
-static void *(*const b1417c0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1417c0_c140ce0)(int object_handle, void *location) = object_connect_to_map;
-
-__attribute__((naked, noinline))
+/* objects_reconnect_to_structure_bsp (0x1417c0) — readable C lift (restored pre-naked). */
+/* 0x1417c0 */
 void objects_reconnect_to_structure_bsp(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl $0x1028, %%eax\n\t"
-      "call *%[chkstk]\n\t"
-      "movl 0x5a8d50, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1193f0]\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x86868686, -0xc(%%ebp)\n\t"
-      "movl %%ebx, -0x18(%%ebp)\n\t"
-      "movb $0, -0x14(%%ebp)\n\t"
-      "movw $0, -0x12(%%ebp)\n\t"
-      "movl %%ebx, -0x10(%%ebp)\n\t"
-      "call *%[c13d730]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lobjects_reconnect_to_structure_bsp_6\n\t"
-      "pushl %%edi\n\t"
-      "jmp .Lobjects_reconnect_to_structure_bsp_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lobjects_reconnect_to_structure_bsp_1:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testb $8, %%ah\n\t"
-      "je .Lobjects_reconnect_to_structure_bsp_5\n\t"
-      "cmpl %%ebx, 0xcc(%%esi)\n\t"
-      "jne .Lobjects_reconnect_to_structure_bsp_5\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "andl $0xfffff7ff, %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movw %%bx, 0x4c(%%esi)\n\t"
-      "movl 0x5a8d50, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "leal 0x50(%%esi), %%edi\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movw %%bx, 0x4(%%eax)\n\t"
-      "call *%[c18f180]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw %%bx, -0x4(%%ebp)\n\t"
-      "jne .Lobjects_reconnect_to_structure_bsp_4\n\t"
-      "movl 0x5c(%%esi), %%eax\n\t"
-      "leal -0x1028(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[gbsp]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1493b0]\n\t"
-      "movl -0x41c(%%ebp), %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lobjects_reconnect_to_structure_bsp_3\n\t"
-      "movl -0x418(%%ebp), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jne .Lobjects_reconnect_to_structure_bsp_2\n\t"
-      "movw %%bx, -0x4(%%ebp)\n\t"
-      "jmp .Lobjects_reconnect_to_structure_bsp_4\n\t"
-      ".Lobjects_reconnect_to_structure_bsp_2:\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e3c0]\n\t"
-      "addl $0xe0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x8(%%eax), %%cx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw %%cx, -0x4(%%ebp)\n\t"
-      "jmp .Lobjects_reconnect_to_structure_bsp_4\n\t"
-      ".Lobjects_reconnect_to_structure_bsp_3:\n\t"
-      "addl $0xc, %%esi\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18f180]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lobjects_reconnect_to_structure_bsp_4:\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c140ce0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lobjects_reconnect_to_structure_bsp_5:\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13d730]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lobjects_reconnect_to_structure_bsp_1\n\t"
-      "popl %%edi\n\t"
-      ".Lobjects_reconnect_to_structure_bsp_6:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [chkstk] "m"(b1417c0_chkstk), [c1193f0] "m"(b1417c0_c1193f0), [c13d730] "m"(b1417c0_c13d730), [dget] "m"(b1417c0_dget), [c18f180] "m"(b1417c0_c18f180), [gbsp] "m"(b1417c0_gbsp), [c1493b0] "m"(b1417c0_c1493b0), [c18e3c0] "m"(b1417c0_c18e3c0), [elem] "m"(b1417c0_elem), [c140ce0] "m"(b1417c0_c140ce0)
-      : "memory");
+  int iVar1;
+  /* collision_bsp_test_sphere results buffer. Original frame is 0x1028 bytes =
+   * 0x1010 (buffer) + 0x10 (bsp_iter) + 0x8 (bsp_data), so the buffer is
+   * int[1028]. The test outcome is read back from the TAIL of this same buffer:
+   *   local_102c[771] (EBP-0x41c) = hit flag
+   *   local_102c[772] (EBP-0x418) = leaf/cluster index
+   * Hazard #5: these must index the buffer the callee wrote — not separate
+   * locals — or clang would not lay them contiguously with the array. */
+  int local_102c[1028];
+  int obj;
+  object_iter_t bsp_iter;
+  char bsp_data[8]; /* scenario_location_from_point output; bsp_data+4 = bsp index (short) */
+
+  object_iterator_new(&bsp_iter, -1, 0);
+  *(short *)(bsp_data + 4) = -1;
+  obj = (int)object_iterator_next(&bsp_iter);
+  while (obj != 0) {
+    if ((*(unsigned int *)(obj + 4) & 0x800) != 0 && *(int *)(obj + 0xcc) == -1) {
+      *(unsigned int *)(obj + 4) = *(unsigned int *)(obj + 4) & 0xfffff7ff;
+      *(short *)(obj + 0x4c) = -1;
+      {
+        int dat_handle;
+        dat_handle = (int)datum_get(*(void **)0x5a8d50, bsp_iter.last_handle);
+        *(short *)(dat_handle + 4) = -1;
+      }
+      CALL_FUN_0018f180(bsp_data, (void *)(obj + 0x50));
+      if (*(short *)(bsp_data + 4) == -1) {
+        /* Sphere-test the object's bounding sphere against the current BSP.
+         * Confirmed 6 cdecl args at 0x14185d-0x141873 (single ADD ESP,0x18):
+         *   collision_bsp_test_sphere(global_collision_bsp_get(), 0, 0,
+         *                             obj+0x50, *(int*)(obj+0x5c), local_102c)
+         * The objects.obj mass-lift dropped 5 of these (called with only the
+         * bsp), so origin/direction/radius/results* came from stale stack ->
+         * wild access -> the "Loading level..." kernel halt. */
+        collision_bsp_test_sphere((int)global_collision_bsp_get(), 0, 0,
+                                  obj + 0x50, *(int *)(obj + 0x5c), local_102c);
+        if (local_102c[771] == 0) {
+          CALL_FUN_0018f180(bsp_data, (void *)(obj + 0xc));
+        } else {
+          /* Hit: record the leaf/cluster index (local_102c[772]) in bsp_data[0]
+           * (MOV [EBP-0x8],EAX at 0x14188d — omitted by the original lift),
+           * then resolve the structure BSP index from the scenario block. */
+          *(int *)bsp_data = local_102c[772];
+          if (local_102c[772] == -1) {
+            *(short *)(bsp_data + 4) = -1;
+          } else {
+            int sc;
+            sc = (int)scenario_get();
+            iVar1 = (int)tag_block_get_element((void *)(sc + 0xe0),
+                                               local_102c[772] & 0x7fffffff, 0x10);
+            *(short *)(bsp_data + 4) = *(short *)(iVar1 + 8);
+          }
+        }
+      }
+      CALL_FUN_00140ce0(bsp_iter.last_handle, bsp_data);
+    }
+    obj = (int)object_iterator_next(&bsp_iter);
+  }
 }
-#else
-#error "objects_reconnect_to_structure_bsp: clang naked draft required"
-#endif
 
 
 /* 0x135510 — lightning_widget_render: renders lightning effects using a
