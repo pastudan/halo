@@ -3974,95 +3974,38 @@ void FUN_000c4540(void)
   FUN_000c40f0(0, 0x40, (char *)tag + 0x20);
 }
 
-/* hs_tokens_enumerate (0xc4580) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static void (*const bc4580_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc4580_exitfn)(int) = system_exit;
-static void __cdecl (*const bc4580_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
-
-__attribute__((naked, noinline))
-int16_t hs_tokens_enumerate(const char *prefix __attribute__((unused)), uint32_t type_mask __attribute__((unused)), char **tokens __attribute__((unused)), int16_t max_tokens __attribute__((unused)))
+/* hs_tokens_enumerate (0xc4580) — readable C lift from XBE leaf. */
+int16_t hs_tokens_enumerate(const char *prefix, uint32_t type_mask, char **tokens,
+                            int16_t max_tokens)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x46b6d0, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .Lhs_tokens_enumerate_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x398\n\t"
-      "pushl $0x27b8c8\n\t"
-      "pushl $0x27b9a4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_tokens_enumerate_1:\n\t"
-      "movw 0x14(%%ebp), %%ax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movw %%ax, 0x46b6cc\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "movw %%di, 0x46b6c8\n\t"
-      "movl %%ecx, 0x46b6d0\n\t"
-      "movl %%eax, 0x46b6d4\n\t"
-      "jne .Lhs_tokens_enumerate_2\n\t"
-      "movl $0x25386f, 0x46b6d4\n\t"
-      ".Lhs_tokens_enumerate_2:\n\t"
-      "movl $0x2f2208, %%esi\n\t"
-      "movl $0x12, %%ebx\n\t"
-      "jmp .Lhs_tokens_enumerate_3\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lhs_tokens_enumerate_3:\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "jne .Lhs_tokens_enumerate_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3a1\n\t"
-      "pushl $0x27b8c8\n\t"
-      "pushl $0x27b980\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_tokens_enumerate_4:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "testl %%edx, %%eax\n\t"
-      "je .Lhs_tokens_enumerate_5\n\t"
-      "call *(%%esi)\n\t"
-      ".Lhs_tokens_enumerate_5:\n\t"
-      "incl %%edi\n\t"
-      "addl $4, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "jne .Lhs_tokens_enumerate_3\n\t"
-      "movswl 0x46b6c8, %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl $0xc4010\n\t"
-      "pushl $4\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d9260]\n\t"
-      "movw 0x46b6c8, %%ax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $0, 0x46b6d0\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bc4580_assert), [exitfn] "m"(bc4580_exitfn), [c1d9260] "m"(bc4580_c1d9260)
-      : "memory");
+  int i;
+  void (**table)(void);
+
+  if (*(void **)0x46b6d0 != 0) {
+    display_assert((const char *)0x27b9a4, (const char *)0x27b8c8, 0x398, true);
+    system_exit(-1);
+  }
+  *(int16_t *)0x46b6cc = max_tokens;
+  *(int16_t *)0x46b6c8 = 0;
+  *(char ***)0x46b6d0 = tokens;
+  *(const char **)0x46b6d4 = prefix;
+  if (prefix == 0)
+    *(const char **)0x46b6d4 = (const char *)0x25386f;
+
+  table = (void (**)(void))0x2f2208;
+  for (i = 0; i < 0x12; i++) {
+    if (table[i] == 0) {
+      display_assert((const char *)0x27b980, (const char *)0x27b8c8, 0x3a1, true);
+      system_exit(-1);
+    }
+    if ((type_mask & (1u << i)) != 0)
+      table[i]();
+  }
+  qsort(tokens, (unsigned)*(int16_t *)0x46b6c8, 4,
+        (int(__cdecl *)(const void *, const void *))FUN_000c4010);
+  *(void **)0x46b6d0 = 0;
+  return *(int16_t *)0x46b6c8;
 }
-#else
-#error "hs_tokens_enumerate: clang naked draft required"
-#endif
 
 
 /* FUN_000c4770 (0xc4770) — readable C lift. */
