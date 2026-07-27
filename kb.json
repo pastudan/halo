@@ -40304,7 +40304,7 @@
         {
           "addr": "0x80940",
           "decl": "void message_encrypt(unsigned short *msgptr, unsigned int *key);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80a40",
