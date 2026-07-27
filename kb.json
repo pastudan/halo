@@ -20721,7 +20721,7 @@
         {
           "addr": "0x16f880",
           "decl": "void FUN_0016f880(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x16f8a0",
@@ -20786,7 +20786,7 @@
         {
           "addr": "0x172520",
           "decl": "void FUN_00172520(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x172640",
@@ -20806,7 +20806,7 @@
         {
           "addr": "0x172720",
           "decl": "void rasterizer_window_get_fog(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x172730",
@@ -20831,7 +20831,7 @@
         {
           "addr": "0x173ae0",
           "decl": "void FUN_00173ae0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x173af0",
@@ -21642,12 +21642,12 @@
         {
           "addr": "0x1559b0",
           "decl": "void rasterizer_spin_begin(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1559c0",
           "decl": "void rasterizer_spin_end(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1559d0",
@@ -21770,7 +21770,7 @@
         {
           "addr": "0x156d80",
           "decl": "void SetupSmartStates(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x156e00",
@@ -27218,7 +27218,7 @@
         {
           "addr": "0xe4ce0",
           "decl": "char ui_widget_match_localized_substring(wchar_t *text@<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe4d40",

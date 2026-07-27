@@ -238,7 +238,7 @@ void FUN_00155380(void)
 
 /* FUN_001553a0 (0x1553a0) — XBE naked draft (batch 343). */
 #if defined(__clang__)
-static void (*const b1553a0_c1e6b10)(void) = D3DDevice_CreateVolumeTexture;
+static void (*const b1553a0_c1e6b10)(void) = (void *)D3DDevice_CreateVolumeTexture;
 
 __attribute__((naked, noinline))
 void FUN_001553a0(void)
@@ -417,9 +417,6 @@ void _rasterizer_window_get_fog(void *out_fog)
   }
 }
 
-
-
-
 /* _rasterizer_windows_end (0x155a40) — readable C lift from XBE leaf. */
 void _rasterizer_windows_end(void)
 {
@@ -438,12 +435,12 @@ void _rasterizer_windows_end(void)
 #if defined(__clang__)
 static void (*const b155a70_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b155a70_exitfn)(int) = system_exit;
-static void (*const b155a70_c16fdd0)(void) = FUN_0016FDD0;
-static void (*const b155a70_c17ff50)(void) = FUN_0017ff50;
+static void (*const b155a70_c16fdd0)(void) = (void *)FUN_0016FDD0;
+static void (*const b155a70_c17ff50)(void) = (void *)FUN_0017ff50;
 static void __stdcall (*const b155a70_c1e8700)(uint32_t stage, void *texture) = (void *)D3DDevice_SetTexture;
 static void (*const b155a70_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void __stdcall (*const b155a70_c1eb2d0)(uint32_t stream, void *vertex_buffer, uint32_t stride) = (void *)D3DDevice_SetStreamSource;
-static void (*const b155a70_c1e8920)(void) = D3DDevice_SetIndices;
+static void (*const b155a70_c1e8920)(void) = (void *)D3DDevice_SetIndices;
 static void (*const b155a70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
@@ -648,9 +645,9 @@ void FUN_00155c10(void)
 #if defined(__clang__)
 static void (*const b155c20_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b155c20_exitfn)(int) = system_exit;
-static void (*const b155c20_c916e0)(void) = profile_texture_start;
+static void (*const b155c20_c916e0)(void) = (void *)profile_texture_start;
 static void *(*const b155c20_xtex)(void *, bool, bool) = xbox_texture_cache_get_hardware_format;
-static void (*const b155c20_c91710)(void) = profile_texture_end;
+static void (*const b155c20_c91710)(void) = (void *)profile_texture_end;
 static void __stdcall (*const b155c20_c1e8700)(uint32_t stage, void *texture) = (void *)D3DDevice_SetTexture;
 static void (*const b155c20_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
@@ -1146,7 +1143,7 @@ void rasterizer_set_texture(int stage __attribute__((unused)), int a2 __attribut
 
 /* FUN_00156070 (0x156070) — XBE naked draft (batch 351). */
 #if defined(__clang__)
-static void (*const b156070_c1edd10)(void) = D3DCubeTexture_LockRect;
+static void (*const b156070_c1edd10)(void) = (void *)D3DCubeTexture_LockRect;
 
 __attribute__((naked, noinline))
 void FUN_00156070(void)
@@ -1611,9 +1608,9 @@ void rasterizer_set_vertex_shader(void)
 #if defined(__clang__)
 static void (*const b156510_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b156510_exitfn)(int) = system_exit;
-static void (*const b156510_c1e9320)(void) = D3DDevice_SetRenderState_PSTextureModes;
+static void (*const b156510_c1e9320)(void) = (void *)D3DDevice_SetRenderState_PSTextureModes;
 static void (*const b156510_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void (*const b156510_c1e93a0)(void) = D3DDevice_SetRenderStateNotInline;
+static void (*const b156510_c1e93a0)(void) = (void *)D3DDevice_SetRenderStateNotInline;
 static void __stdcall (*const b156510_c1ec120)(void *program) = (void *)D3DDevice_SetPixelShaderProgram;
 
 __attribute__((naked, noinline))
@@ -2169,8 +2166,8 @@ void FUN_00156a90(void)
 static void (*const b156ab0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b156ab0_exitfn)(int) = system_exit;
 static void *(*const b156ab0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b156ab0_c156850)(void) = rasterizer_set_model_lighting_point_light;
-static void (*const b156ab0_c1569f0)(void) = FUN_001569f0;
+static void (*const b156ab0_c156850)(void) = (void *)rasterizer_set_model_lighting_point_light;
+static void (*const b156ab0_c1569f0)(void) = (void *)FUN_001569f0;
 static void __stdcall (*const b156ab0_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
 
 __attribute__((naked, noinline))
@@ -2316,7 +2313,7 @@ void rasterizer_set_model_lighting(void *lighting __attribute__((unused)))
 #if defined(__clang__)
 static void (*const b156c30_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b156c30_exitfn)(int) = system_exit;
-static void (*const b156c30_c185830)(void) = render_camera_hack_frustum_z;
+static void (*const b156c30_c185830)(void) = (void *)render_camera_hack_frustum_z;
 static void __stdcall (*const b156c30_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
 
 __attribute__((naked, noinline))
@@ -2427,51 +2424,23 @@ void rasterizer_set_frustum_z(float near_z __attribute__((unused)), float far_z 
 #endif
 
 
-/* SetupSmartStates (0x156d80) — XBE naked draft (batch 338). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* SetupSmartStates (0x156d80) — readable C lift from XBE leaf. */
 void SetupSmartStates(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x90, %%ecx\n\t"
-      "movl $0x1fb698, %%esi\n\t"
-      "movl $0x5a57a0, %%edi\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "jmp .LSetupSmartStates_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LSetupSmartStates_1:\n\t"
-      "movl 0x1fb498(%%eax), %%ecx\n\t"
-      "movl 0x1fb518(%%eax), %%edx\n\t"
-      "movl %%ecx, 0x5a55a0(%%eax)\n\t"
-      "movl 0x1fb598(%%eax), %%ecx\n\t"
-      "movl %%edx, 0x5a5620(%%eax)\n\t"
-      "movl 0x1fb618(%%eax), %%edx\n\t"
-      "movl %%ecx, 0x5a56a0(%%eax)\n\t"
-      "movl %%edx, 0x5a5720(%%eax)\n\t"
-      "addl $4, %%eax\n\t"
-      "cmpl $0x80, %%eax\n\t"
-      "jl .LSetupSmartStates_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, 0x5a5580\n\t"
-      "movl %%eax, 0x5a5584\n\t"
-      "movl %%eax, 0x5a5588\n\t"
-      "movl %%eax, 0x5a558c\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "SetupSmartStates: clang naked draft required"
-#endif
+  int i;
 
+  csmemcpy((void *)0x5a57a0, (void *)0x1fb698, 0x240);
+  for (i = 0; i < 0x80; i += 4) {
+    *(int *)(0x5a55a0 + i) = *(int *)(0x1fb498 + i);
+    *(int *)(0x5a5620 + i) = *(int *)(0x1fb518 + i);
+    *(int *)(0x5a56a0 + i) = *(int *)(0x1fb598 + i);
+    *(int *)(0x5a5720 + i) = *(int *)(0x1fb618 + i);
+  }
+  *(int *)0x5a5580 = 0;
+  *(int *)0x5a5584 = 0;
+  *(int *)0x5a5588 = 0;
+  *(int *)0x5a558c = 0;
+}
 
 /* FUN_00156e00 (0x156e00) — XBE naked draft (batch 308). */
 #if defined(__clang__)
@@ -2479,11 +2448,11 @@ static void (*const b156e00_assert)(const char *, const char *, int, bool) = dis
 static void (*const b156e00_exitfn)(int) = system_exit;
 static void __stdcall (*const b156e00_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = (void *)D3DDevice_CreateTexture;
 static void (*const b156e00_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void (*const b156e00_c1e6b10)(void) = D3DDevice_CreateVolumeTexture;
-static void (*const b156e00_c1e6b40)(void) = D3DDevice_CreateCubeTexture;
+static void (*const b156e00_c1e6b10)(void) = (void *)D3DDevice_CreateVolumeTexture;
+static void (*const b156e00_c1e6b40)(void) = (void *)D3DDevice_CreateCubeTexture;
 static void __stdcall (*const b156e00_c1edc70)(void *texture, unsigned int level, void *locked_rect, void *rect, unsigned int flags) = (void *)D3DTexture_LockRect;
-static void (*const b156e00_c1edd80)(void) = D3DVolumeTexture_LockBox;
-static void (*const b156e00_c1edd10)(void) = D3DCubeTexture_LockRect;
+static void (*const b156e00_c1edd80)(void) = (void *)D3DVolumeTexture_LockBox;
+static void (*const b156e00_c1edd10)(void) = (void *)D3DCubeTexture_LockRect;
 
 __attribute__((naked, noinline))
 void FUN_00156e00(void)
@@ -2703,45 +2672,45 @@ void FUN_00156e00(void)
 
 /* FUN_00157010 (0x157010) — XBE naked draft (batch 326). */
 #if defined(__clang__)
-static void (*const b157010_c1edea0)(void) = D3D_SetPushBufferSize;
+static void (*const b157010_c1edea0)(void) = (void *)D3D_SetPushBufferSize;
 static void b157010_c1eeab0_tgt(void) { return; }
-static void (*const b157010_c1eeab0)(void) = b157010_c1eeab0_tgt;
+static void (*const b157010_c1eeab0)(void) = (void *)b157010_c1eeab0_tgt;
 static void (*const b157010_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static void *(*const b157010_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b157010_c1edec0)(void) = Direct3D_CreateDevice;
+static void (*const b157010_c1edec0)(void) = (void *)Direct3D_CreateDevice;
 static void (*const b157010_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void __stdcall (*const b157010_c1e69f0)(void *caps) = (void *)D3DDevice_GetDeviceCaps;
-static void (*const b157010_c156d80)(void) = SetupSmartStates;
-static void (*const b157010_c1ef170)(void) = D3DDevice_CreatePalette;
-static void (*const b157010_c1eefe0)(void) = D3DPalette_Lock;
+static void (*const b157010_c156d80)(void) = (void *)SetupSmartStates;
+static void (*const b157010_c1ef170)(void) = (void *)D3DDevice_CreatePalette;
+static void (*const b157010_c1eefe0)(void) = (void *)D3DPalette_Lock;
 static void * (*const b157010_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b157010_c1e88a0)(void) = D3DDevice_SetPalette;
+static void (*const b157010_c1e88a0)(void) = (void *)D3DDevice_SetPalette;
 static int __stdcall (*const b157010_c1e7d50)(int back_buffer, uint32_t type, void **out_surface) = (void *)D3DDevice_GetBackBuffer;
 static int __stdcall (*const b157010_c1e8270)(void **out_surface) = (void *)D3DDevice_GetDepthStencilSurface;
 static void * (*const b157010_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
 static void __stdcall (*const b157010_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = (void *)D3DDevice_CreateTexture;
-static void (*const b157010_c1edc20)(void) = D3DTexture_GetSurfaceLevel;
-static void (*const b157010_c1eb590)(void) = D3DDevice_SetShaderConstantMode;
+static void (*const b157010_c1edc20)(void) = (void *)D3DTexture_GetSurfaceLevel;
+static void (*const b157010_c1eb590)(void) = (void *)D3DDevice_SetShaderConstantMode;
 static void __stdcall (*const b157010_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
 static void (*const b157010_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
 static void __stdcall (*const b157010_c1e98e0)(uint32_t value) = (void *)D3DDevice_SetRenderState_ZBias;
 static void (*const b157010_c1e9380)(uint32_t reg_index, uint32_t value) = D3DDevice_SetRenderState_Deferred;
-static void (*const b157010_c1e9ae0)(void) = D3DDevice_SetTextureState_TexCoordIndex;
-static void (*const b157010_c1e72a0)(void) = D3DDevice_SetFlickerFilter;
-static void (*const b157010_c1e72c0)(void) = D3DDevice_SetSoftDisplayFilter;
-static void (*const b157010_c156e00)(void) = FUN_00156e00;
-static int (*const b157010_c1824e0)(void) = rasterizer_memory_pool_new;
-static void (*const b157010_c15e800)(void) = FUN_0015e800;
-static int (*const b157010_c184260)(void) = rasterizer_transparent_geometry_new;
-static void (*const b157010_c178850)(void) = FUN_00178850;
-static void (*const b157010_c17df80)(void) = FUN_0017df80;
-static void (*const b157010_c17eb50)(void) = FUN_0017eb50;
-static int (*const b157010_c183650)(void) = rasterizer_text_cache_initialize;
-static char (*const b157010_c15c2d0)(void) = FUN_0015c2d0;
-static void (*const b157010_c16f6c0)(void) = FUN_0016f6c0;
-static void (*const b157010_c1659a0)(void) = FUN_001659a0;
-static void (*const b157010_c17d910)(void) = rasterizer_screen_effects_initialize;
-static void (*const b157010_c1bf080)(void) = texture_cache_new;
+static void (*const b157010_c1e9ae0)(void) = (void *)D3DDevice_SetTextureState_TexCoordIndex;
+static void (*const b157010_c1e72a0)(void) = (void *)D3DDevice_SetFlickerFilter;
+static void (*const b157010_c1e72c0)(void) = (void *)D3DDevice_SetSoftDisplayFilter;
+static void (*const b157010_c156e00)(void) = (void *)FUN_00156e00;
+static int (*const b157010_c1824e0)(void) = (void *)rasterizer_memory_pool_new;
+static void (*const b157010_c15e800)(void) = (void *)FUN_0015e800;
+static int (*const b157010_c184260)(void) = (void *)rasterizer_transparent_geometry_new;
+static void (*const b157010_c178850)(void) = (void *)FUN_00178850;
+static void (*const b157010_c17df80)(void) = (void *)FUN_0017df80;
+static void (*const b157010_c17eb50)(void) = (void *)FUN_0017eb50;
+static int (*const b157010_c183650)(void) = (void *)rasterizer_text_cache_initialize;
+static char (*const b157010_c15c2d0)(void) = (void *)FUN_0015c2d0;
+static void (*const b157010_c16f6c0)(void) = (void *)FUN_0016f6c0;
+static void (*const b157010_c1659a0)(void) = (void *)FUN_001659a0;
+static void (*const b157010_c17d910)(void) = (void *)rasterizer_screen_effects_initialize;
+static void (*const b157010_c1bf080)(void) = (void *)texture_cache_new;
 static void (*const b157010_c17e010)(void) = (void *)FUN_0017e010;
 
 __attribute__((naked, noinline))

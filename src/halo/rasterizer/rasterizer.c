@@ -243,7 +243,7 @@ static char (*const b174d10_c190980)(void *shader) = shader_ignores_effect;
 static void (*const b174d10_c156ab0)(void *lighting) = rasterizer_set_model_lighting;
 static void * (*const b174d10_c1843b0)(void *group) = rasterizer_transparent_geometry_next_group;
 static char (*const b174d10_c190930)(void *shader) = shader_is_water_decal;
-static void (*const b174d10_c1595c0)(void) = FUN_001595c0;
+static void (*const b174d10_c1595c0)(void) = (void *)FUN_001595c0;
 static int (*const b174d10_c190710)(void *shader) = shader_get_vertex_shader_permutation;
 static void (*const b174d10_c156c30)(float near_z, float far_z) = rasterizer_set_frustum_z;
 static char (*const b174d10_c1908a0)(void *shader) = shader_is_decal;
@@ -5787,19 +5787,19 @@ void FUN_0016fec0(void)
   /* cmp esi, 0x52 -> jge 0x16feeb */
   D3DDevice_SetRenderState_Simple(0, 0);
   /* cmp esi, 0x74 -> jge 0x16fef9 */
-  D3DDevice_SetRenderState_PSTextureModes();
+  ((void (*)(void))D3DDevice_SetRenderState_PSTextureModes)();
   /* cmp esi, 0x75 -> jne 0x16ff0e */
-  D3DDevice_SetRenderState_VertexBlend();
+  ((void (*)(void))D3DDevice_SetRenderState_VertexBlend)();
   /* cmp esi, 0x76 -> jne 0x16ff1a */
-  D3DDevice_SetRenderState_FogColor();
+  ((void (*)(void))D3DDevice_SetRenderState_FogColor)();
   /* cmp esi, 0x77 -> jne 0x16ff26 */
   D3DDevice_SetRenderState_FillMode(edi);
   /* cmp esi, 0x78 -> jne 0x16ff32 */
-  D3DDevice_SetRenderState_BackFillMode();
+  ((void (*)(void))D3DDevice_SetRenderState_BackFillMode)();
   /* cmp esi, 0x79 -> jne 0x16ff3e */
-  D3DDevice_SetRenderState_TwoSidedLighting();
+  ((void (*)(void))D3DDevice_SetRenderState_TwoSidedLighting)();
   /* cmp esi, 0x7a -> jne 0x16ff4a */
-  D3DDevice_SetRenderState_NormalizeNormals();
+  ((void (*)(void))D3DDevice_SetRenderState_NormalizeNormals)();
   /* cmp esi, 0x7b -> jne 0x16ff56 */
   D3DDevice_SetRenderState_ZEnable(edi);
   /* cmp esi, 0x7c -> jne 0x16ff62 */
@@ -5809,49 +5809,49 @@ void FUN_0016fec0(void)
   /* cmp esi, 0x7f -> jne 0x16ff7a */
   D3DDevice_SetRenderState_CullMode(edi);
   /* cmp esi, 0x7e -> jne 0x16ff86 */
-  D3DDevice_SetRenderState_FrontFace();
+  ((void (*)(void))D3DDevice_SetRenderState_FrontFace)();
   /* cmp esi, 0x80 -> jne 0x16ff95 */
-  D3DDevice_SetRenderState_TextureFactor();
+  ((void (*)(void))D3DDevice_SetRenderState_TextureFactor)();
   /* cmp esi, 0x81 -> jne 0x16ffa4 */
   D3DDevice_SetRenderState_ZBias(edi);
   /* cmp esi, 0x82 -> jne 0x16ffb3 */
-  D3DDevice_SetRenderState_LogicOp();
+  ((void (*)(void))D3DDevice_SetRenderState_LogicOp)();
   /* cmp esi, 0x83 -> jne 0x16ffc2 */
-  D3DDevice_SetRenderState_EdgeAntiAlias();
+  ((void (*)(void))D3DDevice_SetRenderState_EdgeAntiAlias)();
   /* cmp esi, 0x84 -> jne 0x16ffd1 */
-  D3DDevice_SetRenderState_MultiSampleAntiAlias();
+  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleAntiAlias)();
   /* cmp esi, 0x85 -> jne 0x16ffe0 */
-  D3DDevice_SetRenderState_MultiSampleMask();
+  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleMask)();
   /* cmp esi, 0x86 -> jne 0x16ffef */
-  D3DDevice_SetRenderState_MultiSampleType();
+  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleType)();
   /* cmp esi, 0x87 -> jne 0x16fffe */
-  D3DDevice_SetRenderState_ShadowFunc();
+  ((void (*)(void))D3DDevice_SetRenderState_ShadowFunc)();
   /* cmp esi, 0x88 -> jne 0x17000d */
-  D3DDevice_SetRenderState_LineWidth();
+  ((void (*)(void))D3DDevice_SetRenderState_LineWidth)();
   /* cmp esi, 0x89 -> jne 0x17001c */
-  D3DDevice_SetRenderState_Dxt1NoiseEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_Dxt1NoiseEnable)();
   /* cmp esi, 0x8a -> jne 0x17002b */
-  D3DDevice_SetRenderState_YuvEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_YuvEnable)();
   /* cmp esi, 0x8b -> jne 0x17003a */
-  D3DDevice_SetRenderState_OcclusionCullEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_OcclusionCullEnable)();
   /* cmp esi, 0x8c -> jne 0x170049 */
-  D3DDevice_SetRenderState_StencilCullEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_StencilCullEnable)();
   /* cmp esi, 0x8d -> jne 0x170058 */
-  D3DDevice_SetRenderState_RopZCmpAlwaysRead();
+  ((void (*)(void))D3DDevice_SetRenderState_RopZCmpAlwaysRead)();
   /* cmp esi, 0x8e -> jne 0x170067 */
-  D3DDevice_SetRenderState_RopZRead();
+  ((void (*)(void))D3DDevice_SetRenderState_RopZRead)();
   /* cmp esi, 0x8f -> jne 0x170075 */
-  D3DDevice_SetRenderState_DoNotCullUncompressed();
+  ((void (*)(void))D3DDevice_SetRenderState_DoNotCullUncompressed)();
   /* cmp edx, 0x16 -> jge 0x17008c */
   D3DDevice_SetTextureStageState(eax, 0, 0);
   /* cmp edx, 0x1c -> jne 0x170099 */
-  D3DDevice_SetTextureState_TexCoordIndex();
+  ((void (*)(void))D3DDevice_SetTextureState_TexCoordIndex)();
   /* cmp edx, 0x1d -> jne 0x1700a6 */
   D3DDevice_SetTextureState_BorderColor(ecx, eax);
   /* cmp edx, 0x1e -> jne 0x1700b3 */
-  D3DDevice_SetTextureState_ColorKeyColor();
+  ((void (*)(void))D3DDevice_SetTextureState_ColorKeyColor)();
   /* cmp edx, 0x1b -> jg 0x1700c0 */
-  D3DDevice_SetTextureState_BumpEnv();
+  ((void (*)(void))D3DDevice_SetTextureState_BumpEnv)();
 
   (void)eax;
   (void)ecx;
@@ -5955,8 +5955,8 @@ void FUN_001703f0(void)
 #if defined(__clang__)
 static void (*const b170440_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b170440_exitfn)(int) = system_exit;
-static void (*const b170440_c1700d0)(void) = FUN_001700d0;
-static int16_t (*const b170440_c100b00)(void) = main_get_window_count;
+static void (*const b170440_c1700d0)(void) = (void *)FUN_001700d0;
+static int16_t (*const b170440_c100b00)(void) = (void *)main_get_window_count;
 static void __stdcall (*const b170440_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
 static unsigned int *(*const b170440_lseed)(void) = random_math_get_local_seed_address;
 static float (*const b170440_rmreal)(unsigned int *) = random_math_real;
@@ -6584,12 +6584,12 @@ static void (*const b170c90_c156510)(void *state) = rasterizer_set_pixel_shader;
 static uint32_t (*const b170c90_c159070)(float a1) = FUN_00159070;
 static unsigned int (*const b170c90_cd1dd0)(float *color) = FUN_000d1dd0;
 static void (*const b170c90_ce2220)(int state, int value) = SetRenderStateSmart;
-static int16_t (*const b170c90_c100b00)(void) = main_get_window_count;
+static int16_t (*const b170c90_c100b00)(void) = (void *)main_get_window_count;
 static void __stdcall (*const b170c90_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
 static void (*const b170c90_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void __stdcall (*const b170c90_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
 static void __stdcall (*const b170c90_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-static void (*const b170c90_c1ed490)(void) = D3DDevice_End;
+static void (*const b170c90_c1ed490)(void) = (void *)D3DDevice_End;
 static void (*const b170c90_c16fa40)(int16_t profile) = FUN_0016fa40;
 static void (*const b170c90_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
@@ -7728,7 +7728,7 @@ static void *(*const b171bc0_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b171bc0_c156510)(void *state) = rasterizer_set_pixel_shader;
 static void __stdcall (*const b171bc0_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
 static void __stdcall (*const b171bc0_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
-static void (*const b171bc0_c1ed490)(void) = D3DDevice_End;
+static void (*const b171bc0_c1ed490)(void) = (void *)D3DDevice_End;
 static void (*const b171bc0_c16fa40)(int16_t profile) = FUN_0016fa40;
 
 __attribute__((naked, noinline))
@@ -8060,26 +8060,11 @@ void FUN_00171bc0(void)
 #endif
 
 
-/* FUN_00172520 (0x172520) — XBE naked draft (batch 393). */
-#if defined(__clang__)
-static void (*const b172520_c16f910)(int16_t profile) = (void *)FUN_0016f910;
-
-__attribute__((naked, noinline))
+/* FUN_00172520 (0x172520) — readable C lift from XBE leaf. */
 void FUN_00172520(void)
 {
-  __asm__ volatile(
-      "pushl $4\n\t"
-      "call *%[c16f910]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c16f910] "m"(b172520_c16f910)
-      : "memory");
+  FUN_0016f910(4);
 }
-#else
-#error "FUN_00172520: clang naked draft required"
-#endif
-
 
 /* FUN_00172640 (0x172640) — readable C lift. */
 void FUN_00172640(void)
@@ -8199,7 +8184,7 @@ static void (*const b172730_c158140)(int target, int mipmap_index, uint32_t colo
 static void __stdcall (*const b172730_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
 static void __stdcall (*const b172730_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
 static void __stdcall (*const b172730_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-static void (*const b172730_c1ed490)(void) = D3DDevice_End;
+static void (*const b172730_c1ed490)(void) = (void *)D3DDevice_End;
 
 __attribute__((naked, noinline))
 void FUN_00172730(void)
@@ -8399,12 +8384,12 @@ static void (*const b172de0_exitfn)(int) = system_exit;
 static void * (*const b172de0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static void __stdcall (*const b172de0_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
 static void (*const b172de0_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void (*const b172de0_c1e9320)(void) = D3DDevice_SetRenderState_PSTextureModes;
+static void (*const b172de0_c1e9320)(void) = (void *)D3DDevice_SetRenderState_PSTextureModes;
 static void (*const b172de0_c155e80)(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index) = rasterizer_set_texture;
 static void __stdcall (*const b172de0_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
 static void (*const b172de0_c190e10)(void *map_animation, void *external_animation, float u_scale, float v_scale, float u_offset, float v_offset, float rotation, float time, float *out_u, float *out_v) = FUN_00190e10;
 static void __stdcall (*const b172de0_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
-static void (*const b172de0_c15e430)(void) = FUN_0015e430;
+static void (*const b172de0_c15e430)(void) = (void *)FUN_0015e430;
 static void (*const b172de0_c17ed90)(void) = (void *)FUN_0017ed90;
 
 __attribute__((naked, noinline))
@@ -8630,7 +8615,7 @@ void FUN_00172de0(void *decal __attribute__((unused)), int param_2 __attribute__
 #if defined(__clang__)
 static void (*const b173090_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b173090_exitfn)(int) = system_exit;
-static void (*const b173090_c172730)(void) = FUN_00172730;
+static void (*const b173090_c172730)(void) = (void *)FUN_00172730;
 static void (*const b173090_c1584f0)(int stage, int target, int max_mipmap) = FUN_001584f0;
 static void __stdcall (*const b173090_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
 static void (*const b173090_c155cf0)(int stage, int bitmap_tag_index, int frame_index) = rasterizer_set_texture_direct;
@@ -8646,8 +8631,8 @@ static void (*const b173090_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
 static void __stdcall (*const b173090_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
 static void (*const b173090_c158140)(int target, int mipmap_index, uint32_t color, int do_clear, int zbuffer) = FUN_00158140;
 static void (*const b173090_c158ae0)(int mode) = FUN_00158ae0;
-static void (*const b173090_c15dc10)(void) = FUN_0015dc10;
-static void (*const b173090_c17edd0)(void) = rasterizer_frame_statistics_count_static_vertices;
+static void (*const b173090_c15dc10)(void) = (void *)FUN_0015dc10;
+static void (*const b173090_c17edd0)(void) = (void *)rasterizer_frame_statistics_count_static_vertices;
 
 __attribute__((naked, noinline))
 void FUN_00173090(void)
@@ -9034,7 +9019,7 @@ void FUN_00173ae0(void)
 static void __stdcall (*const b173af0_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
 
 __attribute__((naked, noinline))
-void FUN_00173af0(void)
+void FUN_00173af0(float *a, float *b, float *out)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9584,7 +9569,7 @@ static void __stdcall (*const b1741d0_c1ed450)(uint32_t primitive_type) = (void 
 static void __stdcall (*const b1741d0_c1ed400)(unsigned int reg, unsigned int color) = (void *)D3DDevice_SetVertexDataColor;
 static void (*const b1741d0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void __stdcall (*const b1741d0_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-static void (*const b1741d0_c1ed490)(void) = D3DDevice_End;
+static void (*const b1741d0_c1ed490)(void) = (void *)D3DDevice_End;
 static void (*const b1741d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
@@ -9733,11 +9718,11 @@ void FUN_001744f0(void)
 #if defined(__clang__)
 static void (*const b174510_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b174510_exitfn)(int) = system_exit;
-static void (*const b174510_c15e430)(void) = FUN_0015e430;
-static void (*const b174510_c15e0f0)(void) = FUN_0015e0f0;
-static void (*const b174510_c15de60)(void) = FUN_0015de60;
-static void (*const b174510_c15dc10)(void) = FUN_0015dc10;
-static void (*const b174510_c15d8b0)(void) = FUN_0015d8b0;
+static void (*const b174510_c15e430)(void) = (void *)FUN_0015e430;
+static void (*const b174510_c15e0f0)(void) = (void *)FUN_0015e0f0;
+static void (*const b174510_c15de60)(void) = (void *)FUN_0015de60;
+static void (*const b174510_c15dc10)(void) = (void *)FUN_0015dc10;
+static void (*const b174510_c15d8b0)(void) = (void *)FUN_0015d8b0;
 static void __cdecl (*const b174510_c15d5b0)(int first_primitive_index, int primitive_count, int dynamic_vertex_buffer_index, short vertices_per_primitive) = rasterizer_draw_dynamic_vertices;
 
 __attribute__((naked, noinline))
@@ -10128,12 +10113,12 @@ void FUN_00174b90(float *a, float *b, float t, float *out)
 #if defined(__clang__)
 static int __stdcall (*const b174bd0_c1ef0a0)(uint32_t length, uint32_t usage, uint32_t fvf, uint32_t pool, void **ppVertexBuffer) = (void *)D3DDevice_CreateVertexBuffer;
 static void (*const b174bd0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void (*const b174bd0_c1ef100)(void) = D3DVertexBuffer_Lock;
+static void (*const b174bd0_c1ef100)(void) = (void *)D3DVertexBuffer_Lock;
 static void * (*const b174bd0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void (*const b174bd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-int FUN_00174bd0(void)
+void FUN_00174bd0(char flag)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -10321,7 +10306,7 @@ void FUN_00178820(void)
 #if defined(__clang__)
 static void (*const b178850_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b178850_exitfn)(int) = system_exit;
-static void (*const b178850_c1eaf70)(void) = D3DDevice_CreateVertexShader;
+static void (*const b178850_c1eaf70)(void) = (void *)D3DDevice_CreateVertexShader;
 static void (*const b178850_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void (*const b178850_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
@@ -10487,7 +10472,7 @@ void FUN_00178850(void)
 
 /* FUN_00178ab0 (0x178ab0) — XBE naked draft (batch 346). */
 #if defined(__clang__)
-static void (*const b178ab0_c1eb6d0)(void) = D3DDevice_DeleteVertexShader;
+static void (*const b178ab0_c1eb6d0)(void) = (void *)D3DDevice_DeleteVertexShader;
 static void (*const b178ab0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void (*const b178ab0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
@@ -10544,11 +10529,11 @@ void FUN_00178ab0(void)
 #if defined(__clang__)
 static void (*const b178b40_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b178b40_exitfn)(int) = system_exit;
-static void (*const b178b40_c1eb540)(void) = D3DDevice_GetVertexShaderSize;
+static void (*const b178b40_c1eb540)(void) = (void *)D3DDevice_GetVertexShaderSize;
 static void (*const b178b40_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void __stdcall (*const b178b40_c1eb7f0)(uint32_t shader) = (void *)D3DDevice_SetVertexShader;
-static void (*const b178b40_c1eb4d0)(void) = D3DDevice_SelectVertexShader;
-static void (*const b178b40_c1eb400)(void) = D3DDevice_LoadVertexShader;
+static void (*const b178b40_c1eb4d0)(void) = (void *)D3DDevice_SelectVertexShader;
+static void (*const b178b40_c1eb400)(void) = (void *)D3DDevice_LoadVertexShader;
 static void (*const b178b40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
@@ -11007,19 +10992,19 @@ void FUN_001792d0(void)
   D3DDevice_SetRenderState_Simple(0, 0);
   /* cmp esi, 0x74 -> jge 0x179312 */
   D3DDevice_SetRenderState_Deferred(0, 0);
-  D3DDevice_SetRenderState_PSTextureModes();
+  ((void (*)(void))D3DDevice_SetRenderState_PSTextureModes)();
   /* cmp esi, 0x75 -> jne 0x17932f */
-  D3DDevice_SetRenderState_VertexBlend();
+  ((void (*)(void))D3DDevice_SetRenderState_VertexBlend)();
   /* cmp esi, 0x76 -> jne 0x17933f */
-  D3DDevice_SetRenderState_FogColor();
+  ((void (*)(void))D3DDevice_SetRenderState_FogColor)();
   /* cmp esi, 0x77 -> jne 0x17934f */
   D3DDevice_SetRenderState_FillMode(edi);
   /* cmp esi, 0x78 -> jne 0x17935f */
-  D3DDevice_SetRenderState_BackFillMode();
+  ((void (*)(void))D3DDevice_SetRenderState_BackFillMode)();
   /* cmp esi, 0x79 -> jne 0x17936f */
-  D3DDevice_SetRenderState_TwoSidedLighting();
+  ((void (*)(void))D3DDevice_SetRenderState_TwoSidedLighting)();
   /* cmp esi, 0x7a -> jne 0x17937f */
-  D3DDevice_SetRenderState_NormalizeNormals();
+  ((void (*)(void))D3DDevice_SetRenderState_NormalizeNormals)();
   /* cmp esi, 0x7b -> jne 0x17938f */
   D3DDevice_SetRenderState_ZEnable(edi);
   /* cmp esi, 0x7c -> jne 0x17939f */
@@ -11029,49 +11014,49 @@ void FUN_001792d0(void)
   /* cmp esi, 0x7f -> jne 0x1793bf */
   D3DDevice_SetRenderState_CullMode(edi);
   /* cmp esi, 0x7e -> jne 0x1793cf */
-  D3DDevice_SetRenderState_FrontFace();
+  ((void (*)(void))D3DDevice_SetRenderState_FrontFace)();
   /* cmp esi, 0x80 -> jne 0x1793e2 */
-  D3DDevice_SetRenderState_TextureFactor();
+  ((void (*)(void))D3DDevice_SetRenderState_TextureFactor)();
   /* cmp esi, 0x81 -> jne 0x1793f5 */
   D3DDevice_SetRenderState_ZBias(edi);
   /* cmp esi, 0x82 -> jne 0x179408 */
-  D3DDevice_SetRenderState_LogicOp();
+  ((void (*)(void))D3DDevice_SetRenderState_LogicOp)();
   /* cmp esi, 0x83 -> jne 0x17941b */
-  D3DDevice_SetRenderState_EdgeAntiAlias();
+  ((void (*)(void))D3DDevice_SetRenderState_EdgeAntiAlias)();
   /* cmp esi, 0x84 -> jne 0x17942e */
-  D3DDevice_SetRenderState_MultiSampleAntiAlias();
+  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleAntiAlias)();
   /* cmp esi, 0x85 -> jne 0x179441 */
-  D3DDevice_SetRenderState_MultiSampleMask();
+  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleMask)();
   /* cmp esi, 0x86 -> jne 0x179454 */
-  D3DDevice_SetRenderState_MultiSampleType();
+  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleType)();
   /* cmp esi, 0x87 -> jne 0x179467 */
-  D3DDevice_SetRenderState_ShadowFunc();
+  ((void (*)(void))D3DDevice_SetRenderState_ShadowFunc)();
   /* cmp esi, 0x88 -> jne 0x17947a */
-  D3DDevice_SetRenderState_LineWidth();
+  ((void (*)(void))D3DDevice_SetRenderState_LineWidth)();
   /* cmp esi, 0x89 -> jne 0x17948d */
-  D3DDevice_SetRenderState_Dxt1NoiseEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_Dxt1NoiseEnable)();
   /* cmp esi, 0x8a -> jne 0x1794a0 */
-  D3DDevice_SetRenderState_YuvEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_YuvEnable)();
   /* cmp esi, 0x8b -> jne 0x1794b3 */
-  D3DDevice_SetRenderState_OcclusionCullEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_OcclusionCullEnable)();
   /* cmp esi, 0x8c -> jne 0x1794c6 */
-  D3DDevice_SetRenderState_StencilCullEnable();
+  ((void (*)(void))D3DDevice_SetRenderState_StencilCullEnable)();
   /* cmp esi, 0x8d -> jne 0x1794d9 */
-  D3DDevice_SetRenderState_RopZCmpAlwaysRead();
+  ((void (*)(void))D3DDevice_SetRenderState_RopZCmpAlwaysRead)();
   /* cmp esi, 0x8e -> jne 0x1794ec */
-  D3DDevice_SetRenderState_RopZRead();
+  ((void (*)(void))D3DDevice_SetRenderState_RopZRead)();
   /* cmp esi, 0x8f -> jne 0x1794fa */
-  D3DDevice_SetRenderState_DoNotCullUncompressed();
+  ((void (*)(void))D3DDevice_SetRenderState_DoNotCullUncompressed)();
   /* cmp edx, 0x16 -> jge 0x179510 */
   D3DDevice_SetTextureStageState(eax, 0, 0);
   /* cmp edx, 0x1c -> jne 0x179521 */
-  D3DDevice_SetTextureState_TexCoordIndex();
+  ((void (*)(void))D3DDevice_SetTextureState_TexCoordIndex)();
   /* cmp edx, 0x1d -> jne 0x179532 */
   D3DDevice_SetTextureState_BorderColor(ecx, eax);
   /* cmp edx, 0x1e -> jne 0x179543 */
-  D3DDevice_SetTextureState_ColorKeyColor();
+  ((void (*)(void))D3DDevice_SetTextureState_ColorKeyColor)();
   /* cmp edx, 0x1b -> jg 0x179550 */
-  D3DDevice_SetTextureState_BumpEnv();
+  ((void (*)(void))D3DDevice_SetTextureState_BumpEnv)();
   D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, eax);
 
   (void)eax;
@@ -11131,7 +11116,7 @@ static void __stdcall (*const b1795c0_c1ed450)(uint32_t primitive_type) = (void 
 static void (*const b1795c0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void __stdcall (*const b1795c0_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
 static void __stdcall (*const b1795c0_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-static void (*const b1795c0_c1ed490)(void) = D3DDevice_End;
+static void (*const b1795c0_c1ed490)(void) = (void *)D3DDevice_End;
 static void (*const b1795c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
@@ -11812,7 +11797,7 @@ static void (*const b179de0_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
 static void *(*const b179de0_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b179de0_c156510)(void *state) = rasterizer_set_pixel_shader;
 static void (*const b179de0_c174510)(void *group, int a2) = FUN_00174510;
-static void (*const b179de0_c1795c0)(void) = FUN_001795c0;
+static void (*const b179de0_c1795c0)(void) = (void *)FUN_001795c0;
 static void (*const b179de0_c155e80)(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index) = rasterizer_set_texture;
 static void __stdcall (*const b179de0_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
 static void (*const b179de0_c155cf0)(int stage, int bitmap_tag_index, int frame_index) = rasterizer_set_texture_direct;
@@ -12629,7 +12614,7 @@ void FUN_0017ad20(void)
 static void __stdcall (*const b17ad40_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
 
 __attribute__((naked, noinline))
-void FUN_0017ad40(void)
+void FUN_0017ad40(int a0, int a1, int a2, int a3, int a4, int a5)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -12663,16 +12648,16 @@ void FUN_0017ad90(void)
   int eax = 0;
 
   D3DDevice_Begin(eax);
-  D3DDevice_End();
+  ((void (*)(void))D3DDevice_End)();
 
   (void)eax;
 }
 
 /* FUN_0017adc0 (0x17adc0) — XBE naked draft (batch 346). */
 #if defined(__clang__)
-static void (*const b17adc0_c1e7030)(void) = D3DDevice_GetVisibilityTestResult;
-static void (*const b17adc0_c1559b0)(void) = rasterizer_spin_begin;
-static void (*const b17adc0_c1559c0)(void) = rasterizer_spin_end;
+static void (*const b17adc0_c1e7030)(void) = (void *)D3DDevice_GetVisibilityTestResult;
+static void (*const b17adc0_c1559b0)(void) = (void *)rasterizer_spin_begin;
+static void (*const b17adc0_c1559c0)(void) = (void *)rasterizer_spin_end;
 static void (*const b17adc0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void (*const b17adc0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b17adc0_exitfn)(int) = system_exit;
@@ -12770,7 +12755,7 @@ void FUN_0017adc0(void)
 
 /* FUN_0017ae90 (0x17ae90) — XBE naked draft (batch 323). */
 #if defined(__clang__)
-static void * (*const b17ae90_c184330)(void) = rasterizer_transparent_geometry_group_new;
+static void * (*const b17ae90_c184330)(void) = (void *)rasterizer_transparent_geometry_group_new;
 static void (*const b17ae90_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b17ae90_exitfn)(int) = system_exit;
 static void (*const b17ae90_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -13359,7 +13344,7 @@ static void __stdcall (*const b17b5c0_c1ed450)(uint32_t primitive_type) = (void 
 static void __stdcall (*const b17b5c0_c1ed400)(unsigned int reg, unsigned int color) = (void *)D3DDevice_SetVertexDataColor;
 static void __stdcall (*const b17b5c0_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
 static void __stdcall (*const b17b5c0_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-static void (*const b17b5c0_c1ed490)(void) = D3DDevice_End;
+static void (*const b17b5c0_c1ed490)(void) = (void *)D3DDevice_End;
 
 __attribute__((naked, noinline))
 void FUN_0017b5c0(void)
@@ -13558,12 +13543,12 @@ void FUN_0017b5c0(void)
 #if defined(__clang__)
 static void (*const b17b7d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b17b7d0_exitfn)(int) = system_exit;
-static void (*const b17b7d0_c17a8a0)(void) = FUN_0017a8a0;
+static void (*const b17b7d0_c17a8a0)(void) = (void *)FUN_0017a8a0;
 static void __stdcall (*const b17b7d0_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
 static void __stdcall (*const b17b7d0_c1ed400)(unsigned int reg, unsigned int color) = (void *)D3DDevice_SetVertexDataColor;
 static void __stdcall (*const b17b7d0_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
 static void __stdcall (*const b17b7d0_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
-static void (*const b17b7d0_c1ed490)(void) = D3DDevice_End;
+static void (*const b17b7d0_c1ed490)(void) = (void *)D3DDevice_End;
 
 __attribute__((naked, noinline))
 void FUN_0017b7d0(void)
@@ -13772,13 +13757,13 @@ void FUN_0017b7d0(void)
 
 /* FUN_0017ba10 (0x17ba10) — XBE naked draft (batch 352). */
 #if defined(__clang__)
-static void (*const b17ba10_c17a8a0)(void) = FUN_0017a8a0;
+static void (*const b17ba10_c17a8a0)(void) = (void *)FUN_0017a8a0;
 static double (*const b17ba10_c1d9c2b)(double x) = floor;
-static void (*const b17ba10_c1e8a40)(void) = D3DDevice_BeginVisibilityTest;
+static void (*const b17ba10_c1e8a40)(void) = (void *)D3DDevice_BeginVisibilityTest;
 static void __stdcall (*const b17ba10_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
 static void __stdcall (*const b17ba10_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
-static void (*const b17ba10_c1ed490)(void) = D3DDevice_End;
-static void (*const b17ba10_c1e8a70)(void) = D3DDevice_EndVisibilityTest;
+static void (*const b17ba10_c1ed490)(void) = (void *)D3DDevice_End;
+static void (*const b17ba10_c1e8a70)(void) = (void *)D3DDevice_EndVisibilityTest;
 static void (*const b17ba10_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
 static void (*const b17ba10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
@@ -14591,12 +14576,12 @@ static void * (*const b17c2f0_c1906b0)(void *shader, int shader_type) = FUN_0019
 static void *(*const b17c2f0_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b17c2f0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static void *(*const b17c2f0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b17c2f0_c17c140)(void) = FUN_0017c140;
-static void (*const b17c2f0_c17c1b0)(void) = FUN_0017c1b0;
+static void (*const b17c2f0_c17c140)(void) = (void *)FUN_0017c140;
+static void (*const b17c2f0_c17c1b0)(void) = (void *)FUN_0017c1b0;
 static unsigned int (*const b17c2f0_d1c90)(float *) = FUN_000d1c90;
-static void (*const b17c2f0_c17be50)(void) = FUN_0017be50;
-static void (*const b17c2f0_c17bf20)(void) = FUN_0017bf20;
-static void (*const b17c2f0_c17c000)(void) = FUN_0017c000;
+static void (*const b17c2f0_c17be50)(void) = (void *)FUN_0017be50;
+static void (*const b17c2f0_c17bf20)(void) = (void *)FUN_0017bf20;
+static void (*const b17c2f0_c17c000)(void) = (void *)FUN_0017c000;
 
 __attribute__((naked, noinline))
 char FUN_0017c2f0(void *shader __attribute__((unused)), void *state __attribute__((unused)))
@@ -15119,9 +15104,9 @@ void rasterizer_dynamic_screen_geometry_draw(void)
 
   rasterizer_memory_pool_delete();
   FUN_0015e9e0();
-  FUN_00184690();
+  FUN_00184690(0);
   FUN_00178ab0();
-  FUN_0017e040();
+  FUN_0017e040(0, 0);
   FUN_0017ff60();
   rasterizer_text_cache_dispose();
   FUN_0015c680();
@@ -15130,7 +15115,7 @@ void rasterizer_dynamic_screen_geometry_draw(void)
   FUN_0017d990();
   texture_cache_delete();
   /* test eax, eax -> je 0x155be4 */
-  D3DDevice_Release();
+  ((void (*)(void))D3DDevice_Release)();
   /* mem[0x00476ab0] = 0 */
   /* test eax, eax -> je 0x155bf7 */
 

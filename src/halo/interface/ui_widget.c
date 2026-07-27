@@ -2500,63 +2500,30 @@ void FUN_000e4c70(void *draw_state, void *cursor, int string_index)
 #endif
 
 
-/* ui_widget_match_localized_substring (0xe4ce0) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static void (*const be4ce0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be4ce0_exitfn)(int) = (void *)system_exit;
-static wchar_t * (*const be4ce0_c1db134)(const wchar_t *s, wchar_t c) = (void *)_wcschr;
-static int16_t (*const be4ce0_ce4a80)(wchar_t *needle) = (void *)ui_widget_find_localized_string_index;
-
-__attribute__((naked, noinline))
+/* ui_widget_match_localized_substring (0xe4ce0) — readable C lift from XBE leaf. */
 char ui_widget_match_localized_substring(wchar_t *text)
 {
-  __asm__ volatile(
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "jne .Lui_widget_match_localized_substring_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1055\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x27b838\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_match_localized_substring_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lui_widget_match_localized_substring_2:\n\t"
-      "pushl $0x25\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1db134]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lui_widget_match_localized_substring_1\n\t"
-      "addl $2, %%ebx\n\t"
-      "call *%[ce4a80]\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lui_widget_match_localized_substring_3\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "jne .Lui_widget_match_localized_substring_2\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".Lui_widget_match_localized_substring_3:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be4ce0_assert), [exitfn] "m"(be4ce0_exitfn), [c1db134] "m"(be4ce0_c1db134), [ce4a80] "m"(be4ce0_ce4a80)
-      : "memory");
-}
-#else
-#error "ui_widget_match_localized_substring: clang naked draft required"
-#endif
+  extern char DAT_0027b838[];
+  extern char DAT_00283280[];
+  wchar_t *p;
 
+  if (text == 0) {
+    display_assert(DAT_0027b838, DAT_00283280, 0x1055, true);
+    system_exit(-1);
+    return 0;
+  }
+  for (;;) {
+    p = _wcschr(text, 0x25);
+    if (p == 0)
+      return 0;
+    p = p + 1; /* skip L'%' */
+    if (ui_widget_find_localized_string_index(p) != (int16_t)0xffff)
+      return 1;
+    text = p;
+    if (text == 0)
+      return 0;
+  }
+}
 
 /* ui_widget_player_prefers_metric_units (0xe4d40) — readable C lift from XBE leaf. */
 char ui_widget_player_prefers_metric_units(int16_t player_index)
