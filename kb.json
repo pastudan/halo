@@ -22290,8 +22290,9 @@
         },
         {
           "addr": "0x109a60",
-          "decl": "void FUN_00109a60(void);",
-          "ported": false
+          "decl": "void FUN_00109a60(float *src, float scale, float *dst);",
+          "ported": true,
+          "name": "FUN_00109a60"
         },
         {
           "addr": "0x109ba0",

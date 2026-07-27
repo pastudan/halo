@@ -7090,143 +7090,44 @@ void FUN_0001ada0(void)
 #endif
 
 
-/* FUN_00109a60 (0x109a60) — XBE naked draft (batch 249). */
-#if defined(__clang__)
-static void (*const b109a60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b109a60_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00109a60(void)
+/* FUN_00109a60 (0x109a60) — readable C lift: 3x3 matrix inverse.
+ * dst = (1/scale) * adjugate(src). Copies src aside when src==dst. */
+void FUN_00109a60(float *src, float scale, float *dst)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x38, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_00109a60_1\n\t"
-      "movl $9, %%ecx\n\t"
-      "leal -0x38(%%ebp), %%edi\n\t"
-      "rep movsl\n\t"
-      "leal -0x38(%%ebp), %%esi\n\t"
-      ".LFUN_00109a60_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00109a60_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x313\n\t"
-      "pushl $0x28c704\n\t"
-      "pushl $0x28c6e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00109a60_2:\n\t"
-      "flds 0x2533c8\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "fdivs 0xc(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%edi, 0xc(%%ebp)\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      ".LFUN_00109a60_3:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%ebx, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00109a60_4:\n\t"
-      "cmpw $2, %%di\n\t"
-      "jge .LFUN_00109a60_5\n\t"
-      "leal 0x1(%%eax), %%edx\n\t"
-      "jmp .LFUN_00109a60_6\n\t"
-      ".LFUN_00109a60_5:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      ".LFUN_00109a60_6:\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .LFUN_00109a60_7\n\t"
-      "decl %%eax\n\t"
-      "jmp .LFUN_00109a60_8\n\t"
-      ".LFUN_00109a60_7:\n\t"
-      "movl $2, %%eax\n\t"
-      ".LFUN_00109a60_8:\n\t"
-      "cmpw $2, %%cx\n\t"
-      "jge .LFUN_00109a60_9\n\t"
-      "leal 0x2(%%ebx), %%edi\n\t"
-      "jmp .LFUN_00109a60_10\n\t"
-      ".LFUN_00109a60_9:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".LFUN_00109a60_10:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "jg .LFUN_00109a60_11\n\t"
-      "movl $2, %%ecx\n\t"
-      ".LFUN_00109a60_11:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "movswl %%di, %%edi\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal (%%ecx,%%eax,1), %%ebx\n\t"
-      "leal (%%edx,%%edx,2), %%edx\n\t"
-      "movl %%edi, -0x14(%%ebp)\n\t"
-      "addl %%edx, %%edi\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "flds (%%esi,%%edi,4)\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "fmuls (%%esi,%%ebx,4)\n\t"
-      "movl -0xc(%%ebp), %%ebx\n\t"
-      "flds (%%esi,%%edx,4)\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "addl $0xc, %%eax\n\t"
-      "fmuls (%%esi,%%ecx,4)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "incl %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "cmpw $3, %%cx\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%ebx, -0xc(%%ebp)\n\t"
-      "fstps -0xc(%%eax)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "jl .LFUN_00109a60_4\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "incl %%edi\n\t"
-      "incl %%eax\n\t"
-      "addl $4, %%edx\n\t"
-      "cmpw $3, %%di\n\t"
-      "movl %%edi, 0xc(%%ebp)\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jl .LFUN_00109a60_3\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b109a60_assert), [exitfn] "m"(b109a60_exitfn)
-      : "memory");
+  float local[9];
+  float *m;
+  float inv;
+  float abs_scale;
+  int i;
+
+  if (src == dst) {
+    for (i = 0; i < 9; i++)
+      local[i] = src[i];
+    m = local;
+  } else {
+    m = src;
+  }
+
+  abs_scale = scale;
+  if (abs_scale < *(float *)0x2533c0)
+    abs_scale = -abs_scale;
+  if ((double)abs_scale < *(double *)0x2533d0) {
+    display_assert((const char *)0x28c6e8, (const char *)0x28c704, 0x313, 1);
+    system_exit(-1);
+  }
+
+  inv = *(float *)0x2533c8 / scale;
+  dst[0] = (m[4] * m[8] - m[5] * m[7]) * inv;
+  dst[3] = (m[5] * m[6] - m[3] * m[8]) * inv;
+  dst[6] = (m[3] * m[7] - m[4] * m[6]) * inv;
+  dst[1] = (m[2] * m[7] - m[1] * m[8]) * inv;
+  dst[4] = (m[0] * m[8] - m[2] * m[6]) * inv;
+  dst[7] = (m[1] * m[6] - m[0] * m[7]) * inv;
+  dst[2] = (m[1] * m[5] - m[2] * m[4]) * inv;
+  dst[5] = (m[2] * m[3] - m[0] * m[5]) * inv;
+  dst[8] = (m[0] * m[4] - m[1] * m[3]) * inv;
 }
-#else
-#error "FUN_00109a60: clang naked draft required"
-#endif
+
 
 
 /* FUN_00113a90 (0x113a90) — XBE naked draft (batch 293). */
