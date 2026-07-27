@@ -26018,7 +26018,7 @@
         {
           "addr": "0x191440",
           "decl": "void reference_list_copy(void *result, void *source);",
-          "ported": false,
+          "ported": true,
           "name": "reference_list_copy",
           "source_path": "src/halo/structures/structures.c"
         },
