@@ -9628,34 +9628,13 @@ void FUN_00174510(void *group __attribute__((unused)), int a2 __attribute__((unu
 #endif
 
 
-/* FUN_00174980 (0x174980) — XBE naked draft (batch 358). */
-#if defined(__clang__)
-static void (*const b174980_c1ef100)(void) = (void *)D3DVertexBuffer_Lock;
-
-__attribute__((naked, noinline))
-void FUN_00174980(void)
+/* FUN_00174980 (0x174980) — readable C lift. */
+int FUN_00174980(int a, int b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ef100]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ef100] "m"(b174980_c1ef100)
-      : "memory");
+  ((void (__stdcall *)(int, int, int, int, int))D3DVertexBuffer_Lock)(a, b, 0, 0, 0);
+  return 0;
 }
-#else
-#error "FUN_00174980: clang naked draft required"
-#endif
+
 /* FUN_001749b0 (0x1749b0) — XBE naked draft (batch 362). */
 #if defined(__clang__)
 static void (*const b1749b0_c1e8a70)(void) = (void *)D3DDevice_EndVisibilityTest;
@@ -9972,31 +9951,12 @@ void FUN_00174ce0(void)
 
 
 
-/* FUN_00178820 (0x178820) — XBE naked draft (batch 379). */
-#if defined(__clang__)
-static void (*const b178820_c1eaf70)(void) = (void *)D3DDevice_CreateVertexShader;
-
-__attribute__((naked, noinline))
-void FUN_00178820(void)
+/* FUN_00178820 (0x178820) — readable C lift. */
+int FUN_00178820(int a, int b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1eaf70]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1eaf70] "m"(b178820_c1eaf70)
-      : "memory");
+  return ((int (__stdcall *)(int, int, int, int))D3DDevice_CreateVertexShader)(a, b, 0, 0);
 }
-#else
-#error "FUN_00178820: clang naked draft required"
-#endif
+
 /* FUN_00178850 (0x178850) — XBE naked draft (batch 315). */
 #if defined(__clang__)
 static void (*const b178850_assert)(const char *, const char *, int, bool) = display_assert;

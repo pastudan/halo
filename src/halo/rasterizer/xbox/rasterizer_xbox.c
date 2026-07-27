@@ -189,6 +189,7 @@ int FUN_00155380(int a, int b, int c, int d, int e)
   return 0;
 }
 
+
 /* FUN_001553a0 (0x1553a0) — readable C lift. */
 int FUN_001553a0(int a, int b, int c, int d, int e, int f)
 {
@@ -199,9 +200,9 @@ int FUN_001553a0(int a, int b, int c, int d, int e, int f)
 /* FUN_001553d0 (0x1553d0) — readable C lift. */
 int FUN_001553d0(int a, int b, int c, int d)
 {
-  ((void (__stdcall *)(int, int, int, int, int, int))D3DDevice_CreateCubeTexture)(a, b, c, d, 0, 0);
-  return 0;
+  return ((int (__stdcall *)(int, int, int, int))D3DDevice_CreateCubeTexture)(a, b, c, d);
 }
+
 
 /* FUN_00155560 (0x155560) — readable C lift. */
 int FUN_00155560(int a, int b, int c, int d, int e)

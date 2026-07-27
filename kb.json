@@ -20942,7 +20942,7 @@
         {
           "addr": "0x174980",
           "decl": "int FUN_00174980(int a, int b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00174980"
         },
         {
@@ -20986,7 +20986,7 @@
         {
           "addr": "0x178820",
           "decl": "int FUN_00178820(int a, int b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00178820"
         },
         {
@@ -21078,7 +21078,7 @@
         },
         {
           "addr": "0x17b540",
-          "decl": "void FUN_0017b540(int tex_flags);",
+          "decl": "int FUN_0017b540(void);",
           "ported": false,
           "name": "FUN_0017b540"
         },
@@ -21801,7 +21801,7 @@
         {
           "addr": "0x155cc0",
           "decl": "int FUN_00155cc0(int a, int b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00155cc0"
         },
         {
@@ -41814,12 +41814,12 @@
         },
         {
           "addr": "0x001e6b10",
-          "decl": "void D3DDevice_CreateVolumeTexture(void);",
+          "decl": "void __stdcall D3DDevice_CreateVolumeTexture(int a, int b, int c, int d, int e, int f, int g);",
           "ported": false
         },
         {
           "addr": "0x001e6b40",
-          "decl": "void D3DDevice_CreateCubeTexture(void);",
+          "decl": "void __stdcall D3DDevice_CreateCubeTexture(int a, int b, int c, int d, int e, int f);",
           "ported": false
         },
         {
@@ -42214,7 +42214,7 @@
         },
         {
           "addr": "0x001eaf70",
-          "decl": "void D3DDevice_CreateVertexShader(void);",
+          "decl": "int __stdcall D3DDevice_CreateVertexShader(int a, int b, int c, int d);",
           "ported": false
         },
         {
@@ -42374,12 +42374,12 @@
         },
         {
           "addr": "0x001edd10",
-          "decl": "void D3DCubeTexture_LockRect(void);",
+          "decl": "void __stdcall D3DCubeTexture_LockRect(int a, int b, int c, int d, int e);",
           "ported": false
         },
         {
           "addr": "0x001edd80",
-          "decl": "void D3DVolumeTexture_LockBox(void);",
+          "decl": "void __stdcall D3DVolumeTexture_LockBox(int a, int b, int c, int d, int e);",
           "ported": false
         },
         {
@@ -42454,7 +42454,7 @@
         },
         {
           "addr": "0x001ef100",
-          "decl": "void D3DVertexBuffer_Lock(void);",
+          "decl": "void __stdcall D3DVertexBuffer_Lock(int a, int b, int c, int d, int e);",
           "ported": false
         },
         {
