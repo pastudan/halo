@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Track A networking/hs/interface/game — naked→C + Unicorn ≥100/0/0; never naked-true."""
+"""Track A networking/hs/interface/game — naked→C + Unicorn ≥100/0/0."""
 from __future__ import annotations
 
 import json
@@ -18,241 +18,260 @@ from prove_inventory_batch4 import ensure_oracle, flip_kb  # noqa: E402
 from tu_compile import docker_compile  # noqa: E402
 from unicorn_c_campaign import KB_PATH, append_ledger, clear_pass, count_ported  # noqa: E402
 
-# (addr, source, name, body|None if already C, decl|None, float_tol|None)
 ITEMS: list[tuple] = []
 
 
-def L(addr, src, name, body, decl=None, ft=None):
-    if body is not None:
-        body = body.strip() + "\n"
-    ITEMS.append((addr, src, name, body, decl, ft))
+def L(addr, src, name, body, decl=None):
+    ITEMS.append((addr, src, name, body.strip() + "\n", decl))
 
 
-# --- already-readable C: prove-only ---
-L(0xB42D0, "game/game.c", "FUN_000b42d0", None, "wchar_t *FUN_000b42d0(int param_1, wchar_t *dst);")
-
-# --- hand lifts ---
 L(
-    0xE4500,
-    "interface/ui_widget.c",
-    "display_error_deferred",
+    0xE2470,
+    "interface/progress_bar.c",
+    "SetTextureStageStateSmart",
     """
-/* display_error_deferred (0xe4500) — readable C lift. */
-void display_error_deferred(int16_t error_handle, int16_t local_player_index, char a3, char a4)
+/* SetTextureStageStateSmart (0xe2470) — readable C lift. */
+void SetTextureStageStateSmart(int stage, int state, int value)
 {
-  int slot;
-  int idx;
-
-  if (local_player_index == (int16_t)-1)
-    slot = 0;
-  else {
-    slot = (int)local_player_index;
-    if (slot < 0 || slot >= 4) {
-      display_assert((const char *)0x283424, (const char *)0x283280, 0x8f0, 1);
-      system_exit(-1);
-    }
-  }
-  idx = slot * 6;
-  if (*(int16_t *)(0x46cc50 + idx) != (int16_t)-1) {
-    error(2, (const char *)0x2833d0, slot);
+  if (state < 0x16) {
+    D3DDevice_SetTextureStageState((uint32_t)stage, (uint32_t)state, (uint32_t)value);
     return;
   }
-  *(int16_t *)(0x46cc50 + idx) = error_handle;
-  *(int16_t *)(0x46cc52 + idx) = local_player_index;
-  *(char *)(0x46cc54 + idx) = a3;
-  *(char *)(0x46cc55 + idx) = a4;
-}
-""",
-    "void display_error_deferred(int16_t error_handle, int16_t local_player_index, char a3, char a4);",
-)
-
-L(
-    0xDD110,
-    "interface/first_person_weapons.c",
-    "first_person_weapon_get_local_index",
-    """
-/* first_person_weapon_get_local_index (0xdd110) — readable C lift. */
-int first_person_weapon_get_local_index(int object_handle)
-{
-  int i;
-  char *base;
-  char *fp;
-  int *slot;
-
-  for (i = 0; i < 4; i++) {
-    if ((int16_t)i < 0 || (int16_t)i >= 4) {
-      display_assert((const char *)0x266fc0, (const char *)0x282294, 0x599, 1);
-      system_exit(-1);
-    }
-    base = *(char **)0x46bea8;
-    fp = base + i * 0x1ea0;
-    slot = (int *)(fp + 8);
-    if (*slot == object_handle && *fp != 0)
-      return i;
+  if (state == 0x1c) {
+    D3DDevice_SetTextureState_TexCoordIndex((uint32_t)stage, (uint32_t)value);
+    return;
   }
-  return -1;
+  if (state == 0x1d) {
+    D3DDevice_SetTextureState_BorderColor((uint32_t)stage, (uint32_t)value);
+    return;
+  }
+  if (state == 0x1e) {
+    D3DDevice_SetTextureState_ColorKeyColor((uint32_t)stage, (uint32_t)value);
+    return;
+  }
+  if (state <= 0x1b) {
+    D3DDevice_SetTextureState_BumpEnv((uint32_t)stage, (uint32_t)state, (uint32_t)value);
+  }
 }
 """,
-    "int first_person_weapon_get_local_index(int object_handle);",
+    "void SetTextureStageStateSmart(int stage, int state, int value);",
 )
 
 L(
-    0xBB220,
+    0xBC6C0,
     "game/players.c",
-    "players_handle_deleted_object",
+    "debug_player_teleport",
     """
-/* players_handle_deleted_object (0xbb220) — readable C lift. */
-void players_handle_deleted_object(int object_handle)
+/* debug_player_teleport (0xbc6c0) — readable C lift. */
+void debug_player_teleport(int16_t local_a, int16_t local_b)
 {
+  int unit_a;
+  int unit_b;
+  int player_a;
   void *obj;
-  unsigned char type_bits;
-  unsigned int mask;
-  data_iter_t iter;
-  void *player;
+  void *pos;
 
-  obj = object_get_and_verify_type(object_handle, -1);
-  type_bits = *(unsigned char *)((char *)obj + 0x64);
-  mask = 1u << type_bits;
-  if ((mask & 3) == 0)
+  player_a = local_player_get_player_index(local_a);
+  if (player_a == -1)
+    unit_a = -1;
+  else
+    unit_a = *(int *)((char *)datum_get(*(data_t **)0x5aa6d4, player_a) + 0x34);
+
+  player_a = local_player_get_player_index(local_b);
+  if (player_a == -1)
+    unit_b = -1;
+  else
+    unit_b = *(int *)((char *)datum_get(*(data_t **)0x5aa6d4, player_a) + 0x34);
+
+  if (unit_a == -1 || unit_b == -1)
     return;
-  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
-  for (player = data_iterator_next(&iter); player != 0; player = data_iterator_next(&iter)) {
-    if (*(int *)((char *)player + 0x34) == object_handle)
-      player_died(*(int *)((char *)&iter + 8));
-  }
+  obj = object_get_and_verify_type(unit_b, 3);
+  pos = (char *)obj + 0x50;
+  FUN_000bb670(player_index_from_unit_index(unit_a), (void *)unit_b, pos);
 }
 """,
-    "void players_handle_deleted_object(int object_handle);",
+    "void debug_player_teleport(int16_t local_a, int16_t local_b);",
 )
 
 L(
-    0x80B40,
-    "networking/message_header.c",
-    "build_message_header",
+    0x11A230,
+    "networking/network_messages.c",
+    "FUN_0011a230",
     """
-/* build_message_header (0x80b40) — readable C lift. */
-void build_message_header(unsigned short *header, unsigned short length, unsigned char type, unsigned char flags)
+/* FUN_0011a230 (0x11a230) — readable C lift. */
+bool FUN_0011a230(int *state, const char *source, short max_length)
 {
-  unsigned short v;
-  unsigned short t;
-  unsigned short f;
-
-  if (header == 0) {
-    display_assert((const char *)0x265cc8, (const char *)0x265ccc, 0x43, 1);
-    system_exit(-1);
-  }
-  if (length > 0xfff) {
-    display_assert((const char *)0x265c94, (const char *)0x265ccc, 0x45, 1);
-    system_exit(-1);
-  }
-  v = (unsigned short)((*header & 0xf) | ((unsigned short)length << 4));
-  *header = v;
-  if (type == 0 || type >= 4) {
-    display_assert((const char *)0x265c64, (const char *)0x265ccc, 0x46, 1);
-    system_exit(-1);
-  }
-  t = (unsigned short)((type & 3) << 2);
-  v = (unsigned short)((*header & 0xfff3) | t);
-  *header = v;
-  if (flags > 3) {
-    display_assert((const char *)0x265bec, (const char *)0x265ccc, 0x47, 1);
-    system_exit(-1);
-  }
-  f = (unsigned short)(flags & 0xffff);
-  v = (unsigned short)((*header & 0xfffc) | (f & 3));
-  *header = v;
-}
-""",
-    "void build_message_header(unsigned short *header, unsigned short length, unsigned char type, unsigned char flags);",
-)
-
-L(
-    0x80CA0,
-    "networking/message_header.c",
-    "create_message",
-    """
-/* create_message (0x80ca0) — readable C lift. */
-int create_message(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size)
-{
-  unsigned short total;
-  int buf;
+  int n;
+  int used;
+  int cap;
+  char *dst;
   int need;
 
-  total = (unsigned short)(payload_len + 2);
-  buf = buffer;
-  if (buf != 0) {
-    need = (int)(short)total;
-    if ((int)buffer_size < need) {
-      display_assert((const char *)0x265d24, (const char *)0x265ccc, 0x29, 1);
-      system_exit(-1);
-    }
-  } else {
-    buf = (int)debug_malloc((uint32_t)(int)(short)total, 0, (const char *)0x265ccc, 0x2e);
+  n = (int)(short)strnlen(source, (int)max_length);
+  used = state[1];
+  dst = (char *)state[0] + used;
+  cap = state[2];
+  need = used + n + 1;
+  if (need > cap) {
+    display_assert((const char *)0x28f010, (const char *)0x28eef8, 0xb6, 1);
+    system_exit(-1);
   }
-  if (buf != 0) {
-    build_message_header((unsigned short *)buf, total, (unsigned char)type, 0);
-    if (payload != 0)
-      csmemcpy((void *)(buf + 2), (void *)payload, (size_t)(payload_len & 0xffff));
+  if (used + n + 1 <= cap && *((char *)state + 0xc) == 0) {
+    csstrncpy(dst, source, (size_t)n);
+    dst[n] = 0;
+    state[1] = used + n + 1;
+    return *((char *)state + 0xc) == 0;
   }
-  return buf;
+  *((char *)state + 0xc) = 1;
+  return *((char *)state + 0xc) == 0;
 }
 """,
-    "int create_message(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size);",
+    "bool FUN_0011a230(int *state, const char *source, short max_length);",
 )
 
-def audit_naked_true() -> list[tuple[str, str, str]]:
+L(
+    0xF0100,
+    "interface/ui_widget_game_data_input_functions.c",
+    "FUN_000f0100",
+    """
+/* FUN_000f0100 (0xf0100) — readable C lift. */
+char FUN_000f0100(void *unused_widget, void *player_ui, char *out_flag)
+{
+  int16_t ctrl;
+  int16_t cur;
+
+  (void)unused_widget;
+  if (player_ui == 0) {
+    display_assert((const char *)0x288670, (const char *)0x2859a4, 0x11c7, 1);
+    system_exit(-1);
+  }
+  ctrl = *(int16_t *)((char *)player_ui + 2);
+  cur = player_ui_get_single_player_local_player_controller(0);
+  if (ctrl == cur) {
+    ui_widget_display_error(0x12, -1, 1, 0);
+    *out_flag = 1;
+    return 0;
+  }
+  player_ui_set_single_player_local_player_controller(1, ctrl);
+  return 1;
+}
+""",
+    "char FUN_000f0100(void *unused_widget, void *player_ui, char *out_flag);",
+)
+
+L(
+    0xE1F20,
+    "interface/progress_bar.c",
+    "FUN_000e1f20",
+    """
+/* FUN_000e1f20 (0xe1f20) — readable C lift. */
+int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d)
+{
+  (void)unused;
+  D3DDevice_SetVertexData4f(reg, a, b, c, d);
+  return 0;
+}
+""",
+    "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
+)
+
+L(
+    0x803D0,
+    "networking/message_header.c",
+    "key_agreement_build_message",
+    """
+/* key_agreement_build_message (0x803d0) — readable C lift. */
+unsigned short *key_agreement_build_message(short type, void *data, int buffer, unsigned short buffer_size)
+{
+  char encoded[0x84];
+  int encoded_size;
+  unsigned short *msg;
+  unsigned short hdr;
+
+  csmemset(encoded, 0, sizeof(encoded));
+  encoded_size = 0x80;
+  if (!encode_packet_group((group_definition *)0x2ee588, data, encoded, &encoded_size, type, 1))
+    return 0;
+  msg = (unsigned short *)create_message(3, (int)encoded, (unsigned int)encoded_size, buffer, buffer_size);
+  if (msg == 0)
+    return 0;
+  hdr = *msg;
+  hdr = (unsigned short)((hdr & 0xfffe) | 2);
+  *msg = hdr;
+  return msg;
+}
+""",
+    "unsigned short *key_agreement_build_message(short type, void *data, int buffer, unsigned short buffer_size);",
+)
+
+L(
+    0xD98C0,
+    "interface/event_manager.c",
+    "FUN_000d98c0",
+    """
+/* FUN_000d98c0 (0xd98c0) — readable C lift. */
+void FUN_000d98c0(int16_t local_a, int16_t local_b)
+{
+  void *src;
+  void *dst;
+  int i;
+
+  if (local_a == (int16_t)-1) {
+    display_assert((const char *)0x281eb8, (const char *)0x281eec, 0x89, 1);
+    system_exit(-1);
+  }
+  if (local_b == (int16_t)-1) {
+    display_assert((const char *)0x281e98, (const char *)0x281eec, 0x8a, 1);
+    system_exit(-1);
+  }
+  src = FUN_000d8bc0(local_b);
+  dst = FUN_000d8bc0(local_a);
+  for (i = 0; i < 0xa; i++)
+    ((int *)dst)[i] = ((int *)src)[i];
+  src = FUN_000d8c30(local_b);
+  dst = FUN_000d8c30(local_a);
+  for (i = 0; i < 0x14; i++)
+    ((int *)dst)[i] = ((int *)src)[i];
+}
+""",
+    "void FUN_000d98c0(int16_t local_a, int16_t local_b);",
+)
+
+
+def audit_naked_true():
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     bad = []
     for o in kb.get("objects", []):
         src = o.get("source") or ""
-        if not src:
-            continue
         sp = ROOT / "src" / "halo" / src
-        if not sp.exists():
+        if not sp.is_file():
             continue
         text = sp.read_text(encoding="utf-8", errors="ignore")
         for f in o.get("functions") or []:
             if f.get("ported") is not True:
                 continue
-            name = f.get("name") or ""
             addr = (f.get("addr") or "").lower()
             if not addr:
                 continue
-            pat = re.compile(
+            if re.search(
                 rf"/\*[^*]*\b{re.escape(addr)}\b[^*]*\*/\s*#if defined\(__clang__\)\s*"
                 rf"(?:static[\s\S]*?)?__attribute__\(\(naked[\s\S]*?#endif",
+                text,
                 re.I,
-            )
-            if pat.search(text):
-                bad.append((name or "?", addr, src))
+            ):
+                bad.append((f.get("name") or "?", addr, src))
     return bad
 
 
-def apply_one(addr, source, name, body, decl) -> tuple[bool, str, str]:
+def apply_one(addr, source, name, body, decl):
     sp = ROOT / "src" / "halo" / source
     text = sp.read_text(encoding="utf-8", errors="replace")
-    if body is None:
-        if re.search(rf"0x{addr:x}", text, re.I) and "naked" not in (
-            re.search(rf"/\*[^*]*0x{addr:x}[^*]*\*/([\s\S]{{0,120}})", text, re.I).group(1)
-            if re.search(rf"/\*[^*]*0x{addr:x}[^*]*\*/([\s\S]{{0,120}})", text, re.I)
-            else "naked"
-        ):
-            return True, "already_c", text
-        # already C without "readable C" marker
-        if not re.search(
-            rf"0x{addr:x}[^\n]*\*/\s*#if defined\(__clang__\)\s*(?:static[\s\S]*?)?__attribute__\(\(naked",
-            text,
-            re.I,
-        ):
-            return True, "already_c", text
-        return False, "still_naked", text
     if re.search(rf"0x{addr:x}[^\n]*readable C lift", text, re.I):
         return True, "already", text
     span = find_naked_block(text, name, addr)
     if not span:
         return False, "locate", text
-    chunk = text[span[0] : span[1]]
-    if len(chunk.encode()) > 2500:
+    if len(text[span[0] : span[1]].encode()) > 3500:
         return False, "too_big", text
     new_text = text[: span[0]] + body + "\n" + text[span[1] :]
     if "int16_t" in body and "#include <stdint.h>" not in new_text:
@@ -273,8 +292,8 @@ def apply_one(addr, source, name, body, decl) -> tuple[bool, str, str]:
     return True, "ok", text
 
 
-def run_uni(name: str, addr: int, seeds: int = 100, timeout: float = 120.0, ft=None) -> dict:
-    outj = ROOT / "artifacts" / "equivalence" / f"uni_{addr:08x}_s{seeds}.json"
+def run_uni(name, addr, timeout=120.0):
+    outj = ROOT / "artifacts" / "equivalence" / f"uni_{addr:08x}_s100.json"
     outj.parent.mkdir(parents=True, exist_ok=True)
     cmd = [
         sys.executable,
@@ -283,19 +302,15 @@ def run_uni(name: str, addr: int, seeds: int = 100, timeout: float = 120.0, ft=N
         "--allow-stubs",
         "--no-stub-arg-trace",
         "--seeds",
-        str(seeds),
+        "100",
         "-q",
         "--output-json",
         str(outj),
     ]
-    if ft is not None:
-        cmd += ["--float-tolerance", str(ft)]
     env = os.environ.copy()
     env["BIPED_SIBLING_RESOLVE"] = "1"
     try:
-        proc = subprocess.run(
-            cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout, env=env
-        )
+        proc = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=timeout, env=env)
     except subprocess.TimeoutExpired:
         return {"passed": 0, "failed": 0, "errors": 1, "tail": "TIMEOUT"}
     text = (proc.stdout or "") + (proc.stderr or "")
@@ -303,115 +318,81 @@ def run_uni(name: str, addr: int, seeds: int = 100, timeout: float = 120.0, ft=N
     passed = failed = errors = None
     if m:
         passed, failed, errors = map(int, m.groups())
-    elif outj.exists():
-        try:
-            payload = json.loads(outj.read_text())
-            passed = payload.get("passed", payload.get("seeds_passed"))
-            failed = payload.get("failed", payload.get("seeds_failed"))
-            errors = payload.get("errors", payload.get("seeds_errors"))
-        except Exception:
-            pass
     return {
         "passed": passed,
         "failed": failed,
         "errors": errors,
         "tail": text[-500:],
-        "missing_candidate": "missing_build_object" in text or "cannot find" in text,
+        "missing_candidate": "cannot find" in text or "missing_build" in text,
     }
 
 
-def commit_push(flips: list[str], touched: set[Path]) -> None:
-    files = ["kb.json", "scripts/lift_grok_w5.py"]
-    files += [str(p.relative_to(ROOT)) for p in sorted(touched)]
-    files = list(dict.fromkeys(files))
+def commit_push(flips, touched):
+    files = ["kb.json", "scripts/lift_grok_w5.py"] + [str(p.relative_to(ROOT)) for p in sorted(touched)]
     subprocess.run(["git", "add"] + files, cwd=ROOT, check=False)
     msg = f"lift(track-a): {len(flips)} Unicorn-prove leaves ({' '.join(flips[:8])}) (ported:true)."
     r = subprocess.run(["git", "commit", "-m", msg], cwd=ROOT, capture_output=True, text=True)
     if r.returncode != 0:
         print("commit failed", r.stdout, r.stderr, flush=True)
         return
-    for _ in range(5):
+    for _ in range(3):
         subprocess.run(["git", "fetch", "pastudan", "track-a-collision-bsp"], cwd=ROOT, capture_output=True)
+        # stash dirt
+        subprocess.run(["git", "stash", "push", "-u", "-m", "tmp"], cwd=ROOT, capture_output=True)
         rb = subprocess.run(
-            ["git", "rebase", "pastudan/track-a-collision-bsp"],
-            cwd=ROOT,
-            capture_output=True,
-            text=True,
+            ["git", "rebase", "pastudan/track-a-collision-bsp"], cwd=ROOT, capture_output=True, text=True
         )
+        subprocess.run(["git", "stash", "pop"], cwd=ROOT, capture_output=True)
         if rb.returncode == 0:
             break
-        print("rebase fail", (rb.stdout or "")[-200:], (rb.stderr or "")[-200:], flush=True)
+        print("rebase fail", (rb.stderr or rb.stdout)[-300:], flush=True)
         subprocess.run(["git", "rebase", "--abort"], cwd=ROOT, capture_output=True)
         return
-    bad = audit_naked_true()
-    # filter false positives for necessity-naked that aren't ported - audit only ported
-    bad = [b for b in bad if b[1]]
-    if bad:
-        print("ABORT push naked-true", bad[:10], flush=True)
+    if audit_naked_true():
+        print("ABORT naked-true", audit_naked_true()[:5], flush=True)
         return
     r = subprocess.run(
-        ["git", "push", "pastudan", "HEAD:track-a-collision-bsp"],
-        cwd=ROOT,
-        capture_output=True,
-        text=True,
+        ["git", "push", "pastudan", "HEAD:track-a-collision-bsp"], cwd=ROOT, capture_output=True, text=True
     )
     print("PUSH", r.returncode, (r.stderr or r.stdout)[-400:], flush=True)
 
 
-def main() -> int:
+def main():
     true0, false0 = count_ported(json.loads(KB_PATH.read_text(encoding="utf-8")))
     total0 = true0 + false0
     print(f"start true={true0}/{total0} ({100*true0/total0:.2f}%) naked_true={len(audit_naked_true())}", flush=True)
-    flips: list[str] = []
-    touched: set[Path] = set()
-
-    for addr, source, name, body, decl, ft in ITEMS:
+    flips = []
+    touched = set()
+    for addr, source, name, body, decl in ITEMS:
         kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
-        already = False
-        for o in kb.get("objects", []):
-            for fn in o.get("functions") or []:
-                if fn.get("addr") and int(fn["addr"], 16) == addr and fn.get("ported") is True:
-                    already = True
-        if already:
-            print(f"\n== 0x{addr:x} {name} already true ==", flush=True)
+        if any(
+            fn.get("addr") and int(fn["addr"], 16) == addr and fn.get("ported") is True
+            for o in kb["objects"]
+            for fn in o.get("functions") or []
+        ):
+            print(f"\n== 0x{addr:x} {name} already ==", flush=True)
             continue
         print(f"\n== 0x{addr:x} {name} ==", flush=True)
         ok, err, orig = apply_one(addr, source, name, body, decl)
         if not ok:
             print(f"  apply FAIL {err}", flush=True)
             continue
-        if err == "compile":
-            continue
         if not ensure_oracle(addr):
             print("  oracle FAIL", flush=True)
-            if body is not None:
-                (ROOT / "src" / "halo" / source).write_text(orig)
+            (ROOT / "src" / "halo" / source).write_text(orig)
             continue
-        res = run_uni(name, addr, ft=ft)
+        res = run_uni(name, addr)
         if not clear_pass(res, 100):
-            res2 = run_uni(hex(addr), addr, ft=ft)
+            res2 = run_uni(hex(addr), addr)
             if clear_pass(res2, 100) or (res2.get("passed") or 0) > (res.get("passed") or 0):
                 res = res2
         okp = clear_pass(res, 100)
-        print(
-            f"  unicorn {res.get('passed')}/{res.get('failed')}/{res.get('errors')} ok={okp}",
-            flush=True,
-        )
-        append_ledger(
-            {
-                "addr": hex(addr),
-                "name": name,
-                "ok": okp,
-                "phase": "lift_grok_w5",
-                "passed": res.get("passed"),
-                "failed": res.get("failed"),
-                "errors": res.get("errors"),
-            }
-        )
+        print(f"  unicorn {res.get('passed')}/{res.get('failed')}/{res.get('errors')} ok={okp}", flush=True)
+        append_ledger({"addr": hex(addr), "name": name, "ok": okp, "phase": "lift_grok_w5",
+                       "passed": res.get("passed"), "failed": res.get("failed"), "errors": res.get("errors")})
         if not okp:
-            if body is not None and err != "already_c":
-                (ROOT / "src" / "halo" / source).write_text(orig)
-            print(f"  REVERT {(res.get('tail') or '')[-180:]}", flush=True)
+            (ROOT / "src" / "halo" / source).write_text(orig)
+            print(f"  REVERT {(res.get('tail') or '')[-160:]}", flush=True)
             continue
         cur = (ROOT / "src" / "halo" / source).read_text(encoding="utf-8", errors="ignore")
         if re.search(
@@ -420,8 +401,7 @@ def main() -> int:
             re.I,
         ):
             print("  REVERT still naked", flush=True)
-            if body is not None:
-                (ROOT / "src" / "halo" / source).write_text(orig)
+            (ROOT / "src" / "halo" / source).write_text(orig)
             continue
         kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
         if flip_kb(kb, addr):
@@ -429,23 +409,14 @@ def main() -> int:
             flips.append(name)
             touched.add(ROOT / "src" / "halo" / source)
             print(f"  FLIP {len(flips)}", flush=True)
-
     print("FLIPS", flips, flush=True)
-    if flips:
-        bad = audit_naked_true()
-        print("pre-push naked_true", len(bad), bad[:5], flush=True)
-        if bad:
-            print("REFUSING commit: naked-true != 0", flush=True)
-            return 2
+    if flips and not audit_naked_true():
         commit_push(flips, touched)
     true1, false1 = count_ported(json.loads(KB_PATH.read_text(encoding="utf-8")))
     total1 = true1 + false1
-    print(
-        f"DONE proven={len(flips)} tip={true1}/{total1} ({100*true1/total1:.2f}%) naked_true={len(audit_naked_true())}",
-        flush=True,
-    )
+    print(f"DONE proven={len(flips)} tip={true1}/{total1} ({100*true1/total1:.2f}%) naked_true={len(audit_naked_true())}", flush=True)
     print("SYMBOLS", " ".join(flips), flush=True)
-    return 0 if len(flips) >= 1 else 1
+    return 0 if flips else 1
 
 
 if __name__ == "__main__":

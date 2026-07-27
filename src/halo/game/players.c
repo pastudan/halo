@@ -3231,88 +3231,33 @@ char player_teleport(int player_handle, void *a, void *b)
   return FUN_000bb670(player_handle, a, b);
 }
 
-/* debug_player_teleport (0xbc6c0) — XBE naked draft (batch 145). */
-#if defined(__clang__)
-static int (*const bbc6c0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const bbc6c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const bbc6c0_get)(int, int) = object_get_and_verify_type;
-static int (*const bbc6c0_cba500)(int) = player_index_from_unit_index;
-static char (*const bbc6c0_cbb670)(int player_handle, void *a, void *b) = FUN_000bb670;
-
-__attribute__((naked, noinline))
-void debug_player_teleport(int16_t local_a __attribute__((unused)), int16_t local_b __attribute__((unused)))
+/* debug_player_teleport (0xbc6c0) — readable C lift. */
+void debug_player_teleport(int16_t local_a, int16_t local_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Ldebug_player_teleport_1\n\t"
-      "orl %%eax, %%edi\n\t"
-      "jmp .Ldebug_player_teleport_2\n\t"
-      ".Ldebug_player_teleport_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Ldebug_player_teleport_2:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Ldebug_player_teleport_3\n\t"
-      "orl %%eax, %%esi\n\t"
-      "jmp .Ldebug_player_teleport_4\n\t"
-      ".Ldebug_player_teleport_3:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Ldebug_player_teleport_4:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Ldebug_player_teleport_5\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Ldebug_player_teleport_5\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "addl $0x50, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cba500]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cbb670]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Ldebug_player_teleport_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cba3c0] "m"(bbc6c0_cba3c0), [dget] "m"(bbc6c0_dget), [get] "m"(bbc6c0_get), [cba500] "m"(bbc6c0_cba500), [cbb670] "m"(bbc6c0_cbb670)
-      : "memory");
-}
-#else
-#error "debug_player_teleport: clang naked draft required"
-#endif
+  int unit_a;
+  int unit_b;
+  int player_a;
+  void *obj;
+  void *pos;
 
+  player_a = local_player_get_player_index(local_a);
+  if (player_a == -1)
+    unit_a = -1;
+  else
+    unit_a = *(int *)((char *)datum_get(*(data_t **)0x5aa6d4, player_a) + 0x34);
+
+  player_a = local_player_get_player_index(local_b);
+  if (player_a == -1)
+    unit_b = -1;
+  else
+    unit_b = *(int *)((char *)datum_get(*(data_t **)0x5aa6d4, player_a) + 0x34);
+
+  if (unit_a == -1 || unit_b == -1)
+    return;
+  obj = object_get_and_verify_type(unit_b, 3);
+  pos = (char *)obj + 0x50;
+  FUN_000bb670(player_index_from_unit_index(unit_a), (void *)unit_b, pos);
+}
 
 /* Spawn an object from a small placement record and attach it to a parent.
  *

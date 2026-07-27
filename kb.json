@@ -7654,8 +7654,9 @@
       "functions": [
         {
           "addr": "0xd98c0",
-          "decl": "void FUN_000d98c0(void);",
-          "ported": false
+          "decl": "void FUN_000d98c0(int16_t local_a, int16_t local_b);",
+          "ported": false,
+          "name": "FUN_000d98c0"
         },
         {
           "addr": "0xd9960",
@@ -18823,7 +18824,8 @@
         {
           "addr": "0xbc6c0",
           "decl": "void debug_player_teleport(int16_t local_a, int16_t local_b);",
-          "ported": false
+          "ported": true,
+          "name": "debug_player_teleport"
         },
         {
           "addr": "0xbc750",
@@ -27776,8 +27778,9 @@
         },
         {
           "addr": "0xf0100",
-          "decl": "void FUN_000f0100(void *widget);",
-          "ported": false
+          "decl": "char FUN_000f0100(void *unused_widget, void *player_ui, char *out_flag);",
+          "ported": false,
+          "name": "FUN_000f0100"
         },
         {
           "addr": "0xf0170",
@@ -30955,17 +30958,17 @@
         {
           "addr": "0x17cd80",
           "decl": "void FUN_0017cd80(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cd90",
           "decl": "void FUN_0017cd90(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cda0",
           "decl": "void FUN_0017cda0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cdb0",
@@ -31040,17 +31043,17 @@
         {
           "addr": "0x17ceb0",
           "decl": "void FUN_0017ceb0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cec0",
           "decl": "void FUN_0017cec0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ced0",
           "decl": "void FUN_0017ced0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cee0",
@@ -31075,7 +31078,7 @@
         {
           "addr": "0x17cf20",
           "decl": "void FUN_0017cf20(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cf30",
@@ -31085,7 +31088,7 @@
         {
           "addr": "0x17cf40",
           "decl": "void FUN_0017cf40(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cf50",
@@ -40023,7 +40026,8 @@
         {
           "addr": "0x803d0",
           "decl": "unsigned short *key_agreement_build_message(short type, void *data, int buffer, unsigned short buffer_size);",
-          "ported": false
+          "ported": true,
+          "name": "key_agreement_build_message"
         },
         {
           "addr": "0x80470",

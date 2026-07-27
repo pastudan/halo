@@ -247,82 +247,26 @@ int prime_compare(const uint32_t *a, const uint32_t *b)
 /* Global: pointer to key_agreement_packets group definition at 0x2ee588. */
 #define key_agreement_group ((void *)0x2ee588)
 
-/* key_agreement_build_message (0x803d0) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static bool (*const b803d0_c11aca0)(group_definition *group, void *data, char *encoded_buf, int32_t *encoded_size, int16_t type, int one) = encode_packet_group;
-static int (*const b803d0_c80ca0)(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size) = create_message;
-
-__attribute__((naked, noinline))
-unsigned short * key_agreement_build_message(short type __attribute__((unused)), void *data __attribute__((unused)), int buffer __attribute__((unused)), unsigned short buffer_size __attribute__((unused)))
+/* key_agreement_build_message (0x803d0) — readable C lift. */
+unsigned short *key_agreement_build_message(short type, void *data, int buffer, unsigned short buffer_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x84, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb $0, -0x84(%%ebp)\n\t"
-      "movl $0x1f, %%ecx\n\t"
-      "leal -0x83(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "stosw\n\t"
-      "pushl $1\n\t"
-      "stosb\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2ee588\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x80, -0x4(%%ebp)\n\t"
-      "call *%[c11aca0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lkey_agreement_build_message_1\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $3\n\t"
-      "call *%[c80ca0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lkey_agreement_build_message_2\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw (%%eax), %%dx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "andl $0xfffe, %%edx\n\t"
-      "orl $2, %%edx\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lkey_agreement_build_message_1:\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".Lkey_agreement_build_message_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11aca0] "m"(b803d0_c11aca0), [c80ca0] "m"(b803d0_c80ca0)
-      : "memory");
-}
-#else
-#error "key_agreement_build_message: clang naked draft required"
-#endif
+  char encoded[0x84];
+  int encoded_size;
+  unsigned short *msg;
+  unsigned short hdr;
 
+  csmemset(encoded, 0, sizeof(encoded));
+  encoded_size = 0x80;
+  if (!encode_packet_group((group_definition *)0x2ee588, data, encoded, &encoded_size, type, 1))
+    return 0;
+  msg = (unsigned short *)create_message(3, (int)encoded, (unsigned int)encoded_size, buffer, buffer_size);
+  if (msg == 0)
+    return 0;
+  hdr = *msg;
+  hdr = (unsigned short)((hdr & 0xfffe) | 2);
+  *msg = hdr;
+  return msg;
+}
 
 /* message_encrypt (0x80940) — XBE naked draft (batch 77). */
 #if defined(__clang__)
