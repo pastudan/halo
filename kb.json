@@ -38796,7 +38796,7 @@
         {
           "addr": "0x160bd0",
           "decl": "void FUN_00160bd0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00160bd0"
         },
         {
