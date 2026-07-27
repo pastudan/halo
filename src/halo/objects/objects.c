@@ -1732,15 +1732,17 @@ void FUN_001362d0(int object_handle __attribute__((unused)))
 
 
 /* FUN_001363d0 (0x1363d0) — readable C lift. */
-int FUN_001363d0(int param_1)
+char FUN_001363d0(int param_1)
 {
   char *entry;
   int16_t kind;
   int cur;
+  char result;
 
+  result = 0;
   cur = param_1;
   if (cur == -1)
-    return 0;
+    return result;
   for (;;) {
     entry = (char *)datum_get(*(void **)0x5a90c4, cur);
     kind = *(int16_t *)(entry + 2);
@@ -1748,12 +1750,11 @@ int FUN_001363d0(int param_1)
       display_assert((const char *)0x29ade4, (const char *)0x29ae0c, 0x96, true);
       system_exit(-1);
     }
-    /* table stride 0x28 = 5*8: index*5*8 = (kind + kind*4)*8 */
     if (*(char *)(0x32352c + ((int)kind * 5) * 8) != 0)
       return 1;
     cur = *(int *)(entry + 8);
     if (cur == -1)
-      return 0;
+      return result;
   }
 }
 

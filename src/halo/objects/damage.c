@@ -2424,7 +2424,7 @@ float FUN_00138f10(float base, float a, float b, float t1, float t2)
 #if defined(__clang__)
 static void (*const b1390d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1390d0_exitfn)(int) = system_exit;
-static void (*const b1390d0_c1805f0)(int param_1, float *param_2) = FUN_001805f0;
+static void (*const b1390d0_c1805f0)(int *param_1, float *param_2) = FUN_001805f0;
 static unsigned int (*const b1390d0_c7dad0)(int bitmap_ref, float *uv, float level, float *out) = bitmap_2d_get_pixel;
 static void (*const b1390d0_c7afb0)(unsigned int color, float *dst) = pixel32_to_real_rgb_color;
 static char (*const b1390d0_cab9c0)(void) = FUN_000ab9c0;

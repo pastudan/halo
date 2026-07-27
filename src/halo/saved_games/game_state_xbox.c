@@ -2200,63 +2200,24 @@ void FUN_001c1720(void)
 #endif
 
 
-/* player_profile_new (0x1c18f0) — XBE naked draft (batch 270). */
-#if defined(__clang__)
-static void (*const b1c18f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c18f0_exitfn)(int) = system_exit;
-static void * (*const b1c18f0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b1c18f0_c1c1340)(void) = player_profile_setup_default_gamespy_settings;
-
-__attribute__((naked, noinline))
-void player_profile_new(void)
+/* player_profile_new (0x1c18f0) — readable C lift. */
+char player_profile_new(int index, void *profile)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lplayer_profile_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc2\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x2829b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_profile_new_1:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .Lplayer_profile_new_2\n\t"
-      "pushl $0x30\n\t"
-      "pushl $0x4ea9c8\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_profile_new_2:\n\t"
-      "call *%[c1c1340]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c18f0_assert), [exitfn] "m"(b1c18f0_exitfn), [c8e0b0] "m"(b1c18f0_c8e0b0), [c1c1340] "m"(b1c18f0_c1c1340)
-      : "memory");
+  extern char DAT_002829b0[];
+  extern char DAT_002b9f70[];
+
+  if (profile == 0) {
+    display_assert(DAT_002829b0, DAT_002b9f70, 0xc2, true);
+    system_exit(-1);
+  }
+  if (index == -1) {
+    csmemcpy(profile, (void *)0x4ea9c8, 0x30);
+    return 0;
+  }
+  player_profile_setup_default_gamespy_settings();
+  return 0;
 }
-#else
-#error "player_profile_new: clang naked draft required"
-#endif
+
 
 
 /* FUN_001c1950 (0x1c1950) — readable C lift. */

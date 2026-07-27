@@ -3045,28 +3045,10 @@ void FUN_0017cc90(void)
   FUN_0016fa40(11);
 }
 
-/* 0x17cca0 */
+/* FUN_0017cca0 (0x17cca0) — readable C lift (jmp thunk to 0x172520). */
 void FUN_0017cca0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-
-  FUN_0016f910(0);
-  /* cmp edx, 0x16 -> jge 0x172540 */
-  D3DDevice_SetTextureStageState(eax, 0, 0);
-  /* cmp edx, 0x1c -> jne 0x172551 */
-  D3DDevice_SetTextureState_TexCoordIndex(0, 0);
-  /* cmp edx, 0x1d -> jne 0x172562 */
-  D3DDevice_SetTextureState_BorderColor(ecx, eax);
-  /* cmp edx, 0x1e -> jne 0x172573 */
-  D3DDevice_SetTextureState_ColorKeyColor(0, 0);
-  /* cmp edx, 0x1b -> jg 0x172580 */
-  D3DDevice_SetTextureState_BumpEnv(0, 0, 0);
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
+  ((void (*)(void))0x172520)();
 }
 
 /* 0x17cce0 */

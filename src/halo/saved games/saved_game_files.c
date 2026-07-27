@@ -901,7 +901,7 @@ static void (*const b1c22e0_c1c4600)(void) = (void (*)(void))saved_game_file_get
 static wchar_t * (*const b1c22e0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
-void playlist_profile_create_default_profiles_on_disk(int profile_index __attribute__((unused)))
+char playlist_profile_create_default_profiles_on_disk(int profile_index __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1301,11 +1301,7 @@ char playlist_profile_delete(int profile_index, void *variant)
     game_engine_playlist_next(0, 0, 4);
     return 0;
   }
-  {
-    char (*create)(int) =
-        (char (*)(int))playlist_profile_create_default_profiles_on_disk;
-    return create(profile_index);
-  }
+  return playlist_profile_create_default_profiles_on_disk(profile_index);
 }
 
 
