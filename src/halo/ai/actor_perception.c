@@ -5628,117 +5628,42 @@ void actor_emotion_update(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_perception_become_acknowledged (0x33330) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void *(*const b33330_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const b33330_c32940)(int actor_handle, int prop_handle) = actor_expected_acknowledgement;
-static void (*const b33330_c3b410)(int actor_handle, int old_prop, int new_prop) = FUN_0003b410;
-static void (*const b33330_c64a80)(int actor_handle, int prop_handle) = prop_iterator_next;
-static void (*const b33330_c2f2b0)(int actor_handle, int prop_handle, int param_3, char param_4) = actor_perception_acknowledge;
-
-__attribute__((naked, noinline))
-void actor_perception_become_acknowledged(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)), char *param_3 __attribute__((unused)))
+/* actor_perception_become_acknowledged (0x33330) — readable C lift. */
+void actor_perception_become_acknowledged(int actor_handle, int prop_handle, char *out_expected)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x24(%%esi), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "xorb %%dl, %%dl\n\t"
-      "cmpw $2, %%cx\n\t"
-      "jl .Lactor_perception_become_acknowledged_1\n\t"
-      "cmpw $3, %%cx\n\t"
-      "jle .Lactor_perception_become_acknowledged_3\n\t"
-      ".Lactor_perception_become_acknowledged_1:\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "setne -0x4(%%ebp)\n\t"
-      "call *%[c32940]\n\t"
-      "movb %%al, -0x8(%%ebp)\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_become_acknowledged_2\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x50(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x50(%%esi)\n\t"
-      "movl 0x54(%%eax), %%edx\n\t"
-      "movl %%edx, 0x54(%%esi)\n\t"
-      "movl 0x58(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x58(%%esi)\n\t"
-      "movl 0x5c(%%eax), %%edx\n\t"
-      "movl %%edx, 0x5c(%%esi)\n\t"
-      "movw 0x9c(%%eax), %%cx\n\t"
-      "movw %%cx, 0x9c(%%esi)\n\t"
-      "movl 0xa0(%%eax), %%edx\n\t"
-      "movl %%edx, 0xa0(%%esi)\n\t"
-      "movb 0xa4(%%eax), %%cl\n\t"
-      "movb %%cl, 0xa4(%%esi)\n\t"
-      "movw 0xa6(%%eax), %%dx\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movw %%dx, 0xa6(%%esi)\n\t"
-      "movw 0xa8(%%eax), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movw %%ax, 0xa8(%%esi)\n\t"
-      "call *%[c3b410]\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c64a80]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl $0xffffffff, 0xc(%%esi)\n\t"
-      ".Lactor_perception_become_acknowledged_2:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movw $3, 0x24(%%esi)\n\t"
-      "call *%[c2f2b0]\n\t"
-      "movb -0x8(%%ebp), %%dl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      ".Lactor_perception_become_acknowledged_3:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "je .Lactor_perception_become_acknowledged_4\n\t"
-      "movb %%dl, (%%ecx)\n\t"
-      ".Lactor_perception_become_acknowledged_4:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b33330_dget), [c32940] "m"(b33330_c32940), [c3b410] "m"(b33330_c3b410), [c64a80] "m"(b33330_c64a80), [c2f2b0] "m"(b33330_c2f2b0)
-      : "memory");
-}
-#else
-#error "actor_perception_become_acknowledged: clang naked draft required"
-#endif
+  unsigned char *prop;
+  unsigned char *owner;
+  char has_owner;
+  char expected;
+  int16_t awareness;
 
+  prop = (unsigned char *)datum_get(*(void **)0x5ab23c, prop_handle);
+  awareness = *(int16_t *)(prop + 0x24);
+  expected = 0;
+  if (awareness < 2 || awareness > 3) {
+    has_owner = (*(int *)(prop + 0xc) != -1);
+    expected = actor_expected_acknowledgement(actor_handle, prop_handle);
+    if (has_owner) {
+      owner = (unsigned char *)datum_get(*(void **)0x5ab23c, *(int *)(prop + 0xc));
+      *(int *)(prop + 0x50) = *(int *)(owner + 0x50);
+      *(int *)(prop + 0x54) = *(int *)(owner + 0x54);
+      *(int *)(prop + 0x58) = *(int *)(owner + 0x58);
+      *(int *)(prop + 0x5c) = *(int *)(owner + 0x5c);
+      *(int16_t *)(prop + 0x9c) = *(int16_t *)(owner + 0x9c);
+      *(int *)(prop + 0xa0) = *(int *)(owner + 0xa0);
+      prop[0xa4] = owner[0xa4];
+      *(int16_t *)(prop + 0xa6) = *(int16_t *)(owner + 0xa6);
+      *(int16_t *)(prop + 0xa8) = *(int16_t *)(owner + 0xa8);
+      FUN_0003b410(actor_handle, *(int *)(prop + 0xc), prop_handle);
+      prop_iterator_next(actor_handle, *(int *)(prop + 0xc));
+      *(int *)(prop + 0xc) = -1;
+    }
+    *(int16_t *)(prop + 0x24) = 3;
+    actor_perception_acknowledge(actor_handle, prop_handle, has_owner, expected);
+  }
+  if (out_expected)
+    *out_expected = expected;
+}
 
 /* prop_status_refresh (0x33440) — XBE naked draft (batch 79). */
 #if defined(__clang__)
@@ -8872,7 +8797,7 @@ static void (*const b355f0_c2f910)(int actor_handle, int prop_handle) = actor_pe
 static int (*const b355f0_c648a0)(int actor_handle, int parent_prop) = prop_orphan_transition;
 static void (*const b355f0_c3b410)(int actor_handle, int old_prop, int new_prop) = FUN_0003b410;
 static int (*const b355f0_gtime)(void) = game_time_get;
-static void (*const b355f0_c33330)(int actor_handle, int prop_handle, char *param_3) = actor_perception_become_acknowledged;
+static void (*const b355f0_c33330)(int actor_handle, int prop_handle, char *param_3) = (void *)actor_perception_become_acknowledged;
 static bool (*const b355f0_c2fc20)(int actor_handle, int clump_item_handle) = actor_get_perception_knowledge;
 static float (*const b355f0_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
 static void (*const b355f0_c64a80)(int actor_handle, int prop_handle) = prop_iterator_next;

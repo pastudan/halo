@@ -34729,8 +34729,9 @@
         },
         {
           "addr": "0x33330",
-          "decl": "void actor_perception_become_acknowledged(int actor_handle, int prop_handle, char *param_3);",
-          "ported": false
+          "decl": "void actor_perception_become_acknowledged(int actor_handle, int prop_handle, char *out_expected);",
+          "ported": true,
+          "name": "actor_perception_become_acknowledged"
         },
         {
           "addr": "0x33440",
