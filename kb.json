@@ -245,8 +245,9 @@
         },
         {
           "addr": "0x67960",
-          "decl": "void FUN_00067960(void);",
-          "ported": false
+          "decl": "int FUN_00067960(unsigned short type@<ax>, unsigned short tag@<cx>, void *out@<edx>, void *ctx, float value);",
+          "ported": true,
+          "name": "FUN_00067960"
         },
         {
           "addr": "0x679f0",
@@ -440,7 +441,7 @@
         },
         {
           "addr": "0x132e20",
-          "decl": "void FUN_00132e20(int object_handle, int widget_datum, void *arg2, void *arg3);",
+          "decl": "void FUN_00132e20(void);",
           "ported": true,
           "name": "FUN_00132e20"
         },
@@ -694,7 +695,7 @@
         },
         {
           "addr": "0x1b8f10",
-          "decl": "void FUN_001b8f10(int vehicle_handle@<esi>, void *wheel_buffer@<eax>, void *scratch_buffer@<ebx>);",
+          "decl": "void FUN_001b8f10(int vehicle_handle, void *wheel_buffer, void *scratch_buffer);",
           "ported": true,
           "name": "FUN_001b8f10"
         },
@@ -12292,7 +12293,7 @@
         {
           "addr": "0xc95f0",
           "decl": "int FUN_000c95f0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9650",
@@ -12857,7 +12858,7 @@
         {
           "addr": "0xce3c0",
           "decl": "void FUN_000ce3c0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce420",
@@ -15133,7 +15134,7 @@
         {
           "addr": "0x124e20",
           "decl": "void network_game_client_game_out_of_sync(void *client);",
-          "ported": false,
+          "ported": true,
           "name": "network_game_client_game_out_of_sync"
         },
         {
@@ -23513,8 +23514,9 @@
         },
         {
           "addr": "0x187f80",
-          "decl": "void FUN_00187f80(void);",
-          "ported": false
+          "decl": "float FUN_00187f80(void *flags, short mode, float *point, float *forward);",
+          "ported": true,
+          "name": "FUN_00187f80"
         },
         {
           "addr": "0x188010",
@@ -24848,7 +24850,7 @@
         },
         {
           "addr": "0x1c9bf0",
-          "decl": "void FUN_001c9bf0(short vchannel_index);",
+          "decl": "void FUN_001c9bf0(void);",
           "ported": true,
           "name": "FUN_001c9bf0"
         },
@@ -25362,7 +25364,7 @@
         {
           "addr": "0x1cd4d0",
           "decl": "void sound_stop_impulse_by_source_and_definition(int source, int definition);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cd540",
@@ -27447,8 +27449,9 @@
         },
         {
           "addr": "0xe5090",
-          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, int widget, int16_t a7);",
-          "ported": false
+          "decl": "void ui_widget_pending_load_apply(int a6@<eax>, void *widget, int16_t a7);",
+          "ported": true,
+          "name": "ui_widget_pending_load_apply"
         },
         {
           "addr": "0xe5180",
@@ -27646,7 +27649,8 @@
         {
           "addr": "0xe9320",
           "decl": "void *ui_widget_spawn_from_event_handler(void *widget, int tag_index);",
-          "ported": false
+          "ported": true,
+          "name": "ui_widget_spawn_from_event_handler"
         },
         {
           "addr": "0xe9450",
@@ -33563,7 +33567,7 @@
         },
         {
           "addr": "0x1d0b9c",
-          "decl": "unsigned int __stdcall FUN_001d0b9c(void *a, void *b, void *c);",
+          "decl": "void FUN_001d0b9c(void);",
           "ported": true,
           "name": "FUN_001d0b9c"
         },
@@ -33580,8 +33584,9 @@
         },
         {
           "addr": "0x1d0c02",
-          "decl": "void FUN_001d0c02(void);",
-          "ported": false
+          "decl": "void __stdcall FUN_001d0c02(void *ptr);",
+          "ported": true,
+          "name": "FUN_001d0c02"
         },
         {
           "addr": "0x1d0c16",

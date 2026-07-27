@@ -337,7 +337,7 @@ void ui_widget_apply_focus(void *root_widget, void *target_widget)
   }
 }
 
-void ui_widget_pending_load_apply(int pending_a6, int widget, int16_t a7);
+void ui_widget_pending_load_apply(int a6 /*@<eax>*/, void *widget, int16_t a7);
 
 void ui_widget_update_list_selection(void *widget, void *definition);
 
@@ -1900,7 +1900,7 @@ void process_ui_widgets(void)
             0, pending_load.tag_index, 0, pending_load.widget_stack, -1, -1,
             -1);
           if (loaded_widget != 0) {
-            ui_widget_pending_load_apply(pending_load.a6, (int)loaded_widget,
+            ui_widget_pending_load_apply(pending_load.a6, loaded_widget,
                                          pending_load.a7);
           }
         }
@@ -10539,110 +10539,62 @@ void ui_widget_pending_load_pop(int *head, void *record)
 
 
 
-/* ui_widget_pending_load_apply (0xe5090) — XBE naked draft (batch 239). */
-#if defined(__clang__)
-static int * (*const be5090_ce4910)(int *widget, int tag_handle) = (void *)ui_widget_find_by_tag;
-static void *(*const be5090_tag)(int, int) = (void *)tag_get;
-static void (*const be5090_ce4f20)(void *root_widget, void *target_widget) = (void *)ui_widget_apply_focus;
-static char (*const be5090_ce4980)(void *widget) = (void *)widget_instance_is_visible_in_parent_chain;
-
-__attribute__((naked, noinline))
-void ui_widget_pending_load_apply(int a6, int widget, int16_t a7)
+/* ui_widget_pending_load_apply (0xe5090) — readable C lift from XBE leaf. */
+void ui_widget_pending_load_apply(int a6 /*@<eax>*/, void *widget, int16_t a7)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lui_widget_pending_load_apply_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ce4910]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_pending_load_apply_3\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "jl .Lui_widget_pending_load_apply_7\n\t"
-      "movl 0x34(%%esi), %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_pending_load_apply_3\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lui_widget_pending_load_apply_1:\n\t"
-      "cmpw $2, 0xe(%%esi)\n\t"
-      "jne .Lui_widget_pending_load_apply_2\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $1, %%ecx\n\t"
-      "jg .Lui_widget_pending_load_apply_3\n\t"
-      ".Lui_widget_pending_load_apply_2:\n\t"
-      "movswl 0xc(%%ebp), %%ecx\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "je .Lui_widget_pending_load_apply_5\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "incl %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_pending_load_apply_1\n\t"
-      ".Lui_widget_pending_load_apply_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".Lui_widget_pending_load_apply_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lui_widget_pending_load_apply_5:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[ce4f20]\n\t"
-      "movl 0x30(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_pending_load_apply_3\n\t"
-      "movw 0xe(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lui_widget_pending_load_apply_6\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jne .Lui_widget_pending_load_apply_3\n\t"
-      ".Lui_widget_pending_load_apply_6:\n\t"
-      "movw %%di, 0x3c(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lui_widget_pending_load_apply_7:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[ce4980]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lui_widget_pending_load_apply_3\n\t"
-      "cmpw $2, 0xe(%%esi)\n\t"
-      "jne .Lui_widget_pending_load_apply_8\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $1, %%ecx\n\t"
-      "jg .Lui_widget_pending_load_apply_3\n\t"
-      ".Lui_widget_pending_load_apply_8:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xc8, 0xfd, 0xff, 0xff\n\t"
-      :
-      : [ce4910] "m"(be5090_ce4910), [tag] "m"(be5090_tag), [ce4f20] "m"(be5090_ce4f20), [ce4980] "m"(be5090_ce4980)
-      : "memory");
+  void *found;
+  void *child;
+  void *parent;
+  void *tag;
+  int i;
+  short kind;
+
+  if (a6 == -1)
+    return;
+
+  found = ui_widget_find_by_tag((int *)widget, a6);
+  if (found == 0)
+    return;
+
+  if (a7 < 0) {
+    if (!widget_instance_is_visible_in_parent_chain(found))
+      return;
+    if (*(short *)((char *)found + 0xe) == 2) {
+      tag = tag_get(0x44654c61, *(int *)found);
+      if (*(int *)((char *)tag + 0x3e0) > 1)
+        return;
+    }
+    ui_widget_apply_focus(widget, found);
+    return;
+  }
+
+  child = *(void **)((char *)found + 0x34);
+  i = 0;
+  if (child == 0)
+    return;
+
+  for (;;) {
+    if (*(short *)((char *)child + 0xe) == 2) {
+      tag = tag_get(0x44654c61, *(int *)child);
+      if (*(int *)((char *)tag + 0x3e0) > 1)
+        return;
+    }
+    if (i == (int)a7)
+      break;
+    child = *(void **)((char *)child + 0x2c);
+    i++;
+    if (child == 0)
+      return;
+  }
+
+  ui_widget_apply_focus(widget, child);
+  parent = *(void **)((char *)child + 0x30);
+  if (parent == 0)
+    return;
+  kind = *(short *)((char *)parent + 0xe);
+  if (kind == 2 || kind == 3)
+    *(short *)((char *)parent + 0x3c) = (short)i;
 }
-#else
-#error "ui_widget_pending_load_apply: clang naked draft required"
-#endif
 
 
 /* ui_widget_update_list_selection (0xe5380) — readable C lift from XBE leaf. */
@@ -10830,7 +10782,7 @@ void ui_widget_close_and_reload(void *widget)
     loaded = ui_widget_load_by_name_or_tag(
         0, tag_index, 0, widget_stack, -1, -1, -1);
     if (loaded != 0)
-      ui_widget_pending_load_apply(a6, (int)loaded, a7);
+      ui_widget_pending_load_apply(a6, loaded, a7);
   }
 }
 
@@ -11998,29 +11950,89 @@ void ui_widget_load_from_tag_internal(void *tag_data, void *widget, void *parent
 #endif
 
 
-/* 0xe9320 */
+/* ui_widget_spawn_from_event_handler (0xe9320) — readable C lift from XBE leaf. */
 void *ui_widget_spawn_from_event_handler(void *widget, int tag_index)
 {
-  int eax = 0;
-  int ecx = 0;
-  int ebp = 0;
+  void *tag;
+  unsigned int flags;
+  int type;
+  int widget_stack;
+  void *parent;
+  void *root;
+  int parent_tag;
+  int child_index;
+  void *iter;
+  int i;
+  void *loaded;
+  int root_tag;
 
-  tag_get(0x44654c61, 0);
-  /* test (char)ecx, 0x10 -> je 0xe9371 */
-  /* cmp eax, 4 -> ja 0xe9368 */
-  /* cmp eax, 4 -> ja 0xe938a */
-  display_assert((char *)0x00284cb8, (char *)0x00283280, 5392, 0);
-  system_exit(0);
-  /* test eax, eax -> jne 0xe93b8 */
-  /* test ecx, ecx -> je 0xe93f1 */
-  /* test eax, eax -> je 0xe93f1 */
-  /* relift: cmp eax, dword ptr [ebp + 8] -> je 0xe93ef */
-  /* test eax, eax -> jne 0xe93e0 */
-  ui_widget_load_by_name_or_tag((char *)0, 0, 0, 0, 0, 0, 0);
-  error(0, (char *)0x00283728);
-  return NULL;
+  tag = tag_get(0x44654c61, tag_index);
+  flags = *(unsigned int *)((char *)tag + 0x2c);
+  type = (int)*(short *)((char *)tag + 2);
 
-  (void)eax;
-  (void)ecx;
-  (void)ebp;
+  if ((flags & 0x1000u) != 0) {
+    if (type > 4) {
+      display_assert((const char *)0x284cb8, (const char *)0x283280, 0x1504, 1);
+      system_exit(-1);
+      widget_stack = (int)widget;
+    } else if (type == 0) {
+      widget_stack = 0;
+    } else if (type == 1) {
+      widget_stack = 1;
+    } else if (type == 2) {
+      widget_stack = 2;
+    } else if (type == 3) {
+      widget_stack = 3;
+    } else {
+      widget_stack = -1;
+    }
+  } else if (type > 4) {
+    display_assert((const char *)0x284cb8, (const char *)0x283280, 0x1510, 1);
+    system_exit(-1);
+    widget_stack = (int)widget;
+  } else if (type == 0) {
+    widget_stack = 0;
+  } else if (type == 1) {
+    widget_stack = 1;
+  } else if (type == 2) {
+    widget_stack = 2;
+  } else if (type == 3) {
+    widget_stack = 3;
+  } else {
+    widget_stack = (int)*(unsigned short *)((char *)widget + 8);
+  }
+
+  parent = *(void **)((char *)widget + 0x30);
+  root = widget;
+  if (parent != 0) {
+    root = parent;
+    while (*(void **)((char *)root + 0x30) != 0)
+      root = *(void **)((char *)root + 0x30);
+  }
+
+  if (parent != 0)
+    parent_tag = *(int *)parent;
+  else
+    parent_tag = -1;
+
+  child_index = -1;
+  if (parent != 0) {
+    iter = *(void **)((char *)parent + 0x34);
+    i = 0;
+    while (iter != 0) {
+      if (iter == widget) {
+        child_index = i;
+        break;
+      }
+      iter = *(void **)((char *)iter + 0x2c);
+      i++;
+    }
+  }
+
+  root_tag = *(int *)root;
+  loaded = ui_widget_load_by_name_or_tag(
+      0, tag_index, 0, widget_stack, root_tag, parent_tag, child_index);
+  if (loaded == 0)
+    error(2, (const char *)0x283728);
+  return loaded;
 }
