@@ -838,77 +838,30 @@ void FUN_00081910(void * a0)
   *(uint8_t *)((char *)a0 + 0x24) = (uint8_t)0;
 }
 
-/* FUN_00081980 (0x81980) — XBE naked draft (batch 343). */
-#if defined(__clang__)
-static void (*const b81980_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81980_exitfn)(int) = system_exit;
-static void * (*const b81980_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-
-__attribute__((naked, noinline))
-void FUN_00081980(void)
+/* FUN_00081980 (0x81980) — readable C lift. */
+void *FUN_00081980(void *src, unsigned short a, unsigned short b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00081980_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081980_1:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00081980_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x265fdc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081980_2:\n\t"
-      "pushl $0x21\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0\n\t"
-      "pushl $0x18\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00081980_3\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "movl %%edx, 0xc(%%ecx)\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "movw %%cx, 0x10(%%eax)\n\t"
-      "movw %%dx, 0x12(%%eax)\n\t"
-      "movl $0, 0x14(%%eax)\n\t"
-      ".LFUN_00081980_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b81980_assert), [exitfn] "m"(b81980_exitfn), [c8ee60] "m"(b81980_c8ee60)
-      : "memory");
+  void *dst;
+  if (*(unsigned char *)0x335090 == 0) {
+    display_assert((const char *)0x265fe4, (const char *)0x265ffc, 0x1e, 1);
+    system_exit(-1);
+  }
+  if (src == NULL) {
+    display_assert((const char *)0x265fdc, (const char *)0x265ffc, 0x1f, 1);
+    system_exit(-1);
+  }
+  dst = debug_malloc(0x18, 0, (const char *)0x265ffc, 0x21);
+  if (dst != NULL) {
+    *(uint32_t *)((char *)dst + 0x0) = *(uint32_t *)((char *)src + 0x0);
+    *(uint32_t *)((char *)dst + 0x4) = *(uint32_t *)((char *)src + 0x4);
+    *(uint32_t *)((char *)dst + 0x8) = *(uint32_t *)((char *)src + 0x8);
+    *(uint32_t *)((char *)dst + 0xc) = *(uint32_t *)((char *)src + 0xc);
+    *(uint16_t *)((char *)dst + 0x10) = a;
+    *(uint16_t *)((char *)dst + 0x12) = b;
+    *(uint32_t *)((char *)dst + 0x14) = 0;
+  }
+  return dst;
 }
-#else
-#error "FUN_00081980: clang naked draft required"
-#endif
-
 
 /* FUN_00081a20 (0x81a20) — readable C lift from XBE leaf. */
 void FUN_00081a20(void *ptr)

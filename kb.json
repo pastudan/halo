@@ -26834,8 +26834,8 @@
         },
         {
           "addr": "0x81980",
-          "decl": "void FUN_00081980(void);",
-          "ported": false
+          "decl": "void *FUN_00081980(void *src, unsigned short a, unsigned short b);",
+          "ported": true
         },
         {
           "addr": "0x81a20",
