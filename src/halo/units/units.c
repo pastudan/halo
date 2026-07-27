@@ -4298,68 +4298,25 @@ int16_t FUN_001ab870(void *animation_state, int animation_graph_tag_index,
   return result;
 }
 
-/* FUN_001ab8c0 (0x1ab8c0) — XBE naked draft (batch 67). */
-#if defined(__clang__)
-static void *(*const b1ab8c0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1ab8c0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void (*const b1ab8c0_c13a740)(int param_1, int param_2, float *param_3) = FUN_0013a740;
-static float (*const b1ab8c0_c7a750)(float *color) = real_rgb_color_brightness;
-static float (*const b1ab8c0_c1393b0)(int object_handle) = object_get_self_illumination;
-
-__attribute__((naked, noinline))
-void FUN_001ab8c0(int unit_handle __attribute__((unused)))
+/* FUN_001ab8c0 (0x1ab8c0) — readable C lift. */
+void FUN_001ab8c0(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001ab8c0_1\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x48(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0xc(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13a740]\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c7a750]\n\t"
-      "fstps 0x290(%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1393b0]\n\t"
-      "fstps 0x294(%%esi)\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ab8c0_1:\n\t"
-      "movl 0x290(%%eax), %%edx\n\t"
-      "movl %%edx, 0x290(%%esi)\n\t"
-      "movl 0x294(%%eax), %%eax\n\t"
-      "movl %%eax, 0x294(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1ab8c0_get), [tryget] "m"(b1ab8c0_tryget), [c13a740] "m"(b1ab8c0_c13a740), [c7a750] "m"(b1ab8c0_c7a750), [c1393b0] "m"(b1ab8c0_c1393b0)
-      : "memory");
+  char *unit;
+  char *parent;
+  float color[3];
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  parent = (char *)object_try_and_get_and_verify_type(*(int *)(unit + 0xcc), 3);
+  if (parent != 0) {
+    *(int *)(unit + 0x290) = *(int *)(parent + 0x290);
+    *(int *)(unit + 0x294) = *(int *)(parent + 0x294);
+    return;
+  }
+  FUN_0013a740((int)(unit + 0xc), (int)(unit + 0x48), color);
+  *(float *)(unit + 0x290) = real_rgb_color_brightness(color);
+  *(float *)(unit + 0x294) = object_get_self_illumination(unit_handle);
 }
-#else
-#error "FUN_001ab8c0: clang naked draft required"
-#endif
+
 
 
 /* FUN_001ab940 (0x1ab940)

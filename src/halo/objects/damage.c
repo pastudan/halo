@@ -2377,74 +2377,25 @@ void object_damage_update(int object_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_00138e30 (0x138e30) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static void *(*const b138e30_tag)(int, int) = tag_get;
-static int16_t (*const b138e30_c1415f0)(int flags, unsigned int type_mask, void *cluster_info, float *position, float radius, int *out_handles, int16_t max_count) = object_find_in_radius;
-static void (*const b138e30_c138900)(void *damage_params, int object_handle, char recursive) = FUN_00138900;
-static void (*const b138e30_c146be0)(void *damage_params) = FUN_00146be0;
-
-__attribute__((naked, noinline))
-void FUN_00138e30(void *damage_params __attribute__((unused)), int target_index __attribute__((unused)))
+/* FUN_00138e30 (0x138e30) — readable C lift. */
+void FUN_00138e30(void *damage_params, int target_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6a707421\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "pushl $0x40\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x1c(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x14(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c1415f0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00138e30_2\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x100(%%ebp), %%esi\n\t"
-      "movzwl %%ax, %%ebx\n\t"
-      "jmp .LFUN_00138e30_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00138e30_1:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c138900]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $4, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_00138e30_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00138e30_2:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c146be0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b138e30_tag), [c1415f0] "m"(b138e30_c1415f0), [c138900] "m"(b138e30_c138900), [c146be0] "m"(b138e30_c146be0)
-      : "memory");
+  char *params = (char *)damage_params;
+  char *jpt;
+  int handles[0x40];
+  int16_t count;
+  int i;
+  (void)target_index;
+
+  jpt = (char *)tag_get(0x6a707421, *(int *)params);
+  count = object_find_in_radius(
+      0, 0, params + 0x14, (float *)(params + 0x1c), *(float *)(jpt + 4),
+      handles, 0x40);
+  for (i = 0; i < (int)count; i++)
+    FUN_00138900(params, handles[i], 0);
+  FUN_00146be0(params);
 }
-#else
-#error "FUN_00138e30: clang naked draft required"
-#endif
+
 
 
 /* FUN_00138eb0 — dispatch object deletion callbacks.

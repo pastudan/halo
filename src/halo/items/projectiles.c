@@ -658,81 +658,44 @@ void FUN_000f8590(int projectile_handle)
   *(float *)(proj + 0x224) = __builtin_cosf(mag);
 }
 
-/* FUN_000f8640 (0xf8640) — XBE naked draft (batch 64). */
-#if defined(__clang__)
-static void *(*const bf8640_get)(int, int) = object_get_and_verify_type;
-static void *(*const bf8640_tag)(int, int) = tag_get;
-static float (*const bf8640_cf7fa0)(void *tag, float range_begin, float range_end) = FUN_000f7fa0;
-
-__attribute__((naked, noinline))
-void FUN_000f8640(int projectile_handle __attribute__((unused)))
+/* FUN_000f8640 (0xf8640) — readable C lift. */
+void FUN_000f8640(int projectile_handle)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x70726f6a\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb 0x4(%%esi), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb $0x10, %%al\n\t"
-      "je .LFUN_000f8640_1\n\t"
-      "movl 0x1e0(%%ecx), %%edx\n\t"
-      "movl 0x1dc(%%ecx), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cf7fa0]\n\t"
-      "fstps 0x20c(%%esi)\n\t"
-      "movl 0x1e0(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x210(%%esi)\n\t"
-      "flds 0x1dc(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000f8640_2\n\t"
-      "flds 0x1dc(%%ecx)\n\t"
-      "fdivs 0x1e4(%%ecx)\n\t"
-      "fstps 0x208(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000f8640_1:\n\t"
-      "movl 0x1d4(%%ecx), %%eax\n\t"
-      "movl 0x1d0(%%ecx), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cf7fa0]\n\t"
-      "fstps 0x20c(%%esi)\n\t"
-      "movl 0x1e0(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x210(%%esi)\n\t"
-      "flds 0x1d0(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000f8640_2\n\t"
-      "flds 0x1d0(%%ecx)\n\t"
-      "fdivs 0x1e4(%%ecx)\n\t"
-      "fstps 0x208(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000f8640_2:\n\t"
-      "movl $0x3f800000, 0x204(%%esi)\n\t"
-      "movl $0, 0x208(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bf8640_get), [tag] "m"(bf8640_tag), [cf7fa0] "m"(bf8640_cf7fa0)
-      : "memory");
+  char *proj;
+  char *tag;
+  float range_begin;
+  float range_end;
+  float sampled;
+
+  proj = (char *)object_get_and_verify_type(projectile_handle, 0x20);
+  tag = (char *)tag_get(0x70726f6a, *(int *)proj);
+  if ((*(unsigned char *)(proj + 4) & 0x10) != 0) {
+    range_begin = *(float *)(tag + 0x1dc);
+    range_end = *(float *)(tag + 0x1e0);
+    sampled = FUN_000f7fa0(tag, range_begin, range_end);
+    *(float *)(proj + 0x20c) = sampled;
+    *(float *)(proj + 0x210) = *(float *)(tag + 0x1e0);
+    if (*(float *)(tag + 0x1dc) > *(float *)0x2533c0) {
+      *(float *)(proj + 0x208) =
+          *(float *)(tag + 0x1dc) / *(float *)(tag + 0x1e4);
+      return;
+    }
+  } else {
+    range_begin = *(float *)(tag + 0x1d0);
+    range_end = *(float *)(tag + 0x1d4);
+    sampled = FUN_000f7fa0(tag, range_begin, range_end);
+    *(float *)(proj + 0x20c) = sampled;
+    *(float *)(proj + 0x210) = *(float *)(tag + 0x1e0);
+    if (*(float *)(tag + 0x1d0) > *(float *)0x2533c0) {
+      *(float *)(proj + 0x208) =
+          *(float *)(tag + 0x1d0) / *(float *)(tag + 0x1e4);
+      return;
+    }
+  }
+  *(int *)(proj + 0x204) = 0x3f800000;
+  *(int *)(proj + 0x208) = 0;
 }
-#else
-#error "FUN_000f8640: clang naked draft required"
-#endif
+
 
 
 /* FUN_000f8720 (0xf8720) — XBE naked draft (batch 58). */

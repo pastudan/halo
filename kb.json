@@ -16291,7 +16291,7 @@
           "name": "FUN_001365d0",
           "addr": "0x1365d0",
           "decl": "void FUN_001365d0(int object_handle, float *body_vitality_override, float *shield_vitality_override);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1366b0",
@@ -17025,7 +17025,7 @@
         {
           "addr": "0x140750",
           "decl": "void FUN_00140750(void);",
-          "ported": false,
+          "ported": true,
           "source_path": "objects/objects.c",
           "name": "FUN_00140750"
         },
@@ -17208,9 +17208,9 @@
         },
         {
           "addr": "0x144940",
-          "decl": "void object_new_by_name(short param_1);",
+          "decl": "int object_new_by_name(short name_index);",
           "name": "object_new_by_name",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1449b0",
@@ -20254,7 +20254,7 @@
         {
           "addr": "0xf8640",
           "decl": "void FUN_000f8640(int projectile_handle@<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf8720",
@@ -29216,7 +29216,7 @@
         {
           "addr": "0x1ab8c0",
           "decl": "void FUN_001ab8c0(int unit_handle@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ab940",
@@ -39370,7 +39370,7 @@
         {
           "addr": "0x138e30",
           "decl": "void FUN_00138e30(void *damage_params, int target_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x138eb0",

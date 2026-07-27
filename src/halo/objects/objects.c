@@ -1793,97 +1793,45 @@ void object_wake(int object_handle)
   *(uint8_t *)(light + 0x2) &= ~0x4;
 }
 
-/* FUN_001365d0 (0x1365d0) — XBE naked draft (batch 64). */
-#if defined(__clang__)
-static void *(*const b1365d0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1365d0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_001365d0(int object_handle __attribute__((unused)), float *body_vitality_override __attribute__((unused)), float *shield_vitality_override __attribute__((unused)))
+/* FUN_001365d0 (0x1365d0) — readable C lift. */
+void FUN_001365d0(int object_handle, float *body_vitality_override,
+                  float *shield_vitality_override)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x2533c0\n\t"
-      "movl 0x7c(%%eax), %%eax\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "je .LFUN_001365d0_2\n\t"
-      "pushl %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl $0x636f6c6c\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001365d0_1\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "flds 0xcc(%%eax)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_001365d0_2\n\t"
-      ".LFUN_001365d0_1:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".LFUN_001365d0_2:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001365d0_3\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_001365d0_3:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001365d0_4\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%eax)\n\t"
-      ".LFUN_001365d0_4:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "fsts 0x8c(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl %%ecx, 0x88(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001365d0_5\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .LFUN_001365d0_6\n\t"
-      ".LFUN_001365d0_5:\n\t"
-      "flds 0x2533c0\n\t"
-      ".LFUN_001365d0_6:\n\t"
-      "fstps 0x90(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001365d0_7\n\t"
-      "movl $0x3f800000, 0x94(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001365d0_7:\n\t"
-      "movl $0, 0x94(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1365d0_get), [tag] "m"(b1365d0_tag)
-      : "memory");
+  char *obj;
+  char *obje;
+  char *coll;
+  float shield;
+  int body_bits;
+  int coll_tag;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  obje = (char *)tag_get(0x6f626a65, *(int *)obj);
+  shield = *(float *)0x2533c0;
+  body_bits = 0;
+  coll_tag = *(int *)(obje + 0x7c);
+  if (coll_tag != -1) {
+    coll = (char *)tag_get(0x636f6c6c, coll_tag);
+    if (coll != 0) {
+      body_bits = *(int *)(coll + 8);
+      shield = *(float *)(coll + 0xcc);
+    }
+  }
+  if (body_vitality_override != 0)
+    body_bits = *(int *)body_vitality_override;
+  if (shield_vitality_override != 0)
+    shield = *shield_vitality_override;
+  *(float *)(obj + 0x8c) = shield;
+  *(int *)(obj + 0x88) = body_bits;
+  if (*(float *)&body_bits > *(float *)0x2533c0)
+    *(float *)(obj + 0x90) = *(float *)0x2533c8;
+  else
+    *(float *)(obj + 0x90) = *(float *)0x2533c0;
+  if (shield > *(float *)0x2533c0)
+    *(int *)(obj + 0x94) = 0x3f800000;
+  else
+    *(int *)(obj + 0x94) = 0;
 }
-#else
-#error "FUN_001365d0: clang naked draft required"
-#endif
+
 
 
 /*
@@ -4768,7 +4716,6 @@ void FUN_0013ddd0(int object_handle __attribute__((unused)))
 #else
 #error "FUN_0013ddd0: clang naked draft required"
 #endif
-
 
 /*
  * object_set_garbage_flag — add or remove an object from the garbage
@@ -8270,76 +8217,28 @@ int object_name_list_get_handle(int16_t index)
   return 0xffffffff;
 }
 
-/* FUN_00140750 (0x140750) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static void (*const b140750_c1193f0)(data_t *data) = data_verify;
-static void * (*const b140750_c13d730)(void *iter) = object_iterator_next;
-static void (*const b140750_c13fd00)(int object_handle) = object_disconnect_from_map;
-static void (*const b140750_c13c8c0)(int param_1) = FUN_0013c8c0;
-
-__attribute__((naked, noinline))
+/* FUN_00140750 (0x140750) — readable C lift. */
 void FUN_00140750(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x5a8d50, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1193f0]\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x86868686, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movb $0, -0xc(%%ebp)\n\t"
-      "movw $0, -0xa(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[c13d730]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00140750_3\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x800, %%ebx\n\t"
-      ".LFUN_00140750_1:\n\t"
-      "testl %%ebx, 0x4(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "je .LFUN_00140750_2\n\t"
-      "cmpl $-1, 0xcc(%%esi)\n\t"
-      "jne .LFUN_00140750_2\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c13fd00]\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "orl %%ebx, %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      ".LFUN_00140750_2:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c13c8c0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13d730]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00140750_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00140750_3:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1193f0] "m"(b140750_c1193f0), [c13d730] "m"(b140750_c13d730), [c13fd00] "m"(b140750_c13fd00), [c13c8c0] "m"(b140750_c13c8c0)
-      : "memory");
+  object_iter_t iter;
+  char *obj;
+
+  data_verify(*(data_t **)0x5a8d50);
+  iter.type_mask = -1;
+  iter.flags = 0;
+  iter.current_index = 0;
+  iter.last_handle = -1;
+  iter.cookie = 0x86868686;
+  for (obj = (char *)object_iterator_next(&iter); obj != 0;
+       obj = (char *)object_iterator_next(&iter)) {
+    if ((*(int *)(obj + 4) & 0x800) != 0 && *(int *)(obj + 0xcc) == -1) {
+      object_disconnect_from_map(iter.last_handle);
+      *(int *)(obj + 4) |= 0x800;
+    }
+    FUN_0013c8c0(iter.last_handle);
+  }
 }
-#else
-#error "FUN_00140750: clang naked draft required"
-#endif
+
 
 
 /* FUN_00141900 (0x141900) — readable C lift from XBE leaf. */
@@ -18850,70 +18749,27 @@ void FUN_0013a340(int param_1 __attribute__((unused)), float *param_2 __attribut
 #endif
 
 
-/* object_new_by_name (0x144940) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static scenario_t * (*const b144940_c18e380)(void) = global_scenario_get;
-static void *(*const b144940_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b144940_c13ca30)(int param_1, int param_2, int *param_3) = FUN_0013ca30;
-static int (*const b144940_c13cab0)(int param_1, int param_2) = FUN_0013cab0;
-static int (*const b144940_c144770)(void *placement_data, int palette_block) = object_new_from_scenario;
-
-__attribute__((naked, noinline))
-void object_new_by_name(short param_1 __attribute__((unused)))
+/* object_new_by_name (0x144940) — readable C lift. */
+int object_new_by_name(short name_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x24\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x204(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x20(%%edi), %%ax\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c13ca30]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x20(%%edi), %%cx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c13cab0]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl 0x22(%%edi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c144770]\n\t"
-      "addl $0x34, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b144940_c18e380), [elem] "m"(b144940_elem), [c13ca30] "m"(b144940_c13ca30), [c13cab0] "m"(b144940_c13cab0), [c144770] "m"(b144940_c144770)
-      : "memory");
+  scenario_t *scenario;
+  char *named;
+  int palette_block;
+  int element_size;
+  int type_block;
+
+  scenario = global_scenario_get();
+  named = (char *)tag_block_get_element((char *)scenario + 0x204,
+                                        (int)name_index, 0x24);
+  palette_block = FUN_0013ca30((int)scenario, (int)*(uint16_t *)(named + 0x20),
+                               &element_size);
+  type_block = FUN_0013cab0((int)scenario, (int)*(uint16_t *)(named + 0x20));
+  return object_new_from_scenario(
+      tag_block_get_element((void *)palette_block,
+                            (int)*(int16_t *)(named + 0x22), element_size),
+      type_block);
 }
-#else
-#error "object_new_by_name: clang naked draft required"
-#endif
+
 
 
 /* FUN_0013aa10 (0x13aa10) — XBE naked draft (batch 61). */
