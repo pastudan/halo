@@ -1,6 +1,6 @@
 #include <stdint.h>
-void FUN_0016f910(int a0);
-void FUN_0016fa40(int a0);
+void FUN_0016f910(int16_t profile);
+void FUN_0016fa40(int16_t profile);
 /*
  * rasterizer_xbox_dynavobgeom.c
  *
@@ -23,7 +23,7 @@ static void (*const b15dc10_c1ecf90)(void) = D3DDevice_DrawIndexedVertices;
 static void (*const b15dc10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_0015dc10(void)
+void FUN_0015dc10(void *obj, int *out, int addend)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1896,7 +1896,7 @@ static void (*const b15f540_assert)(const char *, const char *, int, bool) = dis
 static void (*const b15f540_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_0015f540(void)
+void FUN_0015f540(int arg1, int arg2, uint32_t handle, int subcount2)
 {
   __asm__ volatile(
       "pushl $1\n\t"
@@ -1955,7 +1955,7 @@ static void (*const b15f630_c17edd0)(void) = rasterizer_frame_statistics_count_s
 static void (*const b15f630_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_0015f630(void)
+void FUN_0015f630(uint32_t source, uint32_t param, int arg3, int arg4, uint32_t handle, int subcount2, float *origin, uint32_t widget_flags)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3002,28 +3002,12 @@ void FUN_00160bc0(void)
 
 
 
-/* FUN_00160c20 (0x160c20) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-static void (*const b160c20_c1749b0)(void) = (void *)FUN_001749b0;
-static void (*const b160c20_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
-
-__attribute__((naked, noinline))
+/* FUN_00160c20 (0x160c20) — readable C lift. */
 void FUN_00160c20(void)
 {
-  __asm__ volatile(
-      "call *%[c1749b0]\n\t"
-      "pushl $0x10\n\t"
-      "call *%[c16fa40]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c1749b0] "m"(b160c20_c1749b0), [c16fa40] "m"(b160c20_c16fa40)
-      : "memory");
+  FUN_001749b0();
+  FUN_0016fa40(0x10);
 }
-#else
-#error "FUN_00160c20: clang naked draft required"
-#endif
-
 
 /* FUN_00160c30 (0x160c30) — XBE naked draft (batch 326). */
 #if defined(__clang__)
@@ -4483,7 +4467,7 @@ static unsigned int (*const b1621c0_cd1dd0)(float *color) = FUN_000d1dd0;
 static void (*const b1621c0_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
 
 __attribute__((naked, noinline))
-void FUN_001621c0(void)
+void FUN_001621c0(int object_handle)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -5996,7 +5980,7 @@ static void *(*const b163590_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b163590_c156510)(void *state) = rasterizer_set_pixel_shader;
 
 __attribute__((naked, noinline))
-void FUN_00163590(void)
+void FUN_00163590(int object_handle)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -8783,7 +8767,7 @@ static void (*const b166010_assert)(const char *, const char *, int, bool) = dis
 static void (*const b166010_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_00166010(void)
+void FUN_00166010(void *obj, int *out, int addend)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -9475,7 +9459,7 @@ static void (*const b166890_c174510)(void *group, int a2) = FUN_00174510;
 static void (*const b166890_c17ed90)(void) = (void *)FUN_0017ed90;
 
 __attribute__((naked, noinline))
-void FUN_00166890(void)
+void FUN_00166890(int pass_index)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -12753,7 +12737,7 @@ static void *(*const b168cd0_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b168cd0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
-void FUN_00168cd0(void)
+void FUN_00168cd0(int a0, float a1, float a2, float a3)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -13324,7 +13308,7 @@ void FUN_00169650(void)
 static void __stdcall (*const b169670_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
 
 __attribute__((naked, noinline))
-void FUN_00169670(void)
+void FUN_00169670(int a0, int a1, int a2, int a3, int a4, int a5)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -14994,7 +14978,7 @@ void FUN_0016ab00(void)
 static void (*const b16b180_c16f910)(int16_t profile) = (void *)FUN_0016f910;
 
 __attribute__((naked, noinline))
-void FUN_0016b180(void)
+void FUN_0016b180(int flag)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
