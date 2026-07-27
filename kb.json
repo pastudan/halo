@@ -15864,7 +15864,7 @@
           "addr": "0x11beb0",
           "decl": "int FUN_0011beb0(short *table, short growth_bits);",
           "name": "FUN_0011beb0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c0f0",
@@ -16371,7 +16371,7 @@
         {
           "addr": "0x12f690",
           "decl": "char network_game_server_reset_to_pregame(int server, void *client_message @<ecx>, void *source_address @<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "network_game_server_reset_to_pregame"
         },
         {
