@@ -1,3 +1,4 @@
+#include <stdint.h>
 /*
  * bungie_net/thread_win32.c — lightweight thread pool for Xbox
  * XBE source: c:\halo\SOURCE\bungie_net\common\thread_win32.c
@@ -820,60 +821,22 @@ void create_mutex(void)
 #endif
 
 
-/* FUN_00081910 (0x81910) — XBE naked draft (batch 368). */
-#if defined(__clang__)
-static void (*const b81910_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81910_exitfn)(int) = system_exit;
-static int __stdcall (*const b81910_c1cf900)(int handle) = (void *)CloseHandle;
-
-__attribute__((naked, noinline))
-void FUN_00081910(void)
+/* FUN_00081910 (0x81910) — readable C lift. */
+void FUN_00081910(void * a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00081910_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0x265f5c\n\t"
-      "pushl $0x265fb4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081910_1:\n\t"
-      "movb 0x24(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00081910_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf1\n\t"
-      "pushl $0x265f5c\n\t"
-      "pushl $0x265fc4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081910_2:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1cf900]\n\t"
-      "movb $0, 0x4(%%esi)\n\t"
-      "movl $0, (%%esi)\n\t"
-      "movb $0, 0x24(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b81910_assert), [exitfn] "m"(b81910_exitfn), [c1cf900] "m"(b81910_c1cf900)
-      : "memory");
+  if (a0 == NULL) {
+    display_assert((const char *)0x265fb4, (const char *)0x265f5c, 0xf0, 1);
+    system_exit(-1);
+  }
+  if (*(uint8_t *)((char *)a0 + 0x24) == 0) {
+    display_assert((const char *)0x265fc4, (const char *)0x265f5c, 0xf1, 1);
+    system_exit(-1);
+  }
+  CloseHandle(*(void **)a0);
+  *(uint8_t *)((char *)a0 + 0x4) = (uint8_t)0;
+  *(uint32_t *)((char *)a0 + 0x0) = (uint32_t)0;
+  *(uint8_t *)((char *)a0 + 0x24) = (uint8_t)0;
 }
-#else
-#error "FUN_00081910: clang naked draft required"
-#endif
-
 
 /* FUN_00081980 (0x81980) — XBE naked draft (batch 343). */
 #if defined(__clang__)
