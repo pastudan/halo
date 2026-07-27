@@ -34909,8 +34909,8 @@
         },
         {
           "addr": "0x435b0",
-          "decl": "void ai_conversation_finish(int handle __attribute__((unused)), char param_b __attribute__((unused)), char param_c __attribute__((unused)));",
-          "ported": false,
+          "decl": "void ai_conversation_finish(int handle, char param_b, char param_c);",
+          "ported": true,
           "name": "ai_conversation_finish"
         },
         {

@@ -810,164 +810,76 @@ int16_t ai_conversation_status(int16_t conversation_index)
 }
 
 
-/* ai_conversation_finish (0x435b0) — XBE naked draft (batch 122). */
-#if defined(__clang__)
-static void *(*const b435b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static scenario_t * (*const b435b0_c18e380)(void) = global_scenario_get;
-static void *(*const b435b0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b435b0_cff4d0)(int channel, const char *format, ...) = console_printf;
-static int (*const b435b0_gtime)(void) = game_time_get;
-static void (*const b435b0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void ai_conversation_finish(int handle __attribute__((unused)), char param_b __attribute__((unused)), char param_c __attribute__((unused)))
+/* ai_conversation_finish (0x435b0) — readable C lift. */
+void ai_conversation_finish(int handle, char param_b, char param_c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lai_conversation_finish_9\n\t"
-      "movl 0x6324ec, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x2(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $0x74\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x468, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movb 0x5aca5f, %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_conversation_finish_3\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x259af4, %%ecx\n\t"
-      "jne .Lai_conversation_finish_1\n\t"
-      "movl $0x25386f, %%ecx\n\t"
-      ".Lai_conversation_finish_1:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x259ae4, %%eax\n\t"
-      "jne .Lai_conversation_finish_2\n\t"
-      "movl $0x259ad8, %%eax\n\t"
-      ".Lai_conversation_finish_2:\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x259ac4\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_conversation_finish_3:\n\t"
-      "movl 0x6324ec, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x632574, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2e(%%edx), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "leal 0x1(%%ecx), %%esi\n\t"
-      "movw %%si, 0x2e(%%edx)\n\t"
-      "movl 0x632574, %%edx\n\t"
-      "movswl 0x2e(%%edx), %%esi\n\t"
-      "andl $0x8000000f, %%esi\n\t"
-      "jns .Lai_conversation_finish_4\n\t"
-      "decl %%esi\n\t"
-      "orl $0xfffffff0, %%esi\n\t"
-      "incl %%esi\n\t"
-      ".Lai_conversation_finish_4:\n\t"
-      "movw %%si, 0x2e(%%edx)\n\t"
-      "movl 0x632574, %%edi\n\t"
-      "movswl 0x2c(%%edi), %%edx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "leal 0x1(%%ecx), %%esi\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jg .Lai_conversation_finish_5\n\t"
-      "movl %%esi, %%edx\n\t"
-      ".Lai_conversation_finish_5:\n\t"
-      "movw %%dx, 0x2c(%%edi)\n\t"
-      "movw 0x2(%%eax), %%ax\n\t"
-      "movl 0x632574, %%esi\n\t"
-      "leal 0x3(%%ecx), %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "movw %%ax, (%%edx,%%esi,1)\n\t"
-      "movb 0xc(%%ebp), %%dl\n\t"
-      "shll $4, %%ecx\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "movl 0x632574, %%ecx\n\t"
-      "movb %%dl, 0x32(%%esi,%%ecx,1)\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movb 0x10(%%ebp), %%cl\n\t"
-      "movb %%cl, 0x33(%%esi,%%eax,1)\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x632574, %%edx\n\t"
-      "movl %%eax, 0x34(%%esi,%%edx,1)\n\t"
-      "movl 0x50(%%ebx), %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lai_conversation_finish_8\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".Lai_conversation_finish_6:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl 0x14(%%eax), %%edi\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "testl %%edx, %%edi\n\t"
-      "je .Lai_conversation_finish_7\n\t"
-      "movl 0x28(%%eax,%%ecx,4), %%ecx\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "je .Lai_conversation_finish_7\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xc, 0x6c(%%eax)\n\t"
-      "movl %%edi, 0x1dc(%%eax)\n\t"
-      "movl %%edi, 0x1e0(%%eax)\n\t"
-      "jne .Lai_conversation_finish_7\n\t"
-      "movl %%edi, 0x9c(%%eax)\n\t"
-      ".Lai_conversation_finish_7:\n\t"
-      "movl 0x50(%%ebx), %%eax\n\t"
-      "incl %%esi\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jl .Lai_conversation_finish_6\n\t"
-      ".Lai_conversation_finish_8:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x6324ec, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lai_conversation_finish_9:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b435b0_dget), [c18e380] "m"(b435b0_c18e380), [elem] "m"(b435b0_elem), [cff4d0] "m"(b435b0_cff4d0), [gtime] "m"(b435b0_gtime), [c1196d0] "m"(b435b0_c1196d0)
-      : "memory");
-}
-#else
-#error "ai_conversation_finish: clang naked draft required"
-#endif
+  unsigned char *rec;
+  unsigned char *elem;
+  unsigned char *ai_globals;
+  unsigned char *actor;
+  const char *msg_a;
+  const char *msg_b;
+  int16_t old_idx;
+  int16_t peak;
+  int idx;
+  int bit;
+  int actor_handle;
+  int n;
+  int v;
 
+  if (handle == -1)
+    return;
+
+  rec = (unsigned char *)datum_get(*(void **)0x6324ec, handle);
+  elem = (unsigned char *)tag_block_get_element(
+      (char *)global_scenario_get() + 0x468, *(int16_t *)(rec + 2), 0x74);
+
+  if (*(char *)0x5aca5f) {
+    msg_a = param_b ? (const char *)0x259af4 : (const char *)0x25386f;
+    msg_b = param_c ? (const char *)0x259ae4 : (const char *)0x259ad8;
+    console_printf(0, (const char *)0x259ac4, elem, msg_b, msg_a);
+  }
+
+  rec = (unsigned char *)datum_get(*(void **)0x6324ec, handle);
+  ai_globals = *(unsigned char **)0x632574;
+  old_idx = *(int16_t *)(ai_globals + 0x2e);
+  *(int16_t *)(ai_globals + 0x2e) = (int16_t)(old_idx + 1);
+
+  ai_globals = *(unsigned char **)0x632574;
+  v = *(int16_t *)(ai_globals + 0x2e);
+  v &= 0x8000000f;
+  if (v < 0)
+    v = ((v - 1) | 0xfffffff0) + 1;
+  *(int16_t *)(ai_globals + 0x2e) = (int16_t)v;
+
+  ai_globals = *(unsigned char **)0x632574;
+  peak = *(int16_t *)(ai_globals + 0x2c);
+  idx = (int)old_idx + 1;
+  if (!((int)peak > idx))
+    peak = (int16_t)idx;
+  *(int16_t *)(ai_globals + 0x2c) = peak;
+
+  *(int16_t *)(ai_globals + ((int)old_idx + 3) * 16) = *(int16_t *)(rec + 2);
+  ai_globals[old_idx * 16 + 0x32] = param_b;
+  ai_globals[old_idx * 16 + 0x33] = param_c;
+  *(int *)(ai_globals + old_idx * 16 + 0x34) = game_time_get();
+
+  n = *(int *)(elem + 0x50);
+  for (bit = 0; bit < n; bit++) {
+    if (!((*(int *)(rec + 0x14) >> bit) & 1))
+      continue;
+    actor_handle = *(int *)(rec + 0x28 + bit * 4);
+    if (actor_handle == -1)
+      continue;
+    actor = (unsigned char *)datum_get(*(void **)0x6325a4, actor_handle);
+    *(int *)(actor + 0x1dc) = -1;
+    *(int *)(actor + 0x1e0) = -1;
+    if (*(int16_t *)(actor + 0x6c) == 0xc)
+      *(int *)(actor + 0x9c) = -1;
+  }
+
+  datum_delete(*(data_t **)0x6324ec, handle);
+}
 
 /* FUN_00043740 (0x43740) — XBE naked draft (batch 127). */
 #if defined(__clang__)
@@ -977,7 +889,7 @@ static void * (*const b43740_c119810)(data_iter_t *iterator) = data_iterator_nex
 static scenario_t * (*const b43740_c18e380)(void) = global_scenario_get;
 static void *(*const b43740_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b43740_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b43740_c435b0)(int handle, char param_b, char param_c) = ai_conversation_finish;
+static void (*const b43740_c435b0)(int handle, char param_b, char param_c) = (void *)ai_conversation_finish;
 static int (*const b43740_c119570)(data_t *data, int handle) = data_new_datum;
 static void *(*const b43740_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static int (*const b43740_gtime)(void) = game_time_get;
@@ -2169,7 +2081,7 @@ static scenario_t * (*const b44660_c18e380)(void) = global_scenario_get;
 static void *(*const b44660_elem)(void *, int, int) = tag_block_get_element;
 static void *(*const b44660_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b44660_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b44660_c435b0)(int handle, char param_b, char param_c) = ai_conversation_finish;
+static void (*const b44660_c435b0)(int handle, char param_b, char param_c) = (void *)ai_conversation_finish;
 
 __attribute__((naked, noinline))
 void ai_conversation_unit_died(int unit_handle __attribute__((unused)), char param_2 __attribute__((unused)))
@@ -5784,7 +5696,7 @@ static void *(*const b46b60_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b46b60_cff4d0)(int channel, const char *format, ...) = console_printf;
 static void (*const b46b60_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static char (*const b46b60_c45a10)(int conversation_handle, char *flag_out) = ai_conversation_begin;
-static void (*const b46b60_c435b0)(int handle, char param_b, char param_c) = ai_conversation_finish;
+static void (*const b46b60_c435b0)(int handle, char param_b, char param_c) = (void *)ai_conversation_finish;
 
 __attribute__((naked, noinline))
 char FUN_00046b60(int16_t conversation_index __attribute__((unused)), char allow_finish __attribute__((unused)))
@@ -5937,7 +5849,7 @@ static scenario_t * (*const b46cb0_c18e380)(void) = global_scenario_get;
 static void *(*const b46cb0_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b46cb0_cff4d0)(int channel, const char *format, ...) = console_printf;
 static char (*const b46cb0_c45a10)(int conversation_handle, char *flag_out) = ai_conversation_begin;
-static void (*const b46cb0_c435b0)(int handle, char param_b, char param_c) = ai_conversation_finish;
+static void (*const b46cb0_c435b0)(int handle, char param_b, char param_c) = (void *)ai_conversation_finish;
 static char (*const b46cb0_c43a20)(int conversation_handle) = FUN_00043a20;
 static void *(*const b46cb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static char (*const b46cb0_c43870)(int conversation_handle) = ai_conversation_line_begin;
