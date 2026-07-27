@@ -2509,7 +2509,7 @@
         },
         {
           "addr": "0x1c0e0",
-          "decl": "char FUN_0001c0e0(int actor_handle, char param_2, char *state_data);",
+          "decl": "char FUN_0001c0e0(int actor_handle, char param_2, int state_data);",
           "ported": true,
           "name": "FUN_0001c0e0"
         },
@@ -2719,7 +2719,7 @@
           "addr": "0x1d7a0",
           "decl": "float point_to_line_distance3d(float *p1, float *p2, float *p3);",
           "name": "point_to_line_distance3d",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/ai/actions.c"
         },
         {
@@ -3605,7 +3605,7 @@
           "addr": "0x14510",
           "decl": "void actor_set_prop_if_match(int actor_handle, int old_prop, int new_prop);",
           "name": "actor_set_prop_if_match",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14540",
@@ -3744,7 +3744,7 @@
           "addr": "0x15b70",
           "decl": "void actor_clear_guard_state(int actor_handle);",
           "name": "actor_clear_guard_state",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x15bb0",
@@ -3766,7 +3766,7 @@
           "addr": "0x15f30",
           "decl": "void actor_clear_flee_target(int actor_handle);",
           "name": "actor_clear_flee_target",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x15f60",
@@ -3836,7 +3836,7 @@
         },
         {
           "addr": "0x16d40",
-          "decl": "void actor_look_compute_prop_interest(void);",
+          "decl": "void actor_look_compute_prop_interest(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5);",
           "ported": false,
           "name": "actor_look_compute_prop_interest"
         },
@@ -3854,7 +3854,7 @@
           "addr": "0x17060",
           "decl": "void actor_clear_aim_target(int actor_handle);",
           "name": "actor_clear_aim_target",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17090",
@@ -14061,7 +14061,7 @@
         {
           "addr": "0xf5f90",
           "decl": "void items_initialize(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf5fa0",
@@ -14083,7 +14083,7 @@
           "addr": "0xf6740",
           "decl": "void items_dispose_from_old_map(void);",
           "name": "items_dispose_from_old_map",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6750",
@@ -16661,7 +16661,7 @@
           "addr": "0x13d880",
           "decl": "void object_name_list_set_handle(int16_t param_1, int param_2);",
           "name": "object_name_list_set_handle",
-          "ported": false,
+          "ported": true,
           "source_path": "objects/objects.c"
         },
         {
@@ -16845,7 +16845,7 @@
         },
         {
           "addr": "0x13f080",
-          "decl": "void FUN_0013f080(void);",
+          "decl": "int FUN_0013f080(int param_1, char (*param_2)(int, int), int param_3, int param_4, int param_5, int *param_6);",
           "ported": false,
           "source_path": "objects/objects.c"
         },
@@ -25978,7 +25978,7 @@
         {
           "addr": "0x1954d0",
           "decl": "void FUN_001954d0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001954d0"
         },
         {
@@ -29521,7 +29521,7 @@
           "addr": "0x1b2260",
           "decl": "void scripting_magic_melee_attack(void);",
           "name": "scripting_magic_melee_attack",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
@@ -34154,7 +34154,7 @@
         {
           "addr": "0x2a540",
           "decl": "void midpoint3d(float *a, float *b, float *out);",
-          "ported": false,
+          "ported": true,
           "name": "midpoint3d"
         },
         {
@@ -37951,7 +37951,7 @@
         {
           "addr": "0x120950",
           "decl": "void quaternion_compress_8byte(float *q, short *out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1209b0",

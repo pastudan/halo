@@ -1298,35 +1298,11 @@ void set_real_vector3d(float *out, float x, float y, float z)
   out[2] = z;
 }
 
-/* point_to_line_distance3d (0x1d7a0) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static float (*const b1d7a0_c10cd40)(float *p1, float *p2, float *p3) = FUN_0010cd40;
-
-__attribute__((naked, noinline))
-float point_to_line_distance3d(float *p1 __attribute__((unused)), float *p2 __attribute__((unused)), float *p3 __attribute__((unused)))
+/* point_to_line_distance3d (0x1d7a0) — readable C lift. */
+float point_to_line_distance3d(float *p1, float *p2, float *p3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c10cd40]\n\t"
-      "fsqrt\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10cd40] "m"(b1d7a0_c10cd40)
-      : "memory");
+  return sqrtf(FUN_0010cd40(p1, p2, p3));
 }
-#else
-#error "point_to_line_distance3d: clang naked draft required"
-#endif
-
 
 /* actor_action_set_default_state (0x1d7c0) — XBE naked draft (batch 109). */
 #if defined(__clang__)

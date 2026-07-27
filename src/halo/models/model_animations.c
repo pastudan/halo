@@ -1742,48 +1742,17 @@ void quaternion_decompress_6byte_renormalized(void *compressed, float *out)
   sphere_intersects_rectangle3d(out);
 }
 
-/* quaternion_compress_8byte (0x120950) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-static void (*const b120950_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void quaternion_compress_8byte(float *q __attribute__((unused)), short *out __attribute__((unused)))
+/* quaternion_compress_8byte (0x120950) — readable C lift. */
+void quaternion_compress_8byte(float *q, short *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "flds (%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "fmuls 0x26a600\n\t"
-      "call *%[ftol]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movw %%ax, (%%edi)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fmuls 0x26a600\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x2(%%edi)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fmuls 0x26a600\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x4(%%edi)\n\t"
-      "flds 0xc(%%esi)\n\t"
-      "fmuls 0x26a600\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x6(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(b120950_ftol)
-      : "memory");
-}
-#else
-#error "quaternion_compress_8byte: clang naked draft required"
-#endif
+  float scale;
 
+  scale = *(float *)0x26a600; /* 32767.0f */
+  out[0] = (short)(int64_t)(q[0] * scale);
+  out[1] = (short)(int64_t)(q[1] * scale);
+  out[2] = (short)(int64_t)(q[2] * scale);
+  out[3] = (short)(int64_t)(q[3] * scale);
+}
 
 /* quaternion_compress_6byte (0x1209b0) — XBE naked draft (batch 256). */
 #if defined(__clang__)

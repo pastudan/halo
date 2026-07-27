@@ -4094,28 +4094,11 @@ char FUN_00195530(int param_1, int param_2)
   return param_2 < param_1;
 }
 
-/* FUN_001954d0 (0x1954d0) — XBE naked draft (batch 103). */
-#if defined(__clang__)
-static void * (*const b1954d0_c18e3c0)(void) = scenario_get;
-static void (*const b1954d0_c1943e0)(void *scenario) = build_structure_lens_flares;
-
-__attribute__((naked, noinline))
+/* FUN_001954d0 (0x1954d0) — readable C lift. */
 void FUN_001954d0(void)
 {
-  __asm__ volatile(
-      "call *%[c18e3c0]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1943e0]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b1954d0_c18e3c0), [c1943e0] "m"(b1954d0_c1943e0)
-      : "memory");
+  build_structure_lens_flares(scenario_get());
 }
-#else
-#error "FUN_001954d0: clang naked draft required"
-#endif
-
 
 /* FUN_00195550 (0x195550) — XBE naked draft (batch 86). */
 #if defined(__clang__)

@@ -704,40 +704,16 @@ void FUN_00014480(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_set_prop_if_match (0x14510) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-static void *(*const b14510_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void actor_set_prop_if_match(int actor_handle __attribute__((unused)), int old_prop __attribute__((unused)), int new_prop __attribute__((unused)))
+/* actor_set_prop_if_match (0x14510) — readable C lift. */
+void actor_set_prop_if_match(int actor_handle, int old_prop, int new_prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xac(%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl $0x9c, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jne .Lactor_set_prop_if_match_1\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x10(%%eax)\n\t"
-      ".Lactor_set_prop_if_match_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b14510_dget)
-      : "memory");
-}
-#else
-#error "actor_set_prop_if_match: clang naked draft required"
-#endif
+  char *actor;
 
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (*(int *)(actor + 0xac) == old_prop) {
+    *(int *)(actor + 0x9c + 0x10) = new_prop;
+  }
+}
 
 /* FUN_00014540 (0x14540) — XBE naked draft (batch 76). */
 #if defined(__clang__)
@@ -2864,38 +2840,17 @@ void FUN_00015b30(int actor_handle)
   }
 }
 
-/* actor_clear_guard_state (0x15b70) — XBE naked draft (batch 100). */
-#if defined(__clang__)
-static void *(*const b15b70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void actor_clear_guard_state(int actor_handle __attribute__((unused)))
+/* actor_clear_guard_state (0x15b70) — readable C lift. */
+void actor_clear_guard_state(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xa1(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_clear_guard_state_1\n\t"
-      "movw $0, 0x1e4(%%eax)\n\t"
-      "movl $0xffffffff, 0x1e8(%%eax)\n\t"
-      ".Lactor_clear_guard_state_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b15b70_dget)
-      : "memory");
-}
-#else
-#error "actor_clear_guard_state: clang naked draft required"
-#endif
+  char *actor;
 
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (*(char *)(actor + 0xa1)) {
+    *(short *)(actor + 0x1e4) = 0;
+    *(int *)(actor + 0x1e8) = -1;
+  }
+}
 
 /* FUN_00015cf0 (0x15cf0) — XBE naked draft (batch 78). */
 #if defined(__clang__)
@@ -3102,37 +3057,16 @@ void actor_reset_action_state(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_clear_flee_target (0x15f30) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static void *(*const b15f30_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void actor_clear_flee_target(int actor_handle __attribute__((unused)))
+/* actor_clear_flee_target (0x15f30) — readable C lift. */
+void actor_clear_flee_target(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x9c, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, 0x24(%%eax)\n\t"
-      "jne .Lactor_clear_flee_target_1\n\t"
-      "movl $0xffffffff, 0x34(%%eax)\n\t"
-      ".Lactor_clear_flee_target_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b15f30_dget)
-      : "memory");
-}
-#else
-#error "actor_clear_flee_target: clang naked draft required"
-#endif
+  char *actor;
 
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle) + 0x9c;
+  if (*(short *)(actor + 0x24) == 2) {
+    *(int *)(actor + 0x34) = -1;
+  }
+}
 
 /* FUN_00015f60 (0x15f60) — XBE naked draft (batch 76). */
 #if defined(__clang__)
@@ -4684,38 +4618,16 @@ void FUN_00016ff0(int actor_handle __attribute__((unused)))
 #endif
 
 
-/* actor_clear_aim_target (0x17060) — XBE naked draft (batch 78). */
-#if defined(__clang__)
-static void *(*const b17060_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void actor_clear_aim_target(int actor_handle __attribute__((unused)))
+/* actor_clear_aim_target (0x17060) — readable C lift. */
+void actor_clear_aim_target(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xcc(%%eax), %%cl\n\t"
-      "addl $0x9c, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_clear_aim_target_1\n\t"
-      "movl $0xffffffff, 0x40(%%eax)\n\t"
-      ".Lactor_clear_aim_target_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b17060_dget)
-      : "memory");
-}
-#else
-#error "actor_clear_aim_target: clang naked draft required"
-#endif
+  char *actor;
 
+  actor = (char *)datum_get(*(void **)0x6325a4, actor_handle);
+  if (*(char *)(actor + 0xcc)) {
+    *(int *)(actor + 0x9c + 0x40) = -1;
+  }
+}
 
 /* FUN_00017090 (0x17090) — XBE naked draft (batch 99). */
 #if defined(__clang__)

@@ -110,41 +110,16 @@ float arccosine(float x)
   return acosf(x);
 }
 
-/* midpoint3d (0x2a540) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void midpoint3d(float *a __attribute__((unused)), float *b __attribute__((unused)), float *out __attribute__((unused)))
+/* midpoint3d (0x2a540) — readable C lift. */
+void midpoint3d(float *a, float *b, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fadds (%%edx)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps (%%eax)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fadds 0x4(%%edx)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fadds 0x8(%%edx)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "midpoint3d: clang naked draft required"
-#endif
+  float half;
 
+  half = *(float *)0x253398; /* 0.5f */
+  out[0] = (a[0] + b[0]) * half;
+  out[1] = (a[1] + b[1]) * half;
+  out[2] = (a[2] + b[2]) * half;
+}
 
 /* actor_test_destination (0x2a580) — XBE naked draft (batch 91). */
 #if defined(__clang__)
