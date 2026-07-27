@@ -7555,94 +7555,48 @@ void FUN_000f2ed0(void *widget)
   *(int16_t *)((char *)buf + 0xe) = 0;
 }
 
-/* FUN_000f2f60 (0xf2f60) — XBE naked draft (batch 145). */
-#if defined(__clang__)
-static void (*const bf2f60_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf2f60_exitfn)(int) = (void *)system_exit;
-static int (*const bf2f60_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static void (*const bf2f60_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* FUN_000f2f60 (0xf2f60) — readable C lift. */
 void FUN_000f2f60(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $1, 0xe(%%esi)\n\t"
-      "je .LFUN_000f2f60_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xadc\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x28932c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2f60_1:\n\t"
-      "call *%[c12a0a0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2f60_7\n\t"
-      "movl 0xbc(%%eax), %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "cmpl $4, %%ecx\n\t"
-      "ja .LFUN_000f2f60_3\n\t"
-      "jmp *.LFUN_000f2f60_jt(,%%ecx,4)\n\t"
-      ".LFUN_000f2f60_2:\n\t"
-      "movw $0x16, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2f60_3:\n\t"
-      "movw $0x18, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2f60_4:\n\t"
-      "movl 0x100(%%eax), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl $2, %%edx\n\t"
-      "sete %%cl\n\t"
-      "addl $0x17, %%ecx\n\t"
-      "movw %%cx, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2f60_5:\n\t"
-      "movw $0x17, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2f60_6:\n\t"
-      "movw $0x19, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2f60_7:\n\t"
-      "pushl $0x28931c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000f2f60_jt:\n\t"
-      ".long .LFUN_000f2f60_2\n\t"
-      ".long .LFUN_000f2f60_3\n\t"
-      ".long .LFUN_000f2f60_4\n\t"
-      ".long .LFUN_000f2f60_5\n\t"
-      ".long .LFUN_000f2f60_6\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(bf2f60_assert), [exitfn] "m"(bf2f60_exitfn), [c12a0a0] "m"(bf2f60_c12a0a0), [c8f390] "m"(bf2f60_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_000f2f60: clang naked draft required"
-#endif
+  short *w;
+  int *net;
+  unsigned int kind;
+  int cmp;
 
+  w = (short *)widget;
+  if (w[7] != 1) {
+    display_assert((char *)0x28932c, (char *)0x288938, 0xadc, 1);
+    system_exit(-1);
+  }
+  net = (int *)FUN_0012a0a0();
+  if (!net) {
+    error(2, (const char *)0x28931c);
+    return;
+  }
+  kind = (unsigned int)net[0xbc / 4] - 1u;
+  if (kind > 4u) {
+    w[0x20] = 0x18;
+    return;
+  }
+  switch (kind) {
+  case 0:
+    w[0x20] = 0x16;
+    return;
+  case 1:
+    w[0x20] = 0x18;
+    return;
+  case 2:
+    cmp = (net[0x100 / 4] == 2);
+    w[0x20] = (short)(cmp + 0x17);
+    return;
+  case 3:
+    w[0x20] = 0x17;
+    return;
+  case 4:
+    w[0x20] = 0x19;
+    return;
+  }
+}
 
 /* solo_game_objective_text (0xf3010) — XBE naked draft (batch 116). */
 #if defined(__clang__)
