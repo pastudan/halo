@@ -10319,8 +10319,9 @@
         },
         {
           "addr": "0x1c0680",
-          "decl": "void game_state_read_core(void);",
-          "ported": false
+          "decl": "void game_state_read_core(const char *name, void *buffer, unsigned int size);",
+          "ported": true,
+          "name": "game_state_read_core"
         },
         {
           "addr": "0x1c0720",

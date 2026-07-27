@@ -603,82 +603,23 @@ char game_state_read_core_header(const char *name, void *buffer, uint32_t size)
   return ok;
 }
 
-/* game_state_read_core (0x1c0680) — XBE naked draft (batch 284). */
-#if defined(__clang__)
-static int (*const b1c0680_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static int __stdcall (*const b1c0680_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = (void *)0x1d1d85;
-static int __stdcall (*const b1c0680_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = (void *)0x1d13c9;
-static void (*const b1c0680_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c0680_exitfn)(int) = system_exit;
-static int __stdcall (*const b1c0680_c1cf900)(int handle) = CloseHandle;
-
-__attribute__((naked, noinline))
-void game_state_read_core(void)
+/* game_state_read_core (0x1c0680) — readable C lift. */
+void game_state_read_core(const char *name, void *buffer, unsigned int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x404, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x404(%%ebp), %%ecx\n\t"
-      "pushl $0x2b9ce8\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0\n\t"
-      "pushl $0x80\n\t"
-      "pushl $3\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x80000000\n\t"
-      "leal -0x404(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d1d85]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lgame_state_read_core_1\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d13c9]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgame_state_read_core_1\n\t"
-      "cmpl %%edi, -0x4(%%ebp)\n\t"
-      "je .Lgame_state_read_core_2\n\t"
-      ".Lgame_state_read_core_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe2\n\t"
-      "pushl $0x2b9b70\n\t"
-      "pushl $0x2b9cfc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_state_read_core_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1cf900]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(b1c0680_c1d90f0), [c1d1d85] "m"(b1c0680_c1d1d85), [c1d13c9] "m"(b1c0680_c1d13c9), [assert] "m"(b1c0680_assert), [exitfn] "m"(b1c0680_exitfn), [c1cf900] "m"(b1c0680_c1cf900)
-      : "memory");
+  char path[0x404];
+  int handle;
+  unsigned int transferred;
+
+  crt_sprintf(path, (const char *)0x2b9ce8, name);
+  handle = CreateFileA(path, 0x80000000u, 0, 0, 3, 0x80, 0);
+  if (handle == -1 ||
+      !XReadFile(handle, buffer, size, (int *)&transferred, 0) ||
+      transferred != size) {
+    display_assert((const char *)0x2b9cfc, (const char *)0x2b9b70, 0xe2, 1);
+    system_exit(-1);
+  }
+  XCloseHandle(handle);
 }
-#else
-#error "game_state_read_core: clang naked draft required"
-#endif
-
-
 /* FUN_001c0780 (0x1c0780) — XBE naked draft (batch 277). */
 #if defined(__clang__)
 static void (*const b1c0780_chkstk)(void) = FUN_001d90e0;
