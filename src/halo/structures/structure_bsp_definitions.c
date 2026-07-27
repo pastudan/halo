@@ -914,108 +914,44 @@ void leaf_map_build_leaf_face_for_leaf_on_node(void)
 #endif
 
 
-/* FUN_001931e0 (0x1931e0) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void *(*const b1931e0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1931e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1931e0_exitfn)(int) = system_exit;
-static void (*const b1931e0_c192da0)(void) = (void (*)(void))leaf_map_build_portals_from_leaf;
-static void (*const b1931e0_c1931e0)(void) = (void (*)(void))FUN_001931e0;
-
-__attribute__((naked, noinline))
-void FUN_001931e0(void)
+/* FUN_001931e0 (0x1931e0) — readable C lift from XBE leaf.
+ * Sibling of FUN_00193340: walk 2 children; leaf path builds portals. */
+void FUN_001931e0(void *block, int index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "jmp .LFUN_001931e0_2\n\t"
-      ".LFUN_001931e0_1:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      ".LFUN_001931e0_2:\n\t"
-      "testw %%di, %%di\n\t"
-      "jne .LFUN_001931e0_3\n\t"
-      "orl $0x80000000, %%esi\n\t"
-      ".LFUN_001931e0_3:\n\t"
-      "cmpw $0x100, 0x4d8e90\n\t"
-      "jl .LFUN_001931e0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001931e0_4:\n\t"
-      "movswl 0x4d8e90, %%ecx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movl %%esi, 0x4d8a90(,%%ecx,4)\n\t"
-      "incw 0x4d8e90\n\t"
-      "movl 0x4(%%eax,%%edx,4), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jns .LFUN_001931e0_5\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001931e0_6\n\t"
-      "movl 0x4d8e90, %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c192da0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_001931e0_6\n\t"
-      ".LFUN_001931e0_5:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1931e0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001931e0_6:\n\t"
-      "cmpw $0, 0x4d8e90\n\t"
-      "jg .LFUN_001931e0_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x33\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b28dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001931e0_7:\n\t"
-      "decw 0x4d8e90\n\t"
-      "incl %%edi\n\t"
-      "cmpw $2, %%di\n\t"
-      "jl .LFUN_001931e0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1931e0_elem), [assert] "m"(b1931e0_assert), [exitfn] "m"(b1931e0_exitfn), [c192da0] "m"(b1931e0_c192da0), [c1931e0] "m"(b1931e0_c1931e0)
-      : "memory");
+  void *node;
+  int i;
+  int path_index;
+  int child;
+
+  node = tag_block_get_element(*(void **)block, index, 0xc);
+  for (i = 0; i < 2; i++) {
+    path_index = index;
+    if (i == 0)
+      path_index |= (int)0x80000000;
+    if (*(short *)0x4d8e90 >= 0x100) {
+      display_assert((const char *)0x2b2878, (const char *)0x2b28b4, 0x2a, 1);
+      system_exit(-1);
+    }
+    *(int *)(0x4d8a90 + (*(short *)0x4d8e90) * 4) = path_index;
+    (*(short *)0x4d8e90)++;
+    child = ((int *)((char *)node + 4))[i];
+    if (child < 0) {
+      if (child != -1) {
+        ((void (*)(void *, int, int, int, int))(void *)leaf_map_build_portals_from_leaf)(
+            block, -1, child & 0x7fffffff, 0, (*(short *)0x4d8e90) - 1);
+      }
+    } else {
+      FUN_001931e0(block, child);
+    }
+    if (*(short *)0x4d8e90 <= 0) {
+      display_assert((const char *)0x2b28dc, (const char *)0x2b28b4, 0x33, 1);
+      system_exit(-1);
+    }
+    (*(short *)0x4d8e90)--;
+  }
 }
-#else
-#error "FUN_001931e0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001932d0 (0x1932d0) — readable C lift. */
