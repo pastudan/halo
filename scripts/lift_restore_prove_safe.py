@@ -231,9 +231,10 @@ def main() -> int:
             if obj.exists():
                 obj.unlink()
         if not docker_compile(src):
+            # Revert and keep trying other symbols in this TU. A single bad
+            # extract must not blacklist the whole file for the rest of the run.
             print(f"COMPILE_FAIL revert {name} ({src})", flush=True)
             full.write_text(backup, encoding="utf-8")
-            skipped_tus.add(src)
             continue
 
         res = uni(name, addr, args.seeds, args.timeout)
