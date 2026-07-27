@@ -27886,7 +27886,8 @@
         {
           "addr": "0xeead0",
           "decl": "void playlist_profile_initialize_ctf_rules(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "playlist_profile_initialize_ctf_rules"
         },
         {
           "addr": "0xeebe0",
@@ -28084,7 +28085,8 @@
         {
           "addr": "0xf2390",
           "decl": "void FUN_000f2390(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2390"
         },
         {
           "addr": "0xf24b0",

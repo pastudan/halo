@@ -1355,135 +1355,52 @@ char playlist_profile_initialize_name(void *widget, void *arg1, char *out_flag)
   return ok;
 }
 
-/* playlist_profile_initialize_ctf_rules (0xeead0) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static unsigned short (*const beead0_c1c0ed0)(void) = (void *)FUN_001c0ed0;
-static void *(*const beead0_ce0ea0)(void) = (void *)player_ui_get_edit_player_profile;
-static void *(*const beead0_tag)(int, int) = (void *)tag_get;
-static void (*const beead0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const beead0_exitfn)(int) = (void *)system_exit;
-static void * (*const beead0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
-static void (*const beead0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* playlist_profile_initialize_ctf_rules (0xeead0) — readable C lift from XBE leaf. */
 void playlist_profile_initialize_ctf_rules(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1c0ed0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[ce0ea0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .Lplaylist_profile_initialize_ctf_rules_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdf8\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287cb0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_1:\n\t"
-      "cmpl $3, 0x3e0(%%edi)\n\t"
-      "je .Lplaylist_profile_initialize_ctf_rules_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdf9\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287c74\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_2:\n\t"
-      "movl 0x40(%%esi), %%ecx\n\t"
-      "pushl $0xdfd\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce3d20]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x40(%%esi)\n\t"
-      "je .Lplaylist_profile_initialize_ctf_rules_5\n\t"
-      "movzwl %%bx, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .Lplaylist_profile_initialize_ctf_rules_4\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_3:\n\t"
-      "movl 0x40(%%esi), %%edx\n\t"
-      "movb %%al, (%%eax,%%edx,1)\n\t"
-      "incl %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lplaylist_profile_initialize_ctf_rules_3\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_4:\n\t"
-      "movw %%bx, 0x44(%%esi)\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_5:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .Lplaylist_profile_initialize_ctf_rules_8\n\t"
-      "movw 0x18(%%edx), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .Lplaylist_profile_initialize_ctf_rules_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x18(%%edx)\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x3c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_6:\n\t"
-      "movzwl %%bx, %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jle .Lplaylist_profile_initialize_ctf_rules_7\n\t"
-      "movl %%ecx, %%eax\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_7:\n\t"
-      "movw %%ax, 0x18(%%edx)\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x3c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_initialize_ctf_rules_8:\n\t"
-      "pushl $0x287c4c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c0ed0] "m"(beead0_c1c0ed0), [ce0ea0] "m"(beead0_ce0ea0), [tag] "m"(beead0_tag), [assert] "m"(beead0_assert), [exitfn] "m"(beead0_exitfn), [ce3d20] "m"(beead0_ce3d20), [c8f390] "m"(beead0_c8f390)
-      : "memory");
-}
-#else
-#error "playlist_profile_initialize_ctf_rules: clang naked draft required"
-#endif
+  unsigned short count;
+  void *profile;
+  void *tag;
+  void *buf;
+  int i;
+  short sel;
+  int max_sel;
 
+  count = FUN_001c0ed0();
+  profile = player_ui_get_edit_player_profile();
+  tag = tag_get(0x44654c61, *(int *)widget);
+  if (*(short *)tag != 2) {
+    display_assert((const char *)0x287cb0, (const char *)0x2859a4, 0xdf8, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)tag + 0x3e0) != 3) {
+    display_assert((const char *)0x287c74, (const char *)0x2859a4, 0xdf9, 1);
+    system_exit(-1);
+  }
+  buf = ui_widget_realloc((int)*(void **)((char *)widget + 0x40), count,
+                          (const char *)0x2859a4, 0xdfd);
+  *(void **)((char *)widget + 0x40) = buf;
+  if (buf != 0) {
+    for (i = 0; i < (int)count; i++)
+      ((char *)buf)[i] = (char)i;
+    *(unsigned short *)((char *)widget + 0x44) = count;
+  }
+  if (profile == 0) {
+    error(2, (const char *)0x287c4c);
+    return;
+  }
+  sel = *(short *)((char *)profile + 0x18);
+  if (sel < 0) {
+    *(short *)((char *)profile + 0x18) = 0;
+    *(short *)((char *)widget + 0x3c) = 0;
+    return;
+  }
+  max_sel = (int)count - 1;
+  if ((int)sel > max_sel)
+    sel = (short)max_sel;
+  *(short *)((char *)profile + 0x18) = sel;
+  *(short *)((char *)widget + 0x3c) = sel;
+}
 
 /* FUN_000eebe0 (0xeebe0) — readable C lift. */
 char FUN_000eebe0(void *widget)
@@ -5804,135 +5721,46 @@ void network_pregame_status_screen_update(void *widget)
 #endif
 
 
-/* FUN_000f2390 (0xf2390) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void * (*const bf2390_c12a240)(void) = (void *)network_game_client_get;
-static int16_t (*const bf2390_c124a30)(void *server, void *out_param) = (void *)network_game_client_get_state;
-static int (*const bf2390_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static void (*const bf2390_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf2390_exitfn)(int) = (void *)system_exit;
-static uint8_t (*const bf2390_ce0890)(int16_t) = (void *)player_ui_local_player_wants_to_play_multiplayer;
-static bool (*const bf2390_c12ac80)(void *client) = (void *)network_player_is_valid;
-static bool (*const bf2390_c12a0d0)(void *player) = (void *)network_game_player_is_local;
-static char (*const bf2390_c1258a0)(void *client, int16_t local_player_index) = (void *)network_game_client_add_player;
-static void (*const bf2390_c12b650)(const char *fmt, ...) = (void *)network_game_log;
-
-__attribute__((naked, noinline))
+/* FUN_000f2390 (0xf2390) — readable C lift from XBE leaf. */
 void FUN_000f2390(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12a240]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000f2390_9\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c124a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .LFUN_000f2390_9\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12a0a0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000f2390_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x614\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x2861a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2390_1:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_000f2390_2:\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce0890]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $4, %%cx\n\t"
-      "movb %%al, -0x8(%%ebp,%%edx,1)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jl .LFUN_000f2390_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_000f2390_3:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "shll $5, %%eax\n\t"
-      "leal 0x226(%%eax,%%esi,1), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000f2390_4\n\t"
-      "movswl -0x4(%%ebp), %%edx\n\t"
-      "shll $5, %%edx\n\t"
-      "leal 0x226(%%edx,%%esi,1), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12a0d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000f2390_4\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "movsbl 0x243(%%ecx,%%esi,1), %%edx\n\t"
-      "movb $0, -0x8(%%ebp,%%edx,1)\n\t"
-      "jmp .LFUN_000f2390_5\n\t"
-      ".LFUN_000f2390_4:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".LFUN_000f2390_5:\n\t"
-      "incl %%eax\n\t"
-      "cmpw $0x10, %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .LFUN_000f2390_3\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000f2390_6:\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movb -0x8(%%ebp,%%ecx,1), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .LFUN_000f2390_8\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1258a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000f2390_7\n\t"
-      "pushl $0x28618c\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000f2390_7:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".LFUN_000f2390_8:\n\t"
-      "incl %%eax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .LFUN_000f2390_6\n\t"
-      ".LFUN_000f2390_9:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12a240] "m"(bf2390_c12a240), [c124a30] "m"(bf2390_c124a30), [c12a0a0] "m"(bf2390_c12a0a0), [assert] "m"(bf2390_assert), [exitfn] "m"(bf2390_exitfn), [ce0890] "m"(bf2390_ce0890), [c12ac80] "m"(bf2390_c12ac80), [c12a0d0] "m"(bf2390_c12a0d0), [c1258a0] "m"(bf2390_c1258a0), [c12b650] "m"(bf2390_c12b650)
-      : "memory");
-}
-#else
-#error "FUN_000f2390: clang naked draft required"
-#endif
+  void *client;
+  int16_t state;
+  int16_t state_scratch;
+  char *game;
+  char wants[4];
+  int i;
+  char *player;
+  int slot;
 
+  (void)widget;
+  client = network_game_client_get();
+  if (client == 0)
+    return;
+  state = network_game_client_get_state(client, &state_scratch);
+  if (state != 2)
+    return;
+  game = (char *)FUN_0012a0a0();
+  if (game == 0) {
+    display_assert((const char *)0x2861a8, (const char *)0x288938, 0x614, 1);
+    system_exit(-1);
+  }
+  for (i = 0; i < 4; i++)
+    wants[i] = (char)player_ui_local_player_wants_to_play_multiplayer((int16_t)i);
+  for (i = 0; i < 0x10; i++) {
+    player = game + 0x226 + i * 0x20;
+    if (network_player_is_valid(player) && network_game_player_is_local(player)) {
+      slot = (int)(signed char)player[0x1d];
+      wants[slot] = 0;
+    }
+  }
+  for (i = 0; i < 4; i++) {
+    if (wants[i] != 0) {
+      if (!network_game_client_add_player(client, (int16_t)i))
+        network_game_log((const char *)0x28618c);
+    }
+  }
+}
 
 /* mutliplayer_settings_select_list_update_displayed_items (0xf24b0) — readable C lift. */
 void mutliplayer_settings_select_list_update_displayed_items(void *widget)
