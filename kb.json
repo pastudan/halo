@@ -38684,7 +38684,7 @@
         {
           "addr": "0x15e7a0",
           "decl": "void FUN_0015e7a0(void *obj@<eax>, int *out@<edx>, int addend);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x15e7d0",
@@ -38951,8 +38951,8 @@
         },
         {
           "addr": "0x1659a0",
-          "decl": "void FUN_001659a0(void);",
-          "ported": false
+          "decl": "char FUN_001659a0(void);",
+          "ported": true
         },
         {
           "addr": "0x1659f0",

@@ -8424,45 +8424,19 @@ int FUN_00165980(int a, int b, int c, int d, int e)
 
 
 
-/* FUN_001659a0 (0x1659a0) — XBE naked draft (batch 384). */
-#if defined(__clang__)
-static void * (*const b1659a0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
-static void (*const b1659a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_001659a0(void)
+/* FUN_001659a0 (0x1659a0) — readable C lift. */
+char FUN_001659a0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl $0xf8\n\t"
-      "pushl $0x2a1cc8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5000\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x47df00\n\t"
-      "movl $0, 0x47df04\n\t"
-      "jne .LFUN_001659a0_1\n\t"
-      "pushl $0x2a1c70\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_001659a0_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b1659a0_c8ee60), [c8f390] "m"(b1659a0_c8f390)
-      : "memory");
+  void *p;
+
+  p = debug_malloc(0x5000, 0, (const char *)0x2a1cc8, 0xf8);
+  *(void **)0x47df00 = p;
+  *(unsigned int *)0x47df04 = 0;
+  if (p)
+    return 1;
+  error(2, (const char *)0x2a1c70);
+  return 0;
 }
-#else
-#error "FUN_001659a0: clang naked draft required"
-#endif
 
 
 /* FUN_001659f0 (0x1659f0) — readable C lift. */
