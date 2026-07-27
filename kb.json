@@ -27929,7 +27929,7 @@
         {
           "addr": "0xf3640",
           "decl": "void get_editable_playlist_profile_display_name(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf3690",

@@ -9194,51 +9194,18 @@ void get_editable_player_profile_display_name(void *widget)
 #endif
 
 
-/* get_editable_playlist_profile_display_name (0xf3640) — XBE naked draft (batch 172). */
-#if defined(__clang__)
-static void (*const bf3640_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf3640_exitfn)(int) = system_exit;
-static bool (*const bf3640_c82300)(void) = transport_network_available;
-
-__attribute__((naked, noinline))
+/* get_editable_playlist_profile_display_name (0xf3640) — readable C lift. */
+extern char DAT_00288938[];
+extern char DAT_002894f4[];
 void get_editable_playlist_profile_display_name(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $1, 0xe(%%esi)\n\t"
-      "je .Lget_editable_playlist_profile_display_name_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc3c\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x2894f4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lget_editable_playlist_profile_display_name_1:\n\t"
-      "call *%[c82300]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lget_editable_playlist_profile_display_name_2\n\t"
-      "movl $0x3f800000, 0x24(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lget_editable_playlist_profile_display_name_2:\n\t"
-      "movl $0x3eaa7efa, 0x24(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf3640_assert), [exitfn] "m"(bf3640_exitfn), [c82300] "m"(bf3640_c82300)
-      : "memory");
+  if (*(int16_t *)((char *)widget + 0xe) != 1) {
+    display_assert(DAT_002894f4, DAT_00288938, 0xc3c, true);
+    system_exit(-1);
+  }
+  if (profile_get_editable_playlist_or_similar())
+    *(float *)((char *)widget + 0x24) = 1.0f;
 }
-#else
-#error "get_editable_playlist_profile_display_name: clang naked draft required"
-#endif
-
 
 /* 0xf3690 — collect up to 3 child widget text handles for item UI sync. */
 /* FUN_000f3690 (0xf3690) — XBE naked draft (batch 231). */
