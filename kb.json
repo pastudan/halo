@@ -21068,8 +21068,9 @@
         },
         {
           "addr": "0x17b540",
-          "decl": "void FUN_0017b540(void);",
-          "ported": false
+          "decl": "void FUN_0017b540(int tex_flags);",
+          "ported": false,
+          "name": "FUN_0017b540"
         },
         {
           "addr": "0x17b580",
@@ -31227,7 +31228,7 @@
         {
           "addr": "0x17cfe0",
           "decl": "void FUN_0017cfe0(int tex_flags);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cff0",
