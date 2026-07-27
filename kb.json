@@ -14930,9 +14930,9 @@
         },
         {
           "addr": "0x12a920",
-          "decl": "void network_player_reset(uint8_t *player);",
+          "decl": "void network_player_reset(char *player);",
           "name": "network_player_reset",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "network_game_globals.obj",
