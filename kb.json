@@ -25743,7 +25743,7 @@
         {
           "addr": "0x1935f0",
           "decl": "void structure_bsp_find_material_for_surface(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1937a0",
