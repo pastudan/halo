@@ -34307,10 +34307,10 @@
         },
         {
           "addr": "0x2f5b0",
-          "decl": "int FUN_0002f5b0(int param_1, int param_2);",
+          "decl": "int FUN_0002f5b0(const float *a, const float *b);",
           "name": "FUN_0002f5b0",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2f5f0",
