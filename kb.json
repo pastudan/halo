@@ -4615,8 +4615,8 @@
         },
         {
           "addr": "0x7c490",
-          "decl": "void FUN_0007c490(void);",
-          "ported": false
+          "decl": "float *FUN_0007c490(float *out_color, uint32_t flags, float *lower_bound, float *upper_bound, float *rgb_scale, float blend);",
+          "ported": true
         },
         {
           "addr": "0x7c5f0",

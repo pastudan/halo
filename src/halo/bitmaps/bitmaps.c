@@ -983,153 +983,55 @@ void bitmap_3d_compress_to_mipmap(void *source_bitmap, void *destination_bitmap,
 }
 
 
-/* FUN_0007c490 (0x7c490) — XBE naked draft (batch 263). */
-#if defined(__clang__)
-static float * (*const b7c490_c7c270)(float *out_color, uint32_t flags, float *rgb_lower_bound, float *rgb_upper_bound, float blend) = FUN_0007c270;
-static bool (*const b7c490_c7b020)(float *rgb) = valid_real_rgb_color;
-static char * (*const b7c490_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b7c490_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7c490_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_0007c490(void)
+/* FUN_0007c490 — blend intensity+rgb endpoints, optional rgb_scale. */
+float *FUN_0007c490(float *out_color, uint32_t flags, float *lower_bound,
+                    float *upper_bound, float *rgb_scale, float blend)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal 0x4(%%ebx), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7c270]\n\t"
-      "movl 0x18(%%ebp), %%edi\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0007c490_4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7b020]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0007c490_1\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96e\n\t"
-      "pushl $0x2641f0\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%edi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x2648c8\n\t"
-      "pushl $0x26488c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0007c490_1:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps 0x253f44\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_0007c490_2\n\t"
-      "flds (%%ebx)\n\t"
-      "fcomps 0x253f44\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_0007c490_2\n\t"
-      "flds (%%esi)\n\t"
-      "fmuls (%%edi)\n\t"
-      "fstps (%%esi)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "jmp .LFUN_0007c490_3\n\t"
-      ".LFUN_0007c490_2:\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x1c(%%ebp)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      "fmuls (%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x2533c8\n\t"
-      "fsub %%st(1), %%st(0)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls (%%esi)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls (%%edi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps (%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".LFUN_0007c490_3:\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      ".LFUN_0007c490_4:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7b020]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0007c490_5\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x982\n\t"
-      "pushl $0x2641f0\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x264870\n\t"
-      "pushl $0x26488c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0007c490_5:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7c270] "m"(b7c490_c7c270), [c7b020] "m"(b7c490_c7b020), [c8d9d0] "m"(b7c490_c8d9d0), [assert] "m"(b7c490_assert), [exitfn] "m"(b7c490_exitfn)
-      : "memory");
+  float weight;
+  float weight_inv;
+  char *msg;
+
+  /* lower/upper are [intensity, r, g, b]; interpolate RGB via FUN_0007c270. */
+  FUN_0007c270(out_color, flags, lower_bound + 1, upper_bound + 1, blend);
+
+  if (rgb_scale != NULL) {
+    if (!valid_real_rgb_color(rgb_scale)) {
+      msg = csprintf((char *)0x5ab100,
+                     "%s: assert_valid_real_rgb_color(%f, %f, %f)", "rgb_scale",
+                     (double)rgb_scale[0], (double)rgb_scale[1],
+                     (double)rgb_scale[2]);
+      display_assert(msg, "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x96e,
+                     true);
+      system_exit(-1);
+    }
+
+    if (lower_bound[0] <= *(float *)0x253f44 &&
+        upper_bound[0] <= *(float *)0x253f44) {
+      out_color[0] = out_color[0] * rgb_scale[0];
+      out_color[1] = out_color[1] * rgb_scale[1];
+      out_color[2] = out_color[2] * rgb_scale[2];
+    } else {
+      weight = (*(float *)0x2533c8 - blend) * lower_bound[0] +
+               blend * upper_bound[0];
+      weight_inv = *(float *)0x2533c8 - weight;
+      out_color[0] = weight * out_color[0] + weight_inv * rgb_scale[0];
+      out_color[1] = weight * out_color[1] + weight_inv * rgb_scale[1];
+      out_color[2] = weight * out_color[2] + weight_inv * rgb_scale[2];
+    }
+  }
+
+  if (!valid_real_rgb_color(out_color)) {
+    msg = csprintf((char *)0x5ab100,
+                   "%s: assert_valid_real_rgb_color(%f, %f, %f)", "rgb_result",
+                   (double)out_color[0], (double)out_color[1],
+                   (double)out_color[2]);
+    display_assert(msg, "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x982,
+                   true);
+    system_exit(-1);
+  }
+
+  return out_color;
 }
-#else
-#error "FUN_0007c490: clang naked draft required"
-#endif
 
 
 /* bitmap_format_to_a8r8g8b8 (0x7d0d0) — XBE naked draft (batch 244). */
