@@ -560,7 +560,7 @@ char collision_surface_test_point2d(int bsp, int surface_index, int projection, 
 /* collision_surface_find_closest_point2d (0x147ae0) — XBE naked draft (batch 227). */
 #if defined(__clang__)
 static void *(*const b147ae0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b147ae0_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
+static void (*const b147ae0_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = (void *)FUN_00061df0;
 
 __attribute__((naked, noinline))
 int collision_surface_find_closest_point2d(int bsp __attribute__((unused)), int surface_index __attribute__((unused)), int projection __attribute__((unused)), int sign __attribute__((unused)), float *point __attribute__((unused)), float *out_point __attribute__((unused)))
@@ -842,7 +842,7 @@ typedef struct collision_bsp_edge_test_state {
 /* FUN_001491d0 (0x1491d0) — XBE naked draft (batch 221). */
 #if defined(__clang__)
 static void *(*const b1491d0_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b1491d0_c148910)(float *out_t /* */, float *origin /* */, float *edge_a /* */, float *direction /* */, float *edge_delta /* */, float radius, float *out_u) = FUN_00148910;
+static char (*const b1491d0_c148910)(float *out_t /* */, float *origin /* */, float *edge_a /* */, float *direction /* */, float *edge_delta /* */, float radius, float *out_u) = (void *)FUN_00148910;
 
 __attribute__((naked, noinline))
 char FUN_001491d0(void *state /* */ __attribute__((unused)), int surface_index __attribute__((unused)))
@@ -1153,9 +1153,9 @@ static void __attribute__((unused)) collision_bsp_vector_remember_leaf(collision
 /* FUN_00148780 (0x148780) — XBE naked draft (batch 223). */
 #if defined(__clang__)
 static void *(*const b148780_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b148780_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
-static uint32_t (*const b148780_c146d40)(void *bsp2d_nodes, float *point2d, int node_index) = FUN_00146d40;
-static char (*const b148780_c148240)(int bsp /* */, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d) = FUN_00148240;
+static void (*const b148780_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = (void *)FUN_00061df0;
+static uint32_t (*const b148780_c146d40)(void *bsp2d_nodes, float *point2d, int node_index) = (void *)FUN_00146d40;
+static char (*const b148780_c148240)(int bsp /* */, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d) = (void *)FUN_00148240;
 
 __attribute__((naked, noinline))
 int FUN_00148780(int leaf_index /* */ __attribute__((unused)), int bsp __attribute__((unused)), unsigned short flags __attribute__((unused)), int breakable_surfaces __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), int plane_index __attribute__((unused)), float t __attribute__((unused)), int two_sided __attribute__((unused)))
@@ -1350,8 +1350,8 @@ int FUN_00148780(int leaf_index /* */ __attribute__((unused)), int bsp __attribu
 /* FUN_00148eb0 (0x148eb0) — XBE naked draft (batch 227). */
 #if defined(__clang__)
 static void *(*const b148eb0_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b148eb0_c148eb0)(void *state, int node_index, float t0, float t1) = FUN_00148eb0;
-static int (*const b148eb0_c148780)(int leaf_index /* */, int bsp, unsigned short flags, int breakable_surfaces, float *origin, float *direction, int plane_index, float t, int two_sided) = FUN_00148780;
+static char (*const b148eb0_c148eb0)(void *state, int node_index, float t0, float t1) = (void *)FUN_00148eb0;
+static int (*const b148eb0_c148780)(int leaf_index /* */, int bsp, unsigned short flags, int breakable_surfaces, float *origin, float *direction, int plane_index, float t, int two_sided) = (void *)FUN_00148780;
 
 __attribute__((naked, noinline))
 char FUN_00148eb0(void *state __attribute__((unused)), int node_index __attribute__((unused)), float t0 __attribute__((unused)), float t1 __attribute__((unused)))
@@ -1794,8 +1794,8 @@ typedef struct collision_bsp_sphere_state {
 /* FUN_00147ed0 (0x147ed0) — XBE naked draft (batch 227). */
 #if defined(__clang__)
 static void *(*const b147ed0_elem)(void *, int, int) = tag_block_get_element;
-static bool (*const b147ed0_c10bc70)(float *line_start, float *line_end, float *sphere_center, float sphere_radius) = fast_vector_intersects_sphere;
-static void (*const b147ed0_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
+static bool (*const b147ed0_c10bc70)(float *line_start, float *line_end, float *sphere_center, float sphere_radius) = (void *)fast_vector_intersects_sphere;
+static void (*const b147ed0_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = (void *)FUN_00061df0;
 
 __attribute__((naked, noinline))
 void FUN_00147ed0(void *state /* */ __attribute__((unused)), int surface_index __attribute__((unused)))
@@ -2168,8 +2168,8 @@ void FUN_001486e0(void *state, int node_index)
 static void *(*const b148b90_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b148b90_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b148b90_exitfn)(int) = system_exit;
-static void (*const b148b90_c148b90)(void *state, int node_index) = bsp3d_test_sphere_recursive;
-static void (*const b148b90_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
+static void (*const b148b90_c148b90)(void *state, int node_index) = (void *)bsp3d_test_sphere_recursive;
+static void (*const b148b90_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = (void *)FUN_00061df0;
 static void (*const b148b90_c1486e0)(void *state, int node_index) = (void *)FUN_001486e0;
 
 __attribute__((naked, noinline))
@@ -2569,7 +2569,7 @@ typedef struct collision_bsp_pill_state {
 /* FUN_00148440 (0x148440) — XBE naked draft (batch 223). */
 #if defined(__clang__)
 static void *(*const b148440_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b148440_c148440)(void *state, int node_index, float t0, float t1) = FUN_00148440;
+static char (*const b148440_c148440)(void *state, int node_index, float t0, float t1) = (void *)FUN_00148440;
 
 __attribute__((naked, noinline))
 char FUN_00148440(void *state __attribute__((unused)), int node_index __attribute__((unused)), float t0 __attribute__((unused)), float t1 __attribute__((unused)))
@@ -2899,8 +2899,8 @@ char collision_bsp_test_pill_new(int bsp, short flags, int breakable_surfaces, i
 /* FUN_00149570 (0x149570) — XBE naked draft (batch 227). */
 #if defined(__clang__)
 static void *(*const b149570_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b149570_c149570)(void *state, int node_index) = FUN_00149570;
-static char (*const b149570_c1491d0)(void *state /* */, int surface_index) = FUN_001491d0;
+static char (*const b149570_c149570)(void *state, int node_index) = (void *)FUN_00149570;
+static char (*const b149570_c1491d0)(void *state /* */, int surface_index) = (void *)FUN_001491d0;
 
 __attribute__((naked, noinline))
 char FUN_00149570(void *state __attribute__((unused)), int node_index __attribute__((unused)))
@@ -3076,11 +3076,11 @@ typedef struct collision_bsp_pill_walk_state {
 static void *(*const b149680_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b149680_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b149680_exitfn)(int) = system_exit;
-static char (*const b149680_c149680)(void *state, int node_index) = FUN_00149680;
-static void (*const b149680_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
-static uint32_t (*const b149680_c146d40)(void *bsp2d_nodes, float *point2d, int node_index) = FUN_00146d40;
-static char (*const b149680_c148240)(int bsp /* */, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d) = FUN_00148240;
-static char (*const b149680_c149570)(void *state, int node_index) = FUN_00149570;
+static char (*const b149680_c149680)(void *state, int node_index) = (void *)FUN_00149680;
+static void (*const b149680_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = (void *)FUN_00061df0;
+static uint32_t (*const b149680_c146d40)(void *bsp2d_nodes, float *point2d, int node_index) = (void *)FUN_00146d40;
+static char (*const b149680_c148240)(int bsp /* */, unsigned short flags, int breakable_surfaces, int surface_index, int projection, int sign, float *point2d) = (void *)FUN_00148240;
+static char (*const b149680_c149570)(void *state, int node_index) = (void *)FUN_00149570;
 
 __attribute__((naked, noinline))
 char FUN_00149680(void *state __attribute__((unused)), int node_index __attribute__((unused)))
@@ -3719,10 +3719,10 @@ char FUN_0014dc30(int flags, float *pos, int param_3)
 /* FUN_0014e7d0 (0x14e7d0) — XBE naked draft (batch 232). */
 #if defined(__clang__)
 static void *(*const b14e7d0_gbsp)(void) = global_collision_bsp_get;
-static char (*const b14e7d0_c149c60)(int *block_ptr, void *transformed_2c, void *transformed_20, float scale, float best_dist, float *result) = FUN_00149c60;
-static void * (*const b14e7d0_c18e3c0)(void) = scenario_get;
+static char (*const b14e7d0_c149c60)(int *block_ptr, void *transformed_2c, void *transformed_20, float scale, float best_dist, float *result) = (void *)FUN_00149c60;
+static void * (*const b14e7d0_c18e3c0)(void) = (void *)scenario_get;
 static void *(*const b14e7d0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b14e7d0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
+static void (*const b14e7d0_c18f180)(void *location_out, void *point) = (void *)scenario_location_from_point;
 
 __attribute__((naked, noinline))
 char FUN_0014e7d0(uint32_t collision_flags __attribute__((unused)), float *point __attribute__((unused)), float *offset_vec __attribute__((unused)), float p4 __attribute__((unused)), int unit_handle __attribute__((unused)), void *result __attribute__((unused)))
@@ -3916,11 +3916,11 @@ char FUN_0014e940(int unused, float *origin, float *direction, float radius,
 
 /* FUN_0014e640 (0x14e640) — XBE naked draft (batch 236). */
 #if defined(__clang__)
-static int (*const b14e640_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
-static char (*const b14e640_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = FUN_0014cb00;
-static void (*const b14e640_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = FUN_0010a1c0;
-static void (*const b14e640_c994d0)(float *plane_in, float *plane_out) = plane_negate;
-static int (*const b14e640_c14da80)(int tag_data, int16_t collision_fn_index) = FUN_0014da80;
+static int (*const b14e640_c14c8e0)(int *out, int object_handle) = (void *)FUN_0014c8e0;
+static char (*const b14e640_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = (void *)FUN_0014cb00;
+static void (*const b14e640_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = (void *)FUN_0010a1c0;
+static void (*const b14e640_c994d0)(float *plane_in, float *plane_out) = (void *)plane_negate;
+static int (*const b14e640_c14da80)(int tag_data, int16_t collision_fn_index) = (void *)FUN_0014da80;
 
 __attribute__((naked, noinline))
 char FUN_0014e640(void *model __attribute__((unused)), float *origin __attribute__((unused)), float *offset __attribute__((unused)), void *result __attribute__((unused)))
@@ -4071,15 +4071,15 @@ char FUN_0014e640(void *model __attribute__((unused)), float *origin __attribute
 /* FUN_0014dce0 (0x14dce0) — XBE naked draft (batch 232). */
 #if defined(__clang__)
 static void *(*const b14dce0_get)(int, int) = object_get_and_verify_type;
-static bool (*const b14dce0_c10bc70)(float *line_start, float *line_end, float *sphere_center, float sphere_radius) = fast_vector_intersects_sphere;
+static bool (*const b14dce0_c10bc70)(float *line_start, float *line_end, float *sphere_center, float sphere_radius) = (void *)fast_vector_intersects_sphere;
 static char (*const b14dce0_c1509c0)(int *out, int obj_idx) = (void *)FUN_001509c0;
 static char (*const b14dce0_c150b60)(void *features, float *origin, float *direction, float *out_t_plane) = (void *)FUN_00150b60;
-static int (*const b14dce0_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
-static char (*const b14dce0_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = FUN_0014cb00;
-static void (*const b14dce0_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = FUN_0010a1c0;
-static void (*const b14dce0_c994d0)(float *plane_in, float *plane_out) = plane_negate;
-static int (*const b14dce0_c14da80)(int tag_data, int16_t collision_fn_index) = FUN_0014da80;
-static char (*const b14dce0_c14dce0)(int object_handle, unsigned int type_mask, int param_3, int origin, int direction, int exclude_handle, void *collision_result) = FUN_0014dce0;
+static int (*const b14dce0_c14c8e0)(int *out, int object_handle) = (void *)FUN_0014c8e0;
+static char (*const b14dce0_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = (void *)FUN_0014cb00;
+static void (*const b14dce0_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = (void *)FUN_0010a1c0;
+static void (*const b14dce0_c994d0)(float *plane_in, float *plane_out) = (void *)plane_negate;
+static int (*const b14dce0_c14da80)(int tag_data, int16_t collision_fn_index) = (void *)FUN_0014da80;
+static char (*const b14dce0_c14dce0)(int object_handle, unsigned int type_mask, int param_3, int origin, int direction, int exclude_handle, void *collision_result) = (void *)FUN_0014dce0;
 
 __attribute__((naked, noinline))
 char FUN_0014dce0(int object_handle __attribute__((unused)), unsigned int type_mask __attribute__((unused)), int param_3 __attribute__((unused)), int origin __attribute__((unused)), int direction __attribute__((unused)), int exclude_handle __attribute__((unused)), void *collision_result __attribute__((unused)))
@@ -4307,13 +4307,13 @@ char FUN_0014dce0(int object_handle __attribute__((unused)), unsigned int type_m
 /* FUN_0014ea10 (0x14ea10) — XBE naked draft (batch 231). */
 #if defined(__clang__)
 static void *(*const b14ea10_get)(int, int) = object_get_and_verify_type;
-static void (*const b14ea10_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
-static void (*const b14ea10_c14adb0)(int param_1, float param_2, int param_3, int param_4, int param_5, unsigned char param_6, unsigned char param_7, short param_8, void *features) = collision_features_from_point;
+static void (*const b14ea10_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = (void *)biped_get_camera_height_and_offset;
+static void (*const b14ea10_c14adb0)(int param_1, float param_2, int param_3, int param_4, int param_5, unsigned char param_6, unsigned char param_7, short param_8, void *features) = (void *)collision_features_from_point;
 static char (*const b14ea10_c1509c0)(int *out, int obj_idx) = (void *)FUN_001509c0;
 static void (*const b14ea10_c150790)(void) = (void *)FUN_00150790;
-static int (*const b14ea10_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
-static char (*const b14ea10_c14cde0)(int param_1, int param_2, float param_3, int param_4, int param_5, int param_6) = FUN_0014cde0;
-static char (*const b14ea10_c14ea10)(unsigned int type_mask, int first_handle, float *origin, float radius, float param_5, float param_6, int exclude_handle, int result) = FUN_0014ea10;
+static int (*const b14ea10_c14c8e0)(int *out, int object_handle) = (void *)FUN_0014c8e0;
+static char (*const b14ea10_c14cde0)(int param_1, int param_2, float param_3, int param_4, int param_5, int param_6) = (void *)FUN_0014cde0;
+static char (*const b14ea10_c14ea10)(unsigned int type_mask, int first_handle, float *origin, float radius, float param_5, float param_6, int exclude_handle, int result) = (void *)FUN_0014ea10;
 
 __attribute__((naked, noinline))
 char FUN_0014ea10(unsigned int type_mask __attribute__((unused)), int first_handle __attribute__((unused)), float *origin __attribute__((unused)), float radius __attribute__((unused)), float param_5 __attribute__((unused)), float param_6 __attribute__((unused)), int exclude_handle __attribute__((unused)), int result __attribute__((unused)))
