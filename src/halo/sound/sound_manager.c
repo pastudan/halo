@@ -4813,96 +4813,32 @@ int FUN_001cd190(int sound_tag_index __attribute__((unused)), void *track __attr
 #endif
 
 
-/* FUN_001cd390 (0x1cd390) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static unsigned int *(*const b1cd390_lseed)(void) = random_math_get_local_seed_address;
-static float (*const b1cd390_rrange)(int *, float, float) = random_real_range;
-static void (*const b1cd390_c10cc40)(float *out, float *angles) = angles_to_vector;
-
-__attribute__((naked, noinline))
-void FUN_001cd390(void *track_entry __attribute__((unused)), float *out __attribute__((unused)))
+/* FUN_001cd390 (0x1cd390) — readable C lift: random scaled direction from track. */
+void FUN_001cd390(void *track_entry, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "movl 0x64(%%edi), %%eax\n\t"
-      "movl 0x60(%%edi), %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_001cd390_1\n\t"
-      "movl 0x5c(%%edi), %%ecx\n\t"
-      "movl 0x58(%%edi), %%edx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "movl 0x54(%%edi), %%edx\n\t"
-      "movl 0x50(%%edi), %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c10cc40]\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      "addl $0x14, %%esp\n\t"
-      "fstps (%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001cd390_1:\n\t"
-      "movl 0x31fc38, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [lseed] "m"(b1cd390_lseed), [rrange] "m"(b1cd390_rrange), [c10cc40] "m"(b1cd390_c10cc40)
-      : "memory");
+  char *e = (char *)track_entry;
+  float scale;
+  float angles[2];
+  float *fwd;
+
+  scale = random_real_range((int *)random_math_get_local_seed_address(),
+                            *(float *)(e + 0x60), *(float *)(e + 0x64));
+  if (scale == 0.0f) {
+    fwd = *(float **)0x31fc38;
+    out[0] = fwd[0];
+    out[1] = fwd[1];
+    out[2] = fwd[2];
+    return;
+  }
+  angles[1] = random_real_range((int *)random_math_get_local_seed_address(),
+                                *(float *)(e + 0x58), *(float *)(e + 0x5c));
+  angles[0] = random_real_range((int *)random_math_get_local_seed_address(),
+                                *(float *)(e + 0x50), *(float *)(e + 0x54));
+  angles_to_vector(out, angles);
+  out[0] *= scale;
+  out[1] *= scale;
+  out[2] *= scale;
 }
-#else
-#error "FUN_001cd390: clang naked draft required"
-#endif
 
 
 /* sound_stop_impulse_by_source_and_definition (0x1cd4d0) — readable C lift. */

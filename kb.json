@@ -25278,8 +25278,8 @@
         },
         {
           "addr": "0x1cd390",
-          "decl": "void FUN_001cd390(void *track_entry@<edi>, float *out@<esi>);",
-          "ported": false
+          "decl": "void FUN_001cd390(void *track_entry @<edi>, float *out @<esi>);",
+          "ported": true
         },
         {
           "addr": "0x1cd4d0",
