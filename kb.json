@@ -27449,7 +27449,7 @@
         {
           "addr": "0xe5ab0",
           "decl": "void ui_play_audio_feedback_sound(int16_t sound_selector);",
-          "ported": false,
+          "ported": true,
           "name": "ui_play_audio_feedback_sound"
         },
         {
