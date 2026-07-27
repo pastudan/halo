@@ -19967,8 +19967,8 @@
         },
         {
           "addr": "0x91110",
-          "decl": "void profile_frame_iterator_next(void);",
-          "ported": false
+          "decl": "char profile_frame_iterator_next(int16_t *iter, uint32_t *out_cycles);",
+          "ported": true
         },
         {
           "addr": "0x91190",
@@ -33545,7 +33545,7 @@
         },
         {
           "addr": "0x19d420",
-          "decl": "int FUN_0019d420(int param_1, int param_2);",
+          "decl": "const wchar_t *FUN_0019d420(int tag_index, int16_t string_index);",
           "ported": false
         },
         {

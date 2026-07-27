@@ -2807,62 +2807,34 @@ void profile_frame_iterator_new(int16_t *iter)
   iter[1] = (int16_t)v;
 }
 
-/* profile_frame_iterator_next (0x91110) — XBE naked draft (batch 254). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void profile_frame_iterator_next(void)
+/* profile_frame_iterator_next (0x91110) — readable C lift. */
+char profile_frame_iterator_next(int16_t *iter, uint32_t *out_cycles)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movw 0x2(%%edx), %%cx\n\t"
-      "xorb %%al, %%al\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "movw %%cx, (%%edx)\n\t"
-      "je .Lprofile_frame_iterator_next_3\n\t"
-      "cmpw 0x3365c2, %%cx\n\t"
-      "jge .Lprofile_frame_iterator_next_3\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "je .Lprofile_frame_iterator_next_1\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "imull $0x1128, %%ecx, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x3365d0(%%ecx), %%edi\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "movl 0x3365d4(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      ".Lprofile_frame_iterator_next_1:\n\t"
-      "movswl (%%edx), %%ecx\n\t"
-      "addl $0xff, %%ecx\n\t"
-      "andl $0x800000ff, %%ecx\n\t"
-      "jns .Lprofile_frame_iterator_next_2\n\t"
-      "decl %%ecx\n\t"
-      "orl $0xffffff00, %%ecx\n\t"
-      "incl %%ecx\n\t"
-      ".Lprofile_frame_iterator_next_2:\n\t"
-      "movw %%cx, 0x2(%%edx)\n\t"
-      "cmpw 0x3365c4, %%cx\n\t"
-      "popl %%esi\n\t"
-      "jne .Lprofile_frame_iterator_next_3\n\t"
-      "movw $0xffff, 0x2(%%edx)\n\t"
-      ".Lprofile_frame_iterator_next_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t cx = iter[1];
+  char ok = 0;
+  iter[0] = cx;
+  if (cx == -1 || cx >= *(int16_t *)0x3365c2) {
+    return 0;
+  }
+  ok = 1;
+  if (out_cycles) {
+    int off = (int)cx * 0x1128;
+    out_cycles[0] = *(uint32_t *)(0x3365d0 + off);
+    out_cycles[1] = *(uint32_t *)(0x3365d4 + off);
+  }
+  {
+    int v = (int)iter[0] + 0xff;
+    v &= 0x800000ff;
+    if (v < 0) {
+      v = ((v - 1) | 0xffffff00) + 1;
+    }
+    iter[1] = (int16_t)v;
+    if (iter[1] == *(int16_t *)0x3365c4) {
+      iter[1] = -1;
+    }
+  }
+  return ok;
 }
-#else
-#error "profile_frame_iterator_next: clang naked draft required"
-#endif
-
 
 /* profile_frame_get_messages (0x91190) — XBE naked draft (batch 268). */
 #if defined(__clang__)
