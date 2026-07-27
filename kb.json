@@ -4646,8 +4646,8 @@
         },
         {
           "addr": "0x7be60",
-          "decl": "void bitmap_compress_to_mipmap(void);",
-          "ported": false
+          "decl": "void bitmap_compress_to_mipmap(void *source_bitmap, void *destination_bitmap, short destination_mipmap_index, int unused);",
+          "ported": true
         },
         {
           "addr": "0x7c070",
@@ -4722,7 +4722,7 @@
         },
         {
           "addr": "0x7d0d0",
-          "decl": "unsigned int bitmap_format_to_a8r8g8b8(short format, void *pixels, int index);",
+          "decl": "void bitmap_format_to_a8r8g8b8(void);",
           "ported": false
         },
         {
@@ -32760,12 +32760,12 @@
         },
         {
           "addr": "0x798e0",
-          "decl": "void FUN_000798e0(void);",
+          "decl": "void FUN_000798e0(void *source_bitmap, void *destination_bitmap, short destination_mipmap_index, int unused);",
           "ported": false
         },
         {
           "addr": "0x79bb0",
-          "decl": "void FUN_00079bb0(void);",
+          "decl": "void FUN_00079bb0(void *source_bitmap, void *destination_bitmap, short destination_mipmap_index, int unused);",
           "ported": false
         },
         {
