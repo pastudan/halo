@@ -16260,7 +16260,8 @@
         {
           "addr": "0x1360a0",
           "decl": "void FUN_001360a0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001360a0"
         },
         {
           "addr": "0x136100",
@@ -28696,7 +28697,8 @@
         {
           "addr": "0x1a7730",
           "decl": "void FUN_001a7730(int unit_handle@<eax>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001a7730"
         },
         {
           "addr": "0x1a7790",
@@ -29027,7 +29029,8 @@
         {
           "addr": "0x1aa360",
           "decl": "char FUN_001aa360(int unit_handle, int param_2, int16_t index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001aa360"
         },
         {
           "addr": "0x1aa3c0",
@@ -29229,7 +29232,8 @@
         {
           "addr": "0x1abd10",
           "decl": "void FUN_001abd10(int16_t material_type@<eax>, int unit_handle@<esi>, int weapon_tag_index@<edi>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001abd10"
         },
         {
           "addr": "0x1abd90",

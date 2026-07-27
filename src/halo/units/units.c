@@ -1646,61 +1646,32 @@ int FUN_001a7650(void *tag_data __attribute__((unused)), int dialogue_type __att
 #endif
 
 
-/* FUN_001a7730 (0x1a7730) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void *(*const b1a7730_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a7730_tag)(int, int) = tag_get;
-static int (*const b1a7730_c1a7650)(void *tag_data, int dialogue_type) = FUN_001a7650;
-
-__attribute__((naked, noinline))
-void FUN_001a7730(int unit_handle __attribute__((unused)))
+/* FUN_001a7730 (0x1a7730) — readable C lift from XBE leaf. */
+void FUN_001a7730(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6e(%%esi), %%ax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_001a7730_1\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1a7650]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_001a7730_2\n\t"
-      ".LFUN_001a7730_1:\n\t"
-      "pushl $0\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1a7650]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_001a7730_2\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1a7650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001a7730_2:\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x334(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a7730_get), [tag] "m"(b1a7730_tag), [c1a7650] "m"(b1a7730_c1a7650)
-      : "memory");
+  void *unit;
+  void *unit_tag;
+  int dialogue;
+  short dialogue_type;
+
+  unit = object_get_and_verify_type(unit_handle, 3);
+  unit_tag = tag_get(0x756e6974, *(int *)unit);
+  dialogue_type = *(short *)((char *)unit + 0x6e);
+  if (dialogue_type > 0) {
+    dialogue = FUN_001a7650(unit_tag, (int)dialogue_type);
+    if (dialogue != -1) {
+      *(int *)((char *)unit + 0x334) = dialogue;
+      return;
+    }
+  }
+  dialogue = FUN_001a7650(unit_tag, 0);
+  if (dialogue == -1) {
+    dialogue = FUN_001a7650(unit_tag, dialogue);
+  }
+  *(int *)((char *)unit + 0x334) = dialogue;
 }
-#else
-#error "FUN_001a7730: clang naked draft required"
-#endif
+
+
 
 
 /* unit_set_actively_controlled_flag (0x1a7f80)
@@ -3573,57 +3544,28 @@ void unit_debug_ninja_rope(int unit_handle)
   global_current_collision_user_depth -= 1;
 }
 
-/* FUN_001aa360 (0x1aa360) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b1aa360_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1aa360_tag)(int, int) = tag_get;
-static void (*const b1aa360_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1aa360_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char FUN_001aa360(int unit_handle __attribute__((unused)), int param_2 __attribute__((unused)), int16_t index __attribute__((unused)))
+/* FUN_001aa360 (0x1aa360) — readable C lift from XBE leaf. */
+char FUN_001aa360(int unit_handle, int param_2, int16_t index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x44(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x616e7472\n\t"
-      "call *%[tag]\n\t"
-      "movw 0x10(%%ebp), %%ax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_001aa360_1\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .LFUN_001aa360_2\n\t"
-      ".LFUN_001aa360_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a21\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6ac0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001aa360_2:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1aa360_get), [tag] "m"(b1aa360_tag), [assert] "m"(b1aa360_assert), [exitfn] "m"(b1aa360_exitfn)
-      : "memory");
+  extern char DAT_002b6ac0[];
+  extern char DAT_002b68c0[];
+  void *unit;
+  void *unit_tag;
+  void *actor_variant;
+
+  (void)param_2;
+  unit = object_get_and_verify_type(unit_handle, 3);
+  unit_tag = tag_get(0x756e6974, *(int *)unit);
+  actor_variant = tag_get(0x616e7472, *(int *)((char *)unit_tag + 0x44));
+  (void)actor_variant;
+  if (index < 0 || index >= 2) {
+    display_assert(DAT_002b6ac0, DAT_002b68c0, 0x1a21, true);
+    system_exit(-1);
+  }
+  return 0;
 }
-#else
-#error "FUN_001aa360: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001aa430 (0x1aa430) — XBE naked draft (batch 64). */
@@ -11072,61 +11014,30 @@ void unit_select_weapon_after_vehicle_exit(int unit_handle)
 
 
 
-/* FUN_001abd10 (0x1abd10) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void * (*const b1abd10_c18e500)(int16_t material_type) = FUN_0018e500;
-static int (*const b1abd10_c1c7e70)(int object_handle, int tag_index, int16_t marker, float *position, float *forward, float scale) = object_impulse_sound_new;
-static void *(*const b1abd10_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_001abd10(int16_t material_type __attribute__((unused)), int unit_handle __attribute__((unused)), int weapon_tag_index __attribute__((unused)))
+/* FUN_001abd10 (0x1abd10) — readable C lift from XBE leaf. */
+void FUN_001abd10(int16_t material_type, int unit_handle, int weapon_tag_index)
 {
-  __asm__ volatile(
-      "pushl %%eax\n\t"
-      "call *%[c18e500]\n\t"
-      "movl 0x370(%%eax), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001abd10_1\n\t"
-      "movl 0x31fc3c, %%ecx\n\t"
-      "movl 0x31fc1c, %%edx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c7e70]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_001abd10_1:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_001abd10_2\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x6a707421\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x120(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001abd10_2\n\t"
-      "movl 0x31fc3c, %%ecx\n\t"
-      "movl 0x31fc1c, %%edx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c7e70]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_001abd10_2:\n\t"
-      "ret\n\t"
-      :
-      : [c18e500] "m"(b1abd10_c18e500), [c1c7e70] "m"(b1abd10_c1c7e70), [tag] "m"(b1abd10_tag)
-      : "memory");
+  void *mat;
+  int sound_tag;
+  void *weapon_tag;
+
+  mat = FUN_0018e500(material_type);
+  sound_tag = *(int *)((char *)mat + 0x370);
+  if (sound_tag != -1) {
+    object_impulse_sound_new(unit_handle, sound_tag, -1,
+                             *(float **)0x31fc1c, *(float **)0x31fc3c, 1.0f);
+  }
+  if (weapon_tag_index != -1) {
+    weapon_tag = tag_get(0x6a707421, weapon_tag_index);
+    sound_tag = *(int *)((char *)weapon_tag + 0x120);
+    if (sound_tag != -1) {
+      object_impulse_sound_new(unit_handle, sound_tag, -1,
+                               *(float **)0x31fc1c, *(float **)0x31fc3c, 1.0f);
+    }
+  }
 }
-#else
-#error "FUN_001abd10: clang naked draft required"
-#endif
+
+
 
 
 /* unit_flame_to_death (0x1ac550)

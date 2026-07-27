@@ -1396,59 +1396,31 @@ void FUN_00136040(void)
   }
 }
 
-/* FUN_001360a0 (0x1360a0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void (*const b1360a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1360a0_exitfn)(int) = system_exit;
-static void (*const b1360a0_c119550)(data_t *data) = data_make_invalid;
-
-__attribute__((naked, noinline))
+/* FUN_001360a0 (0x1360a0) — readable C lift from XBE leaf. */
 void FUN_001360a0(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x323538, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001360a0_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_001360a0_2\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_001360a0_3\n\t"
-      ".LFUN_001360a0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x96\n\t"
-      "pushl $0x29ae0c\n\t"
-      "pushl $0x29ade4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001360a0_3:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001360a0_4\n\t"
-      "call *%%eax\n\t"
-      ".LFUN_001360a0_4:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x28, %%edi\n\t"
-      "cmpw $5, %%si\n\t"
-      "jl .LFUN_001360a0_1\n\t"
-      "movl 0x5a90c4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1360a0_assert), [exitfn] "m"(b1360a0_exitfn), [c119550] "m"(b1360a0_c119550)
-      : "memory");
+  extern char DAT_0029ade4[];
+  extern char DAT_0029ae0c[];
+  short i;
+  void (**slot)(void);
+
+  i = 0;
+  slot = (void (**)(void))0x323538;
+  do {
+    if (i < 0 || i >= 5) {
+      display_assert(DAT_0029ade4, DAT_0029ae0c, 0x96, true);
+      system_exit(-1);
+    }
+    if (*slot != 0) {
+      (*slot)();
+    }
+    i = (short)(i + 1);
+    slot = (void (**)(void))((char *)slot + 0x28);
+  } while (i < 5);
+  data_make_invalid(*(data_t **)0x5a90c4);
 }
-#else
-#error "FUN_001360a0: clang naked draft required"
-#endif
+
+
 
 
 /*
