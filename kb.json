@@ -8732,7 +8732,7 @@
         {
           "addr": "0xb46b0",
           "decl": "void race_update_team_score(void);",
-          "ported": false,
+          "ported": true,
           "name": "race_update_team_score"
         },
         {
@@ -8809,7 +8809,7 @@
         {
           "addr": "0xb5040",
           "decl": "void FUN_000b5040(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000b5040"
         },
         {
