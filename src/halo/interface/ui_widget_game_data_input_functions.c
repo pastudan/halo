@@ -3407,92 +3407,35 @@ char FUN_000efed0(void *widget, void *player_ui)
 }
 
 
-/* FUN_000eff70 (0xeff70) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void * (*const beff70_c12a240)(void) = (void *)network_game_client_get;
-static void * (*const beff70_c1257a0)(void *client) = (void *)network_game_client_get_machine_index;
-static uint16_t (*const beff70_c124c40)(void *client) = (void *)FUN_00124c40;
-static bool (*const beff70_c12ac80)(void *client) = (void *)network_player_is_valid;
-static char (*const beff70_c125b90)(void *client, short request_type) = (void *)FUN_00125b90;
-static void (*const beff70_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_000eff70(void *widget)
+/* FUN_000eff70 (0xeff70) — readable C lift. */
+char FUN_000eff70(void *widget, void *player_ui)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12a240]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_000eff70_4\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1257a0]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c124c40]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "addl $0x242, %%esi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_000eff70_1:\n\t"
-      "leal -0x1c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000eff70_2\n\t"
-      "movsbw (%%esi), %%cx\n\t"
-      "cmpw -0x4(%%ebp), %%cx\n\t"
-      "jne .LFUN_000eff70_2\n\t"
-      "movsbw 0x1(%%esi), %%dx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpw 0x2(%%eax), %%dx\n\t"
-      "je .LFUN_000eff70_3\n\t"
-      ".LFUN_000eff70_2:\n\t"
-      "incl %%edi\n\t"
-      "addl $0x20, %%esi\n\t"
-      "cmpl $0x10, %%edi\n\t"
-      "jl .LFUN_000eff70_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000eff70_3:\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c125b90]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000eff70_4\n\t"
-      "pushl $0x288638\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000eff70_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12a240] "m"(beff70_c12a240), [c1257a0] "m"(beff70_c1257a0), [c124c40] "m"(beff70_c124c40), [c12ac80] "m"(beff70_c12ac80), [c125b90] "m"(beff70_c125b90), [c8f390] "m"(beff70_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_000eff70: clang naked draft required"
-#endif
+  void *client;
+  char *slot;
+  uint16_t my_index;
+  int i;
 
+  (void)widget;
+  client = network_game_client_get();
+  if (client == 0) {
+    return 1;
+  }
+  slot = (char *)network_game_client_get_machine_index(client) + 0x242;
+  my_index = FUN_00124c40(client);
+  for (i = 0; i < 0x10; i++) {
+    if (network_player_is_valid(slot - 0x1c) &&
+        (int16_t)*(signed char *)slot == (int16_t)my_index &&
+        (int16_t)*(signed char *)(slot + 1) ==
+            *(int16_t *)((char *)player_ui + 2)) {
+      if (!FUN_00125b90(client, 0)) {
+        error(2, (const char *)0x288638);
+      }
+      return 1;
+    }
+    slot += 0x20;
+  }
+  return 1;
+}
 
 /* FUN_000f0070 (0xf0070) — readable C lift. */
 char FUN_000f0070(void *widget)
@@ -3558,78 +3501,31 @@ char FUN_000f0170(void *widget, void *player_ui)
 
 
 
-/* player_profile_end_editing (0xf01d0) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const bf01d0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf01d0_exitfn)(int) = (void *)system_exit;
-static void * (*const bf01d0_c12a240)(void) = (void *)network_game_client_get;
-static int16_t (*const bf01d0_c124a30)(void *server, void *out_param) = (void *)network_game_client_get_state;
-static char (*const bf01d0_ce9d40)(void) = (void *)FUN_000E9D40;
-static void (*const bf01d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void player_profile_end_editing(void *widget)
+/* player_profile_end_editing (0xf01d0) — readable C lift. */
+char player_profile_end_editing(void *widget, void *arg2, void *arg3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $3, 0xe(%%esi)\n\t"
-      "je .Lplayer_profile_end_editing_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11f1\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2886c8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_profile_end_editing_1:\n\t"
-      "cmpw $0, 0x44(%%esi)\n\t"
-      "jne .Lplayer_profile_end_editing_2\n\t"
-      "call *%[c12a240]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayer_profile_end_editing_3\n\t"
-      "leal 0xa(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c124a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lplayer_profile_end_editing_3\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce9d40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_profile_end_editing_2:\n\t"
-      "pushl $0x288680\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplayer_profile_end_editing_3:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf01d0_assert), [exitfn] "m"(bf01d0_exitfn), [c12a240] "m"(bf01d0_c12a240), [c124a30] "m"(bf01d0_c124a30), [ce9d40] "m"(bf01d0_ce9d40), [c8f390] "m"(bf01d0_c8f390)
-      : "memory");
-}
-#else
-#error "player_profile_end_editing: clang naked draft required"
-#endif
+  void *client;
+  int16_t state_buf;
+  int16_t state;
 
+  if (*(short *)((char *)widget + 0xe) != 3) {
+    display_assert((const char *)0x2886c8, (const char *)0x2859a4, 0x11f1, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)widget + 0x44) != 0) {
+    error(2, (const char *)0x288680);
+    return 0;
+  }
+  client = network_game_client_get();
+  if (client == 0) {
+    return 0;
+  }
+  state = network_game_client_get_state(client, &state_buf);
+  if (state != 0) {
+    return 0;
+  }
+  return ((char (*)(void *, void *, void *))FUN_000E9D40)(widget, arg2, arg3);
+}
 
 /* player_profile_save_changes (0xf0250) — XBE naked draft (batch 120). */
 #if defined(__clang__)
@@ -3835,71 +3731,25 @@ void FUN_000F03D0(void *widget)
 
 
 
-/* player_profile_initialize_advanced_controller_settings (0xf0430) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static void (*const bf0430_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf0430_exitfn)(int) = (void *)system_exit;
-static void (*const bf0430_c1c29c0)(void) = (void *)saved_game_file_get_useable_untitled_profile_name;
-static wchar_t * (*const bf0430_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
-static bool (*const bf0430_cf5500)(wchar_t *text_buffer, unsigned short buffer_size, short caption_index) = (void *)virtual_keyboard_set_validation;
-static void (*const bf0430_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void player_profile_initialize_advanced_controller_settings(void *widget)
+/* player_profile_initialize_advanced_controller_settings (0xf0430) — readable C lift. */
+char player_profile_initialize_advanced_controller_settings(void *widget, void *player_ui)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplayer_profile_initialize_advanced_controller_settings_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1285\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286184\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_profile_initialize_advanced_controller_settings_1:\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c29c0]\n\t"
-      "pushl $0xb\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x46ccd0\n\t"
-      "call *%[c19dc90]\n\t"
-      "pushl $8\n\t"
-      "movw $0, 0x46cce6\n\t"
-      "movw 0x2(%%esi), %%dx\n\t"
-      "pushl $0x18\n\t"
-      "pushl $0x46ccd0\n\t"
-      "movw %%dx, 0x31e4fc\n\t"
-      "call *%[cf5500]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "jne .Lplayer_profile_initialize_advanced_controller_settings_2\n\t"
-      "pushl $0x2887d0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplayer_profile_initialize_advanced_controller_settings_2:\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf0430_assert), [exitfn] "m"(bf0430_exitfn), [c1c29c0] "m"(bf0430_c1c29c0), [c19dc90] "m"(bf0430_c19dc90), [cf5500] "m"(bf0430_cf5500), [c8f390] "m"(bf0430_c8f390)
-      : "memory");
-}
-#else
-#error "player_profile_initialize_advanced_controller_settings: clang naked draft required"
-#endif
+  wchar_t name_buf[128];
 
+  (void)widget;
+  if (player_ui == 0) {
+    display_assert((const char *)0x286184, (const char *)0x2859a4, 0x1285, 1);
+    system_exit(-1);
+  }
+  saved_game_file_get_useable_untitled_profile_name(name_buf);
+  ustrncpy((wchar_t *)0x46ccd0, name_buf, 0xb);
+  *(unsigned short *)0x46cce6 = 0;
+  *(unsigned short *)0x31e4fc = *(unsigned short *)((char *)player_ui + 2);
+  if (!virtual_keyboard_set_validation((wchar_t *)0x46ccd0, 0x18, 8)) {
+    error(2, (const char *)0x2887d0);
+  }
+  return 1;
+}
 
 /* FUN_000f04c0 (0xf04c0) — XBE naked draft (batch 126). */
 #if defined(__clang__)
@@ -7711,83 +7561,30 @@ void mp_level_select_list_update_displayed_items(void *widget)
 
 
 
-/* get_editable_player_profile_display_name (0xf3590) — XBE naked draft (batch 147). */
-#if defined(__clang__)
-static void (*const bf3590_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf3590_exitfn)(int) = (void *)system_exit;
-static const char * (*const bf3590_c100040)(void) = (void *)main_get_map_name;
-static int (*const bf3590_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
-
-__attribute__((naked, noinline))
+/* get_editable_player_profile_display_name (0xf3590) — readable C lift. */
 void get_editable_player_profile_display_name(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x34(%%eax), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lget_editable_player_profile_display_name_1\n\t"
-      "cmpw $3, 0xe(%%esi)\n\t"
-      "je .Lget_editable_player_profile_display_name_2\n\t"
-      ".Lget_editable_player_profile_display_name_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc1f\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x2894c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lget_editable_player_profile_display_name_2:\n\t"
-      "movl 0x2c(%%esi), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lget_editable_player_profile_display_name_3\n\t"
-      "cmpw $1, 0xe(%%edi)\n\t"
-      "je .Lget_editable_player_profile_display_name_4\n\t"
-      ".Lget_editable_player_profile_display_name_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc23\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x289470\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lget_editable_player_profile_display_name_4:\n\t"
-      "cmpb $1, 0x46ce3b\n\t"
-      "jne .Lget_editable_player_profile_display_name_5\n\t"
-      "call *%[c100040]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x46cd38\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lget_editable_player_profile_display_name_5\n\t"
-      "movw 0x3c(%%esi), %%cx\n\t"
-      "cmpw 0x46ce38, %%cx\n\t"
-      "setne %%dl\n\t"
-      "movb %%dl, 0x10(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lget_editable_player_profile_display_name_5:\n\t"
-      "movb $0, 0x10(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf3590_assert), [exitfn] "m"(bf3590_exitfn), [c100040] "m"(bf3590_c100040), [c1dd801] "m"(bf3590_c1dd801)
-      : "memory");
-}
-#else
-#error "get_editable_player_profile_display_name: clang naked draft required"
-#endif
+  void *list_widget;
+  void *text_widget;
 
+  list_widget = *(void **)((char *)widget + 0x34);
+  if (list_widget == 0 || *(short *)((char *)list_widget + 0xe) != 3) {
+    display_assert((const char *)0x2894c0, (const char *)0x288938, 0xc1f, 1);
+    system_exit(-1);
+  }
+  text_widget = *(void **)((char *)list_widget + 0x2c);
+  if (text_widget == 0 || *(short *)((char *)text_widget + 0xe) != 1) {
+    display_assert((const char *)0x289470, (const char *)0x288938, 0xc23, 1);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x46ce3b == 1 &&
+      crt_stricmp((const char *)0x46cd38, main_get_map_name()) == 0) {
+    *(unsigned char *)((char *)text_widget + 0x10) =
+        (*(short *)((char *)list_widget + 0x3c) != *(short *)0x46ce38);
+    return;
+  }
+  *(unsigned char *)((char *)text_widget + 0x10) = 0;
+}
 
 /* get_editable_playlist_profile_display_name (0xf3640) — readable C lift. */
 extern char DAT_00288938[];

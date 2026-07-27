@@ -23798,7 +23798,7 @@
         },
         {
           "addr": "0x1c29c0",
-          "decl": "void saved_game_file_get_useable_untitled_profile_name(void);",
+          "decl": "void saved_game_file_get_useable_untitled_profile_name(wchar_t *out_name);",
           "ported": false
         },
         {
@@ -27860,8 +27860,8 @@
         },
         {
           "addr": "0xeff70",
-          "decl": "void FUN_000eff70(void *widget);",
-          "ported": false
+          "decl": "char FUN_000eff70(void *widget, void *player_ui);",
+          "ported": true
         },
         {
           "addr": "0xf0070",
@@ -27887,8 +27887,8 @@
         },
         {
           "addr": "0xf01d0",
-          "decl": "void player_profile_end_editing(void *widget);",
-          "ported": false
+          "decl": "char player_profile_end_editing(void *widget, void *arg2, void *arg3);",
+          "ported": true
         },
         {
           "addr": "0xf0250",
@@ -27903,8 +27903,8 @@
         },
         {
           "addr": "0xf0430",
-          "decl": "void player_profile_initialize_advanced_controller_settings(void *widget);",
-          "ported": false
+          "decl": "char player_profile_initialize_advanced_controller_settings(void *widget, void *player_ui);",
+          "ported": true
         },
         {
           "addr": "0xf04c0",
@@ -28092,7 +28092,7 @@
         {
           "addr": "0xf3590",
           "decl": "void get_editable_player_profile_display_name(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf3640",
