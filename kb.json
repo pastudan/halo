@@ -38928,8 +38928,8 @@
         },
         {
           "addr": "0x163fe0",
-          "decl": "void FUN_00163fe0(void);",
-          "ported": false
+          "decl": "void FUN_00163fe0(void *bitmap);",
+          "ported": true
         },
         {
           "addr": "0x1640d0",
