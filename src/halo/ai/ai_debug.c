@@ -800,114 +800,286 @@ void ai_debug_idle_look_addprop(int prop, float score)
   *(int16_t *)0x6323dc = (int16_t)(count + 1);
 }
 
-/* ai_debug_change_selected_encounter (0x4afa0) — readable C lift.
- * Step selected encounter forward/backward and print a debug description. */
-void ai_debug_change_selected_encounter(char forward)
+/* ai_debug_change_selected_encounter (0x4afa0) — XBE naked draft (batch 125). */
+#if defined(__clang__)
+static int (*const b4afa0_c1198f0)(data_t *data, int prev_index) = data_next_index;
+static unsigned int (*const b4afa0_c119980)(data_t *data, int datum) = data_prev_index;
+static int (*const b4afa0_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
+static void (*const b4afa0_cff4d0)(int channel, const char *format, ...) = console_printf;
+static void (*const b4afa0_c49220)(int encounter_idx) = ai_debug_select_encounter;
+static scenario_t * (*const b4afa0_c18e380)(void) = global_scenario_get;
+static void *(*const b4afa0_elem)(void *, int, int) = tag_block_get_element;
+static char * (*const b4afa0_c8dff0)(char *destination, const char *source) = csstrcpy;
+static int (*const b4afa0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
+
+__attribute__((naked, noinline))
+void ai_debug_change_selected_encounter(int encounter_index __attribute__((unused)))
 {
-  unsigned int next;
-  void *enc;
-  char *def;
-  char name_buf[0x100];
-  char desc_buf[0x100];
-  const char *squad_str;
-  const char *active_str;
-  int16_t squad_index;
-
-  if (forward)
-    next = (unsigned int)data_next_index(*(data_t **)0x5ab270, *(int *)0x5ac9f4);
-  else
-    next = data_prev_index(*(data_t **)0x5ab270, *(int *)0x5ac9f4);
-
-  enc = (void *)datum_absolute_index_to_index(*(data_t **)0x5ab270, (int)next);
-  if (enc == NULL) {
-    console_printf(0, (const char *)0x25afac);
-    ai_debug_select_encounter(-1);
-    return;
-  }
-
-  def = (char *)tag_block_get_element(
-      (char *)global_scenario_get() + 0x42c, (int)(next & 0xffff), 0xb0);
-
-  if ((*(unsigned char *)(def + 0x20) & 0x20) != 0) {
-    csstrcpy(desc_buf, (const char *)0x25af9c);
-  } else {
-    squad_index = *(int16_t *)(def + 0x7e);
-    if (squad_index == (int16_t)0xffff)
-      csstrcpy(name_buf, (const char *)0x253a04);
-    else
-      crt_sprintf(name_buf, (const char *)0x25acb8, (int)squad_index);
-
-    if ((*(unsigned char *)(def + 0x20) & 0x40) != 0)
-      squad_str = (const char *)0x25af94;
-    else
-      squad_str = (const char *)0x25af8c;
-    crt_sprintf(desc_buf, (const char *)0x25af80, squad_str, name_buf);
-  }
-
-  if (*(unsigned char *)((char *)enc + 0xd) != 0)
-    active_str = (const char *)0x25af78;
-  else
-    active_str = (const char *)0x25af6c;
-
-  console_printf(0, (const char *)0x25af48, def, active_str, desc_buf,
-                 (int)*(int16_t *)((char *)enc + 0x2a));
-  ai_debug_select_encounter((int)next);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x200, %%esp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "je .Lai_debug_change_selected_encounter_1\n\t"
+      "movl 0x5ac9f4, %%eax\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1198f0]\n\t"
+      "jmp .Lai_debug_change_selected_encounter_2\n\t"
+      ".Lai_debug_change_selected_encounter_1:\n\t"
+      "movl 0x5ac9f4, %%edx\n\t"
+      "movl 0x5ab270, %%eax\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119980]\n\t"
+      ".Lai_debug_change_selected_encounter_2:\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "addl $8, %%esp\n\t"
+      "movl %%eax, %%ebx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119270]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lai_debug_change_selected_encounter_3\n\t"
+      "pushl $0x25afac\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cff4d0]\n\t"
+      "pushl $-1\n\t"
+      "call *%[c49220]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lai_debug_change_selected_encounter_3:\n\t"
+      "pushl %%esi\n\t"
+      "movl %%ebx, %%edx\n\t"
+      "andl $0xffff, %%edx\n\t"
+      "pushl $0xb0\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c18e380]\n\t"
+      "addl $0x42c, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "movb 0x20(%%esi), %%al\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testb $0x20, %%al\n\t"
+      "je .Lai_debug_change_selected_encounter_4\n\t"
+      "leal -0x200(%%ebp), %%eax\n\t"
+      "pushl $0x25af9c\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lai_debug_change_selected_encounter_8\n\t"
+      ".Lai_debug_change_selected_encounter_4:\n\t"
+      "movw 0x7e(%%esi), %%ax\n\t"
+      "cmpw $0xffff, %%ax\n\t"
+      "jne .Lai_debug_change_selected_encounter_5\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl $0x253a04\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c8dff0]\n\t"
+      "addl $8, %%esp\n\t"
+      "jmp .Lai_debug_change_selected_encounter_6\n\t"
+      ".Lai_debug_change_selected_encounter_5:\n\t"
+      "movswl %%ax, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x100(%%ebp), %%eax\n\t"
+      "pushl $0x25acb8\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      ".Lai_debug_change_selected_encounter_6:\n\t"
+      "testb $0x40, 0x20(%%esi)\n\t"
+      "movl $0x25af94, %%eax\n\t"
+      "jne .Lai_debug_change_selected_encounter_7\n\t"
+      "movl $0x25af8c, %%eax\n\t"
+      ".Lai_debug_change_selected_encounter_7:\n\t"
+      "leal -0x100(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x200(%%ebp), %%edx\n\t"
+      "pushl $0x25af80\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c1d90f0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lai_debug_change_selected_encounter_8:\n\t"
+      "movb 0xd(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "movl $0x25af78, %%eax\n\t"
+      "jne .Lai_debug_change_selected_encounter_9\n\t"
+      "movl $0x25af6c, %%eax\n\t"
+      ".Lai_debug_change_selected_encounter_9:\n\t"
+      "movswl 0x2a(%%edi), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x200(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%esi\n\t"
+      "pushl $0x25af48\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "pushl %%ebx\n\t"
+      "call *%[c49220]\n\t"
+      "addl $0x1c, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1198f0] "m"(b4afa0_c1198f0), [c119980] "m"(b4afa0_c119980), [c119270] "m"(b4afa0_c119270), [cff4d0] "m"(b4afa0_cff4d0), [c49220] "m"(b4afa0_c49220), [c18e380] "m"(b4afa0_c18e380), [elem] "m"(b4afa0_elem), [c8dff0] "m"(b4afa0_c8dff0), [c1d90f0] "m"(b4afa0_c1d90f0)
+      : "memory");
 }
+#else
+#error "ai_debug_change_selected_encounter: clang naked draft required"
+#endif
 
 
+/* ai_debug_change_selected_actor (0x4c170) — XBE naked draft (batch 126). */
+#if defined(__clang__)
+static int (*const b4c170_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
+static void (*const b4c170_cff4d0)(int channel, const char *format, ...) = console_printf;
+static void (*const b4c170_c4b1b0)(int encounter_idx, int param_2) = ai_debug_select_actor;
+static void (*const b4c170_c59a00)(int *iter, int clump_handle) = encounter_actor_iterator_new;
+static int (*const b4c170_c59a50)(int *iter) = encounter_actor_iterator_next;
+static void * (*const b4c170_c59a90)(int *iter) = encounter_actor_iterator_prev;
+static char * (*const b4c170_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
 
-/* ai_debug_change_selected_actor (0x4c170) — readable C lift.
- * Step selected actor within the current encounter (forward flag on stack). */
-void ai_debug_change_selected_actor(char forward)
+__attribute__((naked, noinline))
+void ai_debug_change_selected_actor(int actor_index __attribute__((unused)))
 {
-  void *enc;
-  int iter[3];
-  int idx;
-  int ok;
-  char *desc;
-
-  enc = (void *)datum_absolute_index_to_index(*(data_t **)0x5ab270,
-                                              *(int *)0x5ac9f4);
-  if (enc == NULL) {
-    console_printf(0, (const char *)0x25b0d0);
-    ai_debug_select_actor(-1, -1);
-    return;
-  }
-
-  idx = 0;
-  encounter_actor_iterator_new(iter, *(int *)0x5ac9f4);
-  if (*(int *)0x5ac9f8 != -1) {
-    ok = encounter_actor_iterator_next(iter);
-    if (ok != 0) {
-      while (iter[1] != *(int *)0x5ac9f8) {
-        idx++;
-        ok = encounter_actor_iterator_next(iter);
-        if (ok == 0)
-          break;
-      }
-    }
-  }
-
-  if (forward) {
-    ok = encounter_actor_iterator_next(iter);
-    idx++;
-  } else {
-    ok = encounter_actor_iterator_prev(iter) != NULL ? 1 : 0;
-    idx--;
-  }
-
-  if (ok != 0) {
-    desc = ai_debug_describe_actor(iter[1], -1, 1, (char *)0x5ab100, 0x100);
-    (void)desc;
-    console_printf(0, (const char *)0x25b0c0, idx + 1,
-                   (int)*(int16_t *)((char *)enc + 0x2a), (char *)0x5ab100);
-    ai_debug_select_actor(*(int *)0x5ac9f4, iter[1]);
-  } else {
-    console_printf(0, (const char *)0x25b0b0);
-    ai_debug_select_actor(*(int *)0x5ac9f4, -1);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movl 0x5ac9f4, %%eax\n\t"
+      "movl 0x5ab270, %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119270]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .Lai_debug_change_selected_actor_1\n\t"
+      "pushl $0x25b0d0\n\t"
+      "pushl %%eax\n\t"
+      "call *%[cff4d0]\n\t"
+      "pushl $-1\n\t"
+      "pushl $-1\n\t"
+      "call *%[c4b1b0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lai_debug_change_selected_actor_1:\n\t"
+      "movl 0x5ac9f4, %%edx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edx\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "call *%[c59a00]\n\t"
+      "movl 0x5ac9f8, %%eax\n\t"
+      "addl $8, %%esp\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .Lai_debug_change_selected_actor_3\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c59a50]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_debug_change_selected_actor_3\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".Lai_debug_change_selected_actor_2:\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "cmpl 0x5ac9f8, %%edx\n\t"
+      "je .Lai_debug_change_selected_actor_3\n\t"
+      "leal -0xc(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "incl %%esi\n\t"
+      "call *%[c59a50]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lai_debug_change_selected_actor_2\n\t"
+      ".Lai_debug_change_selected_actor_3:\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lai_debug_change_selected_actor_4\n\t"
+      "leal -0xc(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c59a50]\n\t"
+      "addl $4, %%esp\n\t"
+      "incl %%esi\n\t"
+      "jmp .Lai_debug_change_selected_actor_5\n\t"
+      ".Lai_debug_change_selected_actor_4:\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c59a90]\n\t"
+      "addl $4, %%esp\n\t"
+      "decl %%esi\n\t"
+      ".Lai_debug_change_selected_actor_5:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lai_debug_change_selected_actor_6\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "pushl $0x100\n\t"
+      "pushl $0x5ab100\n\t"
+      "pushl $1\n\t"
+      "pushl $-1\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c49ac0]\n\t"
+      "movswl 0x2a(%%edi), %%ecx\n\t"
+      "pushl $0x5ab100\n\t"
+      "movswl %%si, %%edx\n\t"
+      "pushl %%ecx\n\t"
+      "incl %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x25b0c0\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "movl -0x8(%%ebp), %%eax\n\t"
+      "movl 0x5ac9f4, %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c4b1b0]\n\t"
+      "addl $0x30, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lai_debug_change_selected_actor_6:\n\t"
+      "pushl $0x25b0b0\n\t"
+      "pushl $0\n\t"
+      "call *%[cff4d0]\n\t"
+      "movl 0x5ac9f4, %%edx\n\t"
+      "pushl $-1\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c4b1b0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "popl %%esi\n\t"
+      "popl %%edi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119270] "m"(b4c170_c119270), [cff4d0] "m"(b4c170_cff4d0), [c4b1b0] "m"(b4c170_c4b1b0), [c59a00] "m"(b4c170_c59a00), [c59a50] "m"(b4c170_c59a50), [c59a90] "m"(b4c170_c59a90), [c49ac0] "m"(b4c170_c49ac0)
+      : "memory");
 }
-
+#else
+#error "ai_debug_change_selected_actor: clang naked draft required"
+#endif
 
 
 /* FUN_000490C0 (0x490c0) — readable C lift (ai campaign). */
@@ -1323,127 +1495,239 @@ char *ai_debug_describe_actor(int actor_handle, int object_handle, char with_act
 }
 
 /* FUN_00049c70 (0x49c70) — readable C lift.
- * Raycast from observer camera; return actor/unit handle under reticle. */
+ * Ray from local camera; return actor handle under crosshair, or -1. */
 int FUN_00049c70(void)
 {
   void *camera;
-  int result;
+  int actor;
   int unit_handle;
-  float direction[3];
-  int16_t hit[0x2e];
-  int hit_obj;
+  int16_t perspective;
+  float dir[3];
+  char hit[0x50];
   char *obj;
-  int parent;
+  int object_handle;
+  int parent_handle;
 
-  result = -1;
+  actor = -1;
   camera = observer_get_camera(0);
-  if (!camera)
-    return -1;
+  if (camera == NULL)
+    return actor;
 
   unit_handle = -1;
-  if (director_get_perspective(0) == 0) {
-    int player_index = local_player_get_player_index(0);
-    char *player = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
+  perspective = director_get_perspective(0);
+  if (perspective == 0) {
+    int player_index;
+    char *player;
+    player_index = local_player_get_player_index(0);
+    player = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
     unit_handle = *(int *)(player + 0x34);
   }
 
-  direction[0] = *(float *)((char *)camera + 0x20) * *(float *)0x25acf0;
-  direction[1] = *(float *)((char *)camera + 0x24) * *(float *)0x25acf0;
-  direction[2] = *(float *)((char *)camera + 0x28) * *(float *)0x25acf0;
+  dir[0] = *(float *)((char *)camera + 0x20) * *(float *)0x25acf0;
+  dir[1] = *(float *)((char *)camera + 0x24) * *(float *)0x25acf0;
+  dir[2] = *(float *)((char *)camera + 0x28) * *(float *)0x25acf0;
 
-  if (!FUN_0014df70(0x81, (float *)camera, direction, unit_handle, hit))
+  if (!FUN_0014df70(0x81, (float *)camera, dir, unit_handle, (short *)hit))
+    return actor;
+  if (*(int16_t *)hit != 3)
+    return actor;
+
+  object_handle = *(int *)(hit + 0x38);
+  if (object_handle == -1)
+    return actor;
+
+  obj = (char *)object_try_and_get_and_verify_type(object_handle, 3);
+  if (obj == NULL)
+    return actor;
+
+  actor = *(int *)(obj + 0x1a8);
+  if (actor == -1)
+    actor = *(int *)(obj + 0x1a4);
+  if (actor != -1)
+    return actor;
+
+  parent_handle = *(int *)(obj + 0x2d4);
+  if (parent_handle == -1)
     return -1;
-  if (hit[0] != 3)
-    return -1;
 
-  hit_obj = *(int *)((char *)hit + 0x38);
-  if (hit_obj == -1)
-    return -1;
-
-  obj = (char *)object_try_and_get_and_verify_type(hit_obj, 3);
-  if (!obj)
-    return -1;
-
-  result = *(int *)(obj + 0x1a8);
-  if (result == -1)
-    result = *(int *)(obj + 0x1a4);
-  if (result != -1)
-    return result;
-
-  parent = *(int *)(obj + 0x2d4);
-  if (parent == -1)
-    return -1;
-
-  obj = (char *)object_get_and_verify_type(parent, 3);
-  result = *(int *)(obj + 0x1a8);
-  if (result != -1)
-    return result;
-  return *(int *)(obj + 0x1a4);
+  obj = (char *)object_get_and_verify_type(parent_handle, 3);
+  actor = *(int *)(obj + 0x1a8);
+  if (actor == -1)
+    actor = *(int *)(obj + 0x1a4);
+  return actor;
 }
 
-/* FUN_00049d60 (0x49d60) — readable C lift.
- * Debug-draw look/aim vectors for the AI debug actor. */
+
+
+/* FUN_00049d60 (0x49d60) — XBE naked draft (batch 120). */
+#if defined(__clang__)
+static void *(*const b49d60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
+static void * (*const b49d60_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
+static float (*const b49d60_norm)(float *) = normalize3d;
+static void (*const b49d60_c27f40)(int actor_handle, void *dir_ptr, void *out1, void *out2) = FUN_00027f40;
+static void (*const b49d60_c189320)(int flag, float *point, float *vector, float scale, void *color) = FUN_00189320;
+
+__attribute__((naked, noinline))
 void FUN_00049d60(void)
 {
-  int actor_handle;
-  char *actor;
-  void *camera;
-  float dir[3];
-  char look_ok;
-  char aim_ok;
-  float pos[3];
-  float *up;
-
-  actor_handle = *(int *)0x5ac9f8;
-  if (*(int *)0x6323b4 != actor_handle) {
-    *(int *)0x6323b4 = actor_handle;
-    *(uint8_t *)0x6323b9 = 0;
-    *(uint8_t *)0x6323b8 = 0;
-  }
-  if (actor_handle == -1)
-    return;
-
-  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
-  camera = observer_get_camera(0);
-  if (camera) {
-    dir[0] = *(float *)camera - *(float *)(actor + 0x120);
-    dir[1] = *((float *)camera + 1) - *(float *)(actor + 0x124);
-    dir[2] = *((float *)camera + 2) - *(float *)(actor + 0x128);
-    if (normalize3d(dir) > 0.0f) {
-      FUN_00027f40(actor_handle, dir, &look_ok, &aim_ok);
-      if (look_ok) {
-        *(uint8_t *)0x6323b9 = 1;
-        *(float *)0x6323c8 = dir[0];
-        *(float *)0x6323cc = dir[1];
-        *(float *)0x6323d0 = dir[2];
-      }
-      if (aim_ok) {
-        *(uint8_t *)0x6323b8 = 1;
-        *(float *)0x6323bc = dir[0];
-        *(float *)0x6323c0 = dir[1];
-        *(float *)0x6323c4 = dir[2];
-      }
-      FUN_00189320(1, (float *)(actor + 0x120), dir, 1.0f, *(void **)0x2ee6c4);
-      FUN_00189320(1, (float *)(actor + 0x120), (float *)(actor + 0x174), 1.0f,
-                   *(void **)0x2ee6d0);
-    }
-  }
-
-  if (*(uint8_t *)0x6323b9) {
-    up = *(float **)0x31fc44;
-    pos[0] = up[0] * *(float *)0x2533e8 + *(float *)(actor + 0x120);
-    pos[1] = up[1] * *(float *)0x2533e8 + *(float *)(actor + 0x124);
-    pos[2] = up[2] * *(float *)0x2533e8 + *(float *)(actor + 0x128);
-    FUN_00189320(1, pos, (float *)0x6323c8, 1.0f, *(void **)0x2ee6d4);
-  }
-  if (*(uint8_t *)0x6323b8) {
-    up = *(float **)0x31fc44;
-    pos[0] = up[0] * *(float *)0x2533e8 + *(float *)(actor + 0x120);
-    pos[1] = up[1] * *(float *)0x2533e8 + *(float *)(actor + 0x124);
-    pos[2] = up[2] * *(float *)0x2533e8 + *(float *)(actor + 0x128);
-    FUN_00189320(1, pos, (float *)0x6323bc, 1.0f, *(void **)0x2ee6d8);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x6323b4, %%eax\n\t"
+      "movl 0x5ac9f8, %%ecx\n\t"
+      "cmpl %%ecx, %%eax\n\t"
+      "je .LFUN_00049d60_1\n\t"
+      "movl %%ecx, %%eax\n\t"
+      "movl %%eax, 0x6323b4\n\t"
+      "movb $0, 0x6323b9\n\t"
+      "movb $0, 0x6323b8\n\t"
+      ".LFUN_00049d60_1:\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "je .LFUN_00049d60_8\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "movl 0x6325a4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[dget]\n\t"
+      "pushl $0\n\t"
+      "movl %%eax, %%esi\n\t"
+      "call *%[c8a4e0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_00049d60_5\n\t"
+      "flds (%%eax)\n\t"
+      "pushl %%edi\n\t"
+      "fsubs 0x120(%%esi)\n\t"
+      "leal 0x120(%%esi), %%edi\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fsubs 0x4(%%edi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fsubs 0x8(%%edi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[norm]\n\t"
+      "fcomps 0x2533c0\n\t"
+      "addl $4, %%esp\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_00049d60_4\n\t"
+      "leal -0x2(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "movl 0x6323b4, %%edx\n\t"
+      "leal -0x1(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c27f40]\n\t"
+      "movb -0x1(%%ebp), %%al\n\t"
+      "movl -0x10(%%ebp), %%ecx\n\t"
+      "movl -0x8(%%ebp), %%edx\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "movl -0xc(%%ebp), %%eax\n\t"
+      "je .LFUN_00049d60_2\n\t"
+      "movb $1, 0x6323b9\n\t"
+      "movl %%ecx, 0x6323c8\n\t"
+      "movl %%eax, 0x6323cc\n\t"
+      "movl %%edx, 0x6323d0\n\t"
+      ".LFUN_00049d60_2:\n\t"
+      "cmpb $0, -0x2(%%ebp)\n\t"
+      "je .LFUN_00049d60_3\n\t"
+      "movb $1, 0x6323b8\n\t"
+      "movl %%ecx, 0x6323bc\n\t"
+      "movl %%eax, 0x6323c0\n\t"
+      "movl %%edx, 0x6323c4\n\t"
+      ".LFUN_00049d60_3:\n\t"
+      "movl 0x2ee6c4, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x3f800000\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "call *%[c189320]\n\t"
+      "movl 0x2ee6d0, %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $0x3f800000\n\t"
+      "leal 0x174(%%esi), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl $1\n\t"
+      "call *%[c189320]\n\t"
+      "addl $0x28, %%esp\n\t"
+      ".LFUN_00049d60_4:\n\t"
+      "popl %%edi\n\t"
+      ".LFUN_00049d60_5:\n\t"
+      "movb 0x6323b9, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00049d60_6\n\t"
+      "movl 0x31fc44, %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "movl 0x2ee6d4, %%ecx\n\t"
+      "fmuls 0x2533e8\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl $0x6323c8\n\t"
+      "fadds 0x120(%%esi)\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls 0x2533e8\n\t"
+      "fadds 0x124(%%esi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "fmuls 0x2533e8\n\t"
+      "fadds 0x128(%%esi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[c189320]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00049d60_6:\n\t"
+      "movb 0x6323b8, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_00049d60_7\n\t"
+      "movl 0x31fc44, %%eax\n\t"
+      "flds (%%eax)\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "fmuls 0x2533e8\n\t"
+      "fadds 0x120(%%esi)\n\t"
+      "fstps -0x10(%%ebp)\n\t"
+      "flds 0x4(%%eax)\n\t"
+      "fmuls 0x2533e8\n\t"
+      "fadds 0x124(%%esi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x8(%%eax)\n\t"
+      "movl 0x2ee6d8, %%eax\n\t"
+      "fmuls 0x2533e8\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x3f800000\n\t"
+      "pushl $0x6323bc\n\t"
+      "fadds 0x128(%%esi)\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $1\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "call *%[c189320]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00049d60_7:\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_00049d60_8:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [dget] "m"(b49d60_dget), [c8a4e0] "m"(b49d60_c8a4e0), [norm] "m"(b49d60_norm), [c27f40] "m"(b49d60_c27f40), [c189320] "m"(b49d60_c189320)
+      : "memory");
 }
+#else
+#error "FUN_00049d60: clang naked draft required"
+#endif
+
 
 /* ai_debug_vocalize (0x49f60) — readable C lift. */
 void ai_debug_vocalize(int a0, int a1)
@@ -1776,92 +2060,155 @@ void ai_debug_speak_list(int name)
   *(short *)0x6324ea = entries[i].code;
 }
 
-/* FUN_0004a770 (0x4a770) — readable C lift.
- * Debug-draw idle-look prop scores for the selected actor. */
+/* FUN_0004a770 (0x4a770) — XBE naked draft (batch 130). */
+#if defined(__clang__)
+static int (*const b4a770_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
+static char * (*const b4a770_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static void (*const b4a770_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
+
+__attribute__((naked, noinline))
 void FUN_0004a770(void)
 {
-  char *actor;
-  char *prop;
-  int16_t i;
-  int16_t n;
-  float pos[3];
-  void *color;
-  float *up;
-  char *buf;
-
-  if (*(uint8_t *)0x6323d4 == 0)
-    return;
-
-  actor = (char *)(int)datum_absolute_index_to_index(
-      *(data_t **)0x6325a4, *(int *)0x6323d8);
-  if (!actor)
-    return;
-
-  n = *(int16_t *)0x6323dc;
-  for (i = 0; i < n; i++) {
-    prop = (char *)(int)datum_absolute_index_to_index(
-        *(data_t **)0x5ab23c, *(int *)(0x6323e0 + (int)i * 4));
-    if (!prop)
-      continue;
-
-    up = *(float **)0x31fc44;
-    pos[0] = up[0] * *(float *)0x2533e8 + *(float *)(actor + 0x120);
-    pos[1] = up[1] * *(float *)0x2533e8 + *(float *)(actor + 0x124);
-    pos[2] = up[2] * *(float *)0x2533e8 + *(float *)(actor + 0x128);
-    pos[0] += *(float *)(prop + 0xe0) * *(float *)0x2555d0;
-    pos[1] += *(float *)(prop + 0xe4) * *(float *)0x2555d0;
-    pos[2] += *(float *)(prop + 0xe8) * *(float *)0x2555d0;
-
-    if (actor[0x55c] != 0 && *(int16_t *)(actor + 0x56c) == 1 &&
-        *(int *)(actor + 0x570) == *(int *)(0x6323e0 + (int)i * 4))
-      color = *(void **)0x2ee6e0;
-    else
-      color = *(void **)0x2ee6c4;
-
-    buf = csprintf((char *)0x5ab100, (const char *)0x25aec8,
-                   (double)*(float *)(0x632460 + (int)i * 4));
-    FUN_00189cb0(1, pos, buf, (int)color);
-  }
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0xc, %%esp\n\t"
+      "movb 0x6323d4, %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0004a770_6\n\t"
+      "movl 0x6323d8, %%eax\n\t"
+      "movl 0x6325a4, %%ecx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c119270]\n\t"
+      "movl %%eax, %%edi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%edi, %%edi\n\t"
+      "je .LFUN_0004a770_5\n\t"
+      "xorl %%ebx, %%ebx\n\t"
+      "cmpw %%bx, 0x6323dc\n\t"
+      "jle .LFUN_0004a770_5\n\t"
+      "pushl %%esi\n\t"
+      ".LFUN_0004a770_1:\n\t"
+      "movl 0x5ab23c, %%eax\n\t"
+      "movswl %%bx, %%esi\n\t"
+      "shll $2, %%esi\n\t"
+      "movl 0x6323e0(%%esi), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119270]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0004a770_4\n\t"
+      "movl 0x31fc44, %%ecx\n\t"
+      "flds (%%ecx)\n\t"
+      "fmuls 0x2533e8\n\t"
+      "fadds 0x120(%%edi)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0x4(%%ecx)\n\t"
+      "fmuls 0x2533e8\n\t"
+      "fadds 0x124(%%edi)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0x8(%%ecx)\n\t"
+      "fmuls 0x2533e8\n\t"
+      "fadds 0x128(%%edi)\n\t"
+      "flds 0xe0(%%eax)\n\t"
+      "fmuls 0x2555d0\n\t"
+      "fadds -0xc(%%ebp)\n\t"
+      "fstps -0xc(%%ebp)\n\t"
+      "flds 0xe4(%%eax)\n\t"
+      "fmuls 0x2555d0\n\t"
+      "fadds -0x8(%%ebp)\n\t"
+      "fstps -0x8(%%ebp)\n\t"
+      "flds 0xe8(%%eax)\n\t"
+      "movb 0x55c(%%edi), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "fmuls 0x2555d0\n\t"
+      ".byte 0xd8, 0xc1\n\t"
+      "fstps -0x4(%%ebp)\n\t"
+      "fstp %%st(0)\n\t"
+      "je .LFUN_0004a770_2\n\t"
+      "cmpw $1, 0x56c(%%edi)\n\t"
+      "jne .LFUN_0004a770_2\n\t"
+      "movl 0x6323e0(%%esi), %%eax\n\t"
+      "movl 0x570(%%edi), %%ecx\n\t"
+      "cmpl %%eax, %%ecx\n\t"
+      "movl 0x2ee6e0, %%eax\n\t"
+      "je .LFUN_0004a770_3\n\t"
+      ".LFUN_0004a770_2:\n\t"
+      "movl 0x2ee6c4, %%eax\n\t"
+      ".LFUN_0004a770_3:\n\t"
+      "flds 0x632460(%%esi)\n\t"
+      "pushl %%eax\n\t"
+      "subl $8, %%esp\n\t"
+      "fstpl (%%esp)\n\t"
+      "pushl $0x25aec8\n\t"
+      "pushl $0x5ab100\n\t"
+      "call *%[c8d9d0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "pushl %%eax\n\t"
+      "leal -0xc(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "call *%[c189cb0]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_0004a770_4:\n\t"
+      "incl %%ebx\n\t"
+      "cmpw 0x6323dc, %%bx\n\t"
+      "jl .LFUN_0004a770_1\n\t"
+      "popl %%esi\n\t"
+      ".LFUN_0004a770_5:\n\t"
+      "popl %%edi\n\t"
+      "popl %%ebx\n\t"
+      ".LFUN_0004a770_6:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c119270] "m"(b4a770_c119270), [c8d9d0] "m"(b4a770_c8d9d0), [c189cb0] "m"(b4a770_c189cb0)
+      : "memory");
 }
+#else
+#error "FUN_0004a770: clang naked draft required"
+#endif
+
 
 /* FUN_0004a8c0 (0x4a8c0) — readable C lift.
- * Debug-draw recent AI communication events (ring of 32). */
+ * Draw AI communication debug markers for the active ring buffer. */
 void FUN_0004a8c0(void)
 {
   int now;
-  char *table;
-  int16_t idx;
-  int16_t end;
+  void *globals;
+  unsigned int idx;
   char *entry;
   int16_t kind;
-  void *color;
-  void *color_ptrs[3];
+  int color;
   float pos[3];
   float *up;
   char *buf;
   int age;
 
   now = game_time_get();
-  table = *(char **)0x632574;
-  idx = *(int16_t *)(table + 0x130);
-  end = *(int16_t *)(table + 0x132);
-  if (idx == end)
+  globals = *(void **)0x632574;
+  idx = *(uint16_t *)((char *)globals + 0x130);
+  if ((uint16_t)idx == *(uint16_t *)((char *)globals + 0x132))
     return;
 
-  color_ptrs[0] = (void *)0x2ee6d8;
-  color_ptrs[1] = (void *)0x2ee6e0;
-  color_ptrs[2] = (void *)0x2ee6d0;
-
   do {
-    entry = table + 0x134 + ((int)idx * 5) * 4;
+    entry = (char *)globals + 0x134 + (int)(int16_t)idx * 20;
     kind = *(int16_t *)entry;
     if (kind != (int16_t)0xffff) {
-      color = *(void **)0x2ee6c4;
-      if (kind >= 0 && kind < 3)
-        color = *(void **)color_ptrs[kind];
-
-      FUN_00189540(1, entry + 4, 0.2f, color);
-
+      color = *(int *)0x2ee6c4;
+      if (kind >= 0 && kind < 3) {
+        int *colors[3];
+        colors[0] = (int *)0x2ee6d8;
+        colors[1] = (int *)0x2ee6e0;
+        colors[2] = (int *)0x2ee6d0;
+        color = *colors[kind];
+      }
+      FUN_00189540(1, entry + 4, 0.2f, (void *)color);
       up = *(float **)0x31fc44;
       pos[0] = up[0] * *(float *)0x2533e4 + *(float *)(entry + 4);
       pos[1] = up[1] * *(float *)0x2533e4 + *(float *)(entry + 8);
@@ -1869,11 +2216,14 @@ void FUN_0004a8c0(void)
       age = now - *(int *)(entry + 0x10);
       buf = csprintf((char *)0x5ab100, (const char *)0x25aed0,
                      (int)*(int16_t *)(entry + 2), age);
-      FUN_00189cb0(1, pos, buf, (int)color);
+      FUN_00189cb0(1, pos, buf, color);
+      globals = *(void **)0x632574;
     }
-    idx = (int16_t)(((int)idx + 1) & 0x1f);
-  } while (idx != end);
+    idx = (idx + 1) & 0x1f;
+  } while ((uint16_t)idx != *(uint16_t *)((char *)globals + 0x132));
 }
+
+
 
 /* FUN_0004a9f0 (0x4a9f0) — readable C lift. */
 void FUN_0004a9f0(void)
@@ -2320,43 +2670,121 @@ void FUN_0004b320(void)
 #endif
 
 
-/* FUN_0004b670 (0x4b670) — readable C lift.
- * ABI: object_handle@<edi>, color@<ebx>, flag on stack.
- * Debug-draw unit/object capsule for AI debug. */
-void FUN_0004b670(int object_handle, void *color, char flag)
+/* FUN_0004b670 (0x4b670) — XBE naked draft (batch 131). */
+#if defined(__clang__)
+static void *(*const b4b670_tryget)(int, int) = object_try_and_get_and_verify_type;
+static void (*const b4b670_c1aae0)(int object_handle, float *center, float *radius) = FUN_0001aae0;
+static void (*const b4b670_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
+static void (*const b4b670_c189860)(char flag, void *center, void *height_vec, float radius, void *color) = FUN_00189860;
+static void (*const b4b670_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
+static void (*const b4b670_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
+
+__attribute__((naked, noinline))
+void FUN_0004b670(void)
 {
-  char *obj;
-  char *parent;
-  float center[3];
-  float radius;
-  float height_offset;
-  float height_vec[3];
-
-  obj = (char *)object_try_and_get_and_verify_type(object_handle, 1);
-  if (!obj)
-    return;
-
-  parent = (char *)object_try_and_get_and_verify_type(*(int *)(obj + 0xcc), 3);
-  if (parent && *(int *)(parent + 0x2d4) == object_handle) {
-    FUN_0001aae0(*(int *)(obj + 0xcc), center, &radius);
-    height_offset = 0.0f;
-  } else {
-    biped_get_camera_height_and_offset(object_handle, (vector3_t *)center,
-                                       &height_offset, &radius);
-  }
-
-  if (flag != 0 && height_offset > 0.0f) {
-    height_vec[0] = 0.0f;
-    height_vec[1] = 0.0f;
-    height_vec[2] = height_offset;
-    FUN_00189860(1, center, height_vec, radius, color);
-  } else {
-    FUN_00189540(1, center, radius * *(float *)0x25afcc, color);
-  }
-
-  if (flag != 0)
-    FUN_00189150(1, center, radius * *(float *)0x255154, color);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x20, %%esp\n\t"
+      "pushl %%esi\n\t"
+      "pushl $1\n\t"
+      "pushl %%edi\n\t"
+      "call *%[tryget]\n\t"
+      "movl %%eax, %%esi\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%esi, %%esi\n\t"
+      "je .LFUN_0004b670_5\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "pushl $3\n\t"
+      "pushl %%eax\n\t"
+      "call *%[tryget]\n\t"
+      "addl $8, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .LFUN_0004b670_1\n\t"
+      "cmpl %%edi, 0x2d4(%%eax)\n\t"
+      "jne .LFUN_0004b670_1\n\t"
+      "movl 0xcc(%%esi), %%eax\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c1aae0]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "movl $0, -0x8(%%ebp)\n\t"
+      "jmp .LFUN_0004b670_2\n\t"
+      ".LFUN_0004b670_1:\n\t"
+      "leal -0x4(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x8(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%edi\n\t"
+      "call *%[c1a0890]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_0004b670_2:\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0004b670_3\n\t"
+      "flds -0x8(%%ebp)\n\t"
+      "fcomps 0x2533c0\n\t"
+      "fnstsw %%ax\n\t"
+      "testb $0x41, %%ah\n\t"
+      "jne .LFUN_0004b670_3\n\t"
+      "movl -0x8(%%ebp), %%ecx\n\t"
+      "movl -0x4(%%ebp), %%edx\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%edx\n\t"
+      "leal -0x20(%%ebp), %%eax\n\t"
+      "movl %%ecx, -0x18(%%ebp)\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x14(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "pushl $1\n\t"
+      "movl $0, -0x20(%%ebp)\n\t"
+      "movl $0, -0x1c(%%ebp)\n\t"
+      "call *%[c189860]\n\t"
+      "addl $0x14, %%esp\n\t"
+      "jmp .LFUN_0004b670_4\n\t"
+      ".LFUN_0004b670_3:\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "fmuls 0x25afcc\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x14(%%ebp), %%edx\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%edx\n\t"
+      "pushl $1\n\t"
+      "call *%[c189540]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_0004b670_4:\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_0004b670_5\n\t"
+      "flds -0x4(%%ebp)\n\t"
+      "pushl %%ebx\n\t"
+      "fmuls 0x255154\n\t"
+      "pushl %%ecx\n\t"
+      "leal -0x14(%%ebp), %%eax\n\t"
+      "fstps (%%esp)\n\t"
+      "pushl %%eax\n\t"
+      "pushl $1\n\t"
+      "call *%[c189150]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".LFUN_0004b670_5:\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tryget] "m"(b4b670_tryget), [c1aae0] "m"(b4b670_c1aae0), [c1a0890] "m"(b4b670_c1a0890), [c189860] "m"(b4b670_c189860), [c189540] "m"(b4b670_c189540), [c189150] "m"(b4b670_c189150)
+      : "memory");
 }
+#else
+#error "FUN_0004b670: clang naked draft required"
+#endif
+
 
 /* ai_debug_lineofsight (0x4b770) — readable C lift. */
 void ai_debug_lineofsight(float *pos_a, int16_t key_a, float *pos_b, int16_t key_b)
@@ -2372,7 +2800,7 @@ void FUN_0004b7a0(void)
   int actor_handle;
   char *actor;
 
-  actor_handle = FUN_00049c70();
+  actor_handle = ((int (*)(void))(void *)&FUN_00049c70)();
   if (actor_handle == -1) {
     return;
   }
@@ -3640,7 +4068,7 @@ static void *(*const b4c920_c490c0)(int) = FUN_000490C0;
 static void *(*const b4c920_get)(int, int) = object_get_and_verify_type;
 static void (*const b4c920_c4b220)(float *point) = FUN_0004b220;
 static void * (*const b4c920_c1d620)(int actor_handle) = actor_action_debug_color;
-static void (*const b4c920_c4b670)(int, void *, char) = FUN_0004b670;
+static void (*const b4c920_c4b670)(void) = FUN_0004b670;
 static char * (*const b4c920_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static void (*const b4c920_c4b2b0)(void) = (void *)FUN_0004b2b0;
 static void (*const b4c920_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;

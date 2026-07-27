@@ -23420,7 +23420,7 @@
           "ported": false
         },
         {
-                    "addr": "0x185f80",
+          "addr": "0x185f80",
           "decl": "void render_frustum_get_projection_bounds(void *frustum, float *bounds);",
           "ported": true,
           "name": "render_frustum_get_projection_bounds"
@@ -23496,7 +23496,7 @@
           "ported": true
         },
         {
-                    "addr": "0x187f80",
+          "addr": "0x187f80",
           "decl": "float FUN_00187f80(void *flags, short mode, float *point, float *forward);",
           "ported": true,
           "name": "FUN_00187f80"
@@ -27451,7 +27451,7 @@
         },
         {
           "addr": "0xe5090",
-          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, void *widget, int16_t a7);",
+          "decl": "void ui_widget_pending_load_apply(int a6 /* @<eax> */, int widget, int16_t a7);",
           "ported": true
         },
         {
