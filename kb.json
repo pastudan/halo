@@ -6343,12 +6343,14 @@
         {
           "addr": "0x11f930",
           "decl": "void pool_resize_handle(void);",
-          "ported": true
+          "ported": true,
+          "name": "pool_resize_handle"
         },
         {
           "addr": "0x11faf0",
           "decl": "void pool_new_pointer_clear(void);",
-          "ported": true
+          "ported": true,
+          "name": "pool_new_pointer_clear"
         },
         {
           "addr": "0x11fd10",
@@ -20003,7 +20005,8 @@
         {
           "addr": "0x8f8e0",
           "decl": "void find_profile_section(void);",
-          "ported": true
+          "ported": true,
+          "name": "find_profile_section"
         },
         {
           "addr": "0x8fa40",
@@ -20071,7 +20074,8 @@
         {
           "addr": "0x908a0",
           "decl": "void profile_find_frame_value(void);",
-          "ported": true
+          "ported": true,
+          "name": "profile_find_frame_value"
         },
         {
           "addr": "0x90cd0",
