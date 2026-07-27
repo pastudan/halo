@@ -422,7 +422,7 @@
         {
           "addr": "0x104950",
           "decl": "void FUN_00104950(const char *fmt, ...);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00104950"
         },
         {
@@ -551,12 +551,14 @@
         {
           "addr": "0x1508b0",
           "decl": "void FUN_001508b0(int *state);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001508b0"
         },
         {
           "addr": "0x1509c0",
           "decl": "char FUN_001509c0(int *out, int obj_idx);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001509c0"
         },
         {
           "addr": "0x150ac0",
@@ -566,7 +568,8 @@
         {
           "addr": "0x150b60",
           "decl": "char FUN_00150b60(void *features, float *origin, float *direction, float *out_t_plane);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00150b60"
         },
         {
           "addr": "0x150c80",
@@ -960,7 +963,8 @@
         {
           "addr": "0x1db11e",
           "decl": "size_t _wcslen(const wchar_t *str);",
-          "ported": false
+          "ported": true,
+          "name": "_wcslen"
         },
         {
           "addr": "0x1db134",
