@@ -1098,26 +1098,7 @@ void FUN_00067f70(void)
 #endif
 
 
-/* FUN_00068030 (0x68030) — readable C lift: TIFF SHORT field pack (MM/II). */
-int FUN_00068030(void *tif /* @<ebx> */, void *out /* @<esi> */,
-                 unsigned short tag /* @<di> */)
-{
-  unsigned short lo;
-  unsigned short hi;
-  unsigned int packed;
-
-  ((void (*)(void *, unsigned int, unsigned short *, unsigned short *))_TIFFgetfield)(
-      (char *)tif + 0x14, (unsigned int)tag, &lo, &hi);
-  *(unsigned short *)out = tag;
-  *((unsigned short *)out + 1) = 3;
-  *((unsigned int *)((char *)out + 4)) = 2;
-  if (*((unsigned short *)((char *)tif + 0xc4)) == 0x4d4d)
-    packed = ((unsigned int)lo << 16) | (unsigned int)hi;
-  else
-    packed = ((unsigned int)hi << 16) | (unsigned int)lo;
-  *((unsigned int *)((char *)out + 8)) = packed;
-  return 1;
-}
+/* FUN_00068030 moved to bitmaps/libtiff/tif_dir.c (readable C lift). */
 /* FUN_000680a0 (0x680a0) — XBE naked draft (batch 306). */
 #if defined(__clang__)
 static void (*const b680a0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;

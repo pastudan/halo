@@ -695,6 +695,45 @@ void _TIFFgetfield(void)
 #error "_TIFFgetfield: clang naked draft required"
 #endif
 
+/* FUN_00068030 (0x68030) — readable C lift: TIFF tag → out record.
+ * ABI: tif@ebx, out@esi, tag@di. XBE: _TIFFgetfield(tif+0x14, tag, &w0, &w1).
+ * Direct CALL so Unicorn can stub/sibling-resolve _TIFFgetfield. */
+int FUN_00068030(void *tif /* @<ebx> */, void *out /* @<esi> */,
+                 unsigned short tag /* @<di> */)
+{
+  unsigned short w0;
+  unsigned short w1;
+  void *dir = (char *)tif + 0x14;
+
+#if defined(__clang__)
+  __asm__ __volatile__(
+      "pushl %[w1]\n\t"
+      "pushl %[w0]\n\t"
+      "movzwl %[tag], %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %[dir]\n\t"
+      "call __TIFFgetfield\n\t"
+      "addl $16, %%esp\n\t"
+      :
+      : [dir] "r"(dir), [tag] "m"(tag), [w0] "r"(&w0), [w1] "r"(&w1)
+      : "eax", "memory");
+#else
+  ((void (*)(void *, unsigned, unsigned short *, unsigned short *))_TIFFgetfield)(
+      dir, tag, &w0, &w1);
+#endif
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = 3;
+  *(int *)((char *)out + 4) = 2;
+  if (*(unsigned short *)((char *)tif + 0xc4) == 0x4d4d) {
+    *(unsigned int *)((char *)out + 8) =
+        ((unsigned int)w0 << 16) | (unsigned int)w1;
+  } else {
+    *(unsigned int *)((char *)out + 8) =
+        ((unsigned int)w1 << 16) | (unsigned int)w0;
+  }
+  return 1;
+}
+
 
 /* TIFFFreeDirectory (0x65f90) — readable C lift. */
 void TIFFFreeDirectory(void *tif)
@@ -2262,7 +2301,7 @@ static void (*const b66e70_c66190)(void) = FUN_00066190;
 static void (*const b66e70_c659f0)(int file, int field, int value) = TIFFSetField;
 static void (*const b66e70_c6f1f0)(void) = (void *)FUN_0006f1f0;
 static void (*const b66e70_c6f220)(void) = (void *)FUN_0006f220;
-static void (*const b66e70_c6f9d0)(void) = FUN_0006f9d0;
+static void (*const b66e70_c6f9d0)(void) = (void *)FUN_0006f9d0;
 static void (*const b66e70_c669f0)(void) = FUN_000669f0;
 static void (*const b66e70_c6f820)(void) = FUN_0006f820;
 static void (*const b66e70_c668a0)(void) = FUN_000668a0;

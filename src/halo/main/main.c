@@ -4701,7 +4701,9 @@ int FUN_00103c00(int *obj __attribute__((unused)))
 #endif
 
 
-/* FUN_00103d80 (0x103d80) — readable C lift from XBE leaf. */
+/* FUN_00103d80 (0x103d80) — readable C lift from XBE leaf.
+ * Assert error_geometry_file is null, then CRT helper with arg 0x31fac8.
+ * Must be a direct CALL (not call [mem]) so Unicorn can stub FUN_001db4a9. */
 void FUN_00103d80(void)
 {
   extern char DAT_0028b81c[];
@@ -4711,10 +4713,17 @@ void FUN_00103d80(void)
     display_assert(DAT_0028b81c, DAT_0028b838, 0x44, true);
     system_exit(-1);
   }
-  {
-    void (*fn)(void *) = (void (*)(void *))FUN_001db4a9;
-    fn((void *)0x31fac8);
-  }
+#if defined(__clang__)
+  __asm__ __volatile__(
+      "pushl $0x31fac8\n\t"
+      "call _FUN_001db4a9\n\t"
+      "addl $4, %%esp\n\t"
+      :
+      :
+      : "memory");
+#else
+  ((void (*)(void *))FUN_001db4a9)((void *)0x31fac8);
+#endif
 }
 
 
