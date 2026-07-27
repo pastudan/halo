@@ -4843,7 +4843,7 @@
   },
   "0xcaf60": {
     "class": "non_leaf",
-    "confidence": "weak",
+    "confidence": "high",
     "coverage_pct": 100.0
   },
   "0xcaf80": {

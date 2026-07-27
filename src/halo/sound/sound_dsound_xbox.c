@@ -583,10 +583,19 @@ void sound_dsound_set_channel_properties(int channel_index, float *properties,
 }
 /* --- sound_dsound_xbox.obj batch drafts (2026-07-26) --- */
 
-/* dsound_angle_from_angle (0x1c9230) — readable C lift. */
+/* dsound_angle_from_angle (0x1c9230) — readable C lift (fld/fmul/_ftol2). */
 int dsound_angle_from_angle(float angle)
 {
-  return (int)(angle * *(float *)0x2b073c);
+  int result;
+  __asm__ volatile(
+      "flds %1\n\t"
+      "fmuls 0x2b073c\n\t"
+      "call %P2\n\t"
+      "movl %%eax, %0"
+      : "=m"(result)
+      : "m"(angle), "X"(FUN_001d9068)
+      : "eax", "edx", "ecx", "st", "cc", "memory");
+  return result;
 }
 
 /* dsound_occlusion_from_occlusion (0x1c9250) — readable C lift. */

@@ -3845,10 +3845,19 @@ void sound_reconnect_to_structure_bsp(void)
 }
 
 
-/* FUN_001cbc20 (0x1cbc20) — readable C lift. */
+/* FUN_001cbc20 (0x1cbc20) — readable C lift (fld/fmul/_ftol2). */
 int FUN_001cbc20(float t)
 {
-  return (int)(t * *(float *)0x2c1288);
+  int result;
+  __asm__ volatile(
+      "flds %1\n\t"
+      "fmuls 0x2c1288\n\t"
+      "call %P2\n\t"
+      "movl %%eax, %0"
+      : "=m"(result)
+      : "m"(t), "X"(FUN_001d9068)
+      : "eax", "edx", "ecx", "st", "cc", "memory");
+  return result;
 }
 
 /* FUN_001cbc40 (0x1cbc40) — XBE naked draft (batch 282). */

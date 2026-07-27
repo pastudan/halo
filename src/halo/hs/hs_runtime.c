@@ -3680,18 +3680,17 @@ int16_t FUN_000caf40(float x)
   return (int16_t)(int)x;
 }
 
-/* FUN_000caf60 (0xcaf60) — readable C lift: fld + MSVC _ftol2 (FUN_001d9068). */
+/* FUN_000caf60 (0xcaf60) — readable C lift (tail-call _ftol2). */
 int FUN_000caf60(float value)
 {
   int result;
-  void (*const ftol)(void) = (void (*)(void))FUN_001d9068;
   __asm__ volatile(
       "flds %1\n\t"
-      "call *%2\n\t"
+      "call %P2\n\t"
       "movl %%eax, %0"
       : "=m"(result)
-      : "m"(value), "m"(ftol)
-      : "eax", "edx", "ecx", "cc", "memory");
+      : "m"(value), "X"(FUN_001d9068)
+      : "eax", "edx", "ecx", "st", "cc", "memory");
   return result;
 }
 

@@ -12548,7 +12548,7 @@
         {
           "addr": "0xcaf60",
           "decl": "int FUN_000caf60(float value);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcaf70",
@@ -24606,7 +24606,7 @@
         {
           "addr": "0x1c9230",
           "decl": "int dsound_angle_from_angle(float angle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c9250",
@@ -25078,7 +25078,7 @@
         {
           "addr": "0x1cbc20",
           "decl": "int FUN_001cbc20(float t);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cbc40",
