@@ -35215,7 +35215,7 @@
           "addr": "0x48e90",
           "decl": "void ai_debug_initialize(void);",
           "name": "ai_debug_initialize",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/ai_debug.c"
         }
       ],
