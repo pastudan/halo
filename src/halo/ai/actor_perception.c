@@ -5022,70 +5022,26 @@ char actor_expected_acknowledgement(int actor_handle __attribute__((unused)), in
 #endif
 
 
-/* actor_perception_unreachable (0x32ac0) — XBE naked draft (batch 238). */
-#if defined(__clang__)
-static void *(*const b32ac0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b32ac0_gtime)(void) = game_time_get;
-static bool (*const b32ac0_c2fc20)(int actor_handle, int clump_item_handle) = actor_get_perception_knowledge;
-static float (*const b32ac0_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
-
-__attribute__((naked, noinline))
-void actor_perception_unreachable(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)), char flag __attribute__((unused)))
+/* actor_perception_unreachable (0x32ac0) — readable C lift from XBE leaf. */
+void actor_perception_unreachable(int actor_handle, int prop_handle, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_unreachable_2\n\t"
-      "cmpw $0, 0x9c(%%esi)\n\t"
-      "jne .Lactor_perception_unreachable_1\n\t"
-      "movw $1, 0x9c(%%esi)\n\t"
-      ".Lactor_perception_unreachable_1:\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0xa0(%%esi)\n\t"
-      "jmp .Lactor_perception_unreachable_3\n\t"
-      ".Lactor_perception_unreachable_2:\n\t"
-      "movw $0, 0x9c(%%esi)\n\t"
-      "movl $0xffffffff, 0xa0(%%esi)\n\t"
-      ".Lactor_perception_unreachable_3:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2fc20]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movb %%al, 0xa4(%%esi)\n\t"
-      "call *%[c2fd10]\n\t"
-      "fstps 0x50(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b32ac0_dget), [gtime] "m"(b32ac0_gtime), [c2fc20] "m"(b32ac0_c2fc20), [c2fd10] "m"(b32ac0_c2fd10)
-      : "memory");
-}
-#else
-#error "actor_perception_unreachable: clang naked draft required"
-#endif
+  char *prop;
 
+  (void)datum_get(*(void **)0x6325a4, actor_handle);
+  prop = (char *)datum_get(*(void **)0x5ab23c, prop_handle);
+  if (flag) {
+    if (*(short *)(prop + 0x9c) == 0)
+      *(short *)(prop + 0x9c) = 1;
+    *(int *)(prop + 0xa0) = game_time_get();
+  } else {
+    *(short *)(prop + 0x9c) = 0;
+    *(int *)(prop + 0xa0) = -1;
+  }
+  *(char *)(prop + 0xa4) =
+      (char)actor_get_perception_knowledge(actor_handle, prop_handle);
+  *(float *)(prop + 0x50) =
+      actor_compute_prop_target_weight(actor_handle, prop_handle);
+}
 
 /* actor_perception_tried_to_uncover (0x32b50) — readable C lift. */
 void actor_perception_tried_to_uncover(int actor_handle, int prop_handle)

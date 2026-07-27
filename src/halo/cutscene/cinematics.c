@@ -727,70 +727,33 @@ void FUN_00093660(void *a, void *b, void *c)
     FUN_00094290(b, c, (int)v);
   }
 }
-/* FUN_00093710 (0x93710) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static void (*const b93710_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
+void FUN_00118be0(void *definition, void *data, int count);
 
-__attribute__((naked, noinline))
-void FUN_00093710(void)
+/* FUN_00093710 (0x93710) — readable C lift from XBE leaf. */
+void FUN_00093710(int *cursor, unsigned char mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      ".LFUN_00093710_1:\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "cmpb $1, %%al\n\t"
-      "movzbl %%al, %%ecx\n\t"
-      "ja .LFUN_00093710_2\n\t"
-      "movl $1, %%ecx\n\t"
-      ".LFUN_00093710_2:\n\t"
-      "movswl -0x4(%%ebp), %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .LFUN_00093710_5\n\t"
-      "movl 0x2ee950(,%%eax,4), %%esi\n\t"
-      "cmpl %%ebx, 0x4(%%esi)\n\t"
-      "je .LFUN_00093710_4\n\t"
-      ".LFUN_00093710_3:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c118be0]\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "addl $0xc, %%esi\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .LFUN_00093710_3\n\t"
-      ".LFUN_00093710_4:\n\t"
-      "incl -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00093710_1\n\t"
-      ".LFUN_00093710_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c118be0] "m"(b93710_c118be0)
-      : "memory");
-}
-#else
-#error "FUN_00093710: clang naked draft required"
-#endif
+  int i;
+  int limit;
+  int *entry;
 
+  i = 0;
+  for (;;) {
+    limit = (int)mode;
+    if (mode <= 1)
+      limit = 1;
+    if ((short)i >= limit)
+      break;
+    entry = *(int **)(0x2ee950 + (int)(short)i * 4);
+    if (entry[1] != -1) {
+      do {
+        FUN_00118be0((void *)entry[0], (void *)*cursor, 1);
+        *cursor += entry[1];
+        entry += 3;
+      } while (entry[1] != -1);
+    }
+    i++;
+  }
+}
 
 /* FUN_00093780 (0x93780) — XBE naked draft (batch 265). */
 #if defined(__clang__)

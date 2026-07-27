@@ -22935,12 +22935,12 @@
         {
           "addr": "0x942a0",
           "decl": "void FUN_000942a0(char *out, void *event, int **stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x94350",
           "decl": "void FUN_00094350(char *out, void *event, int **stream);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x94400",
@@ -34582,7 +34582,7 @@
         {
           "addr": "0x32ac0",
           "decl": "void actor_perception_unreachable(int actor_handle, int prop_handle, char mark);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32b50",

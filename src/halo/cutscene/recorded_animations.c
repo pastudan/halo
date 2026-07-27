@@ -575,165 +575,51 @@ static void __attribute__((unused)) ra_check_ptr(void *p, int line, void *msg)
     RA_EVENT_ASSERT(line, msg);
 }
 
-/* FUN_000942a0 (0x942a0) — XBE naked draft (batch 259). */
-#if defined(__clang__)
-static void (*const b942a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b942a0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000942a0(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
+/* FUN_000942a0 (0x942a0) — readable C lift from XBE leaf. */
+void FUN_000942a0(char *out, void *event, int **stream)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_000942a0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x19\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x2690a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000942a0_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_000942a0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x19\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269480\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000942a0_2:\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .LFUN_000942a0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x19\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269448\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000942a0_3:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000942a0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x19\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269358\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000942a0_4:\n\t"
-      "movb 0x4(%%edi), %%al\n\t"
-      "movb %%al, (%%ebx)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $6, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b942a0_assert), [exitfn] "m"(b942a0_exitfn)
-      : "memory");
+  if (!out) {
+    display_assert((const char *)0x2690a0, (const char *)0x269490, 0x19, 1);
+    system_exit(-1);
+  }
+  if (!event) {
+    display_assert((const char *)0x269480, (const char *)0x269490, 0x19, 1);
+    system_exit(-1);
+  }
+  if (*(short *)event != 2) {
+    display_assert((const char *)0x269448, (const char *)0x269490, 0x19, 1);
+    system_exit(-1);
+  }
+  if (!stream) {
+    display_assert((const char *)0x269358, (const char *)0x269490, 0x19, 1);
+    system_exit(-1);
+  }
+  *out = *((char *)event + 4);
+  *stream = (int *)((char *)*stream + 6);
 }
-#else
-#error "FUN_000942a0: clang naked draft required"
-#endif
 
-
-/* FUN_00094350 (0x94350) — XBE naked draft (batch 259). */
-#if defined(__clang__)
-static void (*const b94350_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b94350_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00094350(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
+/* FUN_00094350 (0x94350) — readable C lift from XBE leaf. */
+void FUN_00094350(char *out, void *event, int **stream)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_00094350_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x2690a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00094350_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00094350_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269480\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00094350_2:\n\t"
-      "cmpw $3, (%%edi)\n\t"
-      "je .LFUN_00094350_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x2694cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00094350_3:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00094350_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269358\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00094350_4:\n\t"
-      "movb 0x4(%%edi), %%al\n\t"
-      "movb %%al, 0x1(%%ebx)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $6, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b94350_assert), [exitfn] "m"(b94350_exitfn)
-      : "memory");
+  if (!out) {
+    display_assert((const char *)0x2690a0, (const char *)0x269490, 0x1a, 1);
+    system_exit(-1);
+  }
+  if (!event) {
+    display_assert((const char *)0x269480, (const char *)0x269490, 0x1a, 1);
+    system_exit(-1);
+  }
+  if (*(short *)event != 3) {
+    display_assert((const char *)0x2694cc, (const char *)0x269490, 0x1a, 1);
+    system_exit(-1);
+  }
+  if (!stream) {
+    display_assert((const char *)0x269358, (const char *)0x269490, 0x1a, 1);
+    system_exit(-1);
+  }
+  out[1] = *((char *)event + 4);
+  *stream = (int *)((char *)*stream + 6);
 }
-#else
-#error "FUN_00094350: clang naked draft required"
-#endif
-
 
 /* FUN_00094400 (0x94400) — XBE naked draft (batch 259). */
 #if defined(__clang__)
