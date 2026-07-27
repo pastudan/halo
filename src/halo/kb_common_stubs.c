@@ -9603,78 +9603,24 @@ void FUN_00132ca0(void)
 #endif
 
 
-/* FUN_00132e20 (0x132e20) — XBE naked draft (batch 374). */
-#if defined(__clang__)
-static void *(*const b132e20_get)(int, int) = object_get_and_verify_type;
-static void *(*const b132e20_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b132e20_tag)(int, int) = tag_get;
-static void (*const b132e20_c131fc0)(void) = (void *)FUN_00131fc0;
-static void (*const b132e20_c132460)(void) = (void *)flag_render_proper;
-
-__attribute__((naked, noinline))
-void FUN_00132e20(void)
+/* FUN_00132e20 (0x132e20) — readable C lift. */
+void FUN_00132e20(int object_handle, int widget_datum, void *arg2, void *arg3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x5a90d0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x666c6167\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpw $5, 0x6(%%esi)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%edi, 0x8(%%esi)\n\t"
-      "jg .LFUN_00132e20_1\n\t"
-      "movb 0x3(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00132e20_2\n\t"
-      ".LFUN_00132e20_1:\n\t"
-      "pushl $0x40a00000\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c131fc0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x3(%%esi)\n\t"
-      ".LFUN_00132e20_2:\n\t"
-      "movb 0x2(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movw $0, 0x6(%%esi)\n\t"
-      "jne .LFUN_00132e20_3\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c132460]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_00132e20_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b132e20_get), [dget] "m"(b132e20_dget), [tag] "m"(b132e20_tag), [c131fc0] "m"(b132e20_c131fc0), [c132460] "m"(b132e20_c132460)
-      : "memory");
+  void *datum;
+  void *flag_tag;
+
+  object_get_and_verify_type(object_handle, -1);
+  datum = datum_get(*(void **)0x5a90d0, widget_datum);
+  flag_tag = tag_get(0x666c6167, *(int *)((char *)datum + 0xc));
+  *(int *)((char *)datum + 8) = object_handle;
+  if (*(short *)((char *)datum + 6) > 5 || *(char *)((char *)datum + 3) == 0) {
+    ((void (*)(void *, void *, float))(void *)FUN_00131fc0)(datum, flag_tag, 5.0f);
+    *(char *)((char *)datum + 3) = 1;
+  }
+  *(short *)((char *)datum + 6) = 0;
+  if (*(char *)((char *)datum + 2) == 0)
+    ((void (*)(void *, void *, void *, void *))(void *)flag_render_proper)(datum, flag_tag, arg2, arg3);
 }
-#else
-#error "FUN_00132e20: clang naked draft required"
-#endif
 
 
 /* FUN_00132ea0 (0x132ea0) — XBE naked draft (batch 362). */
@@ -30273,7 +30219,7 @@ static void (*const b1d5c66_c1d63d5)(void) = FUN_001d63d5;
 static void (*const b1d5c66_c1dd601)(void) = __SEH_epilog;
 
 __attribute__((naked, noinline))
-void FUN_001d5c66(void)
+void *__stdcall FUN_001d5c66(void *heap __attribute__((unused)), unsigned int flags __attribute__((unused)), int size __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl $0x178\n\t"
