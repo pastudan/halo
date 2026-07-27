@@ -12600,93 +12600,30 @@ void FUN_0017b000(int param_1 __attribute__((unused)), int param_2 __attribute__
 #endif
 
 
-/* FUN_0017b480 (0x17b480) — XBE naked draft (batch 402). */
-#if defined(__clang__)
-static void (*const b17b480_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17b480_exitfn)(int) = system_exit;
-static void (*const b17b480_c1560a0)(void) = (void *)rasterizer_set_texture_non_blocking;
-static void (*const b17b480_c155da0)(void) = (void *)rasterizer_set_texture_direct_non_blocking;
-static void __stdcall (*const b17b480_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
-
-__attribute__((naked, noinline))
-char FUN_0017b480(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), short param_3 __attribute__((unused)))
+/* FUN_0017b480 (0x17b480) — readable C lift. */
+char FUN_0017b480(int stage, int bitmap_index, short frame)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017b480_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11d\n\t"
-      "pushl $0x2ae7f0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017b480_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "je .LFUN_0017b480_2\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1560a0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_0017b480_3\n\t"
-      ".LFUN_0017b480_2:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x476204, %%ecx\n\t"
-      "movl 0x6c(%%ecx), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c155da0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0017b480_3:\n\t"
-      "movb %%al, %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_0017b480_4\n\t"
-      "pushl $4\n\t"
-      "movl $0xa, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $4\n\t"
-      "movl $0xb, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xf, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      ".LFUN_0017b480_4:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17b480_assert), [exitfn] "m"(b17b480_exitfn), [c1560a0] "m"(b17b480_c1560a0), [c155da0] "m"(b17b480_c155da0), [c1e9410] "m"(b17b480_c1e9410)
-      : "memory");
-}
-#else
-#error "FUN_0017b480: clang naked draft required"
-#endif
+  char ok;
 
+  if (!*(int *)0x476ab0) {
+    display_assert((const char *)0x29dc40, (const char *)0x2ae7f0, 0x11d, 1);
+    system_exit(-1);
+  }
+  if (bitmap_index != -1)
+    ok = ((char (*)(int, int, int, int, int))(void *)rasterizer_set_texture_non_blocking)(
+        stage, 0, 1, bitmap_index, (int)frame);
+  else
+    ok = ((char (*)(int, int, int))(void *)rasterizer_set_texture_direct_non_blocking)(
+        stage, *(int *)(*(char **)0x476204 + 0x6c), (int)frame);
+  if (!ok) {
+    D3DDevice_SetTextureStageState(0, 0xa, 4);
+    D3DDevice_SetTextureStageState(0, 0xb, 4);
+    D3DDevice_SetTextureStageState(0, 0xd, 2);
+    D3DDevice_SetTextureStageState(0, 0xe, 2);
+    D3DDevice_SetTextureStageState(0, 0xf, 2);
+  }
+  return ok;
+}
 
 /* FUN_0017b540 (0x17b540) — readable C lift. */
 void FUN_0017b540(int tex_flags)
