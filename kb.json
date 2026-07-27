@@ -39486,7 +39486,7 @@
         },
         {
           "addr": "0x1d00b9",
-          "decl": "void FUN_001d00b9(void);",
+          "decl": "int __stdcall FUN_001d00b9(void *handle, unsigned int timeout, int flag);",
           "ported": false
         },
         {
