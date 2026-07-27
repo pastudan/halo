@@ -869,68 +869,37 @@ void FUN_001d0c02(void)
 /* 0x1d0c16 */
 void * LocalFree(void *ptr)
 {
-  FUN_001d6ca8();
+  (void)FUN_001d6ca8(0, 0, ptr);
   return NULL;
 }
 
-/* FUN_001d0c48 (0x1d0c48) — XBE naked draft (batch 324). */
-#if defined(__clang__)
-static void (*const b1d0c48_c1d5c66)(void) = FUN_001d5c66;
-
-__attribute__((naked, noinline))
-void FUN_001d0c48(void)
+/* FUN_001d0c16 (0x1d0c16) — readable C lift (HeapFree-style wrapper). */
+void *__stdcall FUN_001d0c16(void *ptr)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "pushl 0x8(%%esp)\n\t"
-      "shrl $3, %%eax\n\t"
-      "andl $8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl 0x632a28\n\t"
-      "call *%[c1d5c66]\n\t"
-      "ret\n\t"
-      :
-      : [c1d5c66] "m"(b1d0c48_c1d5c66)
-      : "memory");
+  extern void *DAT_00632a28;
+  if (FUN_001d6ca8(DAT_00632a28, 0, ptr))
+    return 0;
+  return ptr;
 }
-#else
-#error "FUN_001d0c48: clang naked draft required"
-#endif
 
-
-/* FUN_001d0c65 (0x1d0c65) — XBE naked draft (batch 351). */
-#if defined(__clang__)
-static void (*const b1d0c65_c1d703b)(void) = FUN_001d703b;
-
-__attribute__((naked, noinline))
-void FUN_001d0c65(void)
+/* FUN_001d0c48 (0x1d0c48) — readable C lift (HeapAlloc-style wrapper). */
+void *__stdcall FUN_001d0c48(int flags, int size)
 {
-  __asm__ volatile(
-      "movl 0xc(%%esp), %%eax\n\t"
-      "testb $0x40, %%al\n\t"
-      "je .LFUN_001d0c65_1\n\t"
-      "pushl $8\n\t"
-      "popl %%eax\n\t"
-      "jmp .LFUN_001d0c65_2\n\t"
-      ".LFUN_001d0c65_1:\n\t"
-      "shll $3, %%eax\n\t"
-      "notl %%eax\n\t"
-      "andl $0x10, %%eax\n\t"
-      ".LFUN_001d0c65_2:\n\t"
-      "pushl 0x8(%%esp)\n\t"
-      "pushl 0x8(%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl 0x632a28\n\t"
-      "call *%[c1d703b]\n\t"
-      "ret\n\t"
-      :
-      : [c1d703b] "m"(b1d0c65_c1d703b)
-      : "memory");
+  extern void *DAT_00632a28;
+  return FUN_001d5c66(DAT_00632a28, ((unsigned int)flags >> 3) & 8, size);
 }
-#else
-#error "FUN_001d0c65: clang naked draft required"
-#endif
 
+/* FUN_001d0c65 (0x1d0c65) — readable C lift (HeapReAlloc-style wrapper). */
+void *__stdcall FUN_001d0c65(void *ptr, int size, int flags)
+{
+  extern void *DAT_00632a28;
+  unsigned int mode;
+  if ((flags & 0x40) != 0)
+    mode = 8;
+  else
+    mode = (~((unsigned int)flags << 3)) & 0x10;
+  return FUN_001d703b(DAT_00632a28, mode, ptr, size);
+}
 
 /* FUN_001d0c91 (0x1d0c91) — XBE naked draft (batch 376). */
 #if defined(__clang__)
