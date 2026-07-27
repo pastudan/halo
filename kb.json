@@ -275,8 +275,7 @@
         {
           "addr": "0x680a0",
           "decl": "void FUN_000680a0(void);",
-          "ported": true,
-          "name": "FUN_000680a0"
+          "ported": false
         },
         {
           "addr": "0x6bcb0",
