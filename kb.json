@@ -22988,22 +22988,26 @@
         {
           "addr": "0x946e0",
           "decl": "void apply_aiming_vector(char *thread, void *event, int **stream);",
-          "ported": false
+          "ported": true,
+          "name": "apply_aiming_vector"
         },
         {
           "addr": "0x947a0",
           "decl": "void apply_looking_vector(char *thread, void *event, int **stream);",
-          "ported": false
+          "ported": true,
+          "name": "apply_looking_vector"
         },
         {
           "addr": "0x94860",
           "decl": "void apply_angle_vector(char *thread, void *event, int **stream);",
-          "ported": false
+          "ported": true,
+          "name": "apply_angle_vector"
         },
         {
           "addr": "0x94970",
           "decl": "void apply_multi_vector(char *thread, void *event, int **stream);",
-          "ported": false
+          "ported": true,
+          "name": "apply_multi_vector"
         },
         {
           "addr": "0x94a70",
@@ -36265,7 +36269,8 @@
         {
           "addr": "0x5c510",
           "decl": "char encounter_spawn_actor(int encounter_handle, int16_t squad_index);",
-          "ported": false
+          "ported": true,
+          "name": "encounter_spawn_actor"
         },
         {
           "addr": "0x5c630",

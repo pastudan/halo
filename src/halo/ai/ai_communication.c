@@ -3415,7 +3415,7 @@ static void *(*const b45290_dget)(void *, int) = (void *(*)(void *, int))datum_g
 static void (*const b45290_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = actor_perception_find_sense_position;
 static int (*const b45290_c31850)(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags) = actor_audibility_at_point;
 static void (*const b45290_c3c1c0)(int param_1, int param_2, int param_3) = FUN_0003c1c0;
-static void (*const b45290_c43ea0)(void *comm /* */, int actor /* */, int stack_a) = FUN_00043ea0;
+static void (*const b45290_c43ea0)(void *comm /* */, int actor /* */, int stack_a) = (void (*)(void *, int, int))(void *)FUN_00043ea0;
 
 __attribute__((naked, noinline))
 void FUN_00045290(int unit_handle __attribute__((unused)), uint16_t priority __attribute__((unused)), uint16_t type __attribute__((unused)), void *comm_data __attribute__((unused)))
@@ -5306,7 +5306,7 @@ static void (*const b46530_c8f390)(unsigned __int16 a1, const char *a2, ...) = e
 static void *(*const b46530_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b46530_c1a6ef0)(int actor, short count, void *comm_buf) = FUN_001a6ef0;
 static void (*const b46530_c43f20)(int unit /* */, int16_t type, int a, int16_t dialogue_index, int16_t reply_index) = ai_communication_update_speech_timers;
-static void (*const b46530_c432b0)(int unit /* */, int actor /* */, int target /* */, int stack_a, short priority) = FUN_000432b0;
+static void (*const b46530_c432b0)(int unit /* */, int actor /* */, int target /* */, int stack_a, short priority) = (void (*)(int, int, int, int, short))(void *)FUN_000432b0;
 static char * (*const b46530_c8d970)(char *s) = strupr;
 
 __attribute__((naked, noinline))
