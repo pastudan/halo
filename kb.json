@@ -7928,8 +7928,9 @@
         },
         {
           "addr": "0x199a60",
-          "decl": "void directory_create_or_delete_contents(void);",
-          "ported": false
+          "decl": "void directory_create_or_delete_contents(const char *directory);",
+          "ported": false,
+          "name": "directory_create_or_delete_contents"
         },
         {
           "addr": "0x199b20",
@@ -8051,7 +8052,7 @@
         },
         {
           "addr": "0x19ac00",
-          "decl": "bool file_write(file_ref_t *info, void *buffer, int size);",
+          "decl": "bool file_write(file_ref_t *info, int size, void *buffer);",
           "ported": false,
           "name": "file_write"
         },
@@ -8068,13 +8069,15 @@
         },
         {
           "addr": "0x19ad30",
-          "decl": "void file_get_last_modification_date(void);",
-          "ported": false
+          "decl": "bool file_get_last_modification_date(file_ref_t *info, void *date_out);",
+          "ported": false,
+          "name": "file_get_last_modification_date"
         },
         {
           "addr": "0x19adf0",
-          "decl": "void file_get_size(void);",
-          "ported": false
+          "decl": "bool file_get_size(file_ref_t *info, unsigned int *size_out);",
+          "ported": false,
+          "name": "file_get_size"
         },
         {
           "addr": "0x19aed0",
@@ -22781,7 +22784,7 @@
         {
           "addr": "0x111770",
           "decl": "void FUN_00111770(int state @<esi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x111910",
@@ -31250,7 +31253,7 @@
         {
           "addr": "0x17d020",
           "decl": "void FUN_0017d020(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d030",
@@ -40249,7 +40252,7 @@
         {
           "addr": "0x81110",
           "decl": "unsigned int FUN_00081110(unsigned int bit_count /* @<esi> */, unsigned int bit_offset /* @<edi> */, int unused);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00081110"
         }
       ],

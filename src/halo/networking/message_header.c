@@ -1187,7 +1187,7 @@ static void (*const b80fc0_assert)(const char *, const char *, int, bool) = disp
 static void (*const b80fc0_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_00080fc0(void)
+unsigned int FUN_00080fc0(unsigned int a __attribute__((unused)), unsigned int c __attribute__((unused)), unsigned int d __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1329,51 +1329,17 @@ void FUN_00081090(void)
 #endif
 
 
-/* FUN_00081110 (0x81110) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void (*const b81110_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81110_exitfn)(int) = system_exit;
-static void (*const b81110_c80fc0)(void) = FUN_00080fc0;
-
-__attribute__((naked, noinline))
-void FUN_00081110(void)
+/* FUN_00081110 (0x81110) — readable C lift. */
+unsigned int FUN_00081110(unsigned int bit_count /* @<esi> */, unsigned int bit_offset /* @<edi> */, int unused)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $2, %%esi\n\t"
-      "ja .LFUN_00081110_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265de0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081110_1:\n\t"
-      "leal -0x1(%%esi), %%eax\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jb .LFUN_00081110_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x86\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265dd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081110_2:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%esi, %%edx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c80fc0]\n\t"
-      :
-      : [assert] "m"(b81110_assert), [exitfn] "m"(b81110_exitfn), [c80fc0] "m"(b81110_c80fc0)
-      : "memory");
+  if (bit_count <= 2) {
+    display_assert((const char *)0x265de0, (const char *)0x265da0, 0x85, 1);
+    system_exit(-1);
+  }
+  if (bit_offset >= (bit_count - 1)) {
+    display_assert((const char *)0x265dd8, (const char *)0x265da0, 0x86, 1);
+    system_exit(-1);
+  }
+  return FUN_00080fc0(bit_offset, (unsigned int)unused, bit_count);
 }
-#else
-#error "FUN_00081110: clang naked draft required"
-#endif
 

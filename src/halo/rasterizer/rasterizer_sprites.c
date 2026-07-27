@@ -165,21 +165,13 @@ void FUN_0017ce60(void)
   (void)eax;
 }
 
-/* 0x17ce70 */
+/* FUN_0017ce70 (0x17ce70) — readable C lift (jmp thunk). */
 void FUN_0017ce70(void)
 {
-  int eax = 0;
-
-  FUN_0016f910(15);
-  FUN_0016fa40(15);
-  FUN_0016f910(16);
-  FUN_001749b0();
-  FUN_0016fa40(16);
-  /* test eax, eax -> jne 0x160c56 */
-  display_assert((char *)0x0029dc40, (char *)0x002a18c0, 17, 0);
-
-  (void)eax;
+  FUN_00160bf0();
 }
+
+
 
 /* FUN_0017ce80 (0x17ce80) — readable C lift. */
 void FUN_0017ce80(void)
@@ -406,18 +398,13 @@ void FUN_0017d010(float *position, float radius, float *scale2d, float angle, ui
   FUN_0017b7d0(position, radius, scale2d, angle, color);
 }
 
-/* 0x17d020 */
+/* FUN_0017d020 (0x17d020) — readable C lift (jmp thunk). */
 void FUN_0017d020(void)
 {
-  int eax = 0;
-
-  D3DDevice_Begin(eax);
-  D3DDevice_End();
-  /* relift: relift: mov (char)eax, byte ptr [0x3256fc] */
-  D3DDevice_GetVisibilityTestResult();
-
-  (void)eax;
+  FUN_0017ad90();
 }
+
+
 
 /* FUN_0017d040 (0x17d040) — readable C lift. */
 void FUN_0017d040(void)
