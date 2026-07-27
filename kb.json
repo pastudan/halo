@@ -36580,8 +36580,8 @@
         },
         {
           "addr": "0x68a30",
-          "decl": "void FUN_00068a30(int param_1, const char *format, ...);",
-          "ported": false
+          "decl": "void FUN_00068a30(void *a0, void *a1, ...);",
+          "ported": true
         },
         {
           "addr": "0x68a50",

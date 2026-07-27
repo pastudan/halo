@@ -314,38 +314,15 @@ void *FUN_00068a10(void *handler)
   return prev;
 }
 
-/* FUN_00068a30 (0x68a30) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068a30(int param_1 __attribute__((unused)), const char *format __attribute__((unused)), ...)
+/* FUN_00068a30 (0x68a30) — readable C lift. */
+void FUN_00068a30(void *a0, void *a1, ...)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x2ca1f4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00068a30_1\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00068a30_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  void *cb;
+  cb = *(void **)0x2ca1f4;
+  if (cb) {
+    ((void (*)(void *, void *, void *))cb)(a0, a1, (void *)((char *)&a1 + 4));
+  }
 }
-#else
-#error "FUN_00068a30: clang naked draft required"
-#endif
-
 
 /* FUN_00068a50 (0x68a50) — readable C lift: set/clear flag bit0 at tif+9. */
 void FUN_00068a50(void *tif, int enable)
