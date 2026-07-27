@@ -35802,7 +35802,7 @@
         {
           "addr": "0x32cb0",
           "decl": "void actor_emotion_update(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_emotion_update"
         },
         {
@@ -36057,7 +36057,7 @@
         {
           "addr": "0x447d0",
           "decl": "void ai_conversation_find_participant(int conversation_handle, int16_t participant_index, char *found_out, char *required_out, float *rating_out, int *handle_out);",
-          "ported": false,
+          "ported": true,
           "name": "ai_conversation_find_participant"
         },
         {
