@@ -21787,7 +21787,7 @@
         {
           "addr": "0x155b90",
           "decl": "void _rasterizer_dispose(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x155c10",

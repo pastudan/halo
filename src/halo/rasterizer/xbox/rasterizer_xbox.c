@@ -403,59 +403,28 @@ int FUN_00155b60(int a, int b)
   return 0;
 }
 
-/* _rasterizer_dispose (0x155b90) — XBE naked draft (batch 383). */
-#if defined(__clang__)
-static void (*const b155b90_c1825e0)(void) = (void *)rasterizer_memory_pool_delete;
-static void (*const b155b90_c15e9e0)(void) = (void *)FUN_0015e9e0;
-static void (*const b155b90_c184690)(void) = (void *)FUN_00184690;
-static void (*const b155b90_c178ab0)(void) = (void *)FUN_00178ab0;
-static void (*const b155b90_c17e040)(void) = (void *)FUN_0017e040;
-static void (*const b155b90_c17ff60)(void) = (void *)FUN_0017ff60;
-static void (*const b155b90_c183720)(void) = (void *)rasterizer_text_cache_dispose;
-static void (*const b155b90_c15c680)(void) = (void *)FUN_0015c680;
-static void (*const b155b90_c16fec0)(void) = (void *)FUN_0016fec0;
-static void (*const b155b90_c165a10)(void) = (void *)FUN_00165a10;
-static void (*const b155b90_c17d990)(void) = (void *)FUN_0017d990;
-static void (*const b155b90_c1be920)(void) = (void *)texture_cache_delete;
-static void (*const b155b90_c1e6f50)(void) = (void *)D3DDevice_Release;
-
-__attribute__((naked, noinline))
+/* _rasterizer_dispose (0x155b90) — readable C lift. */
 void _rasterizer_dispose(void)
 {
-  __asm__ volatile(
-      "call *%[c1825e0]\n\t"
-      "call *%[c15e9e0]\n\t"
-      "call *%[c184690]\n\t"
-      "call *%[c178ab0]\n\t"
-      "call *%[c17e040]\n\t"
-      "call *%[c17ff60]\n\t"
-      "call *%[c183720]\n\t"
-      "call *%[c15c680]\n\t"
-      "call *%[c16fec0]\n\t"
-      "call *%[c165a10]\n\t"
-      "call *%[c17d990]\n\t"
-      "call *%[c1be920]\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .L_rasterizer_dispose_1\n\t"
-      "call *%[c1e6f50]\n\t"
-      "movl $0, 0x476ab0\n\t"
-      ".L_rasterizer_dispose_1:\n\t"
-      "movl 0x476a50, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .L_rasterizer_dispose_2\n\t"
-      "movl $0, 0x476a50\n\t"
-      ".L_rasterizer_dispose_2:\n\t"
-      "ret\n\t"
-      :
-      : [c1825e0] "m"(b155b90_c1825e0), [c15e9e0] "m"(b155b90_c15e9e0), [c184690] "m"(b155b90_c184690), [c178ab0] "m"(b155b90_c178ab0), [c17e040] "m"(b155b90_c17e040), [c17ff60] "m"(b155b90_c17ff60), [c183720] "m"(b155b90_c183720), [c15c680] "m"(b155b90_c15c680), [c16fec0] "m"(b155b90_c16fec0), [c165a10] "m"(b155b90_c165a10), [c17d990] "m"(b155b90_c17d990), [c1be920] "m"(b155b90_c1be920), [c1e6f50] "m"(b155b90_c1e6f50)
-      : "memory");
+  rasterizer_memory_pool_delete();
+  FUN_0015e9e0();
+  FUN_00184690(0);
+  FUN_00178ab0();
+  FUN_0017e040();
+  FUN_0017ff60();
+  rasterizer_text_cache_dispose();
+  FUN_0015c680();
+  FUN_0016fec0();
+  FUN_00165a10();
+  FUN_0017d990();
+  texture_cache_delete();
+  if (*(int *)0x476ab0) {
+    D3DDevice_Release();
+    *(int *)0x476ab0 = 0;
+  }
+  if (*(int *)0x476a50)
+    *(int *)0x476a50 = 0;
 }
-#else
-#error "_rasterizer_dispose: clang naked draft required"
-#endif
-
-
 /* FUN_00155c10 (0x155c10) — readable C lift. */
 void FUN_00155c10(void *callback)
 {
