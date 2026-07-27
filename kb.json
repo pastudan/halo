@@ -6432,8 +6432,9 @@
         },
         {
           "addr": "0x1cf97c",
-          "decl": "void UnhandledExceptionFilter(void);",
-          "ported": false
+          "decl": "int UnhandledExceptionFilter(void *exception_info);",
+          "ported": true,
+          "name": "UnhandledExceptionFilter"
         },
         {
           "addr": "0x1cf999",

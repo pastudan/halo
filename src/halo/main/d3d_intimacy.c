@@ -95,34 +95,23 @@ void XapiCallThreadNotifyRoutines(void)
 #endif
 
 
-/* UnhandledExceptionFilter (0x1cf97c) — XBE naked draft (batch 164). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void UnhandledExceptionFilter(void)
+/* UnhandledExceptionFilter (0x1cf97c) — readable C lift from XBE leaf. */
+int UnhandledExceptionFilter(void *exception_info)
 {
-  __asm__ volatile(
-      "movl 0x632a2c, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LUnhandledExceptionFilter_1\n\t"
-      "pushl 0x4(%%esp)\n\t"
-      "call *%%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LUnhandledExceptionFilter_1\n\t"
-      "orl %%eax, %%eax\n\t"
-      "jmp .LUnhandledExceptionFilter_2\n\t"
-      ".LUnhandledExceptionFilter_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LUnhandledExceptionFilter_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int (*handler)(void *);
+  int result;
+
+  handler = *(int (**)(void *))0x632a2c;
+  if (!handler) {
+    return 0;
+  }
+  result = handler(exception_info);
+  if (result != -1) {
+    return 0;
+  }
+  return result;
 }
-#else
-#error "UnhandledExceptionFilter: clang naked draft required"
-#endif
+
 
 
 /* 0x1cf999 */
