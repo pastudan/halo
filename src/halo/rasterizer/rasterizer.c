@@ -4964,63 +4964,33 @@ char FUN_00172a30(int param_1, const float *shadow_matrix,
 }
 /* --- rasterizer.obj batch drafts (2026-07-26) --- */
 
-/* FUN_0016f480 (0x16f480) — XBE naked draft (batch 364). */
-#if defined(__clang__)
-static void (*const b16f480_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b16f480_exitfn)(int) = system_exit;
-static void (*const b16f480_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_0016f480(const char *message __attribute__((unused)), int16_t profile_index __attribute__((unused)), char condition __attribute__((unused)))
+/* FUN_0016f480 (0x16f480) — readable C lift from XBE leaf. */
+void FUN_0016f480(const char *message, int16_t profile_index, char condition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0016f480_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3c\n\t"
-      "pushl $0x2a3ca4\n\t"
-      "pushl $0x294af0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0016f480_1:\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0016f480_3\n\t"
-      "cmpw $3, 0x47e468\n\t"
-      "jge .LFUN_0016f480_3\n\t"
-      "cmpw $-1, %%di\n\t"
-      "pushl %%esi\n\t"
-      "je .LFUN_0016f480_2\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2a3c7c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incw 0x47e468\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016f480_2:\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x2a3c5c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incw 0x47e468\n\t"
-      ".LFUN_0016f480_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b16f480_assert), [exitfn] "m"(b16f480_exitfn), [c8f390] "m"(b16f480_c8f390)
-      : "memory");
+  extern char DAT_00294af0[];
+  extern char DAT_002a3ca4[];
+  extern char DAT_002a3c7c[];
+  extern char DAT_002a3c5c[];
+
+  if (message == 0) {
+    display_assert(DAT_00294af0, DAT_002a3ca4, 0x3c, true);
+    system_exit(-1);
+  }
+  if (condition != 0) {
+    return;
+  }
+  if (*(short *)0x47e468 >= 3) {
+    return;
+  }
+  if (profile_index != -1) {
+    error(2, DAT_002a3c7c, (int)profile_index, message);
+  } else {
+    error(2, DAT_002a3c5c, -1, message);
+  }
+  *(short *)0x47e468 = (short)(*(short *)0x47e468 + 1);
 }
-#else
-#error "FUN_0016f480: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_0016f500 (0x16f500) — XBE naked draft (batch 320). */
