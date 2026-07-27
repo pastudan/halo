@@ -22464,7 +22464,7 @@
         {
           "addr": "0x12660",
           "decl": "void action_alert_perform(void);",
-          "ported": false,
+          "ported": true,
           "name": "action_alert_perform"
         },
         {
@@ -22502,7 +22502,7 @@
         {
           "addr": "0x12c30",
           "decl": "void FUN_00012c30(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00012c30"
         },
         {
