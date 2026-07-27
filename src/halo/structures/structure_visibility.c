@@ -804,3 +804,61 @@ int FUN_00196b10(float *bounds __attribute__((unused)), int param_2 __attribute_
 #error "FUN_00196b10: clang naked draft required"
 #endif
 
+
+/* FUN_00196e10 (0x196e10) — walk sound cluster list; expand env AABB.
+ * ABI: sound_list@<edi>, env@<ebx>; distance unused on stack in XBE body. */
+void FUN_00196e10(uint16_t *sound_list /*@<edi>*/, void *env /*@<ebx>*/,
+                  float distance)
+{
+  float cur[3];
+  float nxt[3];
+  int i;
+  int n;
+
+  (void)distance;
+  n = (int)(short)sound_list[0];
+  if (n != 0) {
+    cur[0] = *(float *)((char *)sound_list + n * 8 - 4);
+    cur[1] = *(float *)((char *)sound_list + n * 8);
+    cur[2] = -1.0f;
+    FUN_00109590((void *)0x5065e8, cur, cur);
+  }
+  for (i = 0; i < n; i++) {
+    nxt[0] = *(float *)((char *)sound_list + i * 8 + 4);
+    nxt[1] = *(float *)((char *)sound_list + i * 8 + 8);
+    nxt[2] = -1.0f;
+    FUN_00109590((void *)0x5065e8, nxt, nxt);
+    FUN_00189270(1, nxt, cur, env);
+    cur[0] = nxt[0];
+    cur[1] = nxt[1];
+    cur[2] = nxt[2];
+  }
+}
+
+/* FUN_00196eb0 (0x196eb0) — decode 6 quantized fractions into a real AABB. */
+float *FUN_00196eb0(float *parent_bounds, unsigned char *fractions, float *out)
+{
+  int i;
+  float lo;
+  float hi;
+  unsigned char f;
+
+  for (i = 0; i < 6; i++) {
+    if (i < 2) {
+      lo = parent_bounds[0];
+      hi = parent_bounds[1];
+    } else if (i < 4) {
+      lo = parent_bounds[2];
+      hi = parent_bounds[3];
+    } else {
+      lo = parent_bounds[4];
+      hi = parent_bounds[5];
+    }
+    f = fractions[i];
+    if (f == 0xff)
+      out[i] = hi;
+    else
+      out[i] = lo + (hi - lo) * ((float)(int)f * *(float *)0x261518);
+  }
+  return out;
+}

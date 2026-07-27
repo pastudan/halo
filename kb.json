@@ -262,11 +262,6 @@
           "name": "FUN_00067b40"
         },
         {
-          "addr": "0x67b80",
-          "decl": "void FUN_00067b80(void);",
-          "ported": false
-        },
-        {
           "addr": "0x67c10",
           "decl": "int FUN_00067c10(unsigned int count@<eax>, unsigned short tag@<dx>, unsigned int *src@<ecx>, unsigned short type, void *out);",
           "ported": true,
@@ -275,11 +270,6 @@
         {
           "addr": "0x67c50",
           "decl": "void FUN_00067c50(void);",
-          "ported": false
-        },
-        {
-          "addr": "0x67f70",
-          "decl": "void FUN_00067f70(void);",
           "ported": false
         },
         {
@@ -646,16 +636,6 @@
           "decl": "void FUN_00196d60(float *rect@<esi>, int16_t *hull@<edi>);",
           "ported": true,
           "name": "FUN_00196d60"
-        },
-        {
-          "addr": "0x196e10",
-          "decl": "void FUN_00196e10(uint16_t *sound_list @<edi>, void *env @<ebx>, float distance);",
-          "ported": false
-        },
-        {
-          "addr": "0x196eb0",
-          "decl": "float *FUN_00196eb0(float *parent_bounds, unsigned char *fractions, float *out_bounds);",
-          "ported": false
         },
         {
           "addr": "0x1a4440",
@@ -26591,6 +26571,18 @@
           "addr": "0x197b00",
           "decl": "void FUN_00197b00(int16_t cluster_index, uint16_t *sound_list);",
           "ported": true
+        },
+        {
+          "addr": "0x196e10",
+          "decl": "void FUN_00196e10(uint16_t *sound_list@<edi>, void *env@<ebx>, float distance);",
+          "ported": false,
+          "name": "FUN_00196e10"
+        },
+        {
+          "addr": "0x196eb0",
+          "decl": "float *FUN_00196eb0(float *parent_bounds, unsigned char *fractions, float *out);",
+          "ported": true,
+          "name": "FUN_00196eb0"
         }
       ],
       "name": "structure_visibility.obj",
@@ -44041,6 +44033,18 @@
           "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
           "ported": true,
           "name": "FUN_000679f0"
+        },
+        {
+          "addr": "0x67b80",
+          "decl": "int FUN_00067b80(unsigned int count@<eax>, unsigned short tag@<cx>, void *typeinfo, unsigned short type, void *out, float *values);",
+          "ported": false,
+          "name": "FUN_00067b80"
+        },
+        {
+          "addr": "0x67f70",
+          "decl": "int FUN_00067f70(void *out@<esi>, void *tif, unsigned short tag);",
+          "ported": false,
+          "name": "FUN_00067f70"
         }
       ],
       "data": []
