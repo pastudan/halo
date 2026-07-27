@@ -487,62 +487,29 @@ void FUN_00095930(int object)
     control_toggle(object);
 }
 
-/* FUN_000959b0 (0x959b0) — XBE naked draft (batch 288). */
-#if defined(__clang__)
-static void *(*const b959b0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b959b0_tag)(int, int) = tag_get;
-static void (*const b959b0_c97080)(int object, void *ctrl_block) = FUN_00097080;
-
-__attribute__((naked, noinline))
-void FUN_000959b0(int object __attribute__((unused)), void *ctrl __attribute__((unused)))
+/* FUN_000959b0 (0x959b0) — readable C lift from XBE leaf. */
+void FUN_000959b0(int object, void *ctrl)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6c696669\n\t"
-      "call *%[tag]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "leal 0x28(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c97080]\n\t"
-      "leal 0x30(%%edi), %%edx\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "leal 0x1c4(%%esi), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0x3c(%%edi), %%eax\n\t"
-      "movl %%eax, 0x1d0(%%esi)\n\t"
-      "movl 0x40(%%edi), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%ecx, 0x1d4(%%esi)\n\t"
-      "movl 0x44(%%edi), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x1d8(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b959b0_get), [tag] "m"(b959b0_tag), [c97080] "m"(b959b0_c97080)
-      : "memory");
+  void *obj;
+  void *life_tag;
+  int *src;
+  int *dst;
+
+  obj = object_get_and_verify_type(object, 0x200);
+  life_tag = tag_get(0x6c696669, *(int *)obj);
+  (void)life_tag;
+  FUN_00097080(object, (char *)ctrl + 0x28);
+  src = (int *)((char *)ctrl + 0x30);
+  dst = (int *)((char *)obj + 0x1c4);
+  dst[0] = src[0];
+  dst[1] = src[1];
+  dst[2] = src[2];
+  *(int *)((char *)obj + 0x1d0) = *(int *)((char *)ctrl + 0x3c);
+  *(int *)((char *)obj + 0x1d4) = *(int *)((char *)ctrl + 0x40);
+  *(int *)((char *)obj + 0x1d8) = *(int *)((char *)ctrl + 0x44);
 }
-#else
-#error "FUN_000959b0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00095a20 (0x95a20) — readable C lift. */
@@ -561,67 +528,30 @@ char FUN_00095a60(int object)
   return 1;
 }
 
-/* FUN_00095ad0 (0x95ad0) — XBE naked draft (batch 282). */
-#if defined(__clang__)
-static void *(*const b95ad0_get)(int, int) = object_get_and_verify_type;
-static void (*const b95ad0_c97080)(int object, void *ctrl_block) = FUN_00097080;
-
-__attribute__((naked, noinline))
-void FUN_00095ad0(int object __attribute__((unused)), void *ctrl __attribute__((unused)))
+/* FUN_00095ad0 (0x95ad0) — readable C lift from XBE leaf. */
+void FUN_00095ad0(int object, void *ctrl)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x80\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "leal 0x28(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c97080]\n\t"
-      "movb 0x30(%%edi), %%cl\n\t"
-      "movl $1, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%cl, %%al\n\t"
-      "je .LFUN_00095ad0_1\n\t"
-      "orl %%eax, 0x1c4(%%esi)\n\t"
-      ".LFUN_00095ad0_1:\n\t"
-      "movb 0x30(%%edi), %%cl\n\t"
-      "movl $2, %%eax\n\t"
-      "testb %%cl, %%al\n\t"
-      "je .LFUN_00095ad0_2\n\t"
-      "orl %%eax, 0x1c4(%%esi)\n\t"
-      ".LFUN_00095ad0_2:\n\t"
-      "movb 0x30(%%edi), %%cl\n\t"
-      "movl $4, %%eax\n\t"
-      "testb %%cl, %%al\n\t"
-      "je .LFUN_00095ad0_3\n\t"
-      "orl %%eax, 0x1c4(%%esi)\n\t"
-      ".LFUN_00095ad0_3:\n\t"
-      "movb 0x30(%%edi), %%cl\n\t"
-      "movl $8, %%eax\n\t"
-      "testb %%cl, %%al\n\t"
-      "je .LFUN_00095ad0_4\n\t"
-      "orl %%eax, 0x1c4(%%esi)\n\t"
-      ".LFUN_00095ad0_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b95ad0_get), [c97080] "m"(b95ad0_c97080)
-      : "memory");
+  void *obj;
+  unsigned char flags;
+
+  obj = object_get_and_verify_type(object, 0x80);
+  FUN_00097080(object, (char *)ctrl + 0x28);
+  flags = *(unsigned char *)((char *)ctrl + 0x30);
+  if (flags & 1) {
+    *(int *)((char *)obj + 0x1c4) |= 1;
+  }
+  if (flags & 2) {
+    *(int *)((char *)obj + 0x1c4) |= 2;
+  }
+  if (flags & 4) {
+    *(int *)((char *)obj + 0x1c4) |= 4;
+  }
+  if (flags & 8) {
+    *(int *)((char *)obj + 0x1c4) |= 8;
+  }
 }
-#else
-#error "FUN_00095ad0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00095b50 (0x95b50) — readable C lift from XBE leaf. */

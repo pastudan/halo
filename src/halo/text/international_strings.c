@@ -1132,74 +1132,32 @@ void FUN_0019cec0(void)
 
 
 /* 0x19cff0 */
-/* FUN_0019cff0 (0x19cff0) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-static void *(*const b19cff0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void * FUN_0019cff0(void *font_tag __attribute__((unused)), unsigned short character __attribute__((unused)))
+/* FUN_0019cff0 (0x19cff0) — readable C lift from XBE leaf. */
+void *FUN_0019cff0(void *font_tag, unsigned short character)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movzwl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "pushl $0xc\n\t"
-      "shrl $8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x30(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_0019cff0_3\n\t"
-      "cmpl $0x100, %%ecx\n\t"
-      "jne .LFUN_0019cff0_1\n\t"
-      "pushl $2\n\t"
-      "andl $0xff, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .LFUN_0019cff0_2\n\t"
-      ".LFUN_0019cff0_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_0019cff0_2:\n\t"
-      "movw (%%eax), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_0019cff0_3\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "pushl $0x14\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x7c, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0019cff0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b19cff0_elem)
-      : "memory");
+  void *page;
+  int count;
+  void *glyph_index_elem;
+  short glyph_index;
+
+  page = tag_block_get_element((char *)font_tag + 0x30, character >> 8, 0xc);
+  count = *(int *)page;
+  if (count <= 0) {
+    return 0;
+  }
+  if (count == 0x100) {
+    glyph_index_elem = tag_block_get_element(page, character & 0xff, 2);
+  } else {
+    glyph_index_elem = 0;
+  }
+  glyph_index = *(short *)glyph_index_elem;
+  if (glyph_index == (short)0xffff) {
+    return 0;
+  }
+  return tag_block_get_element((char *)font_tag + 0x7c, glyph_index, 0x14);
 }
-#else
-#error "FUN_0019cff0: clang naked draft required"
-#endif
+
+
 
 
 /* set_language_code (0x19d060) — readable C lift. */

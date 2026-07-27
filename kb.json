@@ -3833,7 +3833,8 @@
         {
           "addr": "0x16cf0",
           "decl": "void FUN_00016cf0(int param_1, int param_2, short param_3, int param_4, int param_5);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00016cf0"
         },
         {
           "addr": "0x16d40",
@@ -4118,7 +4119,7 @@
           "addr": "0x27870",
           "decl": "void FUN_00027870(int actor_handle);",
           "name": "FUN_00027870",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/actor_looking.c"
         },
         {
@@ -4179,7 +4180,8 @@
         {
           "addr": "0x2a2b0",
           "decl": "void FUN_0002a2b0(int actor_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0002a2b0"
         },
         {
           "addr": "0x2a330",
@@ -23095,7 +23097,8 @@
         {
           "addr": "0x959b0",
           "decl": "void FUN_000959b0(int object, void *ctrl);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000959b0"
         },
         {
           "addr": "0x95a20",
@@ -23110,7 +23113,8 @@
         {
           "addr": "0x95ad0",
           "decl": "void FUN_00095ad0(int object, void *ctrl);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00095ad0"
         },
         {
           "addr": "0x95b50",
