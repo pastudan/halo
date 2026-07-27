@@ -25359,7 +25359,7 @@
         {
           "addr": "0x1cd4d0",
           "decl": "void sound_stop_impulse_by_source_and_definition(int source, int definition);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cd540",
