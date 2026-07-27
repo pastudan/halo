@@ -520,8 +520,8 @@
         },
         {
           "addr": "0x1506d0",
-          "decl": "void FUN_001506d0(void);",
-          "ported": false
+          "decl": "void FUN_001506d0(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7, int a8);",
+          "ported": true
         },
         {
           "addr": "0x150710",
@@ -625,7 +625,7 @@
         },
         {
           "addr": "0x16de80",
-          "decl": "void FUN_0016de80(void);",
+          "decl": "void FUN_0016de80(int a0, int a1, int a2, int a3, int a4, int a5);",
           "ported": false
         },
         {
