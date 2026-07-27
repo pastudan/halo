@@ -601,106 +601,46 @@ int16_t device_effect_new(int a, int16_t b)
   return idx;
 }
 
-/* create_initial_device_groups (0x96900) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static scenario_t * (*const b96900_c18e380)(void) = global_scenario_get;
-static void *(*const b96900_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b96900_c119610)(data_t *data) = data_new_at_index;
-static void *(*const b96900_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b96900_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b96900_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* create_initial_device_groups (0x96900) — readable C lift. */
 void create_initial_device_groups(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "leal 0x288(%%eax), %%ebx\n\t"
-      "cmpl $0, (%%ebx)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jle .Lcreate_initial_device_groups_6\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      ".Lcreate_initial_device_groups_1:\n\t"
-      "pushl $0x34\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movb 0x24(%%eax), %%cl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testb $1, %%cl\n\t"
-      "je .Lcreate_initial_device_groups_2\n\t"
-      "movl $1, %%esi\n\t"
-      ".Lcreate_initial_device_groups_2:\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "movl 0x20(%%eax), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .Lcreate_initial_device_groups_3\n\t"
-      "movl 0x5aa8c8, %%eax\n\t"
-      "movswl %%di, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movw %%si, 0x2(%%eax)\n\t"
-      "jmp .Lcreate_initial_device_groups_4\n\t"
-      ".Lcreate_initial_device_groups_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x311\n\t"
-      "pushl $0x269ac4\n\t"
-      "pushl $0x269af8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcreate_initial_device_groups_4:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "cmpw %%si, %%di\n\t"
-      "je .Lcreate_initial_device_groups_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x339\n\t"
-      "pushl $0x269ac4\n\t"
-      "pushl $0x269b14\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcreate_initial_device_groups_5:\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "incl %%esi\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jl .Lcreate_initial_device_groups_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".Lcreate_initial_device_groups_6:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b96900_c18e380), [elem] "m"(b96900_elem), [c119610] "m"(b96900_c119610), [dget] "m"(b96900_dget), [assert] "m"(b96900_assert), [exitfn] "m"(b96900_exitfn)
-      : "memory");
+  extern char DAT_00269ac4[];
+  extern char DAT_00269af8[];
+  extern char DAT_00269b14[];
+  char *scenario;
+  char *block;
+  int i;
+  int count;
+  char *elem;
+  int name_index;
+  short flags;
+  short handle;
+  char *rec;
+
+  scenario = (char *)global_scenario_get();
+  block = scenario + 0x288;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    elem = (char *)tag_block_get_element(block, i, 0x34);
+    flags = 0;
+    if ((elem[0x24] & 1) != 0)
+      flags = 1;
+    name_index = *(int *)(elem + 0x20);
+    handle = (short)data_new_at_index(*(data_t **)0x5aa8c8);
+    if (handle == (short)0xffff) {
+      display_assert(DAT_00269af8, DAT_00269ac4, 0x311, 1);
+      system_exit(-1);
+    } else {
+      rec = (char *)datum_get(*(data_t **)0x5aa8c8, (int)handle);
+      *(int *)(rec + 4) = name_index;
+      *(short *)(rec + 2) = flags;
+    }
+    if (handle != (short)i) {
+      display_assert(DAT_00269b14, DAT_00269ac4, 0x339, 1);
+      system_exit(-1);
+    }
+  }
 }
-#else
-#error "create_initial_device_groups: clang naked draft required"
-#endif
-
-
 /* device_delete (0x96a00) — readable C lift. */
 void device_delete(int object_handle)
 {

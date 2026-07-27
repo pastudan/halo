@@ -40351,7 +40351,8 @@
         {
           "addr": "0x96900",
           "decl": "void create_initial_device_groups(void);",
-          "ported": false
+          "ported": true,
+          "name": "create_initial_device_groups"
         },
         {
           "addr": "0x96a00",
