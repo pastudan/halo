@@ -3175,38 +3175,18 @@ void main_save_cancel(void)
   *(char *)0x46da28 = 0;
 }
 
-/* main_save_map_safe (0x100330) — XBE naked draft (batch 187). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* main_save_map_safe (0x100330) — readable C lift. */
 void main_save_map_safe(void)
 {
-  __asm__ volatile(
-      "movb 0x46da28, %%al\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpb %%cl, %%al\n\t"
-      "je .Lmain_save_map_safe_1\n\t"
-      "cmpb %%cl, 0x46da2a\n\t"
-      "je .Lmain_save_map_safe_2\n\t"
-      ".Lmain_save_map_safe_1:\n\t"
-      "movb $1, %%al\n\t"
-      "movb %%al, 0x46da28\n\t"
-      "movb %%al, 0x46da29\n\t"
-      "movb %%al, 0x46da2a\n\t"
-      "movl %%ecx, 0x46da2c\n\t"
-      "movl %%ecx, 0x46da30\n\t"
-      "movw %%cx, 0x46da38\n\t"
-      ".Lmain_save_map_safe_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (*(unsigned char *)0x46da28 == 0 || *(unsigned char *)0x46da2a == 0) {
+    *(unsigned char *)0x46da28 = 1;
+    *(unsigned char *)0x46da29 = 1;
+    *(unsigned char *)0x46da2a = 1;
+    *(unsigned int *)0x46da2c = 0;
+    *(unsigned int *)0x46da30 = 0;
+    *(unsigned short *)0x46da38 = 0;
+  }
 }
-#else
-#error "main_save_map_safe: clang naked draft required"
-#endif
-
 
 /* main_won_map (0x100370) — readable C lift. */
 void main_won_map(void)
