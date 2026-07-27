@@ -1089,33 +1089,20 @@ _BYTE *scripted_hud_messages_clear(void)
   return 0;
 }
 
-/* hud_get_font_index (0xd5160) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static __int16 (*const bd5160_cba4b0)(void) = local_player_count;
-
-__attribute__((naked, noinline))
+/* hud_get_font_index (0xd5160) — readable C lift. */
 int hud_get_font_index(void)
 {
-  __asm__ volatile(
-      "call *%[cba4b0]\n\t"
-      "cmpw $1, %%ax\n\t"
-      "movl 0x5aa68c, %%ecx\n\t"
-      "jle .Lhud_get_font_index_1\n\t"
-      "movl 0x64(%%ecx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lhud_get_font_index_2\n\t"
-      ".Lhud_get_font_index_1:\n\t"
-      "movl 0x54(%%ecx), %%eax\n\t"
-      ".Lhud_get_font_index_2:\n\t"
-      "ret\n\t"
-      :
-      : [cba4b0] "m"(bd5160_cba4b0)
-      : "memory");
-}
-#else
-#error "hud_get_font_index: clang naked draft required"
-#endif
+  char *globals;
+  int font;
 
+  globals = *(char **)0x5aa68c;
+  if (local_player_count() > 1) {
+    font = *(int *)(globals + 0x64);
+    if (font != -1)
+      return font;
+  }
+  return *(int *)(globals + 0x54);
+}
 
 /* hud_get_text_color (0xd5180) — readable C lift. */
 void *hud_get_text_color(void *out_argb)

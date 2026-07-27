@@ -13271,7 +13271,7 @@
           "addr": "0xd5160",
           "decl": "int hud_get_font_index(void);",
           "name": "hud_get_font_index",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/interface/hud_messaging.c"
         },
         {
