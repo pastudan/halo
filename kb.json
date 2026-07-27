@@ -13276,9 +13276,9 @@
         },
         {
           "addr": "0xd5180",
-          "decl": "int *hud_get_text_color(int *param_1);",
+          "decl": "void *hud_get_text_color(void *out_argb);",
           "name": "hud_get_text_color",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/interface/hud_messaging.c"
         },
         {

@@ -1167,41 +1167,18 @@ int hud_get_font_index(void)
 #endif
 
 
-/* hud_get_text_color (0xd5180) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int *hud_get_text_color(int *param_1)
+/* hud_get_text_color (0xd5180) — readable C lift. */
+void *hud_get_text_color(void *out_argb)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa68c, %%eax\n\t"
-      "addl $0x70, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%esi, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%esi\n\t"
-      "movl %%esi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%esi\n\t"
-      "movl %%esi, 0x8(%%edx)\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%edx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "hud_get_text_color: clang naked draft required"
-#endif
+  const uint32_t *src;
 
+  src = (const uint32_t *)(*(uint8_t **)0x5aa68c + 0x70);
+  ((uint32_t *)out_argb)[0] = src[0];
+  ((uint32_t *)out_argb)[1] = src[1];
+  ((uint32_t *)out_argb)[2] = src[2];
+  ((uint32_t *)out_argb)[3] = src[3];
+  return out_argb;
+}
 
 /* hud_messaging_globals_update (0xd51b0)
  * Resets the HUD message priority counter to 0. */
