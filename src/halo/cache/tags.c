@@ -1,3 +1,4 @@
+/* Freestanding TU compile: SleepEx lives in xdk_stubs_rt.c. */
 unsigned int __stdcall SleepEx(unsigned int milliseconds, int alertable);
 
 /* 0x1b9930 — tag_loaded: linear search for a loaded tag by group/name.
@@ -549,102 +550,117 @@ void FUN_001ba6c0(int unused, unsigned int value)
   *(unsigned int *)(base + 0x948) = value;
 }
 
-/* FUN_001ba710 (0x1ba710) — XBE naked draft (batch 281). */
+/* FUN_001ba710 (0x1ba710) — readable C lift from XBE leaf.
+ * cache@eax: init 8x 128KB page slots on global copy state, protect/fill
+ * 5MB cache buffer with 0xfd, then zero a 0x1c0 trailer with 0xfa. */
+void FUN_001ba710(void *cache)
+{
+  unsigned char *g;
+  unsigned int base;
+  unsigned int *slot;
+  int i;
+  unsigned int end;
+
+  g = *(unsigned char **)0x32ea98;
+  base = *(unsigned int *)((char *)cache + 0x960);
+  slot = (unsigned int *)(g + 0x964);
+  for (i = 0; i < 8; i++) {
+    slot[i] = base;
+    base += 0x20000u;
+  }
+  *(unsigned int *)(g + 0x984) = base;
+
+  base = *(unsigned int *)((char *)cache + 0x960);
+  physical_memory_protect((void *)base, 0x512000u, 4u);
+  csmemset((void *)base, 0xfd, 0x500000u);
+  physical_memory_protect((void *)base, 0x500000u, 2u);
+
+  end = base + 0x500000u;
+  *(unsigned int *)((char *)cache + 0x944) = 0x12000u;
+  *(unsigned int *)((char *)cache + 0x940) = end;
+  *(unsigned int *)((char *)cache + 0x948) = end;
+  csmemset((char *)cache + 0x990, 0xfa, 0x1c0u);
+}
+
+/* cache_copy_initialize_and_fill_with_garbage (0x1ba7c0) — XBE naked draft (batch 282). */
 #if defined(__clang__)
-static void __stdcall (*const b1ba710_c1d371d)(void *addr, unsigned int size, unsigned int protect) = physical_memory_protect;
-static void *(*const b1ba710_memset)(void *, int, unsigned int) = csmemset;
+static int __stdcall (*const b1ba7c0_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
+static unsigned int __stdcall (*const b1ba7c0_c1d1d4a)(int handle, unsigned int *high_size) = GetFileSize;
+static void *(*const b1ba7c0_memset)(void *, int, unsigned int) = csmemset;
+static void (*const b1ba7c0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b1ba7c0_exitfn)(int) = system_exit;
 
 __attribute__((naked, noinline))
-void FUN_001ba710(void *cache __attribute__((unused)))
+void cache_copy_initialize_and_fill_with_garbage(char *ctx)
 {
   __asm__ volatile(
-      "pushl %%esi\n\t"
       "pushl %%edi\n\t"
-      "movl 0x32ea98, %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x960(%%esi), %%eax\n\t"
-      "leal 0x964(%%edi), %%ecx\n\t"
-      "movl $8, %%edx\n\t"
-      "jmp .LFUN_001ba710_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_001ba710_1:\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "addl $0x20000, %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "decl %%edx\n\t"
-      "jne .LFUN_001ba710_1\n\t"
-      "pushl $4\n\t"
-      "movl %%eax, 0x984(%%edi)\n\t"
-      "movl 0x960(%%esi), %%eax\n\t"
-      "pushl $0x512000\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x60000000\n\t"
+      "pushl $3\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%edi\n\t"
+      "pushl $0x80000000\n\t"
+      "pushl %%esi\n\t"
+      "call *%[c1d1d85]\n\t"
+      "pushl %%edi\n\t"
       "pushl %%eax\n\t"
-      "call *%[c1d371d]\n\t"
-      "movl 0x960(%%esi), %%ecx\n\t"
-      "pushl $0x500000\n\t"
-      "pushl $0xfd\n\t"
+      "movl %%eax, 0x990(%%esi)\n\t"
+      "call *%[c1d1d4a]\n\t"
+      "pushl $0xdc\n\t"
+      "movl %%eax, 0xa94(%%esi)\n\t"
+      "movl %%eax, 0xa8c(%%esi)\n\t"
+      "movl %%eax, 0xa90(%%esi)\n\t"
+      "leal 0x99c(%%esi), %%eax\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[memset]\n\t"
+      "movl 0xa94(%%esi), %%eax\n\t"
+      "addl $0xc, %%esp\n\t"
+      "cmpl $0x800, %%eax\n\t"
+      "jae .Lcache_copy_initialize_and_fill_with_garbage_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x3c4\n\t"
+      "pushl $0x2b839c\n\t"
+      "pushl $0x2b845c\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lcache_copy_initialize_and_fill_with_garbage_1:\n\t"
+      "pushl $4\n\t"
+      "leal 0x994(%%esi), %%ecx\n\t"
+      "pushl %%edi\n\t"
       "pushl %%ecx\n\t"
       "call *%[memset]\n\t"
-      "movl 0x960(%%esi), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0x500000\n\t"
+      "pushl $4\n\t"
+      "leal 0x998(%%esi), %%edx\n\t"
+      "pushl %%edi\n\t"
       "pushl %%edx\n\t"
-      "call *%[c1d371d]\n\t"
-      "movl 0x960(%%esi), %%eax\n\t"
-      "addl $0x500000, %%eax\n\t"
-      "pushl $0x1c0\n\t"
-      "movl $0x12000, 0x944(%%esi)\n\t"
-      "movl %%eax, 0x940(%%esi)\n\t"
-      "movl %%eax, 0x948(%%esi)\n\t"
-      "pushl $0xfa\n\t"
-      "addl $0x990, %%esi\n\t"
-      "pushl %%esi\n\t"
       "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
+      "orl $0xffffffff, %%eax\n\t"
+      "movl %%eax, 0xa78(%%esi)\n\t"
+      "movl %%eax, 0xa7c(%%esi)\n\t"
+      "movl %%eax, 0xa80(%%esi)\n\t"
+      "movl %%eax, 0xa84(%%esi)\n\t"
+      "movw $0xffff, 0xa88(%%esi)\n\t"
+      "addl $0x18, %%esp\n\t"
+      "movw %%di, 0xab8(%%esi)\n\t"
+      "movw %%di, 0xaba(%%esi)\n\t"
+      "movw %%di, 0xabe(%%esi)\n\t"
+      "movw %%di, 0xac0(%%esi)\n\t"
+      "movl %%edi, 0xab4(%%esi)\n\t"
+      "movw $0xffff, 0xabc(%%esi)\n\t"
       "popl %%edi\n\t"
-      "popl %%esi\n\t"
       "ret\n\t"
       :
-      : [c1d371d] "m"(b1ba710_c1d371d), [memset] "m"(b1ba710_memset)
+      : [c1d1d85] "m"(b1ba7c0_c1d1d85), [c1d1d4a] "m"(b1ba7c0_c1d1d4a), [memset] "m"(b1ba7c0_memset), [assert] "m"(b1ba7c0_assert), [exitfn] "m"(b1ba7c0_exitfn)
       : "memory");
 }
 #else
-#error "FUN_001ba710: clang naked draft required"
+#error "cache_copy_initialize_and_fill_with_garbage: clang naked draft required"
 #endif
-
-/* cache_copy_initialize_and_fill_with_garbage (0x1ba7c0) — readable C lift from XBE leaf.
- * ctx@esi: CreateFileA(path=ctx), record size, zero IO state fields. */
-void cache_copy_initialize_and_fill_with_garbage(char *ctx)
-{
-  int handle;
-  unsigned int size;
-
-  handle = CreateFileA(ctx, 0x80000000u, 0u, 0, 3u, 0x60000000u, 0);
-  *(int *)(ctx + 0x990) = handle;
-  size = GetFileSize(handle, 0);
-  *(unsigned int *)(ctx + 0xa94) = size;
-  *(unsigned int *)(ctx + 0xa8c) = size;
-  *(unsigned int *)(ctx + 0xa90) = size;
-  csmemset(ctx + 0x99c, 0, 0xdcu);
-  if (size < 0x800u) {
-    display_assert((const char *)0x2b845c, (const char *)0x2b839c, 0x3c4, true);
-    system_exit(-1);
-  }
-  csmemset(ctx + 0x994, 0, 4u);
-  csmemset(ctx + 0x998, 0, 4u);
-  *(unsigned int *)(ctx + 0xa78) = 0xffffffffu;
-  *(unsigned int *)(ctx + 0xa7c) = 0xffffffffu;
-  *(unsigned int *)(ctx + 0xa80) = 0xffffffffu;
-  *(unsigned int *)(ctx + 0xa84) = 0xffffffffu;
-  *(unsigned short *)(ctx + 0xa88) = 0xffffu;
-  *(unsigned short *)(ctx + 0xab8) = 0;
-  *(unsigned short *)(ctx + 0xaba) = 0;
-  *(unsigned short *)(ctx + 0xabe) = 0;
-  *(unsigned short *)(ctx + 0xac0) = 0;
-  *(unsigned int *)(ctx + 0xab4) = 0;
-  *(unsigned short *)(ctx + 0xabc) = 0xffffu;
-}
-
 
 
 /* FUN_001ba8b0 (0x1ba8b0) — readable C lift. */

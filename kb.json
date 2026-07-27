@@ -25582,14 +25582,14 @@
         },
         {
           "addr": "0x1ba710",
-          "decl": "void FUN_001ba710(void *cache /* @<eax> */);",
+          "decl": "void FUN_001ba710(void *cache@<eax>);",
           "ported": false,
           "name": "FUN_001ba710"
         },
         {
           "addr": "0x1ba7c0",
           "decl": "void cache_copy_initialize_and_fill_with_garbage(char *ctx@<esi>);",
-          "ported": true,
+          "ported": false,
           "name": "cache_copy_initialize_and_fill_with_garbage"
         },
         {
