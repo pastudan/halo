@@ -7777,7 +7777,8 @@
         {
           "addr": "0xdc000",
           "decl": "void FUN_000dc000(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000dc000"
         },
         {
           "addr": "0xdc070",

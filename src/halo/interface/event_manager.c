@@ -1,3 +1,4 @@
+#include "x87_math.h"
 #include <stdint.h>
 /* motion_sensor_initialize (0xdb0f0) — readable C lift. */
 extern char DAT_00282100[];
@@ -4034,49 +4035,22 @@ void FUN_000dbfb0(int16_t local_player_index, int param_2, void *pt)
   }
 }
 
-/* FUN_000dc000 (0xdc000) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-static int (*const bdc000_gtime)(void) = game_time_get;
-static void (*const bdc000_c1daf7e)(void) = FUN_001daf7e;
-static void (*const bdc000_cdb4c0)(void) = motion_sensor_update;
-
-__attribute__((naked, noinline))
+/* FUN_000dc000 (0xdc000) — readable C lift from XBE leaf.
+ * phase = fmod(game_time * k, period); drive motion-sensor blend factor. */
 void FUN_000dc000(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fldl 0x282180\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fcoms 0x28217c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000dc000_1\n\t"
-      "fadds 0x255d90\n\t"
-      "fmuls 0x2f6708\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fstps 0x46bd30\n\t"
-      "call *%[cdb4c0]\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000dc000_1:\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3ecccccd, 0x46bd30\n\t"
-      "call *%[cdb4c0]\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(bdc000_gtime), [c1daf7e] "m"(bdc000_c1daf7e), [cdb4c0] "m"(bdc000_cdb4c0)
-      : "memory");
+  float phase;
+  int t;
+
+  t = game_time_get();
+  phase = x87_fmod((float)t * *(float *)0x2546a4, *(double *)0x282180);
+  if (phase < *(float *)0x28217c) {
+    *(float *)0x46bd30 =
+        *(float *)0x2533c8 / ((phase + *(float *)0x255d90) * *(float *)0x2f6708);
+  } else {
+    *(unsigned int *)0x46bd30 = 0x3ecccccd;
+  }
+  motion_sensor_update();
 }
-#else
-#error "FUN_000dc000: clang naked draft required"
-#endif
+
 
