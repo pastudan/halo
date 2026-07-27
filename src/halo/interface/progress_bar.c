@@ -930,63 +930,13 @@ void progress_bar_display(float progress)
 }
 /* --- progress_bar.obj batch drafts (2026-07-26) --- */
 
-/* tgaLoad (0xe19c0) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void __stdcall (*const be19c0_c1e6ae0)(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture) = (void *)D3DDevice_CreateTexture;
-static void __stdcall (*const be19c0_c1e7af0)(void *render_target, void *depth_stencil) = (void *)D3DDevice_SetRenderTarget;
-static int __stdcall (*const be19c0_c1e8270)(void **out_surface) = (void *)D3DDevice_GetDepthStencilSurface;
-
-__attribute__((naked, noinline))
-void tgaLoad(void)
+/* tgaLoad (0xe19c0) — readable C lift: stdcall CreateTexture forwarder. */
+__attribute__((stdcall))
+int tgaLoad(int a, int b, int c, int d, int e)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e6ae0]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "movl 0x46c3f0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "setne %%al\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e7af0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e8270]\n\t"
-      "ret\n\t"
-      :
-      : [c1e6ae0] "m"(be19c0_c1e6ae0), [c1e7af0] "m"(be19c0_c1e7af0), [c1e8270] "m"(be19c0_c1e8270)
-      : "memory");
+  return D3DDevice_CreateTexture((uint32_t)a, (uint32_t)b, (uint32_t)c,
+                                 (uint32_t)d, (uint32_t)e, 0, 0);
 }
-#else
-#error "tgaLoad: clang naked draft required"
-#endif
-
-
 /* FUN_000e1a10 (0xe1a10) — readable C lift. */
 __attribute__((stdcall))
 int FUN_000e1a10(int a, int b, int c, int d, int e)

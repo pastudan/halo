@@ -20459,7 +20459,7 @@
         {
           "addr": "0xe19c0",
           "decl": "int __stdcall tgaLoad(int a, int b, int c, int d, int e);",
-          "ported": false,
+          "ported": true,
           "name": "tgaLoad"
         },
         {
