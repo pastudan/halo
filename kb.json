@@ -4988,9 +4988,9 @@
         },
         {
           "addr": "0x1bc6b0",
-          "decl": "void FUN_001bc6b0(void);",
+          "decl": "bool cache_files_precache_in_progress(void);",
           "ported": true,
-          "name": "FUN_001bc6b0"
+          "name": "cache_files_precache_in_progress"
         },
         {
           "addr": "0x1bc6c0",
@@ -14654,7 +14654,7 @@
         },
         {
           "addr": "0x103530",
-          "decl": "void FUN_00103530(int a0, int a1, int a2, int a3, int a4);",
+          "decl": "void FUN_00103530(int base, char (*visit)(uint32_t, int, uint32_t *, uint32_t), uint32_t visit_arg, uint32_t mark, int node_index);",
           "ported": true,
           "source_path": "src/halo/main/main.c"
         },

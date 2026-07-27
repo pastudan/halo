@@ -28,7 +28,7 @@ static char * (*const b1b98d0_c8d9d0)(char *buffer, const char *format, ...) = c
 static int (*const b1b98d0_c8df60)(const char *s1) = csstrlen;
 static int (*const b1b98d0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
 static bool (*const b1b98d0_c1bd8e0)(char *map_name) = cache_files_precache_map_loaded;
-static bool (*const b1b98d0_c1bc6b0)(void) = (bool (*)(void))FUN_001bc6b0;
+static bool (*const b1b98d0_c1bc6b0)(void) = (bool (*)(void))cache_files_precache_in_progress;
 static bool (*const b1b98d0_c1bc6c0)(char *map_name) = cache_files_precache_is_copying_map;
 static void (*const b1b98d0_c1bda30)(void) = cache_files_precache_map_end;
 static __int16 (*const b1b98d0_c1bcf00)(float *) = cache_files_precache_map_status;
@@ -3971,7 +3971,7 @@ int FUN_001b9920(void) {
 /* cache_files_give_time_to_precache (0x1b9de0) — XBE naked draft (batch 281). */
 #if defined(__clang__)
 static bool (*const b1b9de0_c1bd8e0)(char *map_name) = cache_files_precache_map_loaded;
-static bool (*const b1b9de0_c1bc6b0)(void) = (bool (*)(void))FUN_001bc6b0;
+static bool (*const b1b9de0_c1bc6b0)(void) = (bool (*)(void))cache_files_precache_in_progress;
 static bool (*const b1b9de0_c1bc6c0)(char *map_name) = cache_files_precache_is_copying_map;
 static void (*const b1b9de0_c1bda30)(void) = cache_files_precache_map_end;
 static __int16 (*const b1b9de0_c1bcf00)(float *) = cache_files_precache_map_status;
