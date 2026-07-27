@@ -10100,7 +10100,7 @@
         {
           "addr": "0x1c7230",
           "decl": "int game_looping_sound_new(int object_index, int sound_tag_index, void *marker_name, short scale_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c7500",
