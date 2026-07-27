@@ -38307,9 +38307,9 @@
         },
         {
           "addr": "0x12b6b0",
-          "decl": "bool network_game_message_encode(void *message_struct @<edi>, char *encoded_message @<ebx>, int16_t *encoded_message_size @<esi>, int16_t type, int one);",
+          "decl": "bool network_game_message_encode(void *message_struct@<edi>, char *encoded_message@<ebx>, int16_t *encoded_message_size@<esi>, int16_t type, int one);",
           "name": "network_game_message_encode",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "network_game_manager.obj",

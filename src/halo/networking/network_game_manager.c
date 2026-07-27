@@ -610,55 +610,24 @@ bool network_game_create_game_objects(void *game)
   return g[0x430] != 0;
 }
 
-/* network_game_message_encode (0x12b6b0) — XBE naked draft (batch 95). */
-#if defined(__clang__)
-static void (*const b12b6b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12b6b0_exitfn)(int) = system_exit;
-static bool (*const b12b6b0_c11aca0)(group_definition *group, void *data, char *encoded_buf, int32_t *encoded_size, int16_t type, int one) = encode_packet_group;
-
-__attribute__((naked, noinline))
-bool network_game_message_encode(void *message_struct __attribute__((unused)), char *encoded_message __attribute__((unused)), int16_t *encoded_message_size __attribute__((unused)), int16_t type __attribute__((unused)), int one __attribute__((unused)))
+/* network_game_message_encode (0x12b6b0) — readable C lift from XBE leaf. */
+bool network_game_message_encode(void *message_struct, char *encoded_message,
+                                 int16_t *encoded_message_size, int16_t type,
+                                 int one)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lnetwork_game_message_encode_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lnetwork_game_message_encode_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lnetwork_game_message_encode_1\n\t"
-      "cmpw $0, (%%esi)\n\t"
-      "jg .Lnetwork_game_message_encode_2\n\t"
-      ".Lnetwork_game_message_encode_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x161\n\t"
-      "pushl $0x296108\n\t"
-      "pushl $0x296138\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_message_encode_2:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x323510\n\t"
-      "call *%[c11aca0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b12b6b0_assert), [exitfn] "m"(b12b6b0_exitfn), [c11aca0] "m"(b12b6b0_c11aca0)
-      : "memory");
+  extern char DAT_00296138[];
+  extern char DAT_00296108[];
+
+  if (message_struct == 0 || encoded_message == 0 || encoded_message_size == 0 ||
+      *encoded_message_size <= 0) {
+    display_assert(DAT_00296138, DAT_00296108, 0x161, true);
+    system_exit(-1);
+  }
+  return encode_packet_group((group_definition *)0x323510, message_struct,
+                             encoded_message, (int32_t *)encoded_message_size,
+                             type, one);
 }
-#else
-#error "network_game_message_encode: clang naked draft required"
-#endif
+
 
 /* --- network_game_manager.obj batch drafts (2026-07-26) --- */
 
