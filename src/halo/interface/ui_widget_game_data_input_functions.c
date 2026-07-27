@@ -6434,133 +6434,43 @@ void FUN_000f2b90(void *widget)
   else
     w[0x20] = 0xd;
 }
-/* FUN_000f2d50 (0xf2d50) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void (*const bf2d50_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf2d50_exitfn)(int) = (void *)system_exit;
-static int (*const bf2d50_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static void (*const bf2d50_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* FUN_000f2d50 (0xf2d50) — readable C lift: map game type to widget icon. */
 void FUN_000f2d50(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $1, 0xe(%%esi)\n\t"
-      "je .LFUN_000f2d50_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa59\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x28932c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2d50_1:\n\t"
-      "call *%[c12a0a0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2d50_12\n\t"
-      "movl 0xbc(%%eax), %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "cmpl $4, %%ecx\n\t"
-      "ja .LFUN_000f2d50_11\n\t"
-      "jmp *.LFUN_000f2d50_jt(,%%ecx,4)\n\t"
-      ".LFUN_000f2d50_2:\n\t"
-      "cmpb $1, 0xf0(%%eax)\n\t"
-      "jne .LFUN_000f2d50_3\n\t"
-      "movl 0xf4(%%eax), %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $0x1d, %%eax\n\t"
-      "movw %%ax, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_3:\n\t"
-      "movl 0xf4(%%eax), %%ecx\n\t"
-      "negl %%ecx\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $0x1b, %%ecx\n\t"
-      "addl $3, %%ecx\n\t"
-      "movw %%cx, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_4:\n\t"
-      "movw $4, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_5:\n\t"
-      "movl 0x100(%%eax), %%eax\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_000f2d50_7\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_000f2d50_6\n\t"
-      "movw $5, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_6:\n\t"
-      "movw $0x20, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_7:\n\t"
-      "movw $0x1f, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_8:\n\t"
-      "movw $6, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_9:\n\t"
-      "movl 0xf0(%%eax), %%eax\n\t"
-      "subl $2, %%eax\n\t"
-      "je .LFUN_000f2d50_10\n\t"
-      "movw $7, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_10:\n\t"
-      "movw $0x21, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_11:\n\t"
-      "movw $8, 0x40(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2d50_12:\n\t"
-      "pushl $0x28931c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000f2d50_jt:\n\t"
-      ".long .LFUN_000f2d50_2\n\t"
-      ".long .LFUN_000f2d50_4\n\t"
-      ".long .LFUN_000f2d50_5\n\t"
-      ".long .LFUN_000f2d50_8\n\t"
-      ".long .LFUN_000f2d50_9\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(bf2d50_assert), [exitfn] "m"(bf2d50_exitfn), [c12a0a0] "m"(bf2d50_c12a0a0), [c8f390] "m"(bf2d50_c8f390)
-      : "memory");
+  extern char DAT_00288938[]; extern char DAT_0028932c[]; extern char DAT_0028931c[];
+  void *game; unsigned int kind; int v;
+  if (*(short *)((char *)widget + 0xe) != 1) {
+    display_assert(DAT_0028932c, DAT_00288938, 0xa59, true); system_exit(-1);
+  }
+  game = (void *)FUN_0012a0a0();
+  if (game == 0) { error(2, DAT_0028931c); return; }
+  kind = *(unsigned int *)((char *)game + 0xbc) - 1;
+  if (kind > 4) { *(short *)((char *)widget + 0x40) = 8; return; }
+  switch (kind) {
+  case 0:
+    if (*((unsigned char *)game + 0xf0) == 1) {
+      v = *(int *)((char *)game + 0xf4);
+      *(short *)((char *)widget + 0x40) = (short)((v != 0 ? -1 : 0) + 0x1d);
+    } else {
+      v = *(int *)((char *)game + 0xf4);
+      *(short *)((char *)widget + 0x40) = (short)(((v != 0) ? 0x1b : 0) + 3);
+    }
+    break;
+  case 1: *(short *)((char *)widget + 0x40) = 4; break;
+  case 2:
+    v = *(int *)((char *)game + 0x100);
+    if (v == 1) *(short *)((char *)widget + 0x40) = 0x1f;
+    else if (v == 2) *(short *)((char *)widget + 0x40) = 0x20;
+    else *(short *)((char *)widget + 0x40) = 5;
+    break;
+  case 3: *(short *)((char *)widget + 0x40) = 6; break;
+  case 4:
+    v = *(int *)((char *)game + 0xf0);
+    if (v == 2) *(short *)((char *)widget + 0x40) = 0x21;
+    else *(short *)((char *)widget + 0x40) = 7;
+    break;
+  }
 }
-#else
-#error "FUN_000f2d50: clang naked draft required"
-#endif
-
 
 /* FUN_000f2e60 (0xf2e60) — readable C lift from XBE leaf. */
 void FUN_000f2e60(void *widget)
