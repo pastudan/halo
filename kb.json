@@ -28244,7 +28244,7 @@
         {
           "addr": "0xf3850",
           "decl": "void multiplayer_game_set_text_box_for_teams_noteams(int *handles, int count);",
-          "ported": false,
+          "ported": true,
           "name": "multiplayer_game_set_text_box_for_teams_noteams"
         },
         {
