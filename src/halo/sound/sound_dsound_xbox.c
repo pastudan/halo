@@ -972,106 +972,41 @@ short FUN_001c9c80(short index)
   chan = sound_dsound_channel_get(ch);
   return *(short *)chan;
 }
-/* FUN_001c9cf0 (0x1c9cf0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static void *(*const b1c9cf0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1c9cf0_c2060d4)(void) = IDirectSound_CreateSoundBuffer;
-static int __stdcall (*const b1c9cf0_c205b7f)(void *buffer, void *data, uint32_t size) = IDirectSoundBuffer_SetBufferData;
-static int __stdcall (*const b1c9cf0_c205b43)(void *buffer, uint32_t reserved, uint32_t priority, uint32_t flags) = IDirectSoundBuffer_Play;
-static void (*const b1c9cf0_c1c98f0)(int hresult, const char *message, ...) = sound_dsound_log_error;
-
-__attribute__((naked, noinline))
-void FUN_001c9cf0(void)
+/* FUN_001c9cf0 (0x1c9cf0) — readable C lift: create/play silence DS buffer. */
+char FUN_001c9cf0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x2c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x18\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "movl $1, %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movw %%si, -0x14(%%ebp)\n\t"
-      "movw $0x10, -0x6(%%ebp)\n\t"
-      "movw %%si, -0x12(%%ebp)\n\t"
-      "movw $2, -0x8(%%ebp)\n\t"
-      "movl $0x5622, -0x10(%%ebp)\n\t"
-      "movl $0xac44, -0xc(%%ebp)\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x50545c, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x505460\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x18, -0x2c(%%ebp)\n\t"
-      "movl %%ebx, -0x28(%%ebp)\n\t"
-      "movl $0x20, -0x24(%%ebp)\n\t"
-      "movl %%ecx, -0x20(%%ebp)\n\t"
-      "movl $0x1f00, -0x1c(%%ebp)\n\t"
-      "call *%[c2060d4]\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jl .LFUN_001c9cf0_2\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x505464\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x505460, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x20\n\t"
-      "pushl $0x505464\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c205b7f]\n\t"
-      "movl 0x505460, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c205b43]\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jl .LFUN_001c9cf0_1\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c9cf0_1:\n\t"
-      "pushl $0x2c0ccc\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1c98f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c9cf0_2:\n\t"
-      "pushl $0x2c0ca4\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1c98f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b1c9cf0_memset), [c2060d4] "m"(b1c9cf0_c2060d4), [c205b7f] "m"(b1c9cf0_c205b7f), [c205b43] "m"(b1c9cf0_c205b43), [c1c98f0] "m"(b1c9cf0_c1c98f0)
-      : "memory");
-}
-#else
-#error "FUN_001c9cf0: clang naked draft required"
-#endif
+  unsigned char desc[0x18];
+  unsigned char fmt[0x10];
+  int hr;
+  int (*create_buf)(void *, void *, void *, int);
 
+  *(unsigned short *)fmt = 1;
+  *(unsigned short *)(fmt + 2) = 1;
+  *(unsigned int *)(fmt + 4) = 0x5622;
+  *(unsigned int *)(fmt + 8) = 0xac44;
+  *(unsigned short *)(fmt + 0xc) = 2;
+  *(unsigned short *)(fmt + 0xe) = 0x10;
+  csmemset(desc, 0, 0x18);
+  *(unsigned int *)desc = 0x18;
+  *(unsigned int *)(desc + 4) = 0;
+  *(unsigned int *)(desc + 8) = 0x20;
+  *(void **)(desc + 0xc) = fmt;
+  *(unsigned int *)(desc + 0x10) = 0x1f00;
+  create_buf = (int (*)(void *, void *, void *, int))IDirectSound_CreateSoundBuffer;
+  hr = create_buf(*(void **)0x50545c, desc, (void *)0x505460, 0);
+  if (hr < 0) {
+    sound_dsound_log_error(hr, (const char *)0x2c0ca4);
+    return 0;
+  }
+  csmemset((void *)0x505464, 0, 0x20);
+  IDirectSoundBuffer_SetBufferData(*(void **)0x505460, (void *)0x505464, 0x20);
+  hr = IDirectSoundBuffer_Play(*(void **)0x505460, 0, 0, 1);
+  if (hr < 0) {
+    sound_dsound_log_error(hr, (const char *)0x2c0ccc);
+    return 0;
+  }
+  return 1;
+}
 
 /* FUN_001c9e20 (0x1c9e20) — XBE naked draft (batch 247). */
 #if defined(__clang__)

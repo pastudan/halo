@@ -1,3 +1,4 @@
+#include <stdint.h>
 /*
  * game_state_xbox.c — Xbox-specific game state buffer and file management.
  *
@@ -508,80 +509,25 @@ void game_state_read_from_file(void)
 #endif
 
 
-/* game_state_write_core (0x1c0570) — XBE naked draft (batch 286). */
-#if defined(__clang__)
-static int (*const b1c0570_c1d3410)(const char *path, int access) = CreateDirectoryA;
-static int (*const b1c0570_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static int __stdcall (*const b1c0570_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = (void *)0x1d1d85;
-static int __stdcall (*const b1c0570_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = (void *)0x1d14b6;
-static int __stdcall (*const b1c0570_c1cf900)(int handle) = CloseHandle;
-
-__attribute__((naked, noinline))
-void game_state_write_core(void)
+/* game_state_write_core (0x1c0570) — readable C lift: write buffer to core file. */
+char game_state_write_core(const char *name, void *buffer, unsigned int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x404, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl $0x2b9cf4\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1d3410]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x404(%%ebp), %%ecx\n\t"
-      "pushl $0x2b9ce8\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0\n\t"
-      "pushl $0x80\n\t"
-      "pushl $2\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x40000000\n\t"
-      "leal -0x404(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d1d85]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lgame_state_write_core_2\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl $0\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d14b6]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgame_state_write_core_1\n\t"
-      "cmpl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lgame_state_write_core_1\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lgame_state_write_core_1:\n\t"
-      "popl %%edi\n\t"
-      ".Lgame_state_write_core_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1cf900]\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d3410] "m"(b1c0570_c1d3410), [c1d90f0] "m"(b1c0570_c1d90f0), [c1d1d85] "m"(b1c0570_c1d1d85), [c1d14b6] "m"(b1c0570_c1d14b6), [c1cf900] "m"(b1c0570_c1cf900)
-      : "memory");
-}
-#else
-#error "game_state_write_core: clang naked draft required"
-#endif
+  char path[0x400];
+  int handle;
+  unsigned int written;
+  char ok;
 
+  ok = 0;
+  CreateDirectoryA((const char *)0x2b9cf4, 0);
+  crt_sprintf(path, (const char *)0x2b9ce8, name);
+  handle = CreateFileA(path, 0x40000000u, 0, 0, 2, 0x80, 0);
+  if (handle != -1) {
+    if (XWriteFile(handle, buffer, size, (int *)&written, 0) && written == size)
+      ok = 1;
+  }
+  CloseHandle(handle);
+  return ok;
+}
 
 /* game_state_read_core_header (0x1c0600) — readable C lift. */
 char game_state_read_core_header(const char *name, void *buffer, uint32_t size)

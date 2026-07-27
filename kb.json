@@ -10316,8 +10316,9 @@
         },
         {
           "addr": "0x1c0570",
-          "decl": "void game_state_write_core(void);",
-          "ported": false
+          "decl": "char game_state_write_core(const char *name, void *buffer, unsigned int size);",
+          "ported": false,
+          "name": "game_state_write_core"
         },
         {
           "addr": "0x1c0600",
@@ -15695,8 +15696,9 @@
         },
         {
           "addr": "0x12dc20",
-          "decl": "bool FUN_0012dc20(int server@<ebx>);",
-          "ported": false
+          "decl": "bool FUN_0012dc20(int server /* @<ebx> */);",
+          "ported": true,
+          "name": "FUN_0012dc20"
         },
         {
           "addr": "0x12dd20",
@@ -16023,8 +16025,9 @@
         },
         {
           "addr": "0x12f8d0",
-          "decl": "char FUN_0012f8d0(int server @<ecx>, void *decoded_msg @<eax>, void *client_message);",
-          "ported": false
+          "decl": "char FUN_0012f8d0(int server /* @<ecx> */, void *decoded_msg /* @<eax> */, void *client_message);",
+          "ported": true,
+          "name": "FUN_0012f8d0"
         },
         {
           "addr": "0x12f990",
@@ -24848,8 +24851,9 @@
         },
         {
           "addr": "0x1c9cf0",
-          "decl": "void FUN_001c9cf0(void);",
-          "ported": false
+          "decl": "char FUN_001c9cf0(void);",
+          "ported": false,
+          "name": "FUN_001c9cf0"
         },
         {
           "addr": "0x1c9e20",
