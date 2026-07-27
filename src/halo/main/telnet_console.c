@@ -1197,88 +1197,30 @@ void FUN_00131790(void)
 #endif
 
 
-/* FUN_00131840 (0x131840) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-static void (*const b131840_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b131840_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00131840(void)
+/* FUN_00131840 (0x131840) — readable C lift. */
+void *FUN_00131840(void *base, short *dims, short x, short y)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .LFUN_00131840_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00131840_2\n\t"
-      ".LFUN_00131840_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0x29aa38\n\t"
-      "pushl $0x29aa24\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00131840_2:\n\t"
-      "movw 0x10(%%ebp), %%bx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .LFUN_00131840_3\n\t"
-      "cmpw 0xc(%%edi), %%bx\n\t"
-      "jl .LFUN_00131840_4\n\t"
-      ".LFUN_00131840_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x61\n\t"
-      "pushl $0x29aa38\n\t"
-      "pushl $0x29aa08\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00131840_4:\n\t"
-      "movw 0x14(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00131840_5\n\t"
-      "cmpw 0xe(%%edi), %%si\n\t"
-      "jl .LFUN_00131840_6\n\t"
-      ".LFUN_00131840_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x62\n\t"
-      "pushl $0x29aa38\n\t"
-      "pushl $0x29a9e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00131840_6:\n\t"
-      "movswl 0xe(%%edi), %%eax\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "imull %%ecx, %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl %%si, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "popl %%edi\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "popl %%esi\n\t"
-      "leal 0x1c(%%ecx,%%eax,8), %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b131840_assert), [exitfn] "m"(b131840_exitfn)
-      : "memory");
+  extern char DAT_0029aa08[];
+  extern char DAT_0029aa24[];
+  extern char DAT_0029aa38[];
+  extern char DAT_0029a9e8[];
+  int idx;
+
+  if (base == 0 || dims == 0) {
+    display_assert(DAT_0029aa24, DAT_0029aa38, 0x60, 1);
+    system_exit(-1);
+  }
+  if (x < 0 || x >= dims[6]) {
+    display_assert(DAT_0029aa08, DAT_0029aa38, 0x61, 1);
+    system_exit(-1);
+  }
+  if (y < 0 || y >= dims[7]) {
+    display_assert(DAT_0029a9e8, DAT_0029aa38, 0x62, 1);
+    system_exit(-1);
+  }
+  idx = (int)dims[7] * (int)x + (int)y;
+  return (char *)base + idx * 24 + 0x1c;
 }
-#else
-#error "FUN_00131840: clang naked draft required"
-#endif
-
-
 /* telnet_console_print (0x1318f0) — XBE naked draft (batch 141). */
 #if defined(__clang__)
 static void (*const b1318f0_assert)(const char *, const char *, int, bool) = display_assert;
