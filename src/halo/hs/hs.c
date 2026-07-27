@@ -409,50 +409,17 @@ void FUN_000c1090(int16_t function_index, int thread_datum, char init)
   }
 }
 
-/* FUN_000c10d0 (0xc10d0) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static int (*const bc10d0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc10d0_c58720)(unsigned int param_1, int param_2) = FUN_00058720;
-static void (*const bc10d0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c10d0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c10d0 (0xc10d0) — readable C lift. */
+void FUN_000c10d0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c10d0_1\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c58720]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_000c10d0_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc10d0_ccc560), [c58720] "m"(bc10d0_c58720), [ccbf80] "m"(bc10d0_ccbf80)
-      : "memory");
-}
-#else
-#error "FUN_000c10d0: clang naked draft required"
-#endif
+  int *args;
 
+  args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args == NULL)
+    return;
+  FUN_00058720((unsigned int)args[0], args[1]);
+  hs_return(thread_datum, 0);
+}
 
 /* 0xc1110 — Evaluate an HS built-in function call, then dispatch the result
  * to the ai_berserk script command (FUN_000587d0) and commit a 0 result to
