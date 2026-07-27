@@ -479,91 +479,41 @@ void FUN_001bed90(int cache_handle)
 #endif
 
 
-/* FUN_001bef80 (0x1bef80) — XBE naked draft (batch 246). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001bef80(void)
+/* FUN_001bef80 (0x1bef80) — readable C lift.
+ * out_a@eax, out_c@ecx, uv@edx (twin of FUN_001be6b0). */
+void FUN_001bef80(float *out_a, float *out_c, float *uv)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "flds (%%edx)\n\t"
-      "fmuls 0x2a41b8\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "movl 0x31fc38, %%edx\n\t"
-      "fmuls 0x2a41b4\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "flds 0x5066b4\n\t"
-      "fadds (%%edx)\n\t"
-      "fstps (%%eax)\n\t"
-      "flds 0x5066b8\n\t"
-      "fadds 0x4(%%edx)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds 0x5066bc\n\t"
-      "fadds 0x8(%%edx)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds 0x506690\n\t"
-      "fsubs 0x506684\n\t"
-      "flds 0x506694\n\t"
-      "fsubs 0x506688\n\t"
-      "flds 0x506698\n\t"
-      "fsubs 0x50668c\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds 0x50669c\n\t"
-      "fsubs 0x506684\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x5066a0\n\t"
-      "fsubs 0x506688\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x5066a4\n\t"
-      "fsubs 0x50668c\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "fadds 0x506684\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fadds 0x506688\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "fadds 0x50668c\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fadds -0xc(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstp %%st(2)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs (%%eax)\n\t"
-      "fstps (%%ecx)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "fstps 0x4(%%ecx)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fstps 0x8(%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_001bef80: clang naked draft required"
-#endif
+  float *origin;
+  float su, sv;
+  float d0x, d0y, d0z;
+  float d1x, d1y, d1z;
+  float px, py, pz;
 
+  su = uv[0] * *(float *)0x2a41b8;
+  sv = *(float *)0x2533c8 - uv[1] * *(float *)0x2a41b4;
+  origin = *(float **)0x31fc38;
+  out_a[0] = *(float *)0x5066b4 + origin[0];
+  out_a[1] = *(float *)0x5066b8 + origin[1];
+  out_a[2] = *(float *)0x5066bc + origin[2];
+
+  d0x = *(float *)0x506690 - *(float *)0x506684;
+  d0y = *(float *)0x506694 - *(float *)0x506688;
+  d0z = *(float *)0x506698 - *(float *)0x50668c;
+  d1x = *(float *)0x50669c - *(float *)0x506684;
+  d1y = *(float *)0x5066a0 - *(float *)0x506688;
+  d1z = *(float *)0x5066a4 - *(float *)0x50668c;
+
+  px = d0x * su + *(float *)0x506684;
+  py = d0y * su + *(float *)0x506688;
+  pz = d0z * su + *(float *)0x50668c;
+  px = d1x * sv + px;
+  py = d1y * sv + py;
+  pz = d1z * sv + pz;
+
+  out_c[0] = px - out_a[0];
+  out_c[1] = py - out_a[1];
+  out_c[2] = pz - out_a[2];
+}
 
 /* texture_cache_new (0x1bf080) — readable C lift. */
 void texture_cache_new(void)
@@ -611,7 +561,7 @@ void texture_cache_close(void)
 /* texture_cache_debug_render (0x1bf260) — XBE naked draft (batch 244). */
 #if defined(__clang__)
 static void (*const b1bf260_c11da60)(void *cache, unsigned char *usage) = lruv_cache_get_page_usage;
-static void (*const b1bf260_c1bef80)(void) = FUN_001bef80;
+static void (*const b1bf260_c1bef80)(void) = (void *)FUN_001bef80;
 static void (*const b1bf260_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
 static void (*const b1bf260_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
 static void * (*const b1bf260_c119810)(data_iter_t *iterator) = data_iterator_next;
