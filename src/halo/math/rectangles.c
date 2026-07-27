@@ -1561,3 +1561,82 @@ char FUN_00108cd0(int *rect, int *point)
   return p[0] >= r[1] && p[0] < r[3] && p[1] >= r[0] && p[1] < r[2];
 }
 
+/* FUN_00108d00 (0x108d00) — readable C lift: rectangle2d containment. */
+int FUN_00108d00(int16_t *outer, int16_t *inner)
+{
+  if (inner[1] < outer[1])
+    return 0;
+  if (inner[3] > outer[3])
+    return 0;
+  if (inner[0] < outer[0])
+    return 0;
+  if (inner[2] > outer[2])
+    return 0;
+  return 1;
+}
+
+/* FUN_00108d40 (0x108d40) — readable C lift: rectangle2d equal. */
+int FUN_00108d40(int16_t *a, int16_t *b)
+{
+  if (a[1] != b[1])
+    return 0;
+  if (a[3] != b[3])
+    return 0;
+  if (a[0] != b[0])
+    return 0;
+  if (a[2] != b[2])
+    return 0;
+  return 1;
+}
+
+/* FUN_00108d80 (0x108d80) — readable C lift: point2d equal. */
+int FUN_00108d80(int16_t *a, int16_t *b)
+{
+  if (a[0] != b[0])
+    return 0;
+  if (a[1] != b[1])
+    return 0;
+  return 1;
+}
+
+/* FUN_00108e20 (0x108e20) — readable C lift: next power-of-two (u16). */
+int FUN_00108e20(unsigned int value)
+{
+  unsigned int v;
+  int pow2;
+
+  v = (unsigned int)(unsigned short)value;
+  pow2 = 1;
+  if ((int)v <= pow2)
+    return pow2;
+  do {
+    pow2 <<= 1;
+  } while (pow2 < (int)v);
+  return pow2;
+}
+
+/* FUN_00108e40 (0x108e40) — readable C lift: integer square root. */
+unsigned int FUN_00108e40(unsigned int n)
+{
+  unsigned int rem;
+  unsigned int root;
+  unsigned int bit;
+  unsigned int trial;
+
+  rem = n;
+  root = 0;
+  bit = 0x40000000u;
+  while (bit != 0) {
+    trial = bit + root;
+    if (trial <= rem) {
+      rem -= trial;
+      root = trial + bit;
+    }
+    bit >>= 2;
+    root >>= 1;
+  }
+  if (rem > root)
+    root++;
+  return root;
+}
+

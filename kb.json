@@ -31493,18 +31493,21 @@
         },
         {
           "addr": "0x108d00",
-          "decl": "int FUN_00108d00(int *outer, int *inner);",
-          "ported": false
+          "decl": "int FUN_00108d00(int16_t *outer, int16_t *inner);",
+          "ported": true,
+          "name": "FUN_00108d00"
         },
         {
           "addr": "0x108d40",
-          "decl": "int FUN_00108d40(int *a, int *b);",
-          "ported": false
+          "decl": "int FUN_00108d40(int16_t *a, int16_t *b);",
+          "ported": true,
+          "name": "FUN_00108d40"
         },
         {
           "addr": "0x108d80",
-          "decl": "int FUN_00108d80(int *a, int *b);",
-          "ported": false
+          "decl": "int FUN_00108d80(int16_t *a, int16_t *b);",
+          "ported": true,
+          "name": "FUN_00108d80"
         },
         {
           "addr": "0x108db0",
@@ -31524,12 +31527,14 @@
         {
           "addr": "0x108e20",
           "decl": "int FUN_00108e20(unsigned int value);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00108e20"
         },
         {
           "addr": "0x108e40",
-          "decl": "void FUN_00108e40(void);",
-          "ported": false
+          "decl": "unsigned int FUN_00108e40(unsigned int n);",
+          "ported": true,
+          "name": "FUN_00108e40"
         }
       ],
       "name": "rectangles.obj",
