@@ -2897,95 +2897,47 @@ char FUN_000eab70(void *widget)
   return 1;
 }
 
-/* FUN_000ecd50 (0xecd50) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static void *(*const becd50_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
-static void (*const becd50_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const becd50_exitfn)(int) = (void *)system_exit;
-static void * (*const becd50_ce3cd0)(void *widget, int index) = (void *)widget_instance_get_nth_child;
-static void (*const becd50_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* FUN_000ecd50 (0xecd50) — readable C lift: sync playlist widget selection. */
 char FUN_000ecd50(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ce0ec0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $3, 0xe(%%esi)\n\t"
-      "movl %%eax, %%edi\n\t"
-      "je .LFUN_000ecd50_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xab2\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287ab0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ecd50_1:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000ecd50_8\n\t"
-      "movl 0x18(%%edi), %%edi\n\t"
-      "leal -0x1(%%edi), %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "ja .LFUN_000ecd50_6\n\t"
-      "jmp *.LFUN_000ecd50_jt(,%%eax,4)\n\t"
-      ".LFUN_000ecd50_2:\n\t"
-      "movw $1, 0x3c(%%esi)\n\t"
-      "jmp .LFUN_000ecd50_7\n\t"
-      ".LFUN_000ecd50_3:\n\t"
-      "movw $2, 0x3c(%%esi)\n\t"
-      "jmp .LFUN_000ecd50_7\n\t"
-      ".LFUN_000ecd50_4:\n\t"
-      "movw $3, 0x3c(%%esi)\n\t"
-      "jmp .LFUN_000ecd50_7\n\t"
-      ".LFUN_000ecd50_5:\n\t"
-      "movw $4, 0x3c(%%esi)\n\t"
-      "jmp .LFUN_000ecd50_7\n\t"
-      ".LFUN_000ecd50_6:\n\t"
-      "movw $0, 0x3c(%%esi)\n\t"
-      ".LFUN_000ecd50_7:\n\t"
-      "movswl 0x3c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce3cd0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, 0x38(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ecd50_8:\n\t"
-      "pushl $0x286550\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000ecd50_jt:\n\t"
-      ".long .LFUN_000ecd50_6\n\t"
-      ".long .LFUN_000ecd50_3\n\t"
-      ".long .LFUN_000ecd50_4\n\t"
-      ".long .LFUN_000ecd50_2\n\t"
-      ".long .LFUN_000ecd50_5\n\t"
-      ".text\n\t"
-      :
-      : [ce0ec0] "m"(becd50_ce0ec0), [assert] "m"(becd50_assert), [exitfn] "m"(becd50_exitfn), [ce3cd0] "m"(becd50_ce3cd0), [c8f390] "m"(becd50_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_000ecd50: clang naked draft required"
-#endif
+  extern char DAT_002859a4[];
+  extern char DAT_00287ab0[];
+  extern char DAT_00286550[];
+  void *profile;
+  int mode;
+  short idx;
 
+  profile = player_ui_get_edit_playlist_profile();
+  if (*(short *)((char *)widget + 0xe) != 3) {
+    display_assert(DAT_00287ab0, DAT_002859a4, 0xab2, true);
+    system_exit(-1);
+  }
+  if (profile == 0) {
+    error(2, DAT_00286550);
+    return 0;
+  }
+  mode = *(int *)((char *)profile + 0x18);
+  switch (mode) {
+  case 2:
+    idx = 2;
+    break;
+  case 3:
+    idx = 3;
+    break;
+  case 4:
+    idx = 1;
+    break;
+  case 5:
+    idx = 4;
+    break;
+  default:
+    idx = 0;
+    break;
+  }
+  *(short *)((char *)widget + 0x3c) = idx;
+  *(void **)((char *)widget + 0x38) = widget_instance_get_nth_child(widget, idx);
+  return 1;
+}
 
 /* playlist_profile_change_koth_rules (0xece10) — readable C lift. */
 char playlist_profile_change_koth_rules(void *widget)
