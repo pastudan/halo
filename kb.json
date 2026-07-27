@@ -26626,8 +26626,8 @@
         },
         {
           "addr": "0x1318f0",
-          "decl": "void telnet_console_print(void);",
-          "ported": false
+          "decl": "void *telnet_console_print(void *base, short *dims, short x, short y);",
+          "ported": true
         },
         {
           "addr": "0x1319b0",

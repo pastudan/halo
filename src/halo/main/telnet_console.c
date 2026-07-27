@@ -1221,94 +1221,30 @@ void *FUN_00131840(void *base, short *dims, short x, short y)
   idx = (int)dims[7] * (int)x + (int)y;
   return (char *)base + idx * 24 + 0x1c;
 }
-/* telnet_console_print (0x1318f0) — XBE naked draft (batch 141). */
-#if defined(__clang__)
-static void (*const b1318f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1318f0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void telnet_console_print(void)
+/* telnet_console_print (0x1318f0) — readable C lift (grid cell ptr). */
+void *telnet_console_print(void *base, short *dims, short x, short y)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Ltelnet_console_print_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Ltelnet_console_print_2\n\t"
-      ".Ltelnet_console_print_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6d\n\t"
-      "pushl $0x29aa38\n\t"
-      "pushl $0x29aa24\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltelnet_console_print_2:\n\t"
-      "movw 0x10(%%ebp), %%bx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Ltelnet_console_print_3\n\t"
-      "movswl 0xc(%%edi), %%eax\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jl .Ltelnet_console_print_4\n\t"
-      ".Ltelnet_console_print_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6e\n\t"
-      "pushl $0x29aa38\n\t"
-      "pushl $0x29aa80\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltelnet_console_print_4:\n\t"
-      "movw 0x14(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Ltelnet_console_print_5\n\t"
-      "movswl 0xe(%%edi), %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "decl %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .Ltelnet_console_print_6\n\t"
-      ".Ltelnet_console_print_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6f\n\t"
-      "pushl $0x29aa38\n\t"
-      "pushl $0x29aa60\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltelnet_console_print_6:\n\t"
-      "movswl 0xe(%%edi), %%ecx\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "decl %%ecx\n\t"
-      "imull %%edx, %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "popl %%edi\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "leal 0x1534(%%edx,%%ecx,2), %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1318f0_assert), [exitfn] "m"(b1318f0_exitfn)
-      : "memory");
+  extern char DAT_0029aa24[];
+  extern char DAT_0029aa38[];
+  extern char DAT_0029aa60[];
+  extern char DAT_0029aa80[];
+  int idx;
+
+  if (base == 0 || dims == 0) {
+    display_assert(DAT_0029aa24, DAT_0029aa38, 0x6d, 1);
+    system_exit(-1);
+  }
+  if (x < 0 || (int)x >= (int)dims[6] - 1) {
+    display_assert(DAT_0029aa80, DAT_0029aa38, 0x6e, 1);
+    system_exit(-1);
+  }
+  if (y < 0 || (int)y >= (int)dims[7] - 1) {
+    display_assert(DAT_0029aa60, DAT_0029aa38, 0x6f, 1);
+    system_exit(-1);
+  }
+  idx = ((int)dims[7] - 1) * (int)x + (int)y;
+  return (char *)base + idx * 2 + 0x1534;
 }
-#else
-#error "telnet_console_print: clang naked draft required"
-#endif
-
-
 /* FUN_001319b0 (0x1319b0) — readable C lift. */
 void FUN_001319b0(void)
 {
