@@ -78,28 +78,11 @@ void FUN_000ffe90(char param_1)
   }
 }
 
-/* set_game_connection (0xfff70) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void set_game_connection(short param __attribute__((unused)))
+/* set_game_connection (0xfff70) — readable C lift. */
+void set_game_connection(uint16_t connection)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "movw %%ax, 0x46da0c\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  *(uint16_t *)0x46da0c = connection;
 }
-#else
-#error "set_game_connection: clang naked draft required"
-#endif
-
 
 short game_connection(void)
 {

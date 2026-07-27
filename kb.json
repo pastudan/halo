@@ -14258,9 +14258,9 @@
         },
         {
           "addr": "0xfff70",
-          "decl": "void set_game_connection(short param);",
+          "decl": "void set_game_connection(uint16_t connection);",
           "name": "set_game_connection",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xfff80",
