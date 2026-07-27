@@ -18544,7 +18544,7 @@
         {
           "addr": "0xe1500",
           "decl": "void player_ui_begin_editing_profile(int profile_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe15b0",
@@ -20929,7 +20929,7 @@
         },
         {
           "addr": "0x1744f0",
-          "decl": "int FUN_001744f0(int a, int b, int c);",
+          "decl": "void FUN_001744f0(void);",
           "ported": true
         },
         {

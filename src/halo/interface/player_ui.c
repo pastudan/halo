@@ -834,91 +834,34 @@ void player_ui_set_active_player_profile(int16_t local_player_index, int profile
   FUN_000e10c0();
 }
 
-/* player_ui_begin_editing_profile (0xe1500) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static void (*const be1500_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be1500_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const be1500_c1c26f0)(void) = playlist_profile_delete;
-static void (*const be1500_c1c18f0)(void) = player_profile_new;
-static void * (*const be1500_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void player_ui_begin_editing_profile(void)
+/* player_ui_begin_editing_profile (0xe1500) — readable C lift. */
+void player_ui_begin_editing_profile(int profile_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "movl $0xffffffff, 0x46c038\n\t"
-      "call *%[c1c29a0]\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lplayer_ui_begin_editing_profile_3\n\t"
-      "decl %%eax\n\t"
-      "je .Lplayer_ui_begin_editing_profile_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x282a28\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_begin_editing_profile_1:\n\t"
-      "pushl $0x46c0a4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c26f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_ui_begin_editing_profile_2\n\t"
-      "pushl $0x68\n\t"
-      "jmp .Lplayer_ui_begin_editing_profile_4\n\t"
-      ".Lplayer_ui_begin_editing_profile_2:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2829f0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_begin_editing_profile_3:\n\t"
-      "pushl $0x46c0a4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c18f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_ui_begin_editing_profile_5\n\t"
-      "pushl $0x30\n\t"
-      ".Lplayer_ui_begin_editing_profile_4:\n\t"
-      "pushl $0x46c0a4\n\t"
-      "pushl $0x46c03c\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%esi, 0x46c038\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_begin_editing_profile_5:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2829b8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c29a0] "m"(be1500_c1c29a0), [c8f390] "m"(be1500_c8f390), [c1c26f0] "m"(be1500_c1c26f0), [c1c18f0] "m"(be1500_c1c18f0), [c8e0b0] "m"(be1500_c8e0b0)
-      : "memory");
-}
-#else
-#error "player_ui_begin_editing_profile: clang naked draft required"
-#endif
+  unsigned short typ;
+  char ok;
 
+  *(int *)0x46c038 = -1;
+  typ = (unsigned short)saved_game_file_get_type(profile_index);
+  if (typ == 0) {
+    ok = player_profile_new(profile_index, (void *)0x46c0a4);
+    if (ok) {
+      csmemcpy((void *)0x46c03c, (void *)0x46c0a4, 0x30u);
+      *(int *)0x46c038 = profile_index;
+    } else {
+      error(2, (const char *)0x2829b8, profile_index);
+    }
+  } else if (typ == 1) {
+    ok = playlist_profile_delete(profile_index, (void *)0x46c0a4);
+    if (ok) {
+      csmemcpy((void *)0x46c03c, (void *)0x46c0a4, 0x68u);
+      *(int *)0x46c038 = profile_index;
+    } else {
+      error(2, (const char *)0x2829f0, profile_index);
+    }
+  } else {
+    error(2, (const char *)0x282a28, profile_index);
+  }
+}
 
 /* player_ui_save_profile (0xe15b0) — XBE naked draft (batch 123). */
 #if defined(__clang__)
