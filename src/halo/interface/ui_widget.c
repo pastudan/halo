@@ -10743,7 +10743,7 @@ void ui_widget_update_list_selection(void *widget /* @<ecx> */, void *definition
 }
 
 /* ui_widget_list_prev (0xe53e0) — readable C lift from XBE leaf. */
-void ui_widget_list_prev(void *widget)
+void ui_widget_list_prev(void *widget /*@<edi>*/)
 {
   void *cur;
   void *tag;
@@ -10787,95 +10787,79 @@ void ui_widget_list_prev(void *widget)
 
 
 
-/* ui_widget_list_next (0xe5440) — XBE naked draft (batch 141). */
-#if defined(__clang__)
-static void *(*const be5440_tag)(int, int) = (void *)tag_get;
-
-__attribute__((naked, noinline))
-void ui_widget_list_next(void *widget)
+/* ui_widget_list_next (0xe5440) — readable C lift from XBE leaf. */
+void ui_widget_list_next(void *widget /*@<edi>*/)
 {
-  __asm__ volatile(
-      "movl 0x38(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "je .Lui_widget_list_next_2\n\t"
-      "movl 0x28(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lui_widget_list_next_3\n\t"
-      "movl 0x34(%%edi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_list_next_9\n\t"
-      "movl 0x2c(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_list_next_4\n\t"
-      ".Lui_widget_list_next_1:\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x2c(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lui_widget_list_next_1\n\t"
-      "jmp .Lui_widget_list_next_4\n\t"
-      ".Lui_widget_list_next_2:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "movl 0x28(%%eax), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_list_next_5\n\t"
-      ".Lui_widget_list_next_3:\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lui_widget_list_next_4:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_list_next_9\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lui_widget_list_next_5:\n\t"
-      "cmpl 0x38(%%edi), %%esi\n\t"
-      "je .Lui_widget_list_next_9\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x54(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jg .Lui_widget_list_next_8\n\t"
-      "testb $1, 0x2c(%%eax)\n\t"
-      "jne .Lui_widget_list_next_8\n\t"
-      "movw 0xe(%%edi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lui_widget_list_next_8\n\t"
-      "cmpw $3, %%ax\n\t"
-      "je .Lui_widget_list_next_8\n\t"
-      "movl 0x28(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_list_next_5\n\t"
-      "movl 0x34(%%edi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lui_widget_list_next_7\n\t"
-      "movl 0x2c(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lui_widget_list_next_7\n\t"
-      ".Lui_widget_list_next_6:\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x2c(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lui_widget_list_next_6\n\t"
-      ".Lui_widget_list_next_7:\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lui_widget_list_next_5\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lui_widget_list_next_8:\n\t"
-      "movl %%esi, 0x38(%%edi)\n\t"
-      ".Lui_widget_list_next_9:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(be5440_tag)
-      : "memory");
-}
-#else
-#error "ui_widget_list_next: clang naked draft required"
-#endif
+  void *cur;
+  void *tag;
+  void *child;
+  short kind;
 
+  cur = *(void **)((char *)widget + 0x38);
+  if (cur != 0) {
+    cur = *(void **)((char *)cur + 0x28);
+    if (cur == 0) {
+      child = *(void **)((char *)widget + 0x34);
+      if (child == 0)
+        return;
+      cur = *(void **)((char *)child + 0x2c);
+      if (cur != 0) {
+        for (;;) {
+          child = cur;
+          cur = *(void **)((char *)child + 0x2c);
+          if (cur == 0) {
+            cur = child;
+            break;
+          }
+        }
+      } else {
+        cur = child;
+      }
+    }
+  } else {
+    child = *(void **)((char *)widget + 0x34);
+    cur = *(void **)((char *)child + 0x28);
+    if (cur == 0)
+      cur = child;
+  }
+  if (cur == 0)
+    return;
+  for (;;) {
+    if (cur == *(void **)((char *)widget + 0x38))
+      return;
+    tag = tag_get(0x44654c61, *(int *)cur);
+    if (*(int *)((char *)tag + 0x54) > 0 ||
+        (*(unsigned char *)((char *)tag + 0x2c) & 1) != 0) {
+      *(void **)((char *)widget + 0x38) = cur;
+      return;
+    }
+    kind = *(short *)((char *)widget + 0xe);
+    if (kind == 2 || kind == 3) {
+      *(void **)((char *)widget + 0x38) = cur;
+      return;
+    }
+    cur = *(void **)((char *)cur + 0x28);
+    if (cur == 0) {
+      child = *(void **)((char *)widget + 0x34);
+      if (child == 0)
+        return;
+      {
+        void *p = *(void **)((char *)child + 0x2c);
+        if (p != 0) {
+          for (;;) {
+            child = p;
+            p = *(void **)((char *)child + 0x2c);
+            if (p == 0)
+              break;
+          }
+        }
+        cur = child;
+      }
+      if (cur == 0)
+        return;
+    }
+  }
+}
 
 /* ui_widget_close_and_reload (0xe68e0) — readable C lift. */
 void ui_widget_close_and_reload(void *widget)

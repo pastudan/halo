@@ -1,0 +1,6 @@
+{
+  "memory": {},
+  "arg_overrides": {
+    "num_players": [1, 16]
+  }
+}

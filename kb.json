@@ -5459,18 +5459,18 @@
         {
           "addr": "0x93710",
           "decl": "void FUN_00093710(int *cursor, unsigned char mode);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x93780",
           "decl": "void FUN_00093780(void *base, void **cursor, unsigned char mode);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00093780"
         },
         {
           "addr": "0x93810",
           "decl": "void FUN_00093810(void *base, void **cursor, unsigned char mode);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00093810"
         },
         {
@@ -14518,7 +14518,7 @@
         {
           "addr": "0x1008a0",
           "decl": "void FUN_001008a0(int num_players @<ebx>, int *horizontal_out, int *vertical_out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x100910",
@@ -20509,7 +20509,7 @@
         {
           "addr": "0xe2470",
           "decl": "void SetTextureStageStateSmart(int stage, int state, int value);",
-          "ported": false,
+          "ported": true,
           "name": "SetTextureStageStateSmart"
         },
         {
@@ -27437,8 +27437,9 @@
         },
         {
           "addr": "0xe5440",
-          "decl": "void ui_widget_list_next(void *widget@<edi>);",
-          "ported": false
+          "decl": "void ui_widget_list_next(void *widget @<edi>);",
+          "ported": false,
+          "name": "ui_widget_list_next"
         },
         {
           "addr": "0xe54e0",
@@ -28163,8 +28164,8 @@
         },
         {
           "addr": "0xf3690",
-          "decl": "void FUN_000f3690(int *out_handles /* @<eax> */, void *widget /* @<ecx> */);",
-          "ported": false,
+          "decl": "void FUN_000f3690(int *out_handles @<eax>, void *widget @<ecx>);",
+          "ported": true,
           "name": "FUN_000f3690"
         },
         {
