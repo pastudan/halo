@@ -35192,8 +35192,9 @@
         },
         {
           "addr": "0x4a290",
-          "decl": "void ai_debug_speak_list(int a0);",
-          "ported": false
+          "decl": "void ai_debug_speak_list(int name);",
+          "ported": true,
+          "name": "ai_debug_speak_list"
         },
         {
           "addr": "0x4a460",

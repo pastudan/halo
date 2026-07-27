@@ -2077,155 +2077,93 @@ void ai_debug_speak(const char *name)
   *(int16_t *)0x6324ea = sound_idx;
 }
 
-/* ai_debug_speak_list (0x4a290) — XBE naked draft (batch 122). */
-#if defined(__clang__)
-static void *(*const b4a290_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b4a290_c1dd801)(const char *a, const char *b) = crt_stricmp;
-static void (*const b4a290_cff4d0)(int channel, const char *format, ...) = console_printf;
-
-__attribute__((naked, noinline))
-void ai_debug_speak_list(int a0 __attribute__((unused)))
+/* ai_debug_speak_list (0x4a290) — readable C lift. */
+void ai_debug_speak_list(int name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x78, %%esp\n\t"
-      "movl 0x5ac9f8, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_debug_speak_list_7\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x25ae38, -0x78(%%ebp)\n\t"
-      "movw %%bx, -0x74(%%ebp)\n\t"
-      "movb $1, -0x72(%%ebp)\n\t"
-      "movl $0x25ae30, -0x70(%%ebp)\n\t"
-      "movw %%bx, -0x6c(%%ebp)\n\t"
-      "movb %%bl, -0x6a(%%ebp)\n\t"
-      "movl $0x25ae24, -0x68(%%ebp)\n\t"
-      "movw $6, -0x64(%%ebp)\n\t"
-      "movb %%bl, -0x62(%%ebp)\n\t"
-      "movl $0x25ae14, -0x60(%%ebp)\n\t"
-      "movw $0x15, -0x5c(%%ebp)\n\t"
-      "movb %%bl, -0x5a(%%ebp)\n\t"
-      "movl $0x25ae08, -0x58(%%ebp)\n\t"
-      "movw $0x1d, -0x54(%%ebp)\n\t"
-      "movb %%bl, -0x52(%%ebp)\n\t"
-      "movl $0x25adf8, -0x50(%%ebp)\n\t"
-      "movw $0x31, -0x4c(%%ebp)\n\t"
-      "movb %%bl, -0x4a(%%ebp)\n\t"
-      "movl $0x25ade0, -0x48(%%ebp)\n\t"
-      "movw $0x50, -0x44(%%ebp)\n\t"
-      "movb %%bl, -0x42(%%ebp)\n\t"
-      "movl $0x25add0, -0x40(%%ebp)\n\t"
-      "movw $0x60, -0x3c(%%ebp)\n\t"
-      "movb %%bl, -0x3a(%%ebp)\n\t"
-      "movl $0x25adc4, -0x38(%%ebp)\n\t"
-      "movw $0x6c, -0x34(%%ebp)\n\t"
-      "movb %%bl, -0x32(%%ebp)\n\t"
-      "movl $0x25adb0, -0x30(%%ebp)\n\t"
-      "movw $0x7b, -0x2c(%%ebp)\n\t"
-      "movb %%bl, -0x2a(%%ebp)\n\t"
-      "movl $0x25ada8, -0x28(%%ebp)\n\t"
-      "movw $0x94, -0x24(%%ebp)\n\t"
-      "movb %%bl, -0x22(%%ebp)\n\t"
-      "movl $0x25ad98, -0x20(%%ebp)\n\t"
-      "movw $0xb1, -0x1c(%%ebp)\n\t"
-      "movb %%bl, -0x1a(%%ebp)\n\t"
-      "movl $0x25ad84, -0x18(%%ebp)\n\t"
-      "movw $0xbc, -0x14(%%ebp)\n\t"
-      "movb %%bl, -0x12(%%ebp)\n\t"
-      "movl $0x25ad70, -0x10(%%ebp)\n\t"
-      "movw $0xc5, -0xc(%%ebp)\n\t"
-      "movb %%bl, -0xa(%%ebp)\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "movw $0xffff, -0x4(%%ebp)\n\t"
-      "movb %%bl, -0x2(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "leal -0x78(%%ebp), %%esi\n\t"
-      "movl $0x25ae38, %%eax\n\t"
-      "jmp .Lai_debug_speak_list_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_debug_speak_list_1:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_debug_speak_list_2\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "addl $8, %%esi\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .Lai_debug_speak_list_1\n\t"
-      "jmp .Lai_debug_speak_list_3\n\t"
-      ".Lai_debug_speak_list_2:\n\t"
-      "cmpl %%ebx, (%%esi)\n\t"
-      "jne .Lai_debug_speak_list_5\n\t"
-      ".Lai_debug_speak_list_3:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25ad28\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "leal -0x78(%%ebp), %%esi\n\t"
-      "movl $0x25ae38, %%eax\n\t"
-      "jmp .Lai_debug_speak_list_4\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_debug_speak_list_4:\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25ad1c\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cff4d0]\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "addl $8, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .Lai_debug_speak_list_4\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_debug_speak_list_5:\n\t"
-      "cmpl $-1, 0x18(%%edi)\n\t"
-      "je .Lai_debug_speak_list_6\n\t"
-      "movw 0x4(%%esi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lai_debug_speak_list_6\n\t"
-      "movb 0x6(%%esi), %%cl\n\t"
-      "movb $1, 0x5aca89\n\t"
-      "movb $1, 0x6324e0\n\t"
-      "movw %%bx, 0x6324e8\n\t"
-      "movb $1, 0x6324e1\n\t"
-      "movb %%cl, 0x6324e2\n\t"
-      "movl 0x18(%%edi), %%edx\n\t"
-      "movl %%edx, 0x6324e4\n\t"
-      "movw %%ax, 0x6324ea\n\t"
-      ".Lai_debug_speak_list_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lai_debug_speak_list_7:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b4a290_dget), [c1dd801] "m"(b4a290_c1dd801), [cff4d0] "m"(b4a290_cff4d0)
-      : "memory");
-}
-#else
-#error "ai_debug_speak_list: clang naked draft required"
-#endif
+  struct {
+    const char *str;
+    int16_t code;
+    char flag;
+  } entries[15];
+  unsigned char *actor;
+  int handle;
+  int i;
+  char matched;
 
+  handle = *(int *)0x5ac9f8;
+  if (handle == -1)
+    return;
+
+  entries[0].str = (const char *)0x25ae38;
+  entries[0].code = 0;
+  entries[0].flag = 1;
+  entries[1].str = (const char *)0x25ae30;
+  entries[1].code = 0;
+  entries[1].flag = 0;
+  entries[2].str = (const char *)0x25ae24;
+  entries[2].code = 6;
+  entries[2].flag = 0;
+  entries[3].str = (const char *)0x25ae14;
+  entries[3].code = 0x15;
+  entries[3].flag = 0;
+  entries[4].str = (const char *)0x25ae08;
+  entries[4].code = 0x1d;
+  entries[4].flag = 0;
+  entries[5].str = (const char *)0x25adf8;
+  entries[5].code = 0x31;
+  entries[5].flag = 0;
+  entries[6].str = (const char *)0x25ade0;
+  entries[6].code = 0x50;
+  entries[6].flag = 0;
+  entries[7].str = (const char *)0x25add0;
+  entries[7].code = 0x60;
+  entries[7].flag = 0;
+  entries[8].str = (const char *)0x25adc4;
+  entries[8].code = 0x6c;
+  entries[8].flag = 0;
+  entries[9].str = (const char *)0x25adb0;
+  entries[9].code = 0x7b;
+  entries[9].flag = 0;
+  entries[10].str = (const char *)0x25ada8;
+  entries[10].code = 0x94;
+  entries[10].flag = 0;
+  entries[11].str = (const char *)0x25ad98;
+  entries[11].code = 0xb1;
+  entries[11].flag = 0;
+  entries[12].str = (const char *)0x25ad84;
+  entries[12].code = 0xbc;
+  entries[12].flag = 0;
+  entries[13].str = (const char *)0x25ad70;
+  entries[13].code = 0xc5;
+  entries[13].flag = 0;
+  entries[14].str = 0;
+  entries[14].code = -1;
+  entries[14].flag = 0;
+
+  actor = (unsigned char *)datum_get(*(void **)0x6325a4, handle);
+  matched = 0;
+  for (i = 0; entries[i].str != 0; i++) {
+    if (crt_stricmp((const char *)name, entries[i].str) == 0) {
+      matched = 1;
+      break;
+    }
+  }
+  if (!matched || entries[i].str == 0) {
+    console_printf(0, (const char *)0x25ad28, name);
+    for (i = 0; entries[i].str != 0; i++)
+      console_printf(0, (const char *)0x25ad1c, entries[i].str);
+    return;
+  }
+  if (*(int *)(actor + 0x18) == -1 || entries[i].code == -1)
+    return;
+  *(char *)0x5aca89 = 1;
+  *(char *)0x6324e0 = 1;
+  *(short *)0x6324e8 = 0;
+  *(char *)0x6324e1 = 1;
+  *(char *)0x6324e2 = entries[i].flag;
+  *(int *)0x6324e4 = *(int *)(actor + 0x18);
+  *(short *)0x6324ea = entries[i].code;
+}
 
 /* FUN_0004a770 (0x4a770) — XBE naked draft (batch 130). */
 #if defined(__clang__)
