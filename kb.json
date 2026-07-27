@@ -270,7 +270,8 @@
         {
           "addr": "0x67c50",
           "decl": "void FUN_00067c50(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00067c50"
         },
         {
           "addr": "0x680a0",
@@ -478,7 +479,8 @@
         {
           "addr": "0x149ce0",
           "decl": "void FUN_00149ce0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00149ce0"
         },
         {
           "addr": "0x150550",
@@ -4911,7 +4913,8 @@
         {
           "addr": "0x1bb970",
           "decl": "void FUN_001bb970(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001bb970"
         },
         {
           "addr": "0x1bbb60",
@@ -13926,7 +13929,8 @@
         {
           "addr": "0xdf4e0",
           "decl": "void FUN_000df4e0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000df4e0"
         },
         {
           "addr": "0xdfdc0",
@@ -17979,7 +17983,8 @@
         {
           "addr": "0xb6bd0",
           "decl": "void FUN_000b6bd0(char *input@<esi>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000b6bd0"
         },
         {
           "addr": "0xb6dd0",
@@ -20007,7 +20012,8 @@
         {
           "addr": "0x8fb60",
           "decl": "void FUN_0008fb60(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0008fb60"
         },
         {
           "addr": "0x90170",
@@ -21126,7 +21132,8 @@
         {
           "addr": "0x17ba10",
           "decl": "int FUN_0017ba10(float *position, int vis_index, int index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0017ba10"
         },
         {
           "addr": "0x17bca0",
@@ -24163,7 +24170,8 @@
         {
           "addr": "0x190240",
           "decl": "char FUN_00190240(float *position, float *wind_out, int wind_flags, int object_handle);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00190240"
         },
         {
           "addr": "0x190380",
@@ -24871,7 +24879,8 @@
         {
           "addr": "0x1ca130",
           "decl": "void FUN_001ca130(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001ca130"
         },
         {
           "addr": "0x1ca2b0",
@@ -25340,7 +25349,8 @@
         {
           "addr": "0x1cc5b0",
           "decl": "void FUN_001cc5b0(int sound_tag_index, void *source);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001cc5b0"
         },
         {
           "addr": "0x1cc710",
@@ -26588,7 +26598,8 @@
         {
           "addr": "0x196850",
           "decl": "void FUN_00196850(int param_1);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00196850"
         },
         {
           "addr": "0x196a60",
@@ -26676,7 +26687,8 @@
         {
           "addr": "0x131280",
           "decl": "void FUN_00131280(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00131280"
         },
         {
           "addr": "0x1313f0",
@@ -26743,12 +26755,14 @@
         {
           "addr": "0x131e00",
           "decl": "void FUN_00131e00(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00131e00"
         },
         {
           "addr": "0x131ed0",
           "decl": "void FUN_00131ed0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00131ed0"
         },
         {
           "addr": "0x131fc0",
@@ -27552,7 +27566,8 @@
         {
           "addr": "0xe5b10",
           "decl": "void FUN_000e5b10(void *widget /* @<ebx> */, void *draw_state /* @<esi> */);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000e5b10"
         },
         {
           "addr": "0xe5de0",
@@ -28034,7 +28049,7 @@
         {
           "addr": "0xf04c0",
           "decl": "void FUN_000f04c0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f04c0"
         },
         {
@@ -40386,7 +40401,8 @@
         {
           "addr": "0x1be7b0",
           "decl": "void FUN_001be7b0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001be7b0"
         }
       ],
       "name": "xbox_sound_cache.obj",
@@ -44124,7 +44140,7 @@
         {
           "addr": "0x1336a0",
           "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001336a0"
         }
       ],
