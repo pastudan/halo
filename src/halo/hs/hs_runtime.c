@@ -4759,77 +4759,37 @@ void FUN_000ca410(int object_handle, int scenario_index)
   FUN_000ca160(scenario_index, 0, 1, object_handle);
 }
 
-/* FUN_000ca430 (0xca430) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static int (*const bca430_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const bca430_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const bca430_c18ef00)(int cluster_index, int object_handle) = FUN_0018ef00;
-static void (*const bca430_cca160)(int16_t scenario_index, char teleport_flag, char facing_flag, int object_handle) = FUN_000ca160;
-
-__attribute__((naked, noinline))
-void FUN_000ca430(int16_t game_flag __attribute__((unused)), int16_t scenario_index __attribute__((unused)))
+/* FUN_000ca430 (0xca430) — readable C lift from XBE leaf.
+ * For each player object: if not already in cluster game_flag, teleport via FUN_000ca160. */
+void FUN_000ca430(int16_t game_flag, int16_t scenario_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_000ca430_3\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_000ca430_1:\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000ca430_2\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18ef00]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000ca430_2\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x34(%%esi), %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cca160]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000ca430_2:\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .LFUN_000ca430_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000ca430_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(bca430_c1198f0), [dget] "m"(bca430_dget), [c18ef00] "m"(bca430_c18ef00), [cca160] "m"(bca430_cca160)
-      : "memory");
+  void *players;
+  int idx;
+  char *player;
+  int object_handle;
+
+  players = *(void **)0x5aa6d4;
+  for (idx = data_next_index(players, -1); idx != -1;
+       idx = data_next_index(players, idx)) {
+    player = (char *)datum_get(players, idx);
+    object_handle = *(int *)(player + 0x34);
+    if (object_handle == -1)
+      continue;
+    if (FUN_0018ef00((int)game_flag, object_handle))
+      continue;
+    {
+      void (*const fn)(void) = (void (*)(void))(void *)FUN_000ca160;
+      int scen = (int)scenario_index;
+      __asm__ volatile(
+          "movl %1, %%ebx; pushl $1; pushl $1; pushl %2; call *%0; addl $12, %%esp"
+          :
+          : "m"(fn), "r"(object_handle), "r"(scen)
+          : "eax", "ecx", "edx", "ebx", "memory");
+    }
+  }
 }
-#else
-#error "FUN_000ca430: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_000ca670 (0xca670) — readable C lift: enum tostring. */
