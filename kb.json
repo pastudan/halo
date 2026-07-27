@@ -7019,8 +7019,9 @@
         },
         {
           "addr": "0x85ab0",
-          "decl": "void FUN_00085ab0(void);",
-          "ported": false
+          "decl": "int FUN_00085ab0(int exclude_handle, int fallback, char require_field_match@<bl>);",
+          "ported": true,
+          "name": "FUN_00085ab0"
         },
         {
           "addr": "0x85b60",

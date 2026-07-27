@@ -700,103 +700,51 @@ char FUN_00085a40(int handle)
 
 
 
-/* FUN_00085ab0 (0x85ab0) — XBE naked draft (batch 138). */
-#if defined(__clang__)
-static void *(*const b85ab0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b85ab0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b85ab0_c119810)(data_iter_t *iterator) = data_iterator_next;
-
-__attribute__((naked, noinline))
-void FUN_00085ab0(void)
+/* FUN_00085ab0 (0x85ab0) — readable C lift from XBE leaf. */
+int FUN_00085ab0(int exclude_handle, int fallback, char require_field_match)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_00085ab0_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x20(%%eax), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_00085ab0_2\n\t"
-      ".LFUN_00085ab0_1:\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      ".LFUN_00085ab0_2:\n\t"
-      "movl 0x5aa6d4, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00085ab0_9\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00085ab0_3:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "cmpl 0x8(%%ebp), %%ecx\n\t"
-      "je .LFUN_00085ab0_6\n\t"
-      "cmpl $-1, 0x34(%%eax)\n\t"
-      "je .LFUN_00085ab0_6\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00085ab0_4\n\t"
-      "cmpl %%edi, 0x20(%%eax)\n\t"
-      "jne .LFUN_00085ab0_6\n\t"
-      ".LFUN_00085ab0_4:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_00085ab0_5\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "jmp .LFUN_00085ab0_6\n\t"
-      ".LFUN_00085ab0_5:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0xffff, %%edx\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jg .LFUN_00085ab0_7\n\t"
-      ".LFUN_00085ab0_6:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00085ab0_3\n\t"
-      "jmp .LFUN_00085ab0_8\n\t"
-      ".LFUN_00085ab0_7:\n\t"
-      "movl %%ecx, %%esi\n\t"
-      ".LFUN_00085ab0_8:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_00085ab0_10\n\t"
-      ".LFUN_00085ab0_9:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00085ab0_10:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b85ab0_dget), [c1197b0] "m"(b85ab0_c1197b0), [c119810] "m"(b85ab0_c119810)
-      : "memory");
+  data_iter_t iter;
+  void *cur;
+  int match_field;
+  int best;
+  int h;
+
+  if (require_field_match) {
+    cur = datum_get(*(data_t **)0x5aa6d4, exclude_handle);
+    match_field = *(int *)((char *)cur + 0x20);
+  } else {
+    match_field = -1;
+  }
+  data_iterator_new(&iter, *(data_t **)0x5aa6d4);
+  best = -1;
+  for (cur = data_iterator_next(&iter); cur != (void *)0; cur = data_iterator_next(&iter)) {
+    h = (int)iter.datum_handle;
+    if (h == exclude_handle) {
+      continue;
+    }
+    if (*(int *)((char *)cur + 0x34) == -1) {
+      continue;
+    }
+    if (require_field_match) {
+      if (*(int *)((char *)cur + 0x20) != match_field) {
+        continue;
+      }
+    }
+    if (best == -1) {
+      best = h;
+      continue;
+    }
+    if ((h & 0xffff) > (fallback & 0xffff)) {
+      best = h;
+      break;
+    }
+  }
+  if (best != -1) {
+    return best;
+  }
+  return fallback;
 }
-#else
-#error "FUN_00085ab0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00085b60 (0x85b60) — XBE naked draft (batch 129). */
