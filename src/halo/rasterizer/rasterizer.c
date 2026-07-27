@@ -4993,102 +4993,49 @@ void FUN_0016f480(const char *message, int16_t profile_index, char condition)
 
 
 
-/* FUN_0016f500 (0x16f500) — XBE naked draft (batch 320). */
-#if defined(__clang__)
-static bool __stdcall (*const b16f500_c1d33e6)(void *counter) = (void *)QueryPerformanceCounter;
-
-__attribute__((naked, noinline))
-void FUN_0016f500(void)
+/* FUN_0016f500 (0x16f500) — readable C lift. */
+void FUN_0016f500(unsigned int packed)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "shrl $0x1f, %%ebx\n\t"
-      "andb $1, %%bl\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0016f500_4\n\t"
-      "cmpw $0x1d, %%si\n\t"
-      "jge .LFUN_0016f500_4\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d33e6]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_0016f500_2\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl 0x47e358(,%%ecx,8), %%eax\n\t"
-      "orl 0x47e35c(,%%ecx,8), %%eax\n\t"
-      "je .LFUN_0016f500_1\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x47e460, %%dx\n\t"
-      "orl $2, %%edx\n\t"
-      "movw %%dx, 0x47e460\n\t"
-      "movw 0x47e460, %%ax\n\t"
-      ".LFUN_0016f500_1:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x47e358(,%%ecx,8)\n\t"
-      "movl %%eax, 0x47e35c(,%%ecx,8)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016f500_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $3, %%eax\n\t"
-      "movl 0x47e358(%%eax), %%ecx\n\t"
-      "orl 0x47e35c(%%eax), %%ecx\n\t"
-      "je .LFUN_0016f500_3\n\t"
-      "movl 0x47e358(%%eax), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      "movl 0x47e35c(%%eax), %%edx\n\t"
-      "subl %%ecx, %%esi\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "sbbl %%edx, %%ecx\n\t"
-      "movl %%esi, 0x47e270(%%eax)\n\t"
-      "movl %%ecx, 0x47e274(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "movl $0, 0x47e358(%%eax)\n\t"
-      "movl $0, 0x47e35c(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016f500_3:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x47e460, %%dx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "orl $4, %%edx\n\t"
-      "movw %%dx, 0x47e460\n\t"
-      "movw 0x47e460, %%ax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016f500_4:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x47e460, %%cx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "orl $1, %%ecx\n\t"
-      "movw %%cx, 0x47e460\n\t"
-      "movw 0x47e460, %%dx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d33e6] "m"(b16f500_c1d33e6)
-      : "memory");
-}
-#else
-#error "FUN_0016f500: clang naked draft required"
-#endif
+  short idx;
+  char high_bit;
+  unsigned int counter[2];
+  int off;
+  unsigned int lo, hi, start_lo, start_hi;
+  unsigned long long cur, start, delta;
 
+  idx = (short)packed;
+  high_bit = (char)((packed >> 31) & 1);
+  if (idx < 0 || idx >= 0x1d) {
+    *(unsigned short *)0x47e460 = (unsigned short)(*(unsigned short *)0x47e460 | 1);
+    return;
+  }
+
+  QueryPerformanceCounter(counter);
+  off = (int)idx * 8;
+  if (high_bit) {
+    if (*(unsigned int *)(0x47e358 + off) | *(unsigned int *)(0x47e35c + off)) {
+      *(unsigned short *)0x47e460 = (unsigned short)(*(unsigned short *)0x47e460 | 2);
+    }
+    *(unsigned int *)(0x47e358 + off) = counter[0];
+    *(unsigned int *)(0x47e35c + off) = counter[1];
+    return;
+  }
+
+  if ((*(unsigned int *)(0x47e358 + off) | *(unsigned int *)(0x47e35c + off)) == 0) {
+    *(unsigned short *)0x47e460 = (unsigned short)(*(unsigned short *)0x47e460 | 4);
+    return;
+  }
+
+  start_lo = *(unsigned int *)(0x47e358 + off);
+  start_hi = *(unsigned int *)(0x47e35c + off);
+  cur = ((unsigned long long)counter[1] << 32) | counter[0];
+  start = ((unsigned long long)start_hi << 32) | start_lo;
+  delta = cur - start;
+  *(unsigned int *)(0x47e270 + off) = (unsigned int)delta;
+  *(unsigned int *)(0x47e274 + off) = (unsigned int)(delta >> 32);
+  *(unsigned int *)(0x47e358 + off) = 0;
+  *(unsigned int *)(0x47e35c + off) = 0;
+}
 
 /* FUN_0016f610 (0x16f610) — readable C lift. */
 void FUN_0016f610(unsigned int packed)
@@ -5431,100 +5378,41 @@ void FUN_0016fbd0(void)
 #endif
 
 
-/* FUN_0016fcf0 (0x16fcf0) — XBE naked draft (batch 335). */
-#if defined(__clang__)
-static void (*const b16fcf0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b16fcf0_exitfn)(int) = system_exit;
-static void (*const b16fcf0_c16f480)(const char *message, int16_t profile_index, char condition) = FUN_0016f480;
-
-__attribute__((naked, noinline))
-void FUN_0016fcf0(void)
+/* FUN_0016fcf0 (0x16fcf0) — readable C lift. */
+int FUN_0016fcf0(short profile_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw $3, 0x3256ba\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_0016fcf0_1\n\t"
-      "movb 0x325704, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_0016fcf0_8\n\t"
-      ".LFUN_0016fcf0_1:\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0016fcf0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x19f\n\t"
-      "pushl $0x2a3ca4\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0016fcf0_2:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpw $0x1d, %%di\n\t"
-      "jne .LFUN_0016fcf0_3\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016fcf0_3:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_0016fcf0_4\n\t"
-      "cmpw $0x1d, %%di\n\t"
-      "jl .LFUN_0016fcf0_5\n\t"
-      ".LFUN_0016fcf0_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ae\n\t"
-      "pushl $0x2a3ca4\n\t"
-      "pushl $0x2a3db8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0016fcf0_5:\n\t"
-      "cmpw $-1, 0x325180\n\t"
-      "pushl %%esi\n\t"
-      "sete %%al\n\t"
-      "movl $0x2a3e40, %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c16f480]\n\t"
-      "movl 0x47e45c, %%eax\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "testl %%eax, %%edx\n\t"
-      "je .LFUN_0016fcf0_7\n\t"
-      "movl 0x47e18c(,%%ecx,8), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "movl 0x47e188(,%%ecx,8), %%eax\n\t"
-      "jl .LFUN_0016fcf0_8\n\t"
-      "jg .LFUN_0016fcf0_6\n\t"
-      "cmpl $0x7fffffff, %%eax\n\t"
-      "jbe .LFUN_0016fcf0_8\n\t"
-      ".LFUN_0016fcf0_6:\n\t"
-      "movl $0x7fffffff, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016fcf0_7:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      ".LFUN_0016fcf0_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b16fcf0_assert), [exitfn] "m"(b16fcf0_exitfn), [c16f480] "m"(b16fcf0_c16f480)
-      : "memory");
-}
-#else
-#error "FUN_0016fcf0: clang naked draft required"
-#endif
+  unsigned int mask;
+  int lo;
+  int hi;
 
+  if (*(short *)0x3256ba != 3 && !*(char *)0x325704)
+    return 0;
+
+  if (!*(int *)0x476ab0) {
+    display_assert((const char *)0x29dc40, (const char *)0x2a3ca4, 0x19f, true);
+    system_exit(-1);
+  }
+  if (profile_index == 0x1d)
+    return 0;
+  if (profile_index < 0 || profile_index >= 0x1d) {
+    display_assert((const char *)0x2a3db8, (const char *)0x2a3ca4, 0x1ae, true);
+    system_exit(-1);
+  }
+
+  FUN_0016f480((const char *)0x2a3e40, profile_index, *(short *)0x325180 == -1);
+
+  mask = 1u << (unsigned)(int)profile_index;
+  if ((*(unsigned int *)0x47e45c & mask) == 0)
+    return -1;
+
+  lo = *(int *)(0x47e188 + (int)profile_index * 8);
+  hi = *(int *)(0x47e18c + (int)profile_index * 8);
+  if (hi < 0)
+    return lo;
+  if (hi > 0 || (unsigned int)lo > 0x7fffffff)
+    return 0x7fffffff;
+  return lo;
+}
 
 /* FUN_0016FDD0 (0x16fdd0) — XBE naked draft (batch 402). */
 #if defined(__clang__)
