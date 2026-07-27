@@ -8072,7 +8072,7 @@
         {
           "addr": "0x19ad30",
           "decl": "bool file_get_last_modification_date(file_ref_t *info, void *date_out);",
-          "ported": false,
+          "ported": true,
           "name": "file_get_last_modification_date"
         },
         {
