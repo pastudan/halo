@@ -13228,9 +13228,9 @@
         },
         {
           "addr": "0xd4e90",
-          "decl": "void hud_set_state_message_text(short player_index, short slot_index, short text, unsigned char flag);",
+          "decl": "void hud_set_state_message_text(int16_t slot, int16_t index, uint16_t text_id, char flag);",
           "name": "hud_set_state_message_text",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd4f00",
