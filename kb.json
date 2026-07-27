@@ -21664,7 +21664,7 @@
         {
           "addr": "0x15d5a0",
           "decl": "void FUN_0015d5a0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015d5a0"
         },
         {
