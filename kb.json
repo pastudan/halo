@@ -31139,7 +31139,7 @@
         {
           "addr": "0x17ced0",
           "decl": "void FUN_0017ced0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cee0",
