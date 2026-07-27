@@ -1133,7 +1133,8 @@ int FUN_00068030(void *tif /* @<ebx> */, void *out /* @<esi> */,
   unsigned short hi;
   unsigned int packed;
 
-  _TIFFgetfield((char *)tif + 0x14, (unsigned int)tag, &lo, &hi);
+  ((void (*)(void *, unsigned int, unsigned short *, unsigned short *))_TIFFgetfield)(
+      (char *)tif + 0x14, (unsigned int)tag, &lo, &hi);
   *(unsigned short *)out = tag;
   *((unsigned short *)out + 1) = 3;
   *((unsigned int *)((char *)out + 4)) = 2;
@@ -1158,7 +1159,7 @@ static void (*const b680a0_c679f0)(void) = FUN_000679f0;
 static void (*const b680a0_c67710)(void) = (void *)FUN_00067710;
 static void (*const b680a0_c67960)(void) = FUN_00067960;
 static void (*const b680a0_c67f70)(void) = FUN_00067f70;
-static void (*const b680a0_c68030)(void) = FUN_00068030;
+static void (*const b680a0_c68030)(void) = (void *)FUN_00068030;
 static void (*const b680a0_c67c50)(void) = FUN_00067c50;
 static void (*const b680a0_c1df419)(void) = __write;
 static void (*const b680a0_c65f90)(int file) = TIFFFreeDirectory;

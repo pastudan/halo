@@ -290,7 +290,7 @@
         },
         {
           "addr": "0x68030",
-          "decl": "void FUN_00068030(void);",
+          "decl": "int FUN_00068030(void *tif@<ebx>, void *out@<esi>, unsigned short tag@<di>);",
           "ported": true,
           "name": "FUN_00068030"
         },
