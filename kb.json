@@ -6574,7 +6574,7 @@
         },
         {
           "addr": "0x119df0",
-          "decl": "bool FUN_00119df0(int *param_1, int param_2, int param_3);",
+          "decl": "bool FUN_00119df0(int *buf, int value, int size_class);",
           "name": "FUN_00119df0",
           "ported": false
         },
@@ -37855,7 +37855,7 @@
           "addr": "0x117b90",
           "decl": "int array_resize(int *array, int new_count);",
           "name": "array_resize",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x117cf0",

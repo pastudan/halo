@@ -541,127 +541,41 @@ int FUN_00119cc0(int *param_1, int param_2, short param_3, int param_4)
   return (char)param_1[3] == '\0';
 }
 
-/* FUN_00119df0 (0x119df0) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static void (*const b119df0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b119df0_exitfn)(int) = system_exit;
-static void * (*const b119df0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static int (*const b119df0_c119cc0)(int *param_1, int param_2, short param_3, int param_4) = FUN_00119cc0;
-
-__attribute__((naked, noinline))
-bool FUN_00119df0(int *param_1 __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+/* FUN_00119df0 (0x119df0) — readable C lift. */
+bool FUN_00119df0(int *buf, int value, int size_class)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jg .LFUN_00119df0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x54\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28ef70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00119df0_1:\n\t"
-      "cmpl $0xff, %%esi\n\t"
-      "jg .LFUN_00119df0_5\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "movb %%al, 0x13(%%ebp)\n\t"
-      "je .LFUN_00119df0_2\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .LFUN_00119df0_2\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_00119df0_2\n\t"
-      "cmpl 0x8(%%esi), %%eax\n\t"
-      "jl .LFUN_00119df0_3\n\t"
-      ".LFUN_00119df0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2b\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28ef20\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00119df0_3:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "leal 0x1(%%eax), %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jg .LFUN_00119df0_4\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_00119df0_4\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl $1\n\t"
-      "leal 0x13(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00119df0_4:\n\t"
-      "movb $1, 0xc(%%esi)\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00119df0_5:\n\t"
-      "cmpl $0xffff, %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "jg .LFUN_00119df0_6\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl $-2\n\t"
-      "pushl $1\n\t"
-      "leal 0x10(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "jmp .LFUN_00119df0_7\n\t"
-      ".LFUN_00119df0_6:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl $-4\n\t"
-      "pushl $1\n\t"
-      "leal 0x10(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      ".LFUN_00119df0_7:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c119cc0]\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b119df0_assert), [exitfn] "m"(b119df0_exitfn), [c8e0b0] "m"(b119df0_c8e0b0), [c119cc0] "m"(b119df0_c119cc0)
-      : "memory");
+  unsigned char byte_val;
+  int pos;
+  int cap;
+
+  if (size_class <= 0) {
+    display_assert((const char *)0x28ef70, (const char *)0x28eef8, 0x54, 1);
+    system_exit(-1);
+  }
+  if (size_class > 0xff) {
+    int tmp = value;
+    if (size_class <= 0xffff)
+      FUN_00119cc0(buf, (int)&tmp, (short)-2, 1);
+    else
+      FUN_00119cc0(buf, (int)&tmp, (short)-4, 1);
+    return *(char *)((char *)buf + 0xc) == 0;
+  }
+  byte_val = (unsigned char)value;
+  if (buf == 0 || buf[0] == 0 || buf[1] < 0 || buf[1] >= buf[2]) {
+    display_assert((const char *)0x28ef20, (const char *)0x28eef8, 0x2b, 1);
+    system_exit(-1);
+  }
+  pos = buf[1];
+  cap = buf[2];
+  if (pos + 1 <= cap && *((char *)buf + 0xc) == 0) {
+    csmemcpy((void *)(buf[0] + pos), &byte_val, 1);
+    buf[1] = pos + 1;
+    return *((char *)buf + 0xc) == 0;
+  }
+  *((char *)buf + 0xc) = 1;
+  return *((char *)buf + 0xc) == 0;
 }
-#else
-#error "FUN_00119df0: clang naked draft required"
-#endif
+
 
 
 /* Append encoded structures into a bitstream state buffer.

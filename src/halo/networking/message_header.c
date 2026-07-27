@@ -149,84 +149,32 @@ void byte_swap_message_header(unsigned short *header, int byte_order)
   system_exit(-1);
 }
 
-/* create_message (0x80ca0) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void (*const b80ca0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80ca0_exitfn)(int) = system_exit;
-static void * (*const b80ca0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b80ca0_c80b40)(unsigned short *header, unsigned short length, unsigned char type, unsigned char flags) = build_message_header;
-static void * (*const b80ca0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-int create_message(int type __attribute__((unused)), int payload __attribute__((unused)), unsigned int payload_len __attribute__((unused)), int buffer __attribute__((unused)), unsigned short buffer_size __attribute__((unused)))
+/* create_message (0x80ca0) — readable C lift. */
+int create_message(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x2(%%ebx), %%edi\n\t"
-      "je .Lcreate_message_1\n\t"
-      "movzwl 0x18(%%ebp), %%ecx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jge .Lcreate_message_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x29\n\t"
-      "pushl $0x265ccc\n\t"
-      "pushl $0x265d24\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lcreate_message_2\n\t"
-      ".Lcreate_message_1:\n\t"
-      "pushl $0x2e\n\t"
-      "pushl $0x265ccc\n\t"
-      "movswl %%di, %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lcreate_message_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lcreate_message_3\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c80b40]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lcreate_message_3\n\t"
-      "movzwl %%bx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x2(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lcreate_message_3:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80ca0_assert), [exitfn] "m"(b80ca0_exitfn), [c8ee60] "m"(b80ca0_c8ee60), [c80b40] "m"(b80ca0_c80b40), [c8e0b0] "m"(b80ca0_c8e0b0)
-      : "memory");
+  unsigned short total;
+  int buf;
+  int need;
+
+  total = (unsigned short)(payload_len + 2);
+  buf = buffer;
+  if (buf != 0) {
+    need = (int)(short)total;
+    if ((int)buffer_size < need) {
+      display_assert((const char *)0x265d24, (const char *)0x265ccc, 0x29, 1);
+      system_exit(-1);
+    }
+  } else {
+    buf = (int)debug_malloc((uint32_t)(int)(short)total, 0, (const char *)0x265ccc, 0x2e);
+  }
+  if (buf != 0) {
+    build_message_header((unsigned short *)buf, total, (unsigned char)type, 0);
+    if (payload != 0)
+      csmemcpy((void *)(buf + 2), (void *)payload, (size_t)(payload_len & 0xffff));
+  }
+  return buf;
 }
-#else
-#error "create_message: clang naked draft required"
-#endif
+
 
 
 
