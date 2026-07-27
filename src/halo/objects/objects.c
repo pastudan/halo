@@ -11532,8 +11532,8 @@ static void *(*const b143550_dget)(void *, int) = (void *(*)(void *, int))datum_
 static void (*const b143550_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
 static int (*const b143550_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
 static void (*const b143550_c14cf20)(int param_1) = FUN_0014cf20;
-static char (*const b143550_c1509c0)(int *out, int obj_idx) = FUN_001509c0;
-static void (*const b143550_c1508b0)(int *state) = FUN_001508b0;
+static char (*const b143550_c1509c0)(int *out, int obj_idx) = (void *)FUN_001509c0;
+static void (*const b143550_c1508b0)(int *state) = (void *)FUN_001508b0;
 static void (*const b143550_xfrmpt)(float *, float *, float *) = matrix_transform_point;
 static void (*const b143550_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
 

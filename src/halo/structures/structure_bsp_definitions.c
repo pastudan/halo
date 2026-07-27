@@ -1263,195 +1263,90 @@ void leaf_map_initialize_from_bsp(void)
 #endif
 
 
-/* structure_bsp_find_material_for_surface (0x1935f0) — XBE naked draft (batch 117). */
-#if defined(__clang__)
-static void *(*const b1935f0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1935f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1935f0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void structure_bsp_find_material_for_surface(void *scenario __attribute__((unused)), int surface_index __attribute__((unused)), int16_t *out_collection_index __attribute__((unused)), int16_t *out_geometry_index __attribute__((unused)))
+/* structure_bsp_find_material_for_surface (0x1935f0) — readable C lift. */
+void structure_bsp_find_material_for_surface(void *scenario, int surface_index,
+                                             int16_t *out_collection_index,
+                                             int16_t *out_geometry_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw %%di, (%%eax)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw 0x104(%%eax), %%si\n\t"
-      "addl $0x104, %%eax\n\t"
-      "decw %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jle .Lstructure_bsp_find_material_for_surface_4\n\t"
-      "jmp .Lstructure_bsp_find_material_for_surface_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lstructure_bsp_find_material_for_surface_1:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cdq\n\t"
-      "subl %%edx, %%eax\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "sarl $1, %%eax\n\t"
-      "addl %%edi, %%eax\n\t"
-      "movw %%ax, (%%edx)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "pushl $0x100\n\t"
-      "leal 0x14(%%eax), %%ebx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x14(%%eax), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jge .Lstructure_bsp_find_material_for_surface_2\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movw (%%eax), %%si\n\t"
-      "decw %%si\n\t"
-      "movw %%si, (%%eax)\n\t"
-      "jmp .Lstructure_bsp_find_material_for_surface_3\n\t"
-      ".Lstructure_bsp_find_material_for_surface_2:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "pushl $0x100\n\t"
-      "decl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl $0x100\n\t"
-      "decl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x14(%%eax), %%ecx\n\t"
-      "movl 0x18(%%edi), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .Lstructure_bsp_find_material_for_surface_4\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movw (%%eax), %%di\n\t"
-      "incw %%di\n\t"
-      "movw %%di, (%%eax)\n\t"
-      ".Lstructure_bsp_find_material_for_surface_3:\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jg .Lstructure_bsp_find_material_for_surface_1\n\t"
-      ".Lstructure_bsp_find_material_for_surface_4:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movswl (%%eax), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal 0x14(%%eax), %%ecx\n\t"
-      "movw %%si, (%%ebx)\n\t"
-      "movw (%%ecx), %%di\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "jle .Lstructure_bsp_find_material_for_surface_10\n\t"
-      "jmp .Lstructure_bsp_find_material_for_surface_6\n\t"
-      ".Lstructure_bsp_find_material_for_surface_5:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      ".Lstructure_bsp_find_material_for_surface_6:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "subl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "subl %%edx, %%eax\n\t"
-      "sarl $1, %%eax\n\t"
-      "addl %%esi, %%eax\n\t"
-      "movw %%ax, (%%ebx)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x14(%%eax), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jge .Lstructure_bsp_find_material_for_surface_7\n\t"
-      "movw (%%ebx), %%di\n\t"
-      "decw %%di\n\t"
-      "movw %%di, (%%ebx)\n\t"
-      "jmp .Lstructure_bsp_find_material_for_surface_8\n\t"
-      ".Lstructure_bsp_find_material_for_surface_7:\n\t"
-      "movl 0x18(%%eax), %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jl .Lstructure_bsp_find_material_for_surface_9\n\t"
-      "movw (%%ebx), %%si\n\t"
-      "incw %%si\n\t"
-      "movw %%si, (%%ebx)\n\t"
-      ".Lstructure_bsp_find_material_for_surface_8:\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jl .Lstructure_bsp_find_material_for_surface_5\n\t"
-      ".Lstructure_bsp_find_material_for_surface_9:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      ".Lstructure_bsp_find_material_for_surface_10:\n\t"
-      "movswl (%%ebx), %%edx\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jge .Lstructure_bsp_find_material_for_surface_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x2b2bf8\n\t"
-      "pushl $0x2b2c74\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lstructure_bsp_find_material_for_surface_11:\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "addl 0x14(%%esi), %%eax\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "jl .Lstructure_bsp_find_material_for_surface_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x67\n\t"
-      "pushl $0x2b2bf8\n\t"
-      "pushl $0x2b2c30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lstructure_bsp_find_material_for_surface_12:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1935f0_elem), [assert] "m"(b1935f0_assert), [exitfn] "m"(b1935f0_exitfn)
-      : "memory");
-}
-#else
-#error "structure_bsp_find_material_for_surface: clang naked draft required"
-#endif
+  void *collections;
+  int16_t lo;
+  int16_t hi;
+  int16_t mid;
+  void *coll;
+  void *geoms;
+  void *elem;
+  void *elem_a;
+  void *elem_b;
+  int start;
+  int end;
 
+  *out_collection_index = 0;
+  collections = (char *)scenario + 0x104;
+  hi = (int16_t)(*(int16_t *)((char *)scenario + 0x104) - 1);
+  lo = 0;
+  if (hi > 0) {
+    for (;;) {
+      mid = (int16_t)(lo + ((hi - lo) >> 1));
+      *out_collection_index = mid;
+      coll = tag_block_get_element(collections, mid, 0x20);
+      geoms = (char *)coll + 0x14;
+      elem = tag_block_get_element(geoms, 0, 0x100);
+      if (surface_index < *(int *)((char *)elem + 0x14)) {
+        hi = (int16_t)(*out_collection_index - 1);
+        *out_collection_index = hi;
+      } else {
+        elem_a = tag_block_get_element(geoms, *(int *)geoms - 1, 0x100);
+        elem_b = tag_block_get_element(geoms, *(int *)geoms - 1, 0x100);
+        end = *(int *)((char *)elem_b + 0x14) +
+              *(int *)((char *)elem_a + 0x18);
+        if (surface_index < end)
+          break;
+        lo = (int16_t)(*out_collection_index + 1);
+        *out_collection_index = lo;
+      }
+      if (hi <= lo)
+        break;
+    }
+  }
+
+  coll = tag_block_get_element(collections, *out_collection_index, 0x20);
+  geoms = (char *)coll + 0x14;
+  *out_geometry_index = 0;
+  hi = *(int16_t *)geoms;
+  lo = 0;
+  if (hi > 0) {
+    for (;;) {
+      mid = (int16_t)(lo + ((hi - lo) >> 1));
+      *out_geometry_index = mid;
+      elem = tag_block_get_element(geoms, mid, 0x100);
+      start = *(int *)((char *)elem + 0x14);
+      if (surface_index < start) {
+        hi = (int16_t)(*out_geometry_index - 1);
+        *out_geometry_index = hi;
+      } else {
+        end = start + *(int *)((char *)elem + 0x18);
+        if (surface_index < end)
+          break;
+        lo = (int16_t)(*out_geometry_index + 1);
+        *out_geometry_index = lo;
+      }
+      if (lo >= hi)
+        break;
+    }
+  }
+
+  elem = tag_block_get_element(geoms, *out_geometry_index, 0x100);
+  start = *(int *)((char *)elem + 0x14);
+  if (surface_index < start) {
+    display_assert((const char *)0x2b2c74, (const char *)0x2b2bf8, 0x66, 1);
+    system_exit(-1);
+  }
+  end = start + *(int *)((char *)elem + 0x18);
+  if (surface_index >= end) {
+    display_assert((const char *)0x2b2c30, (const char *)0x2b2bf8, 0x67, 1);
+    system_exit(-1);
+  }
+}
 
 /* vertex_type_from_shader_tag (0x1937a0) — readable C lift. */
 void vertex_type_from_shader_tag(int unused_a, short *type_a, short *type_b, char lit)

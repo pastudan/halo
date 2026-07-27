@@ -6075,7 +6075,7 @@ void structures_cluster_marker_end(void)
 #if defined(__clang__)
 static void * (*const b198580_c18e3c0)(void) = global_scenario_get;
 static void *(*const b198580_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b198580_c1935f0)(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index) = structure_bsp_find_material_for_surface;
+static void (*const b198580_c1935f0)(void *scenario, int surface_index, int16_t *out_collection_index, int16_t *out_geometry_index) = (void *)structure_bsp_find_material_for_surface;
 static void (*const b198580_c180500)(float *param_1, float *param_2) = FUN_00180500;
 static char (*const b198580_c10d830)(float *p1, float *p2, float *p3, float *p4, float *out_u, float *out_v) = FUN_0010d830;
 

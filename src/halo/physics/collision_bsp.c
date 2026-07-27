@@ -4593,8 +4593,8 @@ char FUN_0014e640(void *model __attribute__((unused)), float *origin __attribute
 #if defined(__clang__)
 static void *(*const b14dce0_get)(int, int) = object_get_and_verify_type;
 static bool (*const b14dce0_c10bc70)(float *line_start, float *line_end, float *sphere_center, float sphere_radius) = fast_vector_intersects_sphere;
-static char (*const b14dce0_c1509c0)(int *out, int obj_idx) = FUN_001509c0;
-static char (*const b14dce0_c150b60)(void *features, float *origin, float *direction, float *out_t_plane) = FUN_00150b60;
+static char (*const b14dce0_c1509c0)(int *out, int obj_idx) = (void *)FUN_001509c0;
+static char (*const b14dce0_c150b60)(void *features, float *origin, float *direction, float *out_t_plane) = (void *)FUN_00150b60;
 static int (*const b14dce0_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
 static char (*const b14dce0_c14cb00)(int param_1, void *param_2, void *param_3, void *param_4, int16_t *param_5) = FUN_0014cb00;
 static void (*const b14dce0_c10a1c0)(float *matrix, float *in_plane, float *out_plane) = FUN_0010a1c0;
@@ -4830,8 +4830,8 @@ char FUN_0014dce0(int object_handle __attribute__((unused)), unsigned int type_m
 static void *(*const b14ea10_get)(int, int) = object_get_and_verify_type;
 static void (*const b14ea10_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
 static void (*const b14ea10_c14adb0)(int param_1, float param_2, int param_3, int param_4, int param_5, unsigned char param_6, unsigned char param_7, short param_8, void *features) = collision_features_from_point;
-static char (*const b14ea10_c1509c0)(int *out, int obj_idx) = FUN_001509c0;
-static void (*const b14ea10_c150790)(void) = FUN_00150790;
+static char (*const b14ea10_c1509c0)(int *out, int obj_idx) = (void *)FUN_001509c0;
+static void (*const b14ea10_c150790)(void) = (void *)FUN_00150790;
 static int (*const b14ea10_c14c8e0)(int *out, int object_handle) = FUN_0014c8e0;
 static char (*const b14ea10_c14cde0)(int param_1, int param_2, float param_3, int param_4, int param_5, int param_6) = FUN_0014cde0;
 static char (*const b14ea10_c14ea10)(unsigned int type_mask, int first_handle, float *origin, float radius, float param_5, float param_6, int exclude_handle, int result) = FUN_0014ea10;

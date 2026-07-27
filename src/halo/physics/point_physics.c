@@ -43,7 +43,7 @@ float point_physics_definition_get_mass(int tag_data, float scale)
 static void *(*const b154270_get)(int, int) = object_get_and_verify_type;
 static void *(*const b154270_tag)(int, int) = tag_get;
 static void (*const b154270_c152e40)(int object_handle, void *buffer_a, void *buffer_b, float *force, float *aux) = FUN_00152e40;
-static char (*const b154270_c1509c0)(int *out, int obj_idx) = FUN_001509c0;
+static char (*const b154270_c1509c0)(int *out, int obj_idx) = (void *)FUN_001509c0;
 static void (*const b154270_c1093b0)(float *out, float *q) = FUN_001093b0;
 static void (*const b154270_c109120)(float *m) = FUN_00109120;
 static void (*const b154270_c150ed0)(void *phys_state, void *buffer_a, void *buffer_b, float *out_force, float *out_aux) = FUN_00150ed0;
