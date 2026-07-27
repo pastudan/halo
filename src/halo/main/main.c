@@ -3161,166 +3161,37 @@ void main_set_game_connection_to_film_playback(void)
   *(char *)0x46da45 = 1;
 }
 
-/* main_get_solo_level_from_name (0x1006f0) — XBE naked draft (batch 121). */
-#if defined(__clang__)
-static void * (*const b1006f0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-static char * (*const b1006f0_c8d9a0)(char *s) = csstr_tolower;
-static char * (*const b1006f0_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
-
-__attribute__((naked, noinline))
-int main_get_solo_level_from_name(const char *map_name __attribute__((unused)))
+/* main_get_solo_level_from_name (0x1006f0) — readable C lift: map name → solo level. */
+int main_get_solo_level_from_name(const char *map_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x80, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb $0, -0x80(%%ebp)\n\t"
-      "movl $0x1f, %%ecx\n\t"
-      "leal -0x7f(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "stosw\n\t"
-      "stosb\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x7f\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x80(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8de70]\n\t"
-      "leal -0x80(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c8d9a0]\n\t"
-      "leal -0x80(%%ebp), %%eax\n\t"
-      "pushl $0x284a8c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "je .Lmain_get_solo_level_from_name_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_1:\n\t"
-      "leal -0x80(%%ebp), %%ecx\n\t"
-      "pushl $0x284a50\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_2\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_2:\n\t"
-      "leal -0x80(%%ebp), %%edx\n\t"
-      "pushl $0x284a14\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_3\n\t"
-      "movl $2, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_3:\n\t"
-      "leal -0x80(%%ebp), %%eax\n\t"
-      "pushl $0x2849d8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_4\n\t"
-      "movl $3, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_4:\n\t"
-      "leal -0x80(%%ebp), %%ecx\n\t"
-      "pushl $0x28499c\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_5\n\t"
-      "movl $4, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_5:\n\t"
-      "leal -0x80(%%ebp), %%edx\n\t"
-      "pushl $0x284960\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_6\n\t"
-      "movl $5, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_6:\n\t"
-      "leal -0x80(%%ebp), %%eax\n\t"
-      "pushl $0x284924\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_7\n\t"
-      "movl $6, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_7:\n\t"
-      "leal -0x80(%%ebp), %%ecx\n\t"
-      "pushl $0x2848e8\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_8\n\t"
-      "movl $7, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_8:\n\t"
-      "leal -0x80(%%ebp), %%edx\n\t"
-      "pushl $0x2848ac\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_get_solo_level_from_name_9\n\t"
-      "movl $8, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmain_get_solo_level_from_name_9:\n\t"
-      "leal -0x80(%%ebp), %%eax\n\t"
-      "pushl $0x284870\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0xa, %%eax\n\t"
-      "decl %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8de70] "m"(b1006f0_c8de70), [c8d9a0] "m"(b1006f0_c8d9a0), [c1d9690] "m"(b1006f0_c1d9690)
-      : "memory");
-}
-#else
-#error "main_get_solo_level_from_name: clang naked draft required"
-#endif
+  char buf[0x80];
+  char *p;
 
+  csmemset(buf, 0, sizeof(buf));
+  csstrncpy(buf, map_name, 0x7f);
+  buf[0x7f] = 0;
+  csstr_tolower(buf);
+  if (crt_strstr(buf, (const char *)0x284a8c))
+    return 0;
+  if (crt_strstr(buf, (const char *)0x284a50))
+    return 1;
+  if (crt_strstr(buf, (const char *)0x284a14))
+    return 2;
+  if (crt_strstr(buf, (const char *)0x2849d8))
+    return 3;
+  if (crt_strstr(buf, (const char *)0x28499c))
+    return 4;
+  if (crt_strstr(buf, (const char *)0x284960))
+    return 5;
+  if (crt_strstr(buf, (const char *)0x284924))
+    return 6;
+  if (crt_strstr(buf, (const char *)0x2848e8))
+    return 7;
+  if (crt_strstr(buf, (const char *)0x2848ac))
+    return 8;
+  p = crt_strstr(buf, (const char *)0x284870);
+  return p ? 9 : -1;
+}
 
 /* main_get_current_solo_level (0x100860) — readable C lift (thin wrapper). */
 int main_get_current_solo_level(void)

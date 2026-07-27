@@ -14510,7 +14510,8 @@
         {
           "addr": "0x1006f0",
           "decl": "int main_get_solo_level_from_name(const char *map_name);",
-          "ported": false
+          "ported": true,
+          "name": "main_get_solo_level_from_name"
         },
         {
           "addr": "0x100860",
