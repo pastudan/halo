@@ -12294,150 +12294,60 @@ void FUN_00052bb0(int clump_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_000534d0 (0x534d0) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static void *(*const b534d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b534d0_c4b7a0)(void) = FUN_0004b7a0;
-static void (*const b534d0_c494e0)(void) = FUN_000494e0;
-static void (*const b534d0_c49990)(void) = (void *)FUN_00049990;
-static void (*const b534d0_c495b0)(void) = FUN_000495b0;
-static void (*const b534d0_c52bb0)(int clump_handle) = FUN_00052bb0;
-static void (*const b534d0_c4c920)(int actor_handle, char debug_selected, void *debug_context) = FUN_0004c920;
-static void (*const b534d0_c4c890)(void) = FUN_0004c890;
-static void (*const b534d0_c52ab0)(void) = FUN_00052ab0;
-static void (*const b534d0_c49d60)(void) = FUN_00049d60;
-static void (*const b534d0_c52b60)(char reverse_iteration) = FUN_00052b60;
-static void (*const b534d0_c4b810)(void) = FUN_0004b810;
-static void (*const b534d0_c4a770)(void) = FUN_0004a770;
-static void (*const b534d0_c4a8c0)(void) = FUN_0004a8c0;
-static void (*const b534d0_c4bc70)(void) = FUN_0004bc70;
-
-__attribute__((naked, noinline))
+/* FUN_000534d0 (0x534d0) — readable C lift. */
 void FUN_000534d0(void)
 {
-  __asm__ volatile(
-      "movl 0x632574, %%eax\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000534d0_16\n\t"
-      "movl 0x325660, %%ecx\n\t"
-      "movl 0x5acab4, %%eax\n\t"
-      "addl $-0x14, %%ecx\n\t"
-      "incl %%eax\n\t"
-      "cdq\n\t"
-      "movw %%cx, 0x5ac98c\n\t"
-      "movl $0x3e8, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movl 0x5ac9f8, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%edx, 0x5acab4\n\t"
-      "je .LFUN_000534d0_1\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, 0x5ac9f4\n\t"
-      ".LFUN_000534d0_1:\n\t"
-      "movb 0x5ac9c1, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_2\n\t"
-      "call *%[c4b7a0]\n\t"
-      ".LFUN_000534d0_2:\n\t"
-      "movb 0x5aca65, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_16\n\t"
-      "movb 0x5aca69, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_3\n\t"
-      "call *%[c494e0]\n\t"
-      ".LFUN_000534d0_3:\n\t"
-      "movb 0x5aca6a, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_4\n\t"
-      "call *%[c49990]\n\t"
-      ".LFUN_000534d0_4:\n\t"
-      "movb 0x5aca6b, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_5\n\t"
-      "call *%[c495b0]\n\t"
-      ".LFUN_000534d0_5:\n\t"
-      "movl 0x5ac9f4, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000534d0_6\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c52bb0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000534d0_6:\n\t"
-      "movl 0x5ac9f8, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000534d0_7\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c4c920]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000534d0_7:\n\t"
-      "movb 0x5ac9fc, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_8\n\t"
-      "call *%[c4c890]\n\t"
-      ".LFUN_000534d0_8:\n\t"
-      "movb 0x5aca9b, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_9\n\t"
-      "call *%[c52ab0]\n\t"
-      ".LFUN_000534d0_9:\n\t"
-      "movb 0x5aca88, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_10\n\t"
-      "call *%[c49d60]\n\t"
-      ".LFUN_000534d0_10:\n\t"
-      "movb 0x5aca66, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_11\n\t"
-      "movb 0x5aca67, %%dl\n\t"
-      "call *%[c52b60]\n\t"
-      ".LFUN_000534d0_11:\n\t"
-      "movb 0x5aca89, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000534d0_12\n\t"
-      "movb 0x5aca53, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000534d0_12\n\t"
-      "movb 0x5aca93, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_13\n\t"
-      ".LFUN_000534d0_12:\n\t"
-      "call *%[c4b810]\n\t"
-      ".LFUN_000534d0_13:\n\t"
-      "movb 0x5aca76, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_14\n\t"
-      "call *%[c4a770]\n\t"
-      ".LFUN_000534d0_14:\n\t"
-      "movb 0x5aca8c, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_15\n\t"
-      "call *%[c4a8c0]\n\t"
-      ".LFUN_000534d0_15:\n\t"
-      "movb 0x5aca91, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000534d0_16\n\t"
-      "jmp .LFUN_000534d0_10000\n\t"
-      ".LFUN_000534d0_16:\n\t"
-      "ret\n\t"
-      ".LFUN_000534d0_10000:\n\t"
-      "jmp *%[c4bc70]\n\t"
-      :
-      : [dget] "m"(b534d0_dget), [c4b7a0] "m"(b534d0_c4b7a0), [c494e0] "m"(b534d0_c494e0), [c49990] "m"(b534d0_c49990), [c495b0] "m"(b534d0_c495b0), [c52bb0] "m"(b534d0_c52bb0), [c4c920] "m"(b534d0_c4c920), [c4c890] "m"(b534d0_c4c890), [c52ab0] "m"(b534d0_c52ab0), [c49d60] "m"(b534d0_c49d60), [c52b60] "m"(b534d0_c52b60), [c4b810] "m"(b534d0_c4b810), [c4a770] "m"(b534d0_c4a770), [c4a8c0] "m"(b534d0_c4a8c0), [c4bc70] "m"(b534d0_c4bc70)
-      : "memory");
-}
-#else
-#error "FUN_000534d0: clang naked draft required"
-#endif
+  unsigned char *ai_globals;
+  unsigned char *actor;
+  int handle;
+  int rem;
 
+  ai_globals = *(unsigned char **)0x632574;
+  if (!ai_globals[1])
+    return;
+
+  *(int16_t *)0x5ac98c = (int16_t)(*(int *)0x325660 - 0x14);
+  rem = (*(int *)0x5acab4 + 1) % 1000;
+  if (rem < 0)
+    rem += 1000;
+  *(int *)0x5acab4 = rem;
+
+  handle = *(int *)0x5ac9f8;
+  if (handle != -1) {
+    actor = (unsigned char *)datum_get(*(void **)0x6325a4, handle);
+    *(int *)0x5ac9f4 = *(int *)(actor + 0x34);
+  }
+  if (*(char *)0x5ac9c1)
+    FUN_0004b7a0();
+  if (!*(char *)0x5aca65)
+    return;
+  if (*(char *)0x5aca69)
+    FUN_000494e0();
+  if (*(char *)0x5aca6a)
+    FUN_00049990();
+  if (*(char *)0x5aca6b)
+    FUN_000495b0();
+  if (*(int *)0x5ac9f4 != -1)
+    FUN_00052bb0(*(int *)0x5ac9f4);
+  if (*(int *)0x5ac9f8 != -1)
+    FUN_0004c920(*(int *)0x5ac9f8, 1, 0);
+  if (*(char *)0x5ac9fc)
+    FUN_0004c890();
+  if (*(char *)0x5aca9b)
+    FUN_00052ab0();
+  if (*(char *)0x5aca88)
+    FUN_00049d60();
+  if (*(char *)0x5aca66)
+    FUN_00052b60(*(char *)0x5aca67);
+  if (*(char *)0x5aca89 || *(char *)0x5aca53 || *(char *)0x5aca93)
+    FUN_0004b810();
+  if (*(char *)0x5aca76)
+    FUN_0004a770();
+  if (*(char *)0x5aca8c)
+    FUN_0004a8c0();
+  if (*(char *)0x5aca91)
+    FUN_0004bc70();
+}
 
 /* FUN_00053650 (0x53650) — readable C lift: memset helper. */
 void FUN_00053650(void)
