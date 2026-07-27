@@ -18106,7 +18106,7 @@
         {
           "addr": "0xa2a90",
           "decl": "float FUN_000a2a90(float a, float t);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0xa2ab0",
@@ -20849,7 +20849,7 @@
         {
           "addr": "0x172640",
           "decl": "void FUN_00172640(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x172650",
@@ -24142,7 +24142,7 @@
         {
           "addr": "0x190be0",
           "decl": "void numeric_countdown_timer_set(int value, char flag);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x190c00",
@@ -26578,7 +26578,7 @@
         {
           "addr": "0x131a00",
           "decl": "void FUN_00131a00(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x131a20",
@@ -37362,7 +37362,7 @@
         {
           "addr": "0x6f670",
           "decl": "int FUN_0006f670(void *tif);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x6f690",
@@ -37543,7 +37543,7 @@
         {
           "addr": "0x71ca0",
           "decl": "int FUN_00071ca0(void *a0, void *a1);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x71cc0",
