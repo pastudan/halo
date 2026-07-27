@@ -3001,6 +3001,12 @@ void FUN_00160c00(void)
   FUN_0016fa40(15);
 }
 
+/* FUN_00160bd0 (0x160bd0) — readable C lift (profile thunk). */
+void FUN_00160bd0(void)
+{
+  FUN_0016f910(0xe);
+}
+
 /* FUN_00160c20 (0x160c20) — readable C lift. */
 void FUN_00160c20(void)
 {
