@@ -13342,146 +13342,80 @@ char FUN_0017c140(void *obj, short index)
   return ok;
 }
 
-/* FUN_0017c1b0 (0x17c1b0) — XBE naked draft (batch 320). */
-#if defined(__clang__)
-static void (*const b17c1b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17c1b0_exitfn)(int) = system_exit;
-static void (*const b17c1b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_0017c1b0(void)
+/* FUN_0017c1b0 (0x17c1b0) — readable C lift. */
+char FUN_0017c1b0(void *shader, short index)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "movb $1, %%bl\n\t"
-      "jne .LFUN_0017c1b0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x154\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2aef34\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017c1b0_1:\n\t"
-      "movw 0x4c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0017c1b0_3\n\t"
-      "movw 0x50(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_0017c1b0_2\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "je .LFUN_0017c1b0_7\n\t"
-      ".LFUN_0017c1b0_2:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0017c1b0_3\n\t"
-      "movw 0x54(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_0017c1b0_3\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "je .LFUN_0017c1b0_7\n\t"
-      ".LFUN_0017c1b0_3:\n\t"
-      "movw 0x50(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_0017c1b0_4\n\t"
-      "movw 0x54(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0017c1b0_4\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "je .LFUN_0017c1b0_7\n\t"
-      ".LFUN_0017c1b0_4:\n\t"
-      "movw 0x68(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0017c1b0_6\n\t"
-      "movw 0x6a(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_0017c1b0_5\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "je .LFUN_0017c1b0_7\n\t"
-      ".LFUN_0017c1b0_5:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0017c1b0_6\n\t"
-      "movw 0x6c(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_0017c1b0_6\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "je .LFUN_0017c1b0_7\n\t"
-      ".LFUN_0017c1b0_6:\n\t"
-      "movw 0x6a(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_0017c1b0_8\n\t"
-      "movw 0x6c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_0017c1b0_8\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "jne .LFUN_0017c1b0_8\n\t"
-      ".LFUN_0017c1b0_7:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2af140\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_0017c1b0_8:\n\t"
-      "cmpw $0, 0x4e(%%esi)\n\t"
-      "jne .LFUN_0017c1b0_9\n\t"
-      "cmpw $0, 0x52(%%esi)\n\t"
-      "je .LFUN_0017c1b0_10\n\t"
-      ".LFUN_0017c1b0_9:\n\t"
-      "cmpw $0, 0x54(%%esi)\n\t"
-      "je .LFUN_0017c1b0_10\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2af0f0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_0017c1b0_10:\n\t"
-      "movl $3, %%eax\n\t"
-      "cmpw %%ax, 0x68(%%esi)\n\t"
-      "je .LFUN_0017c1b0_11\n\t"
-      "cmpw %%ax, 0x6c(%%esi)\n\t"
-      "jne .LFUN_0017c1b0_12\n\t"
-      ".LFUN_0017c1b0_11:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x2af0a0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_0017c1b0_12:\n\t"
-      "testb $1, (%%esi)\n\t"
-      "je .LFUN_0017c1b0_14\n\t"
-      "cmpw $0, 0x4e(%%esi)\n\t"
-      "jne .LFUN_0017c1b0_13\n\t"
-      "cmpw $0, 0x52(%%esi)\n\t"
-      "je .LFUN_0017c1b0_14\n\t"
-      ".LFUN_0017c1b0_13:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2af050\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_0017c1b0_14:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17c1b0_assert), [exitfn] "m"(b17c1b0_exitfn), [c8f390] "m"(b17c1b0_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_0017c1b0: clang naked draft required"
-#endif
+  char ok;
+  short a;
+  short c;
 
+  ok = 1;
+  if (!shader) {
+    display_assert((const char *)0x2aef34, (const char *)0x2aed00, 0x154, true);
+    system_exit(-1);
+  }
+
+  a = *(short *)((char *)shader + 0x4c);
+  if (a != 0) {
+    c = *(short *)((char *)shader + 0x50);
+    if (c != 0 && a == c)
+      goto dup_map;
+    if (a != 0) {
+      c = *(short *)((char *)shader + 0x54);
+      if (c != 0 && a == c)
+        goto dup_map;
+    }
+  }
+
+  c = *(short *)((char *)shader + 0x50);
+  if (c != 0) {
+    a = *(short *)((char *)shader + 0x54);
+    if (a != 0 && c == a)
+      goto dup_map;
+  }
+
+  a = *(short *)((char *)shader + 0x68);
+  if (a != 0) {
+    c = *(short *)((char *)shader + 0x6a);
+    if (c != 0 && a == c)
+      goto dup_map;
+    if (a != 0) {
+      c = *(short *)((char *)shader + 0x6c);
+      if (c != 0 && a == c)
+        goto dup_map;
+    }
+  }
+
+  c = *(short *)((char *)shader + 0x6a);
+  if (c != 0) {
+    a = *(short *)((char *)shader + 0x6c);
+    if (a != 0 && c == a) {
+dup_map:
+      error(2, (const char *)0x2af140, (int)index);
+      ok = 0;
+    }
+  }
+
+  if (*(short *)((char *)shader + 0x4e) != 0 || *(short *)((char *)shader + 0x52) != 0) {
+    if (*(short *)((char *)shader + 0x54) != 0) {
+      error(2, (const char *)0x2af0f0, (int)index);
+      ok = 0;
+    }
+  }
+
+  if (*(short *)((char *)shader + 0x68) == 3 || *(short *)((char *)shader + 0x6c) == 3) {
+    error(2, (const char *)0x2af0a0, (int)index);
+    ok = 0;
+  }
+
+  if ((*(unsigned char *)shader & 1) != 0) {
+    if (*(short *)((char *)shader + 0x4e) != 0 || *(short *)((char *)shader + 0x52) != 0) {
+      error(2, (const char *)0x2af050, (int)index);
+      return 0;
+    }
+  }
+  return ok;
+}
 
 /* FUN_0017c2f0 (0x17c2f0) — XBE naked draft (batch 300). */
 #if defined(__clang__)

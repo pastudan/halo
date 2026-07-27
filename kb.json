@@ -21142,8 +21142,9 @@
         },
         {
           "addr": "0x17c1b0",
-          "decl": "void FUN_0017c1b0(void);",
-          "ported": false
+          "decl": "char FUN_0017c1b0(void *shader@<esi>, short index@<di>);",
+          "ported": true,
+          "name": "FUN_0017c1b0"
         },
         {
           "addr": "0x17c2f0",
