@@ -14918,7 +14918,7 @@
         {
           "addr": "0x12a7a0",
           "decl": "void FUN_0012a7a0(void);",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/networking/network_game_globals.c"
         },
         {
