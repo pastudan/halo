@@ -33682,7 +33682,7 @@
           "addr": "0xfb090",
           "decl": "int weapon_must_be_readied(int weapon_handle);",
           "name": "weapon_must_be_readied",
-          "ported": false,
+          "ported": true,
           "source_path": "halo/items/weapons.c"
         },
         {
@@ -33695,7 +33695,7 @@
           "addr": "0xfb0f0",
           "decl": "int weapon_prevents_grenade_throwing(int weapon_handle);",
           "name": "weapon_prevents_grenade_throwing",
-          "ported": false,
+          "ported": true,
           "source_path": "halo/items/weapons.c"
         },
         {
@@ -33708,7 +33708,7 @@
           "addr": "0xfb2f0",
           "decl": "int weapon_overcharged(int weapon_handle);",
           "name": "weapon_overcharged",
-          "ported": false,
+          "ported": true,
           "source_path": "halo/items/weapons.c"
         },
         {

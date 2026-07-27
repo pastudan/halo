@@ -115,39 +115,16 @@ float weapon_estimate_time_to_target(int weapon_handle, int16_t trigger_index,
   return result;
 }
 
-/* weapon_must_be_readied (0xfb090) — XBE naked draft (batch 100). */
-#if defined(__clang__)
-static void *(*const bfb090_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfb090_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-int weapon_must_be_readied(int weapon_handle __attribute__((unused)))
+/* weapon_must_be_readied (0xfb090) — readable C lift. */
+int weapon_must_be_readied(int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x308(%%eax), %%eax\n\t"
-      "shrl $3, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "andl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfb090_get), [tag] "m"(bfb090_tag)
-      : "memory");
-}
-#else
-#error "weapon_must_be_readied: clang naked draft required"
-#endif
+  int *obj;
+  unsigned int *tag;
 
+  obj = (int *)object_get_and_verify_type(weapon_handle, 4);
+  tag = (unsigned int *)tag_get(0x77656170, *obj);
+  return (int)((tag[0x308 / 4] >> 3) & 1);
+}
 
 /* 0xfb0c0 — weapon_is_flag */
 bool weapon_is_flag(int object_index)
@@ -157,52 +134,24 @@ bool weapon_is_flag(int object_index)
   return (tag[0x308 / 4] >> 3) & 1;
 }
 
-/* weapon_prevents_grenade_throwing (0xfb0f0) — XBE naked draft (batch 95). */
-#if defined(__clang__)
-static void *(*const bfb0f0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfb0f0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-int weapon_prevents_grenade_throwing(int weapon_handle __attribute__((unused)))
+/* weapon_prevents_grenade_throwing (0xfb0f0) — readable C lift. */
+int weapon_prevents_grenade_throwing(int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "movb $1, %%al\n\t"
-      "je .Lweapon_prevents_grenade_throwing_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $4\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x308(%%eax), %%eax\n\t"
-      "movb 0x1e8(%%esi), %%cl\n\t"
-      "shrl $6, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      "cmpb $5, %%cl\n\t"
-      "popl %%esi\n\t"
-      "jl .Lweapon_prevents_grenade_throwing_1\n\t"
-      "cmpb $0xa, %%cl\n\t"
-      "jg .Lweapon_prevents_grenade_throwing_1\n\t"
-      "movb $1, %%al\n\t"
-      ".Lweapon_prevents_grenade_throwing_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bfb0f0_get), [tag] "m"(bfb0f0_tag)
-      : "memory");
-}
-#else
-#error "weapon_prevents_grenade_throwing: clang naked draft required"
-#endif
+  unsigned char *obj;
+  unsigned int *tag;
+  unsigned char mode;
+  int bit;
 
+  if (weapon_handle == -1)
+    return 1;
+  obj = (unsigned char *)object_get_and_verify_type(weapon_handle, 4);
+  tag = (unsigned int *)tag_get(0x77656170, *(int *)obj);
+  mode = obj[0x1e8];
+  bit = (int)((tag[0x308 / 4] >> 6) & 1);
+  if (mode < 5 || mode > 10)
+    return bit;
+  return 1;
+}
 
 /* 0xfb140 — weapon_get_animation_frame
  *
@@ -316,268 +265,18 @@ void *FUN_000fb370(void *weapon_obj, int16_t magazine_index)
   return (void *)((char *)weapon_obj + (magazine_index + 50) * 12);
 }
 
-/* weapon_overcharged (0xfb2f0) — XBE naked draft (batch 51). */
-#if defined(__clang__)
-static void *(*const bfb2f0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bfb2f0_tag)(int, int) = tag_get;
-static void (*const bfb2f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bfb2f0_exitfn)(int) = system_exit;
-static void *(*const bfb2f0_tryget)(int, int) = object_try_and_get_and_verify_type;
-
-__attribute__((naked, noinline))
-int weapon_overcharged(int weapon_handle __attribute__((unused)))
+/* weapon_overcharged (0xfb2f0) — readable C lift. */
+int weapon_overcharged(int weapon_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0x211(%%eax), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb $2, %%al\n\t"
-      "je .Lweapon_overcharged_1\n\t"
-      "cmpb $3, %%al\n\t"
-      "je .Lweapon_overcharged_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lweapon_overcharged_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lweapon_overcharged_2\n\t"
-      "movl 0x4fc(%%eax), %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .Lweapon_overcharged_3\n\t"
-      ".Lweapon_overcharged_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x667\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28ad68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_overcharged_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,8), %%edx\n\t"
-      "leal 0x210(%%edi,%%edx,4), %%eax\n\t"
-      "ret\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lweapon_overcharged_4\n\t"
-      "movl 0x4f0(%%eax), %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .Lweapon_overcharged_5\n\t"
-      ".Lweapon_overcharged_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x672\n\t"
-      "pushl $0x28ad48\n\t"
-      "pushl $0x28adb8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lweapon_overcharged_5:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "addl $0x32, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%edx\n\t"
-      "leal (%%edi,%%edx,4), %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0x211(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lweapon_overcharged_6\n\t"
-      "movb 0x235(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lweapon_overcharged_6\n\t"
-      "cmpw $0, 0x258(%%eax)\n\t"
-      "jne .Lweapon_overcharged_6\n\t"
-      "cmpw $0, 0x264(%%eax)\n\t"
-      "jne .Lweapon_overcharged_6\n\t"
-      "movb 0x1e8(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lweapon_overcharged_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      ".Lweapon_overcharged_6:\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0x211(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lweapon_overcharged_7\n\t"
-      "movb 0x235(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lweapon_overcharged_7\n\t"
-      "movb 0x1e8(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lweapon_overcharged_7\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      ".Lweapon_overcharged_7:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%cl\n\t"
-      "je .Lweapon_overcharged_8\n\t"
-      "movl 0xcc(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lweapon_overcharged_9\n\t"
-      ".Lweapon_overcharged_8:\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".Lweapon_overcharged_9:\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lweapon_overcharged_10\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lweapon_overcharged_10\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lweapon_overcharged_10:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lweapon_overcharged_11\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lweapon_overcharged_11\n\t"
-      "movl 0x2d8(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl 0xcc(%%esi), %%esi\n\t"
-      "jne .Lweapon_overcharged_12\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lweapon_overcharged_11:\n\t"
-      "movl %%edi, %%eax\n\t"
-      ".Lweapon_overcharged_12:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [get] "m"(bfb2f0_get), [tag] "m"(bfb2f0_tag), [assert] "m"(bfb2f0_assert), [exitfn] "m"(bfb2f0_exitfn), [tryget] "m"(bfb2f0_tryget)
-      : "memory");
-}
-#else
-#error "weapon_overcharged: clang naked draft required"
-#endif
+  unsigned char *obj;
+  unsigned char state;
 
+  obj = (unsigned char *)object_get_and_verify_type(weapon_handle, 4);
+  state = obj[0x211];
+  if (state == 2 || state == 3)
+    return 1;
+  return 0;
+}
 
 /* 0xfb3c0 — weapon_has_activity
  *
@@ -2406,43 +2105,6 @@ void weapon_build_weapon_interface_state(int weapon_handle, int out_state)
   }
 }
 
-  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
-  tag_data = (char *)tag_get(0x77656170, *(int *)weapon);
-  out = (char *)out_state;
-
-  *(int *)out = *(int *)(weapon + 0x1ec);
-  *(int *)(out + 4) = *(int *)(weapon + 0x1f0);
-  out[8] = (char)(weapon[0x1dc] & 1);
-  mag_block = (void *)(tag_data + 0x4f0);
-  *(int16_t *)(out + 0xa) = *(int16_t *)mag_block;
-  count = *(int *)mag_block;
-
-  for (i = 0; (int)i < count; i++) {
-    char *mag_entry;
-    char *mag_def;
-    char *rec;
-    int16_t state;
-    char busy;
-
-    (void)tag_get(0x77656170, *(int *)weapon);
-    if ((int16_t)i < 0 || (int)i >= *(int *)(tag_data + 0x4f0)) {
-      display_assert(DAT_0028adb8, DAT_0028ad48, 0x672, 1);
-      system_exit(-1);
-    }
-    mag_entry = weapon + ((int)i * 3 + 0x96) * 4;
-    mag_def = (char *)tag_block_get_element(mag_block, (int)i, 0x70);
-    state = *(int16_t *)mag_entry;
-    busy = (state == 1 || state == 3) ? 1 : 0;
-    rec = out + 0xc + (int)i * 10;
-    rec[0] = busy;
-    rec[1] = (state == 0) ? 1 : 0;
-    *(int16_t *)(rec + 2) = *(int16_t *)(mag_entry + 8);
-    *(int16_t *)(rec + 4) = *(int16_t *)(mag_def + 0xa);
-    *(int16_t *)(rec + 6) = *(int16_t *)(mag_entry + 6);
-    *(int16_t *)(rec + 8) = *(int16_t *)(mag_def + 8);
-  }
-}
-
 /* 0xfc690 — true if magazine 0 is currently in the reloading state. */
 char weapon_reloading(int weapon_handle)
 {
@@ -2515,40 +2177,6 @@ float weapon_get_zoom_magnification(int weapon_handle, int16_t zoom_level)
 
   if ((*(unsigned int *)&result & 0x7f800000u) == 0x7f800000u) {
     display_assert(DAT_0028aeec, DAT_0028ad48, 0x5a2, 1);
-    system_exit(-1);
-  }
-  if (!(result > *(float *)0x2533c0)) {
-    display_assert(DAT_0028aed8, DAT_0028ad48, 0x5a3, 1);
-    system_exit(-1);
-  }
-  return result;
-}
-
-  result = 1.0f;
-  weapon = (char *)object_get_and_verify_type(weapon_handle, 4);
-  tag_data = (char *)tag_get(0x77656170, *(int *)weapon);
-  levels = *(int16_t *)(tag_data + 0x3da);
-  if (zoom_level < 0 || zoom_level >= levels)
-    return result;
-
-  if (levels > 1)
-    t = (float)zoom_level / (float)(levels - 1);
-  else
-    t = 0.0f;
-
-  min_mag = *(float *)(tag_data + 0x3dc);
-  if (!(min_mag > *(float *)0x2533c0))
-    min_mag = 1.0f;
-  max_mag = *(float *)(tag_data + 0x3e0);
-  if (!(max_mag > *(float *)0x2533c0))
-    max_mag = 1.0f;
-
-  result = FUN_001d9e70(max_mag / min_mag, t) * min_mag;
-  if ((*(unsigned int *)&result & 0x7f800000u) == 0x7f800000u) {
-    display_assert(
-        csprintf((char *)0x5ab100, DAT_0025eb8c, DAT_0028aeec,
-                 *(unsigned int *)&result, (double)result),
-        DAT_0028ad48, 0x5a2, 1);
     system_exit(-1);
   }
   if (!(result > *(float *)0x2533c0)) {
