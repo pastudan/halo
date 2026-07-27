@@ -2670,120 +2670,44 @@ void FUN_0004b320(void)
 #endif
 
 
-/* FUN_0004b670 (0x4b670) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void *(*const b4b670_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void (*const b4b670_c1aae0)(int object_handle, float *center, float *radius) = FUN_0001aae0;
-static void (*const b4b670_c1a0890)(int unit_handle, vector3_t *out_pos, float *out_height_offset, float *out_camera_height) = biped_get_camera_height_and_offset;
-static void (*const b4b670_c189860)(char flag, void *center, void *height_vec, float radius, void *color) = FUN_00189860;
-static void (*const b4b670_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
-static void (*const b4b670_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
-
-__attribute__((naked, noinline))
-void FUN_0004b670(void)
+/* FUN_0004b670 (0x4b670) — readable C lift.
+ * ABI: unit_handle@<edi>, color@<ebx>, flag.
+ * Debug-draw camera/aim volume for a unit. */
+void FUN_0004b670(int unit_handle, int color, char flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[tryget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0004b670_5\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0004b670_1\n\t"
-      "cmpl %%edi, 0x2d4(%%eax)\n\t"
-      "jne .LFUN_0004b670_1\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1aae0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_0004b670_2\n\t"
-      ".LFUN_0004b670_1:\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a0890]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_0004b670_2:\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004b670_3\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0004b670_3\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "movl $0, -0x20(%%ebp)\n\t"
-      "movl $0, -0x1c(%%ebp)\n\t"
-      "call *%[c189860]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_0004b670_4\n\t"
-      ".LFUN_0004b670_3:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "fmuls 0x25afcc\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "call *%[c189540]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_0004b670_4:\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0004b670_5\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "fmuls 0x255154\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[c189150]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_0004b670_5:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tryget] "m"(b4b670_tryget), [c1aae0] "m"(b4b670_c1aae0), [c1a0890] "m"(b4b670_c1a0890), [c189860] "m"(b4b670_c189860), [c189540] "m"(b4b670_c189540), [c189150] "m"(b4b670_c189150)
-      : "memory");
+  char *obj;
+  char *parent;
+  float center[3];
+  float radius;
+  float height;
+  float height_vec[3];
+
+  obj = (char *)object_try_and_get_and_verify_type(unit_handle, 1);
+  if (obj == NULL)
+    return;
+
+  parent = (char *)object_try_and_get_and_verify_type(*(int *)(obj + 0xcc), 3);
+  if (parent != NULL && *(int *)(parent + 0x2d4) == unit_handle) {
+    FUN_0001aae0(*(int *)(obj + 0xcc), center, &radius);
+    height = 0.0f;
+  } else {
+    biped_get_camera_height_and_offset(unit_handle, (vector3_t *)center, &height,
+                                       &radius);
+  }
+
+  if (flag && !(height <= *(float *)0x2533c0)) {
+    height_vec[0] = 0.0f;
+    height_vec[1] = 0.0f;
+    height_vec[2] = height;
+    FUN_00189860(1, center, height_vec, radius, (void *)color);
+  } else {
+    FUN_00189540(1, center, radius * *(float *)0x25afcc, (void *)color);
+  }
+
+  if (flag)
+    FUN_00189150(1, center, radius * *(float *)0x255154, (void *)color);
 }
-#else
-#error "FUN_0004b670: clang naked draft required"
-#endif
+
 
 
 /* ai_debug_lineofsight (0x4b770) — readable C lift. */

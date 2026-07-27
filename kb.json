@@ -35442,7 +35442,7 @@
         },
         {
           "addr": "0x4b670",
-          "decl": "void FUN_0004b670(int object_handle@<edi>, void *color@<ebx>, char flag);",
+          "decl": "void FUN_0004b670(int unit_handle /* @<edi> */, int color /* @<ebx> */, char flag);",
           "ported": true,
           "name": "FUN_0004b670"
         },
