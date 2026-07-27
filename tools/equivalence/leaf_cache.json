@@ -1302,6 +1302,11 @@
     "confidence": "weak",
     "coverage_pct": 25.0
   },
+  "0xf3010": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 17.0
+  },
   "0xf3690": {
     "class": "leaf",
     "confidence": "weak",

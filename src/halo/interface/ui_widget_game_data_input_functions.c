@@ -7426,212 +7426,40 @@ void FUN_000f2f60(void *widget)
   }
 }
 
-/* solo_game_objective_text (0xf3010) — XBE naked draft (batch 116). */
-#if defined(__clang__)
-static void (*const bf3010_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf3010_exitfn)(int) = (void *)system_exit;
-static int (*const bf3010_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static char * (*const bf3010_c1d9690)(const char *haystack, const char *needle) = (void *)crt_strstr;
-static void (*const bf3010_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* solo_game_objective_text (0xf3010) — readable C lift. */
 void solo_game_objective_text(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpw $0, 0xe(%%edi)\n\t"
-      "je .Lsolo_game_objective_text_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb09\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x289360\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsolo_game_objective_text_1:\n\t"
-      "call *%[c12a0a0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_14\n\t"
-      "leal 0x24(%%eax), %%esi\n\t"
-      "pushl $0x288c70\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_2\n\t"
-      "movw $0, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_2:\n\t"
-      "pushl $0x288c64\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_3\n\t"
-      "movw $1, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_3:\n\t"
-      "pushl $0x288c58\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_4\n\t"
-      "movw $2, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_4:\n\t"
-      "pushl $0x288c50\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_5\n\t"
-      "movw $3, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_5:\n\t"
-      "pushl $0x288c44\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_6\n\t"
-      "movw $4, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_6:\n\t"
-      "pushl $0x288c38\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_7\n\t"
-      "movw $5, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_7:\n\t"
-      "pushl $0x288c2c\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_8\n\t"
-      "movw $6, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_8:\n\t"
-      "pushl $0x288c20\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_9\n\t"
-      "movw $7, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_9:\n\t"
-      "pushl $0x288c10\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_10\n\t"
-      "movw $8, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_10:\n\t"
-      "pushl $0x288c04\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_11\n\t"
-      "movw $9, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_11:\n\t"
-      "pushl $0x288bfc\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_12\n\t"
-      "movw $0xa, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_12:\n\t"
-      "pushl $0x288bf4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsolo_game_objective_text_13\n\t"
-      "movw $0xb, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_13:\n\t"
-      "pushl $0x288bec\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $0xd, %%eax\n\t"
-      "movw %%ax, 0x50(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsolo_game_objective_text_14:\n\t"
-      "pushl $0x28931c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf3010_assert), [exitfn] "m"(bf3010_exitfn), [c12a0a0] "m"(bf3010_c12a0a0), [c1d9690] "m"(bf3010_c1d9690), [c8f390] "m"(bf3010_c8f390)
-      : "memory");
+  short *w;
+  char *net;
+  char *hay;
+  static const unsigned int needles[13] = {
+      0x288c70u, 0x288c64u, 0x288c58u, 0x288c50u, 0x288c44u, 0x288c38u,
+      0x288c2cu, 0x288c20u, 0x288c10u, 0x288c04u, 0x288bfcu, 0x288bf4u,
+      0x288becu};
+  int i;
+
+  w = (short *)widget;
+  if (w[7] != 0) {
+    display_assert((char *)0x289360, (char *)0x288938, 0xb09, 1);
+    system_exit(-1);
+  }
+  net = (char *)FUN_0012a0a0();
+  if (!net) {
+    error(2, (const char *)0x28931c);
+    return;
+  }
+  hay = net + 0x24;
+  for (i = 0; i < 12; i++) {
+    if (crt_strstr(hay, (const char *)needles[i])) {
+      w[0x28] = (short)i;
+      return;
+    }
+  }
+  if (crt_strstr(hay, (const char *)needles[12]))
+    w[0x28] = 0xc;
+  else
+    w[0x28] = 0xd;
 }
-#else
-#error "solo_game_objective_text: clang naked draft required"
-#endif
-
-
 /* color_picker_get_string (0xf31d0) — readable C lift. */
 void color_picker_get_string(void *widget)
 {

@@ -28061,7 +28061,7 @@
         {
           "addr": "0xf3010",
           "decl": "void solo_game_objective_text(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf31d0",
