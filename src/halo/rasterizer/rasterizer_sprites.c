@@ -2712,7 +2712,7 @@ static void (*const b17e800_c17df10)(void) = FUN_0017df10;
 static unsigned int (*const b17e800_d1c90)(float *) = FUN_000d1c90;
 
 __attribute__((naked, noinline))
-void FUN_0017e800(void)
+void FUN_0017e800(int a0, int a1, int a2, int a3, int a4, int a5)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2983,68 +2983,17 @@ void FUN_0017e800(void)
 #endif
 
 
-/* FUN_0017eb10 (0x17eb10) — XBE naked draft (batch 378). */
-#if defined(__clang__)
-static void (*const b17eb10_c17e5b0)(float *vert_ws, float *vert_offset, int transform_a, int transform_b) = (void *)FUN_0017e5b0;
-
-__attribute__((naked, noinline))
-void FUN_0017eb10(float *vert_a __attribute__((unused)), float *vert_b __attribute__((unused)), int param_3 __attribute__((unused)))
+/* FUN_0017eb10 (0x17eb10) — readable C lift. */
+void FUN_0017eb10(float *vert_a, float *vert_b, int param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17e5b0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c17e5b0] "m"(b17eb10_c17e5b0)
-      : "memory");
+  FUN_0017e5b0(vert_a, vert_b, param_3, param_3);
 }
-#else
-#error "FUN_0017eb10: clang naked draft required"
-#endif
 
-
-/* FUN_0017eb30 (0x17eb30) — XBE naked draft (batch 379). */
-#if defined(__clang__)
-static void (*const b17eb30_c17e800)(void) = (void *)FUN_0017e800;
-
-__attribute__((naked, noinline))
-void FUN_0017eb30(float *point0 __attribute__((unused)), float *point1 __attribute__((unused)), float *point2 __attribute__((unused)), void *color __attribute__((unused)))
+/* FUN_0017eb30 (0x17eb30) — readable C lift. */
+void FUN_0017eb30(float *point0, float *point1, float *point2, void *color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17e800]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c17e800] "m"(b17eb30_c17e800)
-      : "memory");
+  FUN_0017e800(point0, point1, point2, color, color, color);
 }
-#else
-#error "FUN_0017eb30: clang naked draft required"
-#endif
-
 
 /* FUN_0017eb50 (0x17eb50) — XBE naked draft (batch 385). */
 #if defined(__clang__)
