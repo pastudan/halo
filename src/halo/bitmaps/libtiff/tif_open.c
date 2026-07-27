@@ -1172,46 +1172,20 @@ void FUN_0006cd40(void)
 #endif
 
 
-/* FUN_0006cda0 (0x6cda0) — XBE naked draft (batch 354). */
-#if defined(__clang__)
-static void (*const b6cda0_c6c960)(void) = (void *)FUN_0006c960;
-
-__attribute__((naked, noinline))
-void FUN_0006cda0(void)
+/* FUN_0006cda0 (0x6cda0) — readable C lift. */
+int FUN_0006cda0(unsigned char *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl 0x120(%%edi), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0006cda0_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c6c960]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl $0xffffffff, (%%esi)\n\t"
-      ".LFUN_0006cda0_1:\n\t"
-      "pushl $0x101\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c6c960]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6c960] "m"(b6cda0_c6c960)
-      : "memory");
+  int *slot;
+  int v;
+  slot = *(int **)(tif + 0x120);
+  v = *slot;
+  if (v != -1) {
+    ((void (*)(void *, int))FUN_0006c960)(tif, v);
+    *slot = -1;
+  }
+  ((void (*)(void *, int))FUN_0006c960)(tif, 0x101);
+  return 1;
 }
-#else
-#error "FUN_0006cda0: clang naked draft required"
-#endif
-
 
 /* FUN_0006cde0 (0x6cde0) — XBE naked draft (batch 319). */
 #if defined(__clang__)
