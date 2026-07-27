@@ -714,16 +714,20 @@ void FUN_00093710(int *cursor, unsigned char mode)
 }
 
 /* FUN_00093780 (0x93780) — readable C lift from XBE leaf. */
-void FUN_00093780(void *base, void **cursor, unsigned char mode)
+void FUN_00093780(int base, int *cursor, int mode)
 {
   int i;
   int limit;
   int *rec;
   int size;
   int offset;
+  void *b;
+  void **cur;
 
-  csmemset(base, 0, 0x40);
-  *(short *)((char *)base + 8) = (short)0xffff;
+  b = (void *)(uintptr_t)base;
+  cur = (void **)cursor;
+  csmemset(b, 0, 0x40);
+  *(short *)((char *)b + 8) = (short)0xffff;
   limit = mode;
   if (limit <= 1) {
     limit = 1;
@@ -737,9 +741,9 @@ void FUN_00093780(void *base, void **cursor, unsigned char mode)
       offset = rec[1];
       size = rec[0];
       if (offset != -1) {
-        csmemcpy((char *)base + offset, *cursor, (size_t)size);
+        csmemcpy((char *)b + offset, *cur, (size_t)size);
       }
-      *cursor = (char *)*cursor + size;
+      *cur = (char *)*cur + size;
       rec += 3;
     } while (rec[0] != -1);
   }
@@ -749,13 +753,17 @@ void FUN_00093780(void *base, void **cursor, unsigned char mode)
 
 
 /* FUN_00093810 (0x93810) — readable C lift from XBE leaf. */
-void FUN_00093810(void *base, void **cursor, unsigned char mode)
+void FUN_00093810(int base, int *cursor, int mode)
 {
   int i;
   int limit;
   int *rec;
   int size;
+  void *b;
+  void **cur;
 
+  b = (void *)(uintptr_t)base;
+  cur = (void **)cursor;
   limit = mode;
   if (limit <= 1) {
     limit = 1;
@@ -767,8 +775,8 @@ void FUN_00093810(void *base, void **cursor, unsigned char mode)
       continue;
     }
     do {
-      csmemcpy(*cursor, (char *)base + rec[1], (size_t)size);
-      *cursor = (char *)*cursor + size;
+      csmemcpy(*cur, (char *)b + rec[1], (size_t)size);
+      *cur = (char *)*cur + size;
       rec += 3;
       size = rec[0];
     } while (size != -1);
