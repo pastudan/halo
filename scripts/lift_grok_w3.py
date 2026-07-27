@@ -27,149 +27,6 @@ def L(addr: int, source: str, name: str, body: str, decl: str) -> None:
 
 
 L(
-    0x80820,
-    "networking/message_header.c",
-    "tea_encrypt",
-    """
-/* tea_encrypt (0x80820) — readable C lift. */
-void tea_encrypt(unsigned int *v, unsigned int *w, unsigned int *key)
-{
-  unsigned int y = v[0];
-  unsigned int z = v[1];
-  unsigned int sum = 0;
-  unsigned int n = 32;
-  unsigned int k0 = key[0], k1 = key[1], k2 = key[2], k3 = key[3];
-
-  while (n--) {
-    sum -= 0x61c88647u;
-    y += ((z << 4) + k0) ^ (z + sum) ^ ((z >> 5) + k1);
-    z += ((y << 4) + k2) ^ (y + sum) ^ ((y >> 5) + k3);
-  }
-  w[0] = y;
-  w[1] = z;
-}
-""",
-    "void tea_encrypt(unsigned int *v, unsigned int *w, unsigned int *key);",
-)
-
-L(
-    0x808B0,
-    "networking/message_header.c",
-    "tea_decrypt",
-    """
-/* tea_decrypt (0x808b0) — readable C lift. */
-void tea_decrypt(unsigned int *v, unsigned int *w, unsigned int *key)
-{
-  unsigned int y = v[0];
-  unsigned int z = v[1];
-  unsigned int sum = 0xc6ef3720u;
-  unsigned int n = 32;
-  unsigned int k0 = key[0], k1 = key[1], k2 = key[2], k3 = key[3];
-
-  while (n--) {
-    z -= ((y << 4) + k2) ^ (y + sum) ^ ((y >> 5) + k3);
-    y -= ((z << 4) + k0) ^ (z + sum) ^ ((z >> 5) + k1);
-    sum += 0x61c88647u;
-  }
-  w[0] = y;
-  w[1] = z;
-}
-""",
-    "void tea_decrypt(unsigned int *v, unsigned int *w, unsigned int *key);",
-)
-
-L(
-    0x100500,
-    "main/main.c",
-    "main_switch_structure_bsp",
-    """
-/* main_switch_structure_bsp (0x100500) — readable C lift. */
-void main_switch_structure_bsp(int16_t bsp_index)
-{
-  scenario_t *scenario = global_scenario_get();
-
-  if (bsp_index < 0 || (int)bsp_index >= *(int *)((char *)scenario + 0x5a4)) {
-    console_warning((const char *)0x28b1e0, (int)bsp_index);
-    return;
-  }
-  if (bsp_index == *(int16_t *)0x326a0c) {
-    console_warning((const char *)0x28b20c, (int)bsp_index);
-    return;
-  }
-  *(int16_t *)0x46da40 = bsp_index;
-  hud_load(true);
-}
-""",
-    "void main_switch_structure_bsp(int16_t bsp_index);",
-)
-
-L(
-    0x1A6870,
-    "units/units.c",
-    "FUN_001a6870",
-    """
-/* FUN_001a6870 (0x1a6870) — readable C lift. */
-int FUN_001a6870(char *unit_tag, short seat_index, char prefer_second)
-{
-  int *seats = (int *)(unit_tag + 0x2e4);
-  char *seat = (char *)tag_block_get_element(seats, seat_index, 0x11c);
-  int *block = (int *)(seat + 0xdc);
-  int idx = prefer_second ? 1 : 0;
-  int last = block[0] - 1;
-  void *elem;
-
-  if (idx > last)
-    idx = last;
-  if ((short)idx < 0)
-    return -1;
-  elem = tag_block_get_element(block, idx, 0x30);
-  return verify_tag_reference((int *)elem);
-}
-""",
-    "int FUN_001a6870(char *unit_tag, short seat_index, char prefer_second);",
-)
-
-L(
-    0xE1F20,
-    "interface/progress_bar.c",
-    "FUN_000e1f20",
-    """
-/* FUN_000e1f20 (0xe1f20) — readable C lift. */
-int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d)
-{
-  (void)unused;
-  D3DDevice_SetVertexData4f(reg, a, b, c, d);
-  return 0;
-}
-""",
-    "int __stdcall FUN_000e1f20(int unused, unsigned int reg, float a, float b, float c, float d);",
-)
-
-L(
-    0xA57B0,
-    "game/cheats.c",
-    "FUN_000a57b0",
-    """
-/* FUN_000a57b0 (0xa57b0) — readable C lift. */
-char FUN_000a57b0(float *vec, float max_length)
-{
-  float len2 = vec[0] * vec[0] + vec[1] * vec[1] + vec[2] * vec[2];
-  float max2 = max_length * max_length;
-  float inv;
-
-  if (!(len2 > max2))
-    return 0;
-  inv = max_length / __builtin_sqrtf(len2);
-  vec[0] *= inv;
-  vec[1] *= inv;
-  vec[2] *= inv;
-  return 1;
-}
-""",
-    "char FUN_000a57b0(float *vec, float max_length);",
-)
-
-L(
     0x11BA00,
     "networking/network_messages.c",
     "FUN_0011ba00",
@@ -192,7 +49,12 @@ int FUN_0011ba00(unsigned char *key, unsigned int key_size)
     }
     byte_v = *key;
     coeff = *(short *)(0x3220d4 + (int)idx * 2);
-    sum += (int)(short)(coeff * (int)byte_v);
+    /* imulw truncates to 16 bits but keeps EDI high half from movswl(coeff). */
+    {
+      int addend = (int)coeff;
+      addend = (addend & ~0xffff) | (unsigned short)((short)addend * (short)byte_v);
+      sum += addend;
+    }
     idx++;
     key++;
     if ((int)idx >= (int)remain)
@@ -205,26 +67,296 @@ int FUN_0011ba00(unsigned char *key, unsigned int key_size)
 )
 
 L(
-    0xF6820,
-    "items/items.c",
-    "item_new",
+    0x11A8E0,
+    "networking/network_messages.c",
+    "FUN_0011a8e0",
     """
-/* item_new (0xf6820) — readable C lift. */
-char item_new(int item_handle)
+/* FUN_0011a8e0 (0x11a8e0) — readable C lift. */
+char *FUN_0011a8e0(int *state, unsigned short max_length)
 {
-  char *item = (char *)object_get_and_verify_type(item_handle, 0x10);
-  short count;
-  char ok;
+  char *base;
+  int cursor;
+  int limit;
+  short i;
+  char *p;
 
-  *(short *)(item + 0x1dc) = (short)(*(short *)(item + 0x1dc) - 1);
-  count = *(short *)(item + 0x1dc);
-  ok = count > 0;
-  if (!ok)
-    object_delete(item_handle);
-  return ok;
+  (void)max_length;
+  base = (char *)state[0];
+  cursor = state[1];
+  limit = state[2];
+  p = base + cursor;
+  i = 0;
+  if (cursor >= limit) {
+    *((char *)state + 0xc) = 1;
+    return 0;
+  }
+  for (;;) {
+    if (p[i] == 0) {
+      state[1] = (int)i + cursor + 1;
+      return p;
+    }
+    i++;
+    if (cursor + (int)i >= limit) {
+      *((char *)state + 0xc) = 1;
+      return 0;
+    }
+  }
 }
 """,
-    "char item_new(int item_handle);",
+    "char *FUN_0011a8e0(int *state, unsigned short max_length);",
+)
+
+L(
+    0x11C480,
+    "networking/network_messages.c",
+    "FUN_0011c480",
+    """
+/* FUN_0011c480 (0x11c480) — readable C lift. */
+void FUN_0011c480(int cache)
+{
+  int *node;
+  void (*dispose_fn)(int);
+
+  FUN_0011c290(cache);
+  if (*(int *)(cache + 0x2c) == 0) {
+    *(int *)(cache + 0x2c) = 0;
+    return;
+  }
+  node = *(int **)(cache + 0x24);
+  if (node == 0) {
+    *(int *)(cache + 0x2c) = 0;
+    return;
+  }
+  dispose_fn = *(void (**)(int))(cache + 0x34);
+  while (node != 0) {
+    if ((node[1] & 2) == 0) {
+      dispose_fn(node[0]);
+      node[1] = (node[1] & ~1) | 2;
+    }
+    node = (int *)node[3];
+  }
+  *(int *)(cache + 0x2c) = 0;
+}
+""",
+    "void FUN_0011c480(int cache);",
+)
+
+L(
+    0x807D0,
+    "networking/message_header.c",
+    "key_message_xor_keystream",
+    """
+/* key_message_xor_keystream (0x807d0) — readable C lift. */
+void key_message_xor_keystream(int msg, int len, int keystream, int key_len)
+{
+  int i;
+  int k;
+  int dir;
+  unsigned char b;
+
+  i = 0;
+  k = 0;
+  dir = 1;
+  if (len <= 0)
+    return;
+  while (i < len) {
+    b = *(unsigned char *)(keystream + k);
+    b ^= *(unsigned char *)(msg + i);
+    b = (unsigned char)~b;
+    *(unsigned char *)(msg + i) = b;
+    k += dir;
+    i++;
+    if (k == key_len || k < 0) {
+      dir = -dir;
+      k += dir;
+    }
+  }
+}
+""",
+    "void key_message_xor_keystream(int msg, int len, int keystream, int key_len);",
+)
+
+L(
+    0x11A560,
+    "networking/network_messages.c",
+    "FUN_0011a560",
+    """
+/* FUN_0011a560 (0x11a560) — readable C lift. */
+unsigned char FUN_0011a560(int *state)
+{
+  int cursor;
+  int limit;
+  int next;
+  char *p;
+
+  if (state == 0 || state[0] == 0 || state[1] < 0 || state[1] > state[2]) {
+    display_assert((const char *)0x28f058, (const char *)0x28eef8, 0x100, 1);
+    system_exit(-1);
+  }
+  cursor = state[1];
+  limit = state[2];
+  next = cursor + 1;
+  if (next > limit || *((unsigned char *)state + 0xc) != 0) {
+    *((unsigned char *)state + 0xc) = 1;
+    return 0;
+  }
+  p = (char *)state[0] + cursor;
+  state[1] = next;
+  if (p == 0)
+    return 0;
+  return *(unsigned char *)p;
+}
+""",
+    "unsigned char FUN_0011a560(int *state);",
+)
+
+L(
+    0x11A5D0,
+    "networking/network_messages.c",
+    "FUN_0011a5d0",
+    """
+/* FUN_0011a5d0 (0x11a5d0) — readable C lift. */
+short FUN_0011a5d0(int *state)
+{
+  int cursor;
+  int limit;
+  int next;
+  char *p;
+
+  if (state == 0 || state[0] == 0 || state[1] < 0 || state[1] > state[2]) {
+    display_assert((const char *)0x28f058, (const char *)0x28eef8, 0x100, 1);
+    system_exit(-1);
+  }
+  cursor = state[1];
+  limit = state[2];
+  next = cursor + 2;
+  if (next > limit || *((unsigned char *)state + 0xc) != 0) {
+    *((unsigned char *)state + 0xc) = 1;
+    return 0;
+  }
+  p = (char *)state[0] + cursor;
+  FUN_00118620(p, 1, -2);
+  state[1] = cursor + 2;
+  if (p == 0)
+    return 0;
+  return *(short *)p;
+}
+""",
+    "short FUN_0011a5d0(int *state);",
+)
+
+L(
+    0x11A650,
+    "networking/network_messages.c",
+    "FUN_0011a650",
+    """
+/* FUN_0011a650 (0x11a650) — readable C lift. */
+int FUN_0011a650(int *state)
+{
+  int cursor;
+  int limit;
+  int next;
+  char *p;
+
+  if (state == 0 || state[0] == 0 || state[1] < 0 || state[1] > state[2]) {
+    display_assert((const char *)0x28f058, (const char *)0x28eef8, 0x100, 1);
+    system_exit(-1);
+  }
+  cursor = state[1];
+  limit = state[2];
+  next = cursor + 4;
+  if (next > limit || *((unsigned char *)state + 0xc) != 0) {
+    *((unsigned char *)state + 0xc) = 1;
+    return 0;
+  }
+  p = (char *)state[0] + cursor;
+  FUN_00118620(p, 1, -4);
+  state[1] = cursor + 4;
+  if (p == 0)
+    return 0;
+  return *(int *)p;
+}
+""",
+    "int FUN_0011a650(int *state);",
+)
+
+L(
+    0x11A700,
+    "networking/network_messages.c",
+    "FUN_0011a700",
+    """
+/* FUN_0011a700 (0x11a700) — readable C lift. */
+unsigned int FUN_0011a700(int *state, int maximum_value)
+{
+  if (maximum_value <= 0) {
+    display_assert((const char *)0x28ef70, (const char *)0x28eef8, 0x141, 1);
+    system_exit(-1);
+  }
+  if (maximum_value <= 0xff)
+    return (unsigned int)FUN_0011a560(state);
+  if (maximum_value <= 0xffff)
+    return (unsigned int)(int)FUN_0011a5d0(state);
+  return (unsigned int)FUN_0011a650(state);
+}
+""",
+    "unsigned int FUN_0011a700(int *state, int maximum_value);",
+)
+
+L(
+    0xC3DB0,
+    "hs/hs.c",
+    "hs_find_tag_reference_by_index",
+    """
+/* hs_find_tag_reference_by_index (0xc3db0) — readable C lift. */
+int16_t hs_find_tag_reference_by_index(int tag_index)
+{
+  scenario_t *scenario;
+  int *block;
+  int count;
+  short i;
+  char *elem;
+
+  if (*(int *)0x326a08 == -1)
+    return (int16_t)-1;
+  scenario = global_scenario_get();
+  block = (int *)((char *)scenario + 0x4b4);
+  count = block[0];
+  if (count <= 0)
+    return (int16_t)-1;
+  for (i = 0; (int)i < count; i++) {
+    elem = (char *)tag_block_get_element(block, (int)i, 0x28);
+    if (*(int *)(elem + 0x24) == tag_index)
+      return i;
+  }
+  return (int16_t)-1;
+}
+""",
+    "int16_t hs_find_tag_reference_by_index(int tag_index);",
+)
+
+L(
+    0x12A830,
+    "networking/network_game_globals.c",
+    "network_game_get_number_of_games_played",
+    """
+/* network_game_get_number_of_games_played (0x12a830) — readable C lift. */
+int network_game_get_number_of_games_played(void)
+{
+  void *server;
+  void *game;
+
+  server = *(void **)0x46e8bc;
+  if (server == 0)
+    return FUN_0012a890();
+  game = (void *)network_game_server_get_game(server);
+  if (game == 0) {
+    display_assert((const char *)0x2861a8, (const char *)0x2955e0, 0x73, 1);
+    system_exit(-1);
+  }
+  return *(int *)((char *)game + 0x428);
+}
+""",
+    "int network_game_get_number_of_games_played(void);",
 )
 
 
@@ -350,13 +482,10 @@ def commit_push(flips: list[str], touched: set[Path]) -> None:
     files = [
         "kb.json",
         "scripts/lift_grok_w3.py",
-        "src/halo/bitmaps/libtiff/tif_write.c",
-        "src/halo/main/main.c",
-        "src/halo/units/units.c",
         "src/halo/networking/message_header.c",
         "src/halo/networking/network_messages.c",
-        "src/halo/game/cheats.c",
-        "src/halo/objects/objects.c",
+        "src/halo/networking/network_game_globals.c",
+        "src/halo/hs/hs.c",
     ]
     files += [str(p.relative_to(ROOT)) for p in sorted(touched)]
     # unique
@@ -414,14 +543,16 @@ def commit_push(flips: list[str], touched: set[Path]) -> None:
 
 def main() -> int:
     order = [
-        0x80820,
-        0x808B0,
-        0x100500,
-        0x1A6870,
-        0xF6820,
-        0xE1F20,
-        0xA57B0,
         0x11BA00,
+        0x11A8E0,
+        0x807D0,
+        0x11A560,
+        0x11A5D0,
+        0x11A650,
+        0x11A700,
+        0x11C480,
+        0xC3DB0,
+        0x12A830,
     ]
     true0, _ = count_ported(json.loads(KB_PATH.read_text(encoding="utf-8")))
     print(f"start true={true0}", flush=True)

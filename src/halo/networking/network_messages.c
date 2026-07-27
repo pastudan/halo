@@ -662,70 +662,19 @@ unsigned long long FUN_0011a6d0(int *state)
   return ((unsigned long long)(unsigned int)pair[1] << 32) | (unsigned int)pair[0];
 }
 
-/* FUN_0011a700 (0x11a700) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static void (*const b11a700_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a700_exitfn)(int) = system_exit;
-static unsigned char (*const b11a700_c11a560)(int *state) = FUN_0011a560;
-static short (*const b11a700_c11a5d0)(int *state) = FUN_0011a5d0;
-static int (*const b11a700_c11a650)(int *state) = FUN_0011a650;
-
-__attribute__((naked, noinline))
-unsigned int FUN_0011a700(int *state __attribute__((unused)), int maximum_value __attribute__((unused)))
+/* FUN_0011a700 (0x11a700) — readable C lift. */
+unsigned int FUN_0011a700(int *state, int maximum_value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jg .LFUN_0011a700_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x141\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28ef70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a700_1:\n\t"
-      "cmpl $0xff, %%esi\n\t"
-      "jg .LFUN_0011a700_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11a560]\n\t"
-      "addl $4, %%esp\n\t"
-      "movzbl %%al, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a700_2:\n\t"
-      "cmpl $0xffff, %%esi\n\t"
-      "jg .LFUN_0011a700_3\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c11a5d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a700_3:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c11a650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11a700_assert), [exitfn] "m"(b11a700_exitfn), [c11a560] "m"(b11a700_c11a560), [c11a5d0] "m"(b11a700_c11a5d0), [c11a650] "m"(b11a700_c11a650)
-      : "memory");
+  if (maximum_value <= 0) {
+    display_assert((const char *)0x28ef70, (const char *)0x28eef8, 0x141, 1);
+    system_exit(-1);
+  }
+  if (maximum_value <= 0xff)
+    return (unsigned int)FUN_0011a560(state);
+  if (maximum_value <= 0xffff)
+    return (unsigned int)(int)FUN_0011a5d0(state);
+  return (unsigned int)FUN_0011a650(state);
 }
-#else
-#error "FUN_0011a700: clang naked draft required"
-#endif
-
 
 /* FUN_0011a770 (0x11a770) — XBE naked draft (batch 84). */
 #if defined(__clang__)
@@ -1200,7 +1149,7 @@ static int (*const b11b2a0_c11a430)(int *state, short count, int element_size) =
 static void * (*const b11b2a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static char * (*const b11b2a0_c11a8e0)(int *state, unsigned short max_length) = (void *)FUN_0011a8e0;
 static char * (*const b11b2a0_c8dff0)(char *destination, const char *source) = csstrcpy;
-static unsigned int (*const b11b2a0_c11a700)(int *state, int maximum_value) = FUN_0011a700;
+static unsigned int (*const b11b2a0_c11a700)(int *state, int maximum_value) = (void *)FUN_0011a700;
 static void (*const b11b2a0_c11add0)(packet_definition *def, short *param_2, short *param_3, short *param_4) = compute_packet_field_sizes;
 static void (*const b11b2a0_c11b2a0)(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out) = FUN_0011b2a0;
 static void *(*const b11b2a0_memset)(void *, int, unsigned int) = csmemset;

@@ -3836,7 +3836,7 @@
         },
         {
           "addr": "0x16d40",
-          "decl": "void actor_look_compute_prop_interest(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5);",
+          "decl": "void actor_look_compute_prop_interest(void);",
           "ported": false,
           "name": "actor_look_compute_prop_interest"
         },
@@ -11652,7 +11652,7 @@
           "addr": "0xc3db0",
           "decl": "int16_t hs_find_tag_reference_by_index(int tag_index);",
           "ported": true,
-          "name": "FUN_000c3db0"
+          "name": "hs_find_tag_reference_by_index"
         },
         {
           "addr": "0xc3e10",
@@ -12957,7 +12957,7 @@
         {
           "addr": "0xd1540",
           "decl": "int FUN_000d1540(void);",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/interface/hud.c"
         },
         {
@@ -15365,7 +15365,7 @@
           "addr": "0x11a700",
           "decl": "unsigned int FUN_0011a700(int *state, int maximum_value);",
           "name": "FUN_0011a700",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a770",
@@ -16499,8 +16499,7 @@
         {
           "addr": "0x13c560",
           "decl": "void FUN_0013c560(int param_1);",
-          "ported": true,
-          "name": "FUN_0013c560"
+          "ported": true
         },
         {
           "decl": "int FUN_0013c5c0(int param_1);",
@@ -16510,8 +16509,7 @@
         {
           "addr": "0x13c620",
           "decl": "void FUN_0013c620(int param_1);",
-          "ported": true,
-          "name": "FUN_0013c620"
+          "ported": true
         },
         {
           "addr": "0x13c680",
@@ -16546,8 +16544,7 @@
         {
           "addr": "0x13c8c0",
           "decl": "void FUN_0013c8c0(int param_1);",
-          "ported": true,
-          "name": "FUN_0013c8c0"
+          "ported": true
         },
         {
           "addr": "0x13c920",
@@ -16686,8 +16683,7 @@
           "addr": "0x13db60",
           "decl": "void FUN_0013db60(short *param_1);",
           "ported": true,
-          "source_path": "objects/objects.c",
-          "name": "FUN_0013db60"
+          "source_path": "objects/objects.c"
         },
         {
           "addr": "0x13dbe0",
@@ -29356,7 +29352,7 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle@<esi>);",
+          "decl": "char *unit_get_weapon_name(int unit_handle, int unused);",
           "name": "unit_get_weapon_name",
           "ported": true,
           "obj": "units.obj"
@@ -34311,7 +34307,7 @@
         },
         {
           "addr": "0x2f5b0",
-          "decl": "int FUN_0002f5b0(float *a, float *b);",
+          "decl": "int FUN_0002f5b0(int param_1, int param_2);",
           "name": "FUN_0002f5b0",
           "source_path": "src/halo/ai/actor_perception.c",
           "ported": true
