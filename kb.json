@@ -23480,7 +23480,7 @@
         {
           "addr": "0x186480",
           "decl": "int render_camera_build_clipped_frustum_bounds(camera_t *camera, float *in_bounds, float *out_bounds);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1865e0",

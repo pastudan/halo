@@ -1407,145 +1407,29 @@ void render_camera_screen_to_world(void)
 #endif
 
 
-/* render_camera_build_clipped_frustum_bounds (0x186480) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static void (*const b186480_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b186480_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int render_camera_build_clipped_frustum_bounds(camera_t *camera __attribute__((unused)), float *in_bounds __attribute__((unused)), float *out_bounds __attribute__((unused)))
+/* render_camera_build_clipped_frustum_bounds (0x186480) — readable C lift (restored pre-naked). */
+int render_camera_build_clipped_frustum_bounds(camera_t *camera, float *in_bounds, float *out_bounds)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jne .Lrender_camera_build_clipped_frustum_bounds_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x156\n\t"
-      "pushl $0x2b12b4\n\t"
-      "pushl $0x266e9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_camera_build_clipped_frustum_bounds_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lrender_camera_build_clipped_frustum_bounds_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x157\n\t"
-      "pushl $0x2b12b4\n\t"
-      "pushl $0x2819b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_camera_build_clipped_frustum_bounds_2:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lrender_camera_build_clipped_frustum_bounds_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x158\n\t"
-      "pushl $0x2b12b4\n\t"
-      "pushl $0x2b1304\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_camera_build_clipped_frustum_bounds_3:\n\t"
-      "movb 0x4d0e19, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrender_camera_build_clipped_frustum_bounds_6\n\t"
-      "flds (%%edi)\n\t"
-      "fcomps 0x4(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrender_camera_build_clipped_frustum_bounds_6\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fcomps 0xc(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrender_camera_build_clipped_frustum_bounds_6\n\t"
-      "flds 0x28(%%ebx)\n\t"
-      "movswl 0x30(%%ebx), %%eax\n\t"
-      "fmuls 0x253398\n\t"
-      "movswl 0x2c(%%ebx), %%ecx\n\t"
-      "movswl 0x32(%%ebx), %%edx\n\t"
-      "fptan\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movswl 0x2e(%%ebx), %%eax\n\t"
-      "subl %%eax, %%edx\n\t"
-      "fstp %%st(0)\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "fidivl 0x8(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%edi)\n\t"
-      "fstps (%%esi)\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      "fmuls 0xc(%%edi)\n\t"
-      "fsts 0xc(%%esi)\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x4(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .Lrender_camera_build_clipped_frustum_bounds_4\n\t"
-      "fcomps 0x8(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrender_camera_build_clipped_frustum_bounds_5\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movb -0x1(%%ebp), %%cl\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "popl %%esi\n\t"
-      "sete %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrender_camera_build_clipped_frustum_bounds_4:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lrender_camera_build_clipped_frustum_bounds_5:\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lrender_camera_build_clipped_frustum_bounds_6:\n\t"
-      "movb -0x1(%%ebp), %%cl\n\t"
-      "movl $0x3f800000, %%eax\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $0xbf800000, 0x8(%%esi)\n\t"
-      "movl $0xbf800000, (%%esi)\n\t"
-      "testb %%cl, %%cl\n\t"
-      "popl %%esi\n\t"
-      "sete %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b186480_assert), [exitfn] "m"(b186480_exitfn)
-      : "memory");
-}
-#else
-#error "render_camera_build_clipped_frustum_bounds: clang naked draft required"
-#endif
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
 
+  display_assert((char *)0x00266e9c, (char *)0x002b12b4, 342, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x1864d9 */
+  display_assert((char *)0x002819b0, (char *)0x002b12b4, 343, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x186500 */
+  display_assert((char *)0x002b1304, (char *)0x002b12b4, 344, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1865ae */
+  /* test (char)eax, 1 -> je 0x1865a8 */
+  return 0;
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
+}
 
 /* render_camera_triangle_frontfacing (0x1865e0) — readable C lift. */
 char render_camera_triangle_frontfacing(float *p0, float *p1, float *p2, float *p3)

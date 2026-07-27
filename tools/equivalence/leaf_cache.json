@@ -41,7 +41,9 @@
     "coverage_pct": 22.0
   },
   "0x103600": {
-    "class": "non_leaf"
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 0.0
   },
   "0x1037b0": {
     "class": "non_leaf",
