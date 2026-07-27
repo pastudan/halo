@@ -453,133 +453,80 @@ unsigned int * sieve_of_eratosthenes(unsigned int limit __attribute__((unused)),
 
 /* --- message_header.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00080210 (0x80210) — XBE naked draft (batch 121). */
-#if defined(__clang__)
-static void (*const b80210_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80210_exitfn)(int) = system_exit;
-static void (*const b80210_c7ffe0)(void) = FUN_0007ffe0;
-static void (*const b80210_c7ff40)(void) = (void *)FUN_0007ff40;
-
-__attribute__((naked, noinline))
-void FUN_00080210(void)
+/* FUN_00080210 (0x80210) — readable C lift from XBE leaf. */
+void FUN_00080210(const unsigned short *input, const unsigned short *seed,
+                  unsigned int *out_lo, unsigned int *out_hi)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x2c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .LFUN_00080210_1\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "jne .LFUN_00080210_2\n\t"
-      ".LFUN_00080210_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7c\n\t"
-      "pushl $0x265a54\n\t"
-      "pushl $0x265a90\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00080210_2:\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "nop\n\t"
-      ".LFUN_00080210_3:\n\t"
-      "leal (%%ecx,%%eax,2), %%edx\n\t"
-      "movw -0x2c(%%ebp,%%edx,1), %%dx\n\t"
-      "movw %%dx, -0x2c(%%ebp,%%eax,2)\n\t"
-      "movw %%bx, -0x24(%%ebp,%%eax,2)\n\t"
-      "incl %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "jb .LFUN_00080210_3\n\t"
-      "movl $0x40, 0x8(%%ebp)\n\t"
-      "nop\n\t"
-      ".LFUN_00080210_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "jmp .LFUN_00080210_5\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00080210_5:\n\t"
-      "movzwl -0x2c(%%ebp,%%ecx,2), %%edx\n\t"
-      "leal (%%eax,%%edx,2), %%eax\n\t"
-      "movw %%ax, -0x2c(%%ebp,%%ecx,2)\n\t"
-      "shrl $0x10, %%eax\n\t"
-      "incl %%ecx\n\t"
-      "cmpl $8, %%ecx\n\t"
-      "jb .LFUN_00080210_5\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl -0x24(%%ebp), %%edi\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00080210_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f\n\t"
-      "pushl $0x265a54\n\t"
-      "pushl $0x265a40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00080210_6:\n\t"
-      "leal -0x10(%%ebp), %%ebx\n\t"
-      "call *%[c7ffe0]\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7ff40]\n\t"
-      "movl -0x16(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%ah, %%ah\n\t"
-      "js .LFUN_00080210_7\n\t"
-      "movl -0x1c(%%ebp), %%edi\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "incw -0x2c(%%ebp)\n\t"
-      "movl %%edi, -0x24(%%ebp)\n\t"
-      "movl %%ecx, -0x20(%%ebp)\n\t"
-      ".LFUN_00080210_7:\n\t"
-      "decl 0x8(%%ebp)\n\t"
-      "jne .LFUN_00080210_4\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00080210_8\n\t"
-      "movl -0x2c(%%ebp), %%edx\n\t"
-      "movl -0x28(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      ".LFUN_00080210_8:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00080210_9\n\t"
-      "movl -0x20(%%ebp), %%edx\n\t"
-      "movl %%edi, (%%eax)\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      ".LFUN_00080210_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80210_assert), [exitfn] "m"(b80210_exitfn), [c7ffe0] "m"(b80210_c7ffe0), [c7ff40] "m"(b80210_c7ff40)
-      : "memory");
+  unsigned short local[8];
+  unsigned short tmp[4];
+  unsigned short sum[4];
+  unsigned int carry;
+  unsigned int i;
+  unsigned int round;
+  extern char DAT_00265a54[];
+  extern char DAT_00265a90[];
+  extern char DAT_00265a40[];
+
+  if (input == 0 || seed == 0) {
+    display_assert(DAT_00265a90, DAT_00265a54, 0x7c, 1);
+    system_exit(-1);
+  }
+
+  for (i = 0; i < 4; i++) {
+    local[i] = seed[i];
+    local[i + 4] = 0;
+  }
+
+  for (round = 0; round < 0x40; round++) {
+    carry = 0;
+    for (i = 0; i < 8; i++) {
+      unsigned int v = (unsigned int)local[i] * 2u + carry;
+      local[i] = (unsigned short)v;
+      carry = v >> 16;
+    }
+
+    if (input == 0) {
+      display_assert(DAT_00265a40, DAT_00265a54, 0x4f, 1);
+      system_exit(-1);
+    }
+    /* FUN_0007ffe0(esi=input, ebx=tmp) */
+    {
+      unsigned short flag = 0;
+      unsigned int t;
+      tmp[0] = (unsigned short)(-(short)input[0]);
+      if (input[0] != 0)
+        flag = 1;
+      t = (unsigned int)input[1] + flag;
+      tmp[1] = (unsigned short)(-(int)t);
+      if (input[1] != 0)
+        flag = 1;
+      t = (unsigned int)input[2] + flag;
+      tmp[2] = (unsigned short)(-(int)t);
+      if (input[2] != 0)
+        flag = 1;
+      t = (unsigned int)input[3] + flag;
+      tmp[3] = (unsigned short)(-(int)t);
+    }
+
+    FUN_0007ff40(&local[4], tmp, sum);
+    /* XBE: test sign bit of sum[3] */
+    if ((sum[3] & 0x8000u) == 0) {
+      *(unsigned int *)&local[4] = *(unsigned int *)&sum[0];
+      *(unsigned int *)&local[6] = *(unsigned int *)&sum[2];
+      local[0]++;
+    }
+  }
+
+  if (out_lo != 0) {
+    out_lo[0] = *(unsigned int *)&local[0];
+    out_lo[1] = *(unsigned int *)&local[2];
+  }
+  if (out_hi != 0) {
+    out_hi[0] = *(unsigned int *)&local[4];
+    out_hi[1] = *(unsigned int *)&local[6];
+  }
 }
-#else
-#error "FUN_00080210: clang naked draft required"
-#endif
+
 
 
 /* FUN_00080380 (0x80380) — readable C lift. */

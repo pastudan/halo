@@ -40263,8 +40263,8 @@
       "functions": [
         {
           "addr": "0x80210",
-          "decl": "void FUN_00080210(void);",
-          "ported": false
+          "decl": "void FUN_00080210(const unsigned short *input, const unsigned short *seed, unsigned int *out_lo, unsigned int *out_hi);",
+          "ported": true
         },
         {
           "addr": "0x80380",
