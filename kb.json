@@ -34112,7 +34112,7 @@
         {
           "addr": "0x2a3a0",
           "decl": "void FUN_0002a3a0(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002a3a0"
         },
         {
