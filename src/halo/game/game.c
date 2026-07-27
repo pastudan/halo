@@ -839,7 +839,7 @@ int FUN_000b45c0(int param_1 __attribute__((unused)))
 /* FUN_000b4960 (0xb4960) — XBE naked draft (batch 130). */
 #if defined(__clang__)
 static scenario_t * (*const bb4960_c18e380)(void) = global_scenario_get;
-static void (*const bb4960_cb3860)(void) = FUN_000b3860;
+static void (*const bb4960_cb3860)(void) = (void *)FUN_000b3860;
 static void *(*const bb4960_memset)(void *, int, unsigned int) = csmemset;
 static void *(*const bb4960_elem)(void *, int, int) = tag_block_get_element;
 static void (*const bb4960_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -1197,113 +1197,47 @@ int race_engine_update(int player_handle)
   system_exit(-1);
   return -1;
 }
-/* FUN_000b43b0 (0xb43b0) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static scenario_t * (*const bb43b0_c18e380)(void) = global_scenario_get;
-static void * (*const bb43b0_c18e450)(void) = game_globals_get;
-static void *(*const bb43b0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void FUN_000b43b0(void)
+/* FUN_000b43b0 (0xb43b0) — readable C lift. */
+int FUN_000b43b0(float *point, int *exclude, int exclude_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x49742400, -0x4(%%ebp)\n\t"
-      "movl $0xffffffff, -0x8(%%ebp)\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c18e450]\n\t"
-      "pushl $0xa0\n\t"
-      "addl $0x164, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x378(%%edi), %%eax\n\t"
-      "addl $0x378, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000b43b0_6\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000b43b0_1:\n\t"
-      "pushl $0x94\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $4, 0x10(%%eax)\n\t"
-      "jne .LFUN_000b43b0_5\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LFUN_000b43b0_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000b43b0_2:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "cmpl (%%edx,%%ecx,4), %%esi\n\t"
-      "je .LFUN_000b43b0_5\n\t"
-      "incl %%ecx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "jl .LFUN_000b43b0_2\n\t"
-      ".LFUN_000b43b0_3:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_000b43b0_7\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc3\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fcoms -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000b43b0_4\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_000b43b0_5\n\t"
-      ".LFUN_000b43b0_4:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_000b43b0_5:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_000b43b0_1\n\t"
-      ".LFUN_000b43b0_6:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000b43b0_7:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bb43b0_c18e380), [c18e450] "m"(bb43b0_c18e450), [elem] "m"(bb43b0_elem)
-      : "memory");
-}
-#else
-#error "FUN_000b43b0: clang naked draft required"
-#endif
+  float best_d2;
+  int best;
+  char *scenario;
+  char *globals;
+  char *block;
+  int i, j;
+  char *elem;
+  float dx, dy, dz, d2;
 
+  best_d2 = 1000000.0f;
+  best = -1;
+  scenario = (char *)global_scenario_get();
+  globals = (char *)game_globals_get();
+  tag_block_get_element(globals + 0x164, 0, 0xa0);
+  block = scenario + 0x378;
+  for (i = 0; i < *(int *)block; i++) {
+    elem = (char *)tag_block_get_element(block, i, 0x94);
+    if (*(int16_t *)(elem + 0x10) != 4)
+      continue;
+    for (j = 0; j < exclude_count; j++) {
+      if (i == exclude[j])
+        goto next;
+    }
+    if (point == NULL)
+      return i;
+    dx = *(float *)elem - point[0];
+    dy = *(float *)(elem + 4) - point[1];
+    dz = *(float *)(elem + 8) - point[2];
+    d2 = dx * dx + dy * dy + dz * dz;
+    if (!(d2 >= best_d2)) {
+      best_d2 = d2;
+      best = i;
+    }
+  next:
+    ;
+  }
+  return best;
+}
 
 /* FUN_000b4490 (0xb4490) — XBE naked draft (batch 126). */
 #if defined(__clang__)
@@ -1311,7 +1245,7 @@ static scenario_t * (*const bb4490_c18e380)(void) = global_scenario_get;
 static void (*const bb4490_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
 static void * (*const bb4490_c119810)(data_iter_t *iterator) = data_iterator_next;
 static void *(*const bb4490_get)(int, int) = object_get_and_verify_type;
-static void (*const bb4490_cb43b0)(void) = FUN_000b43b0;
+static void (*const bb4490_cb43b0)(void) = (void *)FUN_000b43b0;
 static void *(*const bb4490_elem)(void *, int, int) = tag_block_get_element;
 static int (*const bb4490_cb3770)(int param_1) = FUN_000b3770;
 static void (*const bb4490_opnew)(void *, int, int) = object_placement_data_new;
@@ -1593,7 +1527,7 @@ static void (*const bb4800_ca9970)(int param_1, int param_2, int param_3) = game
 static bool (*const bb4800_ca8e40)(void) = game_engine_can_score;
 static void *(*const bb4800_get)(int, int) = object_get_and_verify_type;
 static int (*const bb4800_cad270)(float *position, float radius, float height, int16_t type, int16_t index) = find_netgame_flag;
-static void (*const bb4800_cb46b0)(void) = race_update_team_score;
+static void (*const bb4800_cb46b0)(void) = (void *)race_update_team_score;
 
 __attribute__((naked, noinline))
 void FUN_000B4800(void)
@@ -1990,9 +1924,9 @@ void find_next_target(void)
 /* FUN_000b4fb0 (0xb4fb0) — XBE naked draft (batch 146). */
 #if defined(__clang__)
 static void *(*const bb4fb0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bb4fb0_cb4bf0)(void) = FUN_000b4bf0;
+static void (*const bb4fb0_cb4bf0)(void) = (void *)FUN_000b4bf0;
 static void * (*const bb4fb0_ca9350)(void) = game_engine_get_variant;
-static void (*const bb4fb0_cb4e20)(void) = find_next_target;
+static void (*const bb4fb0_cb4e20)(void) = (void *)find_next_target;
 static void (*const bb4fb0_cb4d00)(void) = (void *)FUN_000b4d00;
 
 __attribute__((naked, noinline))
@@ -2262,9 +2196,9 @@ static void (*const bb5210_exitfn)(int) = system_exit;
 static void (*const bb5210_ca9460)(short param_1) = game_engine_clear_goal_position;
 static void *(*const bb5210_get)(int, int) = object_get_and_verify_type;
 static void (*const bb5210_ca93e0)(int flag_index, int *position, float height, char *name, int target, int16_t team, int player) = game_engine_set_goal_position;
-static void (*const bb5210_cb4e20)(void) = find_next_target;
+static void (*const bb5210_cb4e20)(void) = (void *)find_next_target;
 static char (*const bb5210_ca9900)(int param_1) = game_engine_man_out;
-static void (*const bb5210_ca8b00)(void) = game_engine_start_over;
+static void (*const bb5210_ca8b00)(void) = (void *)game_engine_start_over;
 
 __attribute__((naked, noinline))
 void slayer_engine_display_score(void)

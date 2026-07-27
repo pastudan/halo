@@ -8443,8 +8443,8 @@
         },
         {
           "addr": "0xb43b0",
-          "decl": "void FUN_000b43b0(void);",
-          "ported": false
+          "decl": "int FUN_000b43b0(float *point, int *exclude, int exclude_count@<ebx>);",
+          "ported": true
         },
         {
           "addr": "0xb4490",
