@@ -1633,66 +1633,41 @@ void quaternion_compress_8byte(float *q, short *out)
   out[3] = (short)(int64_t)(q[3] * scale);
 }
 
-/* quaternion_compress_6byte (0x1209b0) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void (*const b1209b0_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void quaternion_compress_6byte(void)
+/* quaternion_compress_6byte (0x1209b0) — readable C lift from XBE leaf.
+ * Packs 4 quaternion floats into 3 uint16s (inverse of decompress_6byte). */
+void quaternion_compress_6byte(float *q, unsigned short *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x26a600\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fmuls 0x26a600\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0xc(%%edi)\n\t"
-      "fmuls 0x26a600\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[ftol]\n\t"
-      "flds (%%edi)\n\t"
-      "fmuls 0x26a600\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw %%si, %%cx\n\t"
-      "shrw $0xc, %%cx\n\t"
-      "movzbw %%bh, %%dx\n\t"
-      "andl $0xfff0, %%eax\n\t"
-      "andl $0xfff0, %%esi\n\t"
-      "shll $4, %%esi\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw %%ax, (%%ecx)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "orl %%edx, %%esi\n\t"
-      "andb $0xf0, %%bl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb %%bl, %%dh\n\t"
-      "shrw $4, %%ax\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, 0x2(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "orl %%eax, %%edx\n\t"
-      "movw %%dx, 0x4(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(b1209b0_ftol)
-      : "memory");
+  float scale;
+  int v0, v1, v2, v3;
+  unsigned int eax, ebx, ecx, edx, esi;
+
+  scale = *(float *)0x26a600; /* 32767.0f */
+  v1 = (int)(int64_t)(q[1] * scale);
+  v2 = (int)(int64_t)(q[2] * scale);
+  v3 = (int)(int64_t)(q[3] * scale);
+  v0 = (int)(int64_t)(q[0] * scale);
+
+  eax = (unsigned int)v0;
+  esi = (unsigned int)v1;
+  ebx = (unsigned int)v2;
+
+  ecx = ((unsigned int)(unsigned short)esi) >> 12;
+  edx = (ebx >> 8) & 0xff;
+  eax &= 0xfff0u;
+  esi &= 0xfff0u;
+  esi <<= 4;
+  eax |= ecx;
+  out[0] = (unsigned short)eax;
+
+  eax = (unsigned int)v3;
+  esi |= edx;
+  ebx = (ebx & 0xffffff00u) | (ebx & 0xf0u);
+  edx = (ebx & 0xffu) << 8;
+  eax = ((unsigned int)(unsigned short)eax) >> 4;
+  out[1] = (unsigned short)esi;
+  edx |= eax;
+  out[2] = (unsigned short)edx;
 }
-#else
-#error "quaternion_compress_6byte: clang naked draft required"
-#endif
 
 
 /* animation_graph_node_matrices_from_orientations (0x120a40) — XBE naked draft (batch 261). */
