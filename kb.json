@@ -37860,7 +37860,7 @@
         },
         {
           "addr": "0x120470",
-          "decl": "void FUN_00120470(void *ctrl, int datum_handle);",
+          "decl": "void FUN_00120470(void);",
           "ported": false
         },
         {
@@ -37915,7 +37915,7 @@
         },
         {
           "addr": "0x120930",
-          "decl": "void quaternion_decompress_6byte_renormalized(void *compressed, float *out);",
+          "decl": "void quaternion_decompress_6byte_renormalized(void);",
           "ported": false
         },
         {
@@ -37950,7 +37950,7 @@
         },
         {
           "addr": "0x120ee0",
-          "decl": "void animation_frame_get_xy_translation(void *animation, short frame_index, float *out_xy);",
+          "decl": "void animation_frame_get_xy_translation(void);",
           "ported": false
         },
         {
