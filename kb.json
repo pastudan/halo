@@ -7171,7 +7171,7 @@
         },
         {
           "addr": "0x87b00",
-          "decl": "void editor_camera_set_mode(void);",
+          "decl": "void editor_camera_set_mode(int16_t mode);",
           "ported": false
         },
         {
@@ -27140,13 +27140,15 @@
         },
         {
           "addr": "0x83040",
-          "decl": "char FUN_00083040(int endpoint, unsigned short timeout);",
-          "ported": false
+          "decl": "char FUN_00083040(int *endpoint, unsigned short timeout);",
+          "ported": true,
+          "name": "FUN_00083040"
         },
         {
           "addr": "0x83100",
-          "decl": "void transport_server_initialize(void);",
-          "ported": false
+          "decl": "char transport_server_initialize(int *endpoint, unsigned short timeout);",
+          "ported": false,
+          "name": "transport_server_initialize"
         },
         {
           "addr": "0x831e0",

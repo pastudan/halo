@@ -1715,179 +1715,74 @@ int count_endpoints_in_set(void * a0)
   return (int8_t)*(int8_t *)((char *)a0 + 0x5);
 }
 
-/* FUN_00083040 (0x83040) — XBE naked draft (batch 256). */
-#if defined(__clang__)
-static void (*const b83040_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b83040_exitfn)(int) = system_exit;
-static void b83040_c2251b8_tgt(void) { return; }
-static void (*const b83040_c2251b8)(void) = b83040_c2251b8_tgt;
-static void b83040_c2235f3_tgt(void) { return; }
-static void (*const b83040_c2235f3)(void) = b83040_c2235f3_tgt;
-
-__attribute__((naked, noinline))
-char FUN_00083040(int endpoint __attribute__((unused)), unsigned short timeout __attribute__((unused)))
+/* FUN_00083040 (0x83040) — readable C lift: endpoint_readable. */
+char FUN_00083040(int *endpoint, unsigned short timeout)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .LFUN_00083040_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3f3\n\t"
-      "pushl $0x266618\n\t"
-      "pushl $0x266658\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00083040_1:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .LFUN_00083040_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x4(%%esi), %%al\n\t"
-      "testb $8, %%al\n\t"
-      "je .LFUN_00083040_2\n\t"
-      "shrl $2, %%eax\n\t"
-      "popl %%esi\n\t"
-      "andb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00083040_2:\n\t"
-      "movzwl 0xc(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x108(%%ebp)\n\t"
-      "imull $0x3e8, %%eax, %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x10c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl $1, -0x10c(%%ebp)\n\t"
-      "call *%[c2251b8]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00083040_3\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c2235f3]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00083040_3\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00083040_3:\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00083040_4:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b83040_assert), [exitfn] "m"(b83040_exitfn), [c2251b8] "m"(b83040_c2251b8), [c2235f3] "m"(b83040_c2235f3)
-      : "memory");
+  int sock;
+  uint8_t flags;
+  struct {
+    int count;
+    int fd;
+    int pad[62];
+  } readfds;
+  int tv[2];
+  int n;
+
+  assert_halt(endpoint != 0);
+
+  sock = *endpoint;
+  if (sock == -1)
+    return 0;
+
+  flags = *(uint8_t *)((char *)endpoint + 4);
+  if (flags & 8)
+    return (char)((flags >> 2) & 1);
+
+  readfds.count = 1;
+  readfds.fd = sock;
+  tv[0] = 0;
+  tv[1] = (int)timeout * 1000;
+
+  n = xnet_select(1, &readfds, 0, 0, tv);
+  if (n <= 0)
+    return 0;
+
+  if (xnet_fd_isset(sock, &readfds) == 0)
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_00083040: clang naked draft required"
-#endif
 
-
-/* transport_server_initialize (0x83100) — XBE naked draft (batch 262). */
-#if defined(__clang__)
-static void (*const b83100_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b83100_exitfn)(int) = system_exit;
-static void b83100_c2251b8_tgt(void) { return; }
-static void (*const b83100_c2251b8)(void) = b83100_c2251b8_tgt;
-static void b83100_c2235f3_tgt(void) { return; }
-static void (*const b83100_c2235f3)(void) = b83100_c2235f3_tgt;
-
-__attribute__((naked, noinline))
-void transport_server_initialize(void)
+/* transport_server_initialize (0x83100) — readable C lift. */
+char transport_server_initialize(int *endpoint, unsigned short timeout)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10c, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Ltransport_server_initialize_1\n\t"
-      "cmpl $-1, (%%esi)\n\t"
-      "jne .Ltransport_server_initialize_2\n\t"
-      ".Ltransport_server_initialize_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x417\n\t"
-      "pushl $0x266618\n\t"
-      "pushl $0x26667c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ltransport_server_initialize_2:\n\t"
-      "movzwl 0xc(%%ebp), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "imull $0x3e8, %%eax, %%eax\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x108(%%ebp)\n\t"
-      "movl $1, -0x10c(%%ebp)\n\t"
-      "call *%[c2251b8]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Ltransport_server_initialize_3\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c2235f3]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ltransport_server_initialize_3\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ltransport_server_initialize_3:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b83100_assert), [exitfn] "m"(b83100_exitfn), [c2251b8] "m"(b83100_c2251b8), [c2235f3] "m"(b83100_c2235f3)
-      : "memory");
-}
-#else
-#error "transport_server_initialize: clang naked draft required"
-#endif
+  int sock;
+  struct {
+    int count;
+    int fd;
+    int pad[62];
+  } readfds;
+  int tv[2];
+  int n;
 
+  if (endpoint == 0 || *endpoint == -1) {
+    display_assert((const char *)0x26667c, (const char *)0x266618, 0x417, 1);
+    system_exit(-1);
+  }
+
+  sock = *endpoint;
+  readfds.count = 1;
+  readfds.fd = sock;
+  tv[0] = 0;
+  tv[1] = (int)timeout * 1000;
+
+  n = xnet_select(1, &readfds, 0, 0, tv);
+  if (n <= 0)
+    return 0;
+
+  if (xnet_fd_isset(sock, &readfds) == 0)
+    return 0;
+  return 1;
+}
 
 /* FUN_000831e0 (0x831e0) — readable C lift (assert wrapper). */
 int FUN_000831e0(void * a0)
