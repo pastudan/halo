@@ -1073,3 +1073,22 @@ int FUN_001cfde0(void)
   __asm__ volatile("movl %%fs:0x28, %0" : "=r"(teb));
   return *(int *)((char *)teb + 0x12c);
 }
+
+
+/* FUN_001d0348 (0x1d0348) — readable C lift (WaitForMultipleObjects). */
+int __stdcall FUN_001d0348(int nCount, void *handles, int waitAll, int timeout_ms)
+{
+  return FUN_001d0144(nCount, handles, waitAll, timeout_ms, 0);
+}
+
+/* ResetEvent (0x1cfeca) — readable C lift. */
+int __stdcall ResetEvent(void *handle)
+{
+  int (__stdcall *nt_clear)(void *) = *(int (__stdcall **)(void *))0x2530ec;
+  int status = nt_clear(handle);
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0;
+  }
+  return 1;
+}

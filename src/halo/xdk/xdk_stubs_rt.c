@@ -22,7 +22,7 @@ void FUN_001cfde0(void);
 void * CreateEventA(void *security, int manual_reset, int initial_state, const char *name);
 void OpenEventA(void);
 bool SetEvent(void *handle);
-void ResetEvent(void);
+/* ResetEvent in xvutil */
 void FUN_001cff08(void);
 void FUN_001cff63(void);
 void CreateMutexA(void);
@@ -35,9 +35,9 @@ unsigned int SleepEx(unsigned int milliseconds, int alertable);
 void FUN_001d0216(void);
 void FUN_001d0274(void);
 void FUN_001d02d0(void);
-int WaitForSingleObject(int handle, int timeout_ms);
-void FUN_001d0348(void);
-void FUN_001d0362(void);
+/* WaitForSingleObject in xvutil */
+/* FUN_001d0348 in xvutil */
+/* FUN_001d0362 in xvutil */
 void OutputDebugStringA(void);
 void OutputDebugStringW(void);
 void FUN_001d03ee(void);
@@ -515,34 +515,7 @@ bool SetEvent(void *handle)
   (void)eax;
 }
 
-/* ResetEvent (0x1cfeca) — XBE naked draft (batch 378). */
-#if defined(__clang__)
-static void __stdcall (*const b1cfeca_c1d2296)(int status) = (void *)XapiSetLastNTError;
-
-__attribute__((naked, noinline))
-void ResetEvent(void)
-{
-  __asm__ volatile(
-      "pushl 0x4(%%esp)\n\t"
-      "call *0x2530ec\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LResetEvent_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "jmp .LResetEvent_2\n\t"
-      ".LResetEvent_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d2296]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LResetEvent_2:\n\t"
-      "ret\n\t"
-      :
-      : [c1d2296] "m"(b1cfeca_c1d2296)
-      : "memory");
-}
-#else
-#error "ResetEvent: clang naked draft required"
-#endif
+/* ResetEvent: clang naked draft required — implemented in xapilib/xvutil.c */
 
 
 /* FUN_001cff08 (0x1cff08) — XBE naked draft (batch 353). */
@@ -1130,49 +1103,10 @@ void FUN_001d02d0(void)
 
 /* WaitForSingleObject — implemented in xapilib/xvutil.c */
 
-/* FUN_001d0348 (0x1d0348) — XBE naked draft (batch 377). */
-#if defined(__clang__)
-static void (*const b1d0348_c1d0144)(void) = (void *)FUN_001d0144;
-
-__attribute__((naked, noinline))
-void FUN_001d0348(void)
-{
-  __asm__ volatile(
-      "pushl $0\n\t"
-      "pushl 0x14(%%esp)\n\t"
-      "pushl 0x14(%%esp)\n\t"
-      "pushl 0x14(%%esp)\n\t"
-      "pushl 0x14(%%esp)\n\t"
-      "call *%[c1d0144]\n\t"
-      "ret\n\t"
-      :
-      : [c1d0144] "m"(b1d0348_c1d0144)
-      : "memory");
-}
-#else
-#error "FUN_001d0348: clang naked draft required"
-#endif
+/* FUN_001d0348: clang naked draft required — implemented in xapilib/xvutil.c */
 
 
-/* FUN_001d0362 (0x1d0362) — XBE naked draft (batch 393). */
-#if defined(__clang__)
-static unsigned int __stdcall (*const b1d0362_c1d01c4)(unsigned int milliseconds, int alertable) = (void *)SleepEx;
-
-__attribute__((naked, noinline))
-void FUN_001d0362(void)
-{
-  __asm__ volatile(
-      "pushl $0\n\t"
-      "pushl 0x8(%%esp)\n\t"
-      "call *%[c1d01c4]\n\t"
-      "ret\n\t"
-      :
-      : [c1d01c4] "m"(b1d0362_c1d01c4)
-      : "memory");
-}
-#else
-#error "FUN_001d0362: clang naked draft required"
-#endif
+/* FUN_001d0362: clang naked draft required — implemented in xapilib/xvutil.c */
 
 
 /* OutputDebugStringA (0x1d0370) — XBE naked draft (batch 336). */

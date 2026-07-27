@@ -2,18 +2,7 @@
 
 /* --- LIBCMT:stricmp.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001dd1d1 (0x1dd1d1) — readable C lift: wcstol wrapper (signed). */
-long FUN_001dd1d1(const wchar_t *s, wchar_t **endptr, int base)
-{
-  return ((long (*)(const wchar_t *, wchar_t **, int, int))FUN_001dd00c)(s, endptr, base, 0);
-}
-
-/* FUN_001dd1e8 (0x1dd1e8) — readable C lift: wcstoul wrapper (unsigned). */
-unsigned long FUN_001dd1e8(const wchar_t *s, wchar_t **endptr, int base)
-{
-  return ((unsigned long (*)(const wchar_t *, wchar_t **, int, int))FUN_001dd00c)(
-      s, endptr, base, 1);
-}
+/* FUN_001dd1d1 / FUN_001dd1e8 — moved to wcstol_wrappers.c */
 
 /* FUN_001dd1ff (0x1dd1ff) — XBE naked draft (batch 326). */
 #if defined(__clang__)
@@ -1809,11 +1798,7 @@ void FUN_001dde24(void)
 #endif
 
 
-/* FUN_001dde73 (0x1dde73) — readable C lift. */
-void FUN_001dde73(void)
-{
-  ((void (*)(int))FUN_001defb3)(4);
-}
+/* FUN_001dde73 — moved to wcstol_wrappers.c */
 
 /* __forcdecpt (0x1dde7c) — XBE naked draft (batch 345). */
 #if defined(__clang__)

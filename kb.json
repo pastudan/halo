@@ -1177,7 +1177,7 @@
         },
         {
           "addr": "0x1dd00c",
-          "decl": "void FUN_001dd00c(void);",
+          "decl": "long FUN_001dd00c(const wchar_t *s, wchar_t **endptr, int base, int unsigned_flag);",
           "ported": false
         }
       ],
@@ -1576,7 +1576,7 @@
         },
         {
           "addr": "0x1defb3",
-          "decl": "void FUN_001defb3(void);",
+          "decl": "void FUN_001defb3(int lock_id);",
           "ported": false
         },
         {
@@ -25712,7 +25712,7 @@
         {
           "addr": "0x192bb0",
           "decl": "float FUN_00192bb0(float *v@<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x192c30",
@@ -32077,16 +32077,6 @@
     {
       "functions": [
         {
-          "addr": "0x1dd1d1",
-          "decl": "long FUN_001dd1d1(const wchar_t *s, wchar_t **endptr, int base);",
-          "ported": false
-        },
-        {
-          "addr": "0x1dd1e8",
-          "decl": "unsigned long FUN_001dd1e8(const wchar_t *s, wchar_t **endptr, int base);",
-          "ported": false
-        },
-        {
           "addr": "0x1dd1ff",
           "decl": "double FUN_001dd1ff(const wchar_t *s, wchar_t **endptr);",
           "ported": false
@@ -32223,7 +32213,7 @@
         },
         {
           "addr": "0x1ddde6",
-          "decl": "void __nh_malloc(void);",
+          "decl": "void *__nh_malloc(size_t size, int flags);",
           "ported": false
         },
         {
@@ -32234,11 +32224,6 @@
         {
           "addr": "0x1dde24",
           "decl": "void FUN_001dde24(void);",
-          "ported": false
-        },
-        {
-          "addr": "0x1dde73",
-          "decl": "void FUN_001dde73(void);",
           "ported": false
         },
         {
@@ -33649,6 +33634,18 @@
           "decl": "void __stdcall FUN_001d0362(int ms);",
           "ported": true,
           "name": "FUN_001d0362"
+        },
+        {
+          "addr": "0x1cfeca",
+          "decl": "int __stdcall ResetEvent(void *handle);",
+          "ported": false,
+          "name": "ResetEvent"
+        },
+        {
+          "addr": "0x1d0348",
+          "decl": "int __stdcall FUN_001d0348(int nCount, void *handles, int waitAll, int timeout_ms);",
+          "ported": true,
+          "name": "FUN_001d0348"
         }
       ],
       "name": "XAPILIB:xvutil.obj",
@@ -39899,11 +39896,6 @@
           "ported": false
         },
         {
-          "addr": "0x1cfeca",
-          "decl": "void ResetEvent(void);",
-          "ported": false
-        },
-        {
           "addr": "0x1cff08",
           "decl": "void FUN_001cff08(void);",
           "ported": false
@@ -39941,7 +39933,7 @@
         },
         {
           "addr": "0x1d0144",
-          "decl": "void FUN_001d0144(void);",
+          "decl": "int __stdcall FUN_001d0144(int nCount, void *handles, int waitAll, int timeout_ms, int alertable);",
           "ported": false
         },
         {
@@ -39963,11 +39955,6 @@
         {
           "addr": "0x1d02d0",
           "decl": "void FUN_001d02d0(void);",
-          "ported": false
-        },
-        {
-          "addr": "0x1d0348",
-          "decl": "void FUN_001d0348(void);",
           "ported": false
         },
         {
@@ -40797,7 +40784,7 @@
         {
           "addr": "0x14e940",
           "decl": "char FUN_0014e940(int unused, float *origin, float *direction, float radius, int pad0, void *result);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14ea10",
@@ -44003,6 +43990,30 @@
           "addr": "0x1b280",
           "decl": "char FUN_0001b280(int actor_handle@<ecx>, int object_handle@<eax>, float *in_attach0, float *in_attach1, float *in_attach2, int param_6, float *out_position, int *out_handle);",
           "ported": false
+        }
+      ]
+    },
+    {
+      "name": "LIBCMT:wcstol_wrappers.obj",
+      "source": "libcmt/wcstol_wrappers.c",
+      "functions": [
+        {
+          "addr": "0x1dd1d1",
+          "decl": "long FUN_001dd1d1(const wchar_t *s, wchar_t **endptr, int base);",
+          "ported": true,
+          "name": "FUN_001dd1d1"
+        },
+        {
+          "addr": "0x1dd1e8",
+          "decl": "unsigned long FUN_001dd1e8(const wchar_t *s, wchar_t **endptr, int base);",
+          "ported": true,
+          "name": "FUN_001dd1e8"
+        },
+        {
+          "addr": "0x1dde73",
+          "decl": "void FUN_001dde73(void);",
+          "ported": true,
+          "name": "FUN_001dde73"
         }
       ]
     }
