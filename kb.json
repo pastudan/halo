@@ -35142,7 +35142,7 @@
         {
           "addr": "0x53620",
           "decl": "void set_real_point3d(void);",
-          "ported": false,
+          "ported": true,
           "name": "set_real_point3d"
         },
         {
