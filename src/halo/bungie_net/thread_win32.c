@@ -910,56 +910,23 @@ void FUN_00081980(void)
 #endif
 
 
-/* FUN_00081a20 (0x81a20) — XBE naked draft (batch 370). */
-#if defined(__clang__)
-static void (*const b81a20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81a20_exitfn)(int) = system_exit;
-static void (*const b81a20_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
-
-__attribute__((naked, noinline))
-void FUN_00081a20(void)
+/* FUN_00081a20 (0x81a20) — readable C lift from XBE leaf. */
+void FUN_00081a20(void *ptr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00081a20_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081a20_1:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00081a20_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x30\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl $0x265fdc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081a20_2:\n\t"
-      "pushl $0x32\n\t"
-      "pushl $0x265ffc\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b81a20_assert), [exitfn] "m"(b81a20_exitfn), [c8ef70] "m"(b81a20_c8ef70)
-      : "memory");
+  extern char DAT_00265fe4[];
+  extern char DAT_00265ffc[];
+  extern char DAT_00265fdc[];
+
+  if (*(unsigned char *)0x335090 == 0) {
+    display_assert(DAT_00265fe4, DAT_00265ffc, 0x2f, true);
+    system_exit(-1);
+  }
+  if (ptr == 0) {
+    display_assert(DAT_00265fdc, DAT_00265ffc, 0x30, true);
+    system_exit(-1);
+  }
+  debug_free(ptr, DAT_00265ffc, 0x32);
 }
-#else
-#error "FUN_00081a20: clang naked draft required"
-#endif
+
+
 

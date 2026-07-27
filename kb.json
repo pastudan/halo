@@ -1218,7 +1218,8 @@
         {
           "addr": "0x1db4a9",
           "decl": "void FUN_001db4a9(void);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_001db4a9"
         },
         {
           "addr": "0x1db501",
@@ -20729,13 +20730,15 @@
         },
         {
           "addr": "0x16f8a0",
-          "decl": "void FUN_0016f8a0(void);",
-          "ported": false
+          "decl": "void FUN_0016f8a0(char decrement);",
+          "ported": true,
+          "name": "FUN_0016f8a0"
         },
         {
           "addr": "0x16fb80",
-          "decl": "void rasterizer_initialize(void);",
-          "ported": false
+          "decl": "void *rasterizer_initialize(int16_t index);",
+          "ported": true,
+          "name": "rasterizer_initialize"
         },
         {
           "addr": "0x16fbd0",
@@ -26730,8 +26733,9 @@
         },
         {
           "addr": "0x81a20",
-          "decl": "void FUN_00081a20(void);",
-          "ported": false
+          "decl": "void FUN_00081a20(void *ptr);",
+          "ported": true,
+          "name": "FUN_00081a20"
         }
       ],
       "name": "thread_win32.obj",

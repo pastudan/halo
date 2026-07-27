@@ -4825,63 +4825,23 @@ int FUN_00103c00(int *obj __attribute__((unused)))
 #endif
 
 
-/* FUN_00103d80 (0x103d80) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void (*const b103d80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b103d80_exitfn)(int) = system_exit;
-static void (*const b103d80_c1db4a9)(void) = (void (*)(void))FUN_001db4a9;
-static int (*const b103d80_c1d9dac)(void *stream) = crt_fclose;
-
-__attribute__((naked, noinline))
+/* FUN_00103d80 (0x103d80) — readable C lift from XBE leaf. */
 void FUN_00103d80(void)
 {
-  __asm__ volatile(
-      "movl 0x46e394, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00103d80_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x44\n\t"
-      "pushl $0x28b838\n\t"
-      "pushl $0x28b81c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00103d80_1:\n\t"
-      "pushl $0x31fac8\n\t"
-      "call *%[c1db4a9]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movl 0x46e394, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00103d80_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9dac]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x46e394\n\t"
-      ".LFUN_00103d80_2:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b103d80_assert), [exitfn] "m"(b103d80_exitfn), [c1db4a9] "m"(b103d80_c1db4a9), [c1d9dac] "m"(b103d80_c1d9dac)
-      : "memory");
+  extern char DAT_0028b81c[];
+  extern char DAT_0028b838[];
+
+  if (*(int *)0x46e394 != 0) {
+    display_assert(DAT_0028b81c, DAT_0028b838, 0x44, true);
+    system_exit(-1);
+  }
+  {
+    void (*fn)(void *) = (void (*)(void *))FUN_001db4a9;
+    fn((void *)0x31fac8);
+  }
 }
-#else
-#error "FUN_00103d80: clang naked draft required"
-#endif
+
+
 
 
 static __attribute__((unused)) void error_geometry_assert_null(const char *name, int line)
