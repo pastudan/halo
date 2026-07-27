@@ -37885,8 +37885,8 @@
         },
         {
           "addr": "0x120620",
-          "decl": "char FUN_00120620(int animation@<esi>);",
-          "ported": false
+          "decl": "char FUN_00120620(void *animation@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x120670",

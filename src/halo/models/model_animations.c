@@ -1640,48 +1640,23 @@ void FUN_001204a0(void)
 #endif
 
 
-/* FUN_00120620 (0x120620) — XBE naked draft (batch 274). */
-#if defined(__clang__)
-static void (*const b120620_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b120620_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char FUN_00120620(int animation __attribute__((unused)))
+/* FUN_00120620 (0x120620) — readable C lift. */
+char FUN_00120620(void *animation)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00120620_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x26\n\t"
-      "pushl $0x290ce4\n\t"
-      "pushl $0x290cd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00120620_1:\n\t"
-      "testb $1, 0x3a(%%esi)\n\t"
-      "je .LFUN_00120620_3\n\t"
-      "movb 0x322600, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00120620_2\n\t"
-      "movl 0x88(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00120620_3\n\t"
-      ".LFUN_00120620_2:\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      ".LFUN_00120620_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b120620_assert), [exitfn] "m"(b120620_exitfn)
-      : "memory");
+  extern char DAT_00290ce4[];
+  extern char DAT_00290cd8[];
+  if (!animation) {
+    display_assert(DAT_00290cd8, DAT_00290ce4, 0x26, 1);
+    system_exit(-1);
+  }
+  if (!(*(unsigned char *)((char *)animation + 0x3a) & 1))
+    return 0;
+  if (*(unsigned char *)0x322600)
+    return 1;
+  if (*(int *)((char *)animation + 0x88) == 0)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_00120620: clang naked draft required"
-#endif
-
 
 /* build_damage_animation_index (0x120670) — XBE naked draft (batch 264). */
 #if defined(__clang__)
