@@ -1,138 +1,41 @@
-/* FUN_00146d40 (0x146d40) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static void *(*const b146d40_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-uint32_t FUN_00146d40(void *bsp2d_nodes __attribute__((unused)), float *point2d __attribute__((unused)), int node_index __attribute__((unused)))
+/* FUN_00146d40 (0x146d40) — readable C lift from XBE leaf (2D BSP walk). */
+uint32_t FUN_00146d40(void *bsp2d_nodes, float *point2d, int node_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "js .LFUN_00146d40_4\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".LFUN_00146d40_1:\n\t"
-      "pushl $0x14\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "flds (%%ecx)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00146d40_2\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .LFUN_00146d40_3\n\t"
-      ".LFUN_00146d40_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00146d40_3:\n\t"
-      "movl 0xc(%%ecx,%%eax,4), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jns .LFUN_00146d40_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00146d40_4:\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .LFUN_00146d40_5\n\t"
-      "andl $0x7fffffff, %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00146d40_5:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b146d40_elem)
-      : "memory");
+  int node = node_index;
+  if (node < 0) {
+    goto done;
+  }
+  while (node >= 0) {
+    float *el = (float *)tag_block_get_element(bsp2d_nodes, node, 0x14);
+    float d = el[0] * point2d[0] + el[1] * point2d[1] - el[2];
+    int side = (d < *(float *)0x2533c0) ? 0 : 1;
+    node = ((int *)el)[3 + side];
+  }
+done:
+  if (node == -1) {
+    return 0xffffffffu;
+  }
+  return (uint32_t)(node & 0x7fffffff);
 }
-#else
-#error "FUN_00146d40: clang naked draft required"
-#endif
 
-
-/* bsp3d_find_leaf (0x146db0) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void *(*const b146db0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-uint32_t bsp3d_find_leaf(void *bsp3d __attribute__((unused)), int root __attribute__((unused)), void *point __attribute__((unused)))
+/* bsp3d_find_leaf (0x146db0) — readable C lift from XBE leaf. */
+uint32_t bsp3d_find_leaf(void *bsp3d, int root, void *point)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "nop\n\t"
-      ".Lbsp3d_find_leaf_1:\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "leal 0xc(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%eax)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0xc(%%eax)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lbsp3d_find_leaf_2\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbsp3d_find_leaf_3\n\t"
-      ".Lbsp3d_find_leaf_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lbsp3d_find_leaf_3:\n\t"
-      "movl 0x4(%%edi,%%eax,4), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jns .Lbsp3d_find_leaf_1\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "je .Lbsp3d_find_leaf_4\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbsp3d_find_leaf_4:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b146db0_elem)
-      : "memory");
+  float *p = (float *)point;
+  int node = root;
+  while (node >= 0) {
+    int *node_el = (int *)tag_block_get_element(bsp3d, node, 0xc);
+    float *plane =
+        (float *)tag_block_get_element((char *)bsp3d + 0xc, node_el[0], 0x10);
+    float d = plane[0] * p[0] + plane[1] * p[1] + plane[2] * p[2] - plane[3];
+    int side = (d < *(float *)0x2533c0) ? 0 : 1;
+    node = node_el[1 + side];
+  }
+  if (node == -1) {
+    return 0xffffffffu;
+  }
+  return (uint32_t)(node & 0x7fffffff);
 }
-#else
-#error "bsp3d_find_leaf: clang naked draft required"
-#endif
-
 
 /* bsp3d_clip_line_to_leaves (0x146e30) — XBE naked draft (batch 80). */
 #if defined(__clang__)

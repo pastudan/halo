@@ -1665,75 +1665,36 @@ void FUN_00120710(int anim_entry __attribute__((unused)), int tick_out __attribu
 #endif
 
 
-/* animation_set_frame_size (0x120790) — XBE naked draft (batch 264). */
-#if defined(__clang__)
-static void (*const b120790_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b120790_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void animation_set_frame_size(void)
+/* animation_set_frame_size (0x120790) — readable C lift from XBE leaf. */
+void animation_set_frame_size(char *anim)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lanimation_set_frame_size_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7b\n\t"
-      "pushl $0x290ce4\n\t"
-      "pushl $0x290cd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lanimation_set_frame_size_1:\n\t"
-      "cmpw $0, 0x2c(%%esi)\n\t"
-      "jle .Lanimation_set_frame_size_6\n\t"
-      "pushl %%ebx\n\t"
-      "movzwl 0x2c(%%esi), %%ebx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lanimation_set_frame_size_2:\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "sarl $5, %%ecx\n\t"
-      "testl %%eax, 0x6c(%%esi,%%ecx,4)\n\t"
-      "je .Lanimation_set_frame_size_3\n\t"
-      "addl $8, %%edi\n\t"
-      ".Lanimation_set_frame_size_3:\n\t"
-      "testl %%eax, 0x5c(%%esi,%%ecx,4)\n\t"
-      "je .Lanimation_set_frame_size_4\n\t"
-      "addl $0xc, %%edi\n\t"
-      ".Lanimation_set_frame_size_4:\n\t"
-      "testl %%eax, 0x7c(%%esi,%%ecx,4)\n\t"
-      "je .Lanimation_set_frame_size_5\n\t"
-      "addl $4, %%edi\n\t"
-      ".Lanimation_set_frame_size_5:\n\t"
-      "incl %%edx\n\t"
-      "decl %%ebx\n\t"
-      "jne .Lanimation_set_frame_size_2\n\t"
-      "popl %%ebx\n\t"
-      ".Lanimation_set_frame_size_6:\n\t"
-      "movw %%di, 0x24(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b120790_assert), [exitfn] "m"(b120790_exitfn)
-      : "memory");
-}
-#else
-#error "animation_set_frame_size: clang naked draft required"
-#endif
+  int total;
+  int i;
+  int16_t node_count;
 
+  if (anim == NULL) {
+    display_assert("animation", "c:\\halo\\SOURCE\\models\\model_animations.c", 0x7b, true);
+    system_exit(-1);
+  }
+  total = 0;
+  node_count = *(int16_t *)(anim + 0x2c);
+  if (node_count > 0) {
+    for (i = 0; i < (int)node_count; i++) {
+      unsigned int bit = 1u << (i & 0x1f);
+      int word = i >> 5;
+      if (*(unsigned int *)(anim + 0x6c + word * 4) & bit) {
+        total += 8;
+      }
+      if (*(unsigned int *)(anim + 0x5c + word * 4) & bit) {
+        total += 0xc;
+      }
+      if (*(unsigned int *)(anim + 0x7c + word * 4) & bit) {
+        total += 4;
+      }
+    }
+  }
+  *(int16_t *)(anim + 0x24) = (int16_t)total;
+}
 
 /* quaternion_decompress_6byte_renormalized (0x120930) — readable C lift. */
 void quaternion_decompress_6byte_renormalized(void *compressed, float *out)
@@ -2075,71 +2036,25 @@ void interpolate_node_orientations(void)
 #endif
 
 
-/* FUN_00120cb0 (0x120cb0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static void *(*const b120cb0_tag)(int, int) = tag_get;
-static void *(*const b120cb0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b120cb0_c1dd801)(const char *a, const char *b) = crt_stricmp;
-
-__attribute__((naked, noinline))
-short FUN_00120cb0(int animation_graph_tag_index __attribute__((unused)), const char *name __attribute__((unused)))
+/* FUN_00120cb0 (0x120cb0) — readable C lift from XBE leaf. */
+short FUN_00120cb0(int animation_graph_tag_index, const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x616e7472\n\t"
-      "call *%[tag]\n\t"
-      "leal 0x74(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00120cb0_2\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00120cb0_1:\n\t"
-      "pushl $0xb4\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00120cb0_3\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00120cb0_1\n\t"
-      ".LFUN_00120cb0_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00120cb0_3:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b120cb0_tag), [elem] "m"(b120cb0_elem), [c1dd801] "m"(b120cb0_c1dd801)
-      : "memory");
-}
-#else
-#error "FUN_00120cb0: clang naked draft required"
-#endif
+  char *tag;
+  char *block;
+  int count;
+  short i;
 
+  tag = (char *)tag_get(0x616e7472, animation_graph_tag_index);
+  block = tag + 0x74;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    char *el = (char *)tag_block_get_element(block, (int)i, 0xb4);
+    if (crt_stricmp(name, el) == 0) {
+      return i;
+    }
+  }
+  return (short)0xffff;
+}
 
 /* animation_frame_get_xy_translation (0x120ee0) — readable C lift. */
 void animation_frame_get_xy_translation(void *animation, short frame_index, int *out_xy)

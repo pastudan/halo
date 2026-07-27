@@ -75,55 +75,23 @@ bool FUN_00012e50(int actor_handle)
   return result;
 }
 
-/* magnitude3d (0x12f10) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float magnitude3d(float *v __attribute__((unused)))
+/* magnitude3d (0x12f10) — readable C lift from XBE leaf (normalize2d).
+ * Returns 2D magnitude; normalizes v[0],v[1] in place when |mag| >= 1e-4. */
+float magnitude3d(float *v)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(2)\n\t"
-      "fstp %%st(0)\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lmagnitude3d_1\n\t"
-      "flds 0x2533c8\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "fstps 0x4(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmagnitude3d_1:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "magnitude3d: clang naked draft required"
-#endif
+  float mag;
+  float scale;
 
+  mag = x87_sqrt(v[0] * v[0] + v[1] * v[1]);
+  /* Match x87: only early-out on true less-than; NaN falls into normalize. */
+  if (!((double)fabsf(mag) < *(double *)0x2533d0)) {
+    scale = *(float *)0x2533c8 / mag;
+    v[0] = v[0] * scale;
+    v[1] = v[1] * scale;
+    return mag;
+  }
+  return *(float *)0x2533c0;
+}
 
 /* 0x12f80 — Compute out = base + scale * direction (3-component). */
 float *vector3d_scale_add(float *base, float *direction, float scale, float *out)

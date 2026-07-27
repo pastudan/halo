@@ -587,43 +587,19 @@ __declspec(noinline) float random_math_real(unsigned int *seed)
   return (float)(s >> 16) / 65535.0f;
 }
 
-/* random_real_range (0x10b270) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float random_real_range(int *seed __attribute__((unused)), float min __attribute__((unused)), float max __attribute__((unused)))
+/* random_real_range (0x10b270) — readable C lift from XBE leaf. */
+float random_real_range(int *seed, float min, float max)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "imull $0x19660d, %%eax, %%eax\n\t"
-      "addl $0x3c6ef35f, %%eax\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "shrl $0x10, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "jge .Lrandom_real_range_1\n\t"
-      "fadds 0x25fb8c\n\t"
-      ".Lrandom_real_range_1:\n\t"
-      "fmuls 0x2647f4\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fadds 0xc(%%ebp)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int s = (unsigned int)*seed * 0x19660Du + 0x3c6ef35Fu;
+  float t;
+  *seed = (int)s;
+  t = (float)(s >> 16);
+  if ((int)(s >> 16) < 0) {
+    t += *(float *)0x25fb8c;
+  }
+  t *= *(float *)0x2647f4;
+  return min + t * (max - min);
 }
-#else
-#error "random_real_range: clang naked draft required"
-#endif
-
 
 /* Advance an LCG seed and return the upper 16 bits. */
 uint16_t random_seed_step(unsigned int *seed)

@@ -246,9 +246,20 @@ def synthesize_relocs(
             candidates.append((insn.disp_offset, disp))
         if insn.imm_offset and insn.imm_offset + 4 <= len(raw):
             imm = struct.unpack_from("<I", raw, insn.imm_offset)[0]
-            # Skip relative encodings: encoded dword must equal Capstone's
-            # absolute operand when the operand is an address-bearing imm.
-            candidates.append((insn.imm_offset, imm))
+            # Arithmetic immediates are scalars (e.g. imul eax,eax,0x19660d for
+            # the NR LCG). Treating them as DIR32 zeros the constant and breaks
+            # Unicorn oracles. Only mov/push-style immediates are VA candidates.
+            if insn.mnemonic not in (
+                "mov",
+                "push",
+                "movzx",
+                "movsx",
+            ):
+                imm = None
+            if imm is not None:
+                # Skip relative encodings: encoded dword must equal Capstone's
+                # absolute operand when the operand is an address-bearing imm.
+                candidates.append((insn.imm_offset, imm))
 
         seen_off: set[int] = set()
         for byte_off, val in candidates:

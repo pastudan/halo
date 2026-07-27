@@ -1962,42 +1962,14 @@ void vector_to_angles(float *out_angles, float *in_vector)
   out_angles[1] = (float)atan2((double)z, (double)sqrtf(y * y + x * x));
 }
 
-/* angles_to_vector (0x10cc40) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void angles_to_vector(float *out __attribute__((unused)), float *angles __attribute__((unused)))
+/* angles_to_vector (0x10cc40) — readable C lift from XBE leaf. */
+void angles_to_vector(float *out, float *angles)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fcos\n\t"
-      "flds (%%ecx)\n\t"
-      "fcos\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps (%%eax)\n\t"
-      "flds (%%ecx)\n\t"
-      "fsin\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsin\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float cp = x87_fcos(angles[1]);
+  out[0] = x87_fcos(angles[0]) * cp;
+  out[1] = x87_fsin(angles[0]) * cp;
+  out[2] = x87_fsin(angles[1]);
 }
-#else
-#error "angles_to_vector: clang naked draft required"
-#endif
-
 
 /* Convert an angle to a 2D direction vector stored as (cos, sin, 0) (0x10cc70).
  */

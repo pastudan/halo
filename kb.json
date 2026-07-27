@@ -20486,7 +20486,7 @@
         {
           "addr": "0x10b270",
           "decl": "float random_real_range(int *seed, float min, float max);",
-          "ported": false,
+          "ported": true,
           "status": "ported",
           "name": "random_real_range"
         },
@@ -21779,7 +21779,7 @@
         {
           "addr": "0x12f10",
           "decl": "float magnitude3d(float *v);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x28610",
@@ -22384,7 +22384,7 @@
         {
           "addr": "0x10cc40",
           "decl": "void angles_to_vector(float *out, float *angles);",
-          "ported": false,
+          "ported": true,
           "name": "angles_to_vector"
         },
         {
@@ -37930,8 +37930,8 @@
         },
         {
           "addr": "0x120790",
-          "decl": "void animation_set_frame_size(void);",
-          "ported": false
+          "decl": "void animation_set_frame_size(char *anim);",
+          "ported": true
         },
         {
           "addr": "0x120810",
@@ -37971,7 +37971,7 @@
         {
           "addr": "0x120cb0",
           "decl": "short FUN_00120cb0(int animation_graph_tag_index, const char *name);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x120d10",
@@ -40220,7 +40220,7 @@
         {
           "addr": "0x147660",
           "decl": "void render_debug_collision_bsp(int bsp, int matrix_or_flag);",
-          "ported": false,
+          "ported": true,
           "name": "render_debug_collision_bsp",
           "source_path": "src/halo/physics/collision_bsp.c"
         },

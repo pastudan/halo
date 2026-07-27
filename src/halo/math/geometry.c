@@ -586,62 +586,25 @@ int16_t convex_polygon2d_clip_to_plane(int16_t count __attribute__((unused)), fl
 #endif
 
 
-/* convex_polygon2d_verify (0x106900) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-bool convex_polygon2d_verify(int16_t vertex_count __attribute__((unused)), uint32_t *vertices __attribute__((unused)))
+/* convex_polygon2d_verify (0x106900) — readable C lift from XBE leaf.
+ * Rejects vertices with Inf/NaN float encodings. */
+bool convex_polygon2d_verify(int16_t vertex_count, uint32_t *vertices)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jle .Lconvex_polygon2d_verify_2\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      ".Lconvex_polygon2d_verify_1:\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "movl (%%edx,%%eax,8), %%edi\n\t"
-      "leal (%%edx,%%eax,8), %%eax\n\t"
-      "movl %%edi, 0x8(%%ebp)\n\t"
-      "andl $0x7f800000, %%edi\n\t"
-      "cmpl $0x7f800000, %%edi\n\t"
-      "je .Lconvex_polygon2d_verify_3\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "andl $0x7f800000, %%eax\n\t"
-      "cmpl $0x7f800000, %%eax\n\t"
-      "je .Lconvex_polygon2d_verify_3\n\t"
-      "incl %%ecx\n\t"
-      "cmpw %%si, %%cx\n\t"
-      "jl .Lconvex_polygon2d_verify_1\n\t"
-      ".Lconvex_polygon2d_verify_2:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lconvex_polygon2d_verify_3:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int16_t i;
+  if (vertex_count <= 0) {
+    return true;
+  }
+  for (i = 0; i < vertex_count; i++) {
+    uint32_t *vert = vertices + (i * 2);
+    if ((vert[0] & 0x7f800000u) == 0x7f800000u) {
+      return false;
+    }
+    if ((vert[1] & 0x7f800000u) == 0x7f800000u) {
+      return false;
+    }
+  }
+  return true;
 }
-#else
-#error "convex_polygon2d_verify: clang naked draft required"
-#endif
-
 
 /* convex_polygon3d_verify (0x106dc0) — XBE naked draft (batch 83). */
 #if defined(__clang__)
