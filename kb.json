@@ -22458,7 +22458,7 @@
         {
           "addr": "0x12350",
           "decl": "void action_alert_next_position(void);",
-          "ported": false,
+          "ported": true,
           "name": "action_alert_next_position"
         },
         {
@@ -22553,7 +22553,7 @@
         {
           "addr": "0x13120",
           "decl": "void action_charge_perform(void);",
-          "ported": false,
+          "ported": true,
           "name": "action_charge_perform"
         },
         {
