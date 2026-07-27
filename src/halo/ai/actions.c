@@ -2625,294 +2625,155 @@ char actor_action_handle_grenade_throwing(int actor_handle)
   return result;
 }
 
-/* actor_action_handle_evasion (0x20670) — XBE naked draft (batch 80). */
-#if defined(__clang__)
-static void *(*const b20670_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b20670_tag)(int, int) = tag_get;
-static int (*const b20670_gtime)(void) = game_time_get;
-static char (*const b20670_c1ccc0)(int actor_handle, char param_2) = actor_action_allow_cover_seeking;
-static char (*const b20670_c1d350)(int actor_handle, char param_2, char param_3) = actor_action_try_to_seek_cover;
-static char (*const b20670_c1d3c0)(int actor_handle, short param_2, int param_3, char param_4) = FUN_0001d3c0;
-static int *(*const b20670_gseed)(void) = get_global_random_seed_address;
-static float (*const b20670_rmreal)(unsigned int *) = random_math_real;
-static char (*const b20670_c1fb80)(int actor_handle) = actor_action_consider_grenade;
-static int (*const b20670_c3b380)(int actor_handle) = actor_target_unit_index;
-static void (*const b20670_c46f10)(int16_t type, int unit_handle, int param3, int param4, int16_t param5, int16_t param6, int16_t param7) = FUN_00046f10;
-static char (*const b20670_c1fca0)(int actor_handle) = actor_action_try_to_evade;
-static void (*const b20670_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-char actor_action_handle_evasion(int actor_handle __attribute__((unused)))
+/* actor_action_handle_evasion (0x20670) — readable C lift (restored pre-naked) — Decides whether the actor should
+ * take an evasive action (dodge a thrown grenade, seek cover, or side-step)
+ * this tick, and starts it. Returns 1 if an evasion action was started, 0
+ * otherwise.
+ *
+ * Resolves the actor object plus its 'actv' (actor variant, actor+0x5c) and
+ * 'actr' (actor, actor+0x58) tag blocks, and the current game time.
+ *
+ * 1. Grenade-avoidance dodge: only when the actor has a pending
+ *    grenade-avoid target (short actor+0x3a8 > 0), no vehicle (actor+0x158 ==
+ *    NONE), the target prop's flag (prop+0xa4) is set and its state
+ *    (prop+0x38) is 0 or 1, and the 0x1e-tick dodge cooldown (actor+0x36c)
+ *    has expired. Refreshes the cooldown, then gates on
+ *    actor_action_allow_cover_seeking(actor,1); attempts
+ *    actor_action_try_to_seek_cover, else (when the 'actr' flag 0x400000 is
+ *    set) FUN_0001d3c0 toward the grenade prop.
+ * 2. Selects an evasion radius from the 'actr' tag: tag+0x314 when actor+0x374
+ *    is set and actor+0x378 is clear, otherwise tag+0x310. When actor+0x1ca is
+ *    set and tag+0x318 exceeds *(float*)0x2533c0, the radius is clamped down to
+ *    *(float*)0x253f38. If actor+0x354 <= radius the actor is outside evasion
+ *    range and nothing is done.
+ * 3. When actor+0x504 is clear, one RNG draw is consumed (result discarded) to
+ *    keep the random stream aligned.
+ * 4. If the 'actv' grenade type (tag+0x184) is 2 and
+ *    actor_action_consider_grenade succeeds, clears actor+0x354 and marks the
+ *    action as taken.
+ * 5. Otherwise (action not yet taken): a retreat gate (b_retreat, from
+ *    actor+0x358 / 'actr' flag 0x20 / the target prop's +0x122,+0x121 fields)
+ *    may start a seek-cover + fire-retreat-event sequence (FUN_00046f10 event
+ *    0x18); or, when the side-step gate (b_sidestep, cleared when actor+0x6c
+ *    == 10 with actor+0xa0 in {2,3}) is open and actor+0x368 == 0, calls
+ *    actor_action_try_to_evade and stores a timer at actor+0x368.
+ *
+ * Verified against delinked reference (delinked/actions.obj). Both datum_get
+ * lookups (actor+0x3ac and actor+0x270) use prop_data. FUN_001d9068 at the tail
+ * is the _ftol2 intrinsic, written here as (short)(int)(...). */
+char actor_action_handle_evasion(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x61637476\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x58(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[gtime]\n\t"
-      "cmpw $0, 0x3a8(%%esi)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%ebx, -0xc(%%ebp)\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jle .Lactor_action_handle_evasion_3\n\t"
-      "cmpl $-1, 0x158(%%esi)\n\t"
-      "jne .Lactor_action_handle_evasion_3\n\t"
-      "movl 0x3ac(%%esi), %%eax\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xa4(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_action_handle_evasion_3\n\t"
-      "movw 0x38(%%eax), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lactor_action_handle_evasion_1\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .Lactor_action_handle_evasion_3\n\t"
-      ".Lactor_action_handle_evasion_1:\n\t"
-      "movl 0x36c(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_action_handle_evasion_2\n\t"
-      "addl $0x1e, %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jg .Lactor_action_handle_evasion_3\n\t"
-      ".Lactor_action_handle_evasion_2:\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, 0x36c(%%esi)\n\t"
-      "call *%[c1ccc0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d350]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_handle_evasion_15\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "testl $0x400000, (%%ebx)\n\t"
-      "je .Lactor_action_handle_evasion_4\n\t"
-      "movl 0x3ac(%%esi), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "pushl $5\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d3c0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_4\n\t"
-      "popl %%edi\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_evasion_3:\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      ".Lactor_action_handle_evasion_4:\n\t"
-      "movb 0x374(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_5\n\t"
-      "movb 0x378(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_handle_evasion_5\n\t"
-      "flds 0x314(%%ebx)\n\t"
-      "jmp .Lactor_action_handle_evasion_6\n\t"
-      ".Lactor_action_handle_evasion_5:\n\t"
-      "flds 0x310(%%ebx)\n\t"
-      ".Lactor_action_handle_evasion_6:\n\t"
-      "movb 0x1ca(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_7\n\t"
-      "flds 0x318(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_handle_evasion_7\n\t"
-      "fcoms 0x253f38\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_handle_evasion_7\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x253f38\n\t"
-      ".Lactor_action_handle_evasion_7:\n\t"
-      "fcomps 0x354(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_action_handle_evasion_16\n\t"
-      "movb 0x504(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_handle_evasion_8\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rmreal]\n\t"
-      "fstp %%st(0)\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lactor_action_handle_evasion_8:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "cmpw $2, 0x184(%%eax)\n\t"
-      "jne .Lactor_action_handle_evasion_9\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1fb80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_9\n\t"
-      "movl $0, 0x354(%%esi)\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lactor_action_handle_evasion_9:\n\t"
-      "movb 0x358(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, %%bl\n\t"
-      "movb %%bl, -0x2(%%ebp)\n\t"
-      "je .Lactor_action_handle_evasion_10\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "testb $0x20, (%%ecx)\n\t"
-      "je .Lactor_action_handle_evasion_10\n\t"
-      "movl 0x270(%%esi), %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_action_handle_evasion_10\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x122(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb $2, %%cl\n\t"
-      "jg .Lactor_action_handle_evasion_10\n\t"
-      "cmpb $1, 0x121(%%eax)\n\t"
-      "jg .Lactor_action_handle_evasion_10\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lactor_action_handle_evasion_10:\n\t"
-      "cmpw $0xa, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_handle_evasion_12\n\t"
-      "movw 0xa0(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lactor_action_handle_evasion_11\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jne .Lactor_action_handle_evasion_12\n\t"
-      ".Lactor_action_handle_evasion_11:\n\t"
-      "movb $0, -0x2(%%ebp)\n\t"
-      ".Lactor_action_handle_evasion_12:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_handle_evasion_16\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lactor_action_handle_evasion_14\n\t"
-      "movl 0x36c(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_action_handle_evasion_13\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "addl $0x1e, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jg .Lactor_action_handle_evasion_14\n\t"
-      ".Lactor_action_handle_evasion_13:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, 0x36c(%%esi)\n\t"
-      "call *%[c1ccc0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_14\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rmreal]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "fcomps 0x318(%%ecx)\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_action_handle_evasion_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d350]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_14\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c3b380]\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x18\n\t"
-      "call *%[c46f10]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl $0, 0x354(%%esi)\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_handle_evasion_14:\n\t"
-      "movb -0x2(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_16\n\t"
-      "cmpw $0, 0x368(%%esi)\n\t"
-      "jne .Lactor_action_handle_evasion_16\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1fca0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_handle_evasion_16\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl $0, 0x354(%%esi)\n\t"
-      "flds 0x31c(%%eax)\n\t"
-      "fmuls 0x253394\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x368(%%esi)\n\t"
-      "movb $1, 0x3bb(%%esi)\n\t"
-      ".Lactor_action_handle_evasion_15:\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lactor_action_handle_evasion_16:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b20670_dget), [tag] "m"(b20670_tag), [gtime] "m"(b20670_gtime), [c1ccc0] "m"(b20670_c1ccc0), [c1d350] "m"(b20670_c1d350), [c1d3c0] "m"(b20670_c1d3c0), [gseed] "m"(b20670_gseed), [rmreal] "m"(b20670_rmreal), [c1fb80] "m"(b20670_c1fb80), [c3b380] "m"(b20670_c3b380), [c46f10] "m"(b20670_c46f10), [c1fca0] "m"(b20670_c1fca0), [ftol] "m"(b20670_ftol)
-      : "memory");
+  char *actor;
+  char *actv_tag;
+  char *actr_tag;
+  char *prop;
+  char *other_prop;
+  int now;
+  char status;
+  char b_retreat;
+  char b_sidestep;
+  float radius;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  actv_tag = (char *)tag_get(0x61637476, *(int *)(actor + 0x5c));
+  actr_tag = (char *)tag_get(0x61637472, *(int *)(actor + 0x58));
+  now = game_time_get();
+  status = 0;
+
+  if (*(short *)(actor + 0x3a8) > 0 && *(int *)(actor + 0x158) == -1) {
+    prop = (char *)datum_get(prop_data, *(int *)(actor + 0x3ac));
+    if (*(char *)(prop + 0xa4) != '\0' &&
+        (*(short *)(prop + 0x38) == 0 || *(short *)(prop + 0x38) == 1) &&
+        (*(int *)(actor + 0x36c) == -1 ||
+         *(int *)(actor + 0x36c) + 0x1e <= now)) {
+      *(int *)(actor + 0x36c) = now;
+      if (actor_action_allow_cover_seeking(actor_handle, 1)) {
+        if (actor_action_try_to_seek_cover(actor_handle, 0, 1)) {
+          return 1;
+        }
+        if ((*(unsigned int *)actr_tag & 0x400000) &&
+            FUN_0001d3c0(actor_handle, 5, *(int *)(actor + 0x3ac), 0)) {
+          return 1;
+        }
+      }
+    }
+  }
+
+  if (*(char *)(actor + 0x374) != '\0' && *(char *)(actor + 0x378) == '\0') {
+    radius = *(float *)(actr_tag + 0x314);
+  } else {
+    radius = *(float *)(actr_tag + 0x310);
+  }
+  if (*(char *)(actor + 0x1ca) != '\0') {
+    if (*(float *)(actr_tag + 0x318) > *(float *)0x2533c0 &&
+        radius > *(float *)0x253f38) {
+      radius = *(float *)0x253f38;
+    }
+  }
+  if (*(float *)(actor + 0x354) <= radius) {
+    return 0;
+  }
+
+  if (*(char *)(actor + 0x504) == '\0') {
+    random_math_real((unsigned int *)get_global_random_seed_address());
+  }
+
+  if (*(short *)(actv_tag + 0x184) == 2 &&
+      actor_action_consider_grenade(actor_handle)) {
+    *(int *)(actor + 0x354) = 0;
+    status = 1;
+  }
+
+  b_retreat = 1;
+  b_sidestep = 1;
+  if (*(char *)(actor + 0x358) != '\0' && (*(unsigned int *)actr_tag & 0x20)) {
+    b_retreat = 0;
+    if (*(int *)(actor + 0x270) != -1) {
+      other_prop = (char *)datum_get(prop_data, *(int *)(actor + 0x270));
+      if (*(char *)(other_prop + 0x122) <= 2 &&
+          *(char *)(other_prop + 0x121) <= 1) {
+        b_retreat = 1;
+      }
+    }
+  }
+  if (*(short *)(actor + 0x6c) == 10 &&
+      (*(short *)(actor + 0xa0) == 2 || *(short *)(actor + 0xa0) == 3)) {
+    b_sidestep = 0;
+  }
+
+  if (status == 0) {
+    if (b_retreat != '\0' && (*(int *)(actor + 0x36c) == -1 ||
+                              *(int *)(actor + 0x36c) + 0x1e <= now)) {
+      *(int *)(actor + 0x36c) = now;
+      if (actor_action_allow_cover_seeking(actor_handle, 0)) {
+        if (random_math_real((unsigned int *)get_global_random_seed_address()) <
+            *(float *)(actr_tag + 0x318)) {
+          if (actor_action_try_to_seek_cover(actor_handle, 0, 1)) {
+            FUN_00046f10(0x18, *(int *)(actor + 0x18),
+                         actor_target_unit_index(actor_handle), -1, -1, -1, 0);
+            *(int *)(actor + 0x354) = 0;
+            return 1;
+          }
+        }
+      }
+    }
+    if (b_sidestep == '\0') {
+      return status;
+    }
+    if (*(short *)(actor + 0x368) != 0) {
+      return status;
+    }
+    if (actor_action_try_to_evade(actor_handle)) {
+      *(int *)(actor + 0x354) = 0;
+      *(short *)(actor + 0x368) =
+        (short)(int)(*(float *)(actr_tag + 0x31c) * *(float *)0x253394);
+      *(char *)(actor + 0x3bb) = 1;
+      return 1;
+    }
+    return status;
+  }
+  return status;
 }
-#else
-#error "actor_action_handle_evasion: clang naked draft required"
-#endif
 
 
 /* FUN_00021080 (0x21080) — Returns non-zero if the actor's fire_state

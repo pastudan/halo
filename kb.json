@@ -3014,7 +3014,7 @@
           "addr": "0x20670",
           "decl": "char actor_action_handle_evasion(int actor_handle);",
           "name": "actor_action_handle_evasion",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x20990",
@@ -3870,7 +3870,7 @@
         {
           "addr": "0x153e0",
           "decl": "bool FUN_000153e0(int actor_handle @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000153e0"
         },
         {
@@ -35756,7 +35756,7 @@
           "decl": "void prop_position_refresh(int actor_handle, int prop_handle, float *out_pos, char refresh_flag, char swarm_refresh);",
           "name": "prop_position_refresh",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32170",
@@ -35816,7 +35816,7 @@
           "decl": "void prop_status_refresh(int actor_handle, int prop_handle, float *out_pos);",
           "name": "prop_status_refresh",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x342a0",
@@ -36472,7 +36472,7 @@
         {
           "addr": "0x52bb0",
           "decl": "void FUN_00052bb0(int clump_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00052bb0"
         },
         {

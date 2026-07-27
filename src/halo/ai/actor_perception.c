@@ -2224,322 +2224,152 @@ int actor_perception_unit_from_swarm(int owner_handle, int unit_handle,
   }
   return best_unit;
 }
-/* prop_position_refresh (0x31df0) — XBE naked draft (batch 80). */
-#if defined(__clang__)
-static void *(*const b31df0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b31df0_get)(int, int) = object_get_and_verify_type;
-static float (*const b31df0_c12170)(float *vector) = FUN_00012170;
-static int (*const b31df0_gtime)(void) = game_time_get;
-static int (*const b31df0_c31c00)(int owner_handle, int unit_handle, char verify_flag, float *swarm_origin) = actor_perception_unit_from_swarm;
-static void (*const b31df0_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
-static vector3_t * (*const b31df0_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const b31df0_c1a9520)(int object_handle, float *out_position) = FUN_001a9520;
-static int (*const b31df0_c13d7f0)(int object_handle) = object_get_root_parent;
-static bool (*const b31df0_c18f3e0)(void *location, void *position, int16_t *out_sky_index) = FUN_0018f3e0;
-static char (*const b31df0_c1b55c0)(int vehicle_handle) = vehicle_hover;
-static void (*const b31df0_c31a90)(int actor_handle, float *position, int param_3, void *input_block_out) = (void *)actor_perception_find_sense_position;
-static float (*const b31df0_norm)(float *) = normalize3d;
-
-__attribute__((naked, noinline))
-void prop_position_refresh(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)), float *out_pos __attribute__((unused)), char refresh_flag __attribute__((unused)), char swarm_refresh __attribute__((unused)))
+/* prop_position_refresh (0x31df0) — readable C lift (restored pre-naked). */
+void prop_position_refresh(int actor_handle, int prop_handle, float *out_pos,
+                           char refresh_flag, char swarm_refresh)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x8(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "je .Lprop_position_refresh_18\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lprop_position_refresh_4\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lprop_position_refresh_4\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jg .Lprop_position_refresh_4\n\t"
-      "movb 0x4e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_position_refresh_16\n\t"
-      "testb $4, 0xb6(%%edi)\n\t"
-      "je .Lprop_position_refresh_1\n\t"
-      "cmpw $0, 0x3d0(%%edi)\n\t"
-      "jne .Lprop_position_refresh_1\n\t"
-      "cmpw $0, 0x30(%%esi)\n\t"
-      "jne .Lprop_position_refresh_1\n\t"
-      "leal 0x18(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c12170]\n\t"
-      "fcomps 0x255d1c\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_position_refresh_1\n\t"
-      "movb $1, %%al\n\t"
-      "jmp .Lprop_position_refresh_2\n\t"
-      ".Lprop_position_refresh_1:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lprop_position_refresh_2:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "cmpl %%ebx, 0x270(%%edx)\n\t"
-      "jne .Lprop_position_refresh_3\n\t"
-      "movb 0xb9(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lprop_position_refresh_16\n\t"
-      "movb 0xba(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lprop_position_refresh_16\n\t"
-      ".Lprop_position_refresh_3:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_position_refresh_16\n\t"
-      "movb $1, 0x4e(%%esi)\n\t"
-      "movb $1, 0x127(%%esi)\n\t"
-      ".Lprop_position_refresh_4:\n\t"
-      "movb 0x14(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_position_refresh_8\n\t"
-      "cmpl $-1, 0x1c(%%esi)\n\t"
-      "je .Lprop_position_refresh_8\n\t"
-      "movb 0x18(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_position_refresh_8\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x28(%%esi), %%ecx\n\t"
-      "addl $0x5a, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jg .Lprop_position_refresh_8\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "movl %%eax, 0x28(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x1c(%%esi), %%eax\n\t"
-      "addl $0x120, %%edi\n\t"
-      "call *%[c31c00]\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lprop_position_refresh_7\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, 0x18(%%esi)\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lprop_position_refresh_5\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jg .Lprop_position_refresh_5\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "jmp .Lprop_position_refresh_6\n\t"
-      ".Lprop_position_refresh_5:\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lprop_position_refresh_7\n\t"
-      "pushl %%eax\n\t"
-      ".Lprop_position_refresh_6:\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, 0x18(%%eax)\n\t"
-      ".Lprop_position_refresh_7:\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      ".Lprop_position_refresh_8:\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "leal 0x104(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a9200]\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "leal 0xbc(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1412f0]\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "leal 0xc8(%%esi), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a9520]\n\t"
-      "addl $0x18, %%edi\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "leal 0xd4(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl $0xffffffff, 0xec(%%esi)\n\t"
-      "leal 0xfc(%%esi), %%edi\n\t"
-      "call *%[c13d7f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0x48(%%eax), %%ecx\n\t"
-      "pushl $0\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "movl 0x4c(%%eax), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, 0x4(%%edi)\n\t"
-      "call *%[c18f3e0]\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "movb %%al, 0x118(%%esi)\n\t"
-      "movl %%ebx, 0x110(%%esi)\n\t"
-      "movb $0, 0x135(%%esi)\n\t"
-      "movb $0, 0x136(%%esi)\n\t"
-      "movl %%ebx, 0x114(%%esi)\n\t"
-      "movl 0xcc(%%edi), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lprop_position_refresh_13\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movw 0x64(%%eax), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $1, %%cx\n\t"
-      "jne .Lprop_position_refresh_12\n\t"
-      "movl 0xcc(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x110(%%esi)\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, 0x2d8(%%eax)\n\t"
-      "je .Lprop_position_refresh_9\n\t"
-      "cmpw $0xf, 0x10(%%esi)\n\t"
-      "je .Lprop_position_refresh_9\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "jmp .Lprop_position_refresh_10\n\t"
-      ".Lprop_position_refresh_9:\n\t"
-      "movl $1, %%edx\n\t"
-      ".Lprop_position_refresh_10:\n\t"
-      "movb %%dl, 0x135(%%esi)\n\t"
-      "cmpl %%ecx, 0x2d4(%%eax)\n\t"
-      "jne .Lprop_position_refresh_11\n\t"
-      "movl 0x110(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1b55c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_position_refresh_11\n\t"
-      "movl $1, %%eax\n\t"
-      "movb %%al, 0x136(%%esi)\n\t"
-      "jmp .Lprop_position_refresh_13\n\t"
-      ".Lprop_position_refresh_11:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb %%al, 0x136(%%esi)\n\t"
-      "jmp .Lprop_position_refresh_13\n\t"
-      ".Lprop_position_refresh_12:\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testb $3, %%al\n\t"
-      "je .Lprop_position_refresh_13\n\t"
-      "movl 0xcc(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x114(%%esi)\n\t"
-      ".Lprop_position_refresh_13:\n\t"
-      "movb $0, 0x125(%%esi)\n\t"
-      "movl 0xc8(%%edi), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lprop_position_refresh_16\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lprop_position_refresh_14:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0x64(%%eax), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $3, %%dl\n\t"
-      "je .Lprop_position_refresh_15\n\t"
-      "incb 0x125(%%esi)\n\t"
-      ".Lprop_position_refresh_15:\n\t"
-      "movl 0xc4(%%eax), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .Lprop_position_refresh_14\n\t"
-      ".Lprop_position_refresh_16:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0xbc(%%esi), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c31a90]\n\t"
-      "flds (%%ebx)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "fsubs 0xc(%%eax)\n\t"
-      "leal 0xe0(%%esi), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "fstps (%%edi)\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fsubs 0x10(%%eax)\n\t"
-      "fstps 0x4(%%edi)\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "fsubs 0x14(%%eax)\n\t"
-      "fstps 0x8(%%edi)\n\t"
-      "call *%[norm]\n\t"
-      "fsts 0x11c(%%esi)\n\t"
-      "addl $0x14, %%esp\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lprop_position_refresh_17\n\t"
-      "movl 0x31fc3c, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%edi)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      ".Lprop_position_refresh_17:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lprop_position_refresh_18:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b31df0_dget), [get] "m"(b31df0_get), [c12170] "m"(b31df0_c12170), [gtime] "m"(b31df0_gtime), [c31c00] "m"(b31df0_c31c00), [c1a9200] "m"(b31df0_c1a9200), [c1412f0] "m"(b31df0_c1412f0), [c1a9520] "m"(b31df0_c1a9520), [c13d7f0] "m"(b31df0_c13d7f0), [c18f3e0] "m"(b31df0_c18f3e0), [c1b55c0] "m"(b31df0_c1b55c0), [c31a90] "m"(b31df0_c31a90), [norm] "m"(b31df0_norm)
-      : "memory");
+  char *actor;
+  char *prop;
+  char *unit;
+  char *parent_prop;
+  char *vehicle;
+  char in_fov;
+  int now;
+  int swarm_unit;
+  int unit_handle;
+  float delta[3];
+  float dir[3];
+  float *default_fwd;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 8) == 0)
+    return;
+
+  prop = (char *)datum_get(prop_data, prop_handle);
+  unit_handle = *(int *)(prop + 0x18);
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+
+  if (refresh_flag == 0) {
+    int16_t status = *(int16_t *)(prop + 0x24);
+    if (status >= 4 && status <= 5 && *(char *)(prop + 0x4e) == 0) {
+      in_fov = 0;
+      if ((*(uint8_t *)(unit + 0xb6) & 4) != 0 &&
+          *(int16_t *)(unit + 0x3d0) == 0 && *(int16_t *)(prop + 0x30) == 0) {
+        if (FUN_00012170((float *)(unit + 0x18)) <= *(float *)0x255d1c)
+          in_fov = 1;
+      }
+      if (*(int *)(actor + 0x270) == prop_handle && *(char *)(prop + 0xb9) != 0 &&
+          *(char *)(prop + 0xba) != 0 && in_fov) {
+        *(char *)(prop + 0x4e) = 1;
+        *(char *)(prop + 0x127) = 1;
+      }
+    }
+  }
+
+  if (*(char *)(prop + 0x14) != 0 && *(int *)(prop + 0x1c) != -1 &&
+      swarm_refresh != 0) {
+    now = game_time_get();
+    if (*(int *)(prop + 0x28) + 90 <= now) {
+      *(int *)(prop + 0x28) = now;
+      swarm_unit = actor_perception_unit_from_swarm(
+          *(int *)(prop + 0x1c), unit_handle, 0, (float *)(actor + 0x120));
+      if (swarm_unit != unit_handle) {
+        *(int *)(prop + 0x18) = swarm_unit;
+        unit = (char *)object_get_and_verify_type(swarm_unit, 3);
+        if (*(int16_t *)(prop + 0x24) >= 4 &&
+            *(int16_t *)(prop + 0x24) <= 5) {
+          parent_prop = (char *)datum_get(prop_data, *(int *)(prop + 0xc));
+          *(int *)(parent_prop + 0x18) = swarm_unit;
+        } else if (*(int *)(prop + 0xc) != -1) {
+          parent_prop = (char *)datum_get(prop_data, *(int *)(prop + 0xc));
+          *(int *)(parent_prop + 0x18) = swarm_unit;
+        }
+      }
+    }
+  }
+
+  unit_handle = *(int *)(prop + 0x18);
+  unit_get_head_position(unit_handle, (float *)(prop + 0x104));
+  object_get_world_position(unit_handle, (vector3_t *)(prop + 0xbc));
+  FUN_001a9520(unit_handle, (float *)(prop + 0xc8));
+  {
+    float *actor_pos = (float *)(actor + 0x18);
+    *(float *)(prop + 0xd4) = actor_pos[0];
+    *(float *)(prop + 0xd8) = actor_pos[1];
+    *(float *)(prop + 0xdc) = actor_pos[2];
+  }
+  *(int *)(prop + 0xec) = -1;
+  {
+    int placement_handle = object_get_root_parent(unit_handle);
+    char *placement =
+        (char *)object_get_and_verify_type(placement_handle, 0);
+    *(int *)(prop + 0xfc) = *(int *)(placement + 0x48);
+    *(int *)(prop + 0x100) = *(int *)(placement + 0x4c);
+  }
+  {
+    int16_t sky_index;
+    *(char *)(prop + 0x118) = (char)FUN_0018f3e0((void *)(prop + 0xfc),
+                                                  (void *)(prop + 0xc8),
+                                                  &sky_index);
+  }
+  *(int *)(prop + 0x110) = -1;
+  *(char *)(prop + 0x135) = 0;
+  *(char *)(prop + 0x136) = 0;
+  *(int *)(prop + 0x114) = -1;
+
+  if (*(int *)(unit + 0xcc) != -1) {
+    vehicle = (char *)object_get_and_verify_type(*(int *)(unit + 0xcc), 0);
+    if (*(int16_t *)(vehicle + 0x64) == 1) {
+      *(int *)(prop + 0x110) = *(int *)(unit + 0xcc);
+      if (*(int *)(vehicle + 0x2d8) == unit_handle ||
+          *(int16_t *)(prop + 0x10) == 0xf)
+        *(char *)(prop + 0x135) = 1;
+      else
+        *(char *)(prop + 0x135) = 0;
+      if (*(int *)(vehicle + 0x2d4) == unit_handle) {
+        char hover = vehicle_hover(*(int *)(unit + 0xcc));
+        *(char *)(prop + 0x136) = hover;
+      } else {
+        *(char *)(prop + 0x136) = 0;
+      }
+    } else if ((1 << *(int16_t *)(vehicle + 0x64)) & 3) {
+      *(int *)(prop + 0x114) = *(int *)(unit + 0xcc);
+    }
+  }
+
+  *(char *)(prop + 0x125) = 0;
+  if (*(int *)(unit + 0xc8) != -1) {
+    int chain = *(int *)(unit + 0xc8);
+    while (chain != -1) {
+      char *chain_obj = (char *)object_get_and_verify_type(chain, 0);
+      if ((1 << *(char *)(chain_obj + 0x64)) & 3)
+        (*(char *)(prop + 0x125))++;
+      chain = *(int *)(chain_obj + 0xc4);
+    }
+  }
+
+  actor_perception_find_sense_position(actor_handle, (float *)(prop + 0xbc),
+                                       prop_handle, out_pos);
+  delta[0] = *(float *)(prop + 0xbc) - out_pos[0];
+  delta[1] = *(float *)(prop + 0xbc + 4) - out_pos[1];
+  delta[2] = *(float *)(prop + 0xbc + 8) - out_pos[2];
+  dir[0] = delta[0];
+  dir[1] = delta[1];
+  dir[2] = delta[2];
+  normalize3d(dir);
+  *(float *)(prop + 0x11c) = sqrtf(delta[0] * delta[0] + delta[1] * delta[1] +
+                                     delta[2] * delta[2]);
+  if (*(float *)(prop + 0x11c) >= *(float *)0x2533c0) {
+    default_fwd = *(float **)0x31fc3c;
+    *(float *)(prop + 0xe0) = default_fwd[0];
+    *(float *)(prop + 0xe4) = default_fwd[1];
+    *(float *)(prop + 0xe8) = default_fwd[2];
+  } else {
+    *(float *)(prop + 0xe0) = dir[0];
+    *(float *)(prop + 0xe4) = dir[1];
+    *(float *)(prop + 0xe8) = dir[2];
+  }
 }
-#else
-#error "prop_position_refresh: clang naked draft required"
-#endif
 
 
 /* 0x32170 — register a vehicle danger zone on an actor. */
@@ -3347,1289 +3177,525 @@ void actor_perception_become_acknowledged(int actor_handle, int prop_handle, cha
     *out_expected = expected;
 }
 
-/* prop_status_refresh (0x33440) — XBE naked draft (batch 79). */
-#if defined(__clang__)
-static void *(*const b33440_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b33440_tag)(int, int) = tag_get;
-static void *(*const b33440_get)(int, int) = object_get_and_verify_type;
-static int (*const b33440_gtime)(void) = game_time_get;
-static short (*const b33440_cfff80)(void) = game_connection;
-static void (*const b33440_c140070)(int object_handle, float *position_out, float *direction_out) = object_get_root_location;
-static int (*const b33440_c27a60)(int actor_handle, short look_type, short priority, short *look_buf) = FUN_00027a60;
-static void (*const b33440_c1a9900)(int unit_handle, void *out_aiming) = unit_scripting_unit_driver;
-static int (*const b33440_c416e0)(float *origin, int bsp, float *target, int param_4, short param_5, char param_6, int param_7, char param_8) = ai_test_line_of_sight;
-static int16_t (*const b33440_c314f0)(int actor_handle, float *out_pos, float *head_pos, char vis_type, int16_t los_result, char flag, int param_7, int16_t engagement) = actor_visibility_at_point;
-static bool (*const b33440_c3b100)(int actor_handle) = actor_is_noncombat;
-static char (*const b33440_c3b120)(int actor) = FUN_0003b120;
-static char (*const b33440_c3b150)(int actor_handle) = actor_is_fighting;
-static uint16_t (*const b33440_c2f380)(int actor_handle, int prop_handle) = FUN_0002f380;
-static int (*const b33440_c31850)(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags) = actor_audibility_at_point;
-static int (*const b33440_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
-static char (*const b33440_c32170)(float *sense_pos_out, int actor_handle, int unit_handle, char flag) = FUN_00032170;
-static char (*const b33440_c2f5f0)(float scale, float visibility, char field_60, char dz_flag, int actor_handle, int unit_handle) = FUN_0002f5f0;
-static bool (*const b33440_c3b320)(int actor_handle) = actor_has_ranged_weapon;
-static void (*const b33440_c32ac0)(int actor_handle, int prop_handle, char flag) = actor_perception_unreachable;
-static int16_t (*const b33440_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
-static bool (*const b33440_c2fc20)(int actor_handle, int clump_item_handle) = actor_get_perception_knowledge;
-static float (*const b33440_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
-static float (*const b33440_c278e0)(int actor_handle, int prop_handle) = FUN_000278e0;
-
-__attribute__((naked, noinline))
-void prop_status_refresh(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)), float *out_pos __attribute__((unused)))
+/* prop_status_refresh (0x33440) — readable C lift (restored pre-naked). */
+void prop_status_refresh(int actor_handle, int prop_handle, float *out_pos)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x44, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movb 0x8(%%ebx), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%ebx, -0x14(%%ebp)\n\t"
-      "je .Lprop_status_refresh_120\n\t"
-      "movl 0x58(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, -0x28(%%ebp)\n\t"
-      "movl 0x34(%%ebx), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lprop_status_refresh_1\n\t"
-      "movl $0, -0x18(%%ebp)\n\t"
-      "jmp .Lprop_status_refresh_2\n\t"
-      ".Lprop_status_refresh_1:\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      ".Lprop_status_refresh_2:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%edi, -0x1c(%%ebp)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprop_status_refresh_3\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb 0x40(%%ecx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_4\n\t"
-      ".Lprop_status_refresh_3:\n\t"
-      "cmpw $1, 0x6a(%%ebx)\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      "jne .Lprop_status_refresh_5\n\t"
-      ".Lprop_status_refresh_4:\n\t"
-      "movb $1, -0x4(%%ebp)\n\t"
-      ".Lprop_status_refresh_5:\n\t"
-      "movl 0x1b4(%%edi), %%edx\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "shrl $0xa, %%edx\n\t"
-      "andb $1, %%dl\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%dl, 0x133(%%esi)\n\t"
-      "je .Lprop_status_refresh_6\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lprop_status_refresh_6\n\t"
-      "movb 0x5ac9c6, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_6\n\t"
-      "movb $1, 0x133(%%esi)\n\t"
-      ".Lprop_status_refresh_6:\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_11\n\t"
-      "movl 0x1b4(%%edi), %%eax\n\t"
-      "shrl $0xb, %%eax\n\t"
-      "andb $1, %%al\n\t"
-      "movb %%al, 0x134(%%esi)\n\t"
-      "movswl 0x1d4(%%ebx), %%eax\n\t"
-      "decl %%eax\n\t"
-      "je .Lprop_status_refresh_7\n\t"
-      "decl %%eax\n\t"
-      "jne .Lprop_status_refresh_11\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_11\n\t"
-      "jmp .Lprop_status_refresh_10\n\t"
-      ".Lprop_status_refresh_7:\n\t"
-      "movl 0x1c(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lprop_status_refresh_11\n\t"
-      "cmpl $-1, 0x1d8(%%ebx)\n\t"
-      "je .Lprop_status_refresh_11\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x1d8(%%ebx), %%ecx\n\t"
-      "movl 0x34(%%eax), %%edx\n\t"
-      "xorl %%ecx, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl $0xffff, %%edx\n\t"
-      "jne .Lprop_status_refresh_11\n\t"
-      "shrl $0x1e, %%ecx\n\t"
-      "subl $0, %%ecx\n\t"
-      "je .Lprop_status_refresh_10\n\t"
-      "decl %%ecx\n\t"
-      "je .Lprop_status_refresh_8\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lprop_status_refresh_11\n\t"
-      "movzbl 0x1da(%%ebx), %%ecx\n\t"
-      "cmpw 0x3c(%%eax), %%cx\n\t"
-      "jmp .Lprop_status_refresh_9\n\t"
-      ".Lprop_status_refresh_8:\n\t"
-      "movzbl 0x1da(%%ebx), %%edx\n\t"
-      "cmpw 0x3a(%%eax), %%dx\n\t"
-      ".Lprop_status_refresh_9:\n\t"
-      "jne .Lprop_status_refresh_11\n\t"
-      ".Lprop_status_refresh_10:\n\t"
-      "movb $1, 0x134(%%esi)\n\t"
-      ".Lprop_status_refresh_11:\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "movsbw 0x123(%%esi), %%di\n\t"
-      "pushl $0\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c140070]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fmuls -0x30(%%ebp)\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fmuls -0x34(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fmuls -0x2c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fcoms 0x256350\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_12\n\t"
-      "fstp %%st(0)\n\t"
-      "movb $0, 0x123(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_15\n\t"
-      ".Lprop_status_refresh_12:\n\t"
-      "fcoms 0x25634c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_13\n\t"
-      "fstp %%st(0)\n\t"
-      "movb $1, 0x123(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_15\n\t"
-      ".Lprop_status_refresh_13:\n\t"
-      "fcomps 0x2546a4\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_14\n\t"
-      "movb $2, 0x123(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_15\n\t"
-      ".Lprop_status_refresh_14:\n\t"
-      "movb $3, 0x123(%%esi)\n\t"
-      ".Lprop_status_refresh_15:\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fsubs 0x2c(%%ebx)\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fsubs 0x30(%%ebx)\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fsubs 0x34(%%ebx)\n\t"
-      "fmuls 0xe8(%%esi)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0xe4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0xe0(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fchs\n\t"
-      "fsts -0x10(%%ebp)\n\t"
-      "fcomps 0x256348\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_16\n\t"
-      "movb $0, 0x124(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_22\n\t"
-      ".Lprop_status_refresh_16:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x256344\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_17\n\t"
-      "movb $1, 0x124(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_22\n\t"
-      ".Lprop_status_refresh_17:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x256340\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_18\n\t"
-      "movb $2, 0x124(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_22\n\t"
-      ".Lprop_status_refresh_18:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x256350\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_19\n\t"
-      "movb $3, 0x124(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_22\n\t"
-      ".Lprop_status_refresh_19:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x25634c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_20\n\t"
-      "movb $4, 0x124(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_22\n\t"
-      ".Lprop_status_refresh_20:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x2546a4\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_21\n\t"
-      "movb $5, 0x124(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_22\n\t"
-      ".Lprop_status_refresh_21:\n\t"
-      "movb $6, 0x124(%%esi)\n\t"
-      ".Lprop_status_refresh_22:\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lprop_status_refresh_23\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lprop_status_refresh_23\n\t"
-      "cmpw $1, %%di\n\t"
-      "jg .Lprop_status_refresh_23\n\t"
-      "cmpb $1, 0x123(%%esi)\n\t"
-      "jle .Lprop_status_refresh_23\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal -0x44(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $2\n\t"
-      "pushl %%ecx\n\t"
-      "movw $1, -0x44(%%ebp)\n\t"
-      "movl %%edx, -0x40(%%ebp)\n\t"
-      "call *%[c27a60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lprop_status_refresh_23:\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_24\n\t"
-      "movb $0, 0x121(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_28\n\t"
-      ".Lprop_status_refresh_24:\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x254640\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_25\n\t"
-      "movb $1, 0x121(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_28\n\t"
-      ".Lprop_status_refresh_25:\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x253f34\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_26\n\t"
-      "movb $2, 0x121(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_28\n\t"
-      ".Lprop_status_refresh_26:\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x253394\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_27\n\t"
-      "movb $3, 0x121(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_28\n\t"
-      ".Lprop_status_refresh_27:\n\t"
-      "movb $4, 0x121(%%esi)\n\t"
-      ".Lprop_status_refresh_28:\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a9900]\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fmuls 0xe4(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fmuls 0xe8(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fmuls 0xe0(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fchs\n\t"
-      "fsts -0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .Lprop_status_refresh_29\n\t"
-      "flds 0x2548fc\n\t"
-      "jmp .Lprop_status_refresh_31\n\t"
-      ".Lprop_status_refresh_29:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lprop_status_refresh_30\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lprop_status_refresh_31\n\t"
-      ".Lprop_status_refresh_30:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fsqrt\n\t"
-      "fmuls 0x11c(%%esi)\n\t"
-      ".Lprop_status_refresh_31:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x25633c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lprop_status_refresh_36\n\t"
-      "fcoms 0x253398\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lprop_status_refresh_36\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x256338\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lprop_status_refresh_34\n\t"
-      "fcomps 0x2533ec\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lprop_status_refresh_35\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x253398\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lprop_status_refresh_32\n\t"
-      "movb $2, 0x122(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_37\n\t"
-      ".Lprop_status_refresh_32:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lprop_status_refresh_33\n\t"
-      "movb $3, 0x122(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_37\n\t"
-      ".Lprop_status_refresh_33:\n\t"
-      "movb $4, 0x122(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_37\n\t"
-      ".Lprop_status_refresh_34:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lprop_status_refresh_35:\n\t"
-      "movb $1, 0x122(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_37\n\t"
-      ".Lprop_status_refresh_36:\n\t"
-      "fstp %%st(0)\n\t"
-      "movb $0, 0x122(%%esi)\n\t"
-      ".Lprop_status_refresh_37:\n\t"
-      "cmpw $1, 0x66(%%esi)\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "sete %%cl\n\t"
-      "cmpw $4, %%ax\n\t"
-      "movb %%cl, 0x12f(%%esi)\n\t"
-      "jl .Lprop_status_refresh_41\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jg .Lprop_status_refresh_41\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_38\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_38\n\t"
-      "movl $2, %%eax\n\t"
-      "jmp .Lprop_status_refresh_39\n\t"
-      ".Lprop_status_refresh_38:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lprop_status_refresh_39:\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl 0x158(%%edx), %%ecx\n\t"
-      "movl 0x110(%%esi), %%edx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "setne %%cl\n\t"
-      "leal 0x104(%%esi), %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x100(%%esi), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x28(%%ebx), %%cx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c416e0]\n\t"
-      "movb 0x133(%%esi), %%cl\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movw %%ax, 0x38(%%esi)\n\t"
-      "jne .Lprop_status_refresh_40\n\t"
-      "movb -0x4(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lprop_status_refresh_40\n\t"
-      "pushl $2\n\t"
-      "pushl $0\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x120(%%esi), %%dl\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c314f0]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw %%ax, 0x32(%%esi)\n\t"
-      "movw %%cx, 0x34(%%esi)\n\t"
-      "movw %%cx, 0x36(%%esi)\n\t"
-      "movw %%ax, 0x30(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_95\n\t"
-      ".Lprop_status_refresh_40:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x30(%%esi)\n\t"
-      "movw %%ax, 0x36(%%esi)\n\t"
-      "movw %%ax, 0x34(%%esi)\n\t"
-      "movw %%ax, 0x32(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_95\n\t"
-      ".Lprop_status_refresh_41:\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $0, -0x8(%%ebp)\n\t"
-      "je .Lprop_status_refresh_42\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_42\n\t"
-      "movl $2, %%eax\n\t"
-      "jmp .Lprop_status_refresh_43\n\t"
-      ".Lprop_status_refresh_42:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lprop_status_refresh_43:\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "movl 0x158(%%ecx), %%edx\n\t"
-      "movl 0x110(%%esi), %%ecx\n\t"
-      "cmpl $-1, %%edx\n\t"
-      "setne %%dl\n\t"
-      "leal 0x104(%%esi), %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x100(%%esi), %%dx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x28(%%ebx), %%ax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c416e0]\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "addl $0x20, %%esp\n\t"
-      "movw %%ax, 0x38(%%esi)\n\t"
-      "movb $2, 0x120(%%esi)\n\t"
-      "cmpw $0, 0x64(%%ecx)\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "jne .Lprop_status_refresh_44\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x62697064\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x2f4(%%eax), %%eax\n\t"
-      "shrl $2, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      "movb %%al, 0x130(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_45\n\t"
-      ".Lprop_status_refresh_44:\n\t"
-      "movb $0, 0x130(%%esi)\n\t"
-      ".Lprop_status_refresh_45:\n\t"
-      "flds 0x32c(%%edi)\n\t"
-      "fcomps 0x253398\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lprop_status_refresh_46\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lprop_status_refresh_47\n\t"
-      ".Lprop_status_refresh_46:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lprop_status_refresh_47:\n\t"
-      "movb %%al, 0x131(%%esi)\n\t"
-      "movl 0x1b4(%%edi), %%ecx\n\t"
-      "shrl $0x13, %%ecx\n\t"
-      "andb $1, %%cl\n\t"
-      "movb %%cl, 0x132(%%esi)\n\t"
-      "movb 0xb6(%%edi), %%al\n\t"
-      "shrb $2, %%al\n\t"
-      "andb $1, %%al\n\t"
-      "je .Lprop_status_refresh_48\n\t"
-      "cmpw $0, 0x3d0(%%edi)\n\t"
-      "jne .Lprop_status_refresh_48\n\t"
-      "movb $1, %%dl\n\t"
-      "jmp .Lprop_status_refresh_49\n\t"
-      ".Lprop_status_refresh_48:\n\t"
-      "xorb %%dl, %%dl\n\t"
-      ".Lprop_status_refresh_49:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_50\n\t"
-      "movb 0x127(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lprop_status_refresh_50\n\t"
-      "movl $1, %%ecx\n\t"
-      "jmp .Lprop_status_refresh_51\n\t"
-      ".Lprop_status_refresh_50:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".Lprop_status_refresh_51:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movb %%cl, 0x129(%%esi)\n\t"
-      "movb %%al, 0x127(%%esi)\n\t"
-      "movb %%dl, 0x128(%%esi)\n\t"
-      "je .Lprop_status_refresh_52\n\t"
-      "movb 0x60(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lprop_status_refresh_52\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "cmpw $3, 0x6a(%%edx)\n\t"
-      "jge .Lprop_status_refresh_52\n\t"
-      "movb $1, -0x8(%%ebp)\n\t"
-      ".Lprop_status_refresh_52:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_53\n\t"
-      "movw $0, 0x6a(%%esi)\n\t"
-      ".Lprop_status_refresh_53:\n\t"
-      "movl 0x1a8(%%edi), %%ebx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lprop_status_refresh_54\n\t"
-      "movb $1, %%al\n\t"
-      "jmp .Lprop_status_refresh_55\n\t"
-      ".Lprop_status_refresh_54:\n\t"
-      "movl 0x1a4(%%edi), %%ebx\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lprop_status_refresh_55:\n\t"
-      "cmpl 0x1c(%%esi), %%ebx\n\t"
-      "je .Lprop_status_refresh_56\n\t"
-      "movb %%al, 0x14(%%esi)\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%ebx, 0x1c(%%esi)\n\t"
-      "je .Lprop_status_refresh_56\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x1c(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x1c(%%eax)\n\t"
-      "movb 0x14(%%esi), %%dl\n\t"
-      "addl $8, %%esp\n\t"
-      "movb %%dl, 0x14(%%eax)\n\t"
-      ".Lprop_status_refresh_56:\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "jne .Lprop_status_refresh_59\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $0, -0xc(%%ebp)\n\t"
-      "sete %%al\n\t"
-      ".Lprop_status_refresh_57:\n\t"
-      "movl -0x14(%%ebp), %%edi\n\t"
-      ".Lprop_status_refresh_58:\n\t"
-      "movb -0xc(%%ebp), %%cl\n\t"
-      "movb %%al, 0x12d(%%esi)\n\t"
-      "movb -0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%cl, 0x12b(%%esi)\n\t"
-      "movb %%bl, 0x12c(%%esi)\n\t"
-      "je .Lprop_status_refresh_63\n\t"
-      "movb -0x4(%%ebp), %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lprop_status_refresh_62\n\t"
-      "movb 0x132(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_60\n\t"
-      "movb $2, -0x10(%%ebp)\n\t"
-      "jmp .Lprop_status_refresh_61\n\t"
-      ".Lprop_status_refresh_59:\n\t"
-      "movl 0x1c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c3b100]\n\t"
-      "movl 0x1c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movb %%al, -0xc(%%ebp)\n\t"
-      "call *%[c3b120]\n\t"
-      "movl 0x1c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movb %%al, %%bl\n\t"
-      "call *%[c3b150]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lprop_status_refresh_57\n\t"
-      "movb 0x12c(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lprop_status_refresh_57\n\t"
-      "movb 0x60(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lprop_status_refresh_57\n\t"
-      "movl -0x14(%%ebp), %%edi\n\t"
-      "cmpw $3, 0x6a(%%edi)\n\t"
-      "jge .Lprop_status_refresh_58\n\t"
-      "movb $1, -0x8(%%ebp)\n\t"
-      "jmp .Lprop_status_refresh_58\n\t"
-      ".Lprop_status_refresh_60:\n\t"
-      "movb 0x120(%%esi), %%dl\n\t"
-      "movb %%dl, -0x10(%%ebp)\n\t"
-      ".Lprop_status_refresh_61:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c2f380]\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x38(%%esi), %%cx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "leal 0x104(%%esi), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c314f0]\n\t"
-      "addl $0x28, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jge .Lprop_status_refresh_63\n\t"
-      ".Lprop_status_refresh_62:\n\t"
-      "movw %%ax, 0x30(%%esi)\n\t"
-      "movw %%ax, 0x32(%%esi)\n\t"
-      "movw $0, 0x24(%%esi)\n\t"
-      ".Lprop_status_refresh_63:\n\t"
-      "movb 0x133(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_64\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x30(%%esi)\n\t"
-      "movw %%ax, 0x36(%%esi)\n\t"
-      "movw %%ax, 0x34(%%esi)\n\t"
-      "movw %%ax, 0x32(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_92\n\t"
-      ".Lprop_status_refresh_64:\n\t"
-      "movb -0x4(%%ebp), %%bl\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lprop_status_refresh_65\n\t"
-      "movb 0x5ac9cb, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_66\n\t"
-      ".Lprop_status_refresh_65:\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lprop_status_refresh_67\n\t"
-      "movb 0x5ac9c7, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_67\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_67\n\t"
-      ".Lprop_status_refresh_66:\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lprop_status_refresh_67:\n\t"
-      "movb 0x131(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_70\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_71\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_68\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x2533d8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lprop_status_refresh_71\n\t"
-      ".Lprop_status_refresh_68:\n\t"
-      "cmpw $4, 0x15e(%%edi)\n\t"
-      "movb $1, -0x10(%%ebp)\n\t"
-      "je .Lprop_status_refresh_73\n\t"
-      "cmpw $0xf, 0x4(%%edi)\n\t"
-      "je .Lprop_status_refresh_73\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_72\n\t"
-      "cmpw $3, 0x6a(%%edi)\n\t"
-      "movb $0, -0x10(%%ebp)\n\t"
-      "jge .Lprop_status_refresh_74\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_69\n\t"
-      "movb 0x12c(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_74\n\t"
-      ".Lprop_status_refresh_69:\n\t"
-      "movb $1, -0x10(%%ebp)\n\t"
-      "jmp .Lprop_status_refresh_74\n\t"
-      ".Lprop_status_refresh_70:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lprop_status_refresh_68\n\t"
-      ".Lprop_status_refresh_71:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movw $0, 0x32(%%esi)\n\t"
-      "movb $0, 0x12a(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_79\n\t"
-      ".Lprop_status_refresh_72:\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lprop_status_refresh_74\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lprop_status_refresh_74\n\t"
-      ".Lprop_status_refresh_73:\n\t"
-      "movb $0, -0x10(%%ebp)\n\t"
-      ".Lprop_status_refresh_74:\n\t"
-      "movb 0x132(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_75\n\t"
-      "movb $2, -0x24(%%ebp)\n\t"
-      "jmp .Lprop_status_refresh_76\n\t"
-      ".Lprop_status_refresh_75:\n\t"
-      "movb 0x120(%%esi), %%cl\n\t"
-      "movb %%cl, -0x24(%%ebp)\n\t"
-      ".Lprop_status_refresh_76:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c2f380]\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x38(%%esi), %%dx\n\t"
-      "leal 0x104(%%esi), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x24(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c314f0]\n\t"
-      "addl $0x28, %%esp\n\t"
-      "cmpw $0, 0x32(%%esi)\n\t"
-      "jne .Lprop_status_refresh_77\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lprop_status_refresh_77\n\t"
-      "movl $1, %%ecx\n\t"
-      "jmp .Lprop_status_refresh_78\n\t"
-      ".Lprop_status_refresh_77:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".Lprop_status_refresh_78:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movb %%cl, 0x12a(%%esi)\n\t"
-      "movw %%ax, 0x32(%%esi)\n\t"
-      "je .Lprop_status_refresh_79\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "leal 0x90(%%esi), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl %%ecx, 0x8c(%%esi)\n\t"
-      ".Lprop_status_refresh_79:\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lprop_status_refresh_80\n\t"
-      "movb 0x5ac9cc, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_81\n\t"
-      ".Lprop_status_refresh_80:\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprop_status_refresh_82\n\t"
-      "movb 0x41(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lprop_status_refresh_82\n\t"
-      ".Lprop_status_refresh_81:\n\t"
-      "movw $0, 0x34(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_85\n\t"
-      ".Lprop_status_refresh_82:\n\t"
-      "movw 0x66(%%esi), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .Lprop_status_refresh_84\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lprop_status_refresh_84\n\t"
-      "movl 0x110(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lprop_status_refresh_83\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      ".Lprop_status_refresh_83:\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x38(%%esi), %%cx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x182(%%eax), %%dx\n\t"
-      "leal 0xfc(%%esi), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0xbc(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c31850]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "movw %%ax, 0x34(%%esi)\n\t"
-      "jmp .Lprop_status_refresh_85\n\t"
-      ".Lprop_status_refresh_84:\n\t"
-      "movw $3, 0x34(%%esi)\n\t"
-      ".Lprop_status_refresh_85:\n\t"
-      "cmpw $0, 0x66(%%esi)\n\t"
-      "movw $0, 0x36(%%esi)\n\t"
-      "jne .Lprop_status_refresh_86\n\t"
-      "movw $3, 0x36(%%esi)\n\t"
-      ".Lprop_status_refresh_86:\n\t"
-      "movb 0x132(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_89\n\t"
-      "cmpb $2, 0x122(%%esi)\n\t"
-      "jg .Lprop_status_refresh_89\n\t"
-      "cmpb $2, 0x121(%%esi)\n\t"
-      "jg .Lprop_status_refresh_89\n\t"
-      "movw 0x38(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lprop_status_refresh_87\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .Lprop_status_refresh_89\n\t"
-      ".Lprop_status_refresh_87:\n\t"
-      "movw 0x36(%%esi), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jg .Lprop_status_refresh_88\n\t"
-      "movl $1, %%eax\n\t"
-      ".Lprop_status_refresh_88:\n\t"
-      "movw %%ax, 0x36(%%esi)\n\t"
-      ".Lprop_status_refresh_89:\n\t"
-      "movw 0x34(%%esi), %%cx\n\t"
-      "movw 0x36(%%esi), %%dx\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "movswl %%cx, %%edi\n\t"
-      "jg .Lprop_status_refresh_90\n\t"
-      "movswl %%dx, %%edi\n\t"
-      ".Lprop_status_refresh_90:\n\t"
-      "movswl 0x32(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jg .Lprop_status_refresh_91\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "jg .Lprop_status_refresh_91\n\t"
-      "movswl %%dx, %%eax\n\t"
-      ".Lprop_status_refresh_91:\n\t"
-      "cmpw $1, %%ax\n\t"
-      "movw %%ax, 0x30(%%esi)\n\t"
-      "jne .Lprop_status_refresh_92\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lprop_status_refresh_92\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lprop_status_refresh_92\n\t"
-      "movw $2, 0x30(%%esi)\n\t"
-      ".Lprop_status_refresh_92:\n\t"
-      "cmpw $0, 0x30(%%esi)\n\t"
-      "je .Lprop_status_refresh_93\n\t"
-      "leal 0xbc(%%esi), %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "leal 0x80(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x7c(%%esi)\n\t"
-      ".Lprop_status_refresh_93:\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lprop_status_refresh_95\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lprop_status_refresh_95\n\t"
-      "cmpw $2, 0x32(%%esi)\n\t"
-      "jge .Lprop_status_refresh_94\n\t"
-      "movb 0xb8(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_95\n\t"
-      "movl 0xb4(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lprop_status_refresh_95\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119270]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprop_status_refresh_95\n\t"
-      "cmpw $0xa, 0x268(%%eax)\n\t"
-      "jl .Lprop_status_refresh_95\n\t"
-      "movl 0x270(%%eax), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lprop_status_refresh_95\n\t"
-      "movb 0x454(%%eax), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .Lprop_status_refresh_95\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x18(%%eax), %%ecx\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jne .Lprop_status_refresh_95\n\t"
-      ".Lprop_status_refresh_94:\n\t"
-      "movb $1, 0xb8(%%esi)\n\t"
-      "movw $0, 0xb0(%%esi)\n\t"
-      ".Lprop_status_refresh_95:\n\t"
-      "movb 0x136(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "je .Lprop_status_refresh_96\n\t"
-      "cmpw $2, 0x30(%%esi)\n\t"
-      "movl 0x110(%%esi), %%eax\n\t"
-      "setge %%dl\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c32170]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lprop_status_refresh_96:\n\t"
-      "flds 0x20(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lprop_status_refresh_98\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_97\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "cmpb $0x1e, 0x253(%%ecx)\n\t"
-      "jne .Lprop_status_refresh_98\n\t"
-      ".Lprop_status_refresh_97:\n\t"
-      "cmpw $2, 0x30(%%esi)\n\t"
-      "movl 0x11c(%%esi), %%ecx\n\t"
-      "movl 0x18(%%esi), %%edi\n\t"
-      "setge %%dl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x20(%%esi), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c2f5f0]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lprop_status_refresh_98:\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "je .Lprop_status_refresh_101\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lprop_status_refresh_101\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lprop_status_refresh_101\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c3b320]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_99\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x608(%%eax)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lprop_status_refresh_100\n\t"
-      ".Lprop_status_refresh_99:\n\t"
-      "movl -0x28(%%ebp), %%eax\n\t"
-      "testl $0x8000000, (%%eax)\n\t"
-      "je .Lprop_status_refresh_101\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps 0x37c(%%eax)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_101\n\t"
-      ".Lprop_status_refresh_100:\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c32ac0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lprop_status_refresh_101:\n\t"
-      "movl 0xa0(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lprop_status_refresh_102\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "addl $0x96, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lprop_status_refresh_102\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c32ac0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lprop_status_refresh_102:\n\t"
-      "movb 0x126(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_119\n\t"
-      "movl 0x20(%%esi), %%ecx\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "movw 0x76(%%esi), %%dx\n\t"
-      "fld %%st(0)\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "movb 0x12e(%%esi), %%bl\n\t"
-      "movl 0x1c(%%esi), %%edi\n\t"
-      "movl %%ecx, -0x24(%%ebp)\n\t"
-      "movb 0x60(%%esi), %%cl\n\t"
-      "movw %%dx, -0x18(%%ebp)\n\t"
-      "movb 0x63(%%esi), %%dl\n\t"
-      "movb %%cl, -0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movb %%dl, -0xc(%%ebp)\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x28(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "jne .Lprop_status_refresh_103\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lprop_status_refresh_104\n\t"
-      ".Lprop_status_refresh_103:\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lprop_status_refresh_104:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lprop_status_refresh_118\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprop_status_refresh_105\n\t"
-      "movb 0x8(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lprop_status_refresh_117\n\t"
-      "movb 0x13(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lprop_status_refresh_117\n\t"
-      ".Lprop_status_refresh_105:\n\t"
-      "movb -0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_118\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fcomps 0x255fe0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lprop_status_refresh_117\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_114\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "movl 0x34(%%ecx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movb $1, %%bl\n\t"
-      "je .Lprop_status_refresh_111\n\t"
-      "movl 0x5ab270, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl -0x28(%%ebp), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl -0x20(%%ebp), %%edx\n\t"
-      "movl 0x58(%%edi), %%ecx\n\t"
-      "movl 0x3a0(%%edx), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jg .Lprop_status_refresh_106\n\t"
-      "movl %%edx, %%ecx\n\t"
-      ".Lprop_status_refresh_106:\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lprop_status_refresh_108\n\t"
-      "movl 0x3cc(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lprop_status_refresh_107\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lprop_status_refresh_108\n\t"
-      ".Lprop_status_refresh_107:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lprop_status_refresh_108:\n\t"
-      "movb 0x45(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_109\n\t"
-      "movb 0x44(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_109\n\t"
-      "movb 0x42(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_109\n\t"
-      "movb $1, %%al\n\t"
-      "jmp .Lprop_status_refresh_110\n\t"
-      ".Lprop_status_refresh_109:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lprop_status_refresh_110:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lprop_status_refresh_117\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_111\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fcomps 0x255fdc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lprop_status_refresh_118\n\t"
-      "jmp .Lprop_status_refresh_117\n\t"
-      ".Lprop_status_refresh_111:\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lprop_status_refresh_118\n\t"
-      "movb -0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_status_refresh_112\n\t"
-      "cmpw $0x96, -0x18(%%ebp)\n\t"
-      "jg .Lprop_status_refresh_117\n\t"
-      ".Lprop_status_refresh_112:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d6d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jg .Lprop_status_refresh_117\n\t"
-      "movb -0x8(%%ebp), %%al\n\t"
-      "flds 0x254e74\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_113\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "cmpw $3, 0x6a(%%ecx)\n\t"
-      "jge .Lprop_status_refresh_113\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x254df8\n\t"
-      ".Lprop_status_refresh_113:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lprop_status_refresh_118\n\t"
-      "jmp .Lprop_status_refresh_117\n\t"
-      ".Lprop_status_refresh_114:\n\t"
-      "movb -0x8(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_118\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fcomps 0x255fdc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_status_refresh_115\n\t"
-      "movb $1, %%al\n\t"
-      "jmp .Lprop_status_refresh_116\n\t"
-      ".Lprop_status_refresh_115:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lprop_status_refresh_116:\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_status_refresh_118\n\t"
-      ".Lprop_status_refresh_117:\n\t"
-      "movw $0, 0x6a(%%esi)\n\t"
-      ".Lprop_status_refresh_118:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movb $0, 0x126(%%esi)\n\t"
-      ".Lprop_status_refresh_119:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2fc20]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movb %%al, 0xa4(%%esi)\n\t"
-      "call *%[c2fd10]\n\t"
-      "fstps 0x50(%%esi)\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c278e0]\n\t"
-      "fstps 0x54(%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, 0x64(%%esi)\n\t"
-      "popl %%esi\n\t"
-      ".Lprop_status_refresh_120:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b33440_dget), [tag] "m"(b33440_tag), [get] "m"(b33440_get), [gtime] "m"(b33440_gtime), [cfff80] "m"(b33440_cfff80), [c140070] "m"(b33440_c140070), [c27a60] "m"(b33440_c27a60), [c1a9900] "m"(b33440_c1a9900), [c416e0] "m"(b33440_c416e0), [c314f0] "m"(b33440_c314f0), [c3b100] "m"(b33440_c3b100), [c3b120] "m"(b33440_c3b120), [c3b150] "m"(b33440_c3b150), [c2f380] "m"(b33440_c2f380), [c31850] "m"(b33440_c31850), [c119270] "m"(b33440_c119270), [c32170] "m"(b33440_c32170), [c2f5f0] "m"(b33440_c2f5f0), [c3b320] "m"(b33440_c3b320), [c32ac0] "m"(b33440_c32ac0), [c1d6d0] "m"(b33440_c1d6d0), [c2fc20] "m"(b33440_c2fc20), [c2fd10] "m"(b33440_c2fd10), [c278e0] "m"(b33440_c278e0)
-      : "memory");
+  char *actor;
+  char *prop;
+  char *unit;
+  char *encounter;
+  char *owner_actor;
+  char player_present;
+  char team_flag;
+  float velocity[3];
+  float rel_vel;
+  float speed_sq;
+  float speed;
+  int16_t threat_dir;
+  int16_t los_mode;
+  int16_t los_result;
+  int16_t vis;
+  int16_t aud;
+  int16_t vis_min;
+  char hide_prop;
+  char force_player;
+  char vis_type;
+  char owner_fighting;
+  char owner_noncombat;
+  int owner_handle;
+  int now;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 8) == 0)
+    return;
+
+  encounter = (char *)tag_get('rtca', *(int *)(actor + 0x58));
+  if (*(int *)(actor + 0x34) != -1)
+    owner_actor = (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
+  else
+    owner_actor = 0;
+
+  prop = (char *)datum_get(prop_data, prop_handle);
+  unit = (char *)object_get_and_verify_type(*(int *)(prop + 0x18), 3);
+  now = game_time_get();
+  (void)now;
+
+  if (owner_actor == 0 || *(char *)(owner_actor + 0x40) != 0 ||
+      *(int16_t *)(actor + 0x6a) == 1)
+    player_present = 1;
+  else
+    player_present = 0;
+
+  team_flag = (char)((*(uint32_t *)(unit + 0x1b4) >> 10) & 1);
+  *(char *)(prop + 0x133) = team_flag;
+  if (*(char *)(prop + 0x12e) != 0 && game_connection() == 0 &&
+      *(char *)0x5ac9c6 != 0)
+    *(char *)(prop + 0x133) = 1;
+
+  if (*(char *)(prop + 0x60) != 0) {
+    *(char *)(prop + 0x134) = (char)((*(uint32_t *)(unit + 0x1b4) >> 11) & 1);
+    switch (*(int16_t *)(actor + 0x1d4)) {
+    case 1:
+    case 2:
+      if (*(char *)(prop + 0x12e) != 0)
+        *(char *)(prop + 0x134) = 1;
+      break;
+    default:
+      if (*(int *)(prop + 0x1c) != -1 && *(int *)(actor + 0x1d8) != -1) {
+        char *owner =
+            (char *)datum_get(actor_data, *(int *)(prop + 0x1c));
+        if (((*(int *)(owner + 0x34) ^ *(int *)(actor + 0x1d8)) & 0xffff) == 0) {
+          int role = *(int *)(actor + 0x1d8) >> 30;
+          if (role == 0 || role == 1 || role == 2) {
+            if ((role == 0 &&
+                 *(uint16_t *)(actor + 0x1da) == *(uint16_t *)(owner + 0x3c)) ||
+                (role == 1 &&
+                 *(uint16_t *)(actor + 0x1da) == *(uint16_t *)(owner + 0x3a)))
+              *(char *)(prop + 0x134) = 1;
+          }
+        }
+      }
+      break;
+    }
+  }
+
+  object_get_root_location(*(int *)(prop + 0x18), velocity, 0);
+  speed_sq =
+      velocity[0] * velocity[0] + velocity[1] * velocity[1] + velocity[2] * velocity[2];
+  speed = sqrtf(speed_sq);
+  if (speed < *(float *)0x256350)
+    *(char *)(prop + 0x123) = 0;
+  else if (speed < *(float *)0x25634c)
+    *(char *)(prop + 0x123) = 1;
+  else if (speed < *(float *)0x2546a4)
+    *(char *)(prop + 0x123) = 2;
+  else
+    *(char *)(prop + 0x123) = 3;
+
+  rel_vel = (out_pos[0] - *(float *)(prop + 0xbc)) * *(float *)(prop + 0xe0) +
+            (out_pos[1] - *(float *)(prop + 0xbc + 4)) *
+                *(float *)(prop + 0xe4) +
+            (out_pos[2] - *(float *)(prop + 0xbc + 8)) *
+                *(float *)(prop + 0xe8);
+  if (rel_vel >= *(float *)0x256348)
+    *(char *)(prop + 0x124) = 0;
+  else if (rel_vel >= *(float *)0x256344)
+    *(char *)(prop + 0x124) = 1;
+  else if (rel_vel >= *(float *)0x256340)
+    *(char *)(prop + 0x124) = 2;
+  else if (rel_vel >= *(float *)0x256350)
+    *(char *)(prop + 0x124) = 3;
+  else if (rel_vel >= *(float *)0x25634c)
+    *(char *)(prop + 0x124) = 4;
+  else if (rel_vel >= *(float *)0x2546a4)
+    *(char *)(prop + 0x124) = 5;
+  else
+    *(char *)(prop + 0x124) = 6;
+
+  threat_dir = (int16_t)*(char *)(prop + 0x123);
+  if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3 &&
+      threat_dir <= 1 && *(char *)(prop + 0x123) > 1) {
+    int16_t local[2];
+    local[0] = 1;
+    local[1] = (int16_t)prop_handle;
+    FUN_00027a60(actor_handle, 2, 1, local);
+  }
+
+  if (*(float *)(prop + 0x11c) < *(float *)0x2533c8)
+    *(char *)(prop + 0x121) = 0;
+  else if (*(float *)(prop + 0x11c) < *(float *)0x254640)
+    *(char *)(prop + 0x121) = 1;
+  else if (*(float *)(prop + 0x11c) < *(float *)0x253f34)
+    *(char *)(prop + 0x121) = 2;
+  else if (*(float *)(prop + 0x11c) < *(float *)0x253394)
+    *(char *)(prop + 0x121) = 3;
+  else
+    *(char *)(prop + 0x121) = 4;
+
+  unit_scripting_unit_driver(*(int *)(prop + 0x18), velocity);
+  rel_vel = -(velocity[0] * *(float *)(prop + 0xe0) +
+              velocity[1] * *(float *)(prop + 0xe4) +
+              velocity[2] * *(float *)(prop + 0xe8));
+  if (rel_vel < *(float *)0x2533c0)
+    speed = *(float *)0x2548fc;
+  else if ((rel_vel >= *(float *)0x2533c8) == 0)
+    speed = *(float *)0x2533c0;
+  else
+    speed = sqrtf(*(float *)0x2533c8 - rel_vel * rel_vel) *
+              *(float *)(prop + 0x11c);
+
+  if (rel_vel < *(float *)0x25633c) {
+    if (speed > *(float *)0x253398 && rel_vel < *(float *)0x256338) {
+      if (speed <= *(float *)0x2533ec)
+        *(char *)(prop + 0x122) = 1;
+      else if (rel_vel <= *(float *)0x253398)
+        *(char *)(prop + 0x122) = 2;
+      else if (rel_vel <= *(float *)0x2533c0)
+        *(char *)(prop + 0x122) = 3;
+      else
+        *(char *)(prop + 0x122) = 4;
+    } else
+      *(char *)(prop + 0x122) = 0;
+  } else
+    *(char *)(prop + 0x122) = 0;
+
+  *(char *)(prop + 0x12f) = (char)(*(int16_t *)(prop + 0x66) == 1);
+
+  if (*(int16_t *)(prop + 0x24) >= 4 && *(int16_t *)(prop + 0x24) <= 5) {
+    los_mode = 0;
+    if (*(char *)(prop + 0x12e) != 0 && *(char *)(prop + 0x60) != 0)
+      los_mode = 2;
+    los_result = (int16_t)ai_test_line_of_sight(
+        (float *)(actor + 0x120), *(int16_t *)(actor + 0x28),
+        (float *)(prop + 0x104), 0, *(int *)(prop + 0x110),
+        *(char *)(actor + 0x158) != -1, los_mode, 0);
+    *(int16_t *)(prop + 0x38) = los_result;
+    if (*(char *)(prop + 0x133) == 0 && player_present == 0) {
+      vis = actor_visibility_at_point(
+          actor_handle, out_pos, (float *)(prop + 0x104), 0, los_result, 1, 0,
+          FUN_0002f380(actor_handle, prop_handle));
+      *(int16_t *)(prop + 0x32) = vis;
+      *(int16_t *)(prop + 0x34) = 0;
+      *(int16_t *)(prop + 0x36) = 0;
+      *(int16_t *)(prop + 0x30) = vis;
+    } else {
+      *(int16_t *)(prop + 0x30) = 0;
+      *(int16_t *)(prop + 0x32) = 0;
+      *(int16_t *)(prop + 0x34) = 0;
+      *(int16_t *)(prop + 0x36) = 0;
+    }
+  } else {
+    hide_prop = 0;
+    force_player = player_present;
+    if (*(char *)(prop + 0x12e) != 0 && *(char *)(prop + 0x60) != 0)
+      los_mode = 2;
+    else
+      los_mode = 0;
+
+    los_result = (int16_t)ai_test_line_of_sight(
+        (float *)(actor + 0x120), *(int16_t *)(actor + 0x28),
+        (float *)(prop + 0x104), 0, *(int *)(prop + 0x110),
+        *(char *)(actor + 0x158) != -1, los_mode, 0);
+    *(int16_t *)(prop + 0x38) = los_result;
+    *(char *)(prop + 0x120) = 2;
+
+    if (*(int16_t *)(unit + 0x64) == 0) {
+      char *biped_def = (char *)tag_get('dpib', *(int *)unit);
+      *(char *)(prop + 0x130) =
+          (char)((*(int *)(biped_def + 0x2f4) >> 2) & 1);
+    } else {
+      *(char *)(prop + 0x130) = 0;
+    }
+
+    *(char *)(prop + 0x131) =
+        (char)(*(float *)(unit + 0x32c) < *(float *)0x253398);
+    *(char *)(prop + 0x132) =
+        (char)((*(uint32_t *)(unit + 0x1b4) >> 0x13) & 1);
+
+    if ((*(uint8_t *)(unit + 0xb6) & 4) != 0 &&
+        *(int16_t *)(unit + 0x3d0) == 0) {
+      *(char *)(prop + 0x127) = 1;
+      *(char *)(prop + 0x128) = 1;
+      if (*(char *)(prop + 0x127) == 0)
+        *(char *)(prop + 0x129) = 1;
+      else
+        *(char *)(prop + 0x129) = 0;
+      if (*(char *)(prop + 0x127) != 0 && *(char *)(prop + 0x60) == 0 &&
+          *(int16_t *)(actor + 0x6a) < 3)
+        hide_prop = 1;
+      if (*(char *)(prop + 0x127) != 0)
+        *(int16_t *)(prop + 0x6a) = 0;
+    } else {
+      *(char *)(prop + 0x127) = 0;
+      *(char *)(prop + 0x128) = 0;
+      *(char *)(prop + 0x129) = 0;
+    }
+
+    owner_handle = *(int *)(unit + 0x1a8);
+    if (owner_handle == -1)
+      owner_handle = *(int *)(unit + 0x1a4);
+    if (owner_handle != *(int *)(prop + 0x1c)) {
+      *(char *)(prop + 0x14) = (char)(owner_handle != *(int *)(unit + 0x1a8));
+      *(int *)(prop + 0x1c) = owner_handle;
+      if (*(int *)(prop + 0xc) != -1) {
+        char *parent = (char *)datum_get(prop_data, *(int *)(prop + 0xc));
+        *(int *)(parent + 0x1c) = owner_handle;
+        *(char *)(parent + 0x14) = *(char *)(prop + 0x14);
+      }
+    }
+
+    if (owner_handle == -1) {
+      *(char *)(prop + 0x12d) = (char)(*(char *)(prop + 0x127) == 0);
+      *(char *)(prop + 0x12b) = 0;
+      *(char *)(prop + 0x12c) = 0;
+      if (hide_prop != 0) {
+        if (player_present == 0 && *(char *)(prop + 0x132) != 0)
+          vis_type = 2;
+        else
+          vis_type = *(char *)(prop + 0x120);
+        vis = actor_visibility_at_point(
+            actor_handle, out_pos, (float *)(prop + 0x104), vis_type,
+            los_result, 1, 0, FUN_0002f380(actor_handle, prop_handle));
+        if (vis < 2) {
+          *(int16_t *)(prop + 0x30) = vis;
+          *(int16_t *)(prop + 0x32) = vis;
+          *(int16_t *)(prop + 0x24) = 0;
+        }
+      }
+    } else {
+      owner_fighting = actor_is_fighting(owner_handle);
+      owner_noncombat = FUN_0003b120(owner_handle);
+      (void)owner_noncombat;
+      if (owner_fighting != 0 && *(char *)(prop + 0x12c) == 0 &&
+          *(char *)(prop + 0x60) == 0 && *(int16_t *)(actor + 0x6a) < 3)
+        hide_prop = 1;
+
+      if (hide_prop != 0) {
+        if (player_present == 0 && *(char *)(prop + 0x132) != 0)
+          vis_type = 2;
+        else
+          vis_type = *(char *)(prop + 0x120);
+        vis = actor_visibility_at_point(
+            actor_handle, out_pos, (float *)(prop + 0x104), vis_type,
+            los_result, 1, 0, FUN_0002f380(actor_handle, prop_handle));
+        if (vis < 2) {
+          *(int16_t *)(prop + 0x30) = vis;
+          *(int16_t *)(prop + 0x32) = vis;
+          *(int16_t *)(prop + 0x24) = 0;
+        }
+      }
+    }
+
+    if (*(char *)(prop + 0x133) != 0) {
+      *(int16_t *)(prop + 0x30) = 0;
+      *(int16_t *)(prop + 0x32) = 0;
+      *(int16_t *)(prop + 0x34) = 0;
+      *(int16_t *)(prop + 0x36) = 0;
+    } else if (force_player != 0 ||
+               ((game_connection() == 0 && *(char *)0x5ac9cb != 0) ||
+                (game_connection() == 0 && *(char *)0x5ac9c7 != 0 &&
+                 *(char *)(prop + 0x12e) != 0))) {
+      force_player = 1;
+    }
+
+    if (*(char *)(prop + 0x131) != 0 && *(char *)(prop + 0x60) == 0) {
+      if (*(char *)(prop + 0x12e) != 0 &&
+          *(float *)(prop + 0x11c) > *(float *)0x2533d8)
+        vis_type = 0;
+      else if (*(int16_t *)(actor + 0x15e) == 4 ||
+               *(int16_t *)(actor + 4) == 0xf)
+        vis_type = 0;
+      else if (*(char *)(prop + 0x60) == 0 && *(int16_t *)(actor + 0x6a) < 3)
+        vis_type = 0;
+      else if (*(char *)(prop + 0x127) == 0 && *(char *)(prop + 0x12c) == 0)
+        vis_type = 0;
+      else
+        vis_type = 1;
+
+      if (*(char *)(prop + 0x132) != 0)
+        vis_type = 2;
+      else
+        vis_type = *(char *)(prop + 0x120);
+
+      vis = actor_visibility_at_point(
+          actor_handle, out_pos, (float *)(prop + 0x104), vis_type, los_result,
+          force_player, 0, FUN_0002f380(actor_handle, prop_handle));
+      *(char *)(prop + 0x12a) = (char)(vis > 0 && *(int16_t *)(prop + 0x32) == 0);
+      *(int16_t *)(prop + 0x32) = vis;
+      if (vis > 0) {
+        *(int *)(prop + 0x90) = *(int *)(prop + 0x104);
+        *(int *)(prop + 0x94) = *(int *)(prop + 0x108);
+        *(int *)(prop + 0x98) = *(int *)(prop + 0x10c);
+        *(int *)(prop + 0x8c) = now;
+      }
+
+      if ((game_connection() == 0 && *(char *)0x5ac9cc != 0) ||
+          (owner_actor != 0 && *(char *)(owner_actor + 0x41) != 0))
+        *(int16_t *)(prop + 0x34) = 0;
+      else if (*(int16_t *)(prop + 0x66) == 1 || *(int16_t *)(prop + 0x66) == 2)
+        *(int16_t *)(prop + 0x34) = 3;
+      else {
+        int aud_unit = *(int *)(prop + 0x110);
+        if (aud_unit == -1)
+          aud_unit = *(int *)(prop + 0x18);
+        {
+          char *aud_obj = (char *)object_get_and_verify_type(aud_unit, 3);
+          char *aud_def = (char *)tag_get('tinu', *(int *)aud_obj);
+          aud = actor_audibility_at_point(
+              actor_handle, (float *)(prop + 0xfc), (float *)(prop + 0xbc),
+              aud_obj + 0x48, *(int16_t *)(aud_def + 0x182), 0x3f800000,
+              *(int16_t *)(prop + 0x38));
+          *(int16_t *)(prop + 0x34) = aud;
+        }
+      }
+
+      *(int16_t *)(prop + 0x36) = 0;
+      if (*(int16_t *)(prop + 0x66) == 0)
+        *(int16_t *)(prop + 0x36) = 3;
+
+      if (*(char *)(prop + 0x132) != 0 && *(char *)(prop + 0x122) <= 2 &&
+          *(char *)(prop + 0x121) <= 2) {
+        if (*(int16_t *)(prop + 0x38) == 0 || *(int16_t *)(prop + 0x38) == 1) {
+          if (*(int16_t *)(prop + 0x36) <= 1)
+            *(int16_t *)(prop + 0x36) = 1;
+        } else if (*(int16_t *)(prop + 0x36) > 1) {
+          *(int16_t *)(prop + 0x36) = *(int16_t *)(prop + 0x36);
+        } else {
+          *(int16_t *)(prop + 0x36) = 1;
+        }
+      }
+
+      vis_min = *(int16_t *)(prop + 0x34);
+      if (*(int16_t *)(prop + 0x36) > vis_min)
+        vis_min = *(int16_t *)(prop + 0x36);
+      if (*(int16_t *)(prop + 0x32) > vis_min)
+        vis_min = *(int16_t *)(prop + 0x32);
+      *(int16_t *)(prop + 0x30) = vis_min;
+      if (vis_min == 1 && *(int16_t *)(prop + 0x24) >= 2 &&
+          *(int16_t *)(prop + 0x24) <= 3)
+        *(int16_t *)(prop + 0x30) = 2;
+
+      if (*(int16_t *)(prop + 0x30) != 0) {
+        *(int *)(prop + 0x80) = *(int *)(prop + 0xbc);
+        *(int *)(prop + 0x84) = *(int *)(prop + 0xc0);
+        *(int *)(prop + 0x88) = *(int *)(prop + 0xc4);
+        *(int *)(prop + 0x7c) = now;
+      }
+    }
+  }
+
+  if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3 &&
+      *(int16_t *)(prop + 0x32) < 2 && *(char *)(prop + 0xb8) != 0 &&
+      *(int *)(prop + 0xb4) != -1) {
+    char *killer = (char *)datum_get(actor_data, *(int *)(prop + 0xb4));
+    if (*(char *)(killer + 8) != 0 && *(int16_t *)(killer + 0x268) >= 0xa &&
+        *(int *)(killer + 0x270) != -1 && *(char *)(killer + 0x454) != 0) {
+      char *killer_prop =
+          (char *)datum_get(prop_data, *(int *)(killer + 0x270));
+      if (*(int *)(killer_prop + 0x18) == *(int *)(prop + 0x18)) {
+        *(char *)(prop + 0xb8) = 1;
+        *(int16_t *)(prop + 0xb0) = 0;
+      }
+    }
+  }
+  if (*(int16_t *)(prop + 0x24) >= 2 && *(int16_t *)(prop + 0x24) <= 3 &&
+      *(int16_t *)(prop + 0x32) >= 2)
+    *(char *)(prop + 0xb8) = 1;
+
+  if (*(char *)(prop + 0x136) != 0) {
+    char dz_flag = (char)(*(int16_t *)(prop + 0x30) >= 2);
+    FUN_00032170(out_pos, actor_handle, *(int *)(prop + 0x110), dz_flag);
+  }
+
+  if (*(float *)(prop + 0x20) <= *(float *)0x2533c0) {
+    if (*(char *)(prop + 0x127) != 0 ||
+        *(char *)((char *)unit + 0x253) == 0x1e) {
+      if (*(int16_t *)(prop + 0x30) >= 2) {
+        FUN_0002f5f0(actor_handle, *(float *)(prop + 0x20),
+                     *(float *)(prop + 0x11c), *(int *)(prop + 0x18),
+                     *(char *)(prop + 0x60),
+                     (char)(*(int16_t *)(prop + 0x30) >= 2));
+      }
+    }
+  }
+
+  if (*(char *)(prop + 0x60) != 0 && *(int16_t *)(prop + 0x24) >= 2 &&
+      *(int16_t *)(prop + 0x24) <= 3) {
+    char call_unreachable = 0;
+    if (actor_has_ranged_weapon(actor_handle)) {
+      if (*(float *)(prop + 0x11c) > *(float *)(actor + 0x608))
+        call_unreachable = 1;
+    } else if ((*(uint32_t *)encounter & 0x8000000) != 0) {
+      if (*(float *)(prop + 0x11c) > *(float *)(encounter + 0x37c))
+        call_unreachable = 1;
+    } else {
+      call_unreachable = 1;
+    }
+    if (call_unreachable != 0)
+      actor_perception_unreachable(0, prop_handle, actor_handle);
+  }
+
+  if (*(int *)(prop + 0xa0) != -1 &&
+      *(int *)(prop + 0xa0) + 0x96 < now)
+    actor_perception_unreachable(0, prop_handle, actor_handle);
+
+  if (*(char *)(prop + 0x126) != 0) {
+    char clear_status = 0;
+
+    if (*(char *)(prop + 0x12e) == 0) {
+      char *prop_owner;
+      char *enc;
+      char desire;
+      char hidden;
+      float scaled_vis;
+      int max_teams;
+      int actor_teams;
+      int unit_teams;
+
+      scaled_vis = *(float *)(prop + 0x11c) * *(float *)(prop + 0x20);
+      desire = *(char *)(prop + 0x127);
+
+      if (*(int *)(prop + 0x1c) != -1) {
+        prop_owner = (char *)datum_get(actor_data, *(int *)(prop + 0x1c));
+        if (prop_owner != 0 && *(char *)(prop_owner + 8) != 0 &&
+            *(char *)(prop_owner + 0x13) == 0)
+          clear_status = 1;
+      }
+      if (clear_status == 0 && *(char *)(prop + 0x63) == 0) {
+        if (scaled_vis < *(float *)0x255fe0)
+          clear_status = 1;
+        else if (desire != 0) {
+          if (*(int *)(actor + 0x34) != -1) {
+            enc = (char *)datum_get(*(void **)0x5ab270, *(int *)(actor + 0x34));
+            max_teams = *(int *)(enc + 0x58);
+            actor_teams = *(int *)(actor + 0x3a0);
+            unit_teams = *(int *)(unit + 0x3cc);
+            if (max_teams < actor_teams)
+              max_teams = actor_teams;
+            if (max_teams != -1 && unit_teams != -1 && unit_teams < max_teams)
+              desire = 0;
+            if (desire != 0) {
+              hidden = (char)(*(char *)(enc + 0x45) == 0 &&
+                              *(char *)(enc + 0x44) == 0 &&
+                              *(char *)(enc + 0x42) == 0);
+              if (hidden != 0) {
+                if (scaled_vis > *(float *)0x255fdc)
+                  clear_status = 1;
+              } else if (scaled_vis > *(float *)0x2533c0) {
+                if (*(char *)(prop + 0x127) == 0 ||
+                    *(int16_t *)(prop + 0x76) <= 0x96)
+                  clear_status = 1;
+              }
+            }
+          }
+          if (desire != 0 && actor_action_try_to_panic(actor_handle) > 1)
+            clear_status = 1;
+          if (desire != 0 && *(char *)(prop + 0x127) != 0) {
+            float threshold = *(float *)0x254e74;
+            if (*(int16_t *)(actor + 0x6a) < 3)
+              threshold = *(float *)0x254df8;
+            if (scaled_vis > threshold)
+              clear_status = 1;
+          }
+        } else if (scaled_vis > *(float *)0x255fdc) {
+          clear_status = 1;
+        }
+      }
+
+      if (clear_status != 0)
+        *(int16_t *)(prop + 0x6a) = 0;
+    }
+    *(char *)(prop + 0x126) = 0;
+  }
+
+  *(char *)(prop + 0xa4) =
+      (char)actor_get_perception_knowledge(actor_handle, prop_handle);
+  *(float *)(prop + 0x50) =
+      actor_compute_prop_target_weight(actor_handle, prop_handle);
+  *(float *)(prop + 0x54) = FUN_000278e0(actor_handle, prop_handle);
+  *(char *)(prop + 0x64) = 1;
+  (void)player_present;
 }
-#else
-#error "prop_status_refresh: clang naked draft required"
-#endif
 
 
 /* actor_perception_refresh_test_object (0x342a0) — XBE naked draft (batch 223). */

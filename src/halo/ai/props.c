@@ -651,218 +651,101 @@ int FUN_000643d0(int actor_handle)
   return idx;
 }
 
-/* prop_new_unacknowledged (0x645a0) — XBE naked draft (batch 81). */
-#if defined(__clang__)
-static void *(*const b645a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const b645a0_c2f6e0)(int actor_handle, int existing_prop, int unit_handle, int owner_handle, char field_63, char field_12e, char friendly, char field_127, int16_t field_76, int16_t scale, float visibility, int sense, char *out_flag) = actor_perception_desire_prop;
-static int (*const b645a0_c119610)(data_t *data) = data_new_at_index;
-static void (*const b645a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b645a0_exitfn)(int) = system_exit;
-static void (*const b645a0_c3b410)(int actor_handle, int old_prop, int new_prop) = FUN_0003b410;
-static void (*const b645a0_c64400)(int actor_handle, int prop_handle) = FUN_00064400;
-static void *(*const b645a0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b645a0_c64170)(int actor_handle, int prop_index, int unit_handle) = prop_add;
-
-__attribute__((naked, noinline))
-int prop_new_unacknowledged(int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), char friendly __attribute__((unused)))
+/* prop_new_unacknowledged (0x645a0) — readable C lift (restored pre-naked). */
+int prop_new_unacknowledged(int actor_handle, int unit_handle, char friendly)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x7f7fffff, -0xc(%%ebp)\n\t"
-      "movl $0x7f7fffff, -0x10(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x50(%%eax), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lprop_new_unacknowledged_1:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "je .Lprop_new_unacknowledged_4\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "movl 0x8(%%esi), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lprop_new_unacknowledged_2\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jle .Lprop_new_unacknowledged_1\n\t"
-      ".Lprop_new_unacknowledged_2:\n\t"
-      "cmpl $-1, 0xc(%%esi)\n\t"
-      "jne .Lprop_new_unacknowledged_1\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "movl 0x20(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "fld %%st(0)\n\t"
-      "movw 0x6a(%%esi), %%cx\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "leal -0x1(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x76(%%esi), %%ax\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x127(%%esi), %%cl\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x60(%%esi), %%dl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x63(%%esi), %%cl\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x1c(%%esi), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c2f6e0]\n\t"
-      "addl $0x34, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lprop_new_unacknowledged_3\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps -0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_new_unacknowledged_1\n\t"
-      "movl 0x11c(%%esi), %%edx\n\t"
-      "movl %%ebx, -0x14(%%ebp)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "jmp .Lprop_new_unacknowledged_1\n\t"
-      ".Lprop_new_unacknowledged_3:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "cmpb %%al, 0x60(%%esi)\n\t"
-      "jne .Lprop_new_unacknowledged_1\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "incl %%ecx\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "je .Lprop_new_unacknowledged_1\n\t"
-      "flds 0x11c(%%esi)\n\t"
-      "fcomps -0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lprop_new_unacknowledged_1\n\t"
-      "movl 0x11c(%%esi), %%ecx\n\t"
-      "movl %%ebx, -0x18(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "jmp .Lprop_new_unacknowledged_1\n\t"
-      ".Lprop_new_unacknowledged_4:\n\t"
-      "movl -0x14(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .Lprop_new_unacknowledged_6\n\t"
-      "movl -0x18(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lprop_new_unacknowledged_5\n\t"
-      "movb 0x10(%%ebp), %%cl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%cl, %%cl\n\t"
-      "setne %%dl\n\t"
-      "leal 0x4(%%edx,%%edx,1), %%edx\n\t"
-      "cmpw %%dx, -0x8(%%ebp)\n\t"
-      "jl .Lprop_new_unacknowledged_5\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .Lprop_new_unacknowledged_6\n\t"
-      ".Lprop_new_unacknowledged_5:\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jmp .Lprop_new_unacknowledged_8\n\t"
-      ".Lprop_new_unacknowledged_6:\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lprop_new_unacknowledged_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9e\n\t"
-      "pushl $0x25f134\n\t"
-      "pushl $0x255f50\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lprop_new_unacknowledged_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9f\n\t"
-      "pushl $0x25f134\n\t"
-      "pushl $0x25f46c\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprop_new_unacknowledged_7:\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c3b410]\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c64400]\n\t"
-      "movw (%%esi), %%bx\n\t"
-      "pushl $0x138\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movw %%bx, (%%esi)\n\t"
-      ".Lprop_new_unacknowledged_8:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64170]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b645a0_dget), [c2f6e0] "m"(b645a0_c2f6e0), [c119610] "m"(b645a0_c119610), [assert] "m"(b645a0_assert), [exitfn] "m"(b645a0_exitfn), [c3b410] "m"(b645a0_c3b410), [c64400] "m"(b645a0_c64400), [memset] "m"(b645a0_memset), [c64170] "m"(b645a0_c64170)
-      : "memory");
+  char *actor;
+  char *prop;
+  int prop_handle;
+  int best_handle;
+  int alt_handle;
+  float best_vis;
+  float alt_vis;
+  int match_count;
+  char out_flag;
+  int16_t threshold;
+  float vis;
+  int16_t status;
+
+  best_handle = -1;
+  alt_handle = -1;
+  best_vis = 3.4028235e38f;
+  alt_vis = 3.4028235e38f;
+  match_count = 0;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  prop_handle = *(int *)(actor + 0x50);
+  while (prop_handle != -1) {
+    prop = (char *)datum_get(prop_data, prop_handle);
+    status = *(int16_t *)(prop + 0x24);
+    if (status >= 4 && status <= 5 && *(int *)(prop + 0xc) == -1) {
+      vis = *(float *)(prop + 0x11c);
+      out_flag = 0;
+      if (actor_perception_desire_prop(
+              actor_handle, -1, *(int *)(prop + 0x18), *(int *)(prop + 0x1c),
+              *(char *)(prop + 0x63), *(char *)(prop + 0x12e),
+              *(char *)(prop + 0x60), *(char *)(prop + 0x127),
+              *(int16_t *)(prop + 0x76), *(int16_t *)(prop + 0x6a), vis,
+              *(int *)(prop + 0x20), &out_flag)) {
+        if (*(char *)(prop + 0x60) != friendly) {
+          prop_handle = *(int *)(prop + 8);
+          continue;
+        }
+        match_count++;
+        if (out_flag == 0) {
+          prop_handle = *(int *)(prop + 8);
+          continue;
+        }
+        if (*(float *)(prop + 0x11c) <= alt_vis) {
+          alt_handle = prop_handle;
+          alt_vis = *(float *)(prop + 0x11c);
+        }
+      } else if (*(float *)(prop + 0x11c) <= best_vis) {
+        best_handle = prop_handle;
+        best_vis = *(float *)(prop + 0x11c);
+      }
+    }
+    prop_handle = *(int *)(prop + 8);
+  }
+
+  prop_handle = best_handle;
+  if (prop_handle == -1) {
+    prop_handle = alt_handle;
+    if (prop_handle == -1)
+      goto allocate_new;
+    threshold = (int16_t)(friendly ? 6 : 4);
+    if (match_count < threshold)
+      goto allocate_new;
+    if (prop_handle == -1)
+      goto allocate_new;
+  }
+
+  prop = (char *)datum_get(prop_data, prop_handle);
+  if (*(int *)(prop + 0xc) != -1) {
+    display_assert("prop->parent_prop_index == NONE",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x9e, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(prop + 0xc) != -1) {
+    display_assert("prop->parent_prop_index == NONE",
+                   "c:\\halo\\SOURCE\\ai\\props.c", 0x9f, 1);
+    system_exit(-1);
+  }
+  FUN_0003b410(actor_handle, prop_handle, -1);
+  FUN_00064400(actor_handle, prop_handle);
+  {
+    int16_t saved_type = *(int16_t *)prop;
+    csmemset(prop, 0, 0x138);
+    *(int16_t *)prop = saved_type;
+  }
+  prop_add(actor_handle, prop_handle, unit_handle);
+  return prop_handle;
+
+allocate_new:
+  prop_handle = data_new_at_index(prop_data);
+  prop_add(actor_handle, prop_handle, unit_handle);
+  return prop_handle;
 }
-#else
-#error "prop_new_unacknowledged: clang naked draft required"
-#endif
 
 
 /* FUN_000647c0 (0x647c0) — readable C lift.

@@ -1801,142 +1801,77 @@ FUN_00015250_tail:
   }
 }
 
-/* FUN_000153e0 (0x153e0) — XBE naked draft (batch 75). */
-#if defined(__clang__)
-static void *(*const b153e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b153e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b153e0_exitfn)(int) = system_exit;
-static scenario_t * (*const b153e0_c18e380)(void) = global_scenario_get;
-static void *(*const b153e0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b153e0_c2a3f0)(int actor_handle) = FUN_0002a3f0;
-static float (*const b153e0_c3bd50)(int actor_handle) = actor_destination_tolerance;
-
-__attribute__((naked, noinline))
-bool FUN_000153e0(int actor_handle __attribute__((unused)))
+/* FUN_000153e0 (0x153e0) — readable C lift (restored pre-naked)
+ * Tests whether the actor's flee target position has been reached.
+ * Looks up the firing position from the encounter block using the actor's
+ * prop encounter handle and cached look target index, computes the squared
+ * distance to the actor's current position, and compares against
+ * actor_destination_tolerance.  If within range and the prop at the target
+ * has a seat other than 0 or 1 (driver/passenger), the target is reached.
+ * Returns false if no valid encounter or firing position, or if a prop
+ * with seat 0/1 blocks the position.
+ *
+ * Confirmed: datum_get(actor_data, actor_handle) at entry; assert on
+ *   !actor->meta.swarm (line 0x1d6 in action_flee.c).
+ * Confirmed: global_scenario_get + tag_block_get_element chain to resolve
+ *   the encounter block and firing position.
+ * Confirmed: float subtraction chain at 0x15498-0x154af computes dx/dy/dz;
+ *   squared-distance comparison at 0x154b5-0x154c9 (FPU: FMUL/FADDP/FCOMPP).
+ * Confirmed: prop seat check (0x38) at 0x154fa-0x15503; seat 0 or 1 returns
+ *   false (vehicle driver/passenger seats block the flee target).
+ * Confirmed: FUN_0002a3f0 short-circuit — if the actor is already fleeing
+ *   with the same target index (0x46c==3 && 0x470==0x3b8), returns true. */
+bool FUN_000153e0(int actor_handle)
 {
-  __asm__ volatile(
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000153e0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1d6\n\t"
-      "pushl $0x253504\n\t"
-      "pushl $0x253380\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000153e0_1:\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000153e0_5\n\t"
-      "cmpw $-1, 0x3b8(%%esi)\n\t"
-      "je .LFUN_000153e0_5\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x3b8(%%esi), %%ecx\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x98, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c2a3f0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000153e0_2\n\t"
-      "cmpw $3, 0x46c(%%esi)\n\t"
-      "jne .LFUN_000153e0_2\n\t"
-      "movw 0x470(%%esi), %%dx\n\t"
-      "cmpw 0x3b8(%%esi), %%dx\n\t"
-      "jne .LFUN_000153e0_2\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000153e0_2:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c3bd50]\n\t"
-      "flds (%%edi)\n\t"
-      "fsubs 0x12c(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fsubs 0x130(%%esi)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fsubs 0x134(%%esi)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(4)\n\t"
-      ".byte 0xd8, 0xcd\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "xorb %%al, %%al\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_000153e0_6\n\t"
-      "movl 0xb8(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000153e0_4\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x38(%%eax), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_000153e0_3\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .LFUN_000153e0_3\n\t"
-      "xorb %%al, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "sete %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000153e0_3:\n\t"
-      "movb $1, %%al\n\t"
-      ".LFUN_000153e0_4:\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "sete %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000153e0_5:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".LFUN_000153e0_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b153e0_dget), [assert] "m"(b153e0_assert), [exitfn] "m"(b153e0_exitfn), [c18e380] "m"(b153e0_c18e380), [elem] "m"(b153e0_elem), [c2a3f0] "m"(b153e0_c2a3f0), [c3bd50] "m"(b153e0_c3bd50)
-      : "memory");
+  char *actor;
+  char *encounter;
+  float *firing_pos;
+  float threshold;
+  float dx;
+  float dy;
+  float dz;
+  float dist_sq;
+  int prop_handle;
+  char *prop;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (*(char *)(actor + 0x6) != 0) {
+    display_assert("!actor->meta.swarm", "c:\\halo\\SOURCE\\ai\\action_flee.c",
+                   0x1d6, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(actor + 0x34) == -1 || *(short *)(actor + 0x3b8) == -1)
+    return false;
+
+  encounter =
+    (char *)tag_block_get_element((char *)global_scenario_get() + 0x42c,
+                                  *(int *)(actor + 0x34) & 0xffff, 0xb0);
+  firing_pos = (float *)tag_block_get_element(
+    encounter + 0x98, (int)*(short *)(actor + 0x3b8), 0x18);
+
+  if (FUN_0002a3f0(actor_handle) != 0 && *(short *)(actor + 0x46c) == 3 &&
+      *(short *)(actor + 0x470) == *(short *)(actor + 0x3b8))
+    return true;
+
+  threshold = actor_destination_tolerance(actor_handle);
+
+  dx = firing_pos[0] - *(float *)(actor + 0x12c);
+  dy = firing_pos[1] - *(float *)(actor + 0x130);
+  dz = firing_pos[2] - *(float *)(actor + 0x134);
+  dist_sq = dx * dx + dy * dy + dz * dz;
+
+  if (dist_sq < threshold * threshold) {
+    prop_handle = *(int *)(actor + 0xb8);
+    if (prop_handle != -1) {
+      prop = (char *)datum_get(prop_data, prop_handle);
+      if (*(short *)(prop + 0x38) == 0 || *(short *)(prop + 0x38) == 1)
+        return false;
+      return true;
+    }
+    return true;
+  }
+  return false;
 }
-#else
-#error "FUN_000153e0: clang naked draft required"
-#endif
 
 
 /* FUN_00015520 (0x15520) — XBE naked draft (batch 69). */
