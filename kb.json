@@ -4385,7 +4385,8 @@
         {
           "addr": "0x40a80",
           "decl": "void ai_disconnect_from_structure_bsp(void);",
-          "ported": false
+          "ported": true,
+          "name": "ai_disconnect_from_structure_bsp"
         },
         {
           "addr": "0x40f80",

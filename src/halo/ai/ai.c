@@ -2860,469 +2860,108 @@ void ai_handle_unit_effect(int unit_handle, int effect_type, int priority)
 }
 
 
-/* ai_disconnect_from_structure_bsp (0x40a80) — XBE naked draft (batch 106). */
-#if defined(__clang__)
-static scenario_t * (*const b40a80_c18e380)(void) = global_scenario_get;
-static void *(*const b40a80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b40a80_c59a00)(int *iter, int clump_handle) = encounter_actor_iterator_new;
-static int (*const b40a80_c59a50)(int *iter) = encounter_actor_iterator_next;
-static char * (*const b40a80_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
-static void (*const b40a80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b40a80_exitfn)(int) = system_exit;
-static bool (*const b40a80_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
-static void (*const b40a80_c64540)(int *out, int actor_handle) = FUN_00064540;
-static int (*const b40a80_c64570)(int *iter) = FUN_00064570;
-static void * (*const b40a80_cba6c0)(void) = players_get_combined_pvs;
-static int (*const b40a80_c13d7f0)(int object_handle) = object_get_root_parent;
-static void *(*const b40a80_get)(int, int) = object_get_and_verify_type;
-static void (*const b40a80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b40a80_c3ae60)(int actor_handle, int unit_handle) = actor_swarm_detach_from_unit;
-static int (*const b40a80_c3edc0)(char flags, int unit_index, int actv_tag_index, int encounter_index, int squad_index, char param6, int exclude_actor_handle, char encounter_flag, short starting_location_index, short squad_position_index, unsigned short param11, char param12) = actor_create_for_unit;
-static void (*const b40a80_odel)(int) = object_delete;
-static void (*const b40a80_c3b5e0)(int actor_handle) = actor_flush_position_indices;
-static void (*const b40a80_c59480)(int actor_handle, char flag) = encounter_detach_actor;
-static void (*const b40a80_c59740)(int actor_handle) = encounterless_attach_actor;
-static void (*const b40a80_c5baa0)(int encounter_handle) = encounter_force_deactivate;
-static void (*const b40a80_c3b630)(int actor_handle) = actor_flush_structure_indices;
-
-__attribute__((naked, noinline))
+/* ai_disconnect_from_structure_bsp (0x40a80) — readable C lift. */
 void ai_disconnect_from_structure_bsp(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x174, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x42c(%%ebx), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "movl %%ebx, -0x34(%%ebp)\n\t"
-      "movl %%eax, -0x24(%%ebp)\n\t"
-      "jle .Lai_disconnect_from_structure_bsp_28\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lai_disconnect_from_structure_bsp_1:\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xd(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lai_disconnect_from_structure_bsp_27\n\t"
-      "cmpw $0, 0x2a(%%eax)\n\t"
-      "jle .Lai_disconnect_from_structure_bsp_27\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59a00]\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59a50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "je .Lai_disconnect_from_structure_bsp_27\n\t"
-      "jmp .Lai_disconnect_from_structure_bsp_3\n\t"
-      ".Lai_disconnect_from_structure_bsp_2:\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      ".Lai_disconnect_from_structure_bsp_3:\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "pushl $0x100\n\t"
-      "leal -0x174(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ecx\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c49ac0]\n\t"
-      "movl 0x270(%%esi), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_disconnect_from_structure_bsp_6\n\t"
-      "cmpw $5, 0x268(%%esi)\n\t"
-      "jl .Lai_disconnect_from_structure_bsp_6\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x24(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lai_disconnect_from_structure_bsp_5\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jg .Lai_disconnect_from_structure_bsp_5\n\t"
-      "cmpl $-1, 0xc(%%edi)\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8b9\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x25795c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_disconnect_from_structure_bsp_4:\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      ".Lai_disconnect_from_structure_bsp_5:\n\t"
-      "movb 0x12e(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_disconnect_from_structure_bsp_26\n\t"
-      "movl 0x88(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_disconnect_from_structure_bsp_26\n\t"
-      "cmpl $0x5a, %%eax\n\t"
-      "jge .Lai_disconnect_from_structure_bsp_26\n\t"
-      "flds 0x11c(%%edi)\n\t"
-      "fcomps 0x253f34\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lai_disconnect_from_structure_bsp_26\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lai_disconnect_from_structure_bsp_10\n\t"
-      ".Lai_disconnect_from_structure_bsp_6:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x3e(%%esi), %%dx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ca7a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_26\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x2c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_disconnect_from_structure_bsp_26\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lai_disconnect_from_structure_bsp_7:\n\t"
-      "movb 0x12e(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lai_disconnect_from_structure_bsp_9\n\t"
-      "cmpw $2, 0x32(%%eax)\n\t"
-      "jge .Lai_disconnect_from_structure_bsp_8\n\t"
-      "flds 0x11c(%%eax)\n\t"
-      "fcomps 0x254644\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lai_disconnect_from_structure_bsp_9\n\t"
-      ".Lai_disconnect_from_structure_bsp_8:\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lai_disconnect_from_structure_bsp_9:\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64570]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_7\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_disconnect_from_structure_bsp_26\n\t"
-      ".Lai_disconnect_from_structure_bsp_10:\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_disconnect_from_structure_bsp_24\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_disconnect_from_structure_bsp_26\n\t"
-      "movl 0x6325a0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[cba6c0]\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpw %%bx, 0x2(%%edi)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "jle .Lai_disconnect_from_structure_bsp_15\n\t"
-      ".Lai_disconnect_from_structure_bsp_11:\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "movl 0x18(%%edi,%%edx,4), %%eax\n\t"
-      "leal 0x18(%%edi,%%edx,4), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d7f0]\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movw 0x4c(%%eax), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lai_disconnect_from_structure_bsp_12\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "sarl $5, %%eax\n\t"
-      "testl %%edx, (%%ecx,%%eax,4)\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_14\n\t"
-      ".Lai_disconnect_from_structure_bsp_12:\n\t"
-      "cmpw $0x10, -0x8(%%ebp)\n\t"
-      "jl .Lai_disconnect_from_structure_bsp_13\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8eb\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x257918\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_disconnect_from_structure_bsp_13:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "incl %%eax\n\t"
-      "movl %%ecx, -0x74(%%ebp,%%edx,4)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      ".Lai_disconnect_from_structure_bsp_14:\n\t"
-      "incl %%ebx\n\t"
-      "cmpw 0x2(%%edi), %%bx\n\t"
-      "jl .Lai_disconnect_from_structure_bsp_11\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_16\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      ".Lai_disconnect_from_structure_bsp_15:\n\t"
-      "movb 0x5aca63, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_disconnect_from_structure_bsp_24\n\t"
-      "leal -0x174(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x2578e4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lai_disconnect_from_structure_bsp_24\n\t"
-      ".Lai_disconnect_from_structure_bsp_16:\n\t"
-      "movswl 0x2(%%edi), %%edi\n\t"
-      "cmpw %%di, %%bx\n\t"
-      "movl %%edi, -0x30(%%ebp)\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_17\n\t"
-      "movb 0x5aca63, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_disconnect_from_structure_bsp_26\n\t"
-      "leal -0x174(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2578b8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lai_disconnect_from_structure_bsp_26\n\t"
-      ".Lai_disconnect_from_structure_bsp_17:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jle .Lai_disconnect_from_structure_bsp_21\n\t"
-      "movzwl %%bx, %%ecx\n\t"
-      "leal -0x74(%%ebp), %%edi\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "jmp .Lai_disconnect_from_structure_bsp_18\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_disconnect_from_structure_bsp_18:\n\t"
-      "movl (%%edi), %%esi\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c3ae60]\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $2\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl 0x34(%%eax), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x3a(%%eax), %%cx\n\t"
-      "movl 0x5c(%%eax), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "call *%[c3edc0]\n\t"
-      "addl $0x38, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_19\n\t"
-      "pushl %%esi\n\t"
-      "call *%[odel]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .Lai_disconnect_from_structure_bsp_20\n\t"
-      ".Lai_disconnect_from_structure_bsp_19:\n\t"
-      "incl -0x8(%%ebp)\n\t"
-      ".Lai_disconnect_from_structure_bsp_20:\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "addl $4, %%edi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_18\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x30(%%ebp), %%edi\n\t"
-      ".Lai_disconnect_from_structure_bsp_21:\n\t"
-      "movb 0x5aca63, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lai_disconnect_from_structure_bsp_23\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "movl $0x2578a8, %%ecx\n\t"
-      "jl .Lai_disconnect_from_structure_bsp_22\n\t"
-      "movl $0x25386f, %%ecx\n\t"
-      ".Lai_disconnect_from_structure_bsp_22:\n\t"
-      "pushl %%ecx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movswl %%di, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x174(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x257878\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".Lai_disconnect_from_structure_bsp_23:\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      ".Lai_disconnect_from_structure_bsp_24:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_disconnect_from_structure_bsp_26\n\t"
-      "movb 0x5aca63, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_disconnect_from_structure_bsp_25\n\t"
-      "leal -0x174(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25784c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lai_disconnect_from_structure_bsp_25:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movw 0x3a(%%esi), %%cx\n\t"
-      "movl %%eax, 0x30(%%esi)\n\t"
-      "movw %%cx, 0x38(%%esi)\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c3b5e0]\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59480]\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59740]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lai_disconnect_from_structure_bsp_26:\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59a50]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_2\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      "movl -0x34(%%ebp), %%ebx\n\t"
-      ".Lai_disconnect_from_structure_bsp_27:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c5baa0]\n\t"
-      "movl -0x24(%%ebp), %%eax\n\t"
-      "movl 0x42c(%%ebx), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0x24(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "jl .Lai_disconnect_from_structure_bsp_1\n\t"
-      ".Lai_disconnect_from_structure_bsp_28:\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movl 0x8(%%eax), %%esi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "je .Lai_disconnect_from_structure_bsp_33\n\t"
-      ".Lai_disconnect_from_structure_bsp_29:\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x9(%%eax), %%cl\n\t"
-      "movl 0x2c(%%eax), %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_30\n\t"
-      "pushl $1\n\t"
-      "pushl $0x94a\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x257830\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_disconnect_from_structure_bsp_30:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c3b630]\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64570]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_disconnect_from_structure_bsp_32\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lai_disconnect_from_structure_bsp_31:\n\t"
-      "leal -0x2c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movw %%di, 0x100(%%eax)\n\t"
-      "movl %%edi, 0xfc(%%eax)\n\t"
-      "movl %%edi, 0xec(%%eax)\n\t"
-      "call *%[c64570]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_31\n\t"
-      ".Lai_disconnect_from_structure_bsp_32:\n\t"
-      "cmpl %%edi, %%ebx\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "jne .Lai_disconnect_from_structure_bsp_29\n\t"
-      ".Lai_disconnect_from_structure_bsp_33:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b40a80_c18e380), [dget] "m"(b40a80_dget), [c59a00] "m"(b40a80_c59a00), [c59a50] "m"(b40a80_c59a50), [c49ac0] "m"(b40a80_c49ac0), [assert] "m"(b40a80_assert), [exitfn] "m"(b40a80_exitfn), [ca7a30] "m"(b40a80_ca7a30), [c64540] "m"(b40a80_c64540), [c64570] "m"(b40a80_c64570), [cba6c0] "m"(b40a80_cba6c0), [c13d7f0] "m"(b40a80_c13d7f0), [get] "m"(b40a80_get), [c8f390] "m"(b40a80_c8f390), [c3ae60] "m"(b40a80_c3ae60), [c3edc0] "m"(b40a80_c3edc0), [odel] "m"(b40a80_odel), [c3b5e0] "m"(b40a80_c3b5e0), [c59480] "m"(b40a80_c59480), [c59740] "m"(b40a80_c59740), [c5baa0] "m"(b40a80_c5baa0), [c3b630] "m"(b40a80_c3b630)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+  int local_10 = 0;
+  int local_1c = 0;
+
+  global_scenario_get();
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), local_10);
+  /* test (char)ecx, (char)ecx -> je 0x40eae */
+  /* relift: cmp word ptr [eax + 0x2a], 0 -> jle 0x40eae */
+  encounter_actor_iterator_new((void *)0, local_10);
+  encounter_actor_iterator_next((void *)0);
+  ai_debug_describe_actor(local_1c, -1, 1, (void *)0, 256);
+  /* cmp eax, -1 -> je 0x40be0 */
+  /* relift: cmp word ptr [esi + 0x268], 5 -> jl 0x40be0 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
+  /* cmp (int16_t)eax, 4 -> jl 0x40b9a */
+  /* cmp (int16_t)eax, 5 -> jg 0x40b9a */
+  /* relift: cmp dword ptr [edi + 0xc], -1 -> jne 0x40b85 */
+  display_assert((char *)0x0025795c, (char *)0x002575c0, 2233, 1);
+  system_exit(-1);
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
+  /* test (char)eax, (char)eax -> je 0x40e91 */
+  /* cmp eax, -1 -> je 0x40e91 */
+  /* cmp eax, 0x5a -> jge 0x40e91 */
+  /* relift: relift: fcomp dword ptr [0x253f34] */
+  game_allegiance_get_team_is_friendly(0, 1);
+  /* test (char)eax, (char)eax -> jne 0x40e91 */
+  FUN_00064540((void *)0, local_1c);
+  FUN_00064570((void *)0);
+  /* test eax, eax -> je 0x40e91 */
+  /* test (char)ecx, (char)ecx -> je 0x40c48 */
+  /* relift: cmp word ptr [eax + 0x32], 2 -> jge 0x40c44 */
+  /* relift: relift: fcomp dword ptr [0x254644] */
+  FUN_00064570((void *)0);
+  /* test eax, eax -> jne 0x40c20 */
+  /* test (char)eax, (char)eax -> je 0x40e91 */
+  /* test (char)eax, (char)eax -> je 0x40e3d */
+  /* cmp eax, -1 -> je 0x40e91 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a0), 0);
+  players_get_combined_pvs();
+  object_get_root_parent(0);
+  object_get_and_verify_type(eax, -1);
+  /* cmp (int16_t)eax, 0xffff -> je 0x40ce3 */
+  /* relift: test dword ptr [ecx + eax*4], edx -> jne 0x40d1a */
+  /* relift: cmp word ptr [ebp - 8], 0x10 -> jl 0x40d0a */
+  display_assert((char *)0x00257918, (char *)0x002575c0, 2283, 1);
+  system_exit(-1);
+  /* relift: cmp (int16_t)ebx, word ptr [edi + 2] -> jl 0x40ca3 */
+  /* test (int16_t)ebx, (int16_t)ebx -> jne 0x40d54 */
+  /* relift: relift: mov (char)eax, byte ptr [0x5aca63] */
+  /* test (char)eax, (char)eax -> je 0x40e3d */
+  error(2, (char *)0x002578e4);
+  /* relift: relift: mov (char)eax, byte ptr [0x5aca63] */
+  /* test (char)eax, (char)eax -> je 0x40e91 */
+  error(2, (char *)0x002578b8);
+  actor_swarm_detach_from_unit(local_1c, 0);
+  actor_create_for_unit(1, 0, 0, 0, 0, 0, local_1c, 0, 2, 0, -1, 0);
+  /* cmp eax, -1 -> jne 0x40de9 */
+  object_delete(0);
+  /* relift: relift: mov (char)ecx, byte ptr [0x5aca63] */
+  /* test (char)ecx, (char)ecx -> je 0x40e3a */
+  error(2, (char *)0x00257878);
+  /* test (char)eax, (char)eax -> je 0x40e91 */
+  /* relift: relift: mov (char)eax, byte ptr [0x5aca63] */
+  /* test (char)eax, (char)eax -> je 0x40e63 */
+  error(2, (char *)0x0025784c);
+  actor_flush_position_indices(local_1c);
+  encounter_detach_actor(local_1c, 0);
+  encounterless_attach_actor(local_1c);
+  encounter_actor_iterator_next((void *)0);
+  encounter_force_deactivate(local_10);
+  /* cmp esi, edi -> je 0x40f6d */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
+  /* test (char)ecx, (char)ecx -> jne 0x40f1e */
+  display_assert((char *)0x00257830, (char *)0x002575c0, 2378, 1);
+  system_exit(local_10);
+  actor_flush_structure_indices(0);
+  FUN_00064540((void *)0, 0);
+  FUN_00064570((void *)0);
+  /* test eax, eax -> je 0x40f63 */
+  FUN_00064570((void *)0);
+  /* test eax, eax -> jne 0x40f40 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
+  (void)local_10;
+  (void)local_1c;
 }
-#else
-#error "ai_disconnect_from_structure_bsp: clang naked draft required"
-#endif
+
 
 
 /* ai_consider_major_upgrade (0x41250) — XBE naked draft (batch 225). */
