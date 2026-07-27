@@ -8496,12 +8496,11 @@ void FUN_001659f0(void)
   *(unsigned int *)0x47df04 = 0;
 }
 
-/* 0x165a00 */
+/* FUN_00165a00 (0x165a00) — readable C lift (ret thunk). */
 void FUN_00165a00(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
 }
+
 
 /* FUN_00165a10 (0x165a10) — XBE naked draft (batch 325). */
 #if defined(__clang__)

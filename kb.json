@@ -38940,7 +38940,7 @@
         {
           "addr": "0x165a00",
           "decl": "void FUN_00165a00(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x165a10",
