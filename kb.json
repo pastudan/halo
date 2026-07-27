@@ -4411,7 +4411,8 @@
         {
           "addr": "0x41e80",
           "decl": "void ai_handle_editing(void);",
-          "ported": false
+          "ported": true,
+          "name": "ai_handle_editing"
         }
       ],
       "name": "ai.obj",

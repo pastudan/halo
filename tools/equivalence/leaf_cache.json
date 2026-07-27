@@ -16,7 +16,7 @@
   },
   "0x1": {
     "confidence": "weak",
-    "coverage_pct": 5.1
+    "coverage_pct": 2.3
   },
   "0x10017144": {
     "confidence": "moderate",
@@ -1873,6 +1873,9 @@
   "0x41d59bf2": {
     "confidence": "moderate",
     "coverage_pct": 37.4
+  },
+  "0x41e80": {
+    "class": "non_leaf"
   },
   "0x41f1793f": {
     "confidence": "moderate",

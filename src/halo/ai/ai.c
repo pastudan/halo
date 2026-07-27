@@ -3823,463 +3823,103 @@ char ai_test_ballistic_line_of_fire(int actor_handle __attribute__((unused)), in
 #endif
 
 
-/* ai_handle_editing (0x41e80) — XBE naked draft (batch 106). */
-#if defined(__clang__)
-static scenario_t * (*const b41e80_c18e380)(void) = global_scenario_get;
-static void *(*const b41e80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b41e80_elem)(void *, int, int) = tag_block_get_element;
-static char * (*const b41e80_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b41e80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b41e80_exitfn)(int) = system_exit;
-static void (*const b41e80_c8dae0)(void *dest, const void *src, unsigned int size) = csmemmove;
-static void *(*const b41e80_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b41e80_c59a00)(int *iter, int clump_handle) = encounter_actor_iterator_new;
-static int (*const b41e80_c59a50)(int *iter) = encounter_actor_iterator_next;
-static void (*const b41e80_c3cf10)(int actor_handle, char by_player, char no_delete) = actor_kill;
-static void (*const b41e80_c16ff0)(int actor_handle) = FUN_00016ff0;
-static void (*const b41e80_c3b5e0)(int actor_handle) = actor_flush_position_indices;
-static void (*const b41e80_c59b10)(void *iter, char flag) = encounter_iterator_next;
-static int (*const b41e80_c59b50)(void *iter) = FUN_00059b50;
-static void (*const b41e80_c42ca0)(void) = ai_communication_dispose_from_old_map;
-static void (*const b41e80_c540e0)(void) = ai_profile_dispose_from_old_map;
-static void (*const b41e80_c58fb0)(void) = encounter_compute_activation_cluster_bit_vector;
-static void (*const b41e80_c64160)(void) = FUN_00064160;
-static void (*const b41e80_c3aa90)(void) = actors_dispose_from_old_map;
-static void (*const b41e80_c5dfb0)(void) = FUN_0005dfb0;
-static void (*const b41e80_c53670)(void) = ai_debug_lineofsight_reset;
-static void (*const b41e80_c48fa0)(void) = ai_debug_dispose_from_old_map;
-static void (*const b41e80_c41090)(void) = ai_initialize_for_new_map;
-
-__attribute__((naked, noinline))
+/* ai_handle_editing (0x41e80) — readable C lift. */
 void ai_handle_editing(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x38, %%esp\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "je .Lai_handle_editing_30\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jl .Lai_handle_editing_26\n\t"
-      "movl 0x42c(%%eax), %%edx\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jge .Lai_handle_editing_26\n\t"
-      "movl 0x5ab270, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x80(%%eax), %%bx\n\t"
-      "subw 0x6(%%esi), %%bx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movswl 0x8c(%%eax), %%eax\n\t"
-      "subw 0xa(%%esi), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .Lai_handle_editing_3\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x42c(%%ecx), %%edx\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "decl %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x6(%%eax), %%cx\n\t"
-      "addw 0x4(%%eax), %%cx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "movswl %%cx, %%edi\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "addl %%edi, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $0x400, %%eax\n\t"
-      "jle .Lai_handle_editing_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6b0\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x400\n\t"
-      "pushl $0x257b8c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_handle_editing_1:\n\t"
-      "movswl 0x4(%%esi), %%eax\n\t"
-      "movswl 0x6(%%esi), %%ecx\n\t"
-      "subl %%eax, %%edi\n\t"
-      "leal (%%eax,%%ecx,1), %%edx\n\t"
-      "shll $5, %%edx\n\t"
-      "subl %%ecx, %%edi\n\t"
-      "movl 0x5ab278, %%ecx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "addl $0x80, %%edx\n\t"
-      "movl (%%edx), %%edx\n\t"
-      "addl %%eax, %%edx\n\t"
-      "shll $5, %%edx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8dae0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jle .Lai_handle_editing_2\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movswl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x5ab278, %%edx\n\t"
-      "shll $5, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0x6(%%esi), %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "shll $5, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lai_handle_editing_2:\n\t"
-      "addw %%bx, 0x6(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".Lai_handle_editing_3:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lai_handle_editing_6\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x42c(%%edx), %%eax\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movw 0xa(%%eax), %%cx\n\t"
-      "addw 0x8(%%eax), %%cx\n\t"
-      "movswl -0x4(%%ebp), %%eax\n\t"
-      "movswl %%cx, %%edi\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "addl %%edi, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $0x100, %%eax\n\t"
-      "jle .Lai_handle_editing_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6c4\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x257b50\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_handle_editing_4:\n\t"
-      "movswl 0x8(%%esi), %%eax\n\t"
-      "movswl 0xa(%%esi), %%ecx\n\t"
-      "subl %%eax, %%edi\n\t"
-      "leal (%%eax,%%ecx,1), %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "subl %%ecx, %%edi\n\t"
-      "movl 0x5ab274, %%ecx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl 0x8c(%%edx), %%edx\n\t"
-      "addl %%eax, %%edx\n\t"
-      "shll $4, %%edx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8dae0]\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .Lai_handle_editing_5\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movswl 0xa(%%esi), %%ecx\n\t"
-      "movl 0x5ab274, %%edx\n\t"
-      "shll $4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0x8(%%esi), %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lai_handle_editing_5:\n\t"
-      "addw %%di, 0xa(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".Lai_handle_editing_6:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jne .Lai_handle_editing_7\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lai_handle_editing_13\n\t"
-      ".Lai_handle_editing_7:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x42c(%%edx), %%ecx\n\t"
-      "leal 0x1(%%edi), %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lai_handle_editing_13\n\t"
-      "nop\n\t"
-      ".Lai_handle_editing_8:\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addw %%bx, 0x4(%%edi)\n\t"
-      "movw 0x4(%%edi), %%ax\n\t"
-      "movswl 0x6(%%esi), %%ecx\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lai_handle_editing_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6dc\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x257b00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_handle_editing_9:\n\t"
-      "movswl 0x6(%%edi), %%ecx\n\t"
-      "movswl 0x4(%%edi), %%edx\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "cmpl $0x400, %%ecx\n\t"
-      "jle .Lai_handle_editing_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6dd\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x257aa8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_handle_editing_10:\n\t"
-      "movw -0x4(%%ebp), %%ax\n\t"
-      "addw %%ax, 0x8(%%edi)\n\t"
-      "movw 0x8(%%edi), %%ax\n\t"
-      "movswl 0x8(%%esi), %%ecx\n\t"
-      "movswl 0xa(%%esi), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lai_handle_editing_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6e0\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x257a50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_handle_editing_11:\n\t"
-      "movswl 0xa(%%edi), %%ecx\n\t"
-      "movswl 0x8(%%edi), %%edx\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "cmpl $0x100, %%ecx\n\t"
-      "jle .Lai_handle_editing_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6e1\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x2579f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_handle_editing_12:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x42c(%%ecx), %%edx\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .Lai_handle_editing_8\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".Lai_handle_editing_13:\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59a00]\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59a50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "je .Lai_handle_editing_29\n\t"
-      "jmp .Lai_handle_editing_14\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_handle_editing_14:\n\t"
-      "movw 0x3a(%%esi), %%ax\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "movl -0xc(%%ebp), %%edi\n\t"
-      "jl .Lai_handle_editing_15\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "cmpl 0x80(%%edi), %%ecx\n\t"
-      "jl .Lai_handle_editing_18\n\t"
-      ".Lai_handle_editing_15:\n\t"
-      "movl 0x80(%%edi), %%ecx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "leal 0x80(%%edi), %%eax\n\t"
-      "je .Lai_handle_editing_17\n\t"
-      "pushl $0xe8\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw %%bx, 0x3a(%%esi)\n\t"
-      "movw 0x22(%%eax), %%dx\n\t"
-      "movw %%dx, 0x3c(%%esi)\n\t"
-      "movw 0x22(%%eax), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jl .Lai_handle_editing_16\n\t"
-      "movl 0x8c(%%edi), %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lai_handle_editing_18\n\t"
-      ".Lai_handle_editing_16:\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      "movw %%cx, 0x3c(%%esi)\n\t"
-      "jmp .Lai_handle_editing_19\n\t"
-      ".Lai_handle_editing_17:\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c3cf10]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lai_handle_editing_25\n\t"
-      ".Lai_handle_editing_18:\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      ".Lai_handle_editing_19:\n\t"
-      "movw 0x3c(%%esi), %%ax\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jl .Lai_handle_editing_20\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "cmpl 0x8c(%%edi), %%edx\n\t"
-      "jl .Lai_handle_editing_21\n\t"
-      ".Lai_handle_editing_20:\n\t"
-      "movw %%cx, 0x3c(%%esi)\n\t"
-      ".Lai_handle_editing_21:\n\t"
-      "movw 0x90(%%esi), %%ax\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jl .Lai_handle_editing_22\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x438(%%edx), %%edi\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jl .Lai_handle_editing_23\n\t"
-      ".Lai_handle_editing_22:\n\t"
-      "movw %%cx, 0x90(%%esi)\n\t"
-      ".Lai_handle_editing_23:\n\t"
-      "cmpw $0xb, 0x6c(%%esi)\n\t"
-      "jne .Lai_handle_editing_24\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c16ff0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lai_handle_editing_24:\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c3b5e0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lai_handle_editing_25:\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59a50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .Lai_handle_editing_14\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_handle_editing_26:\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl $0xffffffff, 0x5ac9f4\n\t"
-      "call *%[c59b10]\n\t"
-      "leal -0x38(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_handle_editing_28\n\t"
-      ".Lai_handle_editing_27:\n\t"
-      "movl -0x24(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c3cf10]\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_handle_editing_27\n\t"
-      ".Lai_handle_editing_28:\n\t"
-      "call *%[c42ca0]\n\t"
-      "call *%[c540e0]\n\t"
-      "call *%[c58fb0]\n\t"
-      "call *%[c64160]\n\t"
-      "call *%[c3aa90]\n\t"
-      "call *%[c5dfb0]\n\t"
-      "call *%[c53670]\n\t"
-      "call *%[c48fa0]\n\t"
-      "movl 0x632574, %%ecx\n\t"
-      "movb $0, 0x1(%%ecx)\n\t"
-      "call *%[c41090]\n\t"
-      ".Lai_handle_editing_29:\n\t"
-      "popl %%edi\n\t"
-      ".Lai_handle_editing_30:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b41e80_c18e380), [dget] "m"(b41e80_dget), [elem] "m"(b41e80_elem), [c8d9d0] "m"(b41e80_c8d9d0), [assert] "m"(b41e80_assert), [exitfn] "m"(b41e80_exitfn), [c8dae0] "m"(b41e80_c8dae0), [memset] "m"(b41e80_memset), [c59a00] "m"(b41e80_c59a00), [c59a50] "m"(b41e80_c59a50), [c3cf10] "m"(b41e80_c3cf10), [c16ff0] "m"(b41e80_c16ff0), [c3b5e0] "m"(b41e80_c3b5e0), [c59b10] "m"(b41e80_c59b10), [c59b50] "m"(b41e80_c59b50), [c42ca0] "m"(b41e80_c42ca0), [c540e0] "m"(b41e80_c540e0), [c58fb0] "m"(b41e80_c58fb0), [c64160] "m"(b41e80_c64160), [c3aa90] "m"(b41e80_c3aa90), [c5dfb0] "m"(b41e80_c5dfb0), [c53670] "m"(b41e80_c53670), [c48fa0] "m"(b41e80_c48fa0), [c41090] "m"(b41e80_c41090)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int local_10 = 0;
+  int local_18 = 0;
+  int local_24 = 0;
+  int local_c = 0;
+
+  global_scenario_get();
+  /* cmp ecx, edx -> jge 0x4230b */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
+  global_scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
+  /* cmp eax, 0x400 -> jle 0x41f7b */
+  csprintf((char *)0x005ab100, (char *)0x00257b8c);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(-1);
+  csmemmove((void *)(uintptr_t)*(int *)(local_c), (void *)0, 0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jle 0x41fde */
+  csmemset((void *)(uintptr_t)local_10, 0, 0);
+  /* test (int16_t)eax, (int16_t)eax -> je 0x420c7 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
+  /* cmp eax, 0x100 -> jle 0x42059 */
+  csprintf((char *)0x005ab100, (char *)0x00257b50);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(-1);
+  csmemmove((void *)(uintptr_t)*(int *)((char *)local_c + 0x8c), (void *)0, 0);
+  /* test (int16_t)edi, (int16_t)edi -> jle 0x420bd */
+  csmemset((void *)(uintptr_t)local_10, 0, 0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jne 0x420d5 */
+  /* test (int16_t)eax, (int16_t)eax -> je 0x421f9 */
+  /* cmp eax, ecx -> jge 0x421f9 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
+  /* cmp eax, ecx -> jge 0x4213a */
+  display_assert((char *)0x00257b00, (char *)0x002575c0, 1756, 1);
+  system_exit(-1);
+  /* cmp ecx, 0x400 -> jle 0x4216c */
+  display_assert((char *)0x00257aa8, (char *)0x002575c0, 1757, 1);
+  system_exit(-1);
+  /* cmp eax, ecx -> jge 0x421a9 */
+  display_assert((char *)0x00257a50, (char *)0x002575c0, 1760, 1);
+  system_exit(-1);
+  /* cmp ecx, 0x100 -> jle 0x421db */
+  display_assert((char *)0x002579f0, (char *)0x002575c0, 1761, 1);
+  system_exit(-1);
+  /* cmp eax, edx -> jl 0x420f0 */
+  encounter_actor_iterator_new((void *)0, 0);
+  encounter_actor_iterator_next((void *)0);
+  /* cmp esi, ebx -> je 0x42384 */
+  /* relift: cmp ecx, dword ptr [edi + 0x80] -> jl 0x42291 */
+  tag_block_get_element((void *)((char *)local_c + 0x80), 0, 232);
+  /* cmp (int16_t)eax, (int16_t)ebx -> jl 0x42278 */
+  /* cmp eax, ecx -> jl 0x42291 */
+  actor_kill(local_18, 0, 0);
+  /* cmp (int16_t)eax, (int16_t)ebx -> jl 0x422a8 */
+  /* relift: cmp edx, dword ptr [edi + 0x8c] -> jl 0x422ac */
+  /* cmp (int16_t)eax, (int16_t)ebx -> jl 0x422c8 */
+  /* cmp eax, edi -> jl 0x422cf */
+  /* relift: cmp word ptr [esi + 0x6c], 0xb -> jne 0x422e2 */
+  FUN_00016ff0(local_18);
+  actor_flush_position_indices(local_18);
+  encounter_actor_iterator_next((void *)0);
+  /* cmp esi, ebx -> jne 0x42220 */
+  /* mem[0x005ac9f4] = 0xffffffff */
+  encounter_iterator_next((void *)0, 0);
+  FUN_00059b50((void *)0);
+  /* test eax, eax -> je 0x4234d */
+  actor_kill(local_24, 0, 0);
+  FUN_00059b50((void *)0);
+  /* test eax, eax -> jne 0x42330 */
+  ai_communication_dispose_from_old_map();
+  ai_profile_dispose_from_old_map();
+  encounter_compute_activation_cluster_bit_vector();
+  FUN_00064160();
+  actors_dispose_from_old_map();
+  FUN_0005dfb0();
+  ai_debug_lineofsight_reset();
+  ai_debug_dispose_from_old_map();
+  ai_initialize_for_new_map();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)local_10;
+  (void)local_18;
+  (void)local_24;
+  (void)local_c;
 }
-#else
-#error "ai_handle_editing: clang naked draft required"
-#endif
+
 
