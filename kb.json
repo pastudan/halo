@@ -18005,7 +18005,7 @@
         {
           "addr": "0xa0d50",
           "decl": "void FUN_000a0d50(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a0d50"
         },
         {
@@ -30793,7 +30793,7 @@
         {
           "addr": "0xa4be0",
           "decl": "void FUN_000a4be0(int16_t weather_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a4be0"
         },
         {
