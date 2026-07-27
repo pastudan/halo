@@ -26802,8 +26802,8 @@
         },
         {
           "addr": "0x800d0",
-          "decl": "void FUN_000800d0(void);",
-          "ported": false
+          "decl": "void FUN_000800d0(unsigned short *vec, unsigned short *mat, unsigned short *out);",
+          "ported": true
         }
       ],
       "name": "tiff_file.obj",

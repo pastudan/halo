@@ -1023,116 +1023,63 @@ void FUN_00080070(const unsigned short *a, const unsigned short *b, unsigned sho
   tmp[3] = (unsigned short)(-(int)t);
   FUN_0007ff40(a, tmp, out);
 }
-/* FUN_000800d0 (0x800d0) — XBE naked draft (batch 250). */
-#if defined(__clang__)
-static void (*const b800d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b800d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_000800d0(void)
+/* FUN_000800d0 (0x800d0) — readable C lift from XBE leaf. */
+void FUN_000800d0(unsigned short *vec, unsigned short *mat, unsigned short *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0, -0x24(%%ebp)\n\t"
-      "movl $1, -0x20(%%ebp)\n\t"
-      "movl $2, -0x1c(%%ebp)\n\t"
-      "movl $3, -0x18(%%ebp)\n\t"
-      "movl $4, -0x14(%%ebp)\n\t"
-      "movl $5, -0x10(%%ebp)\n\t"
-      "movl $6, -0xc(%%ebp)\n\t"
-      "je .LFUN_000800d0_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_000800d0_1\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000800d0_2\n\t"
-      ".LFUN_000800d0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5f\n\t"
-      "pushl $0x265a54\n\t"
-      "pushl $0x265a40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000800d0_2:\n\t"
-      "movzwl 0x4(%%ebx), %%ecx\n\t"
-      "movzwl 0x6(%%ebx), %%edx\n\t"
-      "movzwl (%%ebx), %%esi\n\t"
-      "movzwl 0x2(%%ebx), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      ".LFUN_000800d0_3:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movzwl (%%ecx,%%eax,2), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "imull %%esi, %%edx\n\t"
-      "movl %%edx, %%ebx\n\t"
-      "andl $0xffff, %%ebx\n\t"
-      "addl %%ebx, -0x24(%%ebp,%%eax,4)\n\t"
-      "movl -0x20(%%ebp,%%eax,4), %%ebx\n\t"
-      "shrl $0x10, %%edx\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "imull %%edi, %%edx\n\t"
-      "movl %%ebx, -0x20(%%ebp,%%eax,4)\n\t"
-      "movl %%edx, %%ebx\n\t"
-      "andl $0xffff, %%ebx\n\t"
-      "addl %%ebx, -0x20(%%ebp,%%eax,4)\n\t"
-      "movl -0x1c(%%ebp,%%eax,4), %%ebx\n\t"
-      "shrl $0x10, %%edx\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "imull -0x8(%%ebp), %%ecx\n\t"
-      "imull -0x4(%%ebp), %%edx\n\t"
-      "movl %%ebx, -0x1c(%%ebp,%%eax,4)\n\t"
-      "movl %%edx, %%ebx\n\t"
-      "andl $0xffff, %%ebx\n\t"
-      "addl %%ebx, -0x1c(%%ebp,%%eax,4)\n\t"
-      "movl -0x18(%%ebp,%%eax,4), %%ebx\n\t"
-      "shrl $0x10, %%edx\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "movl %%ebx, -0x18(%%ebp,%%eax,4)\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0xffff, %%edx\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "movl %%ebx, -0x18(%%ebp,%%eax,4)\n\t"
-      "movl -0x14(%%ebp,%%eax,4), %%ebx\n\t"
-      "shrl $0x10, %%ecx\n\t"
-      "addl %%ecx, %%ebx\n\t"
-      "movl %%ebx, -0x14(%%ebp,%%eax,4)\n\t"
-      "incl %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "jb .LFUN_000800d0_3\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movw -0x24(%%ebp), %%cx\n\t"
-      "movw -0x20(%%ebp), %%dx\n\t"
-      "popl %%edi\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movw -0x1c(%%ebp), %%cx\n\t"
-      "movw %%dx, 0x2(%%eax)\n\t"
-      "movw -0x18(%%ebp), %%dx\n\t"
-      "popl %%esi\n\t"
-      "movw %%cx, 0x4(%%eax)\n\t"
-      "movw %%dx, 0x6(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b800d0_assert), [exitfn] "m"(b800d0_exitfn)
-      : "memory");
+  unsigned int acc[7];
+  unsigned int m00, m01, m10, m11;
+  unsigned int i;
+  extern char DAT_00265a54[];
+  extern char DAT_00265a40[];
+
+  if (vec == 0 || mat == 0 || out == 0) {
+    display_assert(DAT_00265a40, DAT_00265a54, 0x5f, 1);
+    system_exit(-1);
+  }
+
+  for (i = 0; i < 7; i++)
+    acc[i] = i;
+
+  m00 = mat[0];
+  m01 = mat[1];
+  m10 = mat[2];
+  m11 = mat[3];
+
+  for (i = 0; i < 4; i++) {
+    unsigned int v = vec[i];
+    unsigned int p;
+    unsigned int lo;
+    unsigned int hi;
+
+    p = v * m00;
+    lo = p & 0xffffu;
+    hi = p >> 16;
+    acc[i] += lo;
+    acc[i + 1] += hi;
+
+    p = v * m01;
+    lo = p & 0xffffu;
+    hi = p >> 16;
+    acc[i + 1] += lo;
+    acc[i + 2] += hi;
+
+    p = v * m10;
+    lo = p & 0xffffu;
+    hi = p >> 16;
+    acc[i + 2] += lo;
+    acc[i + 3] += hi;
+
+    p = v * m11;
+    lo = p & 0xffffu;
+    hi = p >> 16;
+    acc[i + 3] += lo;
+    acc[i + 4] += hi;
+  }
+
+  out[0] = (unsigned short)acc[0];
+  out[1] = (unsigned short)acc[1];
+  out[2] = (unsigned short)acc[2];
+  out[3] = (unsigned short)acc[3];
 }
-#else
-#error "FUN_000800d0: clang naked draft required"
-#endif
+
 
