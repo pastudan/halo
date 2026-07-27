@@ -24134,7 +24134,7 @@
         {
           "addr": "0x1908a0",
           "decl": "char shader_is_decal(void *shader);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x190930",
@@ -38796,7 +38796,8 @@
         {
           "addr": "0x160bd0",
           "decl": "void FUN_00160bd0(void);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00160bd0"
         },
         {
           "addr": "0x160be0",
