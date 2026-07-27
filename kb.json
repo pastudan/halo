@@ -13693,12 +13693,12 @@
         {
           "addr": "0xce6c0",
           "decl": "void input_abstraction_get_local_player_preferences(short local_player_index, void *preferences_out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce740",
           "decl": "void input_abstraction_update_local_player_preferences(short local_player_index, void *preferences_in);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce7f0",
@@ -13708,7 +13708,7 @@
         {
           "addr": "0xce840",
           "decl": "void input_abstraction_update_device_changes(int device_flags);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce8c0",

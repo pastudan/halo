@@ -1651,7 +1651,7 @@ static void (*const b11fdb0_exitfn)(int) = system_exit;
 static void *(*const b11fdb0_memset)(void *, int, unsigned int) = csmemset;
 static data_t * (*const b11fdb0_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
 static void (*const b11fdb0_c119b20)(data_t *data) = data_delete_all;
-static void (*const b11fdb0_c11fd50)(void) = FUN_0011fd50;
+static void (*const b11fdb0_c11fd50)(void *pool) = FUN_0011fd50;
 static void (*const b11fdb0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
 __attribute__((naked, noinline))
@@ -1791,7 +1791,7 @@ static void (*const b11ff70_chkstk)(void) = FUN_001d90e0;
 static void (*const b11ff70_c108e20)(void) = (void *)FUN_00108e20;
 static void (*const b11ff70_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b11ff70_exitfn)(int) = system_exit;
-static void (*const b11ff70_c11fd50)(void) = FUN_0011fd50;
+static void (*const b11ff70_c11fd50)(void *pool) = FUN_0011fd50;
 static void (*const b11ff70_c91da0)(void) = FUN_00091da0;
 static void (*const b11ff70_c1193f0)(data_t *data) = data_verify;
 static void *(*const b11ff70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
