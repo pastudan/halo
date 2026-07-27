@@ -938,207 +938,91 @@ void FUN_0007fa00(void)
 #endif
 
 
-/* FUN_0007ff40 (0x7ff40) — XBE naked draft (batch 258). */
-#if defined(__clang__)
-static void (*const b7ff40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7ff40_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_0007ff40(void)
+/* FUN_0007ff40 (0x7ff40) — readable C lift. */
+void FUN_0007ff40(const unsigned short *a, const unsigned short *b, unsigned short *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "je .LFUN_0007ff40_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0007ff40_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_0007ff40_2\n\t"
-      ".LFUN_0007ff40_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x21\n\t"
-      "pushl $0x265a54\n\t"
-      "pushl $0x265a40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0007ff40_2:\n\t"
-      "movzwl (%%ebx), %%ecx\n\t"
-      "movzwl (%%esi), %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl $0xffff, %%eax\n\t"
-      "setg %%cl\n\t"
-      "movw %%ax, (%%edi)\n\t"
-      "movzwl 0x2(%%esi), %%edx\n\t"
-      "movzwl 0x2(%%ebx), %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl $0xffff, %%eax\n\t"
-      "setg %%cl\n\t"
-      "movw %%ax, 0x2(%%edi)\n\t"
-      "movzwl 0x4(%%esi), %%edx\n\t"
-      "movzwl 0x4(%%ebx), %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl $0xffff, %%eax\n\t"
-      "setg %%cl\n\t"
-      "movw %%ax, 0x4(%%edi)\n\t"
-      "movzwl 0x6(%%esi), %%edx\n\t"
-      "movzwl 0x6(%%ebx), %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movw %%ax, 0x6(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b7ff40_assert), [exitfn] "m"(b7ff40_exitfn)
-      : "memory");
+  extern char DAT_00265a40[];
+  extern char DAT_00265a54[];
+  unsigned int sum;
+  unsigned int carry;
+
+  if (a == 0 || b == 0 || out == 0) {
+    display_assert(DAT_00265a40, DAT_00265a54, 0x21, 1);
+    system_exit(-1);
+  }
+  sum = (unsigned int)a[0] + (unsigned int)b[0];
+  carry = (sum > 0xffffu) ? 1u : 0u;
+  out[0] = (unsigned short)sum;
+  sum = (unsigned int)a[1] + (unsigned int)b[1] + carry;
+  carry = (sum > 0xffffu) ? 1u : 0u;
+  out[1] = (unsigned short)sum;
+  sum = (unsigned int)a[2] + (unsigned int)b[2] + carry;
+  carry = (sum > 0xffffu) ? 1u : 0u;
+  out[2] = (unsigned short)sum;
+  sum = (unsigned int)a[3] + (unsigned int)b[3] + carry;
+  out[3] = (unsigned short)sum;
 }
-#else
-#error "FUN_0007ff40: clang naked draft required"
-#endif
-
-
-/* FUN_0007ffe0 (0x7ffe0) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static void (*const b7ffe0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7ffe0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_0007ffe0 (0x7ffe0) — readable C lift (esi=src, ebx=dst register ABI). */
 void FUN_0007ffe0(void)
 {
-  __asm__ volatile(
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0007ffe0_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_0007ffe0_2\n\t"
-      ".LFUN_0007ffe0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3a\n\t"
-      "pushl $0x265a54\n\t"
-      "pushl $0x265a84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0007ffe0_2:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "negw %%ax\n\t"
-      "movw %%ax, (%%ebx)\n\t"
-      "cmpw $0, (%%esi)\n\t"
-      "je .LFUN_0007ffe0_3\n\t"
-      "movl $1, %%edi\n\t"
-      ".LFUN_0007ffe0_3:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2(%%esi), %%cx\n\t"
-      "addw %%di, %%cx\n\t"
-      "negl %%ecx\n\t"
-      "movw %%cx, 0x2(%%ebx)\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "je .LFUN_0007ffe0_4\n\t"
-      "movl $1, %%edi\n\t"
-      ".LFUN_0007ffe0_4:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%esi), %%dx\n\t"
-      "addw %%di, %%dx\n\t"
-      "negl %%edx\n\t"
-      "movw %%dx, 0x4(%%ebx)\n\t"
-      "cmpw $0, 0x4(%%esi)\n\t"
-      "je .LFUN_0007ffe0_5\n\t"
-      "movl $1, %%edi\n\t"
-      ".LFUN_0007ffe0_5:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "addw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "negl %%eax\n\t"
-      "movw %%ax, 0x6(%%ebx)\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b7ffe0_assert), [exitfn] "m"(b7ffe0_exitfn)
-      : "memory");
+  extern char DAT_00265a54[];
+  extern char DAT_00265a84[];
+  const unsigned short *src;
+  unsigned short *dst;
+  unsigned short flag;
+  unsigned int tmp;
+
+  __asm__ volatile("movl %%esi, %0" : "=r"(src));
+  __asm__ volatile("movl %%ebx, %0" : "=r"(dst));
+  flag = 0;
+  if (src == 0 || dst == 0) {
+    display_assert(DAT_00265a84, DAT_00265a54, 0x3a, 1);
+    system_exit(-1);
+  }
+  dst[0] = (unsigned short)(-(short)src[0]);
+  if (src[0] != 0)
+    flag = 1;
+  tmp = (unsigned int)src[1] + flag;
+  dst[1] = (unsigned short)(-(int)tmp);
+  if (src[1] != 0)
+    flag = 1;
+  tmp = (unsigned int)src[2] + flag;
+  dst[2] = (unsigned short)(-(int)tmp);
+  if (src[2] != 0)
+    flag = 1;
+  tmp = (unsigned int)src[3] + flag;
+  dst[3] = (unsigned short)(-(int)tmp);
 }
-#else
-#error "FUN_0007ffe0: clang naked draft required"
-#endif
-
-
-/* FUN_00080070 (0x80070) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static void (*const b80070_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80070_exitfn)(int) = system_exit;
-static void (*const b80070_c7ffe0)(void) = FUN_0007ffe0;
-static void (*const b80070_c7ff40)(void) = FUN_0007ff40;
-
-__attribute__((naked, noinline))
-void FUN_00080070(void)
+/* FUN_00080070 (0x80070) — readable C lift. */
+void FUN_00080070(const unsigned short *a, const unsigned short *b, unsigned short *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_00080070_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00080070_1\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00080070_2\n\t"
-      ".LFUN_00080070_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f\n\t"
-      "pushl $0x265a54\n\t"
-      "pushl $0x265a40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00080070_2:\n\t"
-      "leal -0x8(%%ebp), %%ebx\n\t"
-      "call *%[c7ffe0]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7ff40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80070_assert), [exitfn] "m"(b80070_exitfn), [c7ffe0] "m"(b80070_c7ffe0), [c7ff40] "m"(b80070_c7ff40)
-      : "memory");
+  extern char DAT_00265a40[];
+  extern char DAT_00265a54[];
+  unsigned short tmp[4];
+  unsigned short flag;
+  unsigned int t;
+
+  if (a == 0 || b == 0 || out == 0) {
+    display_assert(DAT_00265a40, DAT_00265a54, 0x4f, 1);
+    system_exit(-1);
+  }
+  /* inlined FUN_0007ffe0(esi=b, ebx=tmp) */
+  flag = 0;
+  tmp[0] = (unsigned short)(-(short)b[0]);
+  if (b[0] != 0)
+    flag = 1;
+  t = (unsigned int)b[1] + flag;
+  tmp[1] = (unsigned short)(-(int)t);
+  if (b[1] != 0)
+    flag = 1;
+  t = (unsigned int)b[2] + flag;
+  tmp[2] = (unsigned short)(-(int)t);
+  if (b[2] != 0)
+    flag = 1;
+  t = (unsigned int)b[3] + flag;
+  tmp[3] = (unsigned short)(-(int)t);
+  FUN_0007ff40(a, tmp, out);
 }
-#else
-#error "FUN_00080070: clang naked draft required"
-#endif
-
-
 /* FUN_000800d0 (0x800d0) — XBE naked draft (batch 250). */
 #if defined(__clang__)
 static void (*const b800d0_assert)(const char *, const char *, int, bool) = display_assert;

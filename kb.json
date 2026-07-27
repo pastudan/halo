@@ -26765,7 +26765,7 @@
         {
           "addr": "0x7ffe0",
           "decl": "void FUN_0007ffe0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80070",

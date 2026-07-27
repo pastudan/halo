@@ -1387,6 +1387,11 @@
     "confidence": "weak",
     "coverage_pct": 81.1
   },
+  "0x7ffe0": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 25.2
+  },
   "0x8": {
     "confidence": "high",
     "coverage_pct": 100.0
