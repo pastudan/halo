@@ -1619,13 +1619,11 @@ int saved_game_file_get_type(int handle)
   return handle & 0xf;
 }
 
-/* 0x1c29b0 */
+/* saved_game_files_notify_memory_units_changed (0x1c29b0) — readable C lift. */
 void saved_game_files_notify_memory_units_changed(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  *(unsigned char *)0x4eacc7 = 1;
 }
-
 /* saved_game_file_get_useable_untitled_profile_name (0x1c29c0) — XBE naked draft (batch 253). */
 #if defined(__clang__)
 static void (*const b1c29c0_assert)(const char *, const char *, int, bool) = display_assert;

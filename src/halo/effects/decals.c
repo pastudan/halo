@@ -330,52 +330,14 @@ void project_point2d(float *point_2d, float *plane, int16_t projection,
                       plane[proj_i];
 }
 
-/* triple_product3d (0x993b0) — XBE naked draft (batch 95). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-float triple_product3d(float *param_1 __attribute__((unused)), float *param_2 __attribute__((unused)), float *param_3 __attribute__((unused)))
+/* triple_product3d (0x993b0) — readable C lift: (a × b) · c. */
+float triple_product3d(float *a, float *b, float *c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "flds (%%eax)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds (%%eax)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls (%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float cx = a[1] * b[2] - a[2] * b[1];
+  float cy = a[2] * b[0] - a[0] * b[2];
+  float cz = a[0] * b[1] - a[1] * b[0];
+  return cx * c[0] + cy * c[1] + cz * c[2];
 }
-#else
-#error "triple_product3d: clang naked draft required"
-#endif
-
-
 /* plane2d_from_points (0x99400)
  *
  * Computes a 2D line equation (normal + distance) from two 2D points.
@@ -3094,13 +3056,13 @@ void FUN_0017cca0(void)
   /* cmp edx, 0x16 -> jge 0x172540 */
   D3DDevice_SetTextureStageState(eax, 0, 0);
   /* cmp edx, 0x1c -> jne 0x172551 */
-  D3DDevice_SetTextureState_TexCoordIndex();
+  D3DDevice_SetTextureState_TexCoordIndex(0, 0);
   /* cmp edx, 0x1d -> jne 0x172562 */
   D3DDevice_SetTextureState_BorderColor(ecx, eax);
   /* cmp edx, 0x1e -> jne 0x172573 */
-  D3DDevice_SetTextureState_ColorKeyColor();
+  D3DDevice_SetTextureState_ColorKeyColor(0, 0);
   /* cmp edx, 0x1b -> jg 0x172580 */
-  D3DDevice_SetTextureState_BumpEnv();
+  D3DDevice_SetTextureState_BumpEnv(0, 0, 0);
 
   (void)eax;
   (void)ecx;

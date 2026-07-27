@@ -6675,9 +6675,9 @@
         },
         {
           "addr": "0x993b0",
-          "decl": "float triple_product3d(float *param_1, float *param_2, float *param_3);",
+          "decl": "float triple_product3d(float *a, float *b, float *c);",
           "name": "triple_product3d",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x99400",
@@ -6867,7 +6867,7 @@
         {
           "addr": "0x17cba0",
           "decl": "void FUN_0017cba0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cbb0",
@@ -6887,7 +6887,7 @@
         {
           "addr": "0x17cbe0",
           "decl": "void FUN_0017cbe0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cbf0",
@@ -6897,7 +6897,7 @@
         {
           "addr": "0x17cc00",
           "decl": "void FUN_0017cc00(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cc10",
@@ -23657,7 +23657,7 @@
         {
           "addr": "0x1c29b0",
           "decl": "void saved_game_files_notify_memory_units_changed(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c29c0",
