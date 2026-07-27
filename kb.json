@@ -20783,8 +20783,9 @@
         },
         {
           "addr": "0x16f610",
-          "decl": "void FUN_0016f610(void);",
-          "ported": false
+          "decl": "void FUN_0016f610(unsigned int packed);",
+          "ported": true,
+          "name": "FUN_0016f610"
         },
         {
           "addr": "0x16f6c0",

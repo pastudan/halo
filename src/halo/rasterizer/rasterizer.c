@@ -5090,71 +5090,39 @@ void FUN_0016f500(void)
 #endif
 
 
-/* FUN_0016f610 (0x16f610) — XBE naked draft (batch 335). */
-#if defined(__clang__)
-static bool __stdcall (*const b16f610_c1d33e6)(void *counter) = (void *)QueryPerformanceCounter;
-
-__attribute__((naked, noinline))
-void FUN_0016f610(void)
+/* FUN_0016f610 (0x16f610) — readable C lift. */
+void FUN_0016f610(unsigned int packed)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "shrl $1, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0016f610_2\n\t"
-      "cmpw $0x10, %%si\n\t"
-      "jge .LFUN_0016f610_2\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d33e6]\n\t"
-      "testb $1, %%bl\n\t"
-      "je .LFUN_0016f610_1\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $3, %%eax\n\t"
-      "movl 0x47e10c(%%eax), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x47e108(%%eax), %%edi\n\t"
-      "movl %%ecx, 0x47e088(%%eax)\n\t"
-      "subl %%edi, %%ecx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x47e08c(%%eax)\n\t"
-      "sbbl %%ebx, %%edx\n\t"
-      "movw %%si, 0x47e454\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x47e008(%%eax)\n\t"
-      "movl %%edx, 0x47e00c(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0016f610_1:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl %%edx, 0x47e108(,%%ecx,8)\n\t"
-      "movl %%eax, 0x47e10c(,%%ecx,8)\n\t"
-      ".LFUN_0016f610_2:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d33e6] "m"(b16f610_c1d33e6)
-      : "memory");
-}
-#else
-#error "FUN_0016f610: clang naked draft required"
-#endif
+  short idx;
+  unsigned int counter[2];
+  int off;
+  unsigned int lo, hi, start_lo, start_hi;
+  unsigned long long cur, start, delta;
 
+  idx = (short)(packed >> 1);
+  if (idx < 0 || idx >= 0x10)
+    return;
+
+  QueryPerformanceCounter(counter);
+  if (packed & 1) {
+    off = (int)idx * 8;
+    lo = counter[0];
+    hi = counter[1];
+    start_lo = *(unsigned int *)(0x47e108 + off);
+    start_hi = *(unsigned int *)(0x47e10c + off);
+    *(unsigned int *)(0x47e088 + off) = lo;
+    *(unsigned int *)(0x47e08c + off) = hi;
+    cur = ((unsigned long long)hi << 32) | lo;
+    start = ((unsigned long long)start_hi << 32) | start_lo;
+    delta = cur - start;
+    *(unsigned int *)(0x47e008 + off) = (unsigned int)delta;
+    *(unsigned int *)(0x47e00c + off) = (unsigned int)(delta >> 32);
+    *(short *)0x47e454 = idx;
+  } else {
+    *(unsigned int *)(0x47e108 + (int)idx * 8) = counter[0];
+    *(unsigned int *)(0x47e10c + (int)idx * 8) = counter[1];
+  }
+}
 
 /* FUN_0016f6c0 (0x16f6c0) — readable C lift from XBE leaf. */
 char FUN_0016f6c0(void)
