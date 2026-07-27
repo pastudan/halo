@@ -39192,7 +39192,7 @@
         {
           "addr": "0x1b9de0",
           "decl": "bool cache_files_give_time_to_precache(const char *name);",
-          "ported": false,
+          "ported": true,
           "name": "cache_files_give_time_to_precache"
         },
         {

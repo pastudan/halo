@@ -3971,94 +3971,40 @@ int FUN_001b9920(void) {
 
 
 
-/* cache_files_give_time_to_precache (0x1b9de0) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static bool (*const b1b9de0_c1bd8e0)(char *map_name) = cache_files_precache_map_loaded;
-static bool (*const b1b9de0_c1bc6b0)(void) = (bool (*)(void))cache_files_precache_in_progress;
-static bool (*const b1b9de0_c1bc6c0)(char *map_name) = cache_files_precache_is_copying_map;
-static void (*const b1b9de0_c1bda30)(void) = cache_files_precache_map_end;
-static __int16 (*const b1b9de0_c1bcf00)(float *) = cache_files_precache_map_status;
-static void (*const b1b9de0_c1bc6a0)(bool) = cache_files_precache_set_priority;
-static bool (*const b1b9de0_c1bd910)(char *map_name, bool) = cache_files_precache_map_begin;
-static void (*const b1b9de0_ce8d20)(void) = display_error_damaged_media;
-
-__attribute__((naked, noinline))
-bool cache_files_give_time_to_precache(const char *name __attribute__((unused)))
+/* cache_files_give_time_to_precache (0x1b9de0) — readable C lift. */
+bool cache_files_give_time_to_precache(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1bd8e0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_files_give_time_to_precache_1\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcache_files_give_time_to_precache_1:\n\t"
-      "call *%[c1bc6b0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_files_give_time_to_precache_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1bc6c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lcache_files_give_time_to_precache_2\n\t"
-      "call *%[c1bda30]\n\t"
-      ".Lcache_files_give_time_to_precache_2:\n\t"
-      "call *%[c1bc6b0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_files_give_time_to_precache_3\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bcf00]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lcache_files_give_time_to_precache_4\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .Lcache_files_give_time_to_precache_5\n\t"
-      "call *%[c1bda30]\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcache_files_give_time_to_precache_3:\n\t"
-      "pushl $0\n\t"
-      "call *%[c1bc6a0]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1bd910]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lcache_files_give_time_to_precache_5\n\t"
-      ".Lcache_files_give_time_to_precache_4:\n\t"
-      "call *%[ce8d20]\n\t"
-      ".Lcache_files_give_time_to_precache_5:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1bd8e0] "m"(b1b9de0_c1bd8e0), [c1bc6b0] "m"(b1b9de0_c1bc6b0), [c1bc6c0] "m"(b1b9de0_c1bc6c0), [c1bda30] "m"(b1b9de0_c1bda30), [c1bcf00] "m"(b1b9de0_c1bcf00), [c1bc6a0] "m"(b1b9de0_c1bc6a0), [c1bd910] "m"(b1b9de0_c1bd910), [ce8d20] "m"(b1b9de0_ce8d20)
-      : "memory");
-}
-#else
-#error "cache_files_give_time_to_precache: clang naked draft required"
-#endif
+  float status;
+  short st;
+  char ok;
 
+  ok = 0;
+  if (cache_files_precache_map_loaded((char *)name)) {
+    return 1;
+  }
+  if (cache_files_precache_in_progress()) {
+    if (!cache_files_precache_is_copying_map((char *)name)) {
+      cache_files_precache_map_end();
+    }
+  }
+  if (cache_files_precache_in_progress()) {
+    st = cache_files_precache_map_status(&status);
+    if (st == 2) {
+      display_error_damaged_media();
+      return ok;
+    }
+    if (st == 1) {
+      cache_files_precache_map_end();
+      return ok;
+    }
+    return ok;
+  }
+  cache_files_precache_set_priority(0);
+  if (!cache_files_precache_map_begin((char *)name, 0)) {
+    display_error_damaged_media();
+  }
+  return ok;
+}
 
 /* FUN_001b9e70 (0x1b9e70) — XBE naked draft (batch 250). */
 #if defined(__clang__)
