@@ -136,20 +136,20 @@ void player_effect_apply(int player_handle, void *effect_descriptor,
 static void *(*const ba3b80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const ba3b80_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const ba3b80_exitfn)(int) = system_exit;
-static void (*const ba3b80_c10b090)(void) = lock_global_random_seed;
+static void (*const ba3b80_c10b090)(void) = (void *)lock_global_random_seed;
 static void *(*const ba3b80_tag)(int, int) = tag_get;
-static char * (*const ba3b80_ca2690)(int16_t local_player_index) = player_effect_get;
-static void (*const ba3b80_ca2ab0)(void) = FUN_000a2ab0;
-static void (*const ba3b80_ca3890)(int unit_index, float *rumble_def, void *direction, float damage_amount, float scale, float *effect) = FUN_000a3890;
-static void (*const ba3b80_ca2ba0)(int unit_index, float damage_amount, float scale, float *effect_data, void *effect) = FUN_000a2ba0;
-static void (*const ba3b80_cb9bc0)(short unit_index, float *rumble_def, float damage_amount, float scale) = rumble_player_impulse;
-static int (*const ba3b80_c1c7480)(int sound_tag_index, float scale) = sound_impulse_start;
-static void (*const ba3b80_c10b0a0)(void) = unlock_global_random_seed;
-static int (*const ba3b80_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
+static char * (*const ba3b80_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
+static void (*const ba3b80_ca2ab0)(void) = (void *)FUN_000a2ab0;
+static void (*const ba3b80_ca3890)(int unit_index, float *rumble_def, void *direction, float damage_amount, float scale, float *effect) = (void *)FUN_000a3890;
+static void (*const ba3b80_ca2ba0)(int unit_index, float damage_amount, float scale, float *effect_data, void *effect) = (void *)FUN_000a2ba0;
+static void (*const ba3b80_cb9bc0)(short unit_index, float *rumble_def, float damage_amount, float scale) = (void *)rumble_player_impulse;
+static int (*const ba3b80_c1c7480)(int sound_tag_index, float scale) = (void *)sound_impulse_start;
+static void (*const ba3b80_c10b0a0)(void) = (void *)unlock_global_random_seed;
+static int (*const ba3b80_cba3c0)(int16_t local_player_index) = (void *)local_player_get_player_index;
 static void *(*const ba3b80_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void * (*const ba3b80_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
-static void (*const ba3b80_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
-static vector3_t * (*const ba3b80_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
+static void * (*const ba3b80_c8a4e0)(unsigned __int16 local_player_index) = (void *)observer_get_camera;
+static void (*const ba3b80_c1a9200)(int object_handle, float *out_position) = (void *)unit_get_head_position;
+static vector3_t * (*const ba3b80_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
 static void (*const ba3b80_cross)(float *, float *, float *) = cross_product3d;
 static float (*const ba3b80_norm)(float *) = normalize3d;
 
@@ -428,9 +428,9 @@ void FUN_000a3b80(int player_index __attribute__((unused)), void *damage_params 
 /* player_effect_add_continuous_effect (0xa27a0) — XBE naked draft (batch 127). */
 #if defined(__clang__)
 static void *(*const ba27a0_tag)(int, int) = tag_get;
-static char * (*const ba27a0_ca2690)(int16_t local_player_index) = player_effect_get;
+static char * (*const ba27a0_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
 static int (*const ba27a0_gtime)(void) = game_time_get;
-static float (*const ba27a0_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
+static float (*const ba27a0_c10a5e0)(int16_t function_type, float input) = (void *)FUN_0010a5e0;
 static void *(*const ba27a0_memset)(void *, int, unsigned int) = csmemset;
 
 __attribute__((naked, noinline))
@@ -826,88 +826,32 @@ float FUN_000a2c70(float scale, float numer, float denom, short function_type)
   float t = *(float *)0x2533c8 - (numer / denom);
   return transition_function_evaluate(function_type, t) * scale;
 }
-/* player_effect_continuous_refresh (0xa2d30) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static int (*const ba2d30_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const ba2d30_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static vector3_t * (*const ba2d30_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static void (*const ba2d30_ca27a0)(void) = player_effect_add_continuous_effect;
-
-__attribute__((naked, noinline))
-void player_effect_continuous_refresh(void)
+/* player_effect_continuous_refresh (0xa2d30) — readable C lift. */
+void player_effect_continuous_refresh(void *effect, float *center)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lplayer_effect_continuous_refresh_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lplayer_effect_continuous_refresh_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lplayer_effect_continuous_refresh_2\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1412f0]\n\t"
-      "flds (%%edi)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "addl $4, %%esp\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca27a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lplayer_effect_continuous_refresh_2:\n\t"
-      "incl %%esi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lplayer_effect_continuous_refresh_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cba3c0] "m"(ba2d30_cba3c0), [dget] "m"(ba2d30_dget), [c1412f0] "m"(ba2d30_c1412f0), [ca27a0] "m"(ba2d30_ca27a0)
-      : "memory");
-}
-#else
-#error "player_effect_continuous_refresh: clang naked draft required"
-#endif
+  int16_t i;
+  int player;
+  char *pdata;
+  int unit;
+  float wpos[3];
+  float dx, dy, dz, dist;
 
+  for (i = 0; i < 4; i++) {
+    player = local_player_get_player_index(i);
+    if (player == -1)
+      continue;
+    pdata = (char *)datum_get(*(data_t **)0x5aa6d4, player);
+    unit = *(int *)(pdata + 0x34);
+    if (unit == -1)
+      continue;
+    object_get_world_position(unit, (vector3_t *)wpos);
+    dx = center[0] - wpos[0];
+    dy = center[1] - wpos[1];
+    dz = center[2] - wpos[2];
+    dist = __builtin_sqrtf(dx * dx + dy * dy + dz * dz);
+    ((void (*)(int16_t, void *, float))player_effect_add_continuous_effect)(i, effect, dist);
+  }
+}
 
 /* scripted_player_effect_set_translation (0xa2dc0) — readable C lift. */
 void scripted_player_effect_set_translation(int a0, int a1, int a2)
@@ -952,10 +896,10 @@ void scripted_player_effect_stop(float seconds)
 /* player_telefrag_effect_start (0xa2ed0) — XBE naked draft (batch 136). */
 #if defined(__clang__)
 static void *(*const ba2ed0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const ba2ed0_ca2690)(int16_t local_player_index) = player_effect_get;
-static void (*const ba2ed0_cb9da0)(short local_player_index, int left_motor, int right_motor) = rumble_set_direct_motors;
-static void (*const ba2ed0_ca2ab0)(void) = FUN_000a2ab0;
-static void (*const ba2ed0_ca2ba0)(int unit_index, float damage_amount, float scale, float *effect_data, void *effect) = FUN_000a2ba0;
+static char * (*const ba2ed0_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
+static void (*const ba2ed0_cb9da0)(short local_player_index, int left_motor, int right_motor) = (void *)rumble_set_direct_motors;
+static void (*const ba2ed0_ca2ab0)(void) = (void *)FUN_000a2ab0;
+static void (*const ba2ed0_ca2ba0)(int unit_index, float damage_amount, float scale, float *effect_data, void *effect) = (void *)FUN_000a2ba0;
 
 __attribute__((naked, noinline))
 void player_telefrag_effect_start(void)
@@ -1048,12 +992,12 @@ void player_telefrag_effect_start(void)
 #if defined(__clang__)
 static void (*const ba2fc0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const ba2fc0_exitfn)(int) = system_exit;
-static bool (*const ba2fc0_cff4c0)(void) = console_is_active;
+static bool (*const ba2fc0_cff4c0)(void) = (void *)console_is_active;
 static int (*const ba2fc0_gtime)(void) = game_time_get;
-static float (*const ba2fc0_c10a710)(short function_type, float t) = transition_function_evaluate;
-static char * (*const ba2fc0_ca2690)(int16_t local_player_index) = player_effect_get;
-static int16_t (*const ba2fc0_cb5ae0)(void) = game_time_get_elapsed;
-static char * (*const ba2fc0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
+static float (*const ba2fc0_c10a710)(short function_type, float t) = (void *)transition_function_evaluate;
+static char * (*const ba2fc0_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
+static int16_t (*const ba2fc0_cb5ae0)(void) = (void *)game_time_get_elapsed;
+static char * (*const ba2fc0_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
 
 __attribute__((naked, noinline))
 void player_effect_get_screen_flash(void)
@@ -1308,8 +1252,8 @@ void player_effect_get_screen_flash(void)
 /* FUN_000a32e0 (0xa32e0) — XBE naked draft (batch 150). */
 #if defined(__clang__)
 static unsigned int *(*const ba32e0_lseed)(void) = random_math_get_local_seed_address;
-static void (*const ba32e0_c10b380)(unsigned int *seed, float *out) = random_seed_get_direction3d;
-static void (*const ba32e0_c1092d0)(float *out_matrix, float *axis, float sine, float cosine) = FUN_001092d0;
+static void (*const ba32e0_c10b380)(unsigned int *seed, float *out) = (void *)random_seed_get_direction3d;
+static void (*const ba32e0_c1092d0)(float *out_matrix, float *axis, float sine, float cosine) = (void *)FUN_001092d0;
 
 __attribute__((naked, noinline))
 void FUN_000a32e0(void)
@@ -1378,19 +1322,19 @@ void FUN_000a32e0(void)
 static void (*const ba3370_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const ba3370_exitfn)(int) = system_exit;
 static int (*const ba3370_gtime)(void) = game_time_get;
-static int16_t (*const ba3370_cb5ae0)(void) = game_time_get_elapsed;
-static void (*const ba3370_cb9ba0)(float scale) = rumble_player_set_scale;
+static int16_t (*const ba3370_cb5ae0)(void) = (void *)game_time_get_elapsed;
+static void (*const ba3370_cb9ba0)(float scale) = (void *)rumble_player_set_scale;
 static unsigned int *(*const ba3370_lseed)(void) = random_math_get_local_seed_address;
 static float (*const ba3370_rrange)(int *, float, float) = random_real_range;
-static void (*const ba3370_c109e90)(float *out, float yaw, float pitch, float roll) = FUN_00109e90;
-static char * (*const ba3370_ca2690)(int16_t local_player_index) = player_effect_get;
-static float (*const ba3370_c10a710)(short function_type, float t) = transition_function_evaluate;
-static void (*const ba3370_c1092d0)(float *out_matrix, float *axis, float sine, float cosine) = FUN_001092d0;
-static float (*const ba3370_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
-static void (*const ba3370_ca32e0)(void) = FUN_000a32e0;
-static void (*const ba3370_cb9da0)(short local_player_index, int left_motor, int right_motor) = rumble_set_direct_motors;
+static void (*const ba3370_c109e90)(float *out, float yaw, float pitch, float roll) = (void *)FUN_00109e90;
+static char * (*const ba3370_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
+static float (*const ba3370_c10a710)(short function_type, float t) = (void *)transition_function_evaluate;
+static void (*const ba3370_c1092d0)(float *out_matrix, float *axis, float sine, float cosine) = (void *)FUN_001092d0;
+static float (*const ba3370_c10a5e0)(int16_t function_type, float input) = (void *)FUN_0010a5e0;
+static void (*const ba3370_ca32e0)(void) = (void *)FUN_000a32e0;
+static void (*const ba3370_cb9da0)(short local_player_index, int left_motor, int right_motor) = (void *)rumble_set_direct_motors;
 static void *(*const ba3370_memset)(void *, int, unsigned int) = csmemset;
-static void (*const ba3370_c109850)(float *a, float *b, float *out) = matrix4x3_multiply;
+static void (*const ba3370_c109850)(float *a, float *b, float *out) = (void *)matrix4x3_multiply;
 
 __attribute__((naked, noinline))
 void player_effect_get_camera_effect_matrix(void)
@@ -1813,15 +1757,15 @@ void player_effect_get_camera_effect_matrix(void)
 #if defined(__clang__)
 static int (*const ba3890_gtime)(void) = game_time_get;
 static float (*const ba3890_norm)(float *) = normalize3d;
-static float * (*const ba3890_cb7e30)(int16_t local_player_index) = player_control_get_facing_angles;
-static void (*const ba3890_c10cc40)(float *out, float *angles) = angles_to_vector;
-static void (*const ba3890_c10c3c0)(void) = FUN_0010c3c0;
+static float * (*const ba3890_cb7e30)(int16_t local_player_index) = (void *)player_control_get_facing_angles;
+static void (*const ba3890_c10cc40)(float *out, float *angles) = (void *)angles_to_vector;
+static void (*const ba3890_c10c3c0)(void) = (void *)FUN_0010c3c0;
 static void (*const ba3890_ftol)(void) = FUN_001d9068;
 static unsigned int *(*const ba3890_lseed)(void) = random_math_get_local_seed_address;
 static float (*const ba3890_rrange)(int *, float, float) = random_real_range;
 static void (*const ba3890_rots)(float *, float *, float, float) = rotate_vector3d_by_sincos;
-static float * (*const ba3890_cb7f10)(int16_t local_player_index, float *out_direction) = player_control_get_facing_direction;
-static void (*const ba3890_cb8cf0)(int16_t a, float *delta) = FUN_000b8cf0;
+static float * (*const ba3890_cb7f10)(int16_t local_player_index, float *out_direction) = (void *)player_control_get_facing_direction;
+static void (*const ba3890_cb8cf0)(int16_t a, float *delta) = (void *)FUN_000b8cf0;
 
 __attribute__((naked, noinline))
 void FUN_000a3890(int unit_index __attribute__((unused)), float *rumble_def __attribute__((unused)), void *direction __attribute__((unused)), float damage_amount __attribute__((unused)), float scale __attribute__((unused)), float *effect __attribute__((unused)))

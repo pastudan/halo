@@ -18138,8 +18138,8 @@
         },
         {
           "addr": "0xa2d30",
-          "decl": "void player_effect_continuous_refresh(void);",
-          "ported": false
+          "decl": "void player_effect_continuous_refresh(void *effect, float *center);",
+          "ported": true
         },
         {
           "addr": "0xa2dc0",
