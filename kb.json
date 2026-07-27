@@ -13794,9 +13794,9 @@
         },
         {
           "addr": "0xce590",
-          "decl": "void input_recording_write_packet(void *state);",
+          "decl": "void input_recording_write_packet(void *packet);",
           "name": "input_recording_write_packet",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xce620",
