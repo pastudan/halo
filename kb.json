@@ -7074,7 +7074,7 @@
         {
           "addr": "0x86360",
           "decl": "void director_save_camera(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x86410",
@@ -7187,8 +7187,8 @@
         },
         {
           "addr": "0x879d0",
-          "decl": "void editor_camera_set_position(void);",
-          "ported": false
+          "decl": "void editor_camera_set_position(float *pos, float *orient);",
+          "ported": true
         },
         {
           "addr": "0x87ac0",
@@ -15107,7 +15107,7 @@
         {
           "addr": "0x124d50",
           "decl": "char network_game_client_address_matches_server(void *client, void *source_address);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x124e20",
@@ -20019,8 +20019,8 @@
         },
         {
           "addr": "0x906d0",
-          "decl": "void FUN_000906d0(void);",
-          "ported": false
+          "decl": "void FUN_000906d0(char *section@<edi>);",
+          "ported": true
         },
         {
           "addr": "0x907c0",
@@ -25525,8 +25525,8 @@
         },
         {
           "addr": "0x1ba930",
-          "decl": "void FUN_001ba930(void);",
-          "ported": false
+          "decl": "void FUN_001ba930(void *header@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x1ba9d0",
@@ -25603,7 +25603,7 @@
         },
         {
           "addr": "0x192bb0",
-          "decl": "void FUN_00192bb0(void);",
+          "decl": "float FUN_00192bb0(float *v@<eax>);",
           "ported": false
         },
         {
@@ -33450,13 +33450,13 @@
         },
         {
           "addr": "0x1d0c48",
-          "decl": "void * __stdcall FUN_001d0c48(uint32_t flags, uint32_t size);",
+          "decl": "void *__stdcall FUN_001d0c48(int flags, int size);",
           "ported": false,
           "name": "FUN_001d0c48"
         },
         {
           "addr": "0x1d0c65",
-          "decl": "void *__stdcall FUN_001d0c65(void *ptr, uint32_t size, uint32_t flags);",
+          "decl": "void *__stdcall FUN_001d0c65(void *ptr, int size, int flags);",
           "ported": false,
           "name": "FUN_001d0c65"
         },

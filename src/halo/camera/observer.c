@@ -2334,7 +2334,7 @@ void camera_track_splut(void)
 /* FUN_00089c00 (0x89c00) — XBE naked draft (batch 133). */
 #if defined(__clang__)
 static void *(*const b89c00_get)(int, int) = object_get_and_verify_type;
-static void (*const b89c00_c898b0)(void) = FUN_000898b0;
+static void (*const b89c00_c898b0)(void) = (void (*)(void))FUN_000898b0;
 static void (*const b89c00_useat)(int, float *) = unit_set_seat_state;
 static void (*const b89c00_c1da0cc)(void) = FUN_001da0cc;
 static void (*const b89c00_c89ab0)(void) = camera_track_splut;

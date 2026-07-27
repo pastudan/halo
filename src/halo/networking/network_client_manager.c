@@ -536,7 +536,7 @@ static __attribute__((unused)) char network_client_manager_send_encoded(void *cl
 
 /* FUN_00124730 (0x124730) — XBE naked draft (batch 116). */
 #if defined(__clang__)
-static void (*const b124730_c123d80)(void) = FUN_00123d80;
+static void (*const b124730_c123d80)(void) = (void (*)(void))FUN_00123d80;
 static void (*const b124730_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b124730_exitfn)(int) = system_exit;
 static void *(*const b124730_tag)(int, int) = tag_get;
@@ -934,91 +934,39 @@ int16_t FUN_00124d00(void *client)
   return *(uint16_t *)((char *)client + 0xca4);
 }
 
-/* network_game_client_address_matches_server (0x124d50) — XBE naked draft (batch 141). */
-#if defined(__clang__)
-static void (*const b124d50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b124d50_exitfn)(int) = system_exit;
-static void (*const b124d50_c1283c0)(int connection, void *buf, int flag) = network_connection_get_address;
-
-__attribute__((naked, noinline))
-char network_game_client_address_matches_server(void *client __attribute__((unused)), void *source_address __attribute__((unused)))
+/* network_game_client_address_matches_server (0x124d50) — readable C lift from XBE leaf. */
+char network_game_client_address_matches_server(void *client, void *source_address)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lnetwork_game_client_address_matches_server_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2d2\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2919a4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_address_matches_server_1:\n\t"
-      "movl 0x82c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lnetwork_game_client_address_matches_server_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2d3\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291990\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_address_matches_server_2:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_game_client_address_matches_server_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2d4\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291980\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_address_matches_server_3:\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "jne .Lnetwork_game_client_address_matches_server_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2d5\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291960\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_address_matches_server_4:\n\t"
-      "movl 0x82c(%%edi), %%ecx\n\t"
-      "pushl $0\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1283c0]\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "popl %%edi\n\t"
-      "sete %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b124d50_assert), [exitfn] "m"(b124d50_exitfn), [c1283c0] "m"(b124d50_c1283c0)
-      : "memory");
+  extern char DAT_00291774[];
+  extern char DAT_002919a4[];
+  extern char DAT_00291990[];
+  extern char DAT_00291980[];
+  extern char DAT_00291960[];
+  unsigned char addr_buf[0x18];
+  int connection;
+
+  if (client == 0) {
+    display_assert(DAT_002919a4, DAT_00291774, 0x2d2, true);
+    system_exit(-1);
+  }
+  connection = *(int *)((char *)client + 0x82c);
+  if (connection == 0) {
+    display_assert(DAT_00291990, DAT_00291774, 0x2d3, true);
+    system_exit(-1);
+  }
+  if (source_address == 0) {
+    display_assert(DAT_00291980, DAT_00291774, 0x2d4, true);
+    system_exit(-1);
+  }
+  if (*(int *)source_address == 0) {
+    display_assert(DAT_00291960, DAT_00291774, 0x2d5, true);
+    system_exit(-1);
+  }
+  network_connection_get_address(connection, addr_buf, 0);
+  return *(int *)source_address == *(int *)addr_buf;
 }
-#else
-#error "network_game_client_address_matches_server: clang naked draft required"
-#endif
+
+#define FUN_00124d50 network_game_client_address_matches_server
 
 
 /* network_game_client_game_out_of_sync (0x124e20) — readable C lift. */
@@ -1348,9 +1296,9 @@ static int (*const b1251e0_cba410)(unsigned __int16 a1, int a2) = local_player_s
 static void * (*const b1251e0_c12b700)(int type, void *data, int16_t message_struct_size) = encode_network_game_message;
 static bool (*const b1251e0_c128e00)(void *connection, void *message, unsigned short size, int dest_address, bool reliable) = network_connection_write;
 static void (*const b1251e0_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b1251e0_ce58c0)(void) = ui_widgets_close_all;
-static void (*const b1251e0_cb5f40)(void) = game_time_start;
-static void (*const b1251e0_ca73c0)(void) = game_initial_pulse;
+static void (*const b1251e0_ce58c0)(void) = (void (*)(void))ui_widgets_close_all;
+static void (*const b1251e0_cb5f40)(void) = (void (*)(void))game_time_start;
+static void (*const b1251e0_ca73c0)(void) = (void (*)(void))game_initial_pulse;
 
 __attribute__((naked, noinline))
 char network_game_client_game_has_started(void *client __attribute__((unused)))
@@ -1826,7 +1774,7 @@ static __attribute__((unused)) char network_client_manager_send_player_request(v
 #if defined(__clang__)
 static void (*const b1258a0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1258a0_exitfn)(int) = system_exit;
-static void (*const b1258a0_ce0980)(void) = player_ui_get_active_player_profile;
+static void (*const b1258a0_ce0980)(void) = (void (*)(void))player_ui_get_active_player_profile;
 static wchar_t * (*const b1258a0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 static void (*const b1258a0_c12b650)(const char *fmt, ...) = network_game_log;
 static void * (*const b1258a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
@@ -2279,7 +2227,7 @@ char network_game_client_advertised_game_is_valid(void *game)
 #if defined(__clang__)
 static unsigned int (*const b125ce0_c8e370)(void) = system_milliseconds;
 static void *(*const b125ce0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b125ce0_c81f30)(void) = transport_nonce_is_equal;
+static void (*const b125ce0_c81f30)(void) = (void (*)(void))transport_nonce_is_equal;
 static void (*const b125ce0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b125ce0_exitfn)(int) = system_exit;
 static void (*const b125ce0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -3008,7 +2956,7 @@ static bool (*const b126590_c12b290)(void *game, void *player) = network_game_re
 static void *(*const b126590_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static int (*const b126590_gtime)(void) = game_time_get;
 static void (*const b126590_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b126590_c12a790)(void) = network_game_client_all_local_players_have_quit;
+static void (*const b126590_c12a790)(void) = (void (*)(void))network_game_client_all_local_players_have_quit;
 static void (*const b126590_c12b650)(const char *fmt, ...) = network_game_log;
 
 __attribute__((naked, noinline))
@@ -3190,7 +3138,7 @@ void network_game_client_game_shutdown(void *client)
   network_game_client_all_local_players_have_quit();
 }
 
-/* FUN_001267c0 (0x1267c0) — readable C lift. */
+/* FUN_001267c0 / network_game_client_reset (0x1267c0) — readable C lift. */
 void FUN_001267c0(void *client, char close_transport)
 {
   void *ep;
@@ -3531,7 +3479,7 @@ void *FUN_00126fe0(void)
                      "connection");
     return NULL;
   }
-  network_game_client_reset((void *)0x5a95a0, 0);
+  FUN_001267c0((void *)0x5a95a0, 0);
   return (void *)0x5a95a0;
 }
 
@@ -3540,7 +3488,7 @@ void *FUN_00126fe0(void)
 static void (*const b1271a0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1271a0_exitfn)(int) = system_exit;
 static void (*const b1271a0_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b1271a0_c1267c0)(void *client, char flag) = network_game_client_reset;
+static void (*const b1271a0_c1267c0)(void *client, char flag) = FUN_001267c0;
 
 __attribute__((naked, noinline))
 void FUN_001271a0(void *client __attribute__((unused)), void *source __attribute__((unused)), int rejection_code __attribute__((unused)))

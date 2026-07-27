@@ -9005,7 +9005,7 @@ void FUN_00194070(void)
 
 /* FUN_001975e0 (0x1975e0) — XBE naked draft (batch 112). */
 #if defined(__clang__)
-static void (*const b1975e0_chkstk)(void) = FUN_001d90e0;
+static void (*const b1975e0_chkstk)(void) = (void (*)(void))FUN_001d90e0;
 static void * (*const b1975e0_c18e3c0)(void) = global_scenario_get;
 static void (*const b1975e0_c185f80)(void *param_1, void *param_2) = render_frustum_get_projection_bounds;
 static uint32_t * (*const b1975e0_c193550)(void *bsp, int16_t cluster_index) = structure_bsp_get_cluster_sound_data;
@@ -9277,7 +9277,7 @@ static void *(*const b1943e0_elem)(void *, int, int) = tag_block_get_element;
 static void *(*const b1943e0_tag)(int, int) = tag_get;
 static void * (*const b1943e0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static int16_t (*const b1943e0_c1b9ad0)(void *tag_block) = tag_block_add_element;
-static void (*const b1943e0_c1b9b50)(void) = FUN_001b9b50;
+static void (*const b1943e0_c1b9b50)(void) = (void (*)(void))FUN_001b9b50;
 static void (*const b1943e0_c1034b0)(int *obj) = FUN_001034b0;
 static int (*const b1943e0_c103860)(int base, float *a, float *b, float *c, char flag) = FUN_00103860;
 static int (*const b1943e0_c103c00)(int *obj) = FUN_00103c00;
@@ -9289,7 +9289,7 @@ static uint32_t (*const b1943e0_c146db0)(void *bsp3d, int root, void *point) = b
 static void __cdecl (*const b1943e0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
 static void (*const b1943e0_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
 static int16_t (*const b1943e0_c105d20)(int16_t vertex_count, float *vertices, int16_t *out_indices) = convex_hull2d_reduce;
-static void (*const b1943e0_c1dbc26)(void) = FUN_001dbc26;
+static void (*const b1943e0_c1dbc26)(void) = (void (*)(void))FUN_001dbc26;
 static double (*const b1943e0_c1d9c2b)(double x) = floor;
 static int (*const b1943e0_c106290)(int16_t count, void *index_array, void *vertex_base, float *query_point, float epsilon) = FUN_00106290;
 static void (*const b1943e0_c1034e0)(int *param_1) = FUN_001034e0;

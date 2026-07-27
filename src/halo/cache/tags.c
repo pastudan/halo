@@ -108,10 +108,10 @@ int tag_get_group_tag(int tag_index)
 static int (*const b1b9fa0_c1bdd50)(void) = FUN_001bdd50;
 static void *(*const b1b9fa0_memset)(void *, int, unsigned int) = csmemset;
 static short (*const b1b9fa0_c1bc9e0)(int param_1, int offset, unsigned int size, int buffer, char *completion_flag, char async_flag) = cache_file_read;
-static void (*const b1b9fa0_c1cfb98)(void) = SwitchToThread;
+static void (*const b1b9fa0_c1cfb98)(void) = (void (*)(void))SwitchToThread;
 static unsigned int (*const b1b9fa0_c1cb8e0)(void) = sound_render_time;
 static unsigned int (*const b1b9fa0_c8e370)(void) = system_milliseconds;
-static void (*const b1b9fa0_c1cf2f0)(void) = sound_idle;
+static void (*const b1b9fa0_c1cf2f0)(void) = (void (*)(void))sound_idle;
 static void (*const b1b9fa0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1b9fa0_exitfn)(int) = system_exit;
 static void (*const b1b9fa0_c1bcdc0)(void *block) = structure_bsp_header_register_vertex_buffers;
@@ -280,7 +280,7 @@ static void (*const b1ba2f0_assert)(const char *, const char *, int, bool) = dis
 static void (*const b1ba2f0_exitfn)(int) = system_exit;
 static unsigned int __stdcall (*const b1ba2f0_c1d1d4a)(int handle, unsigned int *high_size) = GetFileSize;
 static char * (*const b1ba2f0_c8dff0)(char *destination, const char *source) = csstrcpy;
-static void (*const b1ba2f0_c1cfeca)(void) = ResetEvent;
+static void (*const b1ba2f0_c1cfeca)(void) = (void (*)(void))ResetEvent;
 static void *(*const b1ba2f0_memset)(void *, int, unsigned int) = csmemset;
 static bool __stdcall (*const b1ba2f0_c1cfeaa)(void *handle) = SetEvent;
 
@@ -610,7 +610,6 @@ void FUN_001ba710(void)
 #error "FUN_001ba710: clang naked draft required"
 #endif
 
-
 /* cache_copy_initialize_and_fill_with_garbage (0x1ba7c0) — XBE naked draft (batch 282). */
 #if defined(__clang__)
 static int __stdcall (*const b1ba7c0_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
@@ -711,68 +710,34 @@ void FUN_001ba8b0(char *base)
   *(unsigned int *)(base + 0x994) &= 0xfffffeffu;
 }
 
-/* FUN_001ba930 (0x1ba930) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static void (*const b1ba930_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1ba930_exitfn)(int) = system_exit;
-static void (*const b1ba930_c1d00b9)(void) = FUN_001d00b9;
-
-__attribute__((naked, noinline))
-void FUN_001ba930(void)
+/* FUN_001ba930 (0x1ba930) — readable C lift from XBE leaf.
+ * Wait for overlapped I/O on cache header @ESI; clear busy bit. */
+void FUN_001ba930(void *header)
 {
-  __asm__ volatile(
-      "movl 0x994(%%esi), %%eax\n\t"
-      "testb $4, %%ah\n\t"
-      "jne .LFUN_001ba930_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5d6\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8538\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba930_1:\n\t"
-      "movl 0x950(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1388\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d00b9]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x994(%%esi), %%eax\n\t"
-      "testb $4, %%ah\n\t"
-      "je .LFUN_001ba930_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5da\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b84f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba930_2:\n\t"
-      "cmpl $0xc0, %%edi\n\t"
-      "popl %%edi\n\t"
-      "je .LFUN_001ba930_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5db\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8488\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ba930_3:\n\t"
-      "andl $0xfffffbff, 0x994(%%esi)\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1ba930_assert), [exitfn] "m"(b1ba930_exitfn), [c1d00b9] "m"(b1ba930_c1d00b9)
-      : "memory");
+  extern char DAT_002b839c[];
+  extern char DAT_002b8538[];
+  extern char DAT_002b84f0[];
+  extern char DAT_002b8488[];
+  unsigned int flags;
+  int status;
+
+  flags = *(unsigned int *)((char *)header + 0x994);
+  if ((flags & 0x400u) == 0) {
+    display_assert(DAT_002b8538, DAT_002b839c, 0x5d6, 1);
+    system_exit(-1);
+  }
+  status = FUN_001d00b9(*(void **)((char *)header + 0x950), 0x1388, 1);
+  flags = *(unsigned int *)((char *)header + 0x994);
+  if ((flags & 0x400u) != 0) {
+    display_assert(DAT_002b84f0, DAT_002b839c, 0x5da, 1);
+    system_exit(-1);
+  }
+  if (status != 0xc0) {
+    display_assert(DAT_002b8488, DAT_002b839c, 0x5db, 1);
+    system_exit(-1);
+  }
+  *(unsigned int *)((char *)header + 0x994) &= 0xfffffbffu;
 }
-#else
-#error "FUN_001ba930: clang naked draft required"
-#endif
 
 
 /* FUN_001ba9d0 (0x1ba9d0) — readable C lift. */
@@ -975,7 +940,7 @@ void FUN_001baca0(void)
 #if defined(__clang__)
 static void (*const b1badc0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1badc0_exitfn)(int) = system_exit;
-static void (*const b1badc0_c1d0362)(void) = FUN_001d0362;
+static void (*const b1badc0_c1d0362)(void) = (void (*)(void))FUN_001d0362;
 static int __stdcall (*const b1badc0_c1d0336)(int handle, int timeout_ms) = WaitForSingleObject;
 
 __attribute__((naked, noinline))
@@ -1183,7 +1148,7 @@ void FUN_001baf50(void)
 static bool __stdcall (*const b1bafa0_c1d33e6)(void *counter) = QueryPerformanceCounter;
 static void (*const b1bafa0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1bafa0_exitfn)(int) = system_exit;
-static void (*const b1bafa0_c1cfeca)(void) = ResetEvent;
+static void (*const b1bafa0_c1cfeca)(void) = (void (*)(void))ResetEvent;
 static bool __stdcall (*const b1bafa0_c1cfeaa)(void *handle) = SetEvent;
 static char * (*const b1bafa0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 
@@ -1359,7 +1324,7 @@ static void (*const b1bb190_assert)(const char *, const char *, int, bool) = dis
 static void (*const b1bb190_exitfn)(int) = system_exit;
 static unsigned int __stdcall (*const b1bb190_c1d01c4)(unsigned int milliseconds, int alertable) = SleepEx;
 static void __stdcall (*const b1bb190_c1d2268)(unsigned int error) = SetLastError;
-static void (*const b1bb190_c1d19e7)(void) = FUN_001d19e7;
+static void (*const b1bb190_c1d19e7)(void) = (void (*)(void))FUN_001d19e7;
 static int (*const b1bb190_c1d2240)(void) = xapi_GetLastError;
 
 __attribute__((naked, noinline))
@@ -1478,7 +1443,7 @@ static void (*const b1bb2d0_assert)(const char *, const char *, int, bool) = dis
 static void (*const b1bb2d0_exitfn)(int) = system_exit;
 static unsigned int __stdcall (*const b1bb2d0_c1d01c4)(unsigned int milliseconds, int alertable) = SleepEx;
 static void __stdcall (*const b1bb2d0_c1d2268)(unsigned int error) = SetLastError;
-static void (*const b1bb2d0_c1d1a38)(void) = FUN_001d1a38;
+static void (*const b1bb2d0_c1d1a38)(void) = (void (*)(void))FUN_001d1a38;
 static int (*const b1bb2d0_c1d2240)(void) = xapi_GetLastError;
 
 __attribute__((naked, noinline))

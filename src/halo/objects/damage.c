@@ -2928,7 +2928,7 @@ static void (*const d377d0_odest)(int) = object_destroy;
 static void (*const d377d0_d7690)(int, short) = FUN_00137690;
 static void *(*const d377d0_get)(int, int) = object_get_and_verify_type;
 static void *(*const d377d0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const d377d0_ftol)(void) = FUN_001d9068;
+static void (*const d377d0_ftol)(void) = (void (*)(void))FUN_001d9068;
 
 __attribute__((naked, noinline))
 void FUN_001377d0(int object_handle __attribute__((unused)), int region_index __attribute__((unused)), int node_index __attribute__((unused)), unsigned int param_4 __attribute__((unused)), void *collision_model __attribute__((unused)), void *material __attribute__((unused)), void *damage_effect __attribute__((unused)), void *damage_params __attribute__((unused)), unsigned int *flags __attribute__((unused)), float *body_damage __attribute__((unused)), void **param_11 __attribute__((unused)), float scale __attribute__((unused)))

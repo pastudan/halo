@@ -1232,7 +1232,6 @@ void FUN_00090180(void)
 #error "FUN_00090180: clang naked draft required"
 #endif
 
-
 /* compare_profile_sections (0x901d0) — XBE naked draft (batch 249). */
 #if defined(__clang__)
 static void (*const b901d0_assert)(const char *, const char *, int, bool) = display_assert;
@@ -1750,59 +1749,32 @@ void profile_dump_to_file(int a0 __attribute__((unused)))
 #endif
 
 
-/* FUN_000906d0 (0x906d0) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static void * (*const b906d0_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static void (*const b906d0_c8fb60)(void) = (void (*)(void))FUN_0008fb60;
-static int (*const b906d0_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
-
-__attribute__((naked, noinline))
-void FUN_000906d0(void)
+/* FUN_000906d0 (0x906d0) — readable C lift from XBE leaf.
+ * Open profile dump stream once; format section @EDI if not yet dumped. */
+void FUN_000906d0(char *section)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x200, %%esp\n\t"
-      "movl 0x3365b4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000906d0_1\n\t"
-      "pushl $0x2686f0\n\t"
-      "pushl $0x2686dc\n\t"
-      "call *%[c1d9e59]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x3365b4\n\t"
-      "je .LFUN_000906d0_2\n\t"
-      ".LFUN_000906d0_1:\n\t"
-      "cmpb $0, (%%edi)\n\t"
-      "jne .LFUN_000906d0_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x200\n\t"
-      "leal -0x200(%%ebp), %%esi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "movb $1, (%%edi)\n\t"
-      "call *%[c8fb60]\n\t"
-      "movl 0x3365b4, %%ecx\n\t"
-      "leal -0x200(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2686c4\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, (%%edi)\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000906d0_2:\n\t"
-      "movb $1, 0x3365c0\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d9e59] "m"(b906d0_c1d9e59), [c8fb60] "m"(b906d0_c8fb60), [c1d98ad] "m"(b906d0_c1d98ad)
-      : "memory");
+  extern char DAT_002686f0[];
+  extern char DAT_002686dc[];
+  extern char DAT_002686c4[];
+  void *stream;
+  char buf[0x200];
+
+  stream = *(void **)0x3365b4;
+  if (!stream) {
+    stream = crt_fopen(DAT_002686dc, DAT_002686f0);
+    *(void **)0x3365b4 = stream;
+    if (!stream)
+      goto done;
+  }
+  if (section[0] == 0) {
+    section[0] = 1;
+    ((void (*)(void *, char *, int))(void *)FUN_0008fb60)(section, buf, 0x200);
+    crt_fprintf(*(void **)0x3365b4, DAT_002686c4, buf);
+    section[0] = 1;
+  }
+done:
+  *(char *)0x3365c0 = 1;
 }
-#else
-#error "FUN_000906d0: clang naked draft required"
-#endif
 
 
 /* FUN_000907c0 (0x907c0) — XBE naked draft (batch 255). */
@@ -2376,7 +2348,7 @@ int profile_find_game_value(void *section, int16_t *out_index)
     system_exit(-1);
   }
   *out_index = (int16_t)0xffff;
-  return ((int)(uintptr_t)section | 0xffff);
+  return ((int)(unsigned int)section | 0xffff);
 }
 
 /* profile_frame_get_value (0x90d10) — XBE naked draft (batch 242). */
@@ -3108,7 +3080,6 @@ void FUN_00091cf0(void)
 #error "FUN_00091cf0: clang naked draft required"
 #endif
 
-
 /* FUN_00091d50 (0x91d50) — XBE naked draft (batch 252). */
 #if defined(__clang__)
 
@@ -3169,7 +3140,6 @@ void FUN_00091d50(void)
 #else
 #error "FUN_00091d50: clang naked draft required"
 #endif
-
 
 /* FUN_00091da0 (0x91da0) — XBE naked draft (batch 242). */
 #if defined(__clang__)
@@ -3512,7 +3482,7 @@ char *FUN_00092110(int32_t addr, int32_t *symtab)
   /* relift: cmp esi, dword ptr [edx] -> jb 0x9217d */
   /* cmp eax, ecx -> jl 0x92162 */
   snprintf((char *)0x00449f00, 16383, (char *)0x00268b40);
-  return (char *)(uintptr_t)1;
+  return (char *)(unsigned int)1;
 
   (void)eax;
   (void)ecx;
@@ -3580,7 +3550,6 @@ void FUN_000921c0(void)
 #error "FUN_000921c0: clang naked draft required"
 #endif
 
-
 /* 0x922a0 */
 void __fastcall FUN_000922a0(int skip, int32_t *frames, uint32_t max, uint32_t *count)
 {
@@ -3629,7 +3598,7 @@ void __fastcall FUN_000922a0(int skip, int32_t *frames, uint32_t max, uint32_t *
   /* mem[0x00449efc] = eax */
   /* mem[0x00449ef8] = ecx */
   /* relift: tail-call FUN_000922a0(); */
-  FUN_00092370(64, (void *)(uintptr_t)eax, 0, (void *)0);
+  FUN_00092370(64, (void *)(unsigned int)eax, 0, (void *)0);
   /* test edi, edi -> jne 0x92544 */
   error(0, (char *)0x00268c1c);
   /* cmp ebx, eax -> jl 0x92544 */

@@ -877,7 +877,7 @@ static void (*const b85c80_c10cc40)(float *out, float *angles) = angles_to_vecto
 static void (*const b85c80_c8aa80)(float *forward, float *up) = observer_up_from_forward;
 static bool (*const b85c80_cb5c30)(void) = game_time_get_paused;
 static char (*const b85c80_c85a40)(int) = FUN_00085a40;
-static void (*const b85c80_c85ab0)(void) = FUN_00085ab0;
+static void (*const b85c80_c85ab0)(void) = (void (*)(void))FUN_00085ab0;
 static void *(*const b85c80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static bool (*const b85c80_gerun)(void) = game_engine_running;
 static bool (*const b85c80_c84a70)(float *a, float *b) = valid_real_normal3d_perpendicular;
@@ -1321,79 +1321,26 @@ void director_set_mode(int16_t a0)
   }
 }
 
-/* director_save_camera (0x86360) — XBE naked draft (batch 146). */
-#if defined(__clang__)
-static void * (*const b86360_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static void * (*const b86360_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
-static int (*const b86360_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
-static int (*const b86360_c1d9dac)(void *stream) = crt_fclose;
-
-__attribute__((naked, noinline))
+/* director_save_camera (0x86360) — readable C lift from XBE leaf. */
 void director_save_camera(void)
 {
-  __asm__ volatile(
-      "pushl %%edi\n\t"
-      "pushl $0x265938\n\t"
-      "pushl $0x267084\n\t"
-      "call *%[c1d9e59]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Ldirector_save_camera_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "call *%[c8a4e0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "subl $0x14, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x267078\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d98ad]\n\t"
-      "flds 0x28(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x24(%%esi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds 0x20(%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x267078\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d98ad]\n\t"
-      "flds 0x34(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x30(%%esi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x267078\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d98ad]\n\t"
-      "flds 0x38(%%esi)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x267074\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d98ad]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d9dac]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      ".Ldirector_save_camera_1:\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [c1d9e59] "m"(b86360_c1d9e59), [c8a4e0] "m"(b86360_c8a4e0), [c1d98ad] "m"(b86360_c1d98ad), [c1d9dac] "m"(b86360_c1d9dac)
-      : "memory");
+  extern char DAT_00265938[];
+  extern char DAT_00267084[];
+  extern char DAT_00267078[];
+  extern char DAT_00267074[];
+  void *stream;
+  float *cam;
+
+  stream = crt_fopen(DAT_00267084, DAT_00265938);
+  if (!stream)
+    return;
+  cam = (float *)observer_get_camera(0);
+  crt_fprintf(stream, DAT_00267078, (double)cam[0], (double)cam[1], (double)cam[2]);
+  crt_fprintf(stream, DAT_00267078, (double)cam[8], (double)cam[9], (double)cam[10]);
+  crt_fprintf(stream, DAT_00267078, (double)cam[11], (double)cam[12], (double)cam[13]);
+  crt_fprintf(stream, DAT_00267074, (double)cam[14]);
+  crt_fclose(stream);
 }
-#else
-#error "director_save_camera: clang naked draft required"
-#endif
 
 
 /* director_get_perspective (0x86410) — readable C lift. */
@@ -1752,9 +1699,9 @@ void FUN_00086670(void)
 /* director_load_camera (0x86900) — XBE naked draft (batch 126). */
 #if defined(__clang__)
 static void * (*const b86900_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static void (*const b86900_c1da081)(void) = _fscanf;
+static void (*const b86900_c1da081)(void) = (void (*)(void))_fscanf;
 static int (*const b86900_c1d9dac)(void *stream) = crt_fclose;
-static void (*const b86900_c89350)(void) = FUN_00089350;
+static void (*const b86900_c89350)(void) = (void (*)(void))FUN_00089350;
 static void (*const b86900_c8aa80)(float *forward, float *up) = observer_up_from_forward;
 static float (*const b86900_c10c510)(float *v1, float *v2) = FUN_0010c510;
 
@@ -1884,11 +1831,11 @@ void director_load_camera(void)
 #if defined(__clang__)
 static void (*const b86a50_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b86a50_exitfn)(int) = system_exit;
-static void (*const b86a50_c89850)(void) = following_camera_new;
+static void (*const b86a50_c89850)(void) = (void (*)(void))following_camera_new;
 static void (*const b86a50_c865a0)(int16_t local_player_index, int param_1, bool param_2) = FUN_000865a0;
-static void (*const b86a50_c8cf10)(void) = FUN_0008cf10;
-static void (*const b86a50_c89350)(void) = FUN_00089350;
-static void (*const b86a50_c88c40)(void) = first_person_camera_new;
+static void (*const b86a50_c8cf10)(void) = (void (*)(void))FUN_0008cf10;
+static void (*const b86a50_c89350)(void) = (void (*)(void))FUN_00089350;
+static void (*const b86a50_c88c40)(void) = (void (*)(void))first_person_camera_new;
 static void (*const b86a50_cff4d0)(int channel, const char *format, ...) = console_printf;
 
 __attribute__((naked, noinline))
@@ -2032,9 +1979,9 @@ int director_camera_deterministic(int player_index, void *a, void *b)
 static void (*const b86be0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b86be0_exitfn)(int) = system_exit;
 static int (*const b86be0_cb6870)(int16_t local_player_index) = player_control_get_unit_index;
-static void (*const b86be0_c864b0)(void) = director_desired_perspective;
-static void (*const b86be0_c89850)(void) = following_camera_new;
-static void (*const b86be0_c88c40)(void) = first_person_camera_new;
+static void (*const b86be0_c864b0)(void) = (void (*)(void))director_desired_perspective;
+static void (*const b86be0_c89850)(void) = (void (*)(void))following_camera_new;
+static void (*const b86be0_c88c40)(void) = (void (*)(void))first_person_camera_new;
 static void (*const b86be0_c865a0)(int16_t local_player_index, int param_1, bool param_2) = FUN_000865a0;
 
 __attribute__((naked, noinline))
@@ -2131,9 +2078,9 @@ void FUN_00086be0(void)
 static void (*const b86cb0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b86cb0_exitfn)(int) = system_exit;
 static int (*const b86cb0_cb6870)(int16_t local_player_index) = player_control_get_unit_index;
-static void (*const b86cb0_c864b0)(void) = director_desired_perspective;
-static void (*const b86cb0_c89850)(void) = following_camera_new;
-static void (*const b86cb0_c88c40)(void) = first_person_camera_new;
+static void (*const b86cb0_c864b0)(void) = (void (*)(void))director_desired_perspective;
+static void (*const b86cb0_c89850)(void) = (void (*)(void))following_camera_new;
+static void (*const b86cb0_c88c40)(void) = (void (*)(void))first_person_camera_new;
 static void (*const b86cb0_c865a0)(int16_t local_player_index, int param_1, bool param_2) = FUN_000865a0;
 static void (*const b86cb0_c84fe0)(unsigned char param_1) = FUN_00084fe0;
 
@@ -2255,7 +2202,7 @@ static scenario_t * (*const b87800_c18e380)(void) = global_scenario_get;
 static void *(*const b87800_elem)(void *, int, int) = tag_block_get_element;
 static void *(*const b87800_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b87800_c10cc40)(float *out, float *angles) = angles_to_vector;
-static void (*const b87800_c89350)(void) = FUN_00089350;
+static void (*const b87800_c89350)(void) = (void (*)(void))FUN_00089350;
 
 __attribute__((naked, noinline))
 void FUN_00087800(void)
@@ -2373,79 +2320,34 @@ void editor_camera_set_focus(float *pos, float *orient)
   *(float *)0x3356ac = orient[1];
 }
 
-/* editor_camera_set_position (0x879d0) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void (*const b879d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b879d0_exitfn)(int) = system_exit;
-static void (*const b879d0_c87950)(void) = editor_camera_set_focus;
-
-__attribute__((naked, noinline))
-void editor_camera_set_position(void)
+/* editor_camera_set_position (0x879d0) — readable C lift from XBE leaf. */
+void editor_camera_set_position(float *pos, float *orient)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Leditor_camera_set_position_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x94\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x25bb20\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_set_position_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Leditor_camera_set_position_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x95\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x26710c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_set_position_2:\n\t"
-      "movl 0x3356b0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Leditor_camera_set_position_3\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c87950]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, 0x33569a\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Leditor_camera_set_position_3:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%eax)\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x10(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b879d0_assert), [exitfn] "m"(b879d0_exitfn), [c87950] "m"(b879d0_c87950)
-      : "memory");
+  extern char DAT_00267120[];
+  extern char DAT_0025bb20[];
+  extern char DAT_0026710c[];
+  float *dst;
+
+  if (!pos) {
+    display_assert(DAT_0025bb20, DAT_00267120, 0x94, 1);
+    system_exit(-1);
+  }
+  if (!orient) {
+    display_assert(DAT_0026710c, DAT_00267120, 0x95, 1);
+    system_exit(-1);
+  }
+  dst = *(float **)0x3356b0;
+  if (!dst) {
+    editor_camera_set_focus(pos, orient);
+    *(char *)0x33569a = 1;
+    return;
+  }
+  dst[0] = pos[0];
+  dst[1] = pos[1];
+  dst[2] = pos[2];
+  dst[3] = orient[0];
+  dst[4] = orient[1];
 }
-#else
-#error "editor_camera_set_position: clang naked draft required"
-#endif
 
 
 /* FUN_00087ac0 (0x87ac0) — readable C lift. */
@@ -2590,7 +2492,7 @@ void editor_camera_move_to_point(float *point)
 #if defined(__clang__)
 static void (*const b87d00_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b87d00_exitfn)(int) = system_exit;
-static void (*const b87d00_c87950)(void) = editor_camera_set_focus;
+static void (*const b87d00_c87950)(void) = (void (*)(void))editor_camera_set_focus;
 static void (*const b87d00_c109e90)(float *out, float yaw, float pitch, float roll) = FUN_00109e90;
 static void (*const b87d00_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
 static void (*const b87d00_c10cc40)(float *out, float *angles) = angles_to_vector;
@@ -2916,7 +2818,7 @@ void editor_camera_update(void)
 static void (*const b88050_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b88050_exitfn)(int) = system_exit;
 static void (*const b88050_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const b88050_c879d0)(void) = editor_camera_set_position;
+static void (*const b88050_c879d0)(float *, float *) = editor_camera_set_position;
 static void (*const b88050_c85280)(float *position, float *forward, float *up, float param_4, short param_5, int param_6) = FUN_00085280;
 static void (*const b88050_c87eb0)(int) = FUN_00087eb0;
 static void (*const b88050_cff4d0)(int channel, const char *format, ...) = console_printf;

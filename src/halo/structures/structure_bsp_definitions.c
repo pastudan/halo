@@ -201,7 +201,7 @@ void FUN_001929a0(int unused_a __attribute__((unused)), short *type_a __attribut
 static void *(*const b192a50_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b192a50_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b192a50_exitfn)(int) = system_exit;
-static void (*const b192a50_c1929a0)(void) = FUN_001929a0;
+static void (*const b192a50_c1929a0)(void) = (void (*)(void))FUN_001929a0;
 static void (*const b192a50_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
 static void (*const b192a50_c188890)(char flag, float *point0, float *point1, float *point2, void *color) = FUN_00188890;
 
@@ -347,78 +347,33 @@ void render_debug_leaf_faces(void)
 #endif
 
 
-/* FUN_00192bb0 (0x192bb0) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static bool (*const b192bb0_c21fb0)(float *v) = valid_real_normal3d;
-
-__attribute__((naked, noinline))
-void FUN_00192bb0(void)
+/* FUN_00192bb0 (0x192bb0) — readable C lift from XBE leaf.
+ * Normalize vector in place; return original length, or 0 on Inf/invalid. */
+float FUN_00192bb0(float *v)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "flds (%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs -0x4(%%ebp)\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "andl $0x7f800000, %%ecx\n\t"
-      "cmpl $0x7f800000, %%ecx\n\t"
-      "je .LFUN_00192bb0_1\n\t"
-      "fld %%st(0)\n\t"
-      "pushl %%eax\n\t"
-      "fmuls (%%eax)\n\t"
-      "fstps (%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "call *%[c21fb0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00192bb0_2\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00192bb0_1:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00192bb0_2:\n\t"
-      "flds 0x2533c0\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c21fb0] "m"(b192bb0_c21fb0)
-      : "memory");
+  float mag;
+  float scale;
+  uint32_t scale_bits;
+
+  mag = sqrtf(v[0] * v[0] + v[1] * v[1] + v[2] * v[2]);
+  scale = *(float *)0x2533c8 / mag;
+  scale_bits = *(uint32_t *)&scale;
+  if ((scale_bits & 0x7f800000u) == 0x7f800000u)
+    return *(float *)0x2533c0;
+  v[0] *= scale;
+  v[1] *= scale;
+  v[2] *= scale;
+  if (!valid_real_normal3d(v))
+    return *(float *)0x2533c0;
+  return mag;
 }
-#else
-#error "FUN_00192bb0: clang naked draft required"
-#endif
 
 
 /* intersect_planes3d (0x192c30) — XBE naked draft (batch 121). */
 #if defined(__clang__)
 static void (*const b192c30_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b192c30_exitfn)(int) = system_exit;
-static void (*const b192c30_c192bb0)(void) = FUN_00192bb0;
+static float (*const b192c30_c192bb0)(float *) = FUN_00192bb0;
 static uint8_t (*const b192c30_c99270)(float *plane, uint32_t basis) = FUN_00099270;
 static void (*const b192c30_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
 
@@ -586,8 +541,8 @@ static void *(*const b192da0_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b192da0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b192da0_exitfn)(int) = system_exit;
 static char (*const b192da0_c191bd0)(int search_value, void **param_1, char *out) = FUN_00191bd0;
-static void (*const b192da0_c192050)(void) = leaf_map_build_portal_from_leaves;
-static void (*const b192da0_c192da0)(void) = leaf_map_build_portals_from_leaf;
+static void (*const b192da0_c192050)(void) = (void (*)(void))leaf_map_build_portal_from_leaves;
+static void (*const b192da0_c192da0)(void) = (void (*)(void))leaf_map_build_portals_from_leaf;
 
 __attribute__((naked, noinline))
 void leaf_map_build_portals_from_leaf(void)
@@ -802,7 +757,7 @@ void leaf_map_build_portals_from_leaf(void)
 static void *(*const b192f80_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b192f80_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b192f80_exitfn)(int) = system_exit;
-static void (*const b192f80_c192c30)(void) = intersect_planes3d;
+static void (*const b192f80_c192c30)(void) = (void (*)(void))intersect_planes3d;
 static int16_t (*const b192f80_c106510)(int16_t count, float *points, float *line, int16_t max_count, float *out_points, uint32_t *out_bitmask, uint8_t *changed, float epsilon) = convex_polygon2d_clip_to_plane;
 static int16_t (*const b192f80_c1b9ad0)(void *tag_block) = tag_block_add_element;
 static bool (*const b192f80_c1b9a90)(void *block, int count) = tag_block_resize;
@@ -1034,8 +989,8 @@ void leaf_map_build_leaf_face_for_leaf_on_node(void)
 static void *(*const b1931e0_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b1931e0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1931e0_exitfn)(int) = system_exit;
-static void (*const b1931e0_c192da0)(void) = leaf_map_build_portals_from_leaf;
-static void (*const b1931e0_c1931e0)(void) = FUN_001931e0;
+static void (*const b1931e0_c192da0)(void) = (void (*)(void))leaf_map_build_portals_from_leaf;
+static void (*const b1931e0_c1931e0)(void) = (void (*)(void))FUN_001931e0;
 
 __attribute__((naked, noinline))
 void FUN_001931e0(void)
@@ -1137,7 +1092,7 @@ void FUN_001931e0(void)
 #if defined(__clang__)
 static void (*const b1932d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1932d0_exitfn)(int) = system_exit;
-static void (*const b1932d0_c192f80)(void) = leaf_map_build_leaf_face_for_leaf_on_node;
+static void (*const b1932d0_c192f80)(void) = (void (*)(void))leaf_map_build_leaf_face_for_leaf_on_node;
 
 __attribute__((naked, noinline))
 void FUN_001932d0(void)
@@ -1195,8 +1150,8 @@ void FUN_001932d0(void)
 static void *(*const b193340_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b193340_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b193340_exitfn)(int) = system_exit;
-static void (*const b193340_c1932d0)(void) = FUN_001932d0;
-static void (*const b193340_c193340)(void) = FUN_00193340;
+static void (*const b193340_c1932d0)(void) = (void (*)(void))FUN_001932d0;
+static void (*const b193340_c193340)(void) = (void (*)(void))FUN_00193340;
 
 __attribute__((naked, noinline))
 void FUN_00193340(void)
@@ -1292,8 +1247,8 @@ static void (*const b193420_assert)(const char *, const char *, int, bool) = dis
 static void (*const b193420_exitfn)(int) = system_exit;
 static void (*const b193420_penter)(void *) = profile_enter_private;
 static bool (*const b193420_c1b9a90)(void *block, int count) = tag_block_resize;
-static void (*const b193420_c193340)(void) = FUN_00193340;
-static void (*const b193420_c1931e0)(void) = FUN_001931e0;
+static void (*const b193420_c193340)(void) = (void (*)(void))FUN_00193340;
+static void (*const b193420_c1931e0)(void) = (void (*)(void))FUN_001931e0;
 static void (*const b193420_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static void (*const b193420_pexit)(void *) = profile_exit_private;
 
