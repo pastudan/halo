@@ -1460,112 +1460,60 @@ int FUN_000498d0(int16_t a, int16_t b)
 }
 
 
-/* FUN_00049990 (0x49990) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static int (*const b49990_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b49990_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
-static void (*const b49990_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-
-__attribute__((naked, noinline))
+/* FUN_00049990 (0x49990) — readable C lift. */
 void FUN_00049990(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x34, %%esp\n\t"
-      "movl 0x5accac, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x2ee6cc, -0x34(%%ebp)\n\t"
-      "movl $0x2ee6d8, -0x30(%%ebp)\n\t"
-      "movl $0x2ee6ec, -0x2c(%%ebp)\n\t"
-      "movl $0x2ee6dc, -0x28(%%ebp)\n\t"
-      "movl $0x2ee6d4, -0x24(%%ebp)\n\t"
-      "movl $0x2ee6f4, -0x20(%%ebp)\n\t"
-      "movl $0x2ee700, -0x1c(%%ebp)\n\t"
-      "movl $0x2ee6e8, -0x18(%%ebp)\n\t"
-      "movl $0x2ee6e4, -0x14(%%ebp)\n\t"
-      "movl $0x2ee6d0, -0x10(%%ebp)\n\t"
-      "movl $0x2ee6f0, -0xc(%%ebp)\n\t"
-      "movl $0x2ee6e0, -0x8(%%ebp)\n\t"
-      "movl $0x2ee6c4, -0x4(%%ebp)\n\t"
-      "jle .LFUN_00049990_3\n\t"
-      "movl $0x5accb0, %%edi\n\t"
-      "jmp .LFUN_00049990_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00049990_1:\n\t"
-      "movswl 0x5dccb0(,%%esi,2), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25acb8\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movswl 0x5dccb0(,%%esi,2), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $0xc, %%eax\n\t"
-      "jle .LFUN_00049990_2\n\t"
-      "movl $0xc, %%eax\n\t"
-      ".LFUN_00049990_2:\n\t"
-      "movl -0x34(%%ebp,%%eax,4), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x5ab100\n\t"
-      "pushl %%edi\n\t"
-      "pushl $1\n\t"
-      "call *%[c189cb0]\n\t"
-      "movl 0x5accac, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incl %%esi\n\t"
-      "addl $0xc, %%edi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_00049990_1\n\t"
-      ".LFUN_00049990_3:\n\t"
-      "movl 0x5eccb0, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00049990_6\n\t"
-      "movl $0x5eccb8, %%esi\n\t"
-      ".LFUN_00049990_4:\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "cmpl $0xc, %%eax\n\t"
-      "jle .LFUN_00049990_5\n\t"
-      "movl $0xc, %%eax\n\t"
-      ".LFUN_00049990_5:\n\t"
-      "movl -0x34(%%ebp,%%eax,4), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movswl -0x2(%%esi), %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x5accb0(,%%edx,4), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movswl -0x4(%%esi), %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%ecx\n\t"
-      "leal 0x5accb0(,%%ecx,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl 0x5eccb0, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incl %%edi\n\t"
-      "addl $6, %%esi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jl .LFUN_00049990_4\n\t"
-      ".LFUN_00049990_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(b49990_c1d90f0), [c189cb0] "m"(b49990_c189cb0), [c189270] "m"(b49990_c189270)
-      : "memory");
-}
-#else
-#error "FUN_00049990: clang naked draft required"
-#endif
+  int color_ptrs[13];
+  int count;
+  int i;
+  int idx;
+  char *pos;
+  short *edge;
 
+  color_ptrs[0] = 0x2ee6cc;
+  color_ptrs[1] = 0x2ee6d8;
+  color_ptrs[2] = 0x2ee6ec;
+  color_ptrs[3] = 0x2ee6dc;
+  color_ptrs[4] = 0x2ee6d4;
+  color_ptrs[5] = 0x2ee6f4;
+  color_ptrs[6] = 0x2ee700;
+  color_ptrs[7] = 0x2ee6e8;
+  color_ptrs[8] = 0x2ee6e4;
+  color_ptrs[9] = 0x2ee6d0;
+  color_ptrs[10] = 0x2ee6f0;
+  color_ptrs[11] = 0x2ee6e0;
+  color_ptrs[12] = 0x2ee6c4;
+
+  count = *(int *)0x5accac;
+  if (count > 0) {
+    pos = (char *)0x5accb0;
+    for (i = 0; i < count; i++) {
+      idx = *(short *)(0x5dccb0 + i * 2);
+      crt_sprintf((char *)0x5ab100, (const char *)0x25acb8, idx);
+      idx = *(short *)(0x5dccb0 + i * 2);
+      if (idx > 0xc)
+        idx = 0xc;
+      FUN_00189cb0(1, pos, (void *)0x5ab100, *(int *)color_ptrs[idx]);
+      pos += 0xc;
+    }
+  }
+
+  count = *(int *)0x5eccb0;
+  if (count > 0) {
+    edge = (short *)0x5eccb4;
+    for (i = 0; i < count; i++) {
+      idx = edge[2];
+      if (idx > 0xc)
+        idx = 0xc;
+      FUN_00189270(
+          1,
+          (float *)(0x5accb0 + (int)edge[0] * 12),
+          (float *)(0x5accb0 + (int)edge[1] * 12),
+          (void *)(uintptr_t)*(int *)color_ptrs[idx]);
+      edge += 3;
+    }
+  }
+}
 
 /* 0x49ac0 */
 char *ai_debug_describe_actor(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size)
@@ -12413,7 +12361,7 @@ void FUN_00052bb0(int clump_handle __attribute__((unused)))
 static void *(*const b534d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b534d0_c4b7a0)(void) = FUN_0004b7a0;
 static void (*const b534d0_c494e0)(void) = FUN_000494e0;
-static void (*const b534d0_c49990)(void) = FUN_00049990;
+static void (*const b534d0_c49990)(void) = (void *)FUN_00049990;
 static void (*const b534d0_c495b0)(void) = FUN_000495b0;
 static void (*const b534d0_c52bb0)(int clump_handle) = FUN_00052bb0;
 static void (*const b534d0_c4c920)(int actor_handle, char debug_selected, void *debug_context) = FUN_0004c920;

@@ -620,7 +620,7 @@
         },
         {
           "addr": "0x16de60",
-          "decl": "int FUN_0016de60(int a0, int a1, int a2);",
+          "decl": "void FUN_0016de60(void);",
           "ported": true
         },
         {
@@ -35156,7 +35156,8 @@
         {
           "addr": "0x49990",
           "decl": "void FUN_00049990(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00049990"
         },
         {
           "addr": "0x49ac0",
@@ -38688,7 +38689,7 @@
         },
         {
           "addr": "0x15e7d0",
-          "decl": "int __stdcall FUN_0015e7d0(void *obj@<eax>, int *out@<edx>, int addend);",
+          "decl": "int FUN_0015e7d0(void *obj@<eax>, int *out@<edx>, int addend);",
           "ported": true
         },
         {
@@ -39126,7 +39127,7 @@
         },
         {
           "addr": "0x168ca0",
-          "decl": "int __stdcall FUN_00168ca0(void *obj@<eax>, int *out@<edx>, int addend);",
+          "decl": "int FUN_00168ca0(void *obj@<eax>, int *out@<edx>, int addend);",
           "ported": true
         },
         {
@@ -40033,57 +40034,57 @@
         },
         {
           "addr": "0x2038df",
-          "decl": "void FUN_002038df(void);",
+          "decl": "void DirectSoundUseFullHRTF(void);",
           "ported": true
         },
         {
           "addr": "0x204c79",
-          "decl": "void FUN_00204c79(int *caps, void *driver);",
+          "decl": "void IDirectSound_GetSpeakerConfig(void);",
           "ported": true
         },
         {
           "addr": "0x204c5d",
-          "decl": "int FUN_00204c5d(void *driver, int *wf);",
+          "decl": "void IDirectSound_GetCaps(void);",
           "ported": true
         },
         {
           "addr": "0x204c95",
-          "decl": "int FUN_00204c95(void *driver, void *guid, int a, int *b, int *c);",
+          "decl": "void IDirectSound_DownloadEffectsImage(void);",
           "ported": true
         },
         {
           "addr": "0x204d41",
-          "decl": "void FUN_00204d41(void *driver, int a, int b);",
+          "decl": "void IDirectSound_SetMixBinHeadroom(void);",
           "ported": true
         },
         {
           "addr": "0x204d81",
-          "decl": "int FUN_00204d81(void *driver, int pri);",
+          "decl": "void IDirectSound_SetDistanceFactor(void);",
           "ported": true
         },
         {
           "addr": "0x204e48",
-          "decl": "int FUN_00204e48(void *driver, float vol);",
+          "decl": "void IDirectSound_SetRolloffFactor(void);",
           "ported": true
         },
         {
           "addr": "0x2052de",
-          "decl": "void FUN_002052de(void *channel, int a, void *data);",
+          "decl": "void IDirectSoundStream_SetMixBinVolumes_12(void);",
           "ported": true
         },
         {
           "addr": "0x205bd8",
-          "decl": "void FUN_00205bd8(void *channel, int a, void *data);",
+          "decl": "void IDirectSoundStream_SetMixBins(void);",
           "ported": true
         },
         {
           "addr": "0x2060f8",
-          "decl": "int FUN_002060f8(int a, void *b, void *c, void *d);",
+          "decl": "void IDirectSound_CreateSoundStream(void);",
           "ported": true
         },
         {
           "addr": "0x206232",
-          "decl": "int FUN_00206232(void *driver, int a, int b);",
+          "decl": "void DirectSoundCreate(void);",
           "ported": true
         }
       ],
