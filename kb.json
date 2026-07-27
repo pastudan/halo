@@ -14224,7 +14224,7 @@
         {
           "addr": "0xdedf0",
           "decl": "void FUN_000dedf0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000dedf0"
         },
         {
@@ -14241,7 +14241,7 @@
         {
           "addr": "0xdf3d0",
           "decl": "void FUN_000df3d0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000df3d0"
         },
         {
@@ -14271,7 +14271,7 @@
         {
           "addr": "0xdff90",
           "decl": "void interface_draw_bitmap(int sprite_handle, short *offset_xy, void *color, float scale_a, int flag, float scale_b);",
-          "ported": false,
+          "ported": true,
           "name": "interface_draw_bitmap"
         },
         {

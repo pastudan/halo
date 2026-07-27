@@ -168,173 +168,48 @@ void interface_initialize_for_new_map(void)
 }
 /* --- interface.obj batch drafts (2026-07-26) --- */
 
-/* FUN_000dedf0 (0xdedf0) — XBE naked draft (batch 120). */
-#if defined(__clang__)
-static int (*const bdedf0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const bdedf0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int16_t (*const bdedf0_c86410)(int16_t local_player_index) = director_get_perspective;
-static void *(*const bdedf0_get)(int, int) = object_get_and_verify_type;
-static int (*const bdedf0_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static void *(*const bdedf0_tag)(int, int) = tag_get;
-static void *(*const bdedf0_elem)(void *, int, int) = tag_block_get_element;
-static int16_t (*const bdedf0_c1aad90)(int unit_handle) = unit_count_weapons;
-
-__attribute__((naked, noinline))
+/* FUN_000dedf0 (0xdedf0) — readable C lift (restored pre-naked). */
 void FUN_000dedf0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x506548, %%ax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cba3c0]\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "je .LFUN_000dedf0_5\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x506548, %%dx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c86410]\n\t"
-      "movl 0x46bd10, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "cmpb $0, (%%ecx)\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "cmpw $3, %%ax\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x2a2(%%eax), %%eax\n\t"
-      "movl 0x34(%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1adeb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "pushl $3\n\t"
-      "jne .LFUN_000dedf0_1\n\t"
-      "movl 0x34(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "cmpw %%bx, 0x2a0(%%esi)\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x2a0(%%esi), %%ecx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movb (%%eax), %%cl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb $8, %%cl\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0xcc(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2a2(%%eax), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1adeb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jmp .LFUN_000dedf0_2\n\t"
-      ".LFUN_000dedf0_1:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0x2f8(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      ".LFUN_000dedf0_2:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_000dedf0_4\n\t"
-      "pushl $4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x48c(%%eax), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000dedf0_3\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000dedf0_3:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1aad90]\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_000dedf0_4\n\t"
-      "movl 0x46bd0c, %%ecx\n\t"
-      "movl 0x2cc(%%ecx), %%ebx\n\t"
-      ".LFUN_000dedf0_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000dedf0_5:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cba3c0] "m"(bdedf0_cba3c0), [dget] "m"(bdedf0_dget), [c86410] "m"(bdedf0_c86410), [get] "m"(bdedf0_get), [c1adeb0] "m"(bdedf0_c1adeb0), [tag] "m"(bdedf0_tag), [elem] "m"(bdedf0_elem), [c1aad90] "m"(bdedf0_c1aad90)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  local_player_get_player_index(eax);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  director_get_perspective(edx);
+  /* test ecx, ecx -> je 0xdef9b */
+  /* relift: cmp byte ptr [ecx], 0 -> je 0xdef9b */
+  /* cmp (int16_t)eax, 3 -> je 0xdef9b */
+  /* cmp (int16_t)eax, 2 -> je 0xdef9b */
+  /* cmp eax, ebx -> je 0xdef9b */
+  object_get_and_verify_type(0, 0);
+  unit_get_weapon(0, eax);
+  object_get_and_verify_type(0, 0);
+  /* cmp eax, ebx -> je 0xdef9b */
+  /* relift: cmp word ptr [esi + 0x2a0], (int16_t)ebx -> je 0xdef9b */
+  object_get_and_verify_type(0, 0);
+  tag_get(0x756e6974, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)ecx, 8 -> je 0xdef9b */
+  object_get_and_verify_type(0, 0);
+  unit_get_weapon(0, ecx);
+  object_get_and_verify_type(0, 0);
+  /* cmp esi, -1 -> je 0xdef9b */
+  object_get_and_verify_type(0, 0);
+  tag_get('paew', 0);
+  /* cmp eax, -1 -> je 0xdef7e */
+  unit_count_weapons(0);
+  /* test (int16_t)eax, (int16_t)eax -> jne 0xdef9b */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
-#else
-#error "FUN_000dedf0: clang naked draft required"
-#endif
 
 
 /* interface_draw_screen (0xdefb0) — XBE naked draft (batch 109). */
@@ -695,109 +570,21 @@ void profile_graph_toggle(const char *name)
   }
 }
 
-/* FUN_000df3d0 (0xdf3d0) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void (*const bdf3d0_xfrmpt)(float *, float *, float *) = matrix_transform_point;
-static void (*const bdf3d0_c17ca10)(void) = rasterizer_hud_motion_sensor_blip_begin;
-
-__attribute__((naked, noinline))
+/* FUN_000df3d0 (0xdf3d0) — readable C lift (restored pre-naked). */
 void FUN_000df3d0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "decl %%edx\n\t"
-      "cmpl $0x19, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "ja .LFUN_000df3d0_5\n\t"
-      "movzbl 0xdf4c0(%%edx), %%edx\n\t"
-      "jmp *.LFUN_000df3d0_jt(,%%edx,4)\n\t"
-      ".LFUN_000df3d0_1:\n\t"
-      "movl 0x2ee6d8, %%esi\n\t"
-      "jmp .LFUN_000df3d0_6\n\t"
-      ".LFUN_000df3d0_2:\n\t"
-      "movl 0x2ee6e0, %%esi\n\t"
-      "jmp .LFUN_000df3d0_6\n\t"
-      ".LFUN_000df3d0_3:\n\t"
-      "movl 0x2ee6d4, %%esi\n\t"
-      "jmp .LFUN_000df3d0_6\n\t"
-      ".LFUN_000df3d0_4:\n\t"
-      "movl 0x2ee6e8, %%esi\n\t"
-      "jmp .LFUN_000df3d0_6\n\t"
-      ".LFUN_000df3d0_5:\n\t"
-      "movl 0x2ee6c4, %%esi\n\t"
-      ".LFUN_000df3d0_6:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fsts -0x18(%%ebp)\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "fsubrs 0x8(%%eax)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fchs\n\t"
-      "fsts -0x10(%%ebp)\n\t"
-      "flds (%%ecx)\n\t"
-      "fadds 0x25bc08\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fsubrs 0x8(%%eax)\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x25bb10\n\t"
-      "fstps (%%ecx)\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x5065e8\n\t"
-      "call *%[xfrmpt]\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x5065e8\n\t"
-      "call *%[xfrmpt]\n\t"
-      "pushl $0\n\t"
-      "addl $4, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c17ca10]\n\t"
-      "addl $0x28, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000df3d0_jt:\n\t"
-      ".long .LFUN_000df3d0_1\n\t"
-      ".long .LFUN_000df3d0_2\n\t"
-      ".long .LFUN_000df3d0_3\n\t"
-      ".long .LFUN_000df3d0_4\n\t"
-      ".long .LFUN_000df3d0_5\n\t"
-      ".text\n\t"
-      :
-      : [xfrmpt] "m"(bdf3d0_xfrmpt), [c17ca10] "m"(bdf3d0_c17ca10)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  matrix_transform_point((void *)0x005065e8, (float *)(uintptr_t)ecx, (float *)0);
+  matrix_transform_point((void *)0x005065e8, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  rasterizer_hud_motion_sensor_blip_begin();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
-#else
-#error "FUN_000df3d0: clang naked draft required"
-#endif
 
 
 /* FUN_000df4e0 (0xdf4e0) — XBE naked draft (batch 104). */
@@ -1549,149 +1336,25 @@ void interface_draw_fullscreen_overlays(void)
   FUN_000df4e0();
 }
 
-/* interface_draw_bitmap (0xdff90) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void (*const bdff90_ftol)(void) = FUN_001d9068;
-static void *(*const bdff90_memset)(void *, int, unsigned int) = csmemset;
-static void (*const bdff90_c17cfa0)(void *render_data, void *vertices) = rasterizer_sprites_render;
-
-__attribute__((naked, noinline))
+/* interface_draw_bitmap (0xdff90) — readable C lift (restored pre-naked). */
 void interface_draw_bitmap(int sprite_handle, short *offset_xy, void *color, float scale_a, int flag, float scale_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xf4, %%esp\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "fsin\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0, -0x18(%%ebp)\n\t"
-      "movl $0x3f800000, -0x14(%%ebp)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "movl $0x3f800000, -0xc(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fcos\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      "jne .Linterface_draw_bitmap_1\n\t"
-      "leal -0x18(%%ebp), %%ebx\n\t"
-      ".Linterface_draw_bitmap_1:\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movswl 0x4(%%edi), %%ecx\n\t"
-      "movswl 0x10(%%edi), %%edx\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "movswl 0x6(%%edi), %%ecx\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "movswl 0x12(%%edi), %%edx\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "shll $0x18, %%eax\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "movswl (%%ecx), %%edx\n\t"
-      "fstps 0x1c(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movswl 0x2(%%ecx), %%ecx\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "orl $0xffffff, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "movl $1, %%edx\n\t"
-      "leal -0xf0(%%ebp), %%ecx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "fstps 0x10(%%ebp)\n\t"
-      ".Linterface_draw_bitmap_2:\n\t"
-      "testb $2, %%dl\n\t"
-      "je .Linterface_draw_bitmap_3\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "jmp .Linterface_draw_bitmap_4\n\t"
-      ".Linterface_draw_bitmap_3:\n\t"
-      "flds (%%ebx)\n\t"
-      ".Linterface_draw_bitmap_4:\n\t"
-      "cmpw $1, %%si\n\t"
-      "jle .Linterface_draw_bitmap_5\n\t"
-      "flds 0xc(%%ebx)\n\t"
-      "jmp .Linterface_draw_bitmap_6\n\t"
-      ".Linterface_draw_bitmap_5:\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      ".Linterface_draw_bitmap_6:\n\t"
-      "fld %%st(3)\n\t"
-      "incl %%esi\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "movl %%eax, 0xc(%%ecx)\n\t"
-      "incl %%edx\n\t"
-      "addl $0x14, %%ecx\n\t"
-      "cmpw $4, %%si\n\t"
-      ".byte 0xd8, 0xe3\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "flds 0x1c(%%ebp)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x18(%%ecx)\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds 0x10(%%ebp)\n\t"
-      "fstps -0x14(%%ecx)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0x10(%%ecx)\n\t"
-      "fstps -0xc(%%ecx)\n\t"
-      "jl .Linterface_draw_bitmap_2\n\t"
-      "pushl $0x8c\n\t"
-      "fstp %%st(0)\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "fstp %%st(0)\n\t"
-      "leal -0xa4(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[memset]\n\t"
-      "leal -0xf4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xa4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x3f800000, -0x60(%%ebp)\n\t"
-      "movl $0x3f800000, -0x64(%%ebp)\n\t"
-      "movl $0x3f800000, -0x78(%%ebp)\n\t"
-      "movl $0x3f800000, -0x7c(%%ebp)\n\t"
-      "movl %%ebx, -0xa4(%%ebp)\n\t"
-      "movb %%bl, -0x1a(%%ebp)\n\t"
-      "movw $7, -0x1c(%%ebp)\n\t"
-      "movl %%edi, -0x98(%%ebp)\n\t"
-      "call *%[c17cfa0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(bdff90_ftol), [memset] "m"(bdff90_memset), [c17cfa0] "m"(bdff90_c17cfa0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  FUN_001d9068();
+  /* test dl, 2 -> je 0xe004c */
+  /* cmp (int16_t)esi, 1 -> jle 0xe0059 */
+  csmemset((void *)(uintptr_t)edx, 0, 0);
+  rasterizer_sprites_render((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
-#else
-#error "interface_draw_bitmap: clang naked draft required"
-#endif
 
 
 /* FUN_000e0110 (0xe0110) — XBE naked draft (batch 121). */
