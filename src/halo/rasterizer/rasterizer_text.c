@@ -4241,35 +4241,22 @@ void * rasterizer_transparent_geometry_group_new(void)
 #endif
 
 
-/* rasterizer_secondary_geometry_group_new (0x184360) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void * rasterizer_secondary_geometry_group_new(void)
+/* rasterizer_secondary_geometry_group_new (0x184360) — readable C lift. */
+void *rasterizer_secondary_geometry_group_new(void)
 {
-  __asm__ volatile(
-      "movl 0x4d0cf8, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl $0x20, %%ecx\n\t"
-      "jge .Lrasterizer_secondary_geometry_group_new_1\n\t"
-      "movl 0x4d0cf0, %%edx\n\t"
-      "leal (%%ecx,%%ecx,4), %%eax\n\t"
-      "shll $5, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "movl %%ecx, 0x90(%%eax)\n\t"
-      "incl %%ecx\n\t"
-      "movl %%ecx, 0x4d0cf8\n\t"
-      ".Lrasterizer_secondary_geometry_group_new_1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "rasterizer_secondary_geometry_group_new: clang naked draft required"
-#endif
+  int index;
+  char *base;
+  char *group;
 
+  index = *(int *)0x4d0cf8;
+  if (index >= 0x20)
+    return NULL;
+  base = *(char **)0x4d0cf0;
+  group = base + index * 0xa0;
+  *(int *)(group + 0x90) = index;
+  *(int *)0x4d0cf8 = index + 1;
+  return group;
+}
 
 /* rasterizer_secondary_geometry_groups_get (0x184390) — readable C lift. */
 void *rasterizer_secondary_geometry_groups_get(uint16_t *out_count)

@@ -30726,7 +30726,7 @@
           "addr": "0x184360",
           "name": "rasterizer_secondary_geometry_group_new",
           "decl": "void *rasterizer_secondary_geometry_group_new(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x184390",
