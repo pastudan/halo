@@ -6040,13 +6040,13 @@
           "addr": "0x8e250",
           "decl": "char *system_stristr(const char *str, const char *substr);",
           "name": "system_stristr",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8e2b0",
           "decl": "uint32_t system_string_hash(const char *str);",
           "name": "system_string_hash",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8e2e0",
@@ -32115,7 +32115,7 @@
           "addr": "0x11d250",
           "decl": "void lru_cache_dispose(void *cache);",
           "name": "lru_cache_dispose",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/memory/lruv_cache.c"
         },
         {

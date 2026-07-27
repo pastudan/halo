@@ -1261,47 +1261,16 @@ void *FUN_0011d110(const char *name, int total_size, int block_size,
   return cache;
 }
 
-/* lru_cache_dispose (0x11d250) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void (*const b11d250_c11d090)(int cache) = FUN_0011d090;
-static void (*const b11d250_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-void lru_cache_dispose(void *cache __attribute__((unused)))
+/* lru_cache_dispose (0x11d250) — readable C lift. */
+void lru_cache_dispose(void *cache)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c11d090]\n\t"
-      "movb 0x38(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Llru_cache_dispose_1\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "pushl $0x9c\n\t"
-      "pushl $0x28fa1c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Llru_cache_dispose_1:\n\t"
-      "pushl $0x9d\n\t"
-      "pushl $0x28fa1c\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11d090] "m"(b11d250_c11d090), [c8ef70] "m"(b11d250_c8ef70)
-      : "memory");
+  extern char DAT_0028fa1c[];
+  char *c = (char *)cache;
+  FUN_0011d090((int)cache);
+  if (c[0x38])
+    debug_free(*(void **)(c + 0x34), DAT_0028fa1c, 0x9c);
+  debug_free(cache, DAT_0028fa1c, 0x9d);
 }
-#else
-#error "lru_cache_dispose: clang naked draft required"
-#endif
-
 
 /* 0x11d2a0: Flush all cached entries. Runs the teardown helper
  * (FUN_0011d090, cache in @eax), then iterates the fixed-stride element

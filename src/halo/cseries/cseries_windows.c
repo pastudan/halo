@@ -1,113 +1,37 @@
-/* system_stristr (0x8e250) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static int (*const b8e250_c8df60)(const char *s1) = csstrlen;
-static int (*const b8e250_c1e6596)(const char *a, const char *b, size_t n) = __strnicmp;
 
-__attribute__((naked, noinline))
-char * system_stristr(const char *str __attribute__((unused)), const char *substr __attribute__((unused)))
+/* system_stristr (0x8e250) — readable C lift. */
+char *system_stristr(const char *str, const char *substr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movb (%%edi), %%bl\n\t"
-      "incl %%edi\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lsystem_stristr_3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8df60]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "nop\n\t"
-      ".Lsystem_stristr_1:\n\t"
-      "movb (%%esi), %%al\n\t"
-      "incl %%esi\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsystem_stristr_2\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "jne .Lsystem_stristr_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1e6596]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsystem_stristr_1\n\t"
-      "decl %%esi\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsystem_stristr_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsystem_stristr_3:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8df60] "m"(b8e250_c8df60), [c1e6596] "m"(b8e250_c1e6596)
-      : "memory");
+  const char *p;
+  char first;
+  int rest_len;
+
+  first = *substr;
+  substr++;
+  if (!first)
+    return (char *)str;
+  rest_len = csstrlen(substr);
+  p = str;
+  for (;;) {
+    char c = *p++;
+    if (!c)
+      return (char *)0;
+    if (c != first)
+      continue;
+    if (__strnicmp(p, substr, (size_t)rest_len) == 0)
+      return (char *)(p - 1);
+  }
 }
-#else
-#error "system_stristr: clang naked draft required"
-#endif
 
 
-/* system_string_hash (0x8e2b0) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void (*const b8e2b0_c1190b0)(uint32_t *checksum) = crc_new;
-static int (*const b8e2b0_c8df60)(const char *s1) = csstrlen;
-static void (*const b8e2b0_c119100)(uint32_t *checksum, void *data, int size) = crc_checksum_buffer;
-
-__attribute__((naked, noinline))
-uint32_t system_string_hash(const char *str __attribute__((unused)))
+/* system_string_hash (0x8e2b0) — readable C lift. */
+uint32_t system_string_hash(const char *str)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1190b0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8df60]\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119100]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1190b0] "m"(b8e2b0_c1190b0), [c8df60] "m"(b8e2b0_c8df60), [c119100] "m"(b8e2b0_c119100)
-      : "memory");
+  uint32_t checksum;
+  crc_new(&checksum);
+  crc_checksum_buffer(&checksum, (void *)str, csstrlen(str));
+  return checksum;
 }
-#else
-#error "system_string_hash: clang naked draft required"
-#endif
-
 
 void display_debug_string(const char *str)
 {
