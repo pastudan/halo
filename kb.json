@@ -27943,7 +27943,8 @@
         {
           "addr": "0xf3540",
           "decl": "void mp_level_select_list_update_displayed_items(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "mp_level_select_list_update_displayed_items"
         },
         {
           "addr": "0xf3590",
