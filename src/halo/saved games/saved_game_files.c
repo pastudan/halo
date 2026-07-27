@@ -1309,77 +1309,32 @@ char playlist_profile_delete(int profile_index, void *variant)
 
 
 
-/* playlist_profile_read (0x1c2750) — XBE naked draft (batch 262). */
-#if defined(__clang__)
-static void (*const b1c2750_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c2750_exitfn)(int) = system_exit;
-static void (*const b1c2750_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c2750_c81720)(void *thread_reference) = thread_is_done;
-static void (*const b1c2750_c81770)(void *thread_reference) = thread_close;
-static void * (*const b1c2750_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static bool (*const b1c2750_c81630)(int priority_flags, void *function, int param, void **thread_reference) = thread_new;
-
-__attribute__((naked, noinline))
-void playlist_profile_read(int profile_index __attribute__((unused)))
+/* playlist_profile_read (0x1c2750) — readable C lift (esi=out). */
+void playlist_profile_read(int profile_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplaylist_profile_read_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ea\n\t"
-      "pushl $0x2ba59c\n\t"
-      "pushl $0x282808\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_read_1:\n\t"
-      "movl 0x4eaaa4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplaylist_profile_read_3\n\t"
-      "pushl $0x2ba728\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "nop\n\t"
-      ".Lplaylist_profile_read_2:\n\t"
-      "movl 0x4eaaa4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81720]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplaylist_profile_read_2\n\t"
-      "movl 0x4eaaa4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c81770]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, 0x4eaaa4\n\t"
-      ".Lplaylist_profile_read_3:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x4eaa3c\n\t"
-      "movl %%edx, 0x4eaa38\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x4eaaa4\n\t"
-      "pushl $0x4eaa38\n\t"
-      "pushl $0x1c2550\n\t"
-      "pushl $0\n\t"
-      "call *%[c81630]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c2750_assert), [exitfn] "m"(b1c2750_exitfn), [c8f390] "m"(b1c2750_c8f390), [c81720] "m"(b1c2750_c81720), [c81770] "m"(b1c2750_c81770), [c8e0b0] "m"(b1c2750_c8e0b0), [c81630] "m"(b1c2750_c81630)
-      : "memory");
+  extern char DAT_00282808[];
+  extern char DAT_002ba59c[];
+  extern char DAT_002ba728[];
+  void *out;
+  void *thr;
+
+  __asm__ volatile("movl %%esi, %0" : "=r"(out));
+  if (out == 0) {
+    display_assert(DAT_00282808, DAT_002ba59c, 0x1ea, 1);
+    system_exit(-1);
+  }
+  thr = *(void **)0x4eaaa4;
+  if (thr != 0) {
+    error(2, DAT_002ba728);
+    while (!thread_is_done(thr))
+      ;
+    thread_close(*(void **)0x4eaaa4);
+    *(void **)0x4eaaa4 = 0;
+  }
+  *(int *)0x4eaa38 = profile_index;
+  csmemcpy((void *)0x4eaa3c, out, 0x68);
+  thread_new(0, (void *)0x1c2550, (int)0x4eaa38, (void **)0x4eaaa4);
 }
-#else
-#error "playlist_profile_read: clang naked draft required"
-#endif
-
-
 /* playlist_profile_get_display_name (0x1c27f0) — readable C lift from XBE leaf. */
 void playlist_profile_get_display_name(int profile_index, game_variant_t *variant)
 {

@@ -23787,7 +23787,7 @@
         {
           "addr": "0x1c2750",
           "decl": "void playlist_profile_read(int profile_index);",
-          "ported": false,
+          "ported": true,
           "name": "playlist_profile_read"
         },
         {
