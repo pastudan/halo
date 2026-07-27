@@ -26825,8 +26825,8 @@
         },
         {
           "addr": "0x817e0",
-          "decl": "void create_mutex(void);",
-          "ported": false
+          "decl": "char create_mutex(void **out);",
+          "ported": true
         },
         {
           "addr": "0x81910",
@@ -39726,7 +39726,7 @@
         },
         {
           "addr": "0x1cffe5",
-          "decl": "void CreateMutexA(void);",
+          "decl": "void *__stdcall CreateMutexA(void *attrs, int initial_owner, const char *name);",
           "ported": false
         },
         {

@@ -739,87 +739,35 @@ void *FUN_000815f0(void)
   return 0;
 }
 
-/* create_mutex (0x817e0) — XBE naked draft (batch 341). */
-#if defined(__clang__)
-static void (*const b817e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b817e0_exitfn)(int) = system_exit;
-static void (*const b817e0_c815f0)(void) = FUN_000815f0;
-static int (*const b817e0_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
-static void (*const b817e0_c1cffe5)(void) = CreateMutexA;
-
-__attribute__((naked, noinline))
-void create_mutex(void)
+/* create_mutex (0x817e0) — readable C lift. */
+char create_mutex(void **out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "jne .Lcreate_mutex_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb8\n\t"
-      "pushl $0x265f5c\n\t"
-      "pushl $0x265fb4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcreate_mutex_1:\n\t"
-      "call *%[c815f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lcreate_mutex_3\n\t"
-      "movl 0x334988, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x265fa8\n\t"
-      "incl %%eax\n\t"
-      "leal 0x4(%%esi), %%edi\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, 0x334988\n\t"
-      "call *%[c1d9179]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c1cffe5]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "popl %%edi\n\t"
-      "je .Lcreate_mutex_2\n\t"
-      "movl %%esi, (%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcreate_mutex_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, (%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcreate_mutex_3:\n\t"
-      "movl %%esi, (%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b817e0_assert), [exitfn] "m"(b817e0_exitfn), [c815f0] "m"(b817e0_c815f0), [c1d9179] "m"(b817e0_c1d9179), [c1cffe5] "m"(b817e0_c1cffe5)
-      : "memory");
-}
-#else
-#error "create_mutex: clang naked draft required"
-#endif
+  void *obj;
+  char name[0x20];
+  void *handle;
+  unsigned int seq;
 
+  if (out == NULL) {
+    display_assert((const char *)0x265fb4, (const char *)0x265f5c, 0xb8, 1);
+    system_exit(-1);
+  }
+  obj = FUN_000815f0();
+  if (obj == NULL) {
+    *out = NULL;
+    return 0;
+  }
+  seq = *(unsigned int *)0x334988;
+  *(unsigned int *)0x334988 = seq + 1;
+  snprintf((char *)obj + 4, 0x20, (const char *)0x265fa8, seq);
+  handle = CreateMutexA(NULL, 0, (const char *)obj + 4);
+  *(void **)obj = handle;
+  if (handle == NULL) {
+    *out = NULL;
+    return 0;
+  }
+  *out = obj;
+  return 1;
+}
 
 /* FUN_00081910 (0x81910) — readable C lift. */
 void FUN_00081910(void * a0)
