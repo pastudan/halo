@@ -4711,8 +4711,8 @@
         },
         {
           "addr": "0x7d300",
-          "decl": "void palette_find_closest_match(void);",
-          "ported": false
+          "decl": "unsigned int palette_find_closest_match(unsigned int *palette, unsigned int color);",
+          "ported": true
         },
         {
           "addr": "0x7d440",
@@ -20177,13 +20177,13 @@
         },
         {
           "addr": "0x91cf0",
-          "decl": "void FUN_00091cf0(void);",
+          "decl": "void FUN_00091cf0(uint32_t end@<eax>, uint16_t *start, uint32_t cmp);",
           "ported": false,
           "name": "FUN_00091cf0"
         },
         {
           "addr": "0x91d50",
-          "decl": "void FUN_00091d50(void);",
+          "decl": "void FUN_00091d50(uint32_t end@<eax>, uint32_t *start, uint32_t cmp);",
           "ported": false,
           "name": "FUN_00091d50"
         },

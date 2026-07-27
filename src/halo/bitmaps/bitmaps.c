@@ -1593,121 +1593,56 @@ void bitmap_format_to_a8r8g8b8(void)
 #endif
 
 
-/* palette_find_closest_match (0x7d300) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-static void (*const b7d300_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7d300_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void palette_find_closest_match(void)
+/* palette_find_closest_match (0x7d300) — readable C lift from XBE leaf. */
+unsigned int palette_find_closest_match(unsigned int *palette, unsigned int color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "andl $0xff000000, %%ecx\n\t"
-      "cmpl $0x80000000, %%ecx\n\t"
-      "movl $0xffffffff, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "ja .Lpalette_find_closest_match_1\n\t"
-      "movl $0xff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpalette_find_closest_match_1:\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      ".Lpalette_find_closest_match_2:\n\t"
-      "movswl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax,%%edx,4), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "leal (%%eax,%%edx,4), %%edx\n\t"
-      "je .Lpalette_find_closest_match_9\n\t"
-      "movzbl 0x2(%%edx), %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "shrl $0x10, %%eax\n\t"
-      "andl $0xff, %%eax\n\t"
-      "movl %%esi, %%edi\n\t"
-      "subl %%eax, %%edi\n\t"
-      "jns .Lpalette_find_closest_match_3\n\t"
-      "subl %%esi, %%eax\n\t"
-      "movl %%eax, %%edi\n\t"
-      ".Lpalette_find_closest_match_3:\n\t"
-      "movzbl 0x1(%%edx), %%edx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "shrl $8, %%eax\n\t"
-      "andl $0xff, %%eax\n\t"
-      "movl %%edx, %%esi\n\t"
-      "subl %%eax, %%esi\n\t"
-      "jns .Lpalette_find_closest_match_4\n\t"
-      "subl %%edx, %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lpalette_find_closest_match_4:\n\t"
-      "andl $0xff, %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "andl $0xff, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "subl %%eax, %%edx\n\t"
-      "js .Lpalette_find_closest_match_5\n\t"
-      "movl %%edx, %%eax\n\t"
-      "jmp .Lpalette_find_closest_match_6\n\t"
-      ".Lpalette_find_closest_match_5:\n\t"
-      "subl %%ecx, %%eax\n\t"
-      ".Lpalette_find_closest_match_6:\n\t"
-      "imull %%eax, %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "imull %%esi, %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "imull %%edi, %%edx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .Lpalette_find_closest_match_7\n\t"
-      "cmpl %%eax, -0x8(%%ebp)\n\t"
-      "jle .Lpalette_find_closest_match_8\n\t"
-      ".Lpalette_find_closest_match_7:\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      ".Lpalette_find_closest_match_8:\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $0x100, %%cx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "jl .Lpalette_find_closest_match_2\n\t"
-      ".Lpalette_find_closest_match_9:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "jne .Lpalette_find_closest_match_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x44d\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x264d0c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpalette_find_closest_match_10:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b7d300_assert), [exitfn] "m"(b7d300_exitfn)
-      : "memory");
+  int best_index;
+  unsigned int best_dist;
+  int index;
+  extern char DAT_00264a74[];
+  extern char DAT_00264d0c[];
+
+  if ((color & 0xff000000u) <= 0x80000000u)
+    return 0xff;
+
+  best_index = -1;
+  best_dist = 0;
+  for (index = 0; index < 0x100; index++) {
+    unsigned int entry;
+    unsigned int pr, pg, pb;
+    unsigned int cr, cg, cb;
+    unsigned int dr, dg, db;
+    unsigned int dist;
+
+    entry = palette[index];
+    if (entry == 0)
+      break;
+
+    pr = (entry >> 16) & 0xff;
+    pg = (entry >> 8) & 0xff;
+    pb = entry & 0xff;
+    cr = (color >> 16) & 0xff;
+    cg = (color >> 8) & 0xff;
+    cb = color & 0xff;
+
+    dr = (pr >= cr) ? (pr - cr) : (cr - pr);
+    dg = (pg >= cg) ? (pg - cg) : (cg - pg);
+    db = (pb >= cb) ? (pb - cb) : (cb - pb);
+    dist = db * db + dg * dg + dr * dr;
+
+    if (index == 0 || best_dist > dist) {
+      best_dist = dist;
+      best_index = index;
+    }
+  }
+
+  if ((int16_t)best_index == (int16_t)-1) {
+    display_assert(DAT_00264d0c, DAT_00264a74, 0x44d, 1);
+    system_exit(-1);
+  }
+  return (unsigned int)best_index;
 }
-#else
-#error "palette_find_closest_match: clang naked draft required"
-#endif
+
 
 
 /* bitmap_2d_get_pixel (0x7dad0) — XBE naked draft (batch 241). */
