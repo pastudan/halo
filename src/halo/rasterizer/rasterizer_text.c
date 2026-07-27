@@ -4170,7 +4170,6 @@ int16_t compress_real_to_int16(float value)
   return (int16_t)tmp;
 }
 
->>>>>>> 689fac10d (lift(track-a): 12 rasterizer_text/main/structures leaves Unicorn-prove (ported:true).)
 
 
 /* FUN_00180890 (0x180890) — readable C lift from XBE leaf. */
