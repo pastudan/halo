@@ -38688,8 +38688,8 @@
         },
         {
           "addr": "0x15e7d0",
-          "decl": "int FUN_0015e7d0(void *obj@<eax>, int *out@<edx>, int addend);",
-          "ported": false
+          "decl": "int __stdcall FUN_0015e7d0(void *obj@<eax>, int *out@<edx>, int addend);",
+          "ported": true
         },
         {
           "addr": "0x15e800",
@@ -39126,8 +39126,8 @@
         },
         {
           "addr": "0x168ca0",
-          "decl": "int FUN_00168ca0(void *obj@<eax>, int *out@<edx>, int addend);",
-          "ported": false
+          "decl": "int __stdcall FUN_00168ca0(void *obj@<eax>, int *out@<edx>, int addend);",
+          "ported": true
         },
         {
           "addr": "0x168cd0",
