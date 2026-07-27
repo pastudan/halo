@@ -24856,7 +24856,7 @@
         {
           "addr": "0x1ca900",
           "decl": "void FUN_001ca900(int channel_index@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001ca900"
         },
         {

@@ -1671,69 +1671,37 @@ void FUN_001ca2b0(void *buf __attribute__((unused)))
 #endif
 
 
-/* FUN_001ca900 (0x1ca900) — XBE naked draft (batch 261). */
-#if defined(__clang__)
-static void * (*const b1ca900_c1c9290)(short index) = sound_dsound_channel_get;
-static void (*const b1ca900_c1c9670)(void) = FUN_001c9670;
-static void (*const b1ca900_c1c9350)(void) = FUN_001c9350;
-
-__attribute__((naked, noinline))
-void FUN_001ca900(void)
+/* FUN_001ca900 (0x1ca900) — readable C lift: drain channel buffers while status<4. */
+void FUN_001ca900(int channel_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1c9290]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpw $4, 0x8(%%edi)\n\t"
-      "jge .LFUN_001ca900_3\n\t"
-      ".LFUN_001ca900_1:\n\t"
-      "movl 0x68(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001ca900_3\n\t"
-      "movl 0x70(%%edi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *0xc(%%ecx)\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jl .LFUN_001ca900_2\n\t"
-      "testb $1, -0x4(%%ebp)\n\t"
-      "je .LFUN_001ca900_3\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1c9670]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001ca900_3\n\t"
-      "cmpw $4, 0x8(%%edi)\n\t"
-      "jl .LFUN_001ca900_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ca900_2:\n\t"
-      "movl $0x2c0f7c, %%esi\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "call *%[c1c9350]\n\t"
-      ".LFUN_001ca900_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c9290] "m"(b1ca900_c1c9290), [c1c9670] "m"(b1ca900_c1c9670), [c1c9350] "m"(b1ca900_c1c9350)
-      : "memory");
+  char *channel;
+  int hr;
+  unsigned int flags;
+  void *obj;
+  int (__stdcall *get_status)(void *, unsigned int *);
+  char (*drain)(void);
+  char ok;
+
+  channel = (char *)sound_dsound_channel_get((short)channel_index);
+  while (*(int16_t *)(channel + 8) < 4) {
+    if (!*(void **)(channel + 0x68))
+      return;
+    obj = *(void **)(channel + 0x70);
+    get_status = (int (__stdcall *)(void *, unsigned int *))(*(void ***)obj)[3];
+    hr = get_status(obj, &flags);
+    if (hr < 0) {
+      FUN_001c9350(&hr, (char *)0x2c0f7c);
+      return;
+    }
+    if ((flags & 1) == 0)
+      return;
+    drain = (char (*)(void))FUN_001c9670;
+    __asm__ volatile("call *%1" : "=a"(ok) : "m"(drain), "a"(channel_index)
+                     : "ecx", "edx", "memory", "cc");
+    if (!ok)
+      return;
+  }
 }
-#else
-#error "FUN_001ca900: clang naked draft required"
-#endif
 
 
 /* FUN_001ca970 (0x1ca970) — XBE naked draft (batch 263). */
