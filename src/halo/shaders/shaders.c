@@ -869,178 +869,62 @@ void numeric_countdown_timer_set(int value, char flag)
   *(char *)0x4d8a7c = flag;
 }
 
-/* numeric_countdown_timer_get (0x190c00) — XBE naked draft (batch 243). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int numeric_countdown_timer_get(int a0 __attribute__((unused)))
+/* numeric_countdown_timer_get (0x190c00) — readable C lift. */
+int numeric_countdown_timer_get(int a0)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "incl %%eax\n\t"
-      "cmpl $9, %%eax\n\t"
-      "ja .Lnumeric_countdown_timer_get_11\n\t"
-      "jmp *.Lnumeric_countdown_timer_get_jt(,%%eax,4)\n\t"
-      ".Lnumeric_countdown_timer_get_1:\n\t"
-      "movl 0x4d8a78, %%edx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_2:\n\t"
-      "movl 0x4d8a78, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_3:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x66666667, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $2, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_4:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x51eb851f, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $5, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_5:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x10624dd3, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $6, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_6:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x68db8bad, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $0xc, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $6, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_7:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x45e7b273, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $0xe, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_8:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x6fd91d85, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $0x12, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $6, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_9:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x4a90be59, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $0x14, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnumeric_countdown_timer_get_10:\n\t"
-      "movl 0x4d8a78, %%ecx\n\t"
-      "movl $0x774dfd5b, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "sarl $0x18, %%eax\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1f, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      ".Lnumeric_countdown_timer_get_11:\n\t"
-      "movw %%dx, %%ax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lnumeric_countdown_timer_get_jt:\n\t"
-      ".long .Lnumeric_countdown_timer_get_1\n\t"
-      ".long .Lnumeric_countdown_timer_get_2\n\t"
-      ".long .Lnumeric_countdown_timer_get_3\n\t"
-      ".long .Lnumeric_countdown_timer_get_4\n\t"
-      ".long .Lnumeric_countdown_timer_get_5\n\t"
-      ".long .Lnumeric_countdown_timer_get_6\n\t"
-      ".long .Lnumeric_countdown_timer_get_7\n\t"
-      ".long .Lnumeric_countdown_timer_get_8\n\t"
-      ".long .Lnumeric_countdown_timer_get_9\n\t"
-      ".long .Lnumeric_countdown_timer_get_10\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "numeric_countdown_timer_get: clang naked draft required"
-#endif
+  int v;
+  int idx;
+  int q;
+  int r;
 
+  v = *(int *)0x4d8a78;
+  idx = (int)(short)a0 + 1;
+  /* Match XBE: `mov ax, dx` leaves high 16 bits of EAX from the prior quotient. */
+  if ((unsigned int)idx > 9u)
+    return idx & ~0xFFFF;
+  switch (idx) {
+  case 0:
+    return v & 0xFFFF;
+  case 1:
+    q = v / 10;
+    r = v % 10;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 2:
+    q = (v / 10) / 10;
+    r = (v / 10) % 10;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 3:
+    q = (v / 100) / 10;
+    r = (v / 100) % 10;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 4:
+    q = (v / 1000) / 10;
+    r = (v / 1000) % 10;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 5:
+    q = (v / 10000) / 6;
+    r = (v / 10000) % 6;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 6:
+    q = (v / 60000) / 10;
+    r = (v / 60000) % 10;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 7:
+    q = (v / 360000) / 6;
+    r = (v / 360000) % 6;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 8:
+    q = (v / 3600000) / 10;
+    r = (v / 3600000) % 10;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  case 9:
+    q = (v / 36000000) / 10;
+    r = (v / 36000000) % 10;
+    return (q & ~0xFFFF) | (r & 0xFFFF);
+  default:
+    return idx & ~0xFFFF;
+  }
+}
 
 /* numeric_countdown_timer_stop (0x190d90) — readable C lift. */
 void numeric_countdown_timer_stop(void)

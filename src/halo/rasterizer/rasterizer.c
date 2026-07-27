@@ -13491,94 +13491,40 @@ int FUN_0017be50(short si_val /* @<esi> */, short di_val /* @<edi> */)
     return *(int *)(0x2aeaec + (int)(short)di_val * 4) | v;
   return *(int *)(0x2aeb30 + ((int)(short)di_val + idx * 8) * 4);
 }
-/* FUN_0017bf20 (0x17bf20) — XBE naked draft (batch 330). */
-#if defined(__clang__)
-static void (*const b17bf20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17bf20_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_0017bf20(void)
+/* FUN_0017bf20 (0x17bf20) — readable C lift. */
+unsigned int FUN_0017bf20(void *shader /*@<esi>*/)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0017bf20_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf6\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2aef34\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017bf20_1:\n\t"
-      "movw 0x56(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0017bf20_2\n\t"
-      "cmpw $6, %%ax\n\t"
-      "jl .LFUN_0017bf20_3\n\t"
-      ".LFUN_0017bf20_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf7\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2aeeb8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017bf20_3:\n\t"
-      "movw 0x4e(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0017bf20_4\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .LFUN_0017bf20_5\n\t"
-      ".LFUN_0017bf20_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf8\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2aee30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017bf20_5:\n\t"
-      "movw 0x52(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0017bf20_6\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .LFUN_0017bf20_7\n\t"
-      ".LFUN_0017bf20_6:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf9\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2aeda8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017bf20_7:\n\t"
-      "cmpw $1, 0x4e(%%esi)\n\t"
-      "movswl 0x56(%%esi), %%eax\n\t"
-      "movl 0x2aec18(,%%eax,4), %%eax\n\t"
-      "jne .LFUN_0017bf20_8\n\t"
-      "orl $2, %%eax\n\t"
-      ".LFUN_0017bf20_8:\n\t"
-      "cmpw $1, 0x52(%%esi)\n\t"
-      "jne .LFUN_0017bf20_9\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_0017bf20_9:\n\t"
-      "testb $1, (%%esi)\n\t"
-      "je .LFUN_0017bf20_10\n\t"
-      "orl $4, %%eax\n\t"
-      ".LFUN_0017bf20_10:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17bf20_assert), [exitfn] "m"(b17bf20_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_0017bf20: clang naked draft required"
-#endif
+  short v;
+  unsigned int flags;
 
+  if (shader == 0) {
+    display_assert((const char *)0x2aef34, (const char *)0x2aed00, 0xf6, 1);
+    system_exit(-1);
+  }
+  v = *(short *)((char *)shader + 0x56);
+  if (v < 0 || v >= 6) {
+    display_assert((const char *)0x2aeeb8, (const char *)0x2aed00, 0xf7, 1);
+    system_exit(-1);
+  }
+  v = *(short *)((char *)shader + 0x4e);
+  if (v < 0 || v >= 2) {
+    display_assert((const char *)0x2aee30, (const char *)0x2aed00, 0xf8, 1);
+    system_exit(-1);
+  }
+  v = *(short *)((char *)shader + 0x52);
+  if (v < 0 || v >= 2) {
+    display_assert((const char *)0x2aeda8, (const char *)0x2aed00, 0xf9, 1);
+    system_exit(-1);
+  }
+  flags = *(unsigned int *)(0x2aec18 + 4 * *(short *)((char *)shader + 0x56));
+  if (*(short *)((char *)shader + 0x4e) == 1)
+    flags |= 2;
+  if (*(short *)((char *)shader + 0x52) == 1)
+    flags |= 1;
+  if ((*(unsigned char *)shader & 1) != 0)
+    flags |= 4;
+  return flags;
+}
 
 /* FUN_0017c000 (0x17c000) — readable C lift. */
 int FUN_0017c000(short stage /*@<esi>*/, short index /*@<edi>*/)
@@ -14223,13 +14169,12 @@ void rasterizer_window_set_fog(void)
 
   p = game_state_malloc((const char *)0x2af214, 0, 0x10);
   *(void **)0x47e4d0 = p;
-  if (!p) {
+  if (p == 0) {
     display_assert((const char *)0x2af1bc, (const char *)0x2af1ec, 0x121, 1);
     system_exit(-1);
   }
   FUN_00157010();
 }
-
 
 /* FUN_0017C7D0 (0x17c7d0) — readable C lift (jmp thunk). */
 void FUN_0017C7D0(void)

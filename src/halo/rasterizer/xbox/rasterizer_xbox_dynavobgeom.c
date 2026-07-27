@@ -1377,44 +1377,42 @@ void FUN_0015e9e0(void)
   }
 }
 /* FUN_0015ea70 (0x15ea70) — readable C lift. */
-void *FUN_0015ea70(int dynamic_triangle_buffer_index)
+void *FUN_0015ea70(int idx)
 {
-  int idx;
   int *slot;
-  int base;
-  int ptr;
+  int *heap;
+  void *result;
 
-  if (!*(void **)0x476ab0) {
-    display_assert((const char *)0x29dc40, (const char *)0x2a0110, 0x14b, true);
+  if (!*(int *)0x476ab0) {
+    display_assert((char *)0x29dc40, (char *)0x2a0110, 0x14b, 1);
     system_exit(-1);
   }
-  idx = dynamic_triangle_buffer_index;
   if (idx == -1) {
     error(2, (const char *)0x2a1468);
     return 0;
   }
   if (idx < 0) {
-    display_assert((const char *)0x2a07f8, (const char *)0x2a0110, 0x151, true);
+    display_assert((char *)0x2a07f8, (char *)0x2a0110, 0x151, 1);
     system_exit(-1);
   }
   if (idx >= *(int *)0x47dbe0) {
-    display_assert((const char *)0x2a07b8, (const char *)0x2a0110, 0x152, true);
+    display_assert((char *)0x2a07b8, (char *)0x2a0110, 0x152, 1);
     system_exit(-1);
   }
-  if (!*(void **)0x47dbe8) {
-    display_assert((const char *)0x2a0194, (const char *)0x2a0110, 0x154, true);
+  if (!*(int *)0x47dbe8) {
+    display_assert((char *)0x2a0194, (char *)0x2a0110, 0x154, 1);
     system_exit(-1);
   }
-  slot = (int *)(0x47abe0 + (idx * 3) * 4);
+  slot = (int *)(0x47abe0 + idx * 12);
   if (slot[1] <= 0) {
-    display_assert((const char *)0x2a14a4, (const char *)0x2a0110, 0x158, true);
+    display_assert((char *)0x2a14a4, (char *)0x2a0110, 0x158, 1);
     system_exit(-1);
   }
-  base = *(int *)(*(char **)0x47dbe8 + 4);
-  ptr = base + (slot[0] * 3) * 2;
-  slot[2] = ptr;
-  *(unsigned char *)0x47dbec = 0;
-  return (void *)(unsigned)ptr;
+  heap = *(int **)0x47dbe8;
+  result = (void *)(heap[1] + slot[0] * 6);
+  slot[2] = (int)result;
+  *(char *)0x47dbec = 0;
+  return result;
 }
 
 /* FUN_0015eb90 (0x15eb90) — readable C lift. */

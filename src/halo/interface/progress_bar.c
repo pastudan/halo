@@ -1441,80 +1441,50 @@ void FUN_000e2880(float *color /*@<ecx>*/, float progress)
   progress_bar_draw_loading_bar(rect, color, 1.0f, progress);
 }
 
-/* progress_bar_eachframe (0xe28e0) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static int (*const be28e0_c1d0581)(void) = FUN_001d0581;
-static uint32_t __stdcall (*const be28e0_c1ed930)(void *resource) = (void *)D3DResource_Release;
-static void (*const be28e0_c205b67)(void) = IDirectSoundBuffer_Stop;
-static void (*const be28e0_c203897)(void) = IDirectSoundBuffer_Release;
-
-__attribute__((naked, noinline))
+/* progress_bar_eachframe (0xe28e0) — readable C lift. */
 void progress_bar_eachframe(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "call *%[c1d0581]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x31a010, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprogress_bar_eachframe_1\n\t"
-      "call *%[c1d0581]\n\t"
-      "movl %%eax, 0x46c210\n\t"
-      "movb $0, 0x31a010\n\t"
-      "movl $1, 0x46c3e8\n\t"
-      ".Lprogress_bar_eachframe_1:\n\t"
-      "subl 0x46c210, %%esi\n\t"
-      "cmpl $0x3e8, %%esi\n\t"
-      "jbe .Lprogress_bar_eachframe_7\n\t"
-      "movl 0x46c3f0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0, 0x46c3fc\n\t"
-      "je .Lprogress_bar_eachframe_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, 0x46c3f0\n\t"
-      ".Lprogress_bar_eachframe_2:\n\t"
-      "movl 0x46c3f4, %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lprogress_bar_eachframe_3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl 0x46c3f0, %%eax\n\t"
-      "movl $0, 0x46c3f4\n\t"
-      ".Lprogress_bar_eachframe_3:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprogress_bar_eachframe_4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, 0x46c3f0\n\t"
-      ".Lprogress_bar_eachframe_4:\n\t"
-      "movl $0x46c3d8, %%esi\n\t"
-      ".Lprogress_bar_eachframe_5:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lprogress_bar_eachframe_6\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c205b67]\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c203897]\n\t"
-      "movl $0, (%%esi)\n\t"
-      ".Lprogress_bar_eachframe_6:\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpl $0x46c3e8, %%esi\n\t"
-      "jl .Lprogress_bar_eachframe_5\n\t"
-      ".Lprogress_bar_eachframe_7:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1d0581] "m"(be28e0_c1d0581), [c1ed930] "m"(be28e0_c1ed930), [c205b67] "m"(be28e0_c205b67), [c203897] "m"(be28e0_c203897)
-      : "memory");
-}
-#else
-#error "progress_bar_eachframe: clang naked draft required"
-#endif
+  int now;
+  int elapsed;
+  void *p;
+  void *q;
+  void **slot;
 
+  now = FUN_001d0581();
+  if (*(char *)0x31a010 != 0) {
+    *(int *)0x46c210 = FUN_001d0581();
+    *(char *)0x31a010 = 0;
+    *(int *)0x46c3e8 = 1;
+  }
+  elapsed = now - *(int *)0x46c210;
+  if ((unsigned int)elapsed <= 1000u)
+    return;
+
+  p = *(void **)0x46c3f0;
+  *(int *)0x46c3fc = 0;
+  if (p != 0) {
+    D3DResource_Release(p);
+    p = 0;
+    *(void **)0x46c3f0 = 0;
+  }
+  q = *(void **)0x46c3f4;
+  if (q != 0) {
+    D3DResource_Release(q);
+    p = *(void **)0x46c3f0;
+    *(void **)0x46c3f4 = 0;
+  }
+  if (p != 0) {
+    D3DResource_Release(p);
+    *(void **)0x46c3f0 = 0;
+  }
+  for (slot = (void **)0x46c3d8; (unsigned int)slot < 0x46c3e8u; slot++) {
+    if (*slot != 0) {
+      IDirectSoundBuffer_Stop(*slot);
+      IDirectSoundBuffer_Release(*slot);
+      *slot = 0;
+    }
+  }
+}
 
 /* FUN_000e33a0 (0xe33a0) — readable C lift. */
 void FUN_000e33a0(void)

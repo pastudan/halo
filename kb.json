@@ -20528,7 +20528,7 @@
         {
           "addr": "0xe28e0",
           "decl": "void progress_bar_eachframe(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xe33a0",
@@ -21118,8 +21118,9 @@
         },
         {
           "addr": "0x17bf20",
-          "decl": "void FUN_0017bf20(void);",
-          "ported": false
+          "decl": "unsigned int FUN_0017bf20(void *shader @<esi>);",
+          "ported": true,
+          "name": "FUN_0017bf20"
         },
         {
           "addr": "0x17c000",
@@ -24212,7 +24213,7 @@
         {
           "addr": "0x190c00",
           "decl": "int numeric_countdown_timer_get(int a0);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x190d90",
@@ -30984,7 +30985,7 @@
           "addr": "0x1844b0",
           "name": "rasterizer_transparent_geometry_group_to_presorted_index",
           "decl": "short rasterizer_transparent_geometry_group_to_presorted_index(unsigned int group);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "rasterizer_text.obj",
@@ -42431,8 +42432,18 @@
         },
         {
           "addr": "0x001edcb0",
-          "decl": "void __stdcall D3DCubeTexture_GetCubeMapSurface(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3);",
+          "decl": "void D3DCubeTexture_GetCubeMapSurface(void);",
           "ported": false
+        },
+        {
+          "addr": "0x001edd10",
+          "decl": "void __stdcall D3DCubeTexture_LockRect(int a, int b, int c, int d, int e, int f);",
+          "ported": true
+        },
+        {
+          "addr": "0x001edd80",
+          "decl": "void __stdcall D3DVolumeTexture_LockBox(int a, int b, int c, int d, int e);",
+          "ported": true
         },
         {
           "addr": "0x001eddd0",
@@ -42523,6 +42534,11 @@
           "addr": "0x001ef1e0",
           "decl": "int __stdcall D3DSurface_GetDesc(void *surface, void *desc);",
           "ported": false
+        },
+        {
+          "addr": "0x001ef200",
+          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
+          "ported": true
         },
         {
           "addr": "0x001ef890",
@@ -42701,8 +42717,9 @@
         },
         {
           "addr": "0x00203897",
-          "decl": "void IDirectSoundBuffer_Release(void);",
-          "ported": false
+          "decl": "uint32_t __stdcall IDirectSoundBuffer_Release(void *buf);",
+          "ported": false,
+          "name": "IDirectSoundBuffer_Release"
         },
         {
           "addr": "0x002038d9",
@@ -43311,8 +43328,9 @@
         },
         {
           "addr": "0x0020517a",
-          "decl": "void IDirectSoundBuffer_StopEx(void);",
-          "ported": false
+          "decl": "void __stdcall IDirectSoundBuffer_StopEx(void *buf);",
+          "ported": false,
+          "name": "IDirectSoundBuffer_StopEx"
         },
         {
           "addr": "0x002051be",
@@ -43491,8 +43509,9 @@
         },
         {
           "addr": "0x00205b67",
-          "decl": "void IDirectSoundBuffer_Stop(void);",
-          "ported": false
+          "decl": "void __stdcall IDirectSoundBuffer_Stop(void *buf);",
+          "ported": false,
+          "name": "IDirectSoundBuffer_Stop"
         },
         {
           "addr": "0x00205b9f",

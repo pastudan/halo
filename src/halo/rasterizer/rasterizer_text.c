@@ -2553,80 +2553,45 @@ void rasterizer_swizzle_compute_masks(short param_1 __attribute__((unused)), sho
 #endif
 
 
-/* rasterizer_swizzle_interleave_bits (0x1827c0) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void rasterizer_swizzle_interleave_bits(short param_1 __attribute__((unused)), short param_2 __attribute__((unused)), short param_3 __attribute__((unused)), unsigned int param_4 __attribute__((unused)), unsigned int param_5 __attribute__((unused)), unsigned int param_6 __attribute__((unused)), unsigned int *param_7 __attribute__((unused)))
+/* rasterizer_swizzle_interleave_bits (0x1827c0) — readable C lift. */
+void rasterizer_swizzle_interleave_bits(short w, short h, short d, unsigned int x,
+                                        unsigned int y, unsigned int z,
+                                        unsigned int *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $1, %%edx\n\t"
-      ".Lrasterizer_swizzle_interleave_bits_1:\n\t"
-      "cmpw 0x8(%%ebp), %%dx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jge .Lrasterizer_swizzle_interleave_bits_2\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "sarl $1, 0x14(%%ebp)\n\t"
-      "movb %%al, %%cl\n\t"
-      "andl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "orl %%ebx, -0x4(%%ebp)\n\t"
-      "incl %%eax\n\t"
-      ".Lrasterizer_swizzle_interleave_bits_2:\n\t"
-      "cmpw 0xc(%%ebp), %%dx\n\t"
-      "jge .Lrasterizer_swizzle_interleave_bits_3\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "sarl $1, 0x18(%%ebp)\n\t"
-      "movb %%al, %%cl\n\t"
-      "andl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "orl %%ebx, -0x8(%%ebp)\n\t"
-      "incl %%eax\n\t"
-      ".Lrasterizer_swizzle_interleave_bits_3:\n\t"
-      "cmpw 0x10(%%ebp), %%dx\n\t"
-      "jge .Lrasterizer_swizzle_interleave_bits_4\n\t"
-      "movl 0x1c(%%ebp), %%ebx\n\t"
-      "sarl $1, 0x1c(%%ebp)\n\t"
-      "andl $1, %%ebx\n\t"
-      "movb %%al, %%cl\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "orl %%ebx, %%edi\n\t"
-      "incl %%eax\n\t"
-      ".Lrasterizer_swizzle_interleave_bits_4:\n\t"
-      "shll $1, %%edx\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jne .Lrasterizer_swizzle_interleave_bits_1\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl %%edi, 0x8(%%eax)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "rasterizer_swizzle_interleave_bits: clang naked draft required"
-#endif
+  unsigned int ox = 0;
+  unsigned int oy = 0;
+  unsigned int oz = 0;
+  int pos = 0;
+  unsigned int bit = 1;
+  int old_pos;
+  short xs = (short)x;
+  short ys = (short)y;
+  short zs = (short)z;
 
+  do {
+    old_pos = pos;
+    if ((short)bit < w) {
+      ox |= (unsigned int)(xs & 1) << pos;
+      xs = (short)(xs >> 1);
+      pos++;
+    }
+    if ((short)bit < h) {
+      oy |= (unsigned int)(ys & 1) << pos;
+      ys = (short)(ys >> 1);
+      pos++;
+    }
+    if ((short)bit < d) {
+      oz |= (unsigned int)(zs & 1) << pos;
+      zs = (short)(zs >> 1);
+      pos++;
+    }
+    bit <<= 1;
+  } while (old_pos != pos);
+
+  out[0] = ox;
+  out[1] = oy;
+  out[2] = oz;
+}
 
 /* rasterizer_swizzle_bitmap_mipmaps: compute total swizzle buffer size
  * needed for all mipmaps of a bitmap (0x183290).
@@ -4050,87 +4015,30 @@ void *rasterizer_transparent_geometry_group_get(short group_presorted_index)
 
 
 
-/* rasterizer_transparent_geometry_group_to_presorted_index (0x1844b0) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static void (*const b1844b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1844b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-short rasterizer_transparent_geometry_group_to_presorted_index(unsigned int group __attribute__((unused)))
+/* rasterizer_transparent_geometry_group_to_presorted_index (0x1844b0) — readable C lift. */
+short rasterizer_transparent_geometry_group_to_presorted_index(unsigned int group)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x4d0cec, %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "cmpl %%edi, %%ebx\n\t"
-      "jb .Lrasterizer_transparent_geometry_group_to_presorted_index_4\n\t"
-      "movl 0x4d0cf4, %%ecx\n\t"
-      "leal (%%ecx,%%ecx,4), %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "addl %%edi, %%ecx\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jae .Lrasterizer_transparent_geometry_group_to_presorted_index_4\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "subl %%edi, %%ecx\n\t"
-      "movl $0x66666667, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "sarl $6, %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "movl %%edx, %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_to_presorted_index_1\n\t"
-      "movl 0x4d0cf4, %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_to_presorted_index_2\n\t"
-      ".Lrasterizer_transparent_geometry_group_to_presorted_index_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xcb\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x2b0d50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x4d0cec, %%edi\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_to_presorted_index_2:\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "subl %%edi, %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0xa0, %%ecx\n\t"
-      "divl %%ecx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_to_presorted_index_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xcc\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x2b0da8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_to_presorted_index_3:\n\t"
-      "movw %%si, %%ax\n\t"
-      ".Lrasterizer_transparent_geometry_group_to_presorted_index_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1844b0_assert), [exitfn] "m"(b1844b0_exitfn)
-      : "memory");
+  unsigned int base;
+  unsigned int count;
+  int idx;
+
+  base = *(unsigned int *)0x4d0cec;
+  count = *(unsigned int *)0x4d0cf4;
+  if (group < base || group >= base + count * 160u)
+    return -1;
+
+  idx = (int)((group - base) / 160u);
+  if (idx < 0 || idx >= (int)count) {
+    display_assert((const char *)0x2b0d50, (const char *)0x2b0ca8, 0xcb, 1);
+    system_exit(-1);
+    base = *(unsigned int *)0x4d0cec;
+  }
+  if ((group - base) % 160u != 0) {
+    display_assert((const char *)0x2b0da8, (const char *)0x2b0ca8, 0xcc, 1);
+    system_exit(-1);
+  }
+  return (short)idx;
 }
-#else
-#error "rasterizer_transparent_geometry_group_to_presorted_index: clang naked draft required"
-#endif
 
 /* --- rasterizer_text.obj batch drafts (2026-07-26) --- */
 
