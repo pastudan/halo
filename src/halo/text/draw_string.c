@@ -633,57 +633,23 @@ char *draw_string_get_string(short index)
 
 
 
-/* draw_string_set_indents (0x19b5d0) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static void (*const b19b5d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19b5d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void draw_string_set_indents(int width __attribute__((unused)), int height __attribute__((unused)))
+/* draw_string_set_indents (0x19b5d0) — readable C lift. */
+void draw_string_set_indents(int16_t width, int16_t height)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jge .Ldraw_string_set_indents_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x16e\n\t"
-      "pushl $0x2b4210\n\t"
-      "pushl $0x2b4278\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldraw_string_set_indents_1:\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jge .Ldraw_string_set_indents_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x16f\n\t"
-      "pushl $0x2b4210\n\t"
-      "pushl $0x2b4264\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldraw_string_set_indents_2:\n\t"
-      "movw %%di, 0x4d9b50\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, 0x4d9b4e\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19b5d0_assert), [exitfn] "m"(b19b5d0_exitfn)
-      : "memory");
+  extern char DAT_002b4278[];
+  extern char DAT_002b4210[];
+  extern char DAT_002b4264[];
+  if (width < 0) {
+    display_assert(DAT_002b4278, DAT_002b4210, 0x16e, 1);
+    system_exit(-1);
+  }
+  if (height < 0) {
+    display_assert(DAT_002b4264, DAT_002b4210, 0x16f, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)0x4d9b50 = height;
+  *(int16_t *)0x4d9b4e = width;
 }
-#else
-#error "draw_string_set_indents: clang naked draft required"
-#endif
-
 
 /* draw_string_get_color (0x19b790) — readable C lift. */
 void draw_string_get_color(float *out)

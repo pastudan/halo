@@ -1184,64 +1184,24 @@ void FUN_00145660(int object_handle , int animation_graph_tag,
 }
 #endif
 
-/* FUN_00145740 (0x145740) — XBE naked draft (batch 236). */
-#if defined(__clang__)
-static void *(*const b145740_get)(int, int) = object_get_and_verify_type;
-static void *(*const b145740_tag)(int, int) = tag_get;
-static void *(*const b145740_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int FUN_00145740(int object_handle __attribute__((unused)))
+/* FUN_00145740 (0x145740) — readable C lift. */
+int FUN_00145740(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x1a4(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_00145740_1\n\t"
-      "movl 0x7c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x616e7472\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x80(%%esi), %%edx\n\t"
-      "pushl $0xb4\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x74, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x22(%%eax), %%eax\n\t"
-      "movswl 0x82(%%esi), %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "addl $-2, %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "setle %%dl\n\t"
-      "popl %%esi\n\t"
-      "decl %%edx\n\t"
-      "andl %%edx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00145740_1:\n\t"
-      "xorw %%ax, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b145740_get), [tag] "m"(b145740_tag), [elem] "m"(b145740_elem)
-      : "memory");
+  char *obj = (char *)object_get_and_verify_type(object_handle, 0x40);
+  void *tag;
+  void *elem;
+  int v;
+  if (!(*(unsigned char *)(obj + 0x1a4) & 1)) {
+    return 0;
+  }
+  tag = tag_get(0x616e7472, *(int *)(obj + 0x7c));
+  elem = tag_block_get_element((char *)tag + 0x74, *(int16_t *)(obj + 0x80), 0xb4);
+  v = (int)*(int16_t *)((char *)elem + 0x22) - (int)*(int16_t *)(obj + 0x82) - 2;
+  if (v <= 0) {
+    return 0;
+  }
+  return v;
 }
-#else
-#error "FUN_00145740: clang naked draft required"
-#endif
-
 
 /* FUN_001457b0 (0x1457b0) — readable C lift. */
 void FUN_001457b0(int a0, int a1, int a2)

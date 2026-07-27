@@ -414,60 +414,27 @@ void FUN_00184680(void)
   /* relift: no calls detected — manual review */
 }
 
-/* FUN_00184690 (0x184690) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static void (*const b184690_c174cc0)(void) = FUN_00174cc0;
-static void (*const b184690_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-void FUN_00184690(int a0)
+/* FUN_00184690 (0x184690) — readable C lift. */
+void FUN_00184690(int unused)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "call *%[c174cc0]\n\t"
-      "movl 0x4d0cec, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .LFUN_00184690_1\n\t"
-      "pushl $0x111\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00184690_1:\n\t"
-      "movl 0x4d0cfc, %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%esi, 0x4d0cec\n\t"
-      "je .LFUN_00184690_2\n\t"
-      "pushl $0x114\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00184690_2:\n\t"
-      "movl 0x4d0cf0, %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%esi, 0x4d0cfc\n\t"
-      "je .LFUN_00184690_3\n\t"
-      "pushl $0x118\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00184690_3:\n\t"
-      "movl %%esi, 0x4d0cf0\n\t"
-      "movl %%esi, 0x4d0cf8\n\t"
-      "movl %%esi, 0x4d0cf4\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c174cc0] "m"(b184690_c174cc0), [c8ef70] "m"(b184690_c8ef70)
-      : "memory");
+  extern char DAT_002b0ca8[];
+  (void)unused;
+  FUN_00174cc0();
+  if (*(void **)0x4d0cec) {
+    debug_free(*(void **)0x4d0cec, DAT_002b0ca8, 0x111);
+  }
+  *(void **)0x4d0cec = 0;
+  if (*(void **)0x4d0cfc) {
+    debug_free(*(void **)0x4d0cfc, DAT_002b0ca8, 0x114);
+  }
+  *(void **)0x4d0cfc = 0;
+  if (*(void **)0x4d0cf0) {
+    debug_free(*(void **)0x4d0cf0, DAT_002b0ca8, 0x118);
+  }
+  *(void **)0x4d0cf0 = 0;
+  *(void **)0x4d0cf8 = 0;
+  *(void **)0x4d0cf4 = 0;
 }
-#else
-#error "FUN_00184690: clang naked draft required"
-#endif
-
 
 /* FUN_00184710 (0x184710) — readable C lift (auto_lift_trivial). */
 void FUN_00158ae0(int mode);

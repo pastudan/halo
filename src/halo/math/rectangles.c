@@ -1592,67 +1592,14 @@ void FUN_00108bc0(void)
 #endif
 
 
-/* FUN_00108c60 (0x108c60) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00108c60(void)
+/* FUN_00108c60 (0x108c60) — readable C lift. */
+void FUN_00108c60(int16_t *a, int16_t *b, int16_t *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movw 0x2(%%ecx), %%ax\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x2(%%edx), %%si\n\t"
-      "cmpw %%si, %%ax\n\t"
-      "pushl %%edi\n\t"
-      "movswl %%si, %%esi\n\t"
-      "jg .LFUN_00108c60_1\n\t"
-      "movswl %%ax, %%esi\n\t"
-      ".LFUN_00108c60_1:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movw %%si, 0x2(%%eax)\n\t"
-      "movw 0x6(%%ecx), %%si\n\t"
-      "movw 0x6(%%edx), %%di\n\t"
-      "cmpw %%di, %%si\n\t"
-      "movswl %%si, %%esi\n\t"
-      "jg .LFUN_00108c60_2\n\t"
-      "movswl %%di, %%esi\n\t"
-      ".LFUN_00108c60_2:\n\t"
-      "movw %%si, 0x6(%%eax)\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "movw (%%edx), %%di\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jle .LFUN_00108c60_3\n\t"
-      "movswl %%di, %%esi\n\t"
-      "jmp .LFUN_00108c60_4\n\t"
-      ".LFUN_00108c60_3:\n\t"
-      "movswl %%si, %%esi\n\t"
-      ".LFUN_00108c60_4:\n\t"
-      "movw %%si, (%%eax)\n\t"
-      "movw 0x4(%%ecx), %%cx\n\t"
-      "movw 0x4(%%edx), %%dx\n\t"
-      "popl %%edi\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "popl %%esi\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "jg .LFUN_00108c60_5\n\t"
-      "movswl %%dx, %%ecx\n\t"
-      ".LFUN_00108c60_5:\n\t"
-      "movw %%cx, 0x4(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[1] = (a[1] > b[1]) ? a[1] : b[1];
+  out[3] = (a[3] < b[3]) ? a[3] : b[3];
+  out[0] = (a[0] > b[0]) ? a[0] : b[0];
+  out[2] = (a[2] < b[2]) ? a[2] : b[2];
 }
-#else
-#error "FUN_00108c60: clang naked draft required"
-#endif
-
 
 /* FUN_00108cd0 (0x108cd0) — readable C lift. */
 char FUN_00108cd0(int *rect, int *point)

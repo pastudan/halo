@@ -646,62 +646,23 @@ void FUN_000967a0(void *rec __attribute__((unused)), int object __attribute__((u
 #endif
 
 
-/* device_effect_new (0x96850) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static int (*const b96850_c119610)(data_t *data) = data_new_at_index;
-static void *(*const b96850_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b96850_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b96850_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void device_effect_new(void)
+/* device_effect_new (0x96850) — readable C lift. */
+int16_t device_effect_new(int a, int16_t b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa8c8, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Ldevice_effect_new_1\n\t"
-      "movl 0x5aa8c8, %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movw 0xc(%%ebp), %%dx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movw %%dx, 0x2(%%eax)\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldevice_effect_new_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x311\n\t"
-      "pushl $0x269ac4\n\t"
-      "pushl $0x269af8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119610] "m"(b96850_c119610), [dget] "m"(b96850_dget), [assert] "m"(b96850_assert), [exitfn] "m"(b96850_exitfn)
-      : "memory");
+  extern char DAT_00269af8[];
+  extern char DAT_00269ac4[];
+  int16_t idx = (int16_t)data_new_at_index(*(data_t **)0x5aa8c8);
+  char *d;
+  if (idx == -1) {
+    display_assert(DAT_00269af8, DAT_00269ac4, 0x311, 1);
+    system_exit(-1);
+    return idx;
+  }
+  d = (char *)datum_get(*(data_t **)0x5aa8c8, idx);
+  *(int *)(d + 4) = a;
+  *(int16_t *)(d + 2) = b;
+  return idx;
 }
-#else
-#error "device_effect_new: clang naked draft required"
-#endif
-
 
 /* create_initial_device_groups (0x96900) — XBE naked draft (batch 260). */
 #if defined(__clang__)
