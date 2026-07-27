@@ -166,7 +166,7 @@ bool FUN_0012f200(int server, int machine, void *message_data, int message_size)
       &field_count,
       5);
   if (ok) {
-    network_game_server_queue_player_for_addition(server, (int)value);
+    network_game_server_queue_player_for_addition(server, (int)(void *)value);
     return 1;
   }
   network_game_log((const char *)0x298c20);
