@@ -18074,7 +18074,7 @@
         {
           "addr": "0xa2ba0",
           "decl": "void FUN_000a2ba0(int unit_index, float damage_amount, float scale, float *effect_data@<eax>, void *effect@<ebx>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xa27a0",

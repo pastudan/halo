@@ -706,90 +706,56 @@ void FUN_000a2ab0(int unused_player, char *effect, float intensity, float scale,
 }
 
 
-/* FUN_000a2ba0 (0xa2ba0) — XBE naked draft (batch 140). */
-#if defined(__clang__)
-static int (*const ba2ba0_gtime)(void) = game_time_get;
-static void (*const ba2ba0_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_000a2ba0(int unit_index __attribute__((unused)), float damage_amount __attribute__((unused)), float scale __attribute__((unused)), float *effect_data __attribute__((unused)), void *effect __attribute__((unused)))
+/* FUN_000a2ba0 (0xa2ba0) — readable C lift from XBE leaf.
+ * effect_data@eax, effect@ebx; stack: unit_index, damage, scale. */
+void FUN_000a2ba0(int unit_index, float damage_amount, float scale,
+                  float *effect_data, void *effect)
 {
+  float scale30;
+  float lerp_val;
+  float thresh;
+  float timer_f;
+  float cur;
+  char *eff;
+  int i;
+  int *dst;
+  int *src;
+
+  (void)unit_index;
+  game_time_get();
+
+  eff = (char *)effect;
+  scale30 = scale * *(float *)0x253394;
+  lerp_val = (*(float *)0x2533c8 - effect_data[10]) * damage_amount + effect_data[10];
+  timer_f = (float)(int)*(int16_t *)(eff + 0xe2);
+  thresh = scale30 * effect_data[0];
+  cur = *(float *)(eff + 0xac);
+
+  if (!(timer_f < thresh || lerp_val > cur))
+    return;
+
+  dst = (int *)(eff + 0x84);
+  src = (int *)effect_data;
+  for (i = 0; i < 18; i++)
+    dst[i] = src[i];
+  *(float *)(eff + 0xac) = lerp_val;
+
+  /* fmul/fst/ftol in one asm block so ST0 keeps 80-bit product for _ftol2. */
   __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[gtime]\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x253394\n\t"
-      "movswl 0xe2(%%ebx), %%eax\n\t"
-      "fstps 0x10(%%ebp)\n\t"
-      "flds 0x28(%%esi)\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000a2ba0_1\n\t"
-      "fcoms 0xac(%%ebx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000a2ba0_1\n\t"
-      "fcoms 0xac(%%ebx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_000a2ba0_2\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a2ba0_2\n\t"
-      ".LFUN_000a2ba0_1:\n\t"
-      "leal 0x84(%%ebx), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl $0x12, %%ecx\n\t"
-      "rep movsl\n\t"
-      "fstps 0xac(%%ebx)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls (%%eax)\n\t"
-      "fsts (%%eax)\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0xe2(%%ebx)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movb 0xe8(%%ebx), %%al\n\t"
-      "fmuls 0xa4(%%ebx)\n\t"
-      "orb $4, %%al\n\t"
-      "popl %%edi\n\t"
-      "movb %%al, 0xe8(%%ebx)\n\t"
-      "fstps 0xa4(%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a2ba0_2:\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
+      "flds %0\n\t"
+      "fmuls %1\n\t"
+      "fsts %1\n\t"
+      "call %P2\n\t"
+      "movw %%ax, %3\n\t"
+      "flds %0\n\t"
+      "fmuls %4\n\t"
+      "fstps %4\n\t"
       :
-      : [gtime] "m"(ba2ba0_gtime), [ftol] "m"(ba2ba0_ftol)
-      : "memory");
+      : "m"(scale30), "m"(*(float *)(eff + 0x84)), "X"(FUN_001d9068),
+        "m"(*(int16_t *)(eff + 0xe2)), "m"(*(float *)(eff + 0xa4))
+      : "eax", "edx", "ecx", "st", "cc", "memory");
+  *(uint8_t *)(eff + 0xe8) |= 4;
 }
-#else
-#error "FUN_000a2ba0: clang naked draft required"
-#endif
 
 
 /* FUN_000a2c70 (0xa2c70) — readable C lift. function_type@eax */
