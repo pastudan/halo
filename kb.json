@@ -40958,8 +40958,9 @@
         },
         {
           "addr": "0x62ba0",
-          "decl": "void FUN_00062ba0(float *point, float *anchor, float scale, char pick_alt, float *out_point);",
-          "ported": false
+          "decl": "void FUN_00062ba0(float *point@<ecx>, float *anchor@<esi>, float scale, char pick_alt, float *out_point@<edi>);",
+          "ported": true,
+          "name": "FUN_00062ba0"
         },
         {
           "addr": "0x62cf0",
