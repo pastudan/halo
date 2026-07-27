@@ -26080,7 +26080,7 @@
           "comment": "Walk the object's cluster reference chain, removing each cluster-side reference and freeing both datums.",
           "decl": "void cluster_partition_remove_object(void *partition, int object_handle, void *first_cluster_ref);",
           "name": "cluster_partition_remove_object",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c"
         },
         {
