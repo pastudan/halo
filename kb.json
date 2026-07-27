@@ -23498,7 +23498,7 @@
         {
                     "addr": "0x187f80",
           "decl": "float FUN_00187f80(void *flags, short mode, float *point, float *forward);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00187f80"
         },
         {
