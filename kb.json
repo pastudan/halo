@@ -14895,9 +14895,9 @@
         },
         {
           "addr": "0x12a690",
-          "decl": "short network_game_client_get_local_machine_index(void);",
+          "decl": "int16_t network_game_client_get_local_machine_index(void);",
           "name": "network_game_client_get_local_machine_index",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/networking/network_game_globals.c"
         },
         {
