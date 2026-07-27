@@ -275,7 +275,8 @@
         {
           "addr": "0x680a0",
           "decl": "void FUN_000680a0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000680a0"
         },
         {
           "addr": "0x6bcb0",
@@ -2574,7 +2575,7 @@
           "addr": "0x1ccc0",
           "decl": "char actor_action_allow_cover_seeking(int actor_handle, char param_2);",
           "name": "actor_action_allow_cover_seeking",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/ai/actions.c"
         },
         {
@@ -2756,25 +2757,25 @@
           "addr": "0x1fa60",
           "decl": "char actor_action_try_to_throw_grenade(int actor_handle, char flag);",
           "name": "actor_action_try_to_throw_grenade",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1fb80",
           "decl": "char actor_action_consider_grenade(int actor_handle);",
           "name": "actor_action_consider_grenade",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1fca0",
           "decl": "char actor_action_try_to_evade(int actor_handle);",
           "name": "actor_action_try_to_evade",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1fe70",
           "decl": "char actor_action_try_to_dive(int actor_handle, short direction_ref, float param_3, float *direction, float param_5);",
           "name": "actor_action_try_to_dive",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x20140",
@@ -2785,7 +2786,7 @@
           "addr": "0x20280",
           "decl": "int actor_pursuit_find_nearby_actors(int actor_handle, char flag);",
           "name": "actor_pursuit_find_nearby_actors",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x20470",
@@ -2809,7 +2810,7 @@
           "addr": "0x20670",
           "decl": "char actor_action_handle_evasion(int actor_handle);",
           "name": "actor_action_handle_evasion",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x20990",
@@ -3539,7 +3540,7 @@
           "addr": "0x14360",
           "decl": "char actor_update_prop_desire(int actor_handle);",
           "name": "actor_update_prop_desire",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14460",
@@ -3664,7 +3665,7 @@
         {
           "addr": "0x153e0",
           "decl": "bool FUN_000153e0(int actor_handle @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000153e0"
         },
         {
@@ -3793,7 +3794,7 @@
         {
           "addr": "0x16d40",
           "decl": "void actor_look_compute_prop_interest(int actor_handle, int param_2, short *param_3, void (*callback)(void), int param_5);",
-          "ported": false,
+          "ported": true,
           "name": "actor_look_compute_prop_interest"
         },
         {
@@ -7735,7 +7736,7 @@
         {
           "addr": "0xdb250",
           "decl": "char FUN_000db250(int object_handle @<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000db250"
         },
         {
@@ -9521,7 +9522,7 @@
           "addr": "0xaf660",
           "decl": "void game_engine_player_killed(int killer_handle, int kill_object_handle, int dead_handle, int betrayal);",
           "name": "game_engine_player_killed",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xaf9a0",
@@ -11814,7 +11815,7 @@
         {
           "addr": "0xc4580",
           "decl": "int16_t hs_tokens_enumerate(const char *prefix, uint32_t type_mask, char **tokens, int16_t max_tokens);",
-          "ported": false,
+          "ported": true,
           "name": "hs_tokens_enumerate"
         },
         {
@@ -12149,7 +12150,7 @@
         {
           "addr": "0xc7e50",
           "decl": "char hs_macro_function_parse(int16_t function_index, int root_datum);",
-          "ported": false,
+          "ported": true,
           "name": "hs_macro_function_parse"
         },
         {
@@ -12750,7 +12751,7 @@
         {
           "addr": "0xcde00",
           "decl": "void hs_runtime_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "hs_runtime_update"
         },
         {
@@ -12942,7 +12943,7 @@
           "addr": "0xd0c80",
           "name": "hud_set_element_digital",
           "decl": "void hud_set_element_digital(float value, const void *draw_ptr);",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/interface/hud.c"
         },
         {
@@ -13275,7 +13276,7 @@
           "addr": "0xd4fb0",
           "decl": "int hud_messaging_get_objective(void);",
           "name": "hud_messaging_get_objective",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd5070",
@@ -13859,7 +13860,7 @@
           "addr": "0xd0030",
           "decl": "void input_get_raw_data_string(char *buffer, int16_t size);",
           "name": "input_get_raw_data_string",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "input_xbox.obj",
@@ -13931,7 +13932,7 @@
           "addr": "0xdfdc0",
           "decl": "void interface_draw_splitscreen_dividers(void);",
           "name": "interface_draw_splitscreen_dividers",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdff00",
@@ -14105,7 +14106,7 @@
           "addr": "0xf63f0",
           "decl": "void virtual_keyboard_process_input(void);",
           "name": "virtual_keyboard_process_input",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6740",
@@ -15383,7 +15384,7 @@
           "addr": "0x11a430",
           "decl": "int FUN_0011a430(int *state, short count, int element_size);",
           "name": "FUN_0011a430",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a560",
@@ -15419,7 +15420,7 @@
           "addr": "0x11a770",
           "decl": "void *FUN_0011a770(int *state, int element_size_type, unsigned int *element_count_ref, int maximum_element_count, void *bs_definition);",
           "name": "FUN_0011a770",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11a8e0",
@@ -15436,13 +15437,13 @@
           "addr": "0x11aa40",
           "decl": "bool FUN_0011aa40(int group, void *decoded_packet, char *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);",
           "name": "FUN_0011aa40",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b2a0",
           "decl": "void FUN_0011b2a0(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out);",
           "name": "FUN_0011b2a0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b540",
@@ -15453,13 +15454,13 @@
           "addr": "0x11b650",
           "decl": "bool FUN_0011b650(int definition, short version, void *data, char *buffer, short *buffer_size_out, short maximum_buffer_size);",
           "name": "FUN_0011b650",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b750",
           "decl": "bool FUN_0011b750(int definition, int encoded_packet, short encoded_packet_size, int decoded_packet, unsigned short *version_out, short *bytes_consumed_out);",
           "name": "FUN_0011b750",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b850",
@@ -15489,7 +15490,7 @@
           "addr": "0x11ba50",
           "decl": "int FUN_0011ba50(short *table @<esi>, void *key, unsigned short *slot_index_out);",
           "name": "FUN_0011ba50",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11bb70",
@@ -15501,7 +15502,7 @@
           "addr": "0x11bc20",
           "decl": "void FUN_0011bc20(short *table, void *key);",
           "name": "FUN_0011bc20",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11be10",
@@ -15513,13 +15514,13 @@
           "addr": "0x11beb0",
           "decl": "int FUN_0011beb0(short *table, short growth_bits);",
           "name": "FUN_0011beb0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c0f0",
           "decl": "int FUN_0011c0f0(short *table, void *key);",
           "name": "FUN_0011c0f0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c1b0",
@@ -15555,7 +15556,7 @@
           "addr": "0x11c310",
           "decl": "int FUN_0011c310(const char *name, int size, void (*lock_proc)(void *, int), void (*unlock_proc)(void *), void *base_address);",
           "name": "FUN_0011c310",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c430",
@@ -15946,7 +15947,7 @@
           "addr": "0x12e1d0",
           "decl": "void network_game_server_stalled_on_client(void *server, bool stalled);",
           "name": "network_game_server_stalled_on_client",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/networking/network_server_manager.c"
         },
         {
@@ -16917,7 +16918,7 @@
         {
           "addr": "0x13f120",
           "decl": "int find_objects_from_point_vector(int param_1, int param_2, int param_3, int param_4, int param_5, int param_6);",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/objects/objects.c",
           "name": "find_objects_from_point_vector"
         },
@@ -16947,7 +16948,7 @@
           "addr": "0x13f4b0",
           "decl": "void objects_dump_memory(void);",
           "name": "objects_dump_memory",
-          "ported": false,
+          "ported": true,
           "source": "src/halo/objects/objects.c"
         },
         {
@@ -17167,7 +17168,7 @@
           "addr": "0x1417c0",
           "decl": "void objects_reconnect_to_structure_bsp(void);",
           "name": "objects_reconnect_to_structure_bsp",
-          "ported": false,
+          "ported": true,
           "source": "src/halo/objects/objects.c"
         },
         {
@@ -21003,7 +21004,7 @@
           "addr": "0x174d10",
           "decl": "void rasterizer_transparent_geometry_group_draw(void *group, int dirty);",
           "name": "rasterizer_transparent_geometry_group_draw",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x178820",
@@ -21346,7 +21347,7 @@
           "addr": "0x157e40",
           "decl": "void rasterizer_present(void *screenshot_bitmap, short *point);",
           "name": "rasterizer_present",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1580b0",
@@ -21702,7 +21703,7 @@
           "addr": "0x15d5b0",
           "decl": "void __cdecl rasterizer_draw_dynamic_vertices(int first_primitive_index, int primitive_count, int dynamic_vertex_buffer_index, short vertices_per_primitive);",
           "name": "rasterizer_draw_dynamic_vertices",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "rasterizer_decals.obj",
@@ -22771,7 +22772,7 @@
         {
           "addr": "0x1108b0",
           "decl": "char FUN_001108b0(int *tree, int vector, int *out_node);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001108b0"
         },
         {
@@ -25840,30 +25841,30 @@
           "addr": "0x62410",
           "decl": "short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy, float radius);",
           "name": "FUN_00062410",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x624b0",
           "decl": "char FUN_000624b0(void *obstacles, short skip_index, float *pt0, float *vec_a, float radius_base, float max_distance, char check_extant, void *result);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000624b0"
         },
         {
           "addr": "0x625a0",
           "decl": "void FUN_000625a0(void *obstacles, short disc_index, float *point, float base_value, float *out_b, float *out_a, float *out_scalar);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000625a0"
         },
         {
           "addr": "0x62680",
           "decl": "void FUN_00062680(int16_t *partition, uint32_t arg2, int16_t index, uint32_t *out_mask);",
           "name": "FUN_00062680",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x628b0",
           "decl": "void FUN_000628b0(int16_t *partition, uint32_t arg2);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000628b0"
         },
         {
@@ -25939,7 +25940,7 @@
         {
           "addr": "0x105830",
           "decl": "void calculate_vertex(short subdivision_index@<eax>, short subdivision_count@<ecx>, short parent2@<edx>, short parent1@<ebx>, void *sphere@<edi>, short new_vertex);",
-          "ported": false,
+          "ported": true,
           "name": "calculate_vertex"
         },
         {
@@ -25951,20 +25952,20 @@
         {
           "addr": "0x105c80",
           "decl": "short shell_update(short vertex_count, float *vertices @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "shell_update"
         },
         {
           "addr": "0x105d20",
           "decl": "int16_t convex_hull2d_reduce(int16_t vertex_count, float *vertices, int16_t *out_indices);",
           "name": "convex_hull2d_reduce",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x106030",
           "decl": "int FUN_00106030(void *param_1, int param_2, short param_3, int param_4);",
           "name": "FUN_00106030",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c",
           "object": "structures.obj"
         },
@@ -25999,13 +26000,13 @@
           "comment": "Walk a reference list and unlink the entry whose +4 field matches value.",
           "decl": "void reference_list_remove(void *data, int *head, int value);",
           "name": "reference_list_remove",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c"
         },
         {
           "addr": "0x191440",
           "decl": "void reference_list_copy(void *result, void *source);",
-          "ported": false,
+          "ported": true,
           "name": "reference_list_copy",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -26072,7 +26073,7 @@
           "comment": "Find clusters overlapping position+radius and add the object to both per-object and per-cluster reference lists.",
           "decl": "void cluster_partition_add_object(void *partition, int object_handle, void *first_cluster_ref, void *position, uint32_t radius_fp, void *location);",
           "name": "cluster_partition_add_object",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c"
         },
         {
@@ -26116,7 +26117,7 @@
         {
           "addr": "0x191bd0",
           "decl": "char FUN_00191bd0(int search_value@<ebx>, void **param_1, char *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00191bd0"
         },
         {
@@ -26129,7 +26130,7 @@
           "addr": "0x191cb0",
           "decl": "void leaf_map_mark_portal_designators(void *structure, uint32_t portal_index);",
           "name": "leaf_map_mark_portal_designators",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x191d80",
@@ -26217,25 +26218,25 @@
         {
           "addr": "0x195550",
           "decl": "void FUN_00195550(short surface_count, int *out_indices, unsigned int *mask, int out_surfaces);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00195550"
         },
         {
           "addr": "0x195650",
           "decl": "void FUN_00195650(void *out@<eax>, int *indices@<ecx>, int16_t count@<edx>);",
           "name": "FUN_00195650",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1956d0",
           "decl": "int FUN_001956d0(void *param_1, void *param_2, int16_t count@<esi>);",
           "name": "FUN_001956d0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x195790",
           "decl": "void FUN_00195790(int *surface_material_offsets@<eax>, unsigned short surface_count, int lightmap_pass_index, void *material_begin_cb, void *surface_draw_cb, void *pass_end_cb, int param_7);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00195790"
         },
         {
@@ -26347,13 +26348,13 @@
         {
           "addr": "0x197130",
           "decl": "int FUN_00197130(float *bounds, void *param_2, int *param_3, int count, float *center, float radius, float *cull_bounds, int param_8, int param_9, int intersection, int leaf@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00197130"
         },
         {
           "addr": "0x197310",
           "decl": "short FUN_00197310(void *verts@<eax>, void *plane@<ecx>, void *ref@<edx>, void *arg1, int16_t count, int sign, short *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00197310"
         },
         {
@@ -26437,7 +26438,7 @@
         {
           "addr": "0x198580",
           "decl": "char structure_render_surface_from_point_and_leaf(void *render_context, uint32_t leaf_index, int material_type, int16_t *out_collection_index, int16_t *out_geometry_index, int32_t *out_surface, float *out_u, float *out_v);",
-          "ported": false,
+          "ported": true,
           "name": "structure_render_surface_from_point_and_leaf",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -26460,13 +26461,13 @@
         {
           "addr": "0x198ad0",
           "decl": "int16_t structure_clusters_in_cone(int16_t starting_cluster, float *point, float *direction, float length, float sine, float cosine, int16_t max_count, int16_t *out_indices);",
-          "ported": false,
+          "ported": true,
           "name": "structure_clusters_in_cone"
         },
         {
           "addr": "0x198cb0",
           "decl": "char structure_test_vector(float *point, float *direction, float *out_point, int16_t *out_collection_index, int16_t *out_material_index, int32_t *out_surface_index, float *out_u, float *out_v);",
-          "ported": false,
+          "ported": true,
           "name": "structure_test_vector",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -26491,7 +26492,7 @@
           "decl": "void set_file_location_volume_name(int16_t location, const char *volume_name);",
           "name": "set_file_location_volume_name",
           "source_path": "src/halo/structures/structures.c",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "structures.obj",
@@ -26606,7 +26607,7 @@
         {
           "addr": "0x196e10",
           "decl": "void FUN_00196e10(uint16_t *sound_list@<edi>, void *env@<ebx>, float distance);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00196e10"
         },
         {
@@ -27152,7 +27153,7 @@
         {
           "addr": "0x83100",
           "decl": "char transport_server_initialize(int *endpoint, unsigned short timeout);",
-          "ported": false,
+          "ported": true,
           "name": "transport_server_initialize"
         },
         {
@@ -27199,7 +27200,7 @@
         {
           "addr": "0x843a0",
           "decl": "short FUN_000843a0(int *endpoint);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000843a0"
         },
         {
@@ -27785,13 +27786,13 @@
         {
           "addr": "0xeaba0",
           "decl": "char FUN_000eaba0(void *widget, void *event_data, char *out_flag);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000eaba0"
         },
         {
           "addr": "0xead60",
           "decl": "char multiplayer_level_select(void *widget, void *event_data);",
-          "ported": false,
+          "ported": true,
           "name": "multiplayer_level_select"
         },
         {
@@ -28129,7 +28130,7 @@
         {
           "addr": "0xf2720",
           "decl": "void FUN_000f2720(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f2720"
         },
         {
@@ -28208,7 +28209,7 @@
         {
           "addr": "0xf3400",
           "decl": "void game_options_menu_update_pic_desc(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "game_options_menu_update_pic_desc"
         },
         {
@@ -28733,7 +28734,7 @@
           "addr": "0x1a1430",
           "decl": "char biped_fix_position(int unit_handle, int seat_handle, float *initial_position, float *final_position, float scale, char keep_basis, char dont_teleport, char scale_by_height);",
           "name": "biped_fix_position",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a1900",
@@ -28909,7 +28910,7 @@
         {
           "addr": "0x1a68d0",
           "decl": "short FUN_001a68d0(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a68d0"
         },
         {
@@ -29170,7 +29171,7 @@
         {
           "addr": "0x1a9240",
           "decl": "void unit_set_seat_state(int unit_handle, float *position);",
-          "ported": false,
+          "ported": true,
           "name": "unit_set_seat_state"
         },
         {
@@ -29433,7 +29434,7 @@
           "addr": "0x1aaf40",
           "decl": "void FUN_001aaf40(int unit_handle@<edi>);",
           "name": "FUN_001aaf40",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ab110",
@@ -29444,7 +29445,7 @@
           "addr": "0x1ab410",
           "decl": "void unit_aiming_vector(int unit_handle@<eax>);",
           "name": "unit_aiming_vector",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
@@ -29491,14 +29492,14 @@
           "addr": "0x1abb20",
           "decl": "void unit_drop_grenades_on_death(int unit_handle@<eax>);",
           "name": "unit_drop_grenades_on_death",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
           "addr": "0x1abbd0",
           "decl": "void unit_drop_weapons_on_death(int unit_handle@<eax>);",
           "name": "unit_drop_weapons_on_death",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
@@ -29516,7 +29517,7 @@
           "addr": "0x1abd90",
           "decl": "void FUN_001abd90(int unit_handle@<edi>);",
           "name": "FUN_001abd90",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ac3f0",
@@ -29547,13 +29548,13 @@
           "addr": "0x1ac680",
           "decl": "void FUN_001ac680(float initial_p, float initial_v, float max_v, float max_a, int plan);",
           "name": "FUN_001ac680",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1acb70",
           "decl": "void unit_adjust_plan_overlap(void *plan_a@<ecx>, void *plan_b@<eax>, int dummy, float delta_time);",
           "name": "unit_adjust_plan_overlap",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1acd70",
@@ -29564,13 +29565,13 @@
           "addr": "0x1acf90",
           "decl": "void unit_adjust_projectile_ray(int unit_handle, float *origin, float *direction, float *velocity_out, char adjust_origin, char use_unit_forward);",
           "name": "unit_adjust_projectile_ray",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ad060",
           "decl": "void unit_render_debug(int unit_handle);",
           "name": "unit_render_debug",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ad260",
@@ -29606,7 +29607,7 @@
           "addr": "0x1adfc0",
           "decl": "int16_t vehicle_scripting_find_available_seats(int unit_handle, int seat_substring, int16_t seat_desire_type, int16_t *seat_indices, int16_t max_seats);",
           "name": "vehicle_scripting_find_available_seats",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ae160",
@@ -29689,13 +29690,13 @@
           "addr": "0x1ae840",
           "decl": "void unit_cause_melee_damage(int unit_handle, char melee_hit, int target_handle, int param_4, int param_5, int param_6, int param_7);",
           "name": "unit_cause_melee_damage",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1aea90",
           "decl": "char FUN_001aea90(void *anim_state);",
           "name": "unit_cause_player_melee_damage",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1af0d0",
@@ -29721,7 +29722,7 @@
           "addr": "0x1af340",
           "decl": "void unit_update_running_blind(int unit_handle@<eax>, float *run_vector@<esi>);",
           "name": "unit_update_running_blind",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1af620",
@@ -29762,7 +29763,7 @@
           "addr": "0x1b0d90",
           "decl": "short FUN_001b0d90(int unit_handle, char *anim_state);",
           "name": "FUN_001b0d90",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b1290",
@@ -29800,14 +29801,14 @@
           "addr": "0x1b1b60",
           "decl": "char unit_melee_attack_begin(int unit_handle, char param_2, int param_3);",
           "name": "unit_melee_attack_begin",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b1b60.obj"
         },
         {
           "addr": "0x1b1c70",
           "decl": "char unit_leap_begin(int unit_handle, float *forward);",
           "name": "unit_leap_begin",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b1d00",
@@ -29828,7 +29829,7 @@
           "addr": "0x1b2090",
           "decl": "char unit_throw_grenade_begin(int unit_handle, float *alignment_vector);",
           "name": "unit_throw_grenade_begin",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b2260",
@@ -29841,14 +29842,14 @@
           "addr": "0x1b2290",
           "decl": "void unit_impact_melee_damage(int unit_handle, int param_2, int param_3, int param_4, int param_5, int param_6, float *param_7, int param_8);",
           "name": "unit_impact_melee_damage",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b1b60.obj"
         },
         {
           "addr": "0x1b24d0",
           "decl": "void unit_place(int unit_handle, void *placement);",
           "name": "unit_place",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b1b60.obj"
         },
         {
@@ -29861,7 +29862,7 @@
           "addr": "0x1b2660",
           "decl": "void unit_create_initial_weapons(int unit_handle);",
           "name": "unit_create_initial_weapons",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b2660.obj"
         },
         {
@@ -29885,33 +29886,33 @@
           "addr": "0x1b2dd0",
           "decl": "void unit_exit_seat_end(int unit_handle);",
           "name": "unit_exit_seat_end",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b3060",
           "decl": "void unit_died(int unit_handle, char feign_death);",
           "name": "unit_died",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b32d0",
           "decl": "void unit_scripting_enter_vehicle(int unit_handle, int vehicle_handle, char *seat_name);",
           "name": "unit_scripting_enter_vehicle",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b32d0.obj"
         },
         {
           "addr": "0x1b3400",
           "decl": "uint16_t vehicle_scripting_load_magic(int vehicle_handle, int seat_substring, int group_handle);",
           "name": "vehicle_scripting_load_magic",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b32d0.obj"
         },
         {
           "addr": "0x1b3580",
           "decl": "char unit_try_and_exit_seat(int unit_handle);",
           "name": "unit_try_and_exit_seat",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b3580.obj"
         },
         {
@@ -31004,7 +31005,7 @@
         {
           "addr": "0x183770",
           "decl": "void rasterizer_text_get_character_position(short index@<ax>, short *out_y@<ebx>, short *out_x);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_get_character_position"
         },
         {
@@ -31016,19 +31017,19 @@
         {
           "addr": "0x183880",
           "decl": "void rasterizer_text_cache_character(void *font_character@<edi>, void *font);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_cache_character"
         },
         {
           "addr": "0x183c00",
           "decl": "void rasterizer_text_draw_cached_char(void *arg0, void *font, void *font_character, unsigned int color, short x, short y, int screen_x, int screen_y, short width, short height);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_draw_cached_char"
         },
         {
           "addr": "0x183cf0",
           "decl": "void rasterizer_text_draw_cached_chars(void *arg0, void *font, void *font_character, unsigned int color, short x, short y, int offset_x, int offset_y, short width, short height);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_draw_cached_chars"
         },
         {
@@ -31075,7 +31076,7 @@
           "addr": "0x1843b0",
           "name": "rasterizer_transparent_geometry_next_group",
           "decl": "void *rasterizer_transparent_geometry_next_group(void *group);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x184460",
@@ -31531,7 +31532,7 @@
         {
           "addr": "0x17db40",
           "decl": "void rasterizer_screen_effect_set_video(int a0, float a1);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_screen_effect_set_video"
         },
         {
@@ -31661,7 +31662,7 @@
         {
           "addr": "0x107c30",
           "decl": "char FUN_00107c30(int16_t point_count, float *points, int16_t vertices_capacity, char *vertices, int16_t edges_capacity, char *edges, int16_t surfaces_capacity, char *surfaces);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00107c30"
         },
         {
@@ -32360,7 +32361,7 @@
           "addr": "0x11c5f0",
           "name": "FUN_0011c5f0",
           "decl": "void *FUN_0011c5f0(int cache, int size, void *data);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c780",
@@ -32391,7 +32392,7 @@
           "addr": "0x11c870",
           "decl": "void *lrar_cache_new(const char *name, unsigned int minimum_address, unsigned int maximum_address, short block_count, short alignment_bit, short boundary_bit, void (*lock_proc)(short *, short), void (*unlock_proc)(short *));",
           "name": "lrar_cache_new",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/memory/lruv_cache.c"
         },
         {
@@ -32408,7 +32409,7 @@
           "addr": "0x11cab0",
           "name": "lrar_cache_dispose",
           "decl": "void lrar_cache_dispose(int cache);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11cbf0",
@@ -32439,7 +32440,7 @@
           "addr": "0x11d010",
           "decl": "void FUN_0011d010(int cache, void *entry);",
           "name": "FUN_0011d010",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/memory/lruv_cache.c"
         },
         {
@@ -32474,7 +32475,7 @@
           "addr": "0x11d320",
           "name": "FUN_0011d320",
           "decl": "void *FUN_0011d320(int cache, int value);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11d3f0",
@@ -32583,7 +32584,7 @@
           "addr": "0x11de10",
           "name": "FUN_0011de10",
           "decl": "int FUN_0011de10(void *cache, unsigned int size);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bfe90",
@@ -32671,7 +32672,7 @@
           "addr": "0x77040",
           "decl": "void *FUN_00077040(int tag_index, short sequence_index, short frame_index);",
           "name": "FUN_00077040",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x77120",
@@ -34377,7 +34378,7 @@
         {
           "addr": "0xfe6c0",
           "decl": "void FUN_000fe6c0(short trigger_index@<eax>, int weapon@<ecx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000fe6c0"
         }
       ],
@@ -34478,7 +34479,7 @@
         {
           "addr": "0x218d0",
           "decl": "char actor_combat_build_grenade_trajectory(float *origin@<eax>, float *direction@<ebx>, int16_t grenade_index, float grenade_speed, float *target_pos, float *unused_a, float *unused_b, float *aim_speed_out, float *aim_param_out, float *launch_velocity, float *out_accel);",
-          "ported": false,
+          "ported": true,
           "name": "actor_combat_build_grenade_trajectory"
         },
         {
@@ -34517,13 +34518,13 @@
         {
           "addr": "0x2d350",
           "decl": "void actor_destination_update(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_destination_update"
         },
         {
           "addr": "0x2e560",
           "decl": "void actor_move_update(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_update"
         },
         {
@@ -34541,7 +34542,7 @@
         {
           "addr": "0x2cdb0",
           "decl": "char actor_path_refresh(int actor_handle, char store_distance, void *override_path);",
-          "ported": false,
+          "ported": true,
           "name": "actor_path_refresh"
         },
         {
@@ -34553,7 +34554,7 @@
         {
           "addr": "0x2b720",
           "decl": "char actor_path_3d_available(int actor_handle, float *dest_pos, float *dist_out);",
-          "ported": false,
+          "ported": true,
           "name": "actor_path_3d_available"
         },
         {
@@ -34578,7 +34579,7 @@
           "addr": "0x2a610",
           "decl": "void actor_get_stopping_distances(int actor_handle, float *param_2, float *param_3);",
           "name": "actor_get_stopping_distances",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2a7e0",
@@ -34595,32 +34596,32 @@
         {
           "addr": "0x2a8f0",
           "decl": "char actor_move_try_evasion_vector(int actor_handle, float *evasion_vector, float scale, float param_4, char *out_flag, void *result);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_try_evasion_vector"
         },
         {
           "addr": "0x2ab40",
           "decl": "char actor_move_try_evasion_direction(int actor_handle, float *alignment_vector, float param_3, unsigned short *evade_direction_reference, float param_5, char *out_flag, void *result);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_try_evasion_direction"
         },
         {
           "addr": "0x2ace0",
           "decl": "int actor_aim_jump(int actor_handle, int a2, char param_3, float param_4, float *param_5);",
           "name": "actor_aim_jump",
-          "ported": false,
+          "ported": true,
           "source_path": "halo/ai/actor_moving.c"
         },
         {
           "addr": "0x2ade0",
           "decl": "void FUN_0002ade0(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002ade0"
         },
         {
           "addr": "0x2b020",
           "decl": "short FUN_0002b020(float *avoidance_ray, float *ray_origin, int avoidance_data, float *ray_direction, float *collision_t, char *param_3);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002b020"
         },
         {
@@ -34638,19 +34639,19 @@
         {
           "addr": "0x2b490",
           "decl": "void actor_move_get_avoidance_vector(int matrix, float dir_index, float *out_vec);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_get_avoidance_vector"
         },
         {
           "addr": "0x2b830",
           "decl": "void FUN_0002b830(float *facing_basis , char use_3d, float *out_vector, short *out_index, float *in_vec , float *weight_vec);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002b830"
         },
         {
           "addr": "0x2bab0",
           "decl": "void FUN_0002bab0(char use_3d , float *movement_direction , float *facing_direction , float *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002bab0"
         },
         {
@@ -34681,7 +34682,7 @@
         {
           "addr": "0x2daa0",
           "decl": "void actor_move_compute_facing(char want_facing , short move_dir , int actor_handle, char use_z, float max_speed_sq, char path_gate, float arg4, float arg5, float arg6, float arg7, float maximum_throttle, float *movement, float *out_facing, short *out_dir, float *out_vec2, char *out_byte, char *out_bool);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_compute_facing"
         }
       ],
@@ -34708,14 +34709,14 @@
           "decl": "void actor_perception_acknowledge(int actor_handle, int prop_handle, int param_3, char param_4);",
           "name": "actor_perception_acknowledge",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2f380",
           "decl": "uint16_t FUN_0002f380(int actor_handle, int prop_handle);",
           "name": "FUN_0002f380",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2f470",
@@ -34758,7 +34759,7 @@
           "addr": "0x2fa70",
           "decl": "int actor_get_best_damaging_prop(int actor_handle, char prefer_visible);",
           "name": "actor_get_best_damaging_prop",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/ai/actor_perception.c"
         },
         {
@@ -34966,7 +34967,7 @@
           "decl": "void ai_communication_initialize(void);",
           "addr": "0x42a30",
           "name": "ai_communication_initialize",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x42b80",
@@ -35277,7 +35278,7 @@
           "addr": "0x49120",
           "decl": "void *ai_debug_get_path_storage(int actor_handle);",
           "name": "ai_debug_get_path_storage",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x49220",
@@ -35373,7 +35374,7 @@
         {
           "addr": "0x49d60",
           "decl": "void FUN_00049d60(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00049d60"
         },
         {
@@ -35436,7 +35437,7 @@
         {
           "addr": "0x4a770",
           "decl": "void FUN_0004a770(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004a770"
         },
         {
@@ -38760,7 +38761,7 @@
           "addr": "0x146e30",
           "decl": "void bsp3d_clip_line_to_leaves(void);",
           "name": "bsp3d_clip_line_to_leaves",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1470b0",
@@ -39469,7 +39470,7 @@
           "addr": "0x1b9bf0",
           "comment": "Validate and resolve a tag index to its tag_instance record pointer. Asserts if tags not loaded or index out of range. Source: cache/cache_files.c",
           "decl": "int *tag_instance_resolve(int tag_index@<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "tag_instance_resolve"
         },
         {
@@ -40708,7 +40709,7 @@
           "addr": "0x1477f0",
           "decl": "float collision_surface_area(int bsp, int surface_index);",
           "name": "collision_surface_area",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/physics/collision_bsp.c"
         },
         {
@@ -40729,7 +40730,7 @@
         {
           "addr": "0x147d10",
           "decl": "int collision_surface_test_line2d(int bsp, int surface_index, int param3, int param4, float *point, float *direction, float *out_result);",
-          "ported": false,
+          "ported": true,
           "name": "collision_surface_test_line2d",
           "source_path": "src/halo/physics/collision_bsp.c"
         },
@@ -44104,13 +44105,13 @@
         {
           "addr": "0x1335e0",
           "decl": "float FUN_001335e0(float a, float b, float c, float d, float t0, float t1, float t2, float t3, float t);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001335e0"
         },
         {
           "addr": "0x1336a0",
           "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001336a0"
         }
       ],
@@ -44123,13 +44124,13 @@
         {
           "addr": "0x67760",
           "decl": "int FUN_00067760(void *out@<edi>, void *typeinfo@<ebx>, void *data);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00067760"
         },
         {
           "addr": "0x679f0",
           "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000679f0"
         },
         {

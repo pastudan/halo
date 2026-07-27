@@ -140,6 +140,90 @@ bool cache_files_give_time_to_precache(const char *name)
   return ok;
 }
 
+/* tag_instance_resolve (0x1b9bf0) — readable C lift. */
+int *tag_instance_resolve(int tag_index /*@<edi>*/)
+{
+  extern char DAT_002b7da8[];
+  extern char DAT_002b7dc8[];
+  extern char DAT_002b7dec[];
+  extern char DAT_002b8000[];
+  extern char DAT_005ab100[];
+  int *table;
+  int *entry;
+  int idx;
+
+  if (*(unsigned char *)0x4e4d00 == 0) {
+    display_assert(DAT_002b7da8, DAT_002b7dc8, 0x1d3, 1);
+    system_exit(-1);
+  }
+  table = *(int **)0x5054f0;
+  if (table == 0) {
+    display_assert(DAT_002b7dec, DAT_002b7dc8, 0x1d4, 1);
+    system_exit(-1);
+  }
+  idx = (short)tag_index;
+  if (idx < 0 || idx >= *(int *)(*(int *)0x4e5504 + 0xc)) {
+    csprintf(DAT_005ab100, DAT_002b8000, tag_index);
+    display_assert(DAT_005ab100, DAT_002b7dc8, 0x1d7, 1);
+    system_exit(-1);
+  }
+  entry = (int *)((char *)table + (idx << 5));
+  if ((tag_index & 0xffff0000) != 0) {
+    if (entry[3] != tag_index) {
+      csprintf(DAT_005ab100, DAT_002b8000, tag_index);
+      display_assert(DAT_005ab100, DAT_002b7dc8, 0x1db, 1);
+      system_exit(-1);
+    }
+  }
+  return entry;
+}
+
+/* cache_file_header_verify (0x1b9ce0) — readable C lift. */
+bool cache_file_header_verify(void *header, const char *path, int report_errors)
+{
+  extern char DAT_002b7dc8[];
+  extern char DAT_002b8084[];
+  extern char DAT_00288bdc[];
+  extern char DAT_002b804c[];
+  extern char DAT_005ab100[];
+  extern char DAT_002b8024[];
+  unsigned char *h;
+  int file_size;
+  char *name;
+  char *build;
+
+  h = (unsigned char *)header;
+  name = (char *)(h + 0x20);
+  file_size = *(int *)(h + 8);
+  if (*(int *)h != 0x68656164 || *(int *)(h + 0x7fc) != 0x666f6f74 ||
+      file_size < 0 || file_size > 0x11600000 || csstrlen(name) > 0x1f) {
+    if (report_errors) {
+      csprintf(DAT_005ab100, DAT_002b8024, path);
+      display_assert(DAT_005ab100, DAT_002b7dc8, 0x1ed, 1);
+      system_exit(-1);
+    }
+    return 0;
+  }
+  if (*(int *)(h + 4) != 5) {
+    if (report_errors) {
+      csprintf(DAT_005ab100, DAT_002b8084, path);
+      display_assert(DAT_005ab100, DAT_002b7dc8, 0x1f1, 1);
+      system_exit(-1);
+    }
+    return 0;
+  }
+  build = (char *)(h + 0x40);
+  if (csstrcmp(build, DAT_00288bdc) != 0) {
+    if (report_errors) {
+      csprintf(DAT_005ab100, DAT_002b804c, name, build);
+      display_assert(DAT_005ab100, DAT_002b7dc8, 0x1f6, 1);
+      system_exit(-1);
+    }
+    return 0;
+  }
+  return 1;
+}
+
 /* FUN_001b9e70 (0x1b9e70) — XBE naked draft (batch 250). */
 #if defined(__clang__)
 static const char * (*const b1b9e70_c19b0d0)(const char *tag_name) = tag_name_strip_path;
