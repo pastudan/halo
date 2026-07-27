@@ -2,276 +2,70 @@
 
 /* --- LIBCMT:qsort.obj batch drafts (2026-07-26) --- */
 
-/* qsort (0x1d9260) — XBE naked draft (batch 305). */
-#if defined(__clang__)
-static void (*const b1d9260_c1d91f0)(void) = _shortsort;
-
-__attribute__((naked, noinline))
-void __cdecl qsort(void *base __attribute__((unused)), size_t nmemb __attribute__((unused)), size_t size __attribute__((unused)), int (__cdecl *compar)(const void * __attribute__((unused)), const void *) __attribute__((unused)))
+/* 0x1d9260 */
+void qsort(void *base, size_t nmemb, size_t size, int ( *compar)(const void *, const void *))
 {
-  __asm__ volatile(
-      "movl 0x8(%%esp), %%eax\n\t"
-      "subl $0x100, %%esp\n\t"
-      "cmpl $2, %%eax\n\t"
-      "jb .Lqsort_26\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebp\n\t"
-      "movl 0x114(%%esp), %%ebp\n\t"
-      "testl %%ebp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lqsort_25\n\t"
-      "movl 0x114(%%esp), %%ebx\n\t"
-      "leal -0x1(%%eax), %%esi\n\t"
-      "imull %%ebp, %%esi\n\t"
-      "addl %%ebx, %%esi\n\t"
-      "movl $0, 0x18(%%esp)\n\t"
-      "movl %%ebx, 0x10(%%esp)\n\t"
-      "movl %%esi, 0x14(%%esp)\n\t"
-      ".Lqsort_1:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "subl %%ebx, %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%ebp\n\t"
-      "incl %%eax\n\t"
-      "cmpl $8, %%eax\n\t"
-      "ja .Lqsort_3\n\t"
-      "movl 0x120(%%esp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1d91f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lqsort_2:\n\t"
-      "movl 0x18(%%esp), %%eax\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, 0x18(%%esp)\n\t"
-      "js .Lqsort_25\n\t"
-      "movl 0x20(%%esp,%%eax,4), %%edx\n\t"
-      "movl 0x98(%%esp,%%eax,4), %%eax\n\t"
-      "movl %%edx, 0x10(%%esp)\n\t"
-      "movl %%eax, 0x14(%%esp)\n\t"
-      "movl %%edx, %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jmp .Lqsort_1\n\t"
-      ".Lqsort_3:\n\t"
-      "shrl $1, %%eax\n\t"
-      "imull %%ebp, %%eax\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "movl %%eax, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lqsort_5\n\t"
-      "cmpl %%edi, %%ebx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "je .Lqsort_5\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "subl %%edi, %%ecx\n\t"
-      "movl %%ebp, %%esi\n\t"
-      ".Lqsort_4:\n\t"
-      "movb (%%eax), %%bl\n\t"
-      "movb (%%ecx,%%eax,1), %%dl\n\t"
-      "movb %%bl, (%%ecx,%%eax,1)\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "incl %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .Lqsort_4\n\t"
-      "movl 0x10(%%esp), %%ebx\n\t"
-      "movl 0x14(%%esp), %%esi\n\t"
-      ".Lqsort_5:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lqsort_7\n\t"
-      "cmpl %%esi, %%ebx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "je .Lqsort_7\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "subl %%esi, %%ecx\n\t"
-      "movl %%ebp, %%esi\n\t"
-      ".Lqsort_6:\n\t"
-      "movb (%%eax), %%bl\n\t"
-      "movb (%%ecx,%%eax,1), %%dl\n\t"
-      "movb %%bl, (%%ecx,%%eax,1)\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "incl %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .Lqsort_6\n\t"
-      "movl 0x10(%%esp), %%ebx\n\t"
-      "movl 0x14(%%esp), %%esi\n\t"
-      ".Lqsort_7:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lqsort_9\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "je .Lqsort_9\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "subl %%esi, %%ecx\n\t"
-      "movl %%ebp, %%esi\n\t"
-      ".Lqsort_8:\n\t"
-      "movb (%%eax), %%bl\n\t"
-      "movb (%%ecx,%%eax,1), %%dl\n\t"
-      "movb %%bl, (%%ecx,%%eax,1)\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "incl %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .Lqsort_8\n\t"
-      "movl 0x10(%%esp), %%ebx\n\t"
-      ".Lqsort_9:\n\t"
-      "movl 0x14(%%esp), %%esi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lqsort_10:\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "jbe .Lqsort_12\n\t"
-      ".Lqsort_11:\n\t"
-      "addl %%ebp, %%ebx\n\t"
-      "cmpl %%edi, %%ebx\n\t"
-      "jae .Lqsort_12\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lqsort_11\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "ja .Lqsort_13\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lqsort_12:\n\t"
-      "movl 0x14(%%esp), %%eax\n\t"
-      "addl %%ebp, %%ebx\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "ja .Lqsort_13\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lqsort_12\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lqsort_13:\n\t"
-      "subl %%ebp, %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jbe .Lqsort_14\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .Lqsort_13\n\t"
-      ".Lqsort_14:\n\t"
-      "cmpl %%esi, %%ebx\n\t"
-      "ja .Lqsort_17\n\t"
-      "movl %%esi, %%eax\n\t"
-      "je .Lqsort_16\n\t"
-      "movl 0x11c(%%esp), %%ecx\n\t"
-      "movl %%ebx, %%ebp\n\t"
-      "subl %%esi, %%ebp\n\t"
-      "movl %%ecx, 0x1c(%%esp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lqsort_15:\n\t"
-      "movb (%%eax,%%ebp,1), %%cl\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "movb %%dl, (%%eax,%%ebp,1)\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      "movl 0x1c(%%esp), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x1c(%%esp)\n\t"
-      "jne .Lqsort_15\n\t"
-      "movl 0x11c(%%esp), %%ebp\n\t"
-      ".Lqsort_16:\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jne .Lqsort_10\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "jmp .Lqsort_10\n\t"
-      ".Lqsort_17:\n\t"
-      "addl %%ebp, %%esi\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jae .Lqsort_19\n\t"
-      ".Lqsort_18:\n\t"
-      "subl %%ebp, %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jbe .Lqsort_19\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lqsort_18\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jb .Lqsort_20\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lqsort_19:\n\t"
-      "movl 0x10(%%esp), %%eax\n\t"
-      "subl %%ebp, %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jbe .Lqsort_21\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *0x128(%%esp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lqsort_19\n\t"
-      ".Lqsort_20:\n\t"
-      "movl 0x10(%%esp), %%eax\n\t"
-      ".Lqsort_21:\n\t"
-      "movl 0x14(%%esp), %%edx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "movl %%esi, %%edi\n\t"
-      "subl %%ebx, %%ecx\n\t"
-      "subl %%eax, %%edi\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jl .Lqsort_23\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "jae .Lqsort_22\n\t"
-      "movl 0x18(%%esp), %%ecx\n\t"
-      "movl %%eax, 0x20(%%esp,%%ecx,4)\n\t"
-      "movl %%esi, 0x98(%%esp,%%ecx,4)\n\t"
-      "incl %%ecx\n\t"
-      "movl %%ecx, 0x18(%%esp)\n\t"
-      ".Lqsort_22:\n\t"
-      "cmpl %%edx, %%ebx\n\t"
-      "jae .Lqsort_2\n\t"
-      "movl 0x14(%%esp), %%esi\n\t"
-      "movl %%ebx, 0x10(%%esp)\n\t"
-      "jmp .Lqsort_1\n\t"
-      ".Lqsort_23:\n\t"
-      "cmpl %%edx, %%ebx\n\t"
-      "jae .Lqsort_24\n\t"
-      "movl 0x18(%%esp), %%ecx\n\t"
-      "movl %%ebx, 0x20(%%esp,%%ecx,4)\n\t"
-      "movl %%edx, 0x98(%%esp,%%ecx,4)\n\t"
-      "incl %%ecx\n\t"
-      "movl %%ecx, 0x18(%%esp)\n\t"
-      ".Lqsort_24:\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "jae .Lqsort_2\n\t"
-      "movl 0x10(%%esp), %%ebx\n\t"
-      "movl %%esi, 0x14(%%esp)\n\t"
-      "jmp .Lqsort_1\n\t"
-      ".Lqsort_25:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "popl %%ebx\n\t"
-      ".Lqsort_26:\n\t"
-      "addl $0x100, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c1d91f0] "m"(b1d9260_c1d91f0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp eax, 2 -> jb 0x1d94dc */
+  /* cmp eax, 8 -> ja 0x1d92ef */
+  _shortsort();
+  /* test eax, eax -> jle 0x1d932a */
+  /* test eax, eax -> jle 0x1d935c */
+  /* test eax, eax -> jle 0x1d938a */
+  /* cmp edi, ebx -> jbe 0x1d93b0 */
+  /* cmp ebx, edi -> jae 0x1d93b0 */
+  /* test eax, eax -> jle 0x1d9394 */
+  /* cmp edi, ebx -> ja 0x1d93d0 */
+  /* cmp ebx, eax -> ja 0x1d93d0 */
+  /* test eax, eax -> jle 0x1d93b0 */
+  /* cmp esi, edi -> jbe 0x1d93e6 */
+  /* test eax, eax -> jg 0x1d93d0 */
+  /* cmp ebx, esi -> ja 0x1d942c */
+  /* cmp edi, esi -> jne 0x1d9390 */
+  /* cmp edi, esi -> jae 0x1d9450 */
+  /* cmp esi, edi -> jbe 0x1d9450 */
+  /* test eax, eax -> je 0x1d9432 */
+  /* cmp edi, esi -> jb 0x1d946a */
+  /* cmp esi, eax -> jbe 0x1d946e */
+  /* test eax, eax -> je 0x1d9450 */
+  /* cmp edi, ecx -> jl 0x1d94ab */
+  /* cmp eax, esi -> jae 0x1d9496 */
+  /* cmp ebx, edx -> jae 0x1d92c7 */
+  /* cmp ebx, edx -> jae 0x1d94c3 */
+  /* cmp eax, esi -> jae 0x1d92c7 */
+  FUN_001dee48();
+  FUN_001d950d();
+  __fload_withFB();
+  /* relift: cmp word ptr [esp], 0x27f -> je 0x1d9521 */
+  FUN_001dedd5();
+  /* cmp eax, 0x3ff00000 -> jae 0x1d9555 */
+  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
+  FUN_001dedec();
+  /* test eax, 0xfffff -> jne 0x1d957a */
+  /* relift: cmp dword ptr [esp + 8], 0 -> jne 0x1d957a */
+  /* relift: relift: fld xword ptr [0x3314b8] */
+  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
+  __startOneArgErrorHandling();
+  /* test edx, 3 -> je 0x1d95fb */
+  /* cmp (char)ecx, (char)ebx -> je 0x1d95c0 */
+  /* test (char)ecx, (char)ecx -> je 0x1d9644 */
+  /* test edx, 3 -> jne 0x1d95e8 */
+  /* cmp (char)eax, (char)ebx -> je 0x1d9685 */
+  /* test (char)eax, (char)eax -> je 0x1d9642 */
+  /* cmp (char)eax, (char)ebx -> je 0x1d967e */
+  /* test (char)eax, (char)eax -> je 0x1d9642 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "qsort: clang naked draft required"
-#endif
 

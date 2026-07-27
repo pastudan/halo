@@ -121,297 +121,208 @@ int FUN_0011d300(int cache)
   return *(int *)(cache + 0x20) - *(int *)(cache + 0x40);
 }
 
-/* FUN_0011d320 (0x11d320) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void (*const b11d320_c11d090)(int cache) = FUN_0011d090;
-static void (*const b11d320_c11d010)(int cache, void *entry) = FUN_0011d010;
-
-__attribute__((naked, noinline))
-void * FUN_0011d320(int cache __attribute__((unused)), int value __attribute__((unused)))
+/* 0x11d320: lru_cache new-block allocator ('jblU' variant, magic 0x55626c6a).
+ * cdecl(cache, value) -> payload pointer (Ghidra's __thiscall/ECX guess is
+ * wrong: prologue does MOV ESI,[EBP+8] (cache) and MOV EAX,[EBP+0xc] (value),
+ * the epilog is a plain RET, and PUSH ECX at 0x11d323 only reserves the local
+ * LRU-serial slot).
+ *
+ * Validates the 'curl' header (FUN_0011d090, cache in EAX). If the live count
+ * (cache+0x40) is below capacity (cache+0x20), it appends a fresh record at
+ * cache+0x34 + count*stride(cache+0x24) and bumps the count. Once full it walks
+ * all `count` records, validating each (FUN_0011d010), and picks the unlocked
+ * block (block+4 bit0 == 0) with the smallest LRU serial (block+8, unsigned) as
+ * the eviction victim; if every block is locked it returns NULL. The victim's
+ * user pointer (block[0]) is passed to the evict callback (cache+0x30) before
+ * reuse.
+ *
+ * The selected/new block is then initialised: +0x00 = value, +0x04 = magic
+ * (bit0 clear/unlocked), +0x08 = next LRU serial (cache+0x3c, post-increment),
+ * +0x0c = 0. The init callback (cache+0x2c) is invoked with (value, payload)
+ * and the payload pointer (block+0x10) is returned (NULL on failure).
+ * Source: c:\halo\SOURCE\memory\lru_cache.c */
+void *FUN_0011d320(int cache, int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[c11d090]\n\t"
-      "movl 0x40(%%esi), %%eax\n\t"
-      "cmpl 0x20(%%esi), %%eax\n\t"
-      "jne .LFUN_0011d320_4\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl 0x34(%%esi), %%ebx\n\t"
-      "movl %%edi, 0x8(%%ebp)\n\t"
-      "jle .LFUN_0011d320_6\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0011d320_1:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11d010]\n\t"
-      "movb 0x4(%%ebx), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%al\n\t"
-      "jne .LFUN_0011d320_3\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0011d320_2\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpl 0x8(%%ebx), %%eax\n\t"
-      "jbe .LFUN_0011d320_3\n\t"
-      ".LFUN_0011d320_2:\n\t"
-      "movl 0x8(%%ebx), %%ecx\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      ".LFUN_0011d320_3:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x24(%%esi), %%edx\n\t"
-      "movl 0x40(%%esi), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jl .LFUN_0011d320_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0011d320_6\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *0x30(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_0011d320_5\n\t"
-      ".LFUN_0011d320_4:\n\t"
-      "movl 0x24(%%esi), %%edi\n\t"
-      "movl 0x34(%%esi), %%ecx\n\t"
-      "imull %%eax, %%edi\n\t"
-      "addl %%ecx, %%edi\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0x40(%%esi)\n\t"
-      ".LFUN_0011d320_5:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0011d320_6\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl $0x55626c6a, 0x4(%%edi)\n\t"
-      "movl 0x3c(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edi)\n\t"
-      "incl 0x3c(%%esi)\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "leal 0x10(%%edi), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl $0, 0xc(%%edi)\n\t"
-      "call *0x2c(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011d320_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11d090] "m"(b11d320_c11d090), [c11d010] "m"(b11d320_c11d010)
-      : "memory");
+  int count;
+  int block;
+  int victim;
+  unsigned int victim_serial;
+  int i;
+
+  victim = 0;
+  FUN_0011d090(cache);                     /* validate 'curl' header (cache@eax) */
+  count = *(int *)(cache + 0x40);          /* +0x40 live block count */
+  if (count == *(int *)(cache + 0x20)) {   /* +0x20 capacity: cache full -> evict LRU */
+    block = *(int *)(cache + 0x34);        /* +0x34 first block record */
+    victim_serial = 0;                     /* dead init; only read once victim != 0 */
+    if (count < 1) {
+      return (void *)0;
+    }
+    i = 0;
+    do {
+      FUN_0011d010(cache, (void *)block);  /* validate block header */
+      if (((*(unsigned char *)(block + 4) & 1) == 0) &&   /* +0x04 bit0 == unlocked */
+          ((victim == 0) ||
+           (*(unsigned int *)(block + 8) < victim_serial))) {  /* +0x08 older serial */
+        victim_serial = *(unsigned int *)(block + 8);
+        victim = block;
+      }
+      i = i + 1;
+      block = block + *(int *)(cache + 0x24);   /* +0x24 stride advance */
+    } while (i < *(int *)(cache + 0x40));        /* re-read count each iter (faithful) */
+    if (victim == 0) {
+      return (void *)0;                          /* all blocks locked */
+    }
+    (*(void (**)(int))(cache + 0x30))(*(int *)victim);  /* +0x30 evict callback(user_ptr) */
+    block = victim;
+  }
+  else {                                   /* room to append */
+    block = *(int *)(cache + 0x24) * count + *(int *)(cache + 0x34);
+    *(int *)(cache + 0x40) = count + 1;
+  }
+
+  if (block == 0) {
+    return (void *)0;
+  }
+  *(int *)block = value;                    /* +0x00 user value */
+  *(int *)(block + 4) = 0x55626c6a;         /* +0x04 'jblU' magic, unlocked */
+  *(int *)(block + 8) = *(int *)(cache + 0x3c);           /* +0x08 LRU serial */
+  *(int *)(cache + 0x3c) = *(int *)(cache + 0x3c) + 1;    /* +0x3c serial clock++ */
+  *(int *)(block + 0xc) = 0;                /* +0x0c link */
+  (*(void (**)(int, void *))(cache + 0x2c))(*(int *)block,
+                                            (void *)(block + 0x10));  /* +0x2c init cb(value,payload) */
+  return (void *)(block + 0x10);            /* +0x10 payload */
 }
-#else
-#error "FUN_0011d320: clang naked draft required"
-#endif
 
 
-/* FUN_0011c5f0 (0x11c5f0) — XBE naked draft (batch 83). */
-#if defined(__clang__)
-static void (*const b11c5f0_c11c290)(int cache) = FUN_0011c290;
-static void (*const b11c5f0_c11c210)(int cache, int block) = FUN_0011c210;
-
-__attribute__((naked, noinline))
-void * FUN_0011c5f0(int cache __attribute__((unused)), int size __attribute__((unused)), void *data __attribute__((unused)))
+/* 0x11c5f0: 'hlbA' least-recently-used contiguous block allocator. Runs the
+ * cache post-touch bookkeeping (FUN_0011c290, cache in @eax), grows the request
+ * by the 0x10-byte block header and rounds it up to 4 bytes, then rejects it if
+ * it cannot fit under the cache capacity (+0x20). It walks the forward-linked
+ * block list (head @cache+0x2c, next @block+0xc), touching each visited block
+ * (FUN_0011c210, cache in @ebx + block in @esi) and remembering the first free
+ * (bit0-clear) block. When the running placement offset leaves room before the
+ * next block -- or the list end is reached -- it checks the region capacity:
+ * on a fit it evicts every not-yet-marked block in [free_block, cursor) via the
+ * free callback (cache+0x34), writes a fresh block record (data @+0, 'hlbA'
+ * magic 0x41626c68 @+4, byte size @+8, next @+0xc), invokes the allocate/init
+ * callback (cache+0x30)(data, user_ptr), relinks the record as the new head
+ * (cache+0x2c) and returns its user area (block+0x10); on a capacity miss it
+ * resets the cursor to the region base (cache+0x24), clears the placement
+ * state and retries the whole list once (16-bit wrap counter) before giving up.
+ * Returns NULL on an oversized request or after the single retry fails. Block
+ * flags share the magic dword: bit0 = in-use, bit1 = already-freed/marked.
+ * cdecl(cache, size, data). This function contains no integrity asserts, so no
+ * source file/line is fixed by the binary; it lives in the memory-cache TU.
+ * Source: c:\halo\SOURCE\memory (lru allocator; exact file/line not pinned). */
+void *FUN_0011c5f0(int cache, int size, void *data)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "movl %%esi, -0x10(%%ebp)\n\t"
-      "call *%[c11c290]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl $0x10, %%eax\n\t"
-      "testb $3, %%al\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "je .LFUN_0011c5f0_1\n\t"
-      "orl $3, %%eax\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".LFUN_0011c5f0_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0011c5f0_17\n\t"
-      "cmpl 0x20(%%ebx), %%eax\n\t"
-      "jg .LFUN_0011c5f0_17\n\t"
-      "movl 0x2c(%%ebx), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "je .LFUN_0011c5f0_2\n\t"
-      "movl 0xc(%%esi), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "jmp .LFUN_0011c5f0_4\n\t"
-      ".LFUN_0011c5f0_2:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "jmp .LFUN_0011c5f0_4\n\t"
-      ".LFUN_0011c5f0_3:\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      ".LFUN_0011c5f0_4:\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "je .LFUN_0011c5f0_5\n\t"
-      "call *%[c11c210]\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "subl 0x24(%%ebx), %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_0011c5f0_6\n\t"
-      ".LFUN_0011c5f0_5:\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      ".LFUN_0011c5f0_6:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0011c5f0_10\n\t"
-      "movl %%edi, %%esi\n\t"
-      "call *%[c11c210]\n\t"
-      "call *%[c11c210]\n\t"
-      "movl 0x24(%%ebx), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "subl %%edx, %%eax\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jle .LFUN_0011c5f0_9\n\t"
-      "testb $1, 0x4(%%edi)\n\t"
-      "je .LFUN_0011c5f0_7\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "movl 0xc(%%edi), %%edi\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_0011c5f0_16\n\t"
-      ".LFUN_0011c5f0_7:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0011c5f0_8\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      ".LFUN_0011c5f0_8:\n\t"
-      "movl 0xc(%%edi), %%edi\n\t"
-      "jmp .LFUN_0011c5f0_16\n\t"
-      ".LFUN_0011c5f0_9:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      ".LFUN_0011c5f0_10:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "leal (%%eax,%%ecx,1), %%edx\n\t"
-      "cmpl 0x20(%%ebx), %%edx\n\t"
-      "jle .LFUN_0011c5f0_11\n\t"
-      "movl 0x24(%%ebx), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "movw %%ax, %%cx\n\t"
-      "incl %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "je .LFUN_0011c5f0_16\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011c5f0_11:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0011c5f0_14\n\t"
-      ".LFUN_0011c5f0_12:\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "je .LFUN_0011c5f0_14\n\t"
-      "testb $2, 0x4(%%esi)\n\t"
-      "jne .LFUN_0011c5f0_13\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *0x34(%%ebx)\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "andl $0xfffffffe, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "orl $2, %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      ".LFUN_0011c5f0_13:\n\t"
-      "movl 0xc(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0011c5f0_12\n\t"
-      ".LFUN_0011c5f0_14:\n\t"
-      "movl 0x24(%%ebx), %%esi\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "addl %%eax, %%esi\n\t"
-      "leal 0x10(%%esi), %%eax\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x41626c68, 0x4(%%esi)\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl %%edi, 0xc(%%esi)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "call *0x30(%%ebx)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0011c5f0_15\n\t"
-      "movl %%esi, 0xc(%%eax)\n\t"
-      ".LFUN_0011c5f0_15:\n\t"
-      "movl %%esi, 0x2c(%%ebx)\n\t"
-      ".LFUN_0011c5f0_16:\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_0011c5f0_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011c5f0_17:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11c290] "m"(b11c5f0_c11c290), [c11c210] "m"(b11c5f0_c11c210)
-      : "memory");
+  void *result;
+  int *prev_block;
+  int *cur;
+  int *free_block;
+  int *evict;
+  int *new_block;
+  int base_offset;
+  short wrap_count;
+  int prev_wrapped;
+
+  result = (void *)0x0;
+  FUN_0011c290(cache);
+
+  size = size + 0x10;
+  if ((size & 3) != 0) {
+    size = (size | 3) + 1;
+  }
+  if ((size < 0) || (*(int *)(cache + 0x20) < size)) {
+    return (void *)0x0;
+  }
+
+  prev_block = *(int **)(cache + 0x2c);   /* head@+0x2c */
+  free_block = (int *)0x0;
+  wrap_count = 0;
+  if (prev_block == (int *)0x0) {
+    cur = (int *)0x0;
+  } else {
+    cur = (int *)prev_block[3];           /* head->next */
+  }
+
+  do {
+    if (prev_block == (int *)0x0) {
+      base_offset = 0;
+    } else {
+      FUN_0011c210(cache, (int)prev_block);
+      base_offset =
+        (prev_block[2] - *(int *)(cache + 0x24)) + (int)prev_block;
+    }
+
+    if (cur == (int *)0x0) {
+      goto cap_check;
+    }
+
+    FUN_0011c210(cache, (int)cur);
+    FUN_0011c210(cache, (int)cur);
+    if ((base_offset + size) <=
+        (int)((int)cur - *(int *)(cache + 0x24))) {
+      goto cap_check;   /* candidate fits before this block */
+    }
+
+    /* current block overlaps the candidate range */
+    if ((*(unsigned char *)((int)cur + 4) & 1) != 0) {
+      /* in-use: step past it and restart the free run */
+      prev_block = cur;
+      cur = (int *)cur[3];
+      free_block = (int *)0x0;
+    } else {
+      /* free: remember the first free block, keep scanning */
+      if (free_block == (int *)0x0) {
+        free_block = cur;
+      }
+      cur = (int *)cur[3];
+    }
+    goto cont;
+
+  cap_check:
+    if (*(int *)(cache + 0x20) < (base_offset + size)) {
+      /* no room before region end: reset cursor to base and wrap once */
+      cur = *(int **)(cache + 0x24);
+      prev_block = (int *)0x0;
+      free_block = (int *)0x0;
+      prev_wrapped = (wrap_count != 0);
+      wrap_count = (short)(wrap_count + 1);
+      if (prev_wrapped) {
+        return result;
+      }
+    } else {
+      /* fits: evict unmarked blocks in [free_block, cur), then write record */
+      for (evict = free_block;
+           (evict != (int *)0x0) && (evict != cur);
+           evict = (int *)evict[3]) {
+        if ((*(unsigned char *)((int)evict + 4) & 2) == 0) {
+          (*(void (**)(int))(cache + 0x34))(evict[0]);
+          *(int *)((int)evict + 4) =
+            (*(int *)((int)evict + 4) & 0xfffffffeU) | 2;
+        }
+      }
+      new_block = (int *)(*(int *)(cache + 0x24) + base_offset);
+      result = (void *)((int)new_block + 0x10);
+      new_block[2] = size;                /* size   @+0x8 */
+      new_block[1] = 0x41626c68;          /* 'hlbA' @+0x4 */
+      new_block[0] = (int)data;           /* data   @+0x0 */
+      new_block[3] = (int)cur;            /* next   @+0xc */
+      (*(void (**)(void *, void *))(cache + 0x30))(data, result);
+      if (prev_block != (int *)0x0) {
+        prev_block[3] = (int)new_block;
+      }
+      *(int **)(cache + 0x2c) = new_block;
+    }
+
+  cont:
+    if (result != (void *)0x0) {
+      return result;
+    }
+  } while (1);
 }
-#else
-#error "FUN_0011c5f0: clang naked draft required"
-#endif
 
 
 /* FUN_0011c530 (0x11c530) — readable C lift from XBE leaf. */
@@ -454,321 +365,75 @@ void FUN_0011c580(int cache, void *pointer)
 
 
 
-/* lrar_cache_dispose (0x11cab0) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static void (*const b11cab0_c11c820)(int cache) = lruv_update_function_pointers;
-static char * (*const b11cab0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b11cab0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11cab0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void lrar_cache_dispose(int cache __attribute__((unused)))
+/* 0x11cab0: Dispose of every live block in an lrar_cache. Refreshes the
+ * function-pointer table (lruv_update_function_pointers, cache passed in EAX),
+ * then walks the ring buffer from head(+0x34) to tail(+0x36), wrapping at
+ * block_count(+0x38). For each block it validates the cache header ('lrar'
+ * magic @+0x44, base<end, size>=1, count>=1; line 0x199), the block index
+ * (line 0x16e) and the block record ('klbR' magic @block+4, size in range,
+ * offset inside the data region; line 0x186) -- each failure formats the
+ * "appears to be corrupt" message into the shared scratch buffer at 0x5ab100
+ * and hits display_assert + system_exit(-1). When a block holds a non-NULL
+ * user pointer (block[0]) it is passed to the free callback at cache+0x40 and
+ * the slot is cleared. Finally head/tail are reset to -1 (0xffff). The
+ * file/line/halt assert args are pushed before csprintf's args (Ghidra cdecl
+ * arg mis-grouping). Source: c:\halo\SOURCE\memory\lrar_cache.c */
+void lrar_cache_dispose(int cache)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c11c820]\n\t"
-      "movw 0x34(%%esi), %%bx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "cmpw %%ax, %%bx\n\t"
-      "je .Llrar_cache_dispose_11\n\t"
-      ".Llrar_cache_dispose_1:\n\t"
-      "cmpl $0x6c726172, 0x44(%%esi)\n\t"
-      "jne .Llrar_cache_dispose_2\n\t"
-      "movl 0x24(%%esi), %%eax\n\t"
-      "cmpl 0x28(%%esi), %%eax\n\t"
-      "jae .Llrar_cache_dispose_2\n\t"
-      "movl 0x2c(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Llrar_cache_dispose_2\n\t"
-      "cmpw $0, 0x38(%%esi)\n\t"
-      "jg .Llrar_cache_dispose_3\n\t"
-      ".Llrar_cache_dispose_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x199\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x28f82c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llrar_cache_dispose_3:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Llrar_cache_dispose_4\n\t"
-      "cmpw 0x38(%%esi), %%bx\n\t"
-      "jl .Llrar_cache_dispose_5\n\t"
-      ".Llrar_cache_dispose_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x16e\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl $0x28f8c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llrar_cache_dispose_5:\n\t"
-      "movl 0x30(%%esi), %%ecx\n\t"
-      "movswl %%bx, %%edi\n\t"
-      "shll $4, %%edi\n\t"
-      "movl 0x4(%%edi,%%ecx,1), %%eax\n\t"
-      "addl %%ecx, %%edi\n\t"
-      "cmpl $0x52626c6b, %%eax\n\t"
-      "jne .Llrar_cache_dispose_6\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .Llrar_cache_dispose_6\n\t"
-      "cmpl 0x2c(%%esi), %%eax\n\t"
-      "jge .Llrar_cache_dispose_6\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "cmpl 0x24(%%esi), %%ecx\n\t"
-      "jb .Llrar_cache_dispose_6\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "cmpl 0x28(%%esi), %%ecx\n\t"
-      "jbe .Llrar_cache_dispose_7\n\t"
-      ".Llrar_cache_dispose_6:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x186\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x28f7d4\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llrar_cache_dispose_7:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Llrar_cache_dispose_8\n\t"
-      "pushl %%eax\n\t"
-      "call *0x40(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0, (%%edi)\n\t"
-      ".Llrar_cache_dispose_8:\n\t"
-      "cmpw 0x36(%%esi), %%bx\n\t"
-      "je .Llrar_cache_dispose_10\n\t"
-      "incl %%ebx\n\t"
-      "cmpw 0x38(%%esi), %%bx\n\t"
-      "jne .Llrar_cache_dispose_9\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "jmp .Llrar_cache_dispose_1\n\t"
-      ".Llrar_cache_dispose_9:\n\t"
-      "cmpw $-1, %%bx\n\t"
-      "jne .Llrar_cache_dispose_1\n\t"
-      ".Llrar_cache_dispose_10:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      ".Llrar_cache_dispose_11:\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x34(%%esi)\n\t"
-      "movw %%ax, 0x36(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11c820] "m"(b11cab0_c11c820), [c8d9d0] "m"(b11cab0_c8d9d0), [assert] "m"(b11cab0_assert), [exitfn] "m"(b11cab0_exitfn)
-      : "memory");
-}
-#else
-#error "lrar_cache_dispose: clang naked draft required"
-#endif
-
-
-/* 0x11cbf0: lrar_cache block allocator. Refreshes the cache's function-pointer
- * table (lruv_update_function_pointers, cache in @eax), rounds the request up
- * to the primary alignment (cache+0x20), then walks the block ring to find a
- * contiguous address range >= size that fits under cache->maximum_address
- * (+0x28), evicting overlapping blocks via the free callback (cache+0x40) as it
- * goes. Applies an optional secondary boundary alignment (cache+0x22, -1=none).
- * On a fit it writes a fresh block record (data ptr +0, 'lRbk' magic +4,
- * address +8, size +0xc), registers it via the insert callback
- * (cache+0x3c(data, index)), and links it as the new last/head block. Returns
- * the new block index (or 0xffff on reject). Integrity asserts reference
- * c:\halo\SOURCE\memory\lrar_cache.c. The @reg callee FUN_0011ca60 fetches a
- * block record (block_index @<ax>, cache @<edi>). */
-short FUN_0011cbf0(int cache, int size, void *data)
-{
-  int new_block_index;
-  unsigned int new_block_address;
-  unsigned int search_address;
-  unsigned int align_mask;
-  int boundary;
-  unsigned int boundary_mask;
-  unsigned int aligned_base;
   short block_index;
-  short next_index;
   int *block;
-  unsigned int *new_block;
-  int end;
+  int block_size;
 
-  new_block_index = -1;
   lruv_update_function_pointers(cache);
-
-  align_mask = (1 << (*(unsigned char *)(cache + 0x20) & 0x1f)) - 1;
-  if (((unsigned int)size & align_mask) != 0) {
-    size = (align_mask | (unsigned int)size) + 1;
-  }
-
-  if ((size >= 0) && (size <= *(int *)(cache + 0x2c))) {
-    block_index = *(short *)(cache + 0x34);
-    if (*(short *)(cache + 0x36) == -1) {
-      new_block_index = 0;
-    } else {
-      new_block_index = *(short *)(cache + 0x36) + 1;
-    }
-    next_index = block_index;
-    if (*(short *)(cache + 0x38) <= (short)new_block_index) {
-      new_block_index = 0;
-    }
-
+  block_index = *(short *)(cache + 0x34);
+  while (block_index != -1) {
     while (1) {
-      if (*(short *)(cache + 0x36) == -1) {
-        search_address = *(unsigned int *)(cache + 0x24);
-      } else {
-        block = (int *)FUN_0011ca60(*(short *)(cache + 0x36), cache);
-        search_address = block[3] + block[2];
+      if ((*(int *)(cache + 0x44) != 0x6c726172) ||
+          (*(unsigned int *)(cache + 0x28) <= *(unsigned int *)(cache + 0x24)) ||
+          (*(int *)(cache + 0x2c) < 1) ||
+          (*(short *)(cache + 0x38) <= 0)) {
+        display_assert(csprintf((char *)0x5ab100,
+                                "lrar cache %s @%p appears to be corrupt",
+                                cache, cache),
+                       "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x199, 1);
+        system_exit(-1);
       }
-      new_block_address = search_address;
-
-      if (*(short *)(cache + 0x22) != -1) {
-        boundary = 1 << (*(short *)(cache + 0x22) & 0x1f);
-        boundary_mask = ~((unsigned int)boundary - 1U);
-        aligned_base = boundary_mask & search_address;
-        block_index = next_index;
-        if (aligned_base != ((search_address + size) & boundary_mask)) {
-          new_block_address = aligned_base + boundary;
-        }
+      if ((block_index < 0) || (*(short *)(cache + 0x38) <= block_index)) {
+        display_assert("block_index>=0 && block_index<cache->block_count",
+                       "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x16e, 1);
+        system_exit(-1);
       }
-
-      if (block_index != -1) {
-        block = (int *)FUN_0011ca60(block_index, cache);
-        while ((block_index == (short)new_block_index) ||
-               ((search_address <= (unsigned int)block[2]) &&
-                ((unsigned int)block[2] < new_block_address + size))) {
-          if (block[0] != 0) {
-            (*(void (**)(void *))(cache + 0x40))((void *)block[0]);
-            block[0] = 0;
-          }
-          block[1] = -1;
-          next_index = block_index + 1;
-          if (*(short *)(cache + 0x38) <= next_index) {
-            next_index = 0;
-          }
-          if ((*(int *)(cache + 0x44) != 0x6c726172) ||
-              (*(unsigned int *)(cache + 0x28) <=
-               *(unsigned int *)(cache + 0x24)) ||
-              (*(int *)(cache + 0x2c) < 1) || (*(short *)(cache + 0x38) < 1)) {
-            display_assert(csprintf((char *)0x5ab100,
-                                    "lrar cache %s @%p appears to be corrupt",
-                                    cache, cache),
-                           "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x199, 1);
-            system_exit(-1);
-          }
-          if ((next_index < 0) || (*(short *)(cache + 0x38) <= next_index)) {
-            display_assert("block_index>=0 && block_index<cache->block_count",
-                           "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x16e, 1);
-            system_exit(-1);
-          }
-          block = (int *)(next_index * 0x10 + *(int *)(cache + 0x30));
-          block_index = next_index;
-          if ((*(int *)(next_index * 0x10 + 4 + *(int *)(cache + 0x30)) !=
-               0x52626c6b) ||
-              (block[3] < 0) || (*(int *)(cache + 0x2c) <= block[3]) ||
-              ((unsigned int)block[2] < *(unsigned int *)(cache + 0x24)) ||
-              (*(unsigned int *)(cache + 0x28) <
-               (unsigned int)(block[2] + block[3]))) {
-            display_assert(
-              csprintf((char *)0x5ab100,
-                       "lrar cache %s @%p block @%p appears to be corrupt",
-                       cache, cache, block),
-              "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x186, 1);
-            system_exit(-1);
-          }
-        }
+      block = (int *)(block_index * 0x10 + *(int *)(cache + 0x30));
+      block_size = block[3];
+      if ((block[1] != 0x52626c6b) ||
+          (block_size < 0) ||
+          (*(int *)(cache + 0x2c) <= block_size) ||
+          ((unsigned int)block[2] < *(unsigned int *)(cache + 0x24)) ||
+          (*(unsigned int *)(cache + 0x28) <
+           (unsigned int)(block[2] + block_size))) {
+        display_assert(csprintf((char *)0x5ab100,
+                                "lrar cache %s @%p block @%p appears to be corrupt",
+                                cache, cache, block),
+                       "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x186, 1);
+        system_exit(-1);
       }
-
-      if (new_block_address + size <= *(unsigned int *)(cache + 0x28)) {
+      if (*block != 0) {
+        (*(void (**)(int))(cache + 0x40))(*block);
+        *block = 0;
+      }
+      if (block_index == *(short *)(cache + 0x36)) {
+        goto done;
+      }
+      block_index = block_index + 1;
+      if (block_index != *(short *)(cache + 0x38)) {
         break;
       }
-      *(short *)(cache + 0x36) = -1;
-    }
-
-    new_block =
-      (unsigned int *)((short)new_block_index * 0x10 + *(int *)(cache + 0x30));
-    if ((new_block_address < *(unsigned int *)(cache + 0x24)) ||
-        (*(unsigned int *)(cache + 0x28) < new_block_address + size)) {
-      display_assert("adjusted_new_block_address>=cache->minimum_address && "
-                     "adjusted_new_block_address+size<=cache->maximum_address",
-                     "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x111, 1);
-      system_exit(-1);
-    }
-
-    block_index = 0;
-    if (0 < *(short *)(cache + 0x38)) {
-      do {
-        end = block_index * 0x10 + *(int *)(cache + 0x30);
-        if ((*(int *)(block_index * 0x10 + 4 + *(int *)(cache + 0x30)) ==
-             0x52626c6b) &&
-            (search_address = *(unsigned int *)(end + 8),
-             new_block_address <
-               (unsigned int)(*(int *)(end + 0xc) + search_address)) &&
-            (search_address < new_block_address + size)) {
-          display_assert(
-            "adjusted_new_block_address>=test_block->address+test_block->size "
-            "|| adjusted_new_block_address+size<=test_block->address",
-            "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x11c, 1);
-          system_exit(-1);
-        }
-        block_index = block_index + 1;
-      } while (block_index < *(short *)(cache + 0x38));
-    }
-
-    new_block[3] = size;
-    new_block[1] = 0x52626c6b;
-    new_block[2] = new_block_address;
-    new_block[0] = (unsigned int)data;
-    (*(void (**)(void *, int))(cache + 0x3c))(data, new_block_index);
-    *(short *)(cache + 0x36) = (short)new_block_index;
-    if (next_index == -1) {
-      *(short *)(cache + 0x34) = (short)new_block_index;
-    } else {
-      *(short *)(cache + 0x34) = next_index;
+      block_index = 0;
     }
   }
-
-  return (short)new_block_index;
-}
-
-/* Store a short value through a pointer.
- * 0x11c780 / lruv_cache.obj
- */
-void FUN_0011c780(short *param_1, short param_2)
-{
-  *param_1 = param_2;
-}
-
-/* Store 0xffff into a short through a pointer.
- * 0x11c790 / lruv_cache.obj
- */
-void FUN_0011c790(short *param_1)
-{
-  *param_1 = (short)0xffff;
+done:
+  *(short *)(cache + 0x34) = (short)0xffff;
+  *(short *)(cache + 0x36) = (short)0xffff;
 }
 
 /* lrar_cache_new (0x11c870) — XBE naked draft (batch 83). */
@@ -1070,143 +735,49 @@ typedef struct {
   char unk_14[8]; ///< offset=0x14
 } lruv_cache_block_t;
 
-/* FUN_0011d010 (0x11d010) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void (*const b11d010_c11d010)(int cache, void *entry) = FUN_0011d010;
-static char * (*const b11d010_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b11d010_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11d010_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_0011d010(int cache __attribute__((unused)), void *entry __attribute__((unused)))
+/* 0x11d010: lru_cache block-header integrity validator.
+ * lruv_cache.obj (asserts against c:\halo\SOURCE\memory\lru_cache.c line
+ * 0x156=342). cdecl(cache, entry). Verified against disassembly.
+ *
+ * Passes silently when the block header is intact:
+ *   - signature word at entry+4, low bit (used/free flag) masked off, equals
+ *     0x55626c6a,
+ *   - the next-block link at entry+0xc is 0,
+ *   - the byte offset (entry - cache+0x34) is >= 0 and cache+0x24 plus that
+ *     offset does not exceed cache+0x28 (block lies inside the data region),
+ * and
+ *   - the page/count field at entry+8 is (unsigned) below cache+0x3c.
+ * On any failure it formats the "appears to be corrupt" message into the shared
+ * scratch buffer at 0x5ab100 and hits display_assert + system_exit(-1). Note
+ * the assert nesting: the file/line/halt args (line 0x156, halt 1) belong to
+ * display_assert and are pushed before csprintf's 5 args (Ghidra cdecl arg
+ * mis-grouping); the trailing ADD ESP,0x14 confirms the split.
+ *
+ * The call inside the OK branch is a literal CALL 0x11d010 (self-address) with
+ * cdecl args (cache, entry) — verified at 0x11d031. A block that passes the
+ * header checks re-satisfies them on re-entry, so this cannot be functional
+ * recursion; it is MSVC /OPT:ICF COMDAT folding of a byte-identical sibling
+ * validator onto this address. Reproduced as a self-call to match the bytes. */
+void FUN_0011d010(int cache, void *entry)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "andl $0xfffffffe, %%eax\n\t"
-      "cmpl $0x55626c6a, %%eax\n\t"
-      "jne .LFUN_0011d010_1\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0011d010_1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11d010]\n\t"
-      "movl 0x34(%%esi), %%ecx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "js .LFUN_0011d010_1\n\t"
-      "movl 0x24(%%esi), %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "cmpl 0x28(%%esi), %%ecx\n\t"
-      "jg .LFUN_0011d010_1\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "cmpl 0x3c(%%esi), %%edx\n\t"
-      "jb .LFUN_0011d010_2\n\t"
-      ".LFUN_0011d010_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x156\n\t"
-      "pushl $0x28fa1c\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x28f9e8\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011d010_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11d010] "m"(b11d010_c11d010), [c8d9d0] "m"(b11d010_c8d9d0), [assert] "m"(b11d010_assert), [exitfn] "m"(b11d010_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_0011d010: clang naked draft required"
-#endif
+  int offset;
 
-
-/* 0x11d110: Allocate and initialize an lru_cache. Rounds the per-element size
- * (block_size + 0x10 block header) up to a 4-byte multiple, derives the
- * element count from total_size, and allocates the 0x48-byte cache header. If
- * the caller supplies no backing buffer, allocates the data buffer itself and
- * records ownership in the byte at +0x38 (freed by lru_cache_dispose). NULL
- * callbacks default to the file-local stubs FUN_0011cfd0 / FUN_0011cfe0.
- * Writes the 'curl' signature (0x6c727563) at +0x44 and copies the name into
- * name[0x20] at +0 (NUL-terminated at +0x1f). Runs the pointer-refresh helper
- * (FUN_0011d090, cache in @eax) before returning the cache pointer, or 0 if
- * the data-buffer allocation failed. Both assert-fail paths halt via
- * halt_and_catch_fire. Source: c:\halo\SOURCE\memory\lru_cache.c */
-void *FUN_0011d110(const char *name, int total_size, int block_size,
-                   void *delete_callback, void *query_callback, void *buffer)
-{
-  char *cache;
-  unsigned int element_size;
-  int element_count;
-  char owns_buffer;
-
-  if (block_size < 0) {
-    display_assert("block_size>=0", "c:\\halo\\SOURCE\\memory\\lru_cache.c",
-                   0x5e, 1);
-    system_exit(-1);
-  }
-  if (total_size < block_size) {
-    display_assert("total_size>=block_size",
-                   "c:\\halo\\SOURCE\\memory\\lru_cache.c", 0x5f, 1);
-    system_exit(-1);
-  }
-  if ((delete_callback == (void *)0) || (query_callback == (void *)0)) {
-    delete_callback = (void *)FUN_0011cfd0;
-    query_callback = (void *)FUN_0011cfe0;
-  }
-  element_size = (unsigned int)block_size + 0x10;
-  if ((element_size & 3) != 0) {
-    element_size = (element_size | 3) + 1;
-  }
-  element_count = total_size / (int)element_size;
-  cache = (char *)debug_malloc(0x48, 0, "c:\\halo\\SOURCE\\memory\\lru_cache.c",
-                               0x6e);
-  if (cache != (char *)0) {
-    owns_buffer = 0;
-    if (buffer == (void *)0) {
-      buffer = debug_malloc(element_count * element_size, 0,
-                            "c:\\halo\\SOURCE\\memory\\lru_cache.c", 0x75);
-      owns_buffer = 1;
-      if (buffer == (void *)0) {
-        debug_free(cache, "c:\\halo\\SOURCE\\memory\\lru_cache.c", 0x8e);
-        return (void *)0;
-      }
+  if (((*(unsigned int *)((char *)entry + 4) & 0xfffffffe) == 0x55626c6a) &&
+      (*(int *)((char *)entry + 0xc) == 0)) {
+    FUN_0011d010(cache, entry);
+    offset = (int)entry - *(int *)(cache + 0x34);
+    if ((offset >= 0) &&
+        (*(int *)(cache + 0x24) + offset <= *(int *)(cache + 0x28)) &&
+        (*(unsigned int *)((char *)entry + 8) <
+         *(unsigned int *)(cache + 0x3c))) {
+      return;
     }
-    csmemset(cache, 0, 0x48);
-    *(int *)(cache + 0x20) = element_count;
-    *(void **)(cache + 0x2c) = delete_callback;
-    *(void **)(cache + 0x34) = buffer;
-    *(int *)(cache + 0x3c) = 0;
-    *(int *)(cache + 0x40) = 0;
-    *(unsigned int *)(cache + 0x24) = element_size;
-    *(unsigned int *)(cache + 0x28) =
-      (unsigned int)element_count * element_size;
-    *(unsigned int *)(cache + 0x44) = 0x6c727563;
-    *(void **)(cache + 0x30) = query_callback;
-    *(unsigned char *)(cache + 0x38) = (unsigned char)owns_buffer;
-    csstrncpy(cache, name, 0x1f);
-    *(char *)(cache + 0x1f) = 0;
-    FUN_0011d090((int)cache);
   }
-  return cache;
+  display_assert(csprintf((char *)0x5ab100,
+                          "lru cache %s @%p block @%p appears to be corrupt",
+                          cache, cache, entry),
+                 "c:\\halo\\SOURCE\\memory\\lru_cache.c", 0x156, 1);
+  system_exit(-1);
 }
 
 /* lru_cache_dispose (0x11d250) — readable C lift. */

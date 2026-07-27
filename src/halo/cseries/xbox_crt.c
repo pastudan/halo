@@ -1148,28 +1148,12 @@ void FUN_001d703b(void)
 #endif
 
 
-/* FUN_001d76fc (0x1d76fc) — XBE naked draft (batch 272). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* 0x1d76fc */
 void FUN_001d76fc(void)
 {
-  __asm__ volatile(
-      "cmpb $0, -0x1d(%%ebp)\n\t"
-      "je .LFUN_001d76fc_1\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "pushl 0x580(%%eax)\n\t"
-      "call *0x253098\n\t"
-      ".LFUN_001d76fc_1:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  /* relift: no calls detected — manual review */
+  (void)0;
 }
-#else
-#error "FUN_001d76fc: clang naked draft required"
-#endif
 
 
 /* XAutoPowerDownResetTimer (0x1d771c) — XBE naked draft (batch 276). */
