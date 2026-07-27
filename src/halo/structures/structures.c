@@ -345,94 +345,40 @@ bool FUN_00062020(int16_t *obstacle_set, uint32_t datum, uint16_t flags,
 #include "../../common.h"
 #include "../../x87_math.h"
 
-/* FUN_00062410 (0x62410) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void (*const b62410_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b62410_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-short FUN_00062410(void *obstacles __attribute__((unused)), short disc_index_skip __attribute__((unused)), float *position_xy __attribute__((unused)), float radius __attribute__((unused)))
+/* FUN_00062410 (0x62410) — readable C lift from XBE leaf.
+ * Scan obstacle discs for the first whose expanded radius covers position_xy,
+ * skipping disc_index_skip. Returns disc index or -1. */
+short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy,
+                   float radius)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00062410_5\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      ".LFUN_00062410_1:\n\t"
-      "cmpw 0xc(%%ebp), %%si\n\t"
-      "je .LFUN_00062410_4\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00062410_2\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00062410_2\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00062410_3\n\t"
-      ".LFUN_00062410_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18c\n\t"
-      "pushl $0x25e990\n\t"
-      "pushl $0x25e930\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00062410_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal 0x8(%%edi,%%eax,8), %%eax\n\t"
-      "flds 0x10(%%eax)\n\t"
-      "fadds 0x14(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs (%%ebx)\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "je .LFUN_00062410_6\n\t"
-      ".LFUN_00062410_4:\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "incl %%esi\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jl .LFUN_00062410_1\n\t"
-      ".LFUN_00062410_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00062410_6:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b62410_assert), [exitfn] "m"(b62410_exitfn)
-      : "memory");
+  int16_t disc_count;
+  int16_t i;
+  char *disc;
+  float dx;
+  float dy;
+  float r;
+
+  disc_count = *(int16_t *)((char *)obstacles + 2);
+  for (i = 0; i < disc_count; i++) {
+    if (i == disc_index_skip)
+      continue;
+    if (i < 0 || i >= disc_count || disc_count > 0x80) {
+      display_assert(
+          "disc_index>=0 && disc_index<obstacles->disc_count && "
+          "obstacles->disc_count<=MAX",
+          "c:\\halo\\source\\ai\\path.h", 0x18c, true);
+      system_exit(-1);
+    }
+    disc = (char *)obstacles + (int)i * 24 + 8;
+    r = *(float *)(disc + 0x10) + radius;
+    dx = *(float *)(disc + 8) - position_xy[0];
+    dy = *(float *)(disc + 0xc) - position_xy[1];
+    if (dx * dx + dy * dy <= r * r)
+      return i;
+  }
+  return (short)0xffff;
 }
-#else
-#error "FUN_00062410: clang naked draft required"
-#endif
+
 
 
 /* FUN_00062680 (0x62680) — XBE naked draft (batch 82). */
