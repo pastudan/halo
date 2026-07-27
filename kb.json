@@ -21776,7 +21776,8 @@
         {
           "addr": "0x155a70",
           "decl": "void _rasterizer_frame_end(void);",
-          "ported": false
+          "ported": true,
+          "name": "_rasterizer_frame_end"
         },
         {
           "addr": "0x155b60",

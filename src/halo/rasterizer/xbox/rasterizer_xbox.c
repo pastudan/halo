@@ -293,109 +293,42 @@ void _rasterizer_windows_end(void)
 
 
 
-/* _rasterizer_frame_end (0x155a70) — XBE naked draft (batch 335). */
-#if defined(__clang__)
-static void (*const b155a70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b155a70_exitfn)(int) = system_exit;
-static void (*const b155a70_c16fdd0)(void) = (void *)FUN_0016FDD0;
-static void (*const b155a70_c17ff50)(void) = (void *)FUN_0017ff50;
-static void __stdcall (*const b155a70_c1e8700)(uint32_t stage, void *texture) = (void *)D3DDevice_SetTexture;
-static void (*const b155a70_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void __stdcall (*const b155a70_c1eb2d0)(uint32_t stream, void *vertex_buffer, uint32_t stride) = (void *)D3DDevice_SetStreamSource;
-static void (*const b155a70_c1e8920)(void) = (void *)D3DDevice_SetIndices;
-static void (*const b155a70_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* _rasterizer_frame_end (0x155a70) — readable C lift. */
 void _rasterizer_frame_end(void)
 {
-  __asm__ volatile(
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "jne .L_rasterizer_frame_end_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x670\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".L_rasterizer_frame_end_1:\n\t"
-      "call *%[c16fdd0]\n\t"
-      "call *%[c17ff50]\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $4, %%edi\n\t"
-      "nop\n\t"
-      ".L_rasterizer_frame_end_2:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1e8700]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .L_rasterizer_frame_end_3\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .L_rasterizer_frame_end_4\n\t"
-      ".L_rasterizer_frame_end_3:\n\t"
-      "pushl $0x29dcfc\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".L_rasterizer_frame_end_4:\n\t"
-      "incl %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .L_rasterizer_frame_end_2\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl $0x10, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".L_rasterizer_frame_end_5:\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1eb2d0]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .L_rasterizer_frame_end_6\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .L_rasterizer_frame_end_7\n\t"
-      ".L_rasterizer_frame_end_6:\n\t"
-      "pushl $0x29dcb8\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".L_rasterizer_frame_end_7:\n\t"
-      "incl %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .L_rasterizer_frame_end_5\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c1e8920]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "testb %%bl, %%bl\n\t"
-      "popl %%ebx\n\t"
-      "jne .L_rasterizer_frame_end_8\n\t"
-      "pushl $0x29dc80\n\t"
-      "pushl $0\n\t"
-      "call *%[c167ff0]\n\t"
-      "pushl $0x29dc58\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".L_rasterizer_frame_end_8:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b155a70_assert), [exitfn] "m"(b155a70_exitfn), [c16fdd0] "m"(b155a70_c16fdd0), [c17ff50] "m"(b155a70_c17ff50), [c1e8700] "m"(b155a70_c1e8700), [c167ff0] "m"(b155a70_c167ff0), [c1eb2d0] "m"(b155a70_c1eb2d0), [c1e8920] "m"(b155a70_c1e8920), [c8f390] "m"(b155a70_c8f390)
-      : "memory");
+  int i;
+  char ok = 1;
+
+  if (!*(int *)0x476ab0) {
+    display_assert((char *)0x29dc40, (char *)0x29dc0c, 0x670, 1);
+    system_exit(-1);
+  }
+  FUN_0016FDD0();
+  FUN_0017ff50();
+  for (i = 0; i < 4; i++) {
+    D3DDevice_SetTexture((unsigned int)i, 0);
+    if (!ok) {
+      ok = 0;
+      FUN_00167ff0(0, (const char *)0x29dcfc);
+    } else {
+      ok = 1;
+    }
+  }
+  for (i = 0; i < 0x10; i++) {
+    D3DDevice_SetStreamSource((unsigned int)i, 0, 0);
+    if (!ok) {
+      ok = 0;
+      FUN_00167ff0(0, (const char *)0x29dcb8);
+    } else {
+      ok = 1;
+    }
+  }
+  D3DDevice_SetIndices(0, 0);
+  if (!ok) {
+    FUN_00167ff0(0, (const char *)0x29dc80);
+    error(2, (const char *)0x29dc58);
+  }
 }
-#else
-#error "_rasterizer_frame_end: clang naked draft required"
-#endif
-
-
 /* FUN_00155b60 (0x155b60) — readable C lift. */
 int FUN_00155b60(int a, int b)
 {
