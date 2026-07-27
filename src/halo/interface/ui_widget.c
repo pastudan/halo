@@ -2540,97 +2540,28 @@ void ui_play_audio_feedback_sound(int16_t sound_selector)
 
 
 
-/* FUN_000e76b0 (0xe76b0) — XBE naked draft (batch 139). */
-#if defined(__clang__)
-static void (*const be76b0_ce73c0)(void *widget, int16_t *bounds, float opacity_scale, char param_4, char visible) = (void *)FUN_000e73c0;
-
-__attribute__((naked, noinline))
-void FUN_000e76b0(void *widget, void *tag, void *a, float d, int e, int f)
+/* FUN_000e76b0 (0xe76b0) — readable C lift: draw widget children with opacity. */
+void FUN_000e76b0(void *widget, void *tag, void *bounds, float opacity_scale, int param_5, int param_6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl 0x48(%%edi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_000e76b0_3\n\t"
-      "movl 0x30(%%edi), %%eax\n\t"
-      "flds 0x24(%%edi)\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000e76b0_2\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000e76b0_1:\n\t"
-      "fmuls 0x24(%%eax)\n\t"
-      "movl 0x30(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000e76b0_1\n\t"
-      ".LFUN_000e76b0_2:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "fstps 0x24(%%ecx)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x48(%%edi), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ce73c0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000e76b0_3:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testb $1, 0x150(%%eax)\n\t"
-      "je .LFUN_000e76b0_5\n\t"
-      "movl 0x34(%%edi), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "je .LFUN_000e76b0_6\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000e76b0_4:\n\t"
-      "movzwl 0x44(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jge .LFUN_000e76b0_5\n\t"
-      "movswl 0x3c(%%edi), %%edx\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "cmpl %%edx, %%ebx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "sete %%al\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce73c0]\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "addl $0x14, %%esp\n\t"
-      "incl %%ebx\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000e76b0_4\n\t"
-      ".LFUN_000e76b0_5:\n\t"
-      "movw $0, 0x3e(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000e76b0_6:\n\t"
-      "movw %%bx, 0x3e(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce73c0] "m"(be76b0_ce73c0)
-      : "memory");
+  void *draw_child = *(void **)((char *)widget + 0x48);
+  void *parent; float opacity; void *child; int i; char selected;
+  if (draw_child != 0) {
+    parent = *(void **)((char *)widget + 0x30);
+    opacity = *(float *)((char *)widget + 0x24);
+    while (parent != 0) { opacity *= *(float *)((char *)parent + 0x24); parent = *(void **)((char *)parent + 0x30); }
+    *(float *)((char *)draw_child + 0x24) = opacity;
+    FUN_000e73c0(draw_child, bounds, opacity_scale, 0, 1);
+  }
+  if ((*((unsigned char *)tag + 0x150) & 1) != 0) {
+    child = *(void **)((char *)widget + 0x34);
+    for (i = 0; child != 0; child = *(void **)((char *)child + 0x2c), i++) {
+      if (i >= *(unsigned short *)((char *)widget + 0x44)) break;
+      selected = (i == *(short *)((char *)widget + 0x3c));
+      FUN_000e73c0(child, bounds, opacity_scale, param_5, selected);
+    }
+  }
+  *(short *)((char *)widget + 0x3e) = 0;
 }
-#else
-#error "FUN_000e76b0: clang naked draft required"
-#endif
-
 
 /* network_game_reset_to_pregame_ui (0xe8830) — readable C lift. */
 void network_game_reset_to_pregame_ui(void)
