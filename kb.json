@@ -6028,7 +6028,7 @@
         {
           "addr": "0x8e370",
           "decl": "unsigned int system_milliseconds(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8e250",
@@ -8405,7 +8405,7 @@
         {
           "addr": "0xb42d0",
           "decl": "wchar_t *FUN_000b42d0(int, wchar_t *);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb4300",
@@ -17955,7 +17955,7 @@
         {
           "addr": "0xb7f10",
           "decl": "float *player_control_get_facing_direction(int16_t local_player_index, float *out_direction);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xb7f90",
@@ -30560,7 +30560,7 @@
         {
           "addr": "0x181060",
           "decl": "unsigned char *FUN_00181060(void *lens_flare_params @<eax>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x181150",
@@ -40083,7 +40083,7 @@
           "addr": "0x80b40",
           "decl": "void build_message_header(unsigned short *header, unsigned short length, unsigned char type, unsigned char flags);",
           "name": "build_message_header",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80c20",

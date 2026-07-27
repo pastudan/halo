@@ -98,104 +98,36 @@ void tea_decrypt(unsigned int *v, unsigned int *w, unsigned int *key)
   w[1] = z;
 }
 
-/* build_message_header (0x80b40) — XBE naked draft (batch 78). */
-#if defined(__clang__)
-static void (*const b80b40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80b40_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void build_message_header(unsigned short *header __attribute__((unused)), unsigned short length __attribute__((unused)), unsigned char type __attribute__((unused)), unsigned char flags __attribute__((unused)))
+/* build_message_header (0x80b40) — readable C lift. */
+void build_message_header(unsigned short *header, unsigned short length, unsigned char type, unsigned char flags)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lbuild_message_header_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x43\n\t"
-      "pushl $0x265ccc\n\t"
-      "pushl $0x265cc8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_message_header_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpw $0xfff, %%di\n\t"
-      "jbe .Lbuild_message_header_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x45\n\t"
-      "pushl $0x265ccc\n\t"
-      "pushl $0x265c94\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_message_header_2:\n\t"
-      "movb 0x10(%%ebp), %%bl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb (%%esi), %%al\n\t"
-      "shll $4, %%edi\n\t"
-      "andl $0xf, %%eax\n\t"
-      "orl %%edi, %%eax\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "jbe .Lbuild_message_header_3\n\t"
-      "cmpb $4, %%bl\n\t"
-      "jb .Lbuild_message_header_4\n\t"
-      ".Lbuild_message_header_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x46\n\t"
-      "pushl $0x265ccc\n\t"
-      "pushl $0x265c64\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_message_header_4:\n\t"
-      "andb $3, %%bl\n\t"
-      "movzbw %%bl, %%cx\n\t"
-      "movb 0x14(%%ebp), %%bl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "shll $2, %%ecx\n\t"
-      "andl $0xfff3, %%edx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "cmpb $3, %%bl\n\t"
-      "movw %%cx, (%%esi)\n\t"
-      "jbe .Lbuild_message_header_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x47\n\t"
-      "pushl $0x265ccc\n\t"
-      "pushl $0x265bec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbuild_message_header_5:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "movzbw %%bl, %%cx\n\t"
-      "popl %%edi\n\t"
-      "andl $0xfffc, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80b40_assert), [exitfn] "m"(b80b40_exitfn)
-      : "memory");
-}
-#else
-#error "build_message_header: clang naked draft required"
-#endif
+  unsigned short v;
+  unsigned short t;
 
+  if (header == 0) {
+    display_assert((const char *)0x265cc8, (const char *)0x265ccc, 0x43, 1);
+    system_exit(-1);
+  }
+  if (length > 0xfff) {
+    display_assert((const char *)0x265c94, (const char *)0x265ccc, 0x45, 1);
+    system_exit(-1);
+  }
+  v = (unsigned short)((*header & 0xf) | ((unsigned short)length << 4));
+  *header = v;
+  if (type == 0 || type >= 4) {
+    display_assert((const char *)0x265c64, (const char *)0x265ccc, 0x46, 1);
+    system_exit(-1);
+  }
+  t = (unsigned short)((type & 3) << 2);
+  v = (unsigned short)((*header & 0xfff3) | t);
+  *header = v;
+  if (flags > 3) {
+    display_assert((const char *)0x265bec, (const char *)0x265ccc, 0x47, 1);
+    system_exit(-1);
+  }
+  v = (unsigned short)((*header & 0xfffc) | (flags & 3));
+  *header = v;
+}
 
 /* byte_swap_message_header (0x80c20) — readable C lift. */
 void byte_swap_message_header(unsigned short *header, int byte_order)
@@ -295,6 +227,8 @@ int create_message(int type __attribute__((unused)), int payload __attribute__((
 #else
 #error "create_message: clang naked draft required"
 #endif
+
+
 
 
 /* prime_compare (0x80d30) — readable C lift. */

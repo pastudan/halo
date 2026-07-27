@@ -2067,7 +2067,7 @@ static void *(*const bb4fb0_dget)(void *, int) = (void *(*)(void *, int))datum_g
 static void (*const bb4fb0_cb4bf0)(void) = FUN_000b4bf0;
 static void * (*const bb4fb0_ca9350)(void) = game_engine_get_variant;
 static void (*const bb4fb0_cb4e20)(void) = find_next_target;
-static void (*const bb4fb0_cb4d00)(void) = FUN_000b4d00;
+static void (*const bb4fb0_cb4d00)(void) = (void *)FUN_000b4d00;
 
 __attribute__((naked, noinline))
 void FUN_000b4fb0(void)
