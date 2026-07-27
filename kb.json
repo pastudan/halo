@@ -25607,7 +25607,7 @@
         {
           "addr": "0x1ba7c0",
           "decl": "void cache_copy_initialize_and_fill_with_garbage(char *ctx@<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "cache_copy_initialize_and_fill_with_garbage"
         },
         {
