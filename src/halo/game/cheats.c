@@ -254,106 +254,47 @@ float FUN_000a55e0(float a, float b, float c, float d)
   return FUN_000a5590(a, b) * FUN_000a5590(c, d);
 }
 
-/* FUN_000a5610 (0xa5610) — XBE naked draft (batch 134). */
-#if defined(__clang__)
-static void *(*const ba5610_get)(int, int) = object_get_and_verify_type;
-static int (*const ba5610_c1adeb0)(int unit_handle, int16_t weapon_index) = unit_get_weapon;
-static void *(*const ba5610_tag)(int, int) = tag_get;
-static float (*const ba5610_cfc780)(int weapon_handle, int16_t zoom_level) = weapon_get_zoom_magnification;
-
-__attribute__((naked, noinline))
-void FUN_000a5610(void)
+/* FUN_000a5610 (0xa5610) — readable C lift from XBE leaf.
+ * unit@eax, out@ebx, zoom@stack. Note: XBE FPU stack leaves mag in ST for
+ * out[1]/out[3] while out[0]/out[2]/out[4] use inv=const/mag. */
+char FUN_000a5610(int unit_handle /*@<eax>*/, float *out /*@<ebx>*/, int16_t zoom_level)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_000a5610_3\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x2a2(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1adeb0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_000a5610_3\n\t"
-      "pushl $4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .LFUN_000a5610_1\n\t"
-      "testb $0x20, 0x308(%%esi)\n\t"
-      "jne .LFUN_000a5610_3\n\t"
-      ".LFUN_000a5610_1:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cfc780]\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "addl $8, %%esp\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmuls 0x3e4(%%esi)\n\t"
-      "fstps (%%ebx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x3e8(%%esi)\n\t"
-      "fstps 0x4(%%ebx)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x3ec(%%esi)\n\t"
-      "fstps 0x8(%%ebx)\n\t"
-      "fmuls 0x3f0(%%esi)\n\t"
-      "fstps 0xc(%%ebx)\n\t"
-      "flds 0x3f4(%%esi)\n\t"
-      "fcomps 0x3e4(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a5610_2\n\t"
-      "flds 0x3f4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "fstps 0x10(%%ebx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5610_2:\n\t"
-      "flds 0x3e4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "fstps 0x10(%%ebx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5610_3:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(ba5610_get), [c1adeb0] "m"(ba5610_c1adeb0), [tag] "m"(ba5610_tag), [cfc780] "m"(ba5610_cfc780)
-      : "memory");
+  void *unit;
+  int16_t weapon_index;
+  int weapon_handle;
+  void *weapon_obj;
+  void *weap_tag;
+  float mag;
+  float inv;
+  float a, b;
+
+  if (unit_handle == -1)
+    return 0;
+  unit = object_get_and_verify_type(unit_handle, 3);
+  weapon_index = *(int16_t *)((char *)unit + 0x2a2);
+  weapon_handle = unit_get_weapon(unit_handle, weapon_index);
+  if (weapon_handle == -1)
+    return 0;
+  weapon_obj = object_get_and_verify_type(weapon_handle, 4);
+  weap_tag = tag_get(0x77656170, *(int *)weapon_obj);
+  if (zoom_level == (int16_t)0xffff &&
+      (*(unsigned char *)((char *)weap_tag + 0x308) & 0x20))
+    return 0;
+  mag = weapon_get_zoom_magnification(weapon_handle, zoom_level);
+  inv = *(float *)0x2533c8 / mag;
+  out[0] = inv * *(float *)((char *)weap_tag + 0x3e4);
+  out[1] = mag * *(float *)((char *)weap_tag + 0x3e8);
+  out[2] = inv * *(float *)((char *)weap_tag + 0x3ec);
+  out[3] = mag * *(float *)((char *)weap_tag + 0x3f0);
+  a = *(float *)((char *)weap_tag + 0x3f4);
+  b = *(float *)((char *)weap_tag + 0x3e4);
+  /* fcom 3f4 vs 3e4; test 0x41 → <= uses 3e4, else 3f4 */
+  out[4] = inv * ((a <= b) ? b : a);
+  return 1;
 }
-#else
-#error "FUN_000a5610: clang naked draft required"
-#endif
+
+
+
 
 
 /* FUN_000a5700 (0xa5700) — readable C lift from XBE leaf. */

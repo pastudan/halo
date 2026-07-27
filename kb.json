@@ -5187,8 +5187,9 @@
         },
         {
           "addr": "0xa5610",
-          "decl": "void FUN_000a5610(void);",
-          "ported": false
+          "decl": "char FUN_000a5610(int unit_handle@<eax>, float *out@<ebx>, int16_t zoom_level);",
+          "ported": true,
+          "name": "FUN_000a5610"
         },
         {
           "addr": "0xa5700",
