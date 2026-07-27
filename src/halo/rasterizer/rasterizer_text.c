@@ -454,60 +454,27 @@ void FUN_001800b0(short param_1 __attribute__((unused)), int param_2 __attribute
 #endif
 
 
-/* FUN_00180500 (0x180500) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static void (*const b180500_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b180500_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00180500(float *param_1 __attribute__((unused)), float *param_2 __attribute__((unused)))
+/* FUN_00180500 (0x180500) — readable C lift from XBE leaf. */
+void FUN_00180500(float *src, float *dst)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_00180500_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1b6\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x29cb70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00180500_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00180500_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1b7\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x25bb20\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00180500_2:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edi)\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl %%edx, 0x8(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b180500_assert), [exitfn] "m"(b180500_exitfn)
-      : "memory");
+  extern char DAT_0029cb70[];
+  extern char DAT_002afe38[];
+  extern char DAT_0025bb20[];
+
+  if (src == 0) {
+    display_assert(DAT_0029cb70, DAT_002afe38, 0x1b6, true);
+    system_exit(-1);
+  }
+  if (dst == 0) {
+    display_assert(DAT_0025bb20, DAT_002afe38, 0x1b7, true);
+    system_exit(-1);
+  }
+  dst[0] = src[0];
+  dst[1] = src[1];
+  dst[2] = src[2];
 }
-#else
-#error "FUN_00180500: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_geometry_vertex_get_normal: unpack normal from compressed vertex
@@ -534,58 +501,26 @@ void FUN_00180570(int param_1, float *param_2)
   param_2[2] = result[2];
 }
 
-/* FUN_001805f0 (0x1805f0) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static void (*const b1805f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1805f0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001805f0(int param_1 __attribute__((unused)), float *param_2 __attribute__((unused)))
+/* FUN_001805f0 (0x1805f0) — readable C lift from XBE leaf. */
+void FUN_001805f0(int *src, float *dst)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_001805f0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ce\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x29cb70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001805f0_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_001805f0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1cf\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2b0094\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001805f0_2:\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl 0x1c(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1805f0_assert), [exitfn] "m"(b1805f0_exitfn)
-      : "memory");
+  extern char DAT_0029cb70[];
+  extern char DAT_002afe38[];
+  extern char DAT_002b0094[];
+
+  if (src == 0) {
+    display_assert(DAT_0029cb70, DAT_002afe38, 0x1ce, true);
+    system_exit(-1);
+  }
+  if (dst == 0) {
+    display_assert(DAT_002b0094, DAT_002afe38, 0x1cf, true);
+    system_exit(-1);
+  }
+  *(int *)dst = src[6];
+  *((int *)dst + 1) = src[7];
 }
-#else
-#error "FUN_001805f0: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_geometry_vertex_get_normal_packed: unpack normal from packed value
@@ -3212,50 +3147,31 @@ void rasterizer_text_get_character_position(short index __attribute__((unused)),
 #endif
 
 
-/* rasterizer_text_evict_character (0x183820) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void (*const b183820_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b183820_exitfn)(int) = system_exit;
-static void (*const b183820_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void rasterizer_text_evict_character(int **slot __attribute__((unused)))
+/* rasterizer_text_evict_character (0x183820) — readable C lift from XBE leaf. */
+void rasterizer_text_evict_character(int **slot)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "jne .Lrasterizer_text_evict_character_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x262\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0aec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_evict_character_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_text_evict_character_3\n\t"
-      "movw $0xffff, 0xc(%%eax)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movw 0xe(%%eax), %%cx\n\t"
-      "cmpw 0x325748, %%cx\n\t"
-      "jne .Lrasterizer_text_evict_character_2\n\t"
-      "pushl $0x2b0ac4\n\t"
-      "pushl $3\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_text_evict_character_2:\n\t"
-      "movl $0, (%%esi)\n\t"
-      ".Lrasterizer_text_evict_character_3:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b183820_assert), [exitfn] "m"(b183820_exitfn), [c8f390] "m"(b183820_c8f390)
-      : "memory");
+  extern char DAT_002b0aec[];
+  extern char DAT_002b0a0c[];
+  extern char DAT_002b0ac4[];
+  int *entry;
+
+  if (slot == 0) {
+    display_assert(DAT_002b0aec, DAT_002b0a0c, 0x262, true);
+    system_exit(-1);
+  }
+  entry = *slot;
+  if (entry == 0) {
+    return;
+  }
+  *(short *)((char *)entry + 0xc) = (short)0xffff;
+  entry = *slot;
+  if (*(short *)((char *)entry + 0xe) == *(short *)0x325748) {
+    error(3, DAT_002b0ac4);
+  }
+  *slot = 0;
 }
-#else
-#error "rasterizer_text_evict_character: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_text_cache_character (0x183880) — XBE naked draft (batch 80). */
@@ -4903,66 +4819,43 @@ float FUN_00181420(void *lens_flare_params __attribute__((unused)), short rotati
 #endif
 
 
-/* FUN_00182610 (0x182610) — XBE naked draft (batch 326). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00182610(void)
+/* FUN_00182610 (0x182610) — readable C lift from XBE leaf. */
+void FUN_00182610(int16_t mask_si, int16_t width, int16_t height)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $1, %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "movl %%edi, 0x4d0490\n\t"
-      "movl %%edi, 0x4d0494\n\t"
-      "movl %%edi, 0x4d0498\n\t"
-      "movswl %%si, %%esi\n\t"
-      ".LFUN_00182610_1:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jae .LFUN_00182610_2\n\t"
-      "movl 0x4d0498, %%ebx\n\t"
-      "orl %%eax, %%ebx\n\t"
-      "shll $1, %%eax\n\t"
-      "movl %%ebx, 0x4d0498\n\t"
-      "movl %%eax, %%ecx\n\t"
-      ".LFUN_00182610_2:\n\t"
-      "movswl 0x8(%%ebp), %%ebx\n\t"
-      "cmpl %%ebx, %%edx\n\t"
-      "jae .LFUN_00182610_3\n\t"
-      "movl 0x4d0494, %%ebx\n\t"
-      "orl %%eax, %%ebx\n\t"
-      "shll $1, %%eax\n\t"
-      "movl %%ebx, 0x4d0494\n\t"
-      "movl %%eax, %%ecx\n\t"
-      ".LFUN_00182610_3:\n\t"
-      "movswl 0xc(%%ebp), %%ebx\n\t"
-      "cmpl %%ebx, %%edx\n\t"
-      "jae .LFUN_00182610_4\n\t"
-      "orl %%eax, %%edi\n\t"
-      "shll $1, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      ".LFUN_00182610_4:\n\t"
-      "shll $1, %%edx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .LFUN_00182610_1\n\t"
-      "movl %%edi, 0x4d0490\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int bit;
+  unsigned int step;
+  unsigned int tmp;
+  unsigned int mask_z;
+
+  *(int *)0x4d0490 = 0;
+  *(int *)0x4d0494 = 0;
+  *(int *)0x4d0498 = 0;
+  bit = 1;
+  step = 1;
+  mask_z = 0;
+  do {
+    tmp = 0;
+    if (step < (unsigned int)(int)mask_si) {
+      *(unsigned int *)0x4d0498 |= bit;
+      bit <<= 1;
+      tmp = bit;
+    }
+    if (step < (unsigned int)(int)width) {
+      *(unsigned int *)0x4d0494 |= bit;
+      bit <<= 1;
+      tmp = bit;
+    }
+    if (step < (unsigned int)(int)height) {
+      mask_z |= bit;
+      bit <<= 1;
+      tmp = bit;
+    }
+    step <<= 1;
+  } while (tmp != 0);
+  *(unsigned int *)0x4d0490 = mask_z;
 }
-#else
-#error "FUN_00182610: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_xbox_bitmap_swizzle2d_byte (0x182840) — XBE naked draft (batch 332). */
