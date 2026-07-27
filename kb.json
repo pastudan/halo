@@ -3627,7 +3627,7 @@
         {
           "addr": "0x14620",
           "decl": "char FUN_00014620(int actor_handle, void *state_data);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x14680",
@@ -3694,7 +3694,7 @@
           "addr": "0x15150",
           "decl": "void FUN_00015150(int actor_handle);",
           "name": "FUN_00015150",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/actor_looking.c"
         },
         {
@@ -3777,7 +3777,7 @@
           "addr": "0x16000",
           "decl": "void actor_replace_prop_handle(int actor_handle, int old_handle, int new_handle);",
           "name": "actor_replace_prop_handle",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x16050",
@@ -3860,7 +3860,7 @@
           "addr": "0x17090",
           "decl": "void FUN_00017090(int actor_handle);",
           "name": "FUN_00017090",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/actor_looking.c"
         },
         {
@@ -15126,7 +15126,7 @@
           "addr": "0x125610",
           "decl": "void network_client_switch_to_postgame(void *client);",
           "name": "network_client_switch_to_postgame",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x125660",
@@ -25805,7 +25805,7 @@
           "addr": "0x191630",
           "decl": "void cluster_partition_null_references(int *partition);",
           "name": "cluster_partition_null_references",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x191660",
@@ -39932,12 +39932,12 @@
         {
           "addr": "0x80380",
           "decl": "void FUN_00080380(void *decoded_packet, char *encoded_packet, short *encoded_packet_size);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x803b0",
           "decl": "void FUN_000803b0(void *a0, void *a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x803d0",

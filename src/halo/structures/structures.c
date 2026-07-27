@@ -2778,159 +2778,55 @@ void cluster_partition_globals_new(void **out __attribute__((unused)), const cha
 #endif
 
 
-/* cluster_partition_clear (0x1915d0) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-static void *(*const b1915d0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1915d0_c119b20)(data_t *data) = data_delete_all;
-
-__attribute__((naked, noinline))
-void cluster_partition_clear(void *partition __attribute__((unused)))
+/* cluster_partition_clear (0x1915d0) — readable C lift. */
+void cluster_partition_clear(void *partition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x800\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119b20]\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119b20]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b1915d0_memset), [c119b20] "m"(b1915d0_c119b20)
-      : "memory");
+  char *p = (char *)partition;
+  csmemset(*(void **)p, -1, 0x800);
+  data_delete_all(*(data_t **)(p + 8));
+  data_delete_all(*(data_t **)(p + 4));
 }
-#else
-#error "cluster_partition_clear: clang naked draft required"
-#endif
 
-
-/* cluster_partition_dispose (0x191600) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void (*const b191600_c119550)(data_t *data) = data_make_invalid;
-
-__attribute__((naked, noinline))
-void cluster_partition_dispose(void *partition __attribute__((unused)))
+/* cluster_partition_dispose (0x191600) — readable C lift. */
+void cluster_partition_dispose(void *partition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movb 0x24(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lcluster_partition_dispose_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lcluster_partition_dispose_1:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movb 0x24(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "popl %%esi\n\t"
-      "je .Lcluster_partition_dispose_2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lcluster_partition_dispose_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119550] "m"(b191600_c119550)
-      : "memory");
+  char *p = (char *)partition;
+  data_t *a = *(data_t **)(p + 8);
+  data_t *b = *(data_t **)(p + 4);
+  if (*(char *)((char *)a + 0x24) != 0) {
+    data_make_invalid(a);
+  }
+  if (*(char *)((char *)b + 0x24) != 0) {
+    data_make_invalid(b);
+  }
 }
-#else
-#error "cluster_partition_dispose: clang naked draft required"
-#endif
 
-
-/* cluster_partition_null_references (0x191630) — XBE naked draft (batch 100). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void cluster_partition_null_references(int *partition __attribute__((unused)))
+/* cluster_partition_null_references (0x191630) — readable C lift. */
+void cluster_partition_null_references(int *partition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "je .Lcluster_partition_null_references_1\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".Lcluster_partition_null_references_1:\n\t"
-      "cmpl %%ecx, 0x8(%%eax)\n\t"
-      "je .Lcluster_partition_null_references_2\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      ".Lcluster_partition_null_references_2:\n\t"
-      "cmpl %%ecx, 0x4(%%eax)\n\t"
-      "je .Lcluster_partition_null_references_3\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      ".Lcluster_partition_null_references_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (partition[0] != 0) {
+    partition[0] = 0;
+  }
+  if (partition[2] != 0) {
+    partition[2] = 0;
+  }
+  if (partition[1] != 0) {
+    partition[1] = 0;
+  }
 }
-#else
-#error "cluster_partition_null_references: clang naked draft required"
-#endif
 
-
-/* cluster_partition_iter_next (0x191660) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void *(*const b191660_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-int cluster_partition_iter_next(void *partition __attribute__((unused)), int *state __attribute__((unused)))
+/* cluster_partition_iter_next (0x191660) — readable C lift. */
+int cluster_partition_iter_next(void *partition, int *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lcluster_partition_iter_next_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcluster_partition_iter_next_1:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b191660_dget)
-      : "memory");
+  int cur = *state;
+  char *entry;
+  if (cur == -1) {
+    return -1;
+  }
+  entry = (char *)datum_get(*(void **)((char *)partition + 4), cur);
+  *state = *(int *)(entry + 8);
+  return *(int *)(entry + 4);
 }
-#else
-#error "cluster_partition_iter_next: clang naked draft required"
-#endif
-
 
 /* Seed-and-advance a cluster iterator (0x191690).
  * Stores cluster_handle into *out_cluster unconditionally; if the handle is

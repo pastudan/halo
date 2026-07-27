@@ -79,48 +79,20 @@ bool FUN_00124d40(void *connection, void *message, unsigned short size,
                                   reliable);
 }
 
-/* network_client_switch_to_postgame (0x125610) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void (*const b125610_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b125610_exitfn)(int) = system_exit;
-static void (*const b125610_ca9310)(void) = game_engine_switch_to_postgame;
-static void (*const b125610_c12b650)(const char *fmt, ...) = network_game_log;
-
-__attribute__((naked, noinline))
-void network_client_switch_to_postgame(void *client __attribute__((unused)))
+/* network_client_switch_to_postgame (0x125610) — readable C lift. */
+extern char DAT_00291774[];
+extern char DAT_002917a8[];
+extern char DAT_00291f6c[];
+void network_client_switch_to_postgame(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_client_switch_to_postgame_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x48c\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2917a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_client_switch_to_postgame_1:\n\t"
-      "call *%[ca9310]\n\t"
-      "pushl $0x291f6c\n\t"
-      "movw $4, 0xca6(%%esi)\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b125610_assert), [exitfn] "m"(b125610_exitfn), [ca9310] "m"(b125610_ca9310), [c12b650] "m"(b125610_c12b650)
-      : "memory");
+  if (client == 0) {
+    display_assert(DAT_002917a8, DAT_00291774, 0x48c, 1);
+    system_exit(-1);
+  }
+  game_engine_switch_to_postgame();
+  *(uint16_t *)((char *)client + 0xca6) = 4;
+  network_game_log(DAT_00291f6c);
 }
-#else
-#error "network_client_switch_to_postgame: clang naked draft required"
-#endif
-
 
 /* 0x125710 — Asserts client is non-null and returns the connection handle
  * (int) stored at offset 0x82c in the client structure. The returned handle

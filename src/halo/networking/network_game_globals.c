@@ -668,18 +668,18 @@ bool network_game_client_end_frame(void)
 }
 
 /* network_game_client_get_local_machine_index (0x12a690) — readable C lift. */
-int16_t network_game_client_get_local_machine_index(void)
+short network_game_client_get_local_machine_index(void)
 {
-  void *client;
-  char *machine;
-
-  client = *(void **)0x46e8c0;
-  if (client == NULL)
+  void *client = *(void **)0x46e8c0;
+  void *machine;
+  if (client == 0) {
     return -1;
-  machine = (char *)network_game_client_get_machine(client);
-  if (machine == NULL)
+  }
+  machine = network_game_client_get_machine(client);
+  if (machine == 0) {
     return -1;
-  return (int16_t)machine[0x40];
+  }
+  return (short)*(signed char *)((char *)machine + 0x40);
 }
 
 /* network_game_client_local_player_quit (0x12a6c0)

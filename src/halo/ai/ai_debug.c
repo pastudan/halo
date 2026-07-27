@@ -274,48 +274,18 @@ void * ai_debug_get_path_storage(int actor_handle __attribute__((unused)))
  * encounter_idx [match] */
 void ai_debug_select_actor(int encounter_idx, int param_2);
 
-/* ai_debug_select_encounter (0x49220) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void *(*const b49220_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b49220_c4b1b0)(int encounter_idx, int param_2) = ai_debug_select_actor;
-
-__attribute__((naked, noinline))
-void ai_debug_select_encounter(int encounter_idx __attribute__((unused)))
+/* ai_debug_select_encounter (0x49220) — readable C lift. */
+void ai_debug_select_encounter(int encounter_idx)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5ac9f4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .Lai_debug_select_encounter_1\n\t"
-      "pushl $0x670\n\t"
-      "pushl $0\n\t"
-      "pushl $0x629d44\n\t"
-      "movl %%esi, 0x5ac9f4\n\t"
-      "movb $0, 0x629d40\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x8000\n\t"
-      "pushl $0\n\t"
-      "pushl $0x62a3b4\n\t"
-      "call *%[memset]\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c4b1b0]\n\t"
-      "addl $0x20, %%esp\n\t"
-      ".Lai_debug_select_encounter_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b49220_memset), [c4b1b0] "m"(b49220_c4b1b0)
-      : "memory");
+  if (*(int *)0x5ac9f4 == encounter_idx) {
+    return;
+  }
+  *(int *)0x5ac9f4 = encounter_idx;
+  *(char *)0x629d40 = 0;
+  csmemset((void *)0x629d44, 0, 0x670);
+  csmemset((void *)0x62a3b4, 0, 0x8000);
+  ai_debug_select_actor(encounter_idx, -1);
 }
-#else
-#error "ai_debug_select_encounter: clang naked draft required"
-#endif
-
 
 /* FUN_000494d0: set debug ray-test success flag.
  *
