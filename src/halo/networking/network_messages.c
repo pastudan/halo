@@ -2354,8 +2354,8 @@ int FUN_0011c310(const char *name, int size, void (*lock_proc)(void *, int),
     system_exit(-1);
   }
   if (lock_proc == NULL || unlock_proc == NULL) {
-    lock_proc = (void (*)(void *, int))0x11c1d0;
-    unlock_proc = (void (*)(void *))0x11c1e0;
+    lock_proc = (void (*)(void *, int))FUN_0011c1d0;
+    unlock_proc = (void (*)(void *))FUN_0011c1e0;
   }
   if (cache == NULL)
     return 0;
