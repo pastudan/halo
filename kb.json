@@ -23440,7 +23440,7 @@
         {
           "addr": "0x186230",
           "decl": "void render_camera_screen_to_view(void *camera, void *frustum, float *screen_point, float *view_vector);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x186330",
@@ -23465,7 +23465,7 @@
         {
           "addr": "0x186690",
           "decl": "unsigned short render_frustum_build_point_flags(void *frustum, float *point);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x186790",
@@ -30918,19 +30918,19 @@
         },
         {
           "addr": "0x182840",
-          "decl": "void rasterizer_xbox_bitmap_swizzle2d_byte(unsigned char *dest, unsigned char *src, int16_t width, int16_t height);",
+          "decl": "void rasterizer_xbox_bitmap_swizzle2d_byte(void);",
           "ported": false,
           "name": "rasterizer_xbox_bitmap_swizzle2d_byte"
         },
         {
           "addr": "0x182910",
-          "decl": "void rasterizer_xbox_bitmap_swizzle2d_word(uint16_t *dest, uint16_t *src, int16_t width, int16_t height);",
+          "decl": "void rasterizer_xbox_bitmap_swizzle2d_word(void);",
           "ported": false,
           "name": "rasterizer_xbox_bitmap_swizzle2d_word"
         },
         {
           "addr": "0x1829f0",
-          "decl": "void rasterizer_xbox_bitmap_swizzle2d_long(uint32_t *dest, uint32_t *src, int16_t width, int16_t height);",
+          "decl": "void rasterizer_xbox_bitmap_swizzle2d_long(void);",
           "ported": false,
           "name": "rasterizer_xbox_bitmap_swizzle2d_long"
         },
