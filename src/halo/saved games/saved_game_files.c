@@ -2269,89 +2269,37 @@ bool FUN_001c35a0(void *buffer)
 
 
 
-/* FUN_001c3610 (0x1c3610) — XBE naked draft (batch 258). */
-#if defined(__clang__)
-static void (*const b1c3610_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c3610_exitfn)(int) = system_exit;
-static file_ref_t * (*const b1c3610_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static void (*const b1c3610_c19adf0)(void) = file_get_size;
-
-__attribute__((naked, noinline))
-void FUN_001c3610(void)
+/* FUN_001c3610 (0x1c3610) — readable C lift from XBE leaf. */
+unsigned int FUN_001c3610(int16_t slot_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "testw %%si, %%si\n\t"
-      "je .LFUN_001c3610_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x860\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bacc8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3610_1:\n\t"
-      "movb 0x4eacc8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c3610_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x862\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2baac8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3610_2:\n\t"
-      "cmpw $9, %%si\n\t"
-      "jb .LFUN_001c3610_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x863\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bad24\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c3610_3:\n\t"
-      "movzwl %%si, %%eax\n\t"
-      "movl 0x32eb98(,%%eax,4), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c3610_4\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x4eabb0\n\t"
-      "call *%[c19adf0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c3610_4\n\t"
-      "movl $0xfd08e551, %%eax\n\t"
-      "mull -0x4(%%ebp)\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $9, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c3610_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c3610_assert), [exitfn] "m"(b1c3610_exitfn), [c1999f0] "m"(b1c3610_c1999f0), [c19adf0] "m"(b1c3610_c19adf0)
-      : "memory");
+  unsigned path;
+  file_ref_t *opened;
+  unsigned size;
+  extern char DAT_002ba8e8[];
+  extern char DAT_002bacc8[];
+  extern char DAT_002baac8[];
+  extern char DAT_002bad24[];
+
+  if (slot_index != 0) {
+    display_assert(DAT_002bacc8, DAT_002ba8e8, 0x860, 1);
+    system_exit(-1);
+  }
+  if (*(char *)0x4eacc8 != 0) {
+    display_assert(DAT_002baac8, DAT_002ba8e8, 0x862, 1);
+    system_exit(-1);
+  }
+  if ((uint16_t)slot_index >= 9) {
+    display_assert(DAT_002bad24, DAT_002ba8e8, 0x863, 1);
+    system_exit(-1);
+  }
+  path = *(unsigned *)(0x32eb98 + 4 * (unsigned)(uint16_t)slot_index);
+  opened = file_reference_create_from_path((file_ref_t *)0x4eabb0, (char *)path, 0);
+  if (opened == 0)
+    return 0;
+  if (!file_get_size((file_ref_t *)0x4eabb0, &size))
+    return 0;
+  return (unsigned)(((unsigned long long)size * 0xfd08e551ull) >> 41);
 }
-#else
-#error "FUN_001c3610: clang naked draft required"
-#endif
 
 
 /* FUN_001c3710 (0x1c3710) — readable C lift. */

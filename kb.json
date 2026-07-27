@@ -23935,8 +23935,8 @@
         },
         {
           "addr": "0x1c3610",
-          "decl": "void FUN_001c3610(void);",
-          "ported": false
+          "decl": "unsigned int FUN_001c3610(int16_t slot_index /* @<si> */);",
+          "ported": true
         },
         {
           "addr": "0x1c3710",
