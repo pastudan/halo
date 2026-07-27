@@ -31318,7 +31318,7 @@
         {
           "addr": "0x17d980",
           "decl": "void FUN_0017d980(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d990",
