@@ -829,50 +829,24 @@ void ai_debug_idle_look_clear(int actor_handle)
   *(int16_t *)0x6323dc = 0;
 }
 
-/* ai_debug_idle_look_addprop (0x4a710) — XBE naked draft (batch 169). */
-#if defined(__clang__)
-static void (*const b4a710_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b4a710_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void ai_debug_idle_look_addprop(int index __attribute__((unused)), float value __attribute__((unused)))
+/* ai_debug_idle_look_addprop (0x4a710) — readable C lift. */
+extern char DAT_0025ab74[];
+extern char DAT_0025aeac[];
+void ai_debug_idle_look_addprop(int prop, float score)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x6323d4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lai_debug_idle_look_addprop_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13b1\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25aeac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_debug_idle_look_addprop_1:\n\t"
-      "movw 0x6323dc, %%ax\n\t"
-      "cmpw $0x20, %%ax\n\t"
-      "jge .Lai_debug_idle_look_addprop_2\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl %%ecx, 0x6323e0(,%%eax,4)\n\t"
-      "movswl 0x6323dc, %%edx\n\t"
-      "fstps 0x632460(,%%edx,4)\n\t"
-      "incw 0x6323dc\n\t"
-      ".Lai_debug_idle_look_addprop_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b4a710_assert), [exitfn] "m"(b4a710_exitfn)
-      : "memory");
-}
-#else
-#error "ai_debug_idle_look_addprop: clang naked draft required"
-#endif
+  int16_t count;
 
+  if (*(uint8_t *)0x6323d4 == 0) {
+    display_assert(DAT_0025aeac, DAT_0025ab74, 0x13b1, true);
+    system_exit(-1);
+  }
+  count = *(int16_t *)0x6323dc;
+  if (count >= 0x20)
+    return;
+  *(int *)(0x6323e0 + (int)count * 4) = prop;
+  *(float *)(0x632460 + (int)count * 4) = score;
+  *(int16_t *)0x6323dc = (int16_t)(count + 1);
+}
 
 /* ai_debug_change_selected_encounter (0x4afa0) — XBE naked draft (batch 125). */
 #if defined(__clang__)

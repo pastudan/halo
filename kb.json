@@ -34998,8 +34998,8 @@
         },
         {
           "addr": "0x4a710",
-          "decl": "void ai_debug_idle_look_addprop(int index, float value);",
-          "ported": false,
+          "decl": "void ai_debug_idle_look_addprop(int prop, float score);",
+          "ported": true,
           "name": "ai_debug_idle_look_addprop"
         },
         {
