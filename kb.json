@@ -21857,8 +21857,8 @@
         },
         {
           "addr": "0x1569f0",
-          "decl": "void FUN_001569f0(void);",
-          "ported": false
+          "decl": "void FUN_001569f0(void *src, short index, void *dst);",
+          "ported": true
         },
         {
           "addr": "0x156a90",
@@ -42023,7 +42023,7 @@
         },
         {
           "addr": "0x001e8920",
-          "decl": "void D3DDevice_SetIndices(void);",
+          "decl": "void __stdcall D3DDevice_SetIndices(void *indices, int unused);",
           "ported": true
         },
         {
@@ -42293,7 +42293,7 @@
         },
         {
           "addr": "0x001eb590",
-          "decl": "void D3DDevice_SetShaderConstantMode(void);",
+          "decl": "void __stdcall D3DDevice_SetShaderConstantMode(uint32_t mode);",
           "ported": false
         },
         {

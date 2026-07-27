@@ -1833,81 +1833,30 @@ void rasterizer_set_model_lighting_point_light(void)
 #endif
 
 
-/* FUN_001569f0 (0x1569f0) — XBE naked draft (batch 344). */
-#if defined(__clang__)
-static void (*const b1569f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1569f0_exitfn)(int) = system_exit;
-static void *(*const b1569f0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void FUN_001569f0(void)
+/* FUN_001569f0 (0x1569f0) — readable C lift. */
+void FUN_001569f0(void *src, short index, void *dst)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001569f0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb3a\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29e178\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001569f0_1:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_001569f0_2\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x3(%%eax), %%edi\n\t"
-      "shll $5, %%edi\n\t"
-      "leal 0xc(%%ecx), %%edx\n\t"
-      "movl (%%edx), %%ebx\n\t"
-      "addl %%esi, %%edi\n\t"
-      "movl %%ebx, (%%edi)\n\t"
-      "movl 0x4(%%edx), %%ebx\n\t"
-      "movl %%ebx, 0x4(%%edi)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%edi)\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "shll $5, %%eax\n\t"
-      "leal 0x70(%%eax,%%esi,1), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001569f0_2:\n\t"
-      "movswl 0xc(%%ebp), %%edx\n\t"
-      "addl $3, %%edx\n\t"
-      "pushl $0x20\n\t"
-      "shll $5, %%edx\n\t"
-      "addl %%esi, %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1569f0_assert), [exitfn] "m"(b1569f0_exitfn), [memset] "m"(b1569f0_memset)
-      : "memory");
+  int *s;
+  int *d1;
+  int *d2;
+  int idx;
+  if (!dst) {
+    display_assert((const char *)0x29e178, (const char *)0x29dc0c, 0xb3a, 1);
+    system_exit(-1);
+  }
+  s = (int *)src;
+  if (!s)
+    return;
+  idx = (int)index;
+  d1 = (int *)((char *)dst + ((idx + 3) << 5));
+  d1[0] = s[3];
+  d1[1] = s[4];
+  d1[2] = s[5];
+  d2 = (int *)((char *)dst + 0x70 + (idx << 5));
+  d2[0] = s[0];
+  d2[1] = s[1];
+  d2[2] = s[2];
 }
-#else
-#error "FUN_001569f0: clang naked draft required"
-#endif
-
 
 /* FUN_00156a90 (0x156a90) — readable C lift. */
 int FUN_00156a90(int a)
