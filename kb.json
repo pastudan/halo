@@ -14087,8 +14087,8 @@
         },
         {
           "addr": "0xf6750",
-          "decl": "void FUN_000f6750(int object_datum, void *definition);",
-          "ported": false,
+          "decl": "void FUN_000f6750(int item_handle, void *definition);",
+          "ported": true,
           "name": "FUN_000f6750"
         },
         {

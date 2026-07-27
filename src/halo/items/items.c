@@ -806,59 +806,27 @@ void items_dispose_from_old_map(void)
     virtual_keyboard_process_input();
 }
 
-/* FUN_000f6750 (0xf6750) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const bf6750_get)(int, int) = object_get_and_verify_type;
-
-__attribute__((naked, noinline))
-void FUN_000f6750(int object_datum __attribute__((unused)), void *definition __attribute__((unused)))
+/* FUN_000f6750 (0xf6750) — readable C lift. */
+void FUN_000f6750(int item_handle, void *definition)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, 0x22(%%ecx)\n\t"
-      "movl $0xffffffdf, %%edx\n\t"
-      "je .LFUN_000f6750_1\n\t"
-      "orl $0x20, %%edi\n\t"
-      "jmp .LFUN_000f6750_2\n\t"
-      ".LFUN_000f6750_1:\n\t"
-      "andl %%edx, %%edi\n\t"
-      ".LFUN_000f6750_2:\n\t"
-      "movl %%edi, 0x4(%%eax)\n\t"
-      "orl $0x60000, %%edi\n\t"
-      "movl %%edi, 0x4(%%eax)\n\t"
-      "testb $4, 0x22(%%ecx)\n\t"
-      "jne .LFUN_000f6750_3\n\t"
-      "orl $0x20, 0x1a4(%%eax)\n\t"
-      "jmp .LFUN_000f6750_4\n\t"
-      ".LFUN_000f6750_3:\n\t"
-      "andl %%edx, 0x1a4(%%eax)\n\t"
-      ".LFUN_000f6750_4:\n\t"
-      "testb $1, 0x22(%%ecx)\n\t"
-      "popl %%edi\n\t"
-      "jne .LFUN_000f6750_5\n\t"
-      "flds 0x14(%%eax)\n\t"
-      "fadds 0x2533e8\n\t"
-      "fstps 0x14(%%eax)\n\t"
-      ".LFUN_000f6750_5:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bf6750_get)
-      : "memory");
-}
-#else
-#error "FUN_000f6750: clang naked draft required"
-#endif
+  char *item;
+  uint32_t flags;
 
+  item = (char *)object_get_and_verify_type(item_handle, 8);
+  flags = *(uint32_t *)(item + 4);
+  if ((*(uint8_t *)((char *)definition + 0x22) & 1) != 0)
+    flags |= 0x20u;
+  else
+    flags &= ~0x20u;
+  flags |= 0x60000u;
+  *(uint32_t *)(item + 4) = flags;
+  if ((*(uint8_t *)((char *)definition + 0x22) & 4) == 0)
+    *(uint32_t *)(item + 0x1a4) |= 0x20u;
+  else
+    *(uint32_t *)(item + 0x1a4) &= ~0x20u;
+  if ((*(uint8_t *)((char *)definition + 0x22) & 1) == 0)
+    *(float *)(item + 0x14) = *(float *)(item + 0x14) + *(float *)0x2533e8;
+}
 
 #include "x87_math.h"
 
