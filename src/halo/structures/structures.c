@@ -1238,269 +1238,51 @@ void calculate_vertex(short subdivision_index /* @<eax> */,
   normalize3d(vout);
 }
 
-/* shell_update (0x105c80) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static float * (*const b105c80_c99400)(float *out_line, float *point_a, float *point_b) = plane2d_from_points;
-
-__attribute__((naked, noinline))
-short shell_update(short vertex_count __attribute__((unused)), float *vertices __attribute__((unused)))
+/* 0x105c80 - classify a 2D vertex set as empty/point/collinear/planar.
+ *
+ * Register ABI (prologue at 0x105c80): no entry moves; ESI/EDI are zeroed at
+ * entry, so the only register argument is EBX.
+ *   vertex_count : stack [EBP+0x8] (short, number of 2D vertices)
+ *   vertices@<ebx> : float* array of 2D points, stride 2 floats (8 bytes)
+ *
+ * Runs a small state machine over the points.  state (-1) records the first
+ * point p0 and advances to 0.  state 0 tries to build a 2D line through p0 and
+ * the current point via plane2d_from_points; a non-null result (a real edge)
+ * advances to 1.  state 1 evaluates the line equation nx*x+ny*y-d at each
+ * later point; the first point off the line (|eval| >= 0x2533d0 epsilon)
+ * advances to 2 and terminates the scan.  Returns the final state: -1 (no
+ * vertices), 0 (all coincident), 1 (all collinear), 2 (genuinely planar).
+ * 0x2533d0 is a double epsilon. */
+short shell_update(short vertex_count, float *vertices /* @<ebx> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lshell_update_1:\n\t"
-      "cmpw 0x8(%%ebp), %%di\n\t"
-      "jge .Lshell_update_5\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lshell_update_3\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lshell_update_2\n\t"
-      "cmpl $1, %%eax\n\t"
-      "jne .Lshell_update_4\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "movswl %%di, %%eax\n\t"
-      "fmuls 0x4(%%ebx,%%eax,8)\n\t"
-      "leal (%%ebx,%%eax,8), %%eax\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls (%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lshell_update_4\n\t"
-      "movl $2, %%esi\n\t"
-      "jmp .Lshell_update_4\n\t"
-      ".Lshell_update_2:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal (%%ebx,%%edx,8), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99400]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lshell_update_4\n\t"
-      "movl $1, %%esi\n\t"
-      "jmp .Lshell_update_4\n\t"
-      ".Lshell_update_3:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movl (%%ebx,%%edx,8), %%eax\n\t"
-      "movl 0x4(%%ebx,%%edx,8), %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lshell_update_4:\n\t"
-      "incl %%edi\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl .Lshell_update_1\n\t"
-      ".Lshell_update_5:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c99400] "m"(b105c80_c99400)
-      : "memory");
-}
-#else
-#error "shell_update: clang naked draft required"
-#endif
+  float line[3]; /* [EBP-0x14]=nx, [EBP-0x10]=ny, [EBP-0xc]=d */
+  float p0[2];   /* [EBP-0x8], [EBP-0x4] */
+  short state;
+  short i;
+  float eval;
 
-
-/* 0x105d20 — Reduce a 2D point set to its convex hull as an index list.
- * Gift-wrapping (Jarvis march). shell_update (called with the vertex array in
- * EBX) validates that at least three non-collinear points exist (returns 2);
- * otherwise nothing is emitted and 0 is returned.
- *   Phase 1: pick the start vertex (lowest y, then leftmost x) with an epsilon
- *            tie-break (1e-4f) on both axes.
- *   Phase 2: from the current vertex, atan2(dy,dx) angle scan against a running
- *            angle base, wrapping candidate angles into [-1e-4f, ...) by adding
- *            2*pi; keep the minimum-angle vertex, append its index, and stop
- *            when the chosen vertex closes back on the first. A collinear/
- *            degenerate guard uses a double epsilon (=(double)1e-4f) on the
- *            |component delta| between the chosen and first vertices.
- *   Phase 3: reached only when the walk fills all slots (index_count reaches
- *            vertex_count); compacts a trailing duplicate run to the front with
- *            three bounds asserts (geometry.c 0x279,0x27a,0x282).
- * param_1 = vertex_count, param_2 = float[2] vertex array (x,y; 8-byte stride),
- * param_3 = int16 output index list. Returns the emitted index count in AX.
- * Source: c:\halo\SOURCE\math\geometry.c */
-int16_t convex_hull2d_reduce(int16_t vertex_count, float *vertices,
-                             int16_t *out_indices)
-{
-  int16_t index_count;
-
-  index_count = 0;
-  if (shell_update(vertex_count, vertices) == 2) {
-    float base_angle;
-    float best_x;
-    float best_y;
-    int16_t start_index;
-    int16_t current_index;
-    int16_t next_index;
-    float min_angle;
-    int16_t collinear_flag;
-    int16_t i;
-    int16_t first;
-    float *p;
-    float *ref;
-
-    base_angle = 0.0f; /* FLOAT_002533c0 = 0.0f, running gift-wrap base */
-    best_x = 3.4028235e38f; /* FLT_MAX */
-    best_y = 3.4028235e38f;
-    start_index = -1; /* SI default = low word of FLT_MAX (dead: count>0) */
-    collinear_flag = 0;
-
-    /* Phase 1: lowest y, then leftmost x, with epsilon tie-break. */
-    if (vertex_count > 0) {
-      p = vertices + 1; /* &vertices[0].y */
-      for (i = 0; i < vertex_count; i = i + 1) {
-        if ((p[0] < best_y - 1e-4f) ||
-            ((p[0] < best_y) && (p[-1] < best_x + 1e-4f)) ||
-            ((p[0] < best_y + 1e-4f) && (p[-1] < best_x - 1e-4f))) {
-          best_x = p[-1];
-          best_y = p[0];
-          start_index = i;
-        }
-        p = p + 2;
+  state = -1;
+  for (i = 0; i < vertex_count; i++) {
+    int s = (int)state;
+    if (s == -1) {
+      p0[0] = vertices[i * 2];
+      p0[1] = vertices[i * 2 + 1];
+      state = 0;
+    } else if (s == 0) {
+      if (plane2d_from_points(line, &vertices[i * 2], p0) != (float *)0) {
+        state = 1;
+      }
+    } else if (s == 1) {
+      eval = line[0] * vertices[i * 2] + line[1] * vertices[i * 2 + 1] - line[2];
+      if (fabs(eval) >= *(double *)0x002533d0) {
+        state = 2;
       }
     }
-
-    current_index = start_index;
-    next_index =
-      start_index; /* EBX default (dead: inner loop always assigns) */
-    for (;;) {
-      min_angle = 3.4028235e38f; /* FLT_MAX reset (0x105de9) */
-      if (index_count >= vertex_count) {
-        goto compaction;
-      }
-      out_indices[index_count] = current_index;
-      index_count = index_count + 1;
-
-      /* Phase 2: min-angle gift-wrap scan. */
-      if (vertex_count > 0) {
-        ref = vertices + current_index * 2;
-        p = vertices;
-        for (i = 0; i < vertex_count; i = i + 1) {
-          if ((p[0] != ref[0]) || (p[1] != ref[1])) {
-            float angle;
-
-            angle = x87_fatan2f(p[1] - ref[1], p[0] - ref[0]) - base_angle;
-            if (angle < -1e-4f) {
-              do {
-                angle = angle + 6.2831855f; /* 2*pi wrap */
-              } while (angle < -1e-4f);
-            }
-            if (angle < min_angle) {
-              min_angle = angle;
-              next_index = i;
-            }
-          }
-          p = p + 2;
-        }
-      }
-
-      base_angle = base_angle + min_angle;
-      current_index = next_index;
-
-      first = out_indices[0];
-      if (collinear_flag == 0) {
-        if ((fabs(vertices[next_index * 2] - vertices[first * 2]) >= 1e-4f) ||
-            (fabs(vertices[next_index * 2 + 1] - vertices[first * 2 + 1]) >=
-             1e-4f)) {
-          collinear_flag = 1;
-        }
-      }
-
-      first = out_indices[0];
-      if (next_index == first) {
-        return index_count;
-      }
-      if (collinear_flag == 0) {
-        continue;
-      }
-      if ((fabs(vertices[next_index * 2] - vertices[first * 2]) >= 1e-4f) ||
-          (fabs(vertices[next_index * 2 + 1] - vertices[first * 2 + 1]) >=
-           1e-4f)) {
-        continue;
-      }
-      return index_count;
-    }
-
-  compaction: {
-    int16_t last_hull;
-    int16_t search;
-    int16_t k;
-
-    search = index_count - 2;
-    if (search <= 0) {
-      goto assert_start_positive;
-    }
-    last_hull = out_indices[index_count - 1];
-    for (;;) {
-      if (out_indices[search] == last_hull) {
-        int16_t new_count;
-
-        new_count = (index_count - 1) - search;
-        index_count = new_count;
-        if (new_count > 0) {
-          int src;
-          int16_t *psrc;
-          int16_t *pdst;
-
-          src = search;
-          psrc = out_indices + search;
-          pdst = out_indices;
-          k = 0;
-          do {
-            if (vertex_count <= k) {
-              display_assert("vertex_index<vertex_count",
-                             "c:\\halo\\SOURCE\\math\\geometry.c", 0x279, 1);
-              system_exit(-1);
-            }
-            if (vertex_count <= src) {
-              display_assert("start_vertex_index+vertex_index<vertex_count",
-                             "c:\\halo\\SOURCE\\math\\geometry.c", 0x27a, 1);
-              system_exit(-1);
-            }
-            k = k + 1;
-            *pdst = *psrc;
-            psrc = psrc + 1;
-            pdst = pdst + 1;
-            src = src + 1;
-          } while (k < new_count);
-        }
-        if (search > 0) {
-          return index_count;
-        }
-        goto assert_start_positive;
-      }
-      search = search - 1;
-      if (search < 1) {
-        goto assert_start_positive;
-      }
+    if (state >= 2) {
+      break;
     }
   }
-
-  assert_start_positive:
-    display_assert("start_vertex_index>0", "c:\\halo\\SOURCE\\math\\geometry.c",
-                   0x282, 1);
-    system_exit(-1);
-  }
-  return index_count;
+  return state;
 }
 
 

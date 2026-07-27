@@ -25991,7 +25991,7 @@
         {
           "addr": "0x105c80",
           "decl": "short shell_update(short vertex_count, float *vertices @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "shell_update"
         },
         {
@@ -36779,7 +36779,7 @@
           "decl": "void prop_add(int actor_handle, int prop_index, int unit_handle);",
           "name": "prop_add",
           "source_path": "src/halo/ai/props.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x643d0",

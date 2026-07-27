@@ -547,227 +547,100 @@ char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin,
 }
 
 
-/* prop_add (0x64170) — XBE naked draft (batch 81). */
-#if defined(__clang__)
-static int (*const b64170_gtime)(void) = game_time_get;
-static void (*const b64170_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void *(*const b64170_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b64170_get)(int, int) = object_get_and_verify_type;
-static void *(*const b64170_tag)(int, int) = tag_get;
-static void (*const b64170_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b64170_exitfn)(int) = system_exit;
-static bool (*const b64170_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
-static bool (*const b64170_ca7a90)(int16_t team_a, int16_t team_b) = game_team_is_ally;
-static bool (*const b64170_ca7ae0)(int16_t team_a, int16_t team_b) = game_team_ally_status_changed;
-
-__attribute__((naked, noinline))
-void prop_add(int actor_handle __attribute__((unused)), int prop_index __attribute__((unused)), int unit_handle __attribute__((unused)))
+/* 0x64170 — link a new prop into an actor's prop chain. */
+void prop_add(int actor_handle, int prop_index, int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "jne .Lprop_add_2\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x2c97b8, %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .Lprop_add_1\n\t"
-      "addl $0x384, %%eax\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .Lprop_add_12\n\t"
-      ".Lprop_add_1:\n\t"
-      "pushl $0x300\n\t"
-      "pushl $0x25f1a8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, 0x2c97b8\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lprop_add_2:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edi, %%ebx\n\t"
-      "movw %%di, 0x66(%%esi)\n\t"
-      "movw %%di, 0x6c(%%esi)\n\t"
-      "movl %%ebx, 0x18(%%esi)\n\t"
-      "movb $0, 0x74(%%esi)\n\t"
-      "movl %%eax, 0x70(%%esi)\n\t"
-      "movw %%di, 0xb0(%%esi)\n\t"
-      "movb %%al, 0xb8(%%esi)\n\t"
-      "movl %%edi, 0xb4(%%esi)\n\t"
-      "movl %%edi, 0x7c(%%esi)\n\t"
-      "movl %%edi, 0x8c(%%esi)\n\t"
-      "movb %%al, 0x4e(%%esi)\n\t"
-      "movl %%edi, 0x1c(%%esi)\n\t"
-      "movl %%edi, 0xc(%%esi)\n\t"
-      "movw %%ax, 0x6a(%%esi)\n\t"
-      "movl %%edi, 0xa0(%%esi)\n\t"
-      "je .Lprop_add_11\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x18(%%edx), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jne .Lprop_add_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe8\n\t"
-      "pushl $0x25f134\n\t"
-      "pushl $0x25f180\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprop_add_3:\n\t"
-      "cmpw $0, 0x64(%%edi)\n\t"
-      "je .Lprop_add_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe9\n\t"
-      "pushl $0x25f134\n\t"
-      "pushl $0x25f150\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprop_add_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x68(%%edi), %%ax\n\t"
-      "movw %%ax, 0x12(%%esi)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movw 0x3e(%%eax), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ca7a30]\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x12(%%esi), %%dx\n\t"
-      "movb %%al, 0x60(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x3e(%%ebx), %%ax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca7a90]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x12(%%esi), %%cx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb %%al, 0x61(%%esi)\n\t"
-      "movw 0x3e(%%ebx), %%dx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ca7ae0]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movb %%al, 0x62(%%esi)\n\t"
-      "movb 0xb6(%%edi), %%al\n\t"
-      "shrb $2, %%al\n\t"
-      "andb $1, %%al\n\t"
-      "movb %%al, 0x127(%%esi)\n\t"
-      "movl 0x284(%%ecx), %%edx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%edx, 0x20(%%esi)\n\t"
-      "je .Lprop_add_5\n\t"
-      "cmpw $0, 0x3d0(%%edi)\n\t"
-      "jne .Lprop_add_5\n\t"
-      "movl $1, %%ecx\n\t"
-      "jmp .Lprop_add_6\n\t"
-      ".Lprop_add_5:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".Lprop_add_6:\n\t"
-      "negb %%al\n\t"
-      "movb %%cl, 0x128(%%esi)\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0x3e8, %%eax\n\t"
-      "movw %%ax, 0x76(%%esi)\n\t"
-      "movl 0x70(%%edi), %%ecx\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "setne %%al\n\t"
-      "movb %%al, 0x12e(%%esi)\n\t"
-      "cmpl %%ebx, 0x1a8(%%edi)\n\t"
-      "je .Lprop_add_7\n\t"
-      "movb $1, 0x14(%%esi)\n\t"
-      "movl 0x1a8(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x1c(%%esi)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x28(%%esi)\n\t"
-      "jmp .Lprop_add_8\n\t"
-      ".Lprop_add_7:\n\t"
-      "movl 0x1a4(%%edi), %%edx\n\t"
-      "movl %%edx, 0x1c(%%esi)\n\t"
-      ".Lprop_add_8:\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lprop_add_9\n\t"
-      "movw $6, 0x10(%%esi)\n\t"
-      "jmp .Lprop_add_11\n\t"
-      ".Lprop_add_9:\n\t"
-      "movl 0x1c(%%esi), %%eax\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lprop_add_10\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x4(%%eax), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%cx, 0x10(%%esi)\n\t"
-      "jmp .Lprop_add_11\n\t"
-      ".Lprop_add_10:\n\t"
-      "movw %%bx, 0x10(%%esi)\n\t"
-      ".Lprop_add_11:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl 0x50(%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "movl %%ecx, 0x50(%%eax)\n\t"
-      ".Lprop_add_12:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(b64170_gtime), [c8f390] "m"(b64170_c8f390), [dget] "m"(b64170_dget), [get] "m"(b64170_get), [tag] "m"(b64170_tag), [assert] "m"(b64170_assert), [exitfn] "m"(b64170_exitfn), [ca7a30] "m"(b64170_ca7a30), [ca7a90] "m"(b64170_ca7a90), [ca7ae0] "m"(b64170_ca7ae0)
-      : "memory");
+  char *actor;
+  char *prop;
+  char *unit;
+  void *unit_tag;
+  char is_biped_flag;
+  char orphan_flag;
+  int16_t status_word;
+  int now;
+
+  if (prop_index == -1) {
+    now = game_time_get();
+    if (*(int *)0x2c97b8 != -1 && now < *(int *)0x2c97b8 + 900) {
+      error(2, (char *)0x0025f1a8);
+    }
+    *(int *)0x2c97b8 = now;
+    return;
+  }
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  prop = (char *)datum_get(prop_data, prop_index);
+  *(int *)(prop + 4) = actor_handle;
+  *(int16_t *)(prop + 0x66) = -1;
+  *(int16_t *)(prop + 0x6c) = -1;
+  *(int *)(prop + 0x18) = unit_handle;
+  *(char *)(prop + 0x74) = 0;
+  *(int *)(prop + 0x70) = 0;
+  *(int16_t *)(prop + 0xb0) = -1;
+  *(char *)(prop + 0xb8) = 0;
+  *(int *)(prop + 0xb4) = -1;
+  *(int *)(prop + 0x7c) = -1;
+  *(int *)(prop + 0x8c) = -1;
+  *(char *)(prop + 0x4e) = 0;
+  *(int *)(prop + 0x1c) = -1;
+  *(int *)(prop + 0xc) = -1;
+  *(int16_t *)(prop + 0x6a) = 0;
+  *(int *)(prop + 0xa0) = -1;
+
+  if (unit_handle != -1) {
+    unit = (char *)object_get_and_verify_type(unit_handle, 3);
+    unit_tag = tag_get('unit', *(int *)unit);
+    if (unit_handle == *(int *)(actor + 0x18)) {
+      display_assert("unit_index != actor->meta.unit_index",
+                     "c:\\halo\\SOURCE\\ai\\props.c", 0xe8, 1);
+      system_exit(-1);
+    }
+    if (*(int16_t *)(unit + 0x64) != 0) {
+      display_assert("prop_unit->object.type == _object_type_biped",
+                     "c:\\halo\\SOURCE\\ai\\props.c", 0xe9, 1);
+      system_exit(-1);
+    }
+    *(int16_t *)(prop + 0x12) = *(int16_t *)(unit + 0x68);
+    *(char *)(prop + 0x60) = game_allegiance_get_team_is_friendly(
+        *(int16_t *)(prop + 0x12), *(int16_t *)(actor + 0x3e));
+    *(char *)(prop + 0x61) =
+        game_team_is_ally(*(int16_t *)(prop + 0x12),
+                          *(int16_t *)(actor + 0x3e));
+    *(char *)(prop + 0x62) = game_team_ally_status_changed(
+        *(int16_t *)(prop + 0x12), *(int16_t *)(actor + 0x3e));
+    is_biped_flag = (char)((*(char *)(unit + 0xb6) >> 2) & 1);
+    *(char *)(prop + 0x127) = is_biped_flag;
+    *(int *)(prop + 0x20) = *(int *)(unit_tag + 0x284);
+    if (is_biped_flag != 0 && *(int16_t *)(unit + 0x3d0) == 0)
+      orphan_flag = 1;
+    else
+      orphan_flag = 0;
+    *(char *)(prop + 0x128) = orphan_flag;
+    *(int16_t *)(prop + 0x76) = (int16_t)(orphan_flag ? 0x3e8 : 0);
+    *(char *)(prop + 0x12e) = (*(int *)(unit + 0x70) != -1);
+    if (*(int *)(unit + 0x1a8) != -1) {
+      *(char *)(prop + 0x14) = 1;
+      *(int *)(prop + 0x1c) = *(int *)(unit + 0x1a8);
+      *(int *)(prop + 0x28) = game_time_get();
+    } else {
+      *(int *)(prop + 0x1c) = *(int *)(unit + 0x1a4);
+    }
+    if (*(char *)(prop + 0x12e) != 0)
+      status_word = 6;
+    else if (*(int *)(prop + 0x1c) != unit_handle) {
+      char *owner;
+
+      owner = (char *)datum_get(*(void **)0x6325a4, *(int *)(prop + 0x1c));
+      status_word = *(int16_t *)(owner + 4);
+    } else {
+      status_word = -1;
+    }
+    *(int16_t *)(prop + 0x10) = status_word;
+  }
+
+  *(int *)(prop + 8) = *(int *)(actor + 0x50);
+  *(int *)(actor + 0x50) = prop_index;
 }
-#else
-#error "prop_add: clang naked draft required"
-#endif
 
 
 /* FUN_000643d0 (0x643d0) — readable C lift. */
