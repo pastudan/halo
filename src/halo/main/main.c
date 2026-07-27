@@ -79,10 +79,12 @@ void FUN_000ffe90(char param_1)
 }
 
 /* set_game_connection (0xfff70) — readable C lift. */
-void set_game_connection(uint16_t connection)
+void set_game_connection(short param)
 {
-  *(uint16_t *)0x46da0c = connection;
+  *(short *)0x46da0c = param;
 }
+
+
 
 short game_connection(void)
 {
@@ -2884,56 +2886,143 @@ void FUN_00103de0(char *source)
   }
 }
 
+/* ui_widget_display_deferred_errors (0xe8db0) — XBE naked draft (batch 93). */
+#if defined(__clang__)
+static bool (*const be8db0_c930a0)(void) = cinematic_in_progress;
+static void (*const be8db0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const be8db0_exitfn)(int) = system_exit;
+static void (*const be8db0_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
 
-/* ui_widget_display_deferred_errors (0xe8db0) — readable C lift. */
+__attribute__((naked, noinline))
 void ui_widget_display_deferred_errors(void)
 {
-  extern char DAT_00283280[];
-  extern char DAT_00284750[];
-  int i;
-  int16_t *slot;
-  if (cinematic_in_progress()) {
-    display_assert(DAT_00284750, DAT_00283280, 0x93f, true);
-    system_exit(-1);
-  }
-  slot = (int16_t *)0x46cc6c;
-  for (i = 0; i < 4; i++) {
-    int16_t handle = slot[0];
-    if (handle >= 0 && handle < 0x28) {
-      char pause_game = *(char *)((char *)slot + 3);
-      char is_modal = *(char *)((char *)slot + 2);
-      ui_widget_display_error(handle, (int16_t)i, is_modal, pause_game);
-    }
-    slot[0] = (int16_t)0xffff;
-    slot = (int16_t *)((char *)slot + 4);
-  }
+  __asm__ volatile(
+      "call *%[c930a0]\n\t"
+      "testb %%al, %%al\n\t"
+      "je .Lui_widget_display_deferred_errors_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x93f\n\t"
+      "pushl $0x283280\n\t"
+      "pushl $0x284750\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lui_widget_display_deferred_errors_1:\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "xorl %%edi, %%edi\n\t"
+      "movl $0x46cc6c, %%esi\n\t"
+      ".Lui_widget_display_deferred_errors_2:\n\t"
+      "movw (%%esi), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "jl .Lui_widget_display_deferred_errors_3\n\t"
+      "cmpw $0x28, %%ax\n\t"
+      "jge .Lui_widget_display_deferred_errors_3\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "movb 0x3(%%esi), %%cl\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "movb 0x2(%%esi), %%dl\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%edx\n\t"
+      "pushl %%edi\n\t"
+      "pushl %%eax\n\t"
+      "call *%[ce8910]\n\t"
+      "addl $0x10, %%esp\n\t"
+      ".Lui_widget_display_deferred_errors_3:\n\t"
+      "movw $0xffff, (%%esi)\n\t"
+      "incl %%edi\n\t"
+      "addl $4, %%esi\n\t"
+      "cmpw $4, %%di\n\t"
+      "jl .Lui_widget_display_deferred_errors_2\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "ret\n\t"
+      :
+      : [c930a0] "m"(be8db0_c930a0), [assert] "m"(be8db0_assert), [exitfn] "m"(be8db0_exitfn), [ce8910] "m"(be8db0_ce8910)
+      : "memory");
 }
+#else
+#error "ui_widget_display_deferred_errors: clang naked draft required"
+#endif
 
 /* --- main.obj batch1 drafts (2026-07-26) --- */
 
 bool cache_files_give_time_to_precache(const char *name);
 void main_menu_active(char active);
 
-/* gamepad_button_is_down (0xffef0) — readable C lift. */
-char gamepad_button_is_down(int16_t button)
+/* gamepad_button_is_down (0xffef0) — XBE naked draft (batch 149). */
+#if defined(__clang__)
+static void (*const bffef0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const bffef0_exitfn)(int) = system_exit;
+static bool (*const bffef0_ccf6c0)(int16_t gamepad_index) = input_has_gamepad;
+static void * (*const bffef0_ccf710)(int gamepad_index) = input_get_gamepad_state;
+
+__attribute__((naked, noinline))
+char gamepad_button_is_down(int16_t button __attribute__((unused)))
 {
-  int i;
-  unsigned char *state;
-
-  if (button < 0 || button >= 0x10) {
-    display_assert((const char *)0x28b078, (const char *)0x28b0b4, 0xf5, 1);
-    system_exit(-1);
-  }
-  for (i = 0; i < 4; i++) {
-    if (input_has_gamepad(i))
-      break;
-  }
-  if (i >= 4)
-    return 0;
-  state = (unsigned char *)input_get_gamepad_state(i);
-  return (char)(state[0x10 + button] > 0);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "movw 0x8(%%ebp), %%di\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "testw %%di, %%di\n\t"
+      "jl .Lgamepad_button_is_down_1\n\t"
+      "cmpw $0x10, %%di\n\t"
+      "jl .Lgamepad_button_is_down_2\n\t"
+      ".Lgamepad_button_is_down_1:\n\t"
+      "pushl $1\n\t"
+      "pushl $0xf5\n\t"
+      "pushl $0x28b0b4\n\t"
+      "pushl $0x28b078\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".Lgamepad_button_is_down_2:\n\t"
+      "xorl %%esi, %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lgamepad_button_is_down_3:\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccf6c0]\n\t"
+      "addl $4, %%esp\n\t"
+      "testb %%al, %%al\n\t"
+      "jne .Lgamepad_button_is_down_5\n\t"
+      "incl %%esi\n\t"
+      "cmpw $4, %%si\n\t"
+      "jl .Lgamepad_button_is_down_3\n\t"
+      ".Lgamepad_button_is_down_4:\n\t"
+      "popl %%edi\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lgamepad_button_is_down_5:\n\t"
+      "cmpw $4, %%si\n\t"
+      "jge .Lgamepad_button_is_down_4\n\t"
+      "pushl %%esi\n\t"
+      "call *%[ccf710]\n\t"
+      "addl $4, %%esp\n\t"
+      "movswl %%di, %%ecx\n\t"
+      "movb 0x10(%%ecx,%%eax,1), %%dl\n\t"
+      "popl %%edi\n\t"
+      "testb %%dl, %%dl\n\t"
+      "popl %%esi\n\t"
+      "seta %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(bffef0_assert), [exitfn] "m"(bffef0_exitfn), [ccf6c0] "m"(bffef0_ccf6c0), [ccf710] "m"(bffef0_ccf710)
+      : "memory");
 }
-
+#else
+#error "gamepad_button_is_down: clang naked draft required"
+#endif
 
 
 void main_disallow_persistent_storage(void)
@@ -2961,7 +3050,7 @@ void main_set_multiplayer_map_name(const char *name)
 {
   csstrncpy((char *)0x46db55, name, 0xff);
   *(unsigned char *)0x46dc54 = 0;
-  cache_files_give_time_to_precache((char *)0x46db55);
+  cache_files_give_time_to_precache((const char *)0x46db55);
 }
 
 
@@ -3071,7 +3160,7 @@ void main_save_core_name(const char *name)
   if ((unsigned)csstrlen(name) >= 0x40) {
     display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3a5, 0);
   }
-  csstrncpy((char *)0x46dd55, name, 0x3f);
+  csstrncpy(0x46dd55, name, 0x3f);
   *(uint8_t *)0x46da3d = 1;
 }
 
@@ -3095,7 +3184,7 @@ void main_load_core_name(const char *name)
   if ((unsigned)csstrlen(name) >= 0x40) {
     display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3c9, 0);
   }
-  csstrncpy((char *)0x46dd55, name, 0x3f);
+  csstrncpy(0x46dd55, name, 0x3f);
   *(uint8_t *)0x46da3e = 1;
 }
 
@@ -3105,7 +3194,7 @@ void main_load_core_name_at_startup(const char *name)
   if ((unsigned)csstrlen(name) >= 0x40) {
     display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3d7, 0);
   }
-  csstrncpy((char *)0x46dd55, name, 0x3f);
+  csstrncpy(0x46dd55, name, 0x3f);
   *(uint8_t *)0x46da3f = 1;
 }
 
@@ -3356,7 +3445,7 @@ int main_get_solo_level_from_name(const char *map_name __attribute__((unused)))
 /* main_get_current_solo_level (0x100860) — readable C lift (thin wrapper). */
 int main_get_current_solo_level(void)
 {
-  return main_get_solo_level_from_name((const char *)0x46da55);
+  return main_get_solo_level_from_name(0x46da55);
 }
 
 const char *main_get_solo_level_name(int16_t index)
@@ -3492,7 +3581,7 @@ void FUN_001008a0(int num_players __attribute__((unused)), int *horizontal_out _
 static void (*const b101bc0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b101bc0_exitfn)(int) = system_exit;
 static void * (*const b101bc0_c7e0b0)(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format) = bitmap_2d_new;
-static void (*const b101bc0_c199a60)(void) = directory_create_or_delete_contents;
+static void (*const b101bc0_c199a60)(void) = (void (*)(void))directory_create_or_delete_contents;
 static void (*const b101bc0_cb5d00)(float) = game_time_set_speed;
 
 __attribute__((naked, noinline))
@@ -3786,19 +3875,73 @@ void FUN_000e8e20(int a0 __attribute__((unused)))
 #endif
 
 
-/* FUN_000ffeb0 (0xffeb0) — readable C lift. */
-void FUN_000ffeb0(char param_1)
+/* FUN_000ffeb0 (0xffeb0) — XBE naked draft (batch 154). */
+#if defined(__clang__)
+static void (*const bffeb0_c54df0)(void) = (void (*)(void))FUN_00054df0;
+
+__attribute__((naked, noinline))
+void FUN_000ffeb0(char param_1 __attribute__((unused)))
 {
-  if (param_1)
-    FUN_00054df0();
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movb 0x8(%%ebp), %%al\n\t"
+      "testb %%al, %%al\n\t"
+      "je .LFUN_000ffeb0_1\n\t"
+      "popl %%ebp\n\t"
+      "jmp .LFUN_000ffeb0_10000\n\t"
+      ".LFUN_000ffeb0_1:\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "ret\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "nop\n\t"
+      "flds 0x46da08\n\t"
+      "ret\n\t"
+      ".LFUN_000ffeb0_10000:\n\t"
+      "jmp *%[c54df0]\n\t"
+      :
+      : [c54df0] "m"(bffeb0_c54df0)
+      : "memory");
 }
+#else
+#error "FUN_000ffeb0: clang naked draft required"
+#endif
+
 
 /* main_framerate_render (0x102700) — XBE naked draft (batch 114). */
 #if defined(__clang__)
 static int (*const b102700_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
 static void (*const b102700_c19b800)(short style, short justify, int flags) = draw_string_set_style_justify_flags;
 static void (*const b102700_c19b640)(const void *color) = draw_string_set_color;
-static void (*const b102700_c19b7e0)(int) = FUN_0019B7E0;
+static void (*const b102700_c19b7e0)(void) = (void (*)(void))FUN_0019B7E0;
 static void (*const b102700_c183e60)(void *screen_pos, short *bounds, const void *color, int flags, const char *text) = rasterizer_text_draw;
 static bool (*const b102700_c1bc6b0)(void) = cache_files_precache_in_progress;
 static __int16 (*const b102700_c1bcf00)(float *) = cache_files_precache_map_status;
@@ -4298,7 +4441,7 @@ static int (*const b103860_c103600)(int *array, float *vec) = FUN_00103600;
 static int (*const b103860_c1036c0)(int *base, int a, int b, int flag) = FUN_001036c0;
 static void *(*const b103860_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b103860_c104040)(float *p0, float *p1, float *p2, float *color) = FUN_00104040;
-static void (*const b103860_c1db443)(void) = _wprintf;
+static void (*const b103860_c1db443)(void) = (void (*)(void))_wprintf;
 
 __attribute__((naked, noinline))
 int FUN_00103860(int base __attribute__((unused)), float *a __attribute__((unused)), float *b __attribute__((unused)), float *c __attribute__((unused)), char flag __attribute__((unused)))
@@ -4776,7 +4919,7 @@ int FUN_00103c00(int *obj __attribute__((unused)))
 #if defined(__clang__)
 static void (*const b103d80_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b103d80_exitfn)(int) = system_exit;
-static void (*const b103d80_c1db4a9)(void) = FUN_001db4a9;
+static void (*const b103d80_c1db4a9)(void) = (void (*)(void))FUN_001db4a9;
 static int (*const b103d80_c1d9dac)(void *stream) = crt_fclose;
 
 __attribute__((naked, noinline))

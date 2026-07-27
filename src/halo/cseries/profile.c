@@ -441,7 +441,7 @@ void symbol_table_dispose(int32_t *symtab)
   extern char DAT_00268b04[];
   extern char DAT_00268b14[];
   if (!symtab) {
-    display_assert(DAT_00268b04, DAT_00268b14, 0x225, true);
+    display_assert(DAT_00268b04, DAT_00268b14, 0x225, 1);
     system_exit(-1);
   }
   if (symtab[1])
@@ -452,6 +452,7 @@ void symbol_table_dispose(int32_t *symtab)
   symtab[1] = 0;
   symtab[2] = 0;
 }
+
 
 /* --- profile.obj batch drafts (2026-07-26) --- */
 
@@ -1372,7 +1373,7 @@ static void __cdecl (*const b902f0_c1d9260)(void *base, size_t nmemb, size_t siz
 static int (*const b902f0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
 static char * (*const b902f0_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
 static int (*const b902f0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-static void (*const b902f0_ftol)(void) = FUN_001d9068;
+static void (*const b902f0_ftol)(void) = (void (*)(void))FUN_001d9068;
 static int (*const b902f0_c8df60)(const char *s1) = csstrlen;
 
 __attribute__((naked, noinline))
@@ -1664,10 +1665,10 @@ void profile_dump(void)
 
 /* profile_dump_to_file (0x90650) — XBE naked draft (batch 280). */
 #if defined(__clang__)
-static void (*const b90650_chkstk)(void) = FUN_001d90e0;
+static void (*const b90650_chkstk)(void) = (void (*)(void))FUN_001d90e0;
 static int (*const b90650_c8df60)(const char *s1) = csstrlen;
 static void * (*const b90650_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static void (*const b90650_c902f0)(void) = profile_dump;
+static void (*const b90650_c902f0)(void) = (void (*)(void))profile_dump;
 static int (*const b90650_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
 static int (*const b90650_c1d9dac)(void *stream) = crt_fclose;
 
@@ -1737,7 +1738,7 @@ void profile_dump_to_file(int a0 __attribute__((unused)))
 /* FUN_000906d0 (0x906d0) — XBE naked draft (batch 277). */
 #if defined(__clang__)
 static void * (*const b906d0_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
-static void (*const b906d0_c8fb60)(void) = FUN_0008fb60;
+static void (*const b906d0_c8fb60)(void) = (void (*)(void))FUN_0008fb60;
 static int (*const b906d0_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
 
 __attribute__((naked, noinline))
@@ -3267,7 +3268,7 @@ void FUN_00091d50(void)
 
 /* FUN_00091da0 (0x91da0) — XBE naked draft (batch 242). */
 #if defined(__clang__)
-static void (*const b91da0_c91cf0)(void) = FUN_00091cf0;
+static void (*const b91da0_c91cf0)(void) = (void (*)(void))FUN_00091cf0;
 
 __attribute__((naked, noinline))
 void FUN_00091da0(void)
@@ -3417,7 +3418,7 @@ void FUN_00091da0(void)
 
 /* FUN_00091ef0 (0x91ef0) — XBE naked draft (batch 242). */
 #if defined(__clang__)
-static void (*const b91ef0_c91d50)(void) = FUN_00091d50;
+static void (*const b91ef0_c91d50)(void) = (void (*)(void))FUN_00091d50;
 
 __attribute__((naked, noinline))
 void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((unused)), void *cmp)

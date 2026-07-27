@@ -681,8 +681,8 @@ void FUN_0006ec50(void)
 /* FUN_0006ed10 (0x6ed10) — XBE naked draft (batch 351). */
 #if defined(__clang__)
 static void (*const b6ed10_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-static void (*const b6ed10_c6eaf0)(void) = FUN_0006eaf0;
-static void (*const b6ed10_c6e930)(void) = FUN_0006e930;
+static void (*const b6ed10_c6eaf0)(void) = (void (*)(void))FUN_0006eaf0;
+static void (*const b6ed10_c6e930)(void) = (void (*)(void))FUN_0006e930;
 
 __attribute__((naked, noinline))
 void FUN_0006ed10(void)
@@ -2052,48 +2052,19 @@ unsigned int FUN_0006f910(void *tif)
   return FUN_0006f890(tif) * a * c;
 }
 
-/* FUN_0006f950 (0x6f950) — XBE naked draft (batch 387). */
-#if defined(__clang__)
-static int (*const b6f950_c1d98ad)(void *stream, const char *format, ...) = (void *)crt_fprintf;
-static void (*const b6f950_c1d9850)(void) = (void *)FUN_001d9850;
-
-__attribute__((naked, noinline))
-void FUN_0006f950(void)
+/* FUN_0006f950 (0x6f950) — readable C lift. */
+void FUN_0006f950(const char *module, const char *fmt, void *ap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006f950_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x259f68\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0006f950_1:\n\t"
-      "pushl $0x2612e4\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d98ad]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d9850]\n\t"
-      "pushl $0x260020\n\t"
-      "pushl $0x331070\n\t"
-      "call *%[c1d98ad]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d98ad] "m"(b6f950_c1d98ad), [c1d9850] "m"(b6f950_c1d9850)
-      : "memory");
+  extern char DAT_00259f68[];
+  extern char DAT_002612e4[];
+  extern char DAT_00260020[];
+  if (module)
+    crt_fprintf((void *)0x331070, DAT_00259f68, module);
+  crt_fprintf((void *)0x331070, DAT_002612e4);
+  ((void (*)(void *, const char *, void *))(void *)FUN_001d9850)((void *)0x331070, fmt, ap);
+  crt_fprintf((void *)0x331070, DAT_00260020);
 }
-#else
-#error "FUN_0006f950: clang naked draft required"
-#endif
+
 
 
 /* FUN_0006f9b0 (0x6f9b0) — readable C lift: swap global handler. */
@@ -2118,7 +2089,7 @@ void FUN_0006f9d0(void *a0, void *a1, ...)
 
 /* FUN_0006f9f0 (0x6f9f0) — XBE naked draft (batch 341). */
 #if defined(__clang__)
-static void (*const b6f9f0_c6f820)(void) = FUN_0006f820;
+static void (*const b6f9f0_c6f820)(void) = (void (*)(void))FUN_0006f820;
 static void * (*const b6f9f0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
 static void *(*const b6f9f0_memset)(void *, int, unsigned int) = csmemset;
 
@@ -2637,11 +2608,11 @@ void TIFFFlushData1(void)
 
 /* TIFFWriteScanline (0x6fea0) — XBE naked draft (batch 324). */
 #if defined(__clang__)
-static void (*const b6fea0_c6faf0)(void) = FUN_0006faf0;
-static void (*const b6fea0_c6fbd0)(void) = FUN_0006fbd0;
+static void (*const b6fea0_c6faf0)(void) = (void (*)(void))FUN_0006faf0;
+static void (*const b6fea0_c6fbd0)(void) = (void (*)(void))FUN_0006fbd0;
 static void (*const b6fea0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-static void (*const b6fea0_c6a210)(void) = FUN_0006a210;
-static void (*const b6fea0_c6fc60)(void) = FUN_0006fc60;
+static void (*const b6fea0_c6a210)(void) = (void (*)(void))FUN_0006a210;
+static void (*const b6fea0_c6fc60)(void) = (void (*)(void))FUN_0006fc60;
 
 __attribute__((naked, noinline))
 int TIFFWriteScanline(int file __attribute__((unused)), void *buffer __attribute__((unused)), int row __attribute__((unused)), int sample __attribute__((unused)))
@@ -2857,11 +2828,11 @@ int TIFFWriteScanline(int file __attribute__((unused)), void *buffer __attribute
 
 /* TIFFWriteEncodedStrip (0x700c0) — XBE naked draft (batch 348). */
 #if defined(__clang__)
-static void (*const b700c0_c6faf0)(void) = FUN_0006faf0;
+static void (*const b700c0_c6faf0)(void) = (void (*)(void))FUN_0006faf0;
 static void (*const b700c0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-static void (*const b700c0_c6fbd0)(void) = FUN_0006fbd0;
-static void (*const b700c0_c6f260)(void) = FUN_0006f260;
-static void (*const b700c0_c6fd30)(void) = FUN_0006fd30;
+static void (*const b700c0_c6fbd0)(void) = (void (*)(void))FUN_0006fbd0;
+static void (*const b700c0_c6f260)(void) = (void (*)(void))FUN_0006f260;
+static void (*const b700c0_c6fd30)(void) = (void (*)(void))FUN_0006fd30;
 
 __attribute__((naked, noinline))
 void TIFFWriteEncodedStrip(void)
@@ -3069,11 +3040,11 @@ void TIFFWriteRawStrip(void)
 
 /* TIFFWriteEncodedTile (0x70260) — XBE naked draft (batch 342). */
 #if defined(__clang__)
-static void (*const b70260_c6faf0)(void) = FUN_0006faf0;
+static void (*const b70260_c6faf0)(void) = (void (*)(void))FUN_0006faf0;
 static void (*const b70260_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-static void (*const b70260_c6fbd0)(void) = FUN_0006fbd0;
-static void (*const b70260_c6f260)(void) = FUN_0006f260;
-static void (*const b70260_c6fd30)(void) = FUN_0006fd30;
+static void (*const b70260_c6fbd0)(void) = (void (*)(void))FUN_0006fbd0;
+static void (*const b70260_c6f260)(void) = (void (*)(void))FUN_0006f260;
+static void (*const b70260_c6fd30)(void) = (void (*)(void))FUN_0006fd30;
 
 __attribute__((naked, noinline))
 void TIFFWriteEncodedTile(void)
@@ -3393,55 +3364,20 @@ void FUN_00070570(unsigned char *rgb, unsigned short *out)
   *out = (unsigned short)(((b << 6) | g) << 5 | r);
 }
 
-/* FUN_000705b0 (0x705b0) — XBE naked draft (batch 332). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000705b0(void)
+/* FUN_000705b0 (0x705b0) — readable C lift: unpack RGB565→RGB888. */
+void FUN_000705b0(unsigned int *out, const unsigned short *in /*@<eax>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "movb %%cl, %%dl\n\t"
-      "shlb $3, %%dl\n\t"
-      "pushl %%ebx\n\t"
-      "movb %%dl, %%bl\n\t"
-      "shrb $5, %%bl\n\t"
-      "orb %%bl, %%dl\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "shrl $5, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movb -0x4(%%ebp), %%cl\n\t"
-      "shlb $2, %%cl\n\t"
-      "movb %%dl, -0x4(%%ebp)\n\t"
-      "movb %%cl, %%dl\n\t"
-      "shrb $6, %%dl\n\t"
-      "orb %%dl, %%cl\n\t"
-      "shrl $6, %%eax\n\t"
-      "shlb $3, %%al\n\t"
-      "movb %%cl, -0x3(%%ebp)\n\t"
-      "movb %%al, %%cl\n\t"
-      "shrb $5, %%cl\n\t"
-      "orb %%cl, %%al\n\t"
-      "movb %%al, -0x2(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int c = *in;
+  unsigned char r, g, b;
+  b = (unsigned char)((c & 0x1f) << 3);
+  b |= (unsigned char)(b >> 5);
+  g = (unsigned char)(((c >> 5) & 0x3f) << 2);
+  g |= (unsigned char)(g >> 6);
+  r = (unsigned char)(((c >> 11) & 0x1f) << 3);
+  r |= (unsigned char)(r >> 5);
+  *out = (unsigned int)b | ((unsigned int)g << 8) | ((unsigned int)r << 16);
 }
-#else
-#error "FUN_000705b0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00070610 (0x70610) — XBE naked draft (batch 298). */
@@ -3530,7 +3466,7 @@ void FUN_00070610(void)
 
 /* FUN_000706b0 (0x706b0) — XBE naked draft (batch 310). */
 #if defined(__clang__)
-static void (*const b706b0_ftol)(void) = FUN_001d9068;
+static void (*const b706b0_ftol)(void) = (void (*)(void))FUN_001d9068;
 
 __attribute__((naked, noinline))
 void FUN_000706b0(void)
@@ -4023,11 +3959,11 @@ void FUN_00070a00(void)
 
 /* FUN_00070b70 (0x70b70) — XBE naked draft (batch 297). */
 #if defined(__clang__)
-static void (*const b70b70_c70a00)(void) = FUN_00070a00;
-static void (*const b70b70_c70610)(void) = FUN_00070610;
-static void (*const b70b70_c708c0)(void) = FUN_000708c0;
-static void (*const b70b70_c706b0)(void) = FUN_000706b0;
-static void (*const b70b70_ftol)(void) = FUN_001d9068;
+static void (*const b70b70_c70a00)(void) = (void (*)(void))FUN_00070a00;
+static void (*const b70b70_c70610)(void) = (void (*)(void))FUN_00070610;
+static void (*const b70b70_c708c0)(void) = (void (*)(void))FUN_000708c0;
+static void (*const b70b70_c706b0)(void) = (void (*)(void))FUN_000706b0;
+static void (*const b70b70_ftol)(void) = (void (*)(void))FUN_001d9068;
 
 __attribute__((naked, noinline))
 void FUN_00070b70(void)
@@ -4845,7 +4781,7 @@ void FUN_00070b70(void)
 /* FUN_00071400 (0x71400) — XBE naked draft (batch 313). */
 #if defined(__clang__)
 static void *(*const b71400_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b71400_c705b0)(void) = FUN_000705b0;
+static void (*const b71400_c705b0)(void) = (void (*)(void))FUN_000705b0;
 
 __attribute__((naked, noinline))
 void FUN_00071400(void)
@@ -5020,7 +4956,7 @@ void FUN_00071400(void)
 /* DecodeBlockRGB__single_pixel (0x715c0) — XBE naked draft (batch 320). */
 #if defined(__clang__)
 static void *(*const b715c0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b715c0_c705b0)(void) = FUN_000705b0;
+static void (*const b715c0_c705b0)(void) = (void (*)(void))FUN_000705b0;
 static void (*const b715c0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b715c0_exitfn)(int) = system_exit;
 
@@ -5214,7 +5150,7 @@ void DecodeBlockRGB__single_pixel(void)
 
 /* FUN_000717b0 (0x717b0) — XBE naked draft (batch 346). */
 #if defined(__clang__)
-static void (*const b717b0_c71400)(void) = FUN_00071400;
+static void (*const b717b0_c71400)(void) = (void (*)(void))FUN_00071400;
 
 __attribute__((naked, noinline))
 void FUN_000717b0(void)
@@ -5334,7 +5270,7 @@ void FUN_00071840(void)
 
 /* FUN_00071890 (0x71890) — XBE naked draft (batch 306). */
 #if defined(__clang__)
-static void (*const b71890_c71400)(void) = FUN_00071400;
+static void (*const b71890_c71400)(void) = (void (*)(void))FUN_00071400;
 
 __attribute__((naked, noinline))
 void FUN_00071890(void)
@@ -5583,7 +5519,7 @@ void FUN_00071890(void)
 
 /* FUN_00071af0 (0x71af0) — XBE naked draft (batch 309). */
 #if defined(__clang__)
-static void (*const b71af0_c715c0)(void) = DecodeBlockRGB__single_pixel;
+static void (*const b71af0_c715c0)(void) = (void (*)(void))DecodeBlockRGB__single_pixel;
 
 __attribute__((naked, noinline))
 void FUN_00071af0(void)
@@ -5762,7 +5698,7 @@ int FUN_00071ca0(void *a0, void *a1)
 
 /* TIFFWriteRawTile (0x71cc0) — XBE naked draft (batch 313). */
 #if defined(__clang__)
-static void (*const b71cc0_c70b70)(void) = FUN_00070b70;
+static void (*const b71cc0_c70b70)(void) = (void (*)(void))FUN_00070b70;
 
 __attribute__((naked, noinline))
 void TIFFWriteRawTile(void)
@@ -5826,7 +5762,7 @@ void TIFFWriteRawTile(void)
 
 /* FUN_00071d30 (0x71d30) — XBE naked draft (batch 297). */
 #if defined(__clang__)
-static void (*const b71d30_c70b70)(void) = FUN_00070b70;
+static void (*const b71d30_c70b70)(void) = (void (*)(void))FUN_00070b70;
 
 __attribute__((naked, noinline))
 void FUN_00071d30(void)
@@ -6372,7 +6308,7 @@ void FUN_00072060(void)
 #if defined(__clang__)
 static void (*const b721a0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b721a0_exitfn)(int) = system_exit;
-static void (*const b721a0_c108bc0)(void) = FUN_00108bc0;
+static void (*const b721a0_c108bc0)(void) = (void (*)(void))FUN_00108bc0;
 static char * (*const b721a0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static void * (*const b721a0_c7c940)(void *bitmap, short x, short y, short mipmap_index) = bitmap_2d_address;
 
@@ -7652,14 +7588,14 @@ void FUN_00072490(void)
 
 /* FUN_00072f70 (0x72f70) — XBE naked draft (batch 316). */
 #if defined(__clang__)
-static void (*const b72f70_c108bc0)(void) = FUN_00108bc0;
+static void (*const b72f70_c108bc0)(void) = (void (*)(void))FUN_00108bc0;
 static void *(*const b72f70_tag)(int, int) = tag_get;
 static void *(*const b72f70_elem)(void *, int, int) = tag_block_get_element;
 static void * (*const b72f70_c77040)(int tag_index, short sequence_index, short frame_index) = FUN_00077040;
 static void (*const b72f70_c108a10)(void) = (void *)FUN_00108a10;
 static void (*const b72f70_c108a30)(void) = (void *)FUN_00108a30;
 static void (*const b72f70_c1089d0)(void) = (void *)FUN_001089d0;
-static void (*const b72f70_c72490)(void) = FUN_00072490;
+static void (*const b72f70_c72490)(void) = (void (*)(void))FUN_00072490;
 
 __attribute__((naked, noinline))
 void FUN_00072f70(void)
@@ -8071,10 +8007,10 @@ void FUN_00072f70(void)
 static void (*const b73390_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b73390_exitfn)(int) = system_exit;
 static char * (*const b73390_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b73390_ftol)(void) = FUN_001d9068;
-static void (*const b73390_c71fa0)(void) = FUN_00071fa0;
+static void (*const b73390_ftol)(void) = (void (*)(void))FUN_001d9068;
+static void (*const b73390_c71fa0)(void) = (void (*)(void))FUN_00071fa0;
 static void * (*const b73390_c7c940)(void *bitmap, short x, short y, short mipmap_index) = bitmap_2d_address;
-static void (*const b73390_c72060)(void) = FUN_00072060;
+static void (*const b73390_c72060)(void) = (void (*)(void))FUN_00072060;
 
 __attribute__((naked, noinline))
 void FUN_00073390(void)
@@ -8434,7 +8370,7 @@ void FUN_00073390(void)
 
 /* FUN_00073770 (0x73770) — XBE naked draft (batch 327). */
 #if defined(__clang__)
-static void (*const b73770_c73390)(void) = FUN_00073390;
+static void (*const b73770_c73390)(void) = (void (*)(void))FUN_00073390;
 
 __attribute__((naked, noinline))
 void FUN_00073770(void)
@@ -9494,10 +9430,10 @@ int FUN_00073fd0(void *bitmap /* */ __attribute__((unused)))
 static bool (*const b74210_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
 static void (*const b74210_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b74210_exitfn)(int) = system_exit;
-static void (*const b74210_c7be60)(void) = bitmap_compress_to_mipmap;
+static void (*const b74210_c7be60)(void) = (void (*)(void))bitmap_compress_to_mipmap;
 static void * (*const b74210_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
 static int (*const b74210_c7dfe0)(void *bitmap) = bitmap_get_pixel_count;
-static void (*const b74210_c7d300)(void) = palette_find_closest_match;
+static void (*const b74210_c7d300)(void) = (void (*)(void))palette_find_closest_match;
 
 __attribute__((naked, noinline))
 void FUN_00074210(void)
@@ -9840,10 +9776,10 @@ void FUN_00074210(void)
 static bool (*const b745c0_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
 static void (*const b745c0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b745c0_exitfn)(int) = system_exit;
-static void (*const b745c0_c7c070)(void) = bitmap_3d_compress_to_mipmap;
+static void (*const b745c0_c7c070)(void) = (void (*)(void))bitmap_3d_compress_to_mipmap;
 static void * (*const b745c0_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
 static int (*const b745c0_c7dfe0)(void *bitmap) = bitmap_get_pixel_count;
-static void (*const b745c0_c7d0d0)(void) = bitmap_format_to_a8r8g8b8;
+static void (*const b745c0_c7d0d0)(void) = (void (*)(void))bitmap_format_to_a8r8g8b8;
 
 __attribute__((naked, noinline))
 void FUN_000745c0(void)
@@ -10054,13 +9990,13 @@ void FUN_000745c0(void)
 
 /* FUN_000747d0 (0x747d0) — XBE naked draft (batch 323). */
 #if defined(__clang__)
-static void (*const b747d0_c11feb0)(void) = FUN_0011feb0;
+static void (*const b747d0_c11feb0)(void) = (void (*)(void))FUN_0011feb0;
 static void (*const b747d0_c108e20)(void) = (void *)FUN_00108e20;
-static void (*const b747d0_c11fdb0)(void) = FUN_0011fdb0;
-static void (*const b747d0_c120250)(void) = FUN_00120250;
-static void (*const b747d0_c120400)(void) = FUN_00120400;
-static void (*const b747d0_c120340)(void) = FUN_00120340;
-static void (*const b747d0_c1204a0)(void) = FUN_001204a0;
+static void (*const b747d0_c11fdb0)(void) = (void (*)(void))FUN_0011fdb0;
+static void (*const b747d0_c120250)(void) = (void (*)(void))FUN_00120250;
+static void (*const b747d0_c120400)(void) = (void (*)(void))FUN_00120400;
+static void (*const b747d0_c120340)(void) = (void (*)(void))FUN_00120340;
+static void (*const b747d0_c1204a0)(void) = (void (*)(void))FUN_001204a0;
 static int (*const b747d0_c1d98ad)(void *stream, const char *format, ...) = crt_fprintf;
 static int (*const b747d0_c1d9bd2)(void *stream) = crt_fflush;
 
@@ -10309,8 +10245,8 @@ static void (*const b74a30_c8f390)(unsigned __int16 a1, const char *a2, ...) = e
 static void * (*const b74a30_c7e3f0)(unsigned short width, unsigned short mipmap_count, unsigned short format) = bitmap_cube_map_new;
 static void * (*const b74a30_c7e230)(unsigned short width, unsigned short height, unsigned short depth, unsigned short mipmap_count, unsigned short format) = bitmap_3d_new;
 static void * (*const b74a30_c7e0b0)(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format) = bitmap_2d_new;
-static void (*const b74a30_c745c0)(void) = FUN_000745c0;
-static void (*const b74a30_c74210)(void) = FUN_00074210;
+static void (*const b74a30_c745c0)(void) = (void (*)(void))FUN_000745c0;
+static void (*const b74a30_c74210)(void) = (void (*)(void))FUN_00074210;
 static void (*const b74a30_c7c8f0)(void *) = bitmap_delete;
 static void * (*const b74a30_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
 static int (*const b74a30_c7dfe0)(void *bitmap) = bitmap_get_pixel_count;
@@ -10319,7 +10255,7 @@ static void * (*const b74a30_c7cdf0)(void *bitmap, short x, short y, short z, sh
 static void * (*const b74a30_c7cb60)(void *bitmap, short x, short y, short face_index, short mipmap_index) = bitmap_3d_address;
 static void * (*const b74a30_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void (*const b74a30_c1089d0)(void) = (void *)FUN_001089d0;
-static void (*const b74a30_c72490)(void) = FUN_00072490;
+static void (*const b74a30_c72490)(void) = (void (*)(void))FUN_00072490;
 static void (*const b74a30_c77540)(void *bitmap) = FUN_00077540;
 
 __attribute__((naked, noinline))
