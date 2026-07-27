@@ -31031,7 +31031,7 @@
         {
           "addr": "0x17cd60",
           "decl": "void FUN_0017cd60(int object_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cd70",
@@ -31418,7 +31418,7 @@
         },
         {
           "addr": "0x17e800",
-          "decl": "void FUN_0017e800(void);",
+          "decl": "void FUN_0017e800(int a0, int a1, int a2, int a3, int a4, int a5);",
           "ported": false
         },
         {
@@ -38841,8 +38841,9 @@
         },
         {
           "addr": "0x163590",
-          "decl": "void FUN_00163590(void);",
-          "ported": false
+          "decl": "void FUN_00163590(int object_handle);",
+          "ported": false,
+          "name": "FUN_00163590"
         },
         {
           "addr": "0x163910",

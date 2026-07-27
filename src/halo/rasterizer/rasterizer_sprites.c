@@ -6,26 +6,11 @@ void rasterizer_sprites_render(void *render_data, void *vertices)
 }
 /* --- rasterizer_sprites.obj batch drafts (2026-07-26) --- */
 
-/* FUN_0017cd60 (0x17cd60) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0017cd60(int object_handle __attribute__((unused)))
+/* FUN_0017cd60 (0x17cd60) — readable C lift. */
+void FUN_0017cd60(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x27, 0x68, 0xfe, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_00163590(object_handle);
 }
-#else
-#error "FUN_0017cd60: clang naked draft required"
-#endif
-
 
 /* FUN_0017cd70 (0x17cd70) — readable C lift. */
 void FUN_0017cd70(void)
