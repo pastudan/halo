@@ -34432,8 +34432,9 @@
         },
         {
           "addr": "0x218d0",
-          "decl": "char actor_combat_build_grenade_trajectory(int origin@<eax>, float *direction@<ebx>, int16_t grenade_index, float *target_pos, float *param_14, float *aim_vector, float *param_20, float *launch_velocity, float *out_speed);",
-          "ported": false
+          "decl": "char actor_combat_build_grenade_trajectory(float *origin@<eax>, float *direction@<ebx>, int16_t grenade_index, float grenade_speed, float *target_pos, float *unused_a, float *unused_b, float *aim_speed_out, float *aim_param_out, float *launch_velocity, float *out_accel);",
+          "ported": true,
+          "name": "actor_combat_build_grenade_trajectory"
         },
         {
           "addr": "0x219e0",
