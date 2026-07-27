@@ -15518,7 +15518,7 @@
           "addr": "0x11c480",
           "decl": "void FUN_0011c480(int cache);",
           "name": "FUN_0011c480",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c4d0",
@@ -38250,7 +38250,8 @@
         {
           "addr": "0x12b0c0",
           "decl": "bool network_game_player_is_valid(void *player, void *game);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_player_is_valid"
         },
         {
           "addr": "0x12b150",

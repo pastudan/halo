@@ -696,89 +696,35 @@ bool network_game_message_encode(void *message_struct __attribute__((unused)), c
 
 /* --- network_game_manager.obj batch drafts (2026-07-26) --- */
 
-/* network_game_player_is_valid (0x12b0c0) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static void (*const b12b0c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12b0c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-bool network_game_player_is_valid(void *player __attribute__((unused)), void *game __attribute__((unused)))
+/* network_game_player_is_valid (0x12b0c0) — readable C lift from XBE leaf. */
+bool network_game_player_is_valid(void *player, void *game)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Lnetwork_game_player_is_valid_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lnetwork_game_player_is_valid_2\n\t"
-      ".Lnetwork_game_player_is_valid_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x247\n\t"
-      "pushl $0x295874\n\t"
-      "pushl $0x295a5c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_player_is_valid_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lnetwork_game_player_is_valid_6\n\t"
-      "movb 0x1d(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%al, 0xb(%%ebp)\n\t"
-      "jl .Lnetwork_game_player_is_valid_6\n\t"
-      "cmpb $4, %%al\n\t"
-      "jge .Lnetwork_game_player_is_valid_6\n\t"
-      "movb 0x1c(%%esi), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "jl .Lnetwork_game_player_is_valid_6\n\t"
-      "cmpb $4, %%dl\n\t"
-      "jge .Lnetwork_game_player_is_valid_6\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "leal 0x243(%%edi), %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lnetwork_game_player_is_valid_3:\n\t"
-      "cmpb %%dl, -0x1(%%eax)\n\t"
-      "jne .Lnetwork_game_player_is_valid_4\n\t"
-      "movb 0xb(%%ebp), %%bl\n\t"
-      "cmpb %%bl, (%%eax)\n\t"
-      "je .Lnetwork_game_player_is_valid_5\n\t"
-      ".Lnetwork_game_player_is_valid_4:\n\t"
-      "incl %%ecx\n\t"
-      "addl $0x20, %%eax\n\t"
-      "cmpl $0x10, %%ecx\n\t"
-      "jl .Lnetwork_game_player_is_valid_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_player_is_valid_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_player_is_valid_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b12b0c0_assert), [exitfn] "m"(b12b0c0_exitfn)
-      : "memory");
+  extern char DAT_00295a5c[];
+  extern char DAT_00295874[];
+  signed char team;
+  signed char index;
+  int i;
+  unsigned char *slot;
+
+  if (player == 0 || game == 0) {
+    display_assert(DAT_00295a5c, DAT_00295874, 0x247, true);
+    system_exit(-1);
+  }
+  if (player == 0)
+    return 0;
+  index = *(signed char *)((char *)player + 0x1d);
+  if (index < 0 || index >= 4)
+    return 0;
+  team = *(signed char *)((char *)player + 0x1c);
+  if (team < 0 || team >= 4)
+    return 0;
+  slot = (unsigned char *)game + 0x243;
+  for (i = 0; i < 0x10; i++) {
+    if (slot[-1] == (unsigned char)team && slot[0] == (unsigned char)index)
+      return 1;
+    slot += 0x20;
+  }
+  return 0;
 }
-#else
-#error "network_game_player_is_valid: clang naked draft required"
-#endif
+
 

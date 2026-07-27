@@ -438,7 +438,7 @@ float FUN_000a57a0(float x)
 
 
 __attribute__((naked, noinline))
-short FUN_000a57b0(float *vec __attribute__((unused)), float max_length __attribute__((unused)))
+char FUN_000a57b0(float *vec __attribute__((unused)), float max_length __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

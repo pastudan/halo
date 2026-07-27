@@ -3099,62 +3099,30 @@ void FUN_0011c430(void *cache)
   debug_free(cache, DAT_0028f768, 0x8d);
 }
 
-/* FUN_0011c480 (0x11c480) — XBE naked draft (batch 93). */
-#if defined(__clang__)
-static void (*const b11c480_c11c290)(int cache) = FUN_0011c290;
-
-__attribute__((naked, noinline))
-void FUN_0011c480(int cache __attribute__((unused)))
+/* FUN_0011c480 (0x11c480) — readable C lift from XBE leaf. */
+void FUN_0011c480(int cache)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c11c290]\n\t"
-      "movl 0x2c(%%edi), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_0011c480_3\n\t"
-      "movl 0x24(%%edi), %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "je .LFUN_0011c480_3\n\t"
-      "nop\n\t"
-      ".LFUN_0011c480_1:\n\t"
-      "testb $2, 0x4(%%esi)\n\t"
-      "jne .LFUN_0011c480_2\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x34(%%edi)\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "andl $0xfffffffe, %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "orl $2, %%ecx\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      ".LFUN_0011c480_2:\n\t"
-      "movl 0xc(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0011c480_1\n\t"
-      "movl %%esi, 0x2c(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011c480_3:\n\t"
-      "movl %%eax, 0x2c(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11c290] "m"(b11c480_c11c290)
-      : "memory");
+  unsigned char *c;
+  unsigned char *node;
+  void (*cb)(int);
+
+  c = (unsigned char *)cache;
+  FUN_0011c290(cache);
+  if (*(int *)(c + 0x2c) == 0 || *(int *)(c + 0x24) == 0) {
+    *(int *)(c + 0x2c) = 0;
+    return;
+  }
+  for (node = *(unsigned char **)(c + 0x24); node != 0;
+       node = *(unsigned char **)(node + 0xc)) {
+    if ((node[4] & 2) == 0) {
+      cb = *(void (**)(int))(c + 0x34);
+      cb(*(int *)node);
+      *(int *)(node + 4) = (*(int *)(node + 4) & ~1) | 2;
+    }
+  }
+  *(int *)(c + 0x2c) = 0;
 }
-#else
-#error "FUN_0011c480: clang naked draft required"
-#endif
+
 
 
 /* FUN_0011c4d0 (0x11c4d0) — XBE naked draft (batch 94). */
