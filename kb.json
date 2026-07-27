@@ -23016,7 +23016,8 @@
         {
           "addr": "0x95050",
           "decl": "void FUN_00095050(int unit@<edi>, int *out@<ebx>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00095050"
         },
         {
           "addr": "0x950b0",
@@ -23031,7 +23032,8 @@
         {
           "addr": "0x952d0",
           "decl": "void recorded_animation_kill(int unit_handle);",
-          "ported": false
+          "ported": true,
+          "name": "recorded_animation_kill"
         },
         {
           "addr": "0x95330",
@@ -23061,7 +23063,8 @@
         {
           "addr": "0x956e0",
           "decl": "void FUN_000956e0(int object, void *ctrl);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000956e0"
         },
         {
           "addr": "0x95750",
@@ -23112,7 +23115,8 @@
         {
           "addr": "0x95b50",
           "decl": "char FUN_00095b50(int object);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00095b50"
         },
         {
           "addr": "0x95be0",
@@ -25619,7 +25623,7 @@
         {
           "addr": "0x61e80",
           "decl": "int FUN_00061e80(float *p0, float *p1, float radius);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00061e80",
           "object": "structures.obj",
           "source_path": "src/halo/structures/structures.c"
@@ -33647,7 +33651,8 @@
         {
           "addr": "0x19d420",
           "decl": "const wchar_t *FUN_0019d420(int tag_index, int16_t string_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0019d420"
         },
         {
           "addr": "0x19d480",
@@ -35153,7 +35158,7 @@
           "addr": "0x4c0f0",
           "decl": "void ai_debug_initialize_for_new_map(void);",
           "name": "ai_debug_initialize_for_new_map",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/ai_debug.c"
         },
         {

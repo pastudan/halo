@@ -158,49 +158,15 @@ void FUN_00061df0(void *point, short projection, unsigned char sign,
   ((float *)out_projected)[1] = tmp;
 }
 
-/* FUN_00061e80 (0x61e80) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int FUN_00061e80(float *p0 __attribute__((unused)), float *p1 __attribute__((unused)), float radius __attribute__((unused)))
+/* FUN_00061e80 (0x61e80) — readable C lift from XBE leaf. */
+int FUN_00061e80(float *p0, float *p1, float radius)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fsubs (%%ecx)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_00061e80_1\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00061e80_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float dx = p1[0] - p0[0];
+  float dy = p1[1] - p0[1];
+  return (dx * dx + dy * dy) <= (radius * radius);
 }
-#else
-#error "FUN_00061e80: clang naked draft required"
-#endif
+
+
 
 
 /* 0x61ec0 — 3D point-in-radius test.

@@ -191,7 +191,7 @@ void cheat_all_powerups(void)
 #if defined(__clang__)
 static void (*const ba54b0_ca3e60)(void) = FUN_000a3e60;
 static bool (*const ba54b0_c18f3e0)(void *location, void *position, int16_t *out_sky_index) = FUN_0018f3e0;
-static void * (*const ba54b0_c18e3c0)(void) = scenario_get;
+static void * (*const ba54b0_c18e3c0)(void) = global_scenario_get;
 static void *(*const ba54b0_elem)(void *, int, int) = tag_block_get_element;
 static void (*const ba54b0_ca4200)(void) = weather_particle_system_delete;
 static void (*const ba54b0_ca40a0)(void) = weather_particle_system_new;
@@ -433,63 +433,28 @@ float FUN_000a57a0(float x)
   return *(float *)0x2533c8 / __builtin_sqrtf(x);
 }
 
-/* FUN_000a57b0 (0xa57b0) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_000a57b0(float *vec __attribute__((unused)), float max_length __attribute__((unused)))
+/* FUN_000a57b0 (0xa57b0) — readable C lift from XBE leaf. */
+char FUN_000a57b0(float *vec, float max_length)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a57b0_1\n\t"
-      "fsqrt\n\t"
-      "movb $1, %%al\n\t"
-      "fdivrs 0xc(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "fstps 0x4(%%ecx)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "fstps 0x8(%%ecx)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a57b0_1:\n\t"
-      "fstp %%st(0)\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float x = vec[0];
+  float y = vec[1];
+  float z = vec[2];
+  float len2 = x * x + y * y + z * z;
+  float max2 = max_length * max_length;
+
+  if (len2 <= max2) {
+    return 0;
+  }
+  {
+    float scale = max_length / __builtin_sqrtf(len2);
+    vec[0] = x * scale;
+    vec[1] = y * scale;
+    vec[2] = z * scale;
+  }
+  return 1;
 }
-#else
-#error "FUN_000a57b0: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_000a5810 (0xa5810) — readable C lift. */
@@ -1398,7 +1363,7 @@ void FUN_000a5f00(void)
 /* FUN_000a6030 (0xa6030) — XBE naked draft (batch 130). */
 #if defined(__clang__)
 static int (*const ba6030_c18e720)(int point) = FUN_0018e720;
-static void * (*const ba6030_c18e3c0)(void) = scenario_get;
+static void * (*const ba6030_c18e3c0)(void) = global_scenario_get;
 static void *(*const ba6030_elem)(void *, int, int) = tag_block_get_element;
 static void (*const ba6030_ca5f00)(void) = FUN_000a5f00;
 static void __cdecl (*const ba6030_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;

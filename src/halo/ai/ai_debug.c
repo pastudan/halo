@@ -689,55 +689,32 @@ void ai_debug_select_actor(int encounter_idx, int actor_idx)
   *(uint16_t *)0x6323dc = 0;
 }
 
-/* ai_debug_initialize_for_new_map (0x4c0f0) — XBE naked draft (batch 95). */
-#if defined(__clang__)
-static int (*const b4c0f0_c59930)(char *name) = encounter_get_by_name;
-static void (*const b4c0f0_c49000)(void) = ai_debug_clear_storage;
-static void (*const b4c0f0_c49220)(int encounter_idx) = ai_debug_select_encounter;
-
-__attribute__((naked, noinline))
+/* ai_debug_initialize_for_new_map (0x4c0f0) — readable C lift from XBE leaf. */
 void ai_debug_initialize_for_new_map(void)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl $0x5ac9d2\n\t"
-      "call *%[c59930]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c49000]\n\t"
-      "cmpl %%esi, 0x5ac9f4\n\t"
-      "jne .Lai_debug_initialize_for_new_map_1\n\t"
-      "cmpl $-1, 0x5ac9f8\n\t"
-      "je .Lai_debug_initialize_for_new_map_3\n\t"
-      ".Lai_debug_initialize_for_new_map_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c49220]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0xffffffff, 0x5ac9f8\n\t"
-      "movb %%dl, 0x629d40\n\t"
-      "movl $0x62a3b5, %%eax\n\t"
-      "movl $0x200, %%ecx\n\t"
-      "jmp .Lai_debug_initialize_for_new_map_2\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_debug_initialize_for_new_map_2:\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "addl $0x40, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lai_debug_initialize_for_new_map_2\n\t"
-      "movb %%dl, 0x6323d4\n\t"
-      "movl $0xffffffff, 0x6323d8\n\t"
-      "movw %%dx, 0x6323dc\n\t"
-      ".Lai_debug_initialize_for_new_map_3:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c59930] "m"(b4c0f0_c59930), [c49000] "m"(b4c0f0_c49000), [c49220] "m"(b4c0f0_c49220)
-      : "memory");
+  int encounter_idx;
+  int i;
+  unsigned char *p;
+
+  encounter_idx = encounter_get_by_name((char *)0x5ac9d2);
+  ai_debug_clear_storage();
+  if (*(int *)0x5ac9f4 == encounter_idx && *(int *)0x5ac9f8 == -1) {
+    return;
+  }
+  ai_debug_select_encounter(encounter_idx);
+  *(int *)0x5ac9f8 = -1;
+  *(unsigned char *)0x629d40 = 0;
+  p = (unsigned char *)0x62a3b5;
+  for (i = 0; i < 0x200; i++) {
+    *p = 0;
+    p += 0x40;
+  }
+  *(unsigned char *)0x6323d4 = 0;
+  *(int *)0x6323d8 = -1;
+  *(short *)0x6323dc = 0;
 }
-#else
-#error "ai_debug_initialize_for_new_map: clang naked draft required"
-#endif
+
+
 
 
 /* --- ai_debug.obj batch drafts (2026-07-26) --- */
@@ -4398,7 +4375,7 @@ static int (*const b4c920_c13d7f0)(int object_handle) = object_get_root_parent;
 static void *(*const b4c920_tryget)(int, int) = object_try_and_get_and_verify_type;
 static vector3_t * (*const b4c920_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
 static void (*const b4c920_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
-static void * (*const b4c920_c18e3c0)(void) = scenario_get;
+static void * (*const b4c920_c18e3c0)(void) = global_scenario_get;
 static void (*const b4c920_c49300)(void) = FUN_00049300;
 static float (*const b4c920_c441c0)(int unit, char use_teams, int *out_unit, int *out_handle) = ai_communication_get_player_rating;
 static char * (*const b4c920_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
