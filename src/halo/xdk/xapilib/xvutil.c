@@ -801,47 +801,17 @@ void FUN_001d0b31(void)
 #endif
 
 
-/* FUN_001d0b9c (0x1d0b9c) — XBE naked draft (batch 330). */
-#if defined(__clang__)
-static void (*const b1d0b9c_c1d6ca8)(void) = FUN_001d6ca8;
-
-__attribute__((naked, noinline))
-void FUN_001d0b9c(void)
+/* FUN_001d0b9c (0x1d0b9c) — readable C lift (HeapFree BOOL wrapper). */
+unsigned int __stdcall FUN_001d0b9c(void *a, void *b, void *c)
 {
-  __asm__ volatile(
-      "pushl 0xc(%%esp)\n\t"
-      "pushl 0xc(%%esp)\n\t"
-      "pushl 0xc(%%esp)\n\t"
-      "call *%[c1d6ca8]\n\t"
-      "movzbl %%al, %%eax\n\t"
-      "ret\n\t"
-      :
-      : [c1d6ca8] "m"(b1d0b9c_c1d6ca8)
-      : "memory");
+  return (unsigned int)(unsigned char)FUN_001d6ca8(a, (unsigned int)(uintptr_t)b, c);
 }
-#else
-#error "FUN_001d0b9c: clang naked draft required"
-#endif
-
 
 /* 0x1d0bb3 */
 void FUN_001d0bb3(void)
 {
   /* relift: no calls detected — manual review */
   (void)0;
-}
-
-/* 0x1d0bb9 */
-void * FUN_001d0bb9(unsigned int flags, unsigned int size)
-{
-  int eax = 0;
-
-  FUN_001d5c66();
-  /* test (char)eax, 0x40 -> je 0x1d0be3 */
-  FUN_001d703b();
-  return NULL;
-
-  (void)eax;
 }
 
 /* FUN_001d0c02 (0x1d0c02) — XBE naked draft (batch 334). */
@@ -871,6 +841,13 @@ void * LocalFree(void *ptr)
 {
   (void)FUN_001d6ca8(0, 0, ptr);
   return NULL;
+}
+
+/* FUN_001d0bb9 (0x1d0bb9) — readable C lift (HeapAlloc-style wrapper). */
+void *__stdcall FUN_001d0bb9(unsigned int flags, unsigned int size)
+{
+  extern void *DAT_00632a28;
+  return FUN_001d5c66(DAT_00632a28, (flags >> 3) & 8, (int)size);
 }
 
 /* FUN_001d0c16 (0x1d0c16) — readable C lift (HeapFree-style wrapper). */
