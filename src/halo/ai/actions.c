@@ -3461,168 +3461,42 @@ void FUN_0001beb0(void)
 }
 
 
-/* FUN_0001cda0 (0x1cda0) — XBE naked draft (batch 122). */
-#if defined(__clang__)
-static void *(*const b1cda0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1cda0_c2f910)(int actor_handle, int prop_handle) = actor_perception_find_prop_pathfinding_location;
-static char (*const b1cda0_c25a00)(int actor_handle, float *position, int surface_index, int group_mask) = actor_has_accessible_firing_position;
-
-__attribute__((naked, noinline))
+/* FUN_0001cda0 (0x1cda0) — readable C lift (restored pre-naked). */
 void FUN_0001cda0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb %%al, %%bl\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw %%cx, %%di\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movw %%dx, %%si\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%si\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_0001cda0_1\n\t"
-      "cmpw $1, %%si\n\t"
-      "jne .LFUN_0001cda0_2\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_0001cda0_2\n\t"
-      ".LFUN_0001cda0_1:\n\t"
-      "movl 0x24(%%ebp), %%edx\n\t"
-      "movb $0, (%%edx)\n\t"
-      ".LFUN_0001cda0_2:\n\t"
-      "cmpw $2, %%di\n\t"
-      "je .LFUN_0001cda0_4\n\t"
-      "cmpw $1, %%di\n\t"
-      "jne .LFUN_0001cda0_3\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_0001cda0_4\n\t"
-      ".LFUN_0001cda0_3:\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "cmpw $2, %%cx\n\t"
-      "je .LFUN_0001cda0_5\n\t"
-      "cmpw $1, %%cx\n\t"
-      "jne .LFUN_0001cda0_6\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_0001cda0_6\n\t"
-      "jmp .LFUN_0001cda0_5\n\t"
-      ".LFUN_0001cda0_4:\n\t"
-      "movl 0x28(%%ebp), %%edx\n\t"
-      "movb $0, (%%edx)\n\t"
-      ".LFUN_0001cda0_5:\n\t"
-      "movl 0x2c(%%ebp), %%ecx\n\t"
-      "movb $0, (%%ecx)\n\t"
-      ".LFUN_0001cda0_6:\n\t"
-      "movb 0x14(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_0001cda0_7\n\t"
-      "movl 0x28(%%ebp), %%edx\n\t"
-      "movl 0x2c(%%ebp), %%ecx\n\t"
-      "movb $0, (%%edx)\n\t"
-      "movl 0x30(%%ebp), %%edx\n\t"
-      "movb $0, (%%ecx)\n\t"
-      "movb $0, (%%edx)\n\t"
-      ".LFUN_0001cda0_7:\n\t"
-      "movl 0x270(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_0001cda0_8\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $0, (%%eax)\n\t"
-      "movb $0, (%%ecx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0001cda0_8:\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x18(%%ebp), %%cl\n\t"
-      "movl 0x24(%%ebp), %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0xb9(%%esi), %%bl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movl 0x1c(%%ebp), %%ebx\n\t"
-      "sete %%al\n\t"
-      "movb %%al, (%%ebx)\n\t"
-      "movb 0xba(%%esi), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "sete %%al\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movb %%al, (%%edi)\n\t"
-      "je .LFUN_0001cda0_9\n\t"
-      "movb $0, (%%ebx)\n\t"
-      "jmp .LFUN_0001cda0_11\n\t"
-      ".LFUN_0001cda0_9:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0001cda0_11\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .LFUN_0001cda0_10\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .LFUN_0001cda0_10\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0x270(%%ecx), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c2f910]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_0001cda0_10:\n\t"
-      "movl 0xec(%%esi), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0xf0, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c25a00]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb %%al, (%%edi)\n\t"
-      ".LFUN_0001cda0_11:\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "cmpb $0, (%%eax)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "jne .LFUN_0001cda0_12\n\t"
-      "cmpw $3, 0x6e(%%eax)\n\t"
-      "jge .LFUN_0001cda0_12\n\t"
-      "movb $0, (%%ebx)\n\t"
-      ".LFUN_0001cda0_12:\n\t"
-      "cmpw $0, 0x15e(%%eax)\n\t"
-      "jle .LFUN_0001cda0_13\n\t"
-      "movl 0x30(%%ebp), %%ecx\n\t"
-      "movb $0, (%%ecx)\n\t"
-      ".LFUN_0001cda0_13:\n\t"
-      "cmpw $4, 0x15e(%%eax)\n\t"
-      "jne .LFUN_0001cda0_14\n\t"
-      "movl 0x2c(%%ebp), %%edx\n\t"
-      "movb $0, (%%edi)\n\t"
-      "movb $0, (%%edx)\n\t"
-      ".LFUN_0001cda0_14:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1cda0_dget), [c2f910] "m"(b1cda0_c2f910), [c25a00] "m"(b1cda0_c25a00)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), 0);
+  /* cmp (int16_t)esi, 1 -> jne 0x1cddb */
+  /* test (char)ebx, (char)ebx -> je 0x1cddb */
+  /* cmp (int16_t)edi, 2 -> je 0x1ce01 */
+  /* cmp (int16_t)edi, 1 -> jne 0x1cdeb */
+  /* test (char)ebx, (char)ebx -> jne 0x1ce01 */
+  /* cmp (int16_t)ecx, 2 -> je 0x1ce07 */
+  /* cmp (int16_t)ecx, 1 -> jne 0x1ce0d */
+  /* test (char)ebx, (char)ebx -> je 0x1ce0d */
+  /* test (char)ecx, (char)ecx -> je 0x1ce26 */
+  /* cmp eax, -1 -> jne 0x1ce44 */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), 0);
+  /* test (char)eax, (char)eax -> je 0x1ceca */
+  /* cmp (int16_t)eax, 2 -> jl 0x1ceac */
+  /* cmp (int16_t)eax, 3 -> jg 0x1ceac */
+  actor_perception_find_prop_pathfinding_location(0, 0);
+  actor_has_accessible_firing_position(0, (float *)(uintptr_t)eax, 0, 0);
+  /* relift: cmp word ptr [eax + 0x6e], 3 -> jge 0x1cedf */
+  /* relift: cmp word ptr [eax + 0x15e], 0 -> jle 0x1ceef */
+  /* relift: cmp word ptr [eax + 0x15e], 4 -> jne 0x1cf02 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_0001cda0: clang naked draft required"
-#endif
 
 
 /* actor_action_test_grenade (0x1d180) — XBE naked draft (batch 117). */

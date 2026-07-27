@@ -2379,282 +2379,110 @@ char ai_release_inactive_encounters(char *result_description __attribute__((unus
 #endif
 
 
-/* ai_handle_allegiance_broken_notification (0x40150) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static void (*const b40150_cff4d0)(int channel, const char *format, ...) = console_printf;
-static void (*const b40150_c59b10)(void *iter, char flag) = encounter_iterator_next;
-static int (*const b40150_c59b50)(void *iter) = FUN_00059b50;
-static void (*const b40150_c64540)(int *out, int actor_handle) = FUN_00064540;
-static int (*const b40150_c64570)(int *iter) = FUN_00064570;
-static bool (*const b40150_c2fc20)(int actor_handle, int clump_item_handle) = actor_get_perception_knowledge;
-static float (*const b40150_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
-static void (*const b40150_ca7c30)(int16_t team_a, int16_t team_b) = game_allegiance_notify_change;
-
-__attribute__((naked, noinline))
-void ai_handle_allegiance_broken_notification(int16_t team_a __attribute__((unused)), int16_t team_b __attribute__((unused)), char print_message __attribute__((unused)))
+/* ai_handle_allegiance_broken_notification (0x40150) — readable C lift (restored pre-naked). */
+void ai_handle_allegiance_broken_notification(int16_t team_a, int16_t team_b,
+                                              char print_message)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "movb 0x5aca55, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "je .Lai_handle_allegiance_broken_notification_2\n\t"
-      "cmpb %%bl, 0x10(%%ebp)\n\t"
-      "movl $0x257718, %%eax\n\t"
-      "jne .Lai_handle_allegiance_broken_notification_1\n\t"
-      "movl $0x25770c, %%eax\n\t"
-      ".Lai_handle_allegiance_broken_notification_1:\n\t"
-      "movswl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x2efdf8(,%%eax,4), %%ecx\n\t"
-      "movl 0x2efdf8(,%%edx,4), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x257730\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_handle_allegiance_broken_notification_2:\n\t"
-      "leal -0x24(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c59b10]\n\t"
-      "leal -0x24(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lai_handle_allegiance_broken_notification_9\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lai_handle_allegiance_broken_notification_3:\n\t"
-      "movw 0x3e(%%eax), %%ax\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "jne .Lai_handle_allegiance_broken_notification_4\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "jmp .Lai_handle_allegiance_broken_notification_5\n\t"
-      ".Lai_handle_allegiance_broken_notification_4:\n\t"
-      "cmpw 0xc(%%ebp), %%ax\n\t"
-      "jne .Lai_handle_allegiance_broken_notification_8\n\t"
-      ".Lai_handle_allegiance_broken_notification_5:\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .Lai_handle_allegiance_broken_notification_8\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "je .Lai_handle_allegiance_broken_notification_8\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lai_handle_allegiance_broken_notification_6:\n\t"
-      "cmpw %%di, 0x12(%%esi)\n\t"
-      "jne .Lai_handle_allegiance_broken_notification_7\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "movb $1, 0x61(%%esi)\n\t"
-      "movb %%bl, 0x62(%%esi)\n\t"
-      "movb %%al, 0x60(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c2fc20]\n\t"
-      "movb %%al, 0xa4(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c2fd10]\n\t"
-      "fstps 0x50(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lai_handle_allegiance_broken_notification_7:\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c64570]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .Lai_handle_allegiance_broken_notification_6\n\t"
-      ".Lai_handle_allegiance_broken_notification_8:\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59b50]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .Lai_handle_allegiance_broken_notification_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".Lai_handle_allegiance_broken_notification_9:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ca7c30]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cff4d0] "m"(b40150_cff4d0), [c59b10] "m"(b40150_c59b10), [c59b50] "m"(b40150_c59b50), [c64540] "m"(b40150_c64540), [c64570] "m"(b40150_c64570), [c2fc20] "m"(b40150_c2fc20), [c2fd10] "m"(b40150_c2fd10), [ca7c30] "m"(b40150_ca7c30)
-      : "memory");
+  char *actor;
+  char *prop;
+  char iter[0x24];
+  int actor_handle;
+  int16_t other_team;
+
+  if (*(char *)0x5aca55 != 0) {
+    const char *subfmt;
+    if (print_message != 0)
+      subfmt = (const char *)0x257718;
+    else
+      subfmt = (const char *)0x25770c;
+    console_printf(0, (const char *)0x257730,
+                   *(const char **)(team_a * 4 + 0x2efdf8),
+                   *(const char **)(team_b * 4 + 0x2efdf8), subfmt);
+  }
+
+  encounter_iterator_next(iter, 1);
+  actor = (char *)FUN_00059b50(iter);
+  while (actor != 0) {
+    other_team = *(int16_t *)(actor + 0x3e);
+    if (other_team == team_a)
+      other_team = team_b;
+    else if (other_team != team_b)
+      goto next_actor;
+    if (other_team == -1)
+      goto next_actor;
+
+    actor_handle = *(int *)(iter + 0x14);
+    {
+      int prop_iter[2];
+      FUN_00064540(prop_iter, actor_handle);
+      prop = (char *)FUN_00064570(prop_iter);
+      while (prop != 0) {
+        if (*(int16_t *)(prop + 0x12) == other_team) {
+          *(char *)(prop + 0x61) = 1;
+          *(char *)(prop + 0x62) = 0;
+          *(char *)(prop + 0x60) = print_message;
+          *(char *)(prop + 0xa4) = (char)actor_get_perception_knowledge(
+              actor_handle, prop_iter[0]);
+          *(float *)(prop + 0x50) =
+              actor_compute_prop_target_weight(actor_handle, prop_iter[0]);
+        }
+        prop = (char *)FUN_00064570(prop_iter);
+      }
+    }
+
+next_actor:
+    actor = (char *)FUN_00059b50(iter);
+  }
+
+  game_allegiance_notify_change(team_b, team_a);
 }
-#else
-#error "ai_handle_allegiance_broken_notification: clang naked draft required"
-#endif
 
 
-/* ai_handle_damage (0x40460) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-static void *(*const b40460_get)(int, int) = object_get_and_verify_type;
-static int (*const b40460_c3fe30)(int unit_handle, char prefer_passenger) = ai_get_responsible_unit;
-static void (*const b40460_c3b700)(int param_1, int prop_handle, float param_3, int param_4) = actor_handle_damage;
-static bool (*const b40460_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
-static void (*const b40460_c46f10)(int16_t type, int unit_handle, int param3, int param4, int16_t param5, int16_t param6, int16_t param7) = FUN_00046f10;
-static void (*const b40460_ca7bc0)(int16_t team_a, int16_t team_b) = game_allegiance_provoke;
-
-__attribute__((naked, noinline))
-void ai_handle_damage(int victim_handle __attribute__((unused)), int source_handle __attribute__((unused)), int16_t damage_type __attribute__((unused)), float damage_amount __attribute__((unused)), int param_4 __attribute__((unused)), char skip_provoke __attribute__((unused)))
+/* ai_handle_damage (0x40460) — readable C lift (restored pre-naked). */
+void ai_handle_damage(int victim_handle, int source_handle, int16_t damage_type,
+                      float damage_amount, int param_4, char skip_provoke)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "cmpw $9, %%bx\n\t"
-      "setne %%al\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c3fe30]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .Lai_handle_damage_1\n\t"
-      "movl $0, 0x8(%%ebp)\n\t"
-      "jmp .Lai_handle_damage_2\n\t"
-      ".Lai_handle_damage_1:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      ".Lai_handle_damage_2:\n\t"
-      "movb 0x1c(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lai_handle_damage_3\n\t"
-      "cmpw $1, %%bx\n\t"
-      "je .Lai_handle_damage_3\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl 0x1a4(%%edx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lai_handle_damage_3\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c3b700]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lai_handle_damage_3:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jne .Lai_handle_damage_4\n\t"
-      "movl $1, %%ecx\n\t"
-      "jmp .Lai_handle_damage_5\n\t"
-      ".Lai_handle_damage_4:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lai_handle_damage_5\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movswl 0x68(%%eax), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x68(%%ecx), %%dx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ca7a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      ".Lai_handle_damage_5:\n\t"
-      "movb 0x1c(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lai_handle_damage_6\n\t"
-      "cmpw $2, %%cx\n\t"
-      "jne .Lai_handle_damage_6\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $2\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $3\n\t"
-      "jmp .Lai_handle_damage_7\n\t"
-      ".Lai_handle_damage_6:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fcomps 0x2533e4\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lai_handle_damage_8\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $2\n\t"
-      ".Lai_handle_damage_7:\n\t"
-      "call *%[c46f10]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".Lai_handle_damage_8:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "je .Lai_handle_damage_9\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movswl 0x68(%%eax), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x68(%%ecx), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca7bc0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lai_handle_damage_9:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b40460_get), [c3fe30] "m"(b40460_c3fe30), [c3b700] "m"(b40460_c3b700), [ca7a30] "m"(b40460_ca7a30), [c46f10] "m"(b40460_c46f10), [ca7bc0] "m"(b40460_ca7bc0)
-      : "memory");
+  char *victim;
+  char *responsible_unit;
+  int responsible_handle;
+  int16_t provoke_type;
+
+  victim = (char *)object_get_and_verify_type(victim_handle, 3);
+  responsible_handle =
+      ai_get_responsible_unit(source_handle, (char)(damage_type != 9));
+  if (responsible_handle == -1)
+    responsible_unit = 0;
+  else
+    responsible_unit =
+        (char *)object_get_and_verify_type(responsible_handle, 3);
+
+  if (skip_provoke == 0 && damage_type != 1) {
+    if (*(int *)(victim + 0x1a4) != -1)
+      actor_handle_damage(*(int *)(victim + 0x1a4), responsible_handle,
+                          damage_amount, param_4);
+  }
+
+  provoke_type = 0;
+  if (victim_handle == responsible_handle) {
+    provoke_type = 1;
+  } else if (responsible_unit != 0) {
+    char friendly = game_allegiance_get_team_is_friendly(
+        *(int16_t *)(responsible_unit + 0x68),
+        *(int16_t *)(victim + 0x68));
+
+    provoke_type = (int16_t)(2 + (friendly != 0));
+  }
+
+  if (skip_provoke == 0 && provoke_type == 2)
+    FUN_00046f10(3, victim_handle, responsible_handle, 2, damage_type, -1, 0);
+  else if (skip_provoke == 0 && damage_amount > *(float *)0x2533e4)
+    FUN_00046f10(2, victim_handle, responsible_handle, provoke_type, damage_type,
+                 -1, 0);
+
+  if (responsible_unit != 0)
+    game_allegiance_provoke(*(int16_t *)(responsible_unit + 0x68),
+                            *(int16_t *)(victim + 0x68));
 }
-#else
-#error "ai_handle_damage: clang naked draft required"
-#endif
 
 
 /* ai_handle_deleted_object (0x40700) — readable C lift (restored pre-naked). */
