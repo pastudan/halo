@@ -37860,8 +37860,8 @@
         },
         {
           "addr": "0x120470",
-          "decl": "void FUN_00120470(void);",
-          "ported": false
+          "decl": "void FUN_00120470(void *pool, int datum_handle);",
+          "ported": true
         },
         {
           "addr": "0x1204a0",
