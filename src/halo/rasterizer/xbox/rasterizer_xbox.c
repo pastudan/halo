@@ -617,28 +617,12 @@ void _rasterizer_dispose(void)
 #endif
 
 
-/* FUN_00155c10 (0x155c10) — XBE naked draft (batch 379). */
-#if defined(__clang__)
-static void (*const b155c10_c1e70e0)(void) = (void *)D3DDevice_SetVerticalBlankCallback;
-
-__attribute__((naked, noinline))
-void FUN_00155c10(void)
+/* FUN_00155c10 (0x155c10) — readable C lift. */
+void FUN_00155c10(void *callback)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e70e0]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1e70e0] "m"(b155c10_c1e70e0)
-      : "memory");
+  ((void (__stdcall *)(void *))D3DDevice_SetVerticalBlankCallback)(callback);
 }
-#else
-#error "FUN_00155c10: clang naked draft required"
-#endif
+
 
 
 /* rasterizer_set_texture_bitmap_data (0x155c20) — XBE naked draft (batch 345). */

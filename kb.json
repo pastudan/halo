@@ -21779,8 +21779,8 @@
         },
         {
           "addr": "0x155c10",
-          "decl": "void FUN_00155c10(void);",
-          "ported": false
+          "decl": "void FUN_00155c10(void *callback);",
+          "ported": true
         },
         {
           "addr": "0x155c20",
@@ -41880,7 +41880,7 @@
         },
         {
           "addr": "0x001e70e0",
-          "decl": "void D3DDevice_SetVerticalBlankCallback(void);",
+          "decl": "void __stdcall D3DDevice_SetVerticalBlankCallback(void *callback);",
           "ported": false
         },
         {
