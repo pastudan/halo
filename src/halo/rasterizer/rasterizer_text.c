@@ -46,45 +46,20 @@ float *FUN_0017ffc0(float *param_1, unsigned int param_2)
   return param_1;
 }
 
-/* FUN_00180050 (0x180050) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void (*const b180050_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b180050_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int FUN_00180050(short param_1 __attribute__((unused)))
+/* FUN_00180050 (0x180050) — readable C lift from XBE leaf. */
+int FUN_00180050(short param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00180050_1\n\t"
-      "cmpw $0xc, %%si\n\t"
-      "jl .LFUN_00180050_2\n\t"
-      ".LFUN_00180050_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xaa\n\t"
-      "pushl $0x2afe38\n\t"
-      "pushl $0x2a0228\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00180050_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movswl 0x2afe14(,%%eax,2), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b180050_assert), [exitfn] "m"(b180050_exitfn)
-      : "memory");
+  extern char DAT_002a0228[];
+  extern char DAT_002afe38[];
+
+  if (param_1 < 0 || param_1 >= 0xc) {
+    display_assert(DAT_002a0228, DAT_002afe38, 0xaa, true);
+    system_exit(-1);
+  }
+  return (int)*(short *)(0x2afe14 + (int)param_1 * 2);
 }
-#else
-#error "FUN_00180050: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001800b0 (0x1800b0) — XBE naked draft (batch 79). */
@@ -2458,44 +2433,23 @@ void FUN_00181c20(void)
 
 /* rasterizer_memory_pool.c */
 
-/* rasterizer_memory_pool_new (0x1824e0) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void * (*const b1824e0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b1824e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-int rasterizer_memory_pool_new(void)
+/* rasterizer_memory_pool_new (0x1824e0) — readable C lift from XBE leaf. */
+char rasterizer_memory_pool_new(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl $0x13\n\t"
-      "pushl $0x2b077c\n\t"
-      "pushl $0\n\t"
-      "pushl $0x18000\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4d0488\n\t"
-      "jne .Lrasterizer_memory_pool_new_1\n\t"
-      "pushl $0x2b0740\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".Lrasterizer_memory_pool_new_1:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b1824e0_c8ee60), [c8f390] "m"(b1824e0_c8f390)
-      : "memory");
+  extern char DAT_002b077c[];
+  extern char DAT_002b0740[];
+  void *pool;
+
+  pool = debug_malloc(0x18000, false, DAT_002b077c, 0x13);
+  *(void **)0x4d0488 = pool;
+  if (pool == 0) {
+    error(2, DAT_002b0740);
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "rasterizer_memory_pool_new: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_memory_pool_reset: reset pool allocation cursor to zero (0x182520)
@@ -2505,98 +2459,43 @@ void rasterizer_memory_pool_reset(void)
   *(int *)0x4d048c = 0;
 }
 
-/* rasterizer_memory_pool_alloc (0x182530) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static void * (*const b182530_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b182530_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-int rasterizer_memory_pool_alloc(int data __attribute__((unused)), int size __attribute__((unused)))
+/* rasterizer_memory_pool_alloc (0x182530) — readable C lift from XBE leaf. */
+void *rasterizer_memory_pool_alloc(void *data, int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4d048c, %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "leal (%%ecx,%%edx,1), %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl $0x18000, %%eax\n\t"
-      "ja .Lrasterizer_memory_pool_alloc_1\n\t"
-      "movl 0x4d0488, %%esi\n\t"
-      "movl %%eax, 0x4d048c\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_memory_pool_alloc_2\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_memory_pool_alloc_1:\n\t"
-      "pushl $0x2b07b0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_memory_pool_alloc_2:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8e0b0] "m"(b182530_c8e0b0), [c8f390] "m"(b182530_c8f390)
-      : "memory");
+  extern char DAT_002b07b0[];
+  int used;
+  void *dest;
+
+  used = *(int *)0x4d048c;
+  if (used + size > 0x18000) {
+    error(2, DAT_002b07b0);
+    return 0;
+  }
+  dest = (char *)*(void **)0x4d0488 + used;
+  *(int *)0x4d048c = used + size;
+  if (data != 0) {
+    csmemcpy(dest, data, (size_t)size);
+  }
+  return dest;
 }
-#else
-#error "rasterizer_memory_pool_alloc: clang naked draft required"
-#endif
 
 
-/* rasterizer_memory_pool_copy (0x182590) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void (*const b182590_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b182590_exitfn)(int) = system_exit;
-static int (*const b182590_c182530)(int data, int size) = rasterizer_memory_pool_alloc;
 
-__attribute__((naked, noinline))
-void rasterizer_memory_pool_copy(int data __attribute__((unused)), int size __attribute__((unused)))
+
+/* rasterizer_memory_pool_copy (0x182590) — readable C lift from XBE leaf. */
+int rasterizer_memory_pool_copy(int data, int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lrasterizer_memory_pool_copy_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x42\n\t"
-      "pushl $0x2b077c\n\t"
-      "pushl $0x2b07dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_memory_pool_copy_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c182530]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b182590_assert), [exitfn] "m"(b182590_exitfn), [c182530] "m"(b182590_c182530)
-      : "memory");
+  extern char DAT_002b07dc[];
+  extern char DAT_002b077c[];
+
+  if (data == 0) {
+    display_assert(DAT_002b07dc, DAT_002b077c, 0x42, true);
+    system_exit(-1);
+  }
+  return rasterizer_memory_pool_alloc(data, size);
 }
-#else
-#error "rasterizer_memory_pool_copy: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_001825d0: stub (0x1825d0) */
@@ -4249,50 +4148,21 @@ void * rasterizer_transparent_geometry_next_group(void *group __attribute__((unu
 #endif
 
 
-/* rasterizer_transparent_geometry_group_get (0x184460) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-static void (*const b184460_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b184460_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void * rasterizer_transparent_geometry_group_get(short group_presorted_index __attribute__((unused)))
+/* rasterizer_transparent_geometry_group_get (0x184460) — readable C lift from XBE leaf. */
+void *rasterizer_transparent_geometry_group_get(short group_presorted_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_get_1\n\t"
-      "movl 0x4d0cf4, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_get_2\n\t"
-      ".Lrasterizer_transparent_geometry_group_get_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xbc\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x2b0d50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_get_2:\n\t"
-      "movl 0x4d0cec, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "shll $5, %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b184460_assert), [exitfn] "m"(b184460_exitfn)
-      : "memory");
+  extern char DAT_002b0d50[];
+  extern char DAT_002b0ca8[];
+
+  if (group_presorted_index < 0 ||
+      (int)group_presorted_index >= *(int *)0x4d0cf4) {
+    display_assert(DAT_002b0d50, DAT_002b0ca8, 0xbc, true);
+    system_exit(-1);
+  }
+  return (void *)(*(int *)0x4d0cec + (int)group_presorted_index * 0xa0);
 }
-#else
-#error "rasterizer_transparent_geometry_group_get: clang naked draft required"
-#endif
+
+
 
 
 /* rasterizer_transparent_geometry_group_to_presorted_index (0x1844b0) — XBE naked draft (batch 89). */

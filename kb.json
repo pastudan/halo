@@ -30464,7 +30464,7 @@
           "addr": "0x180050",
           "decl": "int FUN_00180050(short param_1);",
           "name": "FUN_00180050",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1800b0",
@@ -30599,9 +30599,9 @@
         },
         {
           "addr": "0x1824e0",
-          "decl": "int rasterizer_memory_pool_new(void);",
+          "decl": "char rasterizer_memory_pool_new(void);",
           "name": "rasterizer_memory_pool_new",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x182520",
@@ -30611,15 +30611,15 @@
         },
         {
           "addr": "0x182530",
-          "decl": "int rasterizer_memory_pool_alloc(int data, int size);",
+          "decl": "void *rasterizer_memory_pool_alloc(void *data, int size);",
           "name": "rasterizer_memory_pool_alloc",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x182590",
-          "decl": "void rasterizer_memory_pool_copy(int data, int size);",
+          "decl": "int rasterizer_memory_pool_copy(int data, int size);",
           "name": "rasterizer_memory_pool_copy",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1825d0",
@@ -30800,7 +30800,7 @@
           "addr": "0x184460",
           "name": "rasterizer_transparent_geometry_group_get",
           "decl": "void *rasterizer_transparent_geometry_group_get(short group_presorted_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1844b0",
