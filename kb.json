@@ -4755,7 +4755,7 @@
         {
           "addr": "0x7e0b0",
           "decl": "void *bitmap_2d_new(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format);",
-          "ported": false,
+          "ported": true,
           "name": "bitmap_2d_new"
         },
         {
@@ -20023,7 +20023,7 @@
         {
           "addr": "0x901d0",
           "decl": "int compare_profile_sections(const void *a, const void *b);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x902f0",
@@ -28238,13 +28238,13 @@
         {
           "addr": "0xf3740",
           "decl": "void multiplayer_game_set_text_box_for_game_ruleset(int *handles, int count);",
-          "ported": false,
+          "ported": true,
           "name": "multiplayer_game_set_text_box_for_game_ruleset"
         },
         {
           "addr": "0xf3850",
           "decl": "void multiplayer_game_set_text_box_for_teams_noteams(int *handles, int count);",
-          "ported": false,
+          "ported": true,
           "name": "multiplayer_game_set_text_box_for_teams_noteams"
         },
         {
@@ -40773,7 +40773,7 @@
         {
           "addr": "0x1486e0",
           "decl": "void FUN_001486e0(void *state, int node_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001486e0"
         },
         {
