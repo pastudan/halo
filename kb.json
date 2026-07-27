@@ -17304,8 +17304,9 @@
         },
         {
           "addr": "0x89270",
-          "decl": "void first_person_camera_update(void);",
-          "ported": false
+          "decl": "void first_person_camera_update(float *fov_slot, int16_t *player, void *camera);",
+          "ported": true,
+          "name": "first_person_camera_update"
         },
         {
           "addr": "0x89330",
@@ -35073,8 +35074,9 @@
         },
         {
           "addr": "0x44660",
-          "decl": "void ai_conversation_unit_died(int unit_handle, char param_2);",
-          "ported": false
+          "decl": "void ai_conversation_unit_died(int unit_handle, char force);",
+          "ported": true,
+          "name": "ai_conversation_unit_died"
         },
         {
           "addr": "0x447d0",
@@ -35279,13 +35281,15 @@
         },
         {
           "addr": "0x49c70",
-          "decl": "void FUN_00049c70(void);",
-          "ported": false
+          "decl": "int FUN_00049c70(void);",
+          "ported": true,
+          "name": "FUN_00049c70"
         },
         {
           "addr": "0x49d60",
           "decl": "void FUN_00049d60(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00049d60"
         },
         {
           "addr": "0x49f60",
@@ -35347,12 +35351,14 @@
         {
           "addr": "0x4a770",
           "decl": "void FUN_0004a770(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0004a770"
         },
         {
           "addr": "0x4a8c0",
           "decl": "void FUN_0004a8c0(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0004a8c0"
         },
         {
           "addr": "0x4a9f0",
@@ -35401,8 +35407,9 @@
         },
         {
           "addr": "0x4b670",
-          "decl": "void FUN_0004b670(void);",
-          "ported": false
+          "decl": "void FUN_0004b670(int object_handle@<edi>, void *color@<ebx>, char flag);",
+          "ported": true,
+          "name": "FUN_0004b670"
         },
         {
           "addr": "0x4b770",
