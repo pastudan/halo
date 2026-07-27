@@ -1620,6 +1620,11 @@
     "confidence": "high",
     "coverage_pct": 68.6
   },
+  "0x67710": {
+    "class": "leaf",
+    "confidence": "moderate",
+    "coverage_pct": 39.4
+  },
   "0x68": {
     "confidence": "high",
     "coverage_pct": 63.3

@@ -2,42 +2,34 @@
 
 /* --- <common> batch drafts (2026-07-26) --- */
 
-/* FUN_00067710 (0x67710) — XBE naked draft (batch 327). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00067710(void)
+/* FUN_00067710 (0x67710) — readable C lift.
+ * ABI: tag@<ax>, value@<ecx>, out@<edx>, tif@<esi>. */
+void FUN_00067710(unsigned short tag /*@<ax>*/, unsigned int value /*@<ecx>*/,
+                  void *out /*@<edx>*/, void *tif /*@<esi>*/)
 {
-  __asm__ volatile(
-      "cmpl $0xffff, %%ecx\n\t"
-      "movw %%ax, (%%edx)\n\t"
-      "movl $1, 0x4(%%edx)\n\t"
-      "jbe .LFUN_00067710_1\n\t"
-      "movw $4, 0x2(%%edx)\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "ret\n\t"
-      ".LFUN_00067710_1:\n\t"
-      "movw $3, 0x2(%%edx)\n\t"
-      "movl 0xd0(%%esi), %%eax\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "andl %%ecx, %%eax\n\t"
-      "cmpw $0x4d4d, 0xc4(%%esi)\n\t"
-      "jne .LFUN_00067710_2\n\t"
-      "movl 0xcc(%%esi), %%ecx\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "shll %%cl, %%eax\n\t"
-      ".LFUN_00067710_2:\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00067710: clang naked draft required"
-#endif
+  unsigned int masked;
+  unsigned int shift;
+  char *bitmask;
+  char *bitspersample;
 
+  *(unsigned short *)out = tag;
+  *((unsigned int *)out + 1) = 1;
+  if (value > 0xffffu) {
+    *((unsigned short *)out + 1) = 4;
+    *((unsigned int *)out + 2) = value;
+    return;
+  }
+  *((unsigned short *)out + 1) = 3;
+  bitmask = *(char **)((char *)tif + 0xd0);
+  masked = *(unsigned int *)(bitmask + 0xc);
+  masked &= value;
+  if (*(unsigned short *)((char *)tif + 0xc4) == 0x4d4d) {
+    bitspersample = *(char **)((char *)tif + 0xcc);
+    shift = *(unsigned int *)(bitspersample + 0xc);
+    masked <<= (unsigned char)shift;
+  }
+  *((unsigned int *)out + 2) = masked;
+}
 
 /* FUN_00067760 (0x67760) — XBE naked draft (batch 346). */
 #if defined(__clang__)
@@ -1163,7 +1155,7 @@ static void (*const b680a0_c1e24d2)(void) = __lseek;
 static void * (*const b680a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void (*const b680a0_c67b40)(void) = FUN_00067b40;
 static void (*const b680a0_c679f0)(void) = FUN_000679f0;
-static void (*const b680a0_c67710)(void) = FUN_00067710;
+static void (*const b680a0_c67710)(void) = (void *)FUN_00067710;
 static void (*const b680a0_c67960)(void) = FUN_00067960;
 static void (*const b680a0_c67f70)(void) = FUN_00067f70;
 static void (*const b680a0_c68030)(void) = FUN_00068030;

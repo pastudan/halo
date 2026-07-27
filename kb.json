@@ -230,8 +230,8 @@
         },
         {
           "addr": "0x67710",
-          "decl": "void FUN_00067710(void);",
-          "ported": false
+          "decl": "void FUN_00067710(unsigned short tag@<ax>, unsigned int value@<ecx>, void *out@<edx>, void *tif@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x67760",
@@ -290,7 +290,7 @@
         },
         {
           "addr": "0x68030",
-          "decl": "int FUN_00068030(void *tif@<ebx>, void *out@<esi>, unsigned short tag@<di>);",
+          "decl": "void FUN_00068030(void);",
           "ported": true,
           "name": "FUN_00068030"
         },
@@ -23825,7 +23825,7 @@
         },
         {
           "addr": "0x1c2890",
-          "decl": "char saved_game_file_close(void *info, int packed);",
+          "decl": "void saved_game_file_close(void);",
           "ported": true,
           "name": "saved_game_file_close"
         },
@@ -23875,7 +23875,7 @@
         },
         {
           "addr": "0x1c2d20",
-          "decl": "char saved_game_file_retrieve_player1_last_used_profile_directory(void *out_path);",
+          "decl": "char saved_game_file_retrieve_player1_last_used_profile_directory(char *out_name);",
           "ported": true,
           "name": "saved_game_file_retrieve_player1_last_used_profile_directory"
         },
@@ -23887,7 +23887,7 @@
         },
         {
           "addr": "0x1c2ed0",
-          "decl": "char saved_game_file_retrieve_last_used_multiplayer_variant_directory(void *out_path);",
+          "decl": "char saved_game_file_retrieve_last_used_multiplayer_variant_directory(char *out_name);",
           "ported": true,
           "name": "saved_game_file_retrieve_last_used_multiplayer_variant_directory"
         },
@@ -23899,7 +23899,7 @@
         },
         {
           "addr": "0x1c3080",
-          "decl": "bool saved_game_file_retrieve_last_used_multiplayer_map(char *out_name);",
+          "decl": "char saved_game_file_retrieve_last_used_multiplayer_map(char *out_name);",
           "ported": true,
           "name": "saved_game_file_retrieve_last_used_multiplayer_map"
         },
