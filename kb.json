@@ -31004,7 +31004,7 @@
         {
           "addr": "0x183770",
           "decl": "void rasterizer_text_get_character_position(short index@<ax>, short *out_y@<ebx>, short *out_x);",
-          "ported": true,
+          "ported": false,
           "name": "rasterizer_text_get_character_position"
         },
         {
@@ -31075,7 +31075,7 @@
           "addr": "0x1843b0",
           "name": "rasterizer_transparent_geometry_next_group",
           "decl": "void *rasterizer_transparent_geometry_next_group(void *group);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x184460",
