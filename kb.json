@@ -6183,7 +6183,7 @@
           "addr": "0x11e8a0",
           "decl": "bool memory_pool_block_resize(void *pool, void **block_reference, int new_size);",
           "name": "memory_pool_block_resize",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "memory_pool.obj",
@@ -32555,7 +32555,7 @@
           "addr": "0x11da60",
           "decl": "void lruv_cache_get_page_usage(void *cache, unsigned char *usage);",
           "name": "lruv_cache_get_page_usage",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/memory/lruv_cache.c"
         },
         {
