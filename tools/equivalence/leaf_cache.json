@@ -4,6 +4,13 @@
     "confidence": "high",
     "coverage_pct": 100.0
   },
+  "0x1c9c80": {
+    "class": "non_leaf"
+  },
+  "0x2": {
+    "confidence": "weak",
+    "coverage_pct": 89.7
+  },
   "0x34": {
     "confidence": "high",
     "coverage_pct": 100.0

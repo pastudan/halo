@@ -24777,8 +24777,8 @@
         },
         {
           "addr": "0x1c9c80",
-          "decl": "void FUN_001c9c80(void);",
-          "ported": false
+          "decl": "short FUN_001c9c80(short index);",
+          "ported": true
         },
         {
           "addr": "0x1c9cf0",
