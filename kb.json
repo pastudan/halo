@@ -32933,7 +32933,8 @@
         {
           "addr": "0x1ff03f",
           "decl": "float *__stdcall mat4x4_transform_vec4(float *out, float *in, float *matrix);",
-          "ported": false
+          "ported": true,
+          "name": "mat4x4_transform_vec4"
         },
         {
           "addr": "0x1ff913",
