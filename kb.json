@@ -620,8 +620,8 @@
         },
         {
           "addr": "0x16de60",
-          "decl": "void FUN_0016de60(void);",
-          "ported": false
+          "decl": "int FUN_0016de60(int a0, int a1, int a2);",
+          "ported": true
         },
         {
           "addr": "0x16de80",
@@ -39069,7 +39069,7 @@
         },
         {
           "addr": "0x168340",
-          "decl": "void FUN_00168340(void);",
+          "decl": "int FUN_00168340(int a0, int a1, int a2);",
           "ported": false
         },
         {

@@ -24404,34 +24404,12 @@ void FUN_0015d8b0(void)
 #endif
 
 
-/* FUN_0016de60 (0x16de60) — XBE naked draft (batch 388). */
-#if defined(__clang__)
-static void __stdcall (*const b16de60_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-
-__attribute__((naked, noinline))
-void FUN_0016de60(void)
+/* FUN_0016de60 (0x16de60) — readable C lift. */
+int FUN_0016de60(int a0, int a1, int a2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1ed280]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed280] "m"(b16de60_c1ed280)
-      : "memory");
+  D3DDevice_SetVertexData2f(a0, a1, a2);
+  return 0;
 }
-#else
-#error "FUN_0016de60: clang naked draft required"
-#endif
-
-
 /* FUN_0016de80 (0x16de80) — readable C lift. */
 void FUN_0016de80(int a0, int a1, int a2, int a3, int a4, int a5)
 {
