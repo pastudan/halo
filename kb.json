@@ -25710,8 +25710,9 @@
         },
         {
           "addr": "0x1932d0",
-          "decl": "void FUN_001932d0(void);",
-          "ported": false
+          "decl": "void FUN_001932d0(void *node@<edi>, void *leaf@<ebx>);",
+          "ported": true,
+          "name": "FUN_001932d0"
         },
         {
           "addr": "0x193340",

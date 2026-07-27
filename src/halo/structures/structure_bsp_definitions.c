@@ -1088,62 +1088,27 @@ void FUN_001931e0(void)
 #endif
 
 
-/* FUN_001932d0 (0x1932d0) — XBE naked draft (batch 159). */
-#if defined(__clang__)
-static void (*const b1932d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1932d0_exitfn)(int) = system_exit;
-static void (*const b1932d0_c192f80)(void) = (void (*)(void))leaf_map_build_leaf_face_for_leaf_on_node;
-
-__attribute__((naked, noinline))
-void FUN_001932d0(void)
+/* FUN_001932d0 (0x1932d0) — readable C lift. */
+void FUN_001932d0(void *node, void *leaf)
 {
-  __asm__ volatile(
-      "movw 0x4d8e90, %%ax\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_001932d0_4\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_001932d0_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_001932d0_2\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jl .LFUN_001932d0_3\n\t"
-      ".LFUN_001932d0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2900\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movw 0x4d8e90, %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001932d0_3:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl 0x4d8a8c(,%%eax,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c192f80]\n\t"
-      "movw 0x4d8e90, %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "incl %%esi\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jl .LFUN_001932d0_1\n\t"
-      ".LFUN_001932d0_4:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1932d0_assert), [exitfn] "m"(b1932d0_exitfn), [c192f80] "m"(b1932d0_c192f80)
-      : "memory");
-}
-#else
-#error "FUN_001932d0: clang naked draft required"
-#endif
+  short count;
+  short i;
+  void *face;
 
+  count = *(short *)0x4d8e90;
+  if (count <= 0)
+    return;
+  for (i = 0; i < count; i++) {
+    if (i < 0 || i >= count) {
+      display_assert((const char *)0x2b2900, (const char *)0x2b28b4, 0x3b, true);
+      system_exit(-1);
+      count = *(short *)0x4d8e90;
+    }
+    face = *(void **)(0x4d8a8c + ((int)count - (int)i) * 4);
+    ((void (*)(void *, void *, void *))(void *)leaf_map_build_leaf_face_for_leaf_on_node)(
+        leaf, node, face);
+  }
+}
 
 /* FUN_00193340 (0x193340) — XBE naked draft (batch 139). */
 #if defined(__clang__)
