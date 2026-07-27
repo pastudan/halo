@@ -4,7 +4,7 @@
 void interface_initialize(void)
 {
   ((void (*)(void))0xe33a0)();
-  ((void (*)(void))0xd02f0)();
+  hud_new();
   ((void (*)(void))0x19b320)();
   ((void (*)(void))0xdc750)();
 }
@@ -12,14 +12,14 @@ void interface_initialize(void)
 void interface_dispose_from_old_map(void)
 {
   ((void (*)(void))0x19b3a0)();
-  ((void (*)(void))0xd03e0)();
+  hud_dispose_from_old_map();
 }
 
 void interface_dispose(void)
 {
   ((void (*)(void))0x19b3b0)();
   ((void (*)(void))0xe33e0)();
-  ((void (*)(void))0xd0340)();
+  hud_dispose();
 }
 
 #define NUMBER_OF_INTERFACE_TAGS 16

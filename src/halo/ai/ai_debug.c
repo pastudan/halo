@@ -63,61 +63,20 @@ void ai_debug_dispose_from_old_map(void)
 #endif
 
 
-/* ai_debug_clear_storage (0x49000) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static void (*const b49000_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b49000_exitfn)(int) = system_exit;
-static void *(*const b49000_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* ai_debug_clear_storage (0x49000) — readable C lift from XBE leaf. */
 void ai_debug_clear_storage(void)
 {
-  __asm__ volatile(
-      "movl 0x331f58, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_debug_clear_storage_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd0\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25abac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_debug_clear_storage_1:\n\t"
-      "movl 0x331f58, %%eax\n\t"
-      "pushl $0x657c00\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x331f5c, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_debug_clear_storage_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd3\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25ab94\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_debug_clear_storage_2:\n\t"
-      "movl 0x331f5c, %%ecx\n\t"
-      "pushl $0x394f80\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b49000_assert), [exitfn] "m"(b49000_exitfn), [memset] "m"(b49000_memset)
-      : "memory");
+  if (!*(void **)0x331f58) {
+    display_assert((const char *)0x25abac, (const char *)0x25ab74, 0xd0, 1);
+    system_exit(-1);
+  }
+  csmemset(*(void **)0x331f58, 0, 0x657c00);
+  if (!*(void **)0x331f5c) {
+    display_assert((const char *)0x25ab94, (const char *)0x25ab74, 0xd3, 1);
+    system_exit(-1);
+  }
+  csmemset(*(void **)0x331f5c, 0, 0x394f80);
 }
-#else
-#error "ai_debug_clear_storage: clang naked draft required"
-#endif
-
 
 /* ai_debug_actor_deleted (0x49080) — readable C lift. */
 void ai_debug_actor_deleted(int actor_handle)

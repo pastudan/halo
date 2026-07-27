@@ -2188,58 +2188,11 @@ void FUN_001398b0(int *param_1, int param_2)
   cluster_partition_iter_first((void *)0x5a90b0, param_1, (int16_t)param_2);
 }
 
-/* FUN_001398d0 (0x1398d0) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static int (*const b1398d0_c191660)(void *partition, int *state) = cluster_partition_iter_next;
-static void (*const b1398d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1398d0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001398d0(int *param_1 __attribute__((unused)))
+/* FUN_001398d0 (0x1398d0) — readable C lift from XBE leaf. */
+void FUN_001398d0(int *param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x5a90b0\n\t"
-      "call *%[c191660]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movb 0x5a8d60, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001398d0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x664\n\t"
-      "pushl $0x29b324\n\t"
-      "pushl $0x29b488\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001398d0_1:\n\t"
-      "incl 0x5a8d64\n\t"
-      "movb $1, 0x5a8d60\n\t"
-      "ret\n\t"
-      :
-      : [c191660] "m"(b1398d0_c191660), [assert] "m"(b1398d0_assert), [exitfn] "m"(b1398d0_exitfn)
-      : "memory");
+  cluster_partition_iter_next((void *)0x5a90b0, param_1);
 }
-#else
-#error "FUN_001398d0: clang naked draft required"
-#endif
-
 
 /* FUN_00139930 (0x139930) — XBE naked draft (batch 96). */
 #if defined(__clang__)

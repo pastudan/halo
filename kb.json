@@ -6416,7 +6416,7 @@
         },
         {
           "addr": "0x1cf840",
-          "decl": "char FUN_001cf840(int object_handle);",
+          "decl": "void FUN_001cf840(void);",
           "ported": true
         },
         {
@@ -13234,9 +13234,9 @@
         },
         {
           "addr": "0xd4f00",
-          "decl": "void hud_enable_custom_state_message(short param_1, char param_2);",
+          "decl": "void hud_enable_custom_state_message(short player_index, unsigned char enable);",
           "name": "hud_enable_custom_state_message",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd4f70",
@@ -14103,7 +14103,7 @@
         },
         {
           "addr": "0xf6820",
-          "decl": "char item_new(int item_handle);",
+          "decl": "char item_new(int object_handle);",
           "name": "item_new",
           "ported": true
         },
@@ -14895,7 +14895,7 @@
         },
         {
           "addr": "0x12a690",
-          "decl": "int16_t network_game_client_get_local_machine_index(void);",
+          "decl": "short network_game_client_get_local_machine_index(void);",
           "name": "network_game_client_get_local_machine_index",
           "ported": true,
           "source_path": "src/halo/networking/network_game_globals.c"
@@ -14930,7 +14930,7 @@
         },
         {
           "addr": "0x12a920",
-          "decl": "void network_player_reset(char *player);",
+          "decl": "void network_player_reset(uint8_t *player);",
           "name": "network_player_reset",
           "ported": true
         }
@@ -15512,7 +15512,7 @@
         },
         {
           "addr": "0x11c430",
-          "decl": "void FUN_0011c430(void *cache);",
+          "decl": "void FUN_0011c430(int cache);",
           "name": "FUN_0011c430",
           "ported": true
         },
@@ -16315,7 +16315,7 @@
         {
           "addr": "0x1398d0",
           "decl": "void FUN_001398d0(int *param_1);",
-          "ported": false
+          "ported": true
         },
         {
           "name": "FUN_00139930",
@@ -20277,7 +20277,7 @@
         {
           "addr": "0xfad00",
           "decl": "int16_t FUN_000fad00(int animation_graph_tag_index, int16_t animation_index);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "projectiles.obj",
@@ -28581,7 +28581,7 @@
         },
         {
           "addr": "0x1a67e0",
-          "decl": "int16_t FUN_001a67e0(const char *name);",
+          "decl": "short FUN_001a67e0(const char *param_1);",
           "ported": true,
           "source_path": "units/units.c"
         },
@@ -28622,7 +28622,7 @@
         },
         {
           "addr": "0x1a6cd0",
-          "decl": "int16_t FUN_001a6cd0(const char *name);",
+          "decl": "short FUN_001a6cd0(const char *param_1);",
           "ported": true,
           "source_path": "units/units.c"
         },
@@ -29352,7 +29352,7 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle /* @<esi> */);",
+          "decl": "char *unit_get_weapon_name(int unit_handle@<esi>, int unused);",
           "name": "unit_get_weapon_name",
           "ported": true,
           "obj": "units.obj"
@@ -34307,7 +34307,7 @@
         },
         {
           "addr": "0x2f5b0",
-          "decl": "int FUN_0002f5b0(const float *a, const float *b);",
+          "decl": "int FUN_0002f5b0(float *a, float *b);",
           "name": "FUN_0002f5b0",
           "source_path": "src/halo/ai/actor_perception.c",
           "ported": true
@@ -34835,7 +34835,7 @@
           "addr": "0x49000",
           "decl": "void ai_debug_clear_storage(void);",
           "name": "ai_debug_clear_storage",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/ai_debug.c"
         },
         {
@@ -37930,7 +37930,7 @@
         },
         {
           "addr": "0x120790",
-          "decl": "void animation_set_frame_size(char *anim);",
+          "decl": "void animation_set_frame_size(void);",
           "ported": true
         },
         {
@@ -38316,7 +38316,7 @@
         },
         {
           "addr": "0x1470b0",
-          "decl": "int FUN_001470b0(int param_1, uint32_t param_2, uint32_t param_3, float *param_4, int param_5, float param_6, void (*param_7)(float *, int, unsigned int, unsigned int, void *), void *param_8);",
+          "decl": "int FUN_001470b0(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7);",
           "ported": true
         }
       ],

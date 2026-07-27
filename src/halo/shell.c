@@ -37,16 +37,16 @@ int shell_initialize(void)
   int success;
 
   success = 0;
-  ((void (*)(void))0x8d830)();
+  cseries_initialize();
   result = (char)FUN_001911b0();
   if (result != '\0') {
-    ((void (*)(void))0x8f370)();
-    ((void (*)(void))0x1b98c0)();
-    ((void (*)(void))0x10b5c0)();
-    ((void (*)(void))0x1c0070)();
+    errors_initialize();
+    tag_files_close();
+    real_math_initialize();
+    game_state_lruv_cache_new();
     result = ((char (*)(void))0x17c790)();
     if (result != '\0') {
-      ((void (*)(void))0xd01c0)();
+      input_initialize();
       ((void (*)(void))0x1cc710)();
       success = 1;
     }
@@ -77,11 +77,11 @@ void shell_dispose(void)
   ((void (*)(void))0x1cb820)();
   ((void (*)(void))0xcf490)();
   ((void (*)(void))0x17c940)();
-  ((void (*)(void))0x10b5d0)();
+  real_math_dispose();
   ((void (*)(void))0x1b98d0)();
-  ((void (*)(void))0x8f1f0)();
+  errors_dispose();
   ((void (*)(void))0x191220)();
-  ((void (*)(void))0x8d850)();
+  cseries_dispose();
 }
 
 /* shell_application_is_paused (0x191170)

@@ -728,55 +728,28 @@ void hud_render_timer(void)
   }
 }
 
-/* hud_enable_custom_state_message (0xd4f00) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static wchar_t * (*const bd4f00_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-
-__attribute__((naked, noinline))
-void hud_enable_custom_state_message(short param_1, char param_2)
+/* hud_enable_custom_state_message (0xd4f00) — readable C lift from XBE leaf. */
+void hud_enable_custom_state_message(short player_index, unsigned char enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x46bd18, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movb 0xc(%%ebp), %%bl\n\t"
-      "pushl %%esi\n\t"
-      "movswl 0x8(%%ebp), %%esi\n\t"
-      "imull $0x460, %%esi, %%esi\n\t"
-      "movb 0x458(%%esi,%%ecx,1), %%al\n\t"
-      "movb 0x45e(%%esi,%%ecx,1), %%dl\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "setne %%al\n\t"
-      "orb %%al, %%dl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpb %%al, %%bl\n\t"
-      "movb %%dl, 0x45e(%%esi)\n\t"
-      "movb %%bl, 0x458(%%esi)\n\t"
-      "movl %%eax, 0x454(%%esi)\n\t"
-      "je .Lhud_enable_custom_state_message_1\n\t"
-      "pushl $0xff\n\t"
-      "leal 0x230(%%esi), %%ecx\n\t"
-      "pushl $0x26cdf0\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, 0x454(%%esi)\n\t"
-      "call *%[c19dc90]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lhud_enable_custom_state_message_1:\n\t"
-      "movb %%bl, 0x45f(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19dc90] "m"(bd4f00_c19dc90)
-      : "memory");
-}
-#else
-#error "hud_enable_custom_state_message: clang naked draft required"
-#endif
+  char *base;
+  char *slot;
+  char prev;
+  char dirty;
 
+  base = *(char **)0x46bd18;
+  slot = base + (int)player_index * 0x460;
+  prev = slot[0x458];
+  dirty = slot[0x45e];
+  dirty = (char)(dirty | (prev != (char)enable));
+  slot[0x45e] = dirty;
+  slot[0x458] = (char)enable;
+  *(int *)(slot + 0x454) = 0;
+  if (enable != 0) {
+    *(int *)(slot + 0x454) = 0;
+    ustrncpy((wchar_t *)(slot + 0x230), (wchar_t *)0x26cdf0, 0xff);
+  }
+  slot[0x45f] = (char)enable;
+}
 
 /* hud_set_state_text (0xd4f70) — readable C lift. */
 void hud_set_state_text(int16_t slot, wchar_t *text)

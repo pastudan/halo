@@ -271,12 +271,17 @@ uint16_t FUN_0002f380(int actor_handle __attribute__((unused)), int prop_handle 
 #endif
 
 
-/* FUN_0002f5b0 (0x2f5b0) — readable C lift. */
-int FUN_0002f5b0(const float *a, const float *b)
+/* FUN_0002f5b0 (0x2f5b0) — readable C lift from XBE leaf (compare z). */
+int FUN_0002f5b0(float *a, float *b)
 {
-  if (a[2] < b[2])
+  float az;
+  float bz;
+
+  az = a[2];
+  bz = b[2];
+  if (az < bz)
     return -1;
-  if (a[2] > b[2])
+  if (az > bz)
     return 1;
   return 0;
 }
