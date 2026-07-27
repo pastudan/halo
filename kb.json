@@ -7085,7 +7085,7 @@
         {
           "addr": "0x864b0",
           "decl": "short director_desired_perspective(int unit_handle, short *out_perspective);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x865a0",
@@ -44202,4 +44202,4 @@
   "0x11cfd0": {
     "ported": true
   }
-}
+}\n

@@ -1370,117 +1370,59 @@ int16_t director_get_perspective(int16_t local_player_index)
   return *(int16_t *)(slot + 0x56);
 }
 
-/* director_desired_perspective (0x864b0) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void *(*const b864b0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b864b0_tag)(int, int) = tag_get;
-static void *(*const b864b0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void director_desired_perspective(void)
+/* director_desired_perspective (0x864b0) — readable C lift. */
+short director_desired_perspective(int unit_handle, short *out_perspective)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movw %%bx, (%%edi)\n\t"
-      "je .Ldirector_desired_perspective_4\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Ldirector_desired_perspective_5\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movb 0x64(%%eax), %%cl\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $3, %%dl\n\t"
-      "je .Ldirector_desired_perspective_3\n\t"
-      "movswl 0x2a0(%%esi), %%ecx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "shrl $6, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "andb $1, %%al\n\t"
-      "testb $0x10, %%cl\n\t"
-      "je .Ldirector_desired_perspective_1\n\t"
-      "movl $1, %%ebx\n\t"
-      ".Ldirector_desired_perspective_1:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Ldirector_desired_perspective_3\n\t"
-      "movb 0x253(%%esi), %%al\n\t"
-      "cmpb $0x1a, %%al\n\t"
-      "jne .Ldirector_desired_perspective_2\n\t"
-      "movw $1, (%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldirector_desired_perspective_2:\n\t"
-      "cmpb $0x1b, %%al\n\t"
-      "jne .Ldirector_desired_perspective_3\n\t"
-      "movw $3, (%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldirector_desired_perspective_3:\n\t"
-      "movw $2, (%%edi)\n\t"
-      ".Ldirector_desired_perspective_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldirector_desired_perspective_5:\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .Ldirector_desired_perspective_6\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jne .Ldirector_desired_perspective_4\n\t"
-      ".Ldirector_desired_perspective_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b864b0_get), [tag] "m"(b864b0_tag), [elem] "m"(b864b0_elem)
-      : "memory");
+  char *unit;
+  int parent;
+  char *parent_obj;
+  void *seat;
+  unsigned int flags;
+  char state;
+  short result;
+
+  result = 0;
+  *out_perspective = 0;
+  if (unit_handle == -1) {
+    return result;
+  }
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  parent = *(int *)(unit + 0xcc);
+  if (parent == -1) {
+    if (*out_perspective == 1 || *out_perspective == 3) {
+      return 1;
+    }
+    return result;
+  }
+  parent_obj = (char *)object_get_and_verify_type(parent, -1);
+  if (((1 << *(unsigned char *)(parent_obj + 0x64)) & 3) == 0) {
+    *out_perspective = 2;
+    return result;
+  }
+  seat = tag_block_get_element(
+      (char *)tag_get(0x756e6974, *(int *)parent_obj) + 0x2e4,
+      (int)*(short *)(unit + 0x2a0),
+      0x11c);
+  flags = *(unsigned int *)seat;
+  if (flags & 0x10) {
+    result = 1;
+  }
+  if (((flags >> 6) & 1) == 0) {
+    *out_perspective = 2;
+    return result;
+  }
+  state = *(char *)(unit + 0x253);
+  if (state == 0x1a) {
+    *out_perspective = 1;
+    return 1;
+  }
+  if (state == 0x1b) {
+    *out_perspective = 3;
+    return 1;
+  }
+  *out_perspective = 2;
+  return result;
 }
-#else
-#error "director_desired_perspective: clang naked draft required"
-#endif
-
-
 /* FUN_00086670 (0x86670) — XBE naked draft (batch 115). */
 #if defined(__clang__)
 static void (*const b86670_assert)(const char *, const char *, int, bool) = display_assert;
