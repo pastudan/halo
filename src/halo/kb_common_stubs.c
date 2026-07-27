@@ -25013,93 +25013,34 @@ short FUN_00196c90(int out_handles __attribute__((unused)), short max_count __at
 #endif
 
 
-/* FUN_00196d60 (0x196d60) — XBE naked draft (batch 329). */
-#if defined(__clang__)
-static void (*const b196d60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b196d60_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00196d60(float *rect __attribute__((unused)), int16_t *hull __attribute__((unused)))
+/* FUN_00196d60 (0x196d60) — readable C lift. */
+void FUN_00196d60(float *rect, int16_t *hull)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00196d60_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4cf\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b3714\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00196d60_1:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_00196d60_2\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_00196d60_2\n\t"
-      "cmpw $0x100, %%ax\n\t"
-      "jle .LFUN_00196d60_3\n\t"
-      ".LFUN_00196d60_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4d0\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b36fc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00196d60_3:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpw %%dx, (%%edi)\n\t"
-      "leal 0x4(%%edi), %%ecx\n\t"
-      "jle .LFUN_00196d60_9\n\t"
-      ".LFUN_00196d60_4:\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00196d60_5\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      ".LFUN_00196d60_5:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196d60_6\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      ".LFUN_00196d60_6:\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x4(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00196d60_7\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      ".LFUN_00196d60_7:\n\t"
-      "flds 0xc(%%esi)\n\t"
-      "fcomps 0x4(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196d60_8\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      ".LFUN_00196d60_8:\n\t"
-      "addl $8, %%ecx\n\t"
-      "incl %%edx\n\t"
-      "cmpw (%%edi), %%dx\n\t"
-      "jl .LFUN_00196d60_4\n\t"
-      ".LFUN_00196d60_9:\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b196d60_assert), [exitfn] "m"(b196d60_exitfn)
-      : "memory");
+  int i;
+  int count;
+  float *pt;
+
+  if (!rect) {
+    display_assert((const char *)0x2b3714, (const char *)0x2b36c8, 0x4cf, 1);
+    system_exit(-1);
+  }
+  if (!hull || hull[0] < 0 || hull[0] > 0x100) {
+    display_assert((const char *)0x2b36fc, (const char *)0x2b36c8, 0x4d0, 1);
+    system_exit(-1);
+  }
+  count = hull[0];
+  pt = (float *)(hull + 2); /* hull+4 */
+  for (i = 0; i < count; i++, pt += 2) {
+    if (rect[0] > pt[0])
+      rect[0] = pt[0];
+    if (rect[1] < pt[0])
+      rect[1] = pt[0];
+    if (rect[2] > pt[1])
+      rect[2] = pt[1];
+    if (rect[3] < pt[1])
+      rect[3] = pt[1];
+  }
 }
-#else
-#error "FUN_00196d60: clang naked draft required"
-#endif
 
 
 /* FUN_00196e10 (0x196e10) — XBE naked draft (batch 354). */
@@ -28952,63 +28893,23 @@ void FUN_001a5300(int unit_handle __attribute__((unused)), unsigned char *state 
 #endif
 
 
-/* FUN_001b8f10 (0x1b8f10) — XBE naked draft (batch 386). */
-#if defined(__clang__)
-static void *(*const b1b8f10_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1b8f10_tag)(int, int) = tag_get;
-static void (*const b1b8f10_c1b69a0)(int vehicle_handle, void *wheel_buffer, void *scratch_buffer) = (void *)FUN_001b69a0;
-static void (*const b1b8f10_b7020)(int) = FUN_001b7020;
-static void (*const b1b8f10_c1b6560)(int vehicle_handle, void *wheel_buffer, void *scratch_buffer) = (void *)FUN_001b6560;
-
-__attribute__((naked, noinline))
-void FUN_001b8f10(void)
+/* FUN_001b8f10 (0x1b8f10) — readable C lift. */
+void FUN_001b8f10(int vehicle_handle, void *wheel_buffer, void *scratch_buffer)
 {
-  __asm__ volatile(
-      "pushl %%edi\n\t"
-      "pushl $2\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x8c(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x70687973\n\t"
-      "call *%[tag]\n\t"
-      "flds (%%eax)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001b8f10_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1b69a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "call *%[b7020]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      ".LFUN_001b8f10_1:\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1b6560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "call *%[b7020]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1b8f10_get), [tag] "m"(b1b8f10_tag), [c1b69a0] "m"(b1b8f10_c1b69a0), [b7020] "m"(b1b8f10_b7020), [c1b6560] "m"(b1b8f10_c1b6560)
-      : "memory");
+  void *obj;
+  void *vehi;
+  void *phys;
+
+  obj = object_get_and_verify_type(vehicle_handle, 2);
+  vehi = tag_get(0x76656869, *(int *)obj);
+  phys = tag_get(0x70687973, *(int *)((char *)vehi + 0x8c));
+  if (*(float *)phys > *(float *)0x2533c0) {
+    FUN_001b6560(vehicle_handle, wheel_buffer, scratch_buffer);
+  } else {
+    FUN_001b69a0(vehicle_handle, wheel_buffer, scratch_buffer);
+  }
+  FUN_001b7020(vehicle_handle);
 }
-#else
-#error "FUN_001b8f10: clang naked draft required"
-#endif
 
 
 /* FUN_001b8f80 (0x1b8f80) — XBE naked draft (batch 302). */

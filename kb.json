@@ -485,7 +485,8 @@
         {
           "addr": "0x1335e0",
           "decl": "float FUN_001335e0(float a, float b, float c, float d, float ta, float tb, float tc, float td, float t);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_001335e0"
         },
         {
           "addr": "0x1336a0",
@@ -654,7 +655,8 @@
         {
           "addr": "0x196d60",
           "decl": "void FUN_00196d60(float *rect@<esi>, int16_t *hull@<edi>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00196d60"
         },
         {
           "addr": "0x196e10",
@@ -688,8 +690,9 @@
         },
         {
           "addr": "0x1b8f10",
-          "decl": "void FUN_001b8f10(void);",
-          "ported": false
+          "decl": "void FUN_001b8f10(int vehicle_handle@<esi>, void *wheel_buffer@<eax>, void *scratch_buffer@<ebx>);",
+          "ported": true,
+          "name": "FUN_001b8f10"
         },
         {
           "addr": "0x1b8f80",
