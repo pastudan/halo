@@ -260,8 +260,9 @@
         },
         {
           "addr": "0x67ac0",
-          "decl": "void FUN_00067ac0(void);",
-          "ported": false
+          "decl": "int FUN_00067ac0(unsigned int count@<eax>, unsigned short tag@<dx>, unsigned short *src@<ecx>, void *tif, unsigned short type, void *out);",
+          "ported": true,
+          "name": "FUN_00067ac0"
         },
         {
           "addr": "0x67b40",
