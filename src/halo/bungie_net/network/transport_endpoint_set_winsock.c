@@ -1902,7 +1902,7 @@ short FUN_00083bd0(int *endpoint __attribute__((unused)), int flag __attribute__
 static void (*const b83e20_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b83e20_exitfn)(int) = system_exit;
 static int (*const b83e20_c83930)(int af, int type, int protocol) = FUN_00083930;
-static short (*const b83e20_c83bd0)(int endpoint, int flag) = FUN_00083bd0;
+static short (*const b83e20_c83bd0)(int *endpoint, int flag) = FUN_00083bd0;
 static void b83e20_c2251a2_tgt(void) { return; }
 static void (*const b83e20_c2251a2)(void) = b83e20_c2251a2_tgt;
 static void (*const b83e20_c2235c4)(void) = GetLastError;
@@ -2231,7 +2231,7 @@ static void (*const b841b0_c82d30)(void) = endpoint_pool_cleanup;
 static void (*const b841b0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b841b0_exitfn)(int) = system_exit;
 static void * (*const b841b0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b841b0_c817e0)(void) = create_mutex;
+static char (*const b841b0_c817e0)(void **out) = create_mutex;
 static bool (*const b841b0_c81630)(int priority_flags, void *function, int param, void **thread_reference) = thread_new;
 static char (*const b841b0_c82c90)(void *endpoint) = FUN_00082c90;
 static void (*const b841b0_c81770)(void *thread_reference) = thread_close;
@@ -2593,7 +2593,7 @@ int FUN_00084740(int endpoint __attribute__((unused)), void *message __attribute
 /* FUN_00084940 (0x84940) — readable C lift. */
 int FUN_00084940(int listening_endpoint)
 {
-  void *p = (void *)FUN_00084450(listening_endpoint);
+  void *p = (void *)FUN_00084450((int *)(intptr_t)listening_endpoint);
   if (p)
     destroy_endpoint(p);
   return 0;

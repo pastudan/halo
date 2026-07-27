@@ -724,87 +724,40 @@ void hud_set_state_text(int16_t slot, wchar_t *text)
   *(uint16_t *)(entry + 0x42e) = 0;
 }
 
-/* hud_messaging_get_objective (0xd4fb0) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static scenario_t * (*const bd4fb0_c18e380)(void) = global_scenario_get;
-static void *(*const bd4fb0_tag)(int, int) = tag_get;
-static void *(*const bd4fb0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bd4fb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bd4fb0_exitfn)(int) = system_exit;
-static void * (*const bd4fb0_c19b1a0)(void *tag_data, int offset, int size) = tag_data_get_pointer;
-
-__attribute__((naked, noinline))
+/* hud_messaging_get_objective (0xd4fb0) — readable C lift. */
 int hud_messaging_get_objective(void)
 {
-  __asm__ volatile(
-      "movl 0x46bd18, %%ecx\n\t"
-      "movl 0x1190(%%ecx), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .Lhud_messaging_get_objective_3\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl 0x5a0(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x686d7420\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x46bd18, %%eax\n\t"
-      "movl 0x1190(%%eax), %%esi\n\t"
-      "movzwl 0x22(%%esi), %%ecx\n\t"
-      "pushl $2\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x14(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movb 0x24(%%esi), %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "je .Lhud_messaging_get_objective_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a1\n\t"
-      "pushl $0x281b48\n\t"
-      "pushl $0x281b9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhud_messaging_get_objective_1:\n\t"
-      "cmpb $0, (%%ebx)\n\t"
-      "je .Lhud_messaging_get_objective_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a2\n\t"
-      "pushl $0x281b48\n\t"
-      "pushl $0x281b74\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhud_messaging_get_objective_2:\n\t"
-      "movzbl 0x1(%%ebx), %%eax\n\t"
-      "movzwl 0x20(%%esi), %%ecx\n\t"
-      "shll $1, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "shll $1, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19b1a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lhud_messaging_get_objective_3:\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bd4fb0_c18e380), [tag] "m"(bd4fb0_tag), [elem] "m"(bd4fb0_elem), [assert] "m"(bd4fb0_assert), [exitfn] "m"(bd4fb0_exitfn), [c19b1a0] "m"(bd4fb0_c19b1a0)
-      : "memory");
+  char *globals;
+  char *msg_state;
+  scenario_t *scenario;
+  void *hmt_tag;
+  unsigned char *elem;
+  int index;
+  int offset;
+  int size;
+
+  globals = *(char **)0x46bd18;
+  msg_state = *(char **)(globals + 0x1190);
+  if (msg_state == 0)
+    return 0;
+
+  scenario = global_scenario_get();
+  hmt_tag = tag_get(0x686d7420, *(int *)((char *)scenario + 0x5a0));
+  msg_state = *(char **)(*(char **)0x46bd18 + 0x1190);
+  index = (int)*(unsigned short *)(msg_state + 0x22);
+  elem = (unsigned char *)tag_block_get_element((char *)hmt_tag + 0x14, index, 2);
+  if (*(unsigned char *)(msg_state + 0x24) != 1) {
+    display_assert((const char *)0x281b9c, (const char *)0x281b48, 0x2a1, 1);
+    system_exit(-1);
+  }
+  if (elem[0] != 0) {
+    display_assert((const char *)0x281b74, (const char *)0x281b48, 0x2a2, 1);
+    system_exit(-1);
+  }
+  size = (int)elem[1] << 1;
+  offset = (int)*(unsigned short *)(msg_state + 0x20) << 1;
+  return (int)(uintptr_t)tag_data_get_pointer(hmt_tag, offset, size);
 }
-#else
-#error "hud_messaging_get_objective: clang naked draft required"
-#endif
 
 
 /* hud_set_state_message_icon (0xd4e30) — readable C lift. */
@@ -1061,11 +1014,11 @@ static void (*const bd5350_exitfn)(int) = system_exit;
 static int16_t (*const bd5350_cb5ae0)(void) = game_time_get_elapsed;
 static scenario_t * (*const bd5350_c18e380)(void) = global_scenario_get;
 static void *(*const bd5350_elem)(void *, int, int) = tag_block_get_element;
-static int (*const bd5350_c19d420)(int param_1, int param_2) = FUN_0019d420;
+static const wchar_t *(*const bd5350_c19d420)(int tag_index, int16_t string_index) = FUN_0019d420;
 static void (*const bd5350_cd44f0)(int cursor, short *element, int param_1, int param_2) = FUN_000d44f0;
 static void (*const bd5350_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static int16_t (*const bd5350_ce4da0)(int16_t icon_type, int local_player_index) = remap_sticks_for_local_player;
-static void (*const bd5350_c19b5d0)(int width, int height) = draw_string_set_indents;
+static void (*const bd5350_c19b5d0)(int16_t width, int16_t height) = draw_string_set_indents;
 static void (*const bd5350_c19cdb0)(short *out_rect, void *text, short *out_bounds, short *in_rect) = FUN_0019cdb0;
 static void (*const bd5350_c184060)(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text) = rasterizer_draw_string;
 static void * (*const bd5350_c19b1a0)(void *tag_data, int offset, int size) = tag_data_get_pointer;
@@ -3617,7 +3570,7 @@ void FUN_000d7d40(int param_1)
           handle_slots[slot_count] = iVar13;
           sVar4 = local_player_count();
           iVar13 = FUN_001a6870(
-              vehicle_tag,
+              (char *)(uintptr_t)vehicle_tag,
               *(unsigned short *)(next_unit + 0x2a0), 1 < sVar4);
           tag_indices[slot_count] = iVar13;
           slot_count = slot_count + 1;
@@ -3995,7 +3948,7 @@ void FUN_000d7d40(int param_1)
 
           sVar4 = local_player_count();
           FUN_000dbfb0(local_player_idx, 1 < sVar4,
-                       (int)local_78_buf);
+                       (void *)local_78_buf);
         }
 
         {

@@ -13279,7 +13279,7 @@
           "addr": "0xd4fb0",
           "decl": "int hud_messaging_get_objective(void);",
           "name": "hud_messaging_get_objective",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd5070",
@@ -27136,7 +27136,7 @@
         {
           "addr": "0x82bd0",
           "decl": "void FUN_00082bd0(void *xnaddr, uint32_t *key, uint32_t *nonce, uint16_t port, void *addr);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00082bd0"
         },
         {

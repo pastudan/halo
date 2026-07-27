@@ -100,48 +100,48 @@ void interface_draw_text(int font_index, int style, int justify, int flags,
   draw_string_set_font(tag_index, style, justify, flags, color);
 }
 
-/* interface_draw_splitscreen_dividers (0xdfdc0) — readable C lift from XBE leaf. */
+/* interface_draw_splitscreen_dividers (0xdfdc0) — readable C lift. */
 void interface_draw_splitscreen_dividers(void)
 {
-  int16_t count;
   int16_t rect[4];
+  int16_t nplayers;
 
   if (game_engine_force_single_screen())
     return;
   if (cinematic_in_progress())
     return;
 
-  count = local_player_count();
-  if (count <= 1)
+  nplayers = local_player_count();
+  if (nplayers <= 1)
     return;
 
+  /* Vertical center divider (2+ players). */
   rect[0] = 0xef;
   rect[1] = 0;
   rect[2] = 0xf1;
   rect[3] = 0x280;
-  draw_quad(rect, 0xff000000);
+  draw_quad(rect, (int)0xff000000);
 
-  if (count <= 2)
+  if (nplayers <= 2)
     return;
 
-  rect[3] = 0x141;
+  /* Horizontal divider for 3–4 players. */
   rect[2] = 0x1e0;
+  rect[3] = 0x141;
   rect[1] = 0x13f;
-  if (count == 3) {
+  if (nplayers == 3) {
     rect[0] = 0xf0;
-    draw_quad(rect, 0xff000000);
+    draw_quad(rect, (int)0xff000000);
     return;
   }
 
   rect[0] = 0;
-  if (count != 4) {
-    display_assert("window_count==4", "c:\\halo\\SOURCE\\interface\\interface.c",
-                   0x374, true);
+  if (nplayers != 4) {
+    display_assert((const char *)0x2825d0, (const char *)0x2824e0, 0x374, 1);
     system_exit(-1);
   }
-  draw_quad(rect, 0xff000000);
+  draw_quad(rect, (int)0xff000000);
 }
-
 
 
 /* Initialize interface for a new map: set up HUD elements and load the
@@ -818,13 +818,13 @@ static void (*const bdf4e0_c14da20)(char *display_line) = FUN_0014da20;
 static void (*const bdf4e0_c183e60)(void *screen_pos, short *bounds, const void *color, int flags, const char *text) = rasterizer_text_draw;
 static void (*const bdf4e0_c902f0)(void) = profile_dump;
 static void (*const bdf4e0_c19b560)(void *stops, short count) = draw_string_set_tab_stops;
-static void (*const bdf4e0_c185f80)(void *param_1, void *param_2) = render_frustum_get_projection_bounds;
+static void (*const bdf4e0_c185f80)(void *frustum, float *bounds) = render_frustum_get_projection_bounds;
 static void (*const bdf4e0_c908a0)(void) = profile_find_frame_value;
 static void (*const bdf4e0_c17ca10)(void) = rasterizer_hud_motion_sensor_blip_begin;
 static void *(*const bdf4e0_memset)(void *, int, unsigned int) = csmemset;
 static void (*const bdf4e0_c17ca40)(void) = FUN_0017ca40;
-static void (*const bdf4e0_c910b0)(void) = profile_frame_iterator_new;
-static void (*const bdf4e0_c91110)(void) = profile_frame_iterator_next;
+static void (*const bdf4e0_c910b0)(int16_t *iter) = profile_frame_iterator_new;
+static char (*const bdf4e0_c91110)(int16_t *iter, uint32_t *out_cycles) = profile_frame_iterator_next;
 static void (*const bdf4e0_c90d10)(void) = profile_frame_get_value;
 static void (*const bdf4e0_ftol)(void) = FUN_001d9068;
 static void (*const bdf4e0_xfrmpt)(float *, float *, float *) = matrix_transform_point;
@@ -834,8 +834,8 @@ static void (*const bdf4e0_c17ca60)(short *points, int16_t point_count, float *c
 static void * (*const bdf4e0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void (*const bdf4e0_c17ca70)(void) = FUN_0017ca70;
 static void (*const bdf4e0_c17ca00)(void) = rasterizer_widget_get_occlusion_test_result;
-static void (*const bdf4e0_c91190)(void) = profile_frame_get_messages;
-static void (*const bdf4e0_c91220)(void) = profile_frame_get_stalls;
+static void (*const bdf4e0_c91190)(int16_t *frame_ref) = profile_frame_get_messages;
+static int (*const bdf4e0_c91220)(int16_t *frame_ref, int16_t *out_count, int *out_val) = profile_frame_get_stalls;
 static void (*const bdf4e0_cdf3d0)(void) = FUN_000df3d0;
 static void (*const bdf4e0_c17ca30)(void) = rasterizer_hud_motion_sensor_blip_end;
 

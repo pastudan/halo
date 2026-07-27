@@ -623,7 +623,7 @@ void FUN_001ba8b0(char *base)
   extern char DAT_002b839c[];
   extern char DAT_002b8488[];
   int status;
-  status = FUN_001d00b9(*(void **)(base + 0x950), 0x1388, 1);
+  status = FUN_001d00b9((int)(uintptr_t)*(void **)(base + 0x950), 0x1388, 1);
   if ((*(unsigned int *)(base + 0x994) >> 8) & 1) {
     display_assert(DAT_002b84a8, DAT_002b839c, 0x5ca, 1);
     system_exit(-1);
@@ -651,7 +651,7 @@ void FUN_001ba930(void *header)
     display_assert(DAT_002b8538, DAT_002b839c, 0x5d6, 1);
     system_exit(-1);
   }
-  status = FUN_001d00b9(*(void **)((char *)header + 0x950), 0x1388, 1);
+  status = FUN_001d00b9((int)(uintptr_t)*(void **)((char *)header + 0x950), 0x1388, 1);
   flags = *(unsigned int *)((char *)header + 0x994);
   if ((flags & 0x400u) != 0) {
     display_assert(DAT_002b84f0, DAT_002b839c, 0x5da, 1);
