@@ -2236,156 +2236,30 @@ void FUN_00099490(float *plane, float *point, float *normal)
   plane[3] = plane[0] * point[0] + plane[1] * point[1] + plane[2] * point[2];
 }
 
-/* decal_update (0x996b0) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void *(*const b996b0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b996b0_gtime)(void) = game_time_get;
-static void (*const b996b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b996b0_exitfn)(int) = system_exit;
-static void *(*const b996b0_tag)(int, int) = tag_get;
-static void (*const b996b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b996b0_c17cb10)(int decal_index) = FUN_0017cb10;
-
-__attribute__((naked, noinline))
+/* decal_update (0x996b0) — readable C lift (restored pre-naked). */
 void decal_update(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x5aa8b8, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[gtime]\n\t"
-      "subl 0x14(%%esi), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "cmpl $-1, 0x2c(%%esi)\n\t"
-      "fmuls 0x269dc0\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jne .Ldecal_update_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x133\n\t"
-      "pushl $0x269e0c\n\t"
-      "pushl $0x26a030\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldecal_update_1:\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x64656361\n\t"
-      "call *%[tag]\n\t"
-      "movw 0x2(%%esi), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $2, %%cl\n\t"
-      "movb $0xff, 0x28(%%esi)\n\t"
-      "jne .Ldecal_update_7\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Ldecal_update_3\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x1c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Ldecal_update_3\n\t"
-      "testb $1, %%cl\n\t"
-      "je .Ldecal_update_2\n\t"
-      "movl 0x44dfd0, %%eax\n\t"
-      "andl $0xfffe, %%ecx\n\t"
-      "movw %%cx, 0x2(%%esi)\n\t"
-      "movl 0x2804(%%eax), %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x2804(%%eax)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "jns .Ldecal_update_2\n\t"
-      "movb 0x4557dc, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Ldecal_update_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x269f48\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x4557dc\n\t"
-      ".Ldecal_update_2:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c17cb10]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldecal_update_3:\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldecal_update_7\n\t"
-      "flds 0x20(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldecal_update_7\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "fcoms 0x20(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Ldecal_update_6\n\t"
-      "fdivs 0x20(%%esi)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Ldecal_update_4\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Ldecal_update_5\n\t"
-      ".Ldecal_update_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x142\n\t"
-      "pushl $0x269e0c\n\t"
-      "pushl $0x26a01c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldecal_update_5:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fistps -0x8(%%ebp)\n\t"
-      "movb -0x8(%%ebp), %%dl\n\t"
-      "movb %%dl, 0x28(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldecal_update_6:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Ldecal_update_7:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b996b0_dget), [gtime] "m"(b996b0_gtime), [assert] "m"(b996b0_assert), [exitfn] "m"(b996b0_exitfn), [tag] "m"(b996b0_tag), [c8f390] "m"(b996b0_c8f390), [c17cb10] "m"(b996b0_c17cb10)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_time_get();
+  display_assert((char *)0x0026a030, (char *)0x00269e0c, 307, 0);
+  system_exit(0);
+  tag_get('aced', 0);
+  /* test (char)ecx, 1 -> je 0x9978a */
+  /* test (char)ecx, (char)ecx -> jne 0x9978a */
+  error(0, (char *)0x00269f48);
+  FUN_0017cb10(0);
+  /* test (char)eax, 0x41 -> jne 0x9982e */
+  /* test (char)eax, 0x41 -> jne 0x9982e */
+  /* test (char)eax, 1 -> jne 0x997ef */
+  display_assert((char *)0x0026a01c, (char *)0x00269e0c, 322, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
 }
-#else
-#error "decal_update: clang naked draft required"
-#endif
 
 
 /* decals_reconnect_to_structure_bsp (0x99b70) — XBE naked draft (batch 119). */

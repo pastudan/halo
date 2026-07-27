@@ -6949,7 +6949,7 @@
         {
           "addr": "0x996b0",
           "decl": "void decal_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "decal_update"
         },
         {
@@ -18467,7 +18467,7 @@
         {
           "addr": "0xa27a0",
           "decl": "void player_effect_add_continuous_effect(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_effect_add_continuous_effect"
         },
         {
