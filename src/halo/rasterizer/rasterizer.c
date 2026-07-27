@@ -13544,65 +13544,26 @@ int FUN_0017c000(short stage /*@<esi>*/, short index /*@<edi>*/)
   return ((int *)0x2aeb30)[(int)(short)index + (int)(short)stage * 8];
 }
 
-/* FUN_0017c140 (0x17c140) — XBE naked draft (batch 362). */
-#if defined(__clang__)
-static void (*const b17c140_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17c140_exitfn)(int) = system_exit;
-static void (*const b17c140_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_0017c140(void)
+/* FUN_0017c140 (0x17c140) — readable C lift. */
+char FUN_0017c140(void *obj, short index)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "movb $1, %%bl\n\t"
-      "jne .LFUN_0017c140_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13c\n\t"
-      "pushl $0x2aed00\n\t"
-      "pushl $0x2af04c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017c140_1:\n\t"
-      "cmpl $-1, 0x28(%%esi)\n\t"
-      "jne .LFUN_0017c140_2\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2af00c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_0017c140_2:\n\t"
-      "flds 0x18(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_0017c140_3\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2aefc0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_0017c140_3:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17c140_assert), [exitfn] "m"(b17c140_exitfn), [c8f390] "m"(b17c140_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_0017c140: clang naked draft required"
-#endif
+  char ok;
 
+  ok = 1;
+  if (!obj) {
+    display_assert((const char *)0x2af04c, (const char *)0x2aed00, 0x13c, true);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)obj + 0x28) == -1) {
+    error(2, (const char *)0x2af00c, (int)index);
+    ok = 0;
+  }
+  if (*(float *)((char *)obj + 0x18) != *(float *)0x2533c0) {
+    error(2, (const char *)0x2aefc0, (int)index);
+    return 0;
+  }
+  return ok;
+}
 
 /* FUN_0017c1b0 (0x17c1b0) — XBE naked draft (batch 320). */
 #if defined(__clang__)

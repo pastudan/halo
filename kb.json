@@ -21129,8 +21129,8 @@
         },
         {
           "addr": "0x17c140",
-          "decl": "char FUN_0017c140(void *shader @<esi>, short index @<di>);",
-          "ported": false,
+          "decl": "char FUN_0017c140(void *obj@<esi>, short index@<di>);",
+          "ported": true,
           "name": "FUN_0017c140"
         },
         {
@@ -42537,11 +42537,6 @@
           "addr": "0x001ef1e0",
           "decl": "int __stdcall D3DSurface_GetDesc(void *surface, void *desc);",
           "ported": false
-        },
-        {
-          "addr": "0x001ef200",
-          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
-          "ported": true
         },
         {
           "addr": "0x001ef890",
