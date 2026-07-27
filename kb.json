@@ -15787,7 +15787,7 @@
           "addr": "0x11aa40",
           "decl": "bool FUN_0011aa40(int group, void *decoded_packet, char *encoded_packet, short *encoded_packet_size, short *packet_type, short *packet_version, short expected_packet_class);",
           "name": "FUN_0011aa40",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b2a0",
@@ -16091,7 +16091,7 @@
         {
           "addr": "0x12eca0",
           "decl": "bool network_server_manager_pregame_start(void *server);",
-          "ported": false,
+          "ported": true,
           "name": "network_server_manager_pregame_start"
         },
         {

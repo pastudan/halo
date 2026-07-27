@@ -2526,251 +2526,111 @@ bool network_game_server_start(void *server)
 }
 
 
-/* network_server_manager_pregame_start (0x12eca0) — XBE naked draft (batch 113). */
-#if defined(__clang__)
-static void (*const b12eca0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12eca0_exitfn)(int) = system_exit;
-static void *(*const b12eca0_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b12eca0_c12b700)(int type, void *data, int16_t message_struct_size) = encode_network_game_message;
-static bool (*const b12eca0_c12f430)(void *server, void *message) = FUN_0012f430;
-static void (*const b12eca0_c12b650)(const char *fmt, ...) = network_game_log;
-static bool (*const b12eca0_c12ac80)(void *client) = network_player_is_valid;
-static void (*const b12eca0_c12abc0)(void *game, bool flag) = network_game_reset_for_next_round;
-static bool (*const b12eca0_c12dc20)(int server) = FUN_0012dc20;
-static void * (*const b12eca0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static bool (*const b12eca0_c12e580)(int server) = FUN_0012e580;
-
-__attribute__((naked, noinline))
-bool network_server_manager_pregame_start(void *server __attribute__((unused)))
+/* network_server_manager_pregame_start (0x12eca0) — readable C lift (restored pre-naked). */
+bool network_server_manager_pregame_start(void *server)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x43c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb %%bl, -0x1(%%ebp)\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "jne .Lnetwork_server_manager_pregame_start_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x324\n\t"
-      "pushl $0x296bf0\n\t"
-      "pushl $0x296c34\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_server_manager_pregame_start_1:\n\t"
-      "pushl $0x10\n\t"
-      "leal 0x488(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x434(%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $2, 0x4(%%esi)\n\t"
-      "movl %%ebx, 0x47c(%%esi)\n\t"
-      "movl %%ebx, 0x484(%%esi)\n\t"
-      "movb %%bl, 0x4b9(%%esi)\n\t"
-      "movb %%bl, 0x4b8(%%esi)\n\t"
-      "movl %%ecx, 0x434(%%esi)\n\t"
-      "jne .Lnetwork_server_manager_pregame_start_11\n\t"
-      "pushl $4\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x1e\n\t"
-      "call *%[c12b700]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .Lnetwork_server_manager_pregame_start_10\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12f430]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_10\n\t"
-      "pushl $0x298924\n\t"
-      "call *%[c12b650]\n\t"
-      "movb 0xc8(%%esi), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_5\n\t"
-      "leal 0x24c(%%esi), %%edi\n\t"
-      "movl $0x10, 0x8(%%ebp)\n\t"
-      "jmp .Lnetwork_server_manager_pregame_start_2\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lnetwork_server_manager_pregame_start_2:\n\t"
-      "leal -0x1e(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_4\n\t"
-      "movsbl (%%edi), %%eax\n\t"
-      "subl %%ebx, %%eax\n\t"
-      "je .Lnetwork_server_manager_pregame_start_3\n\t"
-      "decl %%eax\n\t"
-      "jne .Lnetwork_server_manager_pregame_start_4\n\t"
-      "movb %%bl, (%%edi)\n\t"
-      "jmp .Lnetwork_server_manager_pregame_start_4\n\t"
-      ".Lnetwork_server_manager_pregame_start_3:\n\t"
-      "movb $1, (%%edi)\n\t"
-      ".Lnetwork_server_manager_pregame_start_4:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0x20, %%edi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jne .Lnetwork_server_manager_pregame_start_2\n\t"
-      ".Lnetwork_server_manager_pregame_start_5:\n\t"
-      "leal 0x44a(%%esi), %%eax\n\t"
-      "movl $4, %%ecx\n\t"
-      "jmp .Lnetwork_server_manager_pregame_start_6\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lnetwork_server_manager_pregame_start_6:\n\t"
-      "andb $0xfb, (%%eax)\n\t"
-      "movl %%ebx, -0xa(%%eax)\n\t"
-      "movl %%ebx, -0x6(%%eax)\n\t"
-      "addl $0x10, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lnetwork_server_manager_pregame_start_6\n\t"
-      "leal 0x8(%%esi), %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12abc0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "call *%[c12dc20]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_7\n\t"
-      "pushl $0x434\n\t"
-      "leal -0x43c(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x434\n\t"
-      "leal -0x43c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $6\n\t"
-      "call *%[c12b700]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_server_manager_pregame_start_8\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12f430]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_8\n\t"
-      "popl %%edi\n\t"
-      "movw $0, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_server_manager_pregame_start_7:\n\t"
-      "pushl $4\n\t"
-      "leal 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $9\n\t"
-      "movl $0, 0x8(%%ebp)\n\t"
-      "call *%[c12b700]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_server_manager_pregame_start_9\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12f430]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_9\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "call *%[c12e580]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_9\n\t"
-      "pushl $0x2988f8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lnetwork_server_manager_pregame_start_8:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_server_manager_pregame_start_9:\n\t"
-      "pushl $0x2988a8\n\t"
-      "call *%[c12b650]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_server_manager_pregame_start_10:\n\t"
-      "pushl $0x298868\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_server_manager_pregame_start_11:\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "call *%[c12dc20]\n\t"
-      "movb %%al, %%bl\n\t"
-      "movb 0xc8(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_15\n\t"
-      "addl $0x24c, %%esi\n\t"
-      "movl $0x10, %%edi\n\t"
-      ".Lnetwork_server_manager_pregame_start_12:\n\t"
-      "leal -0x1e(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_server_manager_pregame_start_14\n\t"
-      "movsbl (%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lnetwork_server_manager_pregame_start_13\n\t"
-      "decl %%eax\n\t"
-      "jne .Lnetwork_server_manager_pregame_start_14\n\t"
-      "movb $0, (%%esi)\n\t"
-      "jmp .Lnetwork_server_manager_pregame_start_14\n\t"
-      ".Lnetwork_server_manager_pregame_start_13:\n\t"
-      "movb $1, (%%esi)\n\t"
-      ".Lnetwork_server_manager_pregame_start_14:\n\t"
-      "addl $0x20, %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .Lnetwork_server_manager_pregame_start_12\n\t"
-      ".Lnetwork_server_manager_pregame_start_15:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b12eca0_assert), [exitfn] "m"(b12eca0_exitfn), [memset] "m"(b12eca0_memset), [c12b700] "m"(b12eca0_c12b700), [c12f430] "m"(b12eca0_c12f430), [c12b650] "m"(b12eca0_c12b650), [c12ac80] "m"(b12eca0_c12ac80), [c12abc0] "m"(b12eca0_c12abc0), [c12dc20] "m"(b12eca0_c12dc20), [c8e0b0] "m"(b12eca0_c8e0b0), [c12e580] "m"(b12eca0_c12e580)
-      : "memory");
+  char *s;
+  bool result;
+  int i;
+  char *client_ptr;
+  char *flags_ptr;
+  void *msg;
+  char local_buf[0x434];
+
+  s = (char *)server;
+  result = false;
+  if (!server) {
+    display_assert("server",
+                   "c:\\halo\\SOURCE\\networking\\network_server_manager.c",
+                   0x324, 1);
+    system_exit(-1);
+  }
+  csmemset(s + 0x488, 0, 0x10);
+  *(int *)(s + 0x47c) = 0;
+  *(int *)(s + 0x484) = 0;
+  *(char *)(s + 0x4b9) = 0;
+  *(char *)(s + 0x4b8) = 0;
+  *(int *)(s + 0x434) = *(int *)(s + 0x434) + 1;
+
+  if (*(int16_t *)(s + 4) != 2) {
+    result = FUN_0012dc20((int)server);
+    if (*(char *)(s + 0xc8) != 0) {
+      client_ptr = s + 0x24c;
+      for (i = 0x10; i != 0; i--) {
+        if (network_player_is_valid(client_ptr - 0x1e)) {
+          if (*client_ptr == 0) {
+            *client_ptr = 1;
+          } else if (*client_ptr == 1) {
+            *client_ptr = 0;
+          }
+        }
+        client_ptr += 0x20;
+      }
+    }
+    return result;
+  }
+
+  /* Postgame → pregame transition */
+  {
+    int data = 0;
+    msg = encode_network_game_message(0x1e, &data, 4);
+  }
+  if (!msg || !FUN_0012f430(server, msg)) {
+    network_game_log(
+      "failed to signal all client machines to switch to pregame");
+    return false;
+  }
+  network_game_log("server resetting to pregame");
+
+  /* Toggle client team assignments */
+  if (*(char *)(s + 0xc8) != 0) {
+    client_ptr = s + 0x24c;
+    for (i = 0x10; i != 0; i--) {
+      if (network_player_is_valid(client_ptr - 0x1e)) {
+        if (*client_ptr == 0) {
+          *client_ptr = 1;
+        } else if (*client_ptr == 1) {
+          *client_ptr = 0;
+        }
+      }
+      client_ptr += 0x20;
+    }
+  }
+
+  /* Clear per-machine state flags */
+  flags_ptr = s + 0x44a;
+  for (i = 4; i != 0; i--) {
+    *flags_ptr &= 0xfb;
+    *(int *)(flags_ptr - 0xa) = 0;
+    *(int *)(flags_ptr - 0x6) = 0;
+    flags_ptr += 0x10;
+  }
+
+  network_game_reset_for_next_round(s + 8, 0);
+
+  if (FUN_0012dc20((int)server)) {
+    csmemcpy(local_buf, s + 8, 0x434);
+    msg = encode_network_game_message(6, local_buf, 0x434);
+    if (msg && FUN_0012f430(server, msg)) {
+      *(int16_t *)(s + 4) = 0;
+      return true;
+    }
+    return result;
+  }
+
+  /* Playlist ended — send graceful exit */
+  {
+    int data = 0;
+    msg = encode_network_game_message(9, &data, 4);
+    if (msg && FUN_0012f430(server, msg) && FUN_0012e580((int)server)) {
+      network_game_log("the playlist has ended - server going down");
+      return result;
+    }
+  }
+  network_game_log("the playlist has ended - server going down, but failed to "
+                   "alert client machines");
+  return result;
 }
-#else
-#error "network_server_manager_pregame_start: clang naked draft required"
-#endif
 
 
 /* Initialize the global network server (0x12eef0).
