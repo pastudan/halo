@@ -39118,7 +39118,7 @@
         {
           "addr": "0x168b10",
           "decl": "void FUN_00168b10(void *bitmap);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x168bc0",

@@ -12277,89 +12277,29 @@ void FUN_00168ae0(void *obj)
 
 
 
-/* FUN_00168b10 (0x168b10) — XBE naked draft (batch 341). */
-#if defined(__clang__)
-static void (*const b168b10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b168b10_exitfn)(int) = system_exit;
-static void (*const b168b10_c1688d0)(void) = (void *)FUN_001688d0;
-static void (*const b168b10_c1686c0)(void) = (void *)FUN_001686c0;
-static void (*const b168b10_c168500)(void) = (void *)FUN_00168500;
-
-__attribute__((naked, noinline))
-void FUN_00168b10(void *bitmap __attribute__((unused)))
+/* FUN_00168b10 (0x168b10) — readable C lift. */
+void FUN_00168b10(void *bitmap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .LFUN_00168b10_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x70\n\t"
-      "pushl $0x2a27a8\n\t"
-      "pushl $0x263768\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00168b10_1:\n\t"
-      "movw $1, 0x325652\n\t"
-      "movswl 0xa(%%esi), %%eax\n\t"
-      "subl %%ebx, %%eax\n\t"
-      "je .LFUN_00168b10_4\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_00168b10_3\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_00168b10_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0x2a27a8\n\t"
-      "pushl $0x261d30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x325652\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00168b10_2:\n\t"
-      "call *%[c1688d0]\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x325652\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00168b10_3:\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%edi\n\t"
-      "call *%[c1686c0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x325652\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00168b10_4:\n\t"
-      "call *%[c168500]\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x325652\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b168b10_assert), [exitfn] "m"(b168b10_exitfn), [c1688d0] "m"(b168b10_c1688d0), [c1686c0] "m"(b168b10_c1686c0), [c168500] "m"(b168b10_c168500)
-      : "memory");
+  int kind;
+
+  if (!bitmap) {
+    display_assert((char *)0x263768, (char *)0x2a27a8, 0x70, 1);
+    system_exit(-1);
+  }
+  *(short *)0x325652 = 1;
+  kind = (int)*(short *)((char *)bitmap + 0xa);
+  if (kind == 0)
+    FUN_00168500();
+  else if (kind == 1)
+    FUN_001686c0();
+  else if (kind == 2)
+    FUN_001688d0();
+  else {
+    display_assert((char *)0x261d30, (char *)0x2a27a8, 0x80, 1);
+    system_exit(-1);
+  }
+  *(short *)0x325652 = 0;
 }
-#else
-#error "FUN_00168b10: clang naked draft required"
-#endif
-
-
 /* FUN_00168bc0 (0x168bc0) — readable C lift. */
 int FUN_00168bc0(int a, int b, int c)
 {
