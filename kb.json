@@ -33713,7 +33713,7 @@
         {
           "addr": "0x19cff0",
           "decl": "void *FUN_0019cff0(void *font_tag, unsigned short character);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x19d060",
