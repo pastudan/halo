@@ -18375,8 +18375,9 @@
         },
         {
           "addr": "0xe0620",
-          "decl": "void FUN_000e0620(void);",
-          "ported": false
+          "decl": "void FUN_000e0620(int a0, int a1, float *cursor_xy);",
+          "ported": true,
+          "name": "FUN_000e0620"
         },
         {
           "addr": "0xe0720",

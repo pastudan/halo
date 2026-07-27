@@ -49,83 +49,50 @@ void player_ui_initialize(void)
 }
 /* --- player_ui.obj batch drafts (2026-07-26) --- */
 
-/* FUN_000e0620 (0xe0620) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-static void (*const be0620_ftol)(void) = FUN_001d9068;
-static int (*const be0620_cb5b20)(void) = local_time_get;
-
-__attribute__((naked, noinline))
-void FUN_000e0620(void)
+/* FUN_000e0620 (0xe0620) — readable C lift from XBE leaf. */
+void FUN_000e0620(int a0, int a1, float *cursor_xy)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movb 0x46beb0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000e0620_2\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl %%eax, 0x46bec4\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x46bec8\n\t"
-      "flds (%%edi)\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "movl 0x46bed8, %%ebx\n\t"
-      "movw %%ax, %%si\n\t"
-      "sarw $1, %%si\n\t"
-      "subw 0x10(%%ebx), %%si\n\t"
-      "movw %%si, -0x6(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "movl -0x6(%%ebp), %%edx\n\t"
-      "movl 0x46beb8, %%ecx\n\t"
-      "sarw $1, %%ax\n\t"
-      "subw 0x12(%%ebx), %%ax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "movw 0x46beb6, %%dx\n\t"
-      "addw %%ax, %%dx\n\t"
-      "movw %%ax, 0x46bece\n\t"
-      "addw 0x46beb2, %%ax\n\t"
-      "movw %%si, 0x46becc\n\t"
-      "addw 0x46beb4, %%si\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, -0x8(%%ebp)\n\t"
-      "movb 0x46beba, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movw %%si, -0x6(%%ebp)\n\t"
-      "popl %%esi\n\t"
-      "movw %%cx, -0x2(%%ebp)\n\t"
-      "movw %%dx, -0x4(%%ebp)\n\t"
-      "popl %%ebx\n\t"
-      "je .LFUN_000e0620_1\n\t"
-      "call *%[cb5b20]\n\t"
-      "subl 0x46bed0, %%eax\n\t"
-      "cmpl $7, %%eax\n\t"
-      "jle .LFUN_000e0620_2\n\t"
-      ".LFUN_000e0620_1:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x46bebc\n\t"
-      "movl %%ecx, 0x46bec0\n\t"
-      "call *%[cb5b20]\n\t"
-      "movl %%eax, 0x46bed0\n\t"
-      "movb $0, 0x46bebb\n\t"
-      ".LFUN_000e0620_2:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(be0620_ftol), [cb5b20] "m"(be0620_cb5b20)
-      : "memory");
-}
-#else
-#error "FUN_000e0620: clang naked draft required"
-#endif
+  char *sprite;
+  int16_t si, ax, cx, dx;
+  int16_t rect[4];
+  (void)a0;
+  (void)a1;
 
+  if (*(unsigned char *)0x46beb0 == 0)
+    return;
+
+  *(int *)0x46bec4 = *(int *)cursor_xy;
+  *(int *)0x46bec8 = *(int *)(cursor_xy + 1);
+  sprite = *(char **)0x46bed8;
+  si = (int16_t)((int)cursor_xy[0] >> 1);
+  si = (int16_t)(si - *(int16_t *)(sprite + 0x10));
+  ax = (int16_t)((int)cursor_xy[1] >> 1);
+  ax = (int16_t)(ax - *(int16_t *)(sprite + 0x12));
+  cx = (int16_t)(*(int16_t *)0x46beb8 + si);
+  dx = (int16_t)(*(int16_t *)0x46beb6 + ax);
+  *(int16_t *)0x46bece = ax;
+  ax = (int16_t)(ax + *(int16_t *)0x46beb2);
+  *(int16_t *)0x46becc = si;
+  si = (int16_t)(si + *(int16_t *)0x46beb4);
+  rect[0] = ax;          /* ebp-8 */
+  rect[1] = si;          /* ebp-6 */
+  rect[2] = cx;          /* ebp-2 — NOTE packing: word layout */
+  rect[3] = dx;          /* ebp-4 */
+
+  /* Match MSVC stack layout: [ebp-8]=ax, [ebp-6]=si, [ebp-4]=dx, [ebp-2]=cx as two dwords */
+  {
+    int dword_lo = (uint16_t)ax | ((uint16_t)si << 16);
+    int dword_hi = (uint16_t)dx | ((uint16_t)cx << 16);
+    if (*(unsigned char *)0x46beba != 0) {
+      if (local_time_get() - *(int *)0x46bed0 <= 7)
+        return;
+    }
+    *(int *)0x46bebc = dword_lo;
+    *(int *)0x46bec0 = dword_hi;
+    *(int *)0x46bed0 = local_time_get();
+    *(unsigned char *)0x46bebb = 0;
+  }
+}
 
 /* player_ui_reset_single_player_local_player_controllers (0xe0720) — readable C lift. */
 void player_ui_reset_single_player_local_player_controllers(void)
