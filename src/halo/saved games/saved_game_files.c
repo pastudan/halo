@@ -3111,43 +3111,18 @@ void FUN_001c3610(void)
 #endif
 
 
-/* FUN_001c3710 (0x1c3710) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001c3710(void)
+/* FUN_001c3710 (0x1c3710) — readable C lift. */
+unsigned int FUN_001c3710(unsigned int a, unsigned int c, unsigned int d, unsigned char flag0, unsigned char flag1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "andl $0xfff, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "andl $0xff, %%ecx\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "andl $0xf, %%edx\n\t"
-      "shll $8, %%eax\n\t"
-      "orl %%edx, %%eax\n\t"
-      "movb 0x8(%%ebp), %%dl\n\t"
-      "movb $1, %%cl\n\t"
-      "cmpb %%cl, %%dl\n\t"
-      "jne .LFUN_001c3710_1\n\t"
-      "orl $0x40000000, %%eax\n\t"
-      ".LFUN_001c3710_1:\n\t"
-      "cmpb %%cl, 0xc(%%ebp)\n\t"
-      "jne .LFUN_001c3710_2\n\t"
-      "orl $0x80000000, %%eax\n\t"
-      ".LFUN_001c3710_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int r;
+  r = ((a & 0xfff) << 8) | (c & 0xff);
+  r = (r << 8) | (d & 0xf);
+  if (flag0 == 1)
+    r |= 0x40000000u;
+  if (flag1 == 1)
+    r |= 0x80000000u;
+  return r;
 }
-#else
-#error "FUN_001c3710: clang naked draft required"
-#endif
-
 
 /* saved_game_file_find_profile_index_for_directory_path (0x1c38d0) — XBE naked draft (batch 249). */
 #if defined(__clang__)

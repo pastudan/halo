@@ -23754,8 +23754,8 @@
         },
         {
           "addr": "0x1c3710",
-          "decl": "unsigned int FUN_001c3710(unsigned int a@<eax>, unsigned int c@<ecx>, unsigned int d@<edx>, unsigned char flag_a, unsigned char flag_b);",
-          "ported": false
+          "decl": "unsigned int FUN_001c3710(unsigned int a@<eax>, unsigned int c@<ecx>, unsigned int d@<edx>, unsigned char flag0, unsigned char flag1);",
+          "ported": true
         },
         {
           "addr": "0x1c3750",
