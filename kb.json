@@ -11922,8 +11922,9 @@
         },
         {
           "addr": "0xc55d0",
-          "decl": "char FUN_000c55d0(const char *name, int *out_handles, int16_t max_count@<ebx>, int root_handle@<edi>);",
-          "ported": false
+          "decl": "char FUN_000c55d0(const char *name, int *out_handles, int16_t max_count@<bx>, int root_handle@<edi>);",
+          "ported": true,
+          "name": "FUN_000c55d0"
         },
         {
           "addr": "0xc5680",

@@ -4457,83 +4457,42 @@ int FUN_000c5310(int parent_handle __attribute__((unused)), int sibling_handle _
 #endif
 
 
-/* FUN_000c55d0 (0xc55d0) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-static void *(*const bc55d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const bc55d0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-char FUN_000c55d0(const char *name __attribute__((unused)), int *out_handles __attribute__((unused)), int16_t max_count __attribute__((unused)), int root_handle __attribute__((unused)))
+/* FUN_000c55d0 (0xc55d0) — readable C lift from XBE leaf.
+ * Walk HS thread child list from root@edi; fill out_handles with up to
+ * max_count@bx entries. Success only when count == max_count and list ends. */
+char FUN_000c55d0(const char *name, int *out_handles, int16_t max_count /*@<bx>*/, int root_handle /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c55d0_2\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_000c55d0_1:\n\t"
-      "cmpw %%bx, %%si\n\t"
-      "jge .LFUN_000c55d0_3\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, (%%edx,%%ecx,4)\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "incl %%esi\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000c55d0_1\n\t"
-      ".LFUN_000c55d0_2:\n\t"
-      "cmpw %%bx, %%si\n\t"
-      ".LFUN_000c55d0_3:\n\t"
-      "popl %%esi\n\t"
-      "jne .LFUN_000c55d0_4\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c55d0_5\n\t"
-      ".LFUN_000c55d0_4:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x27bcc8\n\t"
-      "pushl $0x46b704\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x46b704, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c55d0_5:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bc55d0_dget), [c1d90f0] "m"(bc55d0_c1d90f0)
-      : "memory");
+  void *data;
+  void *node;
+  int handle;
+  int cur;
+  int count;
+
+  data = *(void **)0x5aa6c8;
+  node = datum_get(data, root_handle);
+  handle = *(int *)((char *)node + 0x10);
+  node = datum_get(data, handle);
+  cur = *(int *)((char *)node + 0x8);
+  count = 0;
+  if (cur != -1) {
+    while (count < (int)max_count) {
+      out_handles[count] = cur;
+      node = datum_get(data, cur);
+      cur = *(int *)((char *)node + 0x8);
+      count++;
+      if (cur == -1)
+        break;
+    }
+  }
+  if (count != (int)max_count || cur != -1) {
+    crt_sprintf((char *)0x46b704, (const char *)0x27bcc8, name, (int)max_count);
+    *(void **)0x46b6fc = (void *)0x46b704;
+    node = datum_get(data, root_handle);
+    *(int *)0x46b700 = *(int *)((char *)node + 0xc);
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_000c55d0: clang naked draft required"
-#endif
+
+
 
