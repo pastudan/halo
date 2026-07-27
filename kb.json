@@ -21853,7 +21853,7 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "char action_avoid_setup(void * a0, void * a1);",
+          "decl": "void action_avoid_setup(void);",
           "ported": true
         },
         {

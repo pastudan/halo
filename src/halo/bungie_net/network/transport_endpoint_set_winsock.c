@@ -1371,7 +1371,7 @@ int FUN_000824a0(int *a, int *b)
 #if defined(__clang__)
 static void (*const b824d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b824d0_exitfn)(int) = system_exit;
-static void __cdecl (*const b824d0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = (void *)FUN_001d9260;
+static void __cdecl (*const b824d0_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = (void *)qsort;
 static void * (*const b824d0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void b824d0_c2251b8_tgt(void) { return; }
 static void (*const b824d0_c2251b8)(void) = b824d0_c2251b8_tgt;
