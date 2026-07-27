@@ -536,8 +536,9 @@
         },
         {
           "addr": "0x150840",
-          "decl": "void FUN_00150840(void);",
-          "ported": false
+          "decl": "short FUN_00150840(int object_handle@<eax>, short index@<si>);",
+          "ported": true,
+          "name": "FUN_00150840"
         },
         {
           "addr": "0x1508b0",

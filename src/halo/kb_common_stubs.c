@@ -12914,63 +12914,26 @@ void FUN_00150790(void)
 #endif
 
 
-/* FUN_00150840 (0x150840) — XBE naked draft (batch 352). */
-#if defined(__clang__)
-static void *(*const b150840_get)(int, int) = object_get_and_verify_type;
-static void *(*const b150840_tag)(int, int) = tag_get;
-static void *(*const b150840_elem)(void *, int, int) = tag_block_get_element;
-static void * (*const b150840_c18e3c0)(void) = scenario_get;
-
-__attribute__((naked, noinline))
-void FUN_00150840(void)
+/* FUN_00150840 (0x150840) — readable C lift. */
+short FUN_00150840(int object_handle, short index)
 {
-  __asm__ volatile(
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_00150840_2\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00150840_1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6f626a65\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x7c(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x636f6c6c\n\t"
-      "call *%[tag]\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl $0x48\n\t"
-      "pushl %%edx\n\t"
-      "addl $0x234, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x24(%%eax), %%ax\n\t"
-      "addl $0x24, %%esp\n\t"
-      "ret\n\t"
-      ".LFUN_00150840_1:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl $0x14\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e3c0]\n\t"
-      "addl $0xa4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x12(%%eax), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      ".LFUN_00150840_2:\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b150840_get), [tag] "m"(b150840_tag), [elem] "m"(b150840_elem), [c18e3c0] "m"(b150840_c18e3c0)
-      : "memory");
-}
-#else
-#error "FUN_00150840: clang naked draft required"
-#endif
+  void *obj;
+  void *tag;
+  void *coll;
+  void *elem;
 
+  if (index == -1)
+    return -1;
+  if (object_handle != -1) {
+    obj = object_get_and_verify_type(object_handle, -1);
+    tag = tag_get(0x6f626a65, *(int *)obj);
+    coll = tag_get(0x636f6c6c, *(int *)((char *)tag + 0x7c));
+    elem = tag_block_get_element((char *)coll + 0x234, index, 0x48);
+    return *(short *)((char *)elem + 0x24);
+  }
+  elem = tag_block_get_element((char *)scenario_get() + 0xa4, index, 0x14);
+  return *(short *)((char *)elem + 0x12);
+}
 
 /* FUN_001508b0 (0x1508b0) — XBE naked draft (batch 376). */
 #if defined(__clang__)
