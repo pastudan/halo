@@ -468,52 +468,37 @@ void FUN_00068a70(void)
 #endif
 
 
-/* FUN_00068bd0 (0x68bd0) — XBE naked draft (batch 338). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068bd0(void)
+/* FUN_00068bd0 (0x68bd0) — readable C lift. */
+int FUN_00068bd0(unsigned char *tif)
 {
-  __asm__ volatile(
-      "movl 0x120(%%eax), %%ecx\n\t"
-      "cmpw $0, 0x2(%%ecx)\n\t"
-      "pushl %%esi\n\t"
-      "jne .LFUN_00068bd0_1\n\t"
-      "movl 0x138(%%eax), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jle .LFUN_00068bd0_1\n\t"
-      "decl %%edx\n\t"
-      "movl %%edx, 0x138(%%eax)\n\t"
-      "movl 0x134(%%eax), %%edx\n\t"
-      "movzbl (%%edx), %%edx\n\t"
-      "movl 0x14(%%ecx), %%esi\n\t"
-      "movzbw (%%esi,%%edx,1), %%dx\n\t"
-      "movw %%dx, (%%ecx)\n\t"
-      "incl 0x134(%%eax)\n\t"
-      ".LFUN_00068bd0_1:\n\t"
-      "movswl (%%ecx), %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x2(%%ecx), %%dx\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "movzbl 0x2ec370(%%eax), %%eax\n\t"
-      "andl %%esi, %%eax\n\t"
-      "incl %%edx\n\t"
-      "cmpw $7, %%dx\n\t"
-      "movw %%dx, 0x2(%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "jle .LFUN_00068bd0_2\n\t"
-      "movw $0, 0x2(%%ecx)\n\t"
-      ".LFUN_00068bd0_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *state;
+  unsigned int n;
+  unsigned short bitpos;
+  int mask;
+  state = *(unsigned char **)(tif + 0x120);
+  if (*(short *)(state + 2) == 0) {
+    n = *(unsigned int *)(tif + 0x138);
+    if ((int)n > 0) {
+      *(unsigned int *)(tif + 0x138) = n - 1;
+      {
+        unsigned char b;
+        unsigned char *table;
+        b = **(unsigned char **)(tif + 0x134);
+        table = *(unsigned char **)(state + 0x14);
+        *(unsigned short *)state = table[b];
+        *(unsigned int *)(tif + 0x134) += 1;
+      }
+    }
+  }
+  bitpos = *(unsigned short *)(state + 2);
+  mask = *(unsigned char *)(0x2ec370 + (short)bitpos);
+  mask &= (short)*(unsigned short *)state;
+  bitpos = (unsigned short)(bitpos + 1);
+  *(unsigned short *)(state + 2) = bitpos;
+  if ((short)bitpos > 7)
+    *(unsigned short *)(state + 2) = 0;
+  return mask;
 }
-#else
-#error "FUN_00068bd0: clang naked draft required"
-#endif
-
 
 /* FUN_00068c40 (0x68c40) — XBE naked draft (batch 346). */
 #if defined(__clang__)

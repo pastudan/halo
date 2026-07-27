@@ -36614,8 +36614,8 @@
         },
         {
           "addr": "0x68bd0",
-          "decl": "void FUN_00068bd0(void);",
-          "ported": false
+          "decl": "int FUN_00068bd0(unsigned char *tif@<eax>);",
+          "ported": true
         },
         {
           "addr": "0x68c40",
@@ -36952,7 +36952,7 @@
         },
         {
           "addr": "0x6d140",
-          "decl": "void FUN_0006d140(void);",
+          "decl": "void FUN_0006d140(unsigned char *tif, void *a1, void *a2, void *a3);",
           "ported": false
         },
         {
