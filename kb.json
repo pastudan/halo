@@ -10314,8 +10314,8 @@
         },
         {
           "addr": "0x1c0600",
-          "decl": "void game_state_read_core_header(void);",
-          "ported": false
+          "decl": "char game_state_read_core_header(const char *name, void *buffer, uint32_t size);",
+          "ported": true
         },
         {
           "addr": "0x1c0680",

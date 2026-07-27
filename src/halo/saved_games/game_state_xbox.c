@@ -310,7 +310,7 @@ void FUN_001c0d70(int param_1)
 #if defined(__clang__)
 static void (*const b1c0260_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1c0260_exitfn)(int) = system_exit;
-static int __stdcall (*const b1c0260_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
+static int __stdcall (*const b1c0260_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = (void *)0x1d1d85;
 static unsigned int __stdcall (*const b1c0260_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
 static bool __stdcall (*const b1c0260_c1d158c)(int handle) = SetEndOfFile;
 static int (*const b1c0260_c1d2240)(void) = xapi_GetLastError;
@@ -399,7 +399,7 @@ void game_state_create_or_open_file(void)
 static void (*const b1c0450_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1c0450_exitfn)(int) = system_exit;
 static unsigned int __stdcall (*const b1c0450_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
-static int __stdcall (*const b1c0450_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = ReadFile;
+static int __stdcall (*const b1c0450_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = (void *)0x1d13c9;
 static int (*const b1c0450_c1d2240)(void) = xapi_GetLastError;
 static char * (*const b1c0450_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 
@@ -512,8 +512,8 @@ void game_state_read_from_file(void)
 #if defined(__clang__)
 static int (*const b1c0570_c1d3410)(const char *path, int access) = CreateDirectoryA;
 static int (*const b1c0570_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static int __stdcall (*const b1c0570_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
-static int __stdcall (*const b1c0570_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
+static int __stdcall (*const b1c0570_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = (void *)0x1d1d85;
+static int __stdcall (*const b1c0570_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = (void *)0x1d14b6;
 static int __stdcall (*const b1c0570_c1cf900)(int handle) = CloseHandle;
 
 __attribute__((naked, noinline))
@@ -583,82 +583,31 @@ void game_state_write_core(void)
 #endif
 
 
-/* game_state_read_core_header (0x1c0600) — XBE naked draft (batch 285). */
-#if defined(__clang__)
-static int (*const b1c0600_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static int __stdcall (*const b1c0600_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
-static int __stdcall (*const b1c0600_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = ReadFile;
-static int __stdcall (*const b1c0600_c1cf900)(int handle) = CloseHandle;
-
-__attribute__((naked, noinline))
-void game_state_read_core_header(void)
+/* game_state_read_core_header (0x1c0600) — readable C lift. */
+char game_state_read_core_header(const char *name, void *buffer, uint32_t size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x404, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x404(%%ebp), %%ecx\n\t"
-      "pushl $0x2b9ce8\n\t"
-      "pushl %%ecx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0\n\t"
-      "pushl $0x80\n\t"
-      "pushl $3\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x80000000\n\t"
-      "leal -0x404(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d1d85]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lgame_state_read_core_header_2\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl $0\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d13c9]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgame_state_read_core_header_1\n\t"
-      "cmpl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lgame_state_read_core_header_1\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lgame_state_read_core_header_1:\n\t"
-      "popl %%edi\n\t"
-      ".Lgame_state_read_core_header_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1cf900]\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d90f0] "m"(b1c0600_c1d90f0), [c1d1d85] "m"(b1c0600_c1d1d85), [c1d13c9] "m"(b1c0600_c1d13c9), [c1cf900] "m"(b1c0600_c1cf900)
-      : "memory");
-}
-#else
-#error "game_state_read_core_header: clang naked draft required"
-#endif
+  char path[0x404];
+  int handle;
+  unsigned int transferred;
+  char ok;
 
+  ok = 0;
+  crt_sprintf(path, (const char *)0x2b9ce8, name);
+  handle = CreateFileA(path, 0x80000000u, 0, 0, 3, 0x80, 0);
+  if (handle != -1) {
+    if (FUN_001d13c9((void *)handle, buffer, size, &transferred, NULL) &&
+        transferred == size)
+      ok = 1;
+  }
+  CloseHandle(handle);
+  return ok;
+}
 
 /* game_state_read_core (0x1c0680) — XBE naked draft (batch 284). */
 #if defined(__clang__)
 static int (*const b1c0680_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static int __stdcall (*const b1c0680_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
-static int __stdcall (*const b1c0680_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = ReadFile;
+static int __stdcall (*const b1c0680_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = (void *)0x1d1d85;
+static int __stdcall (*const b1c0680_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = (void *)0x1d13c9;
 static void (*const b1c0680_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1c0680_exitfn)(int) = system_exit;
 static int __stdcall (*const b1c0680_c1cf900)(int handle) = CloseHandle;
@@ -735,16 +684,16 @@ void game_state_read_core(void)
 static void (*const b1c0780_chkstk)(void) = FUN_001d90e0;
 static void (*const b1c0780_ce0bf0)(void) = (void (*)(void))player_ui_get_path_to_local_player_profile_directory;
 static char * (*const b1c0780_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
-static int __stdcall (*const b1c0780_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = CreateFileA;
+static int __stdcall (*const b1c0780_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = (void *)0x1d1d85;
 static unsigned int __stdcall (*const b1c0780_c1d1d4a)(int handle, unsigned int *high_size) = GetFileSize;
 static void *(*const b1c0780_memset)(void *, int, unsigned int) = csmemset;
-static int __stdcall (*const b1c0780_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
+static int __stdcall (*const b1c0780_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = (void *)0x1d14b6;
 static unsigned int __stdcall (*const b1c0780_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
 static bool __stdcall (*const b1c0780_c1d158c)(int handle) = SetEndOfFile;
 static char * (*const b1c0780_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static void (*const b1c0780_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1c0780_exitfn)(int) = system_exit;
-static void (*const b1c0780_c1c0750)(void) = FUN_001c0750;
+static void (*const b1c0780_c1c0750)(void) = (void *)FUN_001c0750;
 static int __stdcall (*const b1c0780_c1cf900)(int handle) = CloseHandle;
 static char * (*const b1c0780_c8dff0)(char *destination, const char *source) = csstrcpy;
 
@@ -899,7 +848,7 @@ static void (*const b1c0ac0_exitfn)(int) = system_exit;
 static void * (*const b1c0ac0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void *(*const b1c0ac0_memset)(void *, int, unsigned int) = csmemset;
 static unsigned int __stdcall (*const b1c0ac0_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
-static int __stdcall (*const b1c0ac0_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = WriteFile;
+static int __stdcall (*const b1c0ac0_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = (void *)0x1d14b6;
 static int (*const b1c0ac0_c1d2240)(void) = xapi_GetLastError;
 static char * (*const b1c0ac0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static void (*const b1c0ac0_ce0bf0)(void) = (void (*)(void))player_ui_get_path_to_local_player_profile_directory;
@@ -1059,7 +1008,7 @@ static void (*const b1c0da0_exitfn)(int) = system_exit;
 static file_ref_t * (*const b1c0da0_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
 static bool (*const b1c0da0_c19a7a0)(file_ref_t *info, int flags) = file_open;
 static bool (*const b1c0da0_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-static void (*const b1c0da0_c1c3160)(void) = saved_game_file_generate_checksum;
+static void (*const b1c0da0_c1c3160)(void) = (void *)saved_game_file_generate_checksum;
 static int (*const b1c0da0_c8da40)(const void *a, const void *b, int size) = csmemcmp;
 static void * (*const b1c0da0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static bool (*const b1c0da0_c19a930)(file_ref_t *info) = file_close;
@@ -1629,15 +1578,15 @@ static void (*const b1c1340_c8f390)(unsigned __int16 a1, const char *a2, ...) = 
 static bool (*const b1c1340_c81720)(void *thread_reference) = thread_is_done;
 static void (*const b1c1340_c81770)(void *thread_reference) = thread_close;
 static void (*const b1c1340_c1c2af0)(void) = (void *)saved_game_files_take_mutex;
-static void (*const b1c1340_c1c4850)(void) = FUN_001c4850;
+static void (*const b1c1340_c1c4850)(void) = (void *)FUN_001c4850;
 static bool (*const b1c1340_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-static void (*const b1c1340_c1c3160)(void) = saved_game_file_generate_checksum;
+static void (*const b1c1340_c1c3160)(void) = (void *)saved_game_file_generate_checksum;
 static int (*const b1c1340_c8da40)(const void *a, const void *b, int size) = csmemcmp;
 static void * (*const b1c1340_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b1c1340_c1c2890)(void) = saved_game_file_close;
+static void (*const b1c1340_c1c2890)(void) = (void *)saved_game_file_close;
 static void (*const b1c1340_c1c2b10)(void) = (void *)saved_game_files_release_mutex;
 static void *(*const b1c1340_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1c1340_c1c4600)(void) = saved_game_file_get_display_name;
+static void (*const b1c1340_c1c4600)(void) = (void *)saved_game_file_get_display_name;
 static wchar_t * (*const b1c1340_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 
 __attribute__((naked, noinline))
@@ -1874,13 +1823,13 @@ static void (*const b1c15c0_assert)(const char *, const char *, int, bool) = dis
 static void (*const b1c15c0_exitfn)(int) = system_exit;
 static void (*const b1c15c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 static void (*const b1c15c0_c1c2af0)(void) = (void *)saved_game_files_take_mutex;
-static void (*const b1c15c0_c1c4850)(void) = FUN_001c4850;
+static void (*const b1c15c0_c1c4850)(void) = (void *)FUN_001c4850;
 static void * (*const b1c15c0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b1c15c0_c1c3160)(void) = saved_game_file_generate_checksum;
+static void (*const b1c15c0_c1c3160)(void) = (void *)saved_game_file_generate_checksum;
 static bool (*const b1c15c0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c15c0_c19ac00)(void) = file_write;
-static void (*const b1c15c0_c1c2890)(void) = saved_game_file_close;
-static void (*const b1c15c0_c1c4990)(void) = FUN_001c4990;
+static void (*const b1c15c0_c19ac00)(void) = (void *)file_write;
+static void (*const b1c15c0_c1c2890)(void) = (void *)saved_game_file_close;
+static void (*const b1c15c0_c1c4990)(void) = (void *)FUN_001c4990;
 static char (*const b1c15c0_c1c46c0)(int param_1) = delete_enumerated_saved_game_file;
 static void (*const b1c15c0_c1c2b10)(void) = (void *)saved_game_files_release_mutex;
 
@@ -2020,16 +1969,16 @@ void FUN_001c15c0(void)
 
 /* FUN_001c1720 (0x1c1720) — XBE naked draft (batch 261). */
 #if defined(__clang__)
-static void (*const b1c1720_c1c5560)(void) = FUN_001c5560;
-static void (*const b1c1720_c1c4850)(void) = FUN_001c4850;
+static void (*const b1c1720_c1c5560)(void) = (void *)FUN_001c5560;
+static void (*const b1c1720_c1c4850)(void) = (void *)FUN_001c4850;
 static void *(*const b1c1720_memset)(void *, int, unsigned int) = csmemset;
 static wchar_t * (*const b1c1720_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
 static void (*const b1c1720_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1c1720_c1c3160)(void) = saved_game_file_generate_checksum;
+static void (*const b1c1720_c1c3160)(void) = (void *)saved_game_file_generate_checksum;
 static bool (*const b1c1720_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c1720_c19ac00)(void) = file_write;
+static void (*const b1c1720_c19ac00)(void) = (void *)file_write;
 static char (*const b1c1720_c1c46c0)(int param_1) = delete_enumerated_saved_game_file;
-static void (*const b1c1720_c1c2890)(void) = saved_game_file_close;
+static void (*const b1c1720_c1c2890)(void) = (void *)saved_game_file_close;
 
 __attribute__((naked, noinline))
 void FUN_001c1720(void)
@@ -2246,14 +2195,14 @@ int FUN_001c19c0(void)
 
 /* FUN_001c19e0 (0x1c19e0) — XBE naked draft (batch 242). */
 #if defined(__clang__)
-static void (*const b1c19e0_c1c1290)(void) = game_state_read_from_persistent_storage;
+static void (*const b1c19e0_c1c1290)(void) = (void *)game_state_read_from_persistent_storage;
 static int (*const b1c19e0_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
 static file_ref_t * (*const b1c19e0_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static void (*const b1c19e0_c1c3160)(void) = saved_game_file_generate_checksum;
+static void (*const b1c19e0_c1c3160)(void) = (void *)saved_game_file_generate_checksum;
 static bool (*const b1c19e0_c19a490)(file_ref_t *info) = FUN_0019a490;
 static bool (*const b1c19e0_c19a7a0)(file_ref_t *info, int flags) = file_open;
 static bool (*const b1c19e0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c19e0_c19ac00)(void) = file_write;
+static void (*const b1c19e0_c19ac00)(void) = (void *)file_write;
 static bool (*const b1c19e0_c19a930)(file_ref_t *info) = file_close;
 static void (*const b1c19e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
