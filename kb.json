@@ -13697,7 +13697,7 @@
         },
         {
           "addr": "0xce740",
-          "decl": "void input_abstraction_update_local_player_preferences(void);",
+          "decl": "void input_abstraction_update_local_player_preferences(short local_player_index, void *preferences_in);",
           "ported": false
         },
         {
@@ -13707,7 +13707,7 @@
         },
         {
           "addr": "0xce840",
-          "decl": "void input_abstraction_update_device_changes(void);",
+          "decl": "void input_abstraction_update_device_changes(int device_flags);",
           "ported": false
         },
         {
@@ -22686,7 +22686,7 @@
         {
           "addr": "0x110800",
           "decl": "void FUN_00110800(int param_1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x110820",

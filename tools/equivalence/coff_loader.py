@@ -178,7 +178,12 @@ def load_coff(path: str) -> tuple[list[CoffSection], list[CoffSymbol], bytes]:
 
 
 def _canonical(name: str) -> str:
-    """Strip a leading underscore from a COFF symbol name (MSVC cdecl decoration)."""
+    """Strip MSVC decoration to a bare C identifier.
+
+    Handles leading underscores (cdecl) and trailing ``@N`` stdcall suffixes
+    (``_BinkWait@4`` / ``BinkWait@4`` → ``BinkWait``).
+    """
+    name = name.split("@", 1)[0]
     return name.lstrip("_")
 
 

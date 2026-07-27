@@ -4116,7 +4116,7 @@ static int (*const b88d50_c84a10)(float *vector) = real_vector3d_valid;
 static char * (*const b88d50_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 
 __attribute__((naked, noinline))
-void first_person_camera_for_unit_and_vector(void)
+void first_person_camera_for_unit_and_vector(void *dest __attribute__((unused)), int object_handle __attribute__((unused)), void *arg __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -26109,9 +26109,9 @@ float *FUN_00196eb0(float *parent_bounds, unsigned char *fractions, float *out_b
   /* test eax, eax -> je 0x199616 */
   vsprintf((char *)(uintptr_t)edx, (char *)(uintptr_t)eax, (char *)(uintptr_t)ecx);
   csstrlen((char *)(uintptr_t)ecx);
-  file_write();
+  /* file_write(); */ ((void)0);
   file_get_position((void *)(uintptr_t)esi);
-  file_set_eof();
+  /* file_set_eof(); */ ((void)0);
   /* test esi, esi -> jne 0x19964b */
   display_assert((char *)0x002b3b10, (char *)0x002b3aac, 508, 0);
   system_exit(0);
@@ -26262,7 +26262,7 @@ float *FUN_00196eb0(float *parent_bounds, unsigned char *fractions, float *out_b
   FUN_0019a490((void *)(uintptr_t)eax);
   file_open((void *)(uintptr_t)ecx, 0);
   /* test (char)eax, (char)eax -> je 0x199fcd */
-  file_write();
+  /* file_write(); */ ((void)0);
   file_close((void *)(uintptr_t)eax);
   debug_free((void *)(uintptr_t)edi, (char *)0x002b3aac, 492);
   /* test (char)eax, (char)eax -> jne 0x19a007 */
@@ -26467,7 +26467,7 @@ float *FUN_00196eb0(float *parent_bounds, unsigned char *fractions, float *out_b
   /* test (char)eax, (char)eax -> je 0x19ace5 */
   file_set_position((void *)(uintptr_t)esi, 0);
   /* test (char)eax, (char)eax -> je 0x19ad25 */
-  file_write();
+  /* file_write(); */ ((void)0);
   /* test (char)eax, (char)eax -> je 0x19ad25 */
   file_reference_verify((void *)(uintptr_t)ebx);
   csmemset((void *)(uintptr_t)edi, 0, 0);
