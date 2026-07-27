@@ -260,183 +260,44 @@ int16_t path_add_step(void *path __attribute__((unused)), float *delta __attribu
 #endif
 
 
-/* FUN_00060ea0 (0x60ea0) — XBE naked draft (batch 233). */
-#if defined(__clang__)
-static char * (*const b60ea0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b60ea0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b60ea0_exitfn)(int) = system_exit;
-static short (*const b60ea0_c62410)(void *obstacles, short disc_index_skip, float *position_xy, float radius) = FUN_00062410;
-static void * (*const b60ea0_c60070)(void *obstacles, int16_t disc_index) = FUN_00060070;
-static int16_t (*const b60ea0_c60c80)(void *path, float *delta, int16_t zone_index, char surface_flag, float step_cost, int16_t parent_step) = path_add_step;
-
-__attribute__((naked, noinline))
-void FUN_00060ea0(void *avoidance_record __attribute__((unused)), float *end_point __attribute__((unused)), void *param_2 __attribute__((unused)), void *scenario __attribute__((unused)), unsigned char param_4 __attribute__((unused)), float radius __attribute__((unused)), float *start_point __attribute__((unused)), int param_7 __attribute__((unused)), float param_8 __attribute__((unused)), unsigned char param_9 __attribute__((unused)), unsigned char param_10 __attribute__((unused)))
+/* FUN_00060ea0 (0x60ea0) — readable C lift (restored pre-naked). */
+void FUN_00060ea0(void *avoidance_record, float *end_point, void *param_2, void *scenario, unsigned char param_4, float radius, float *start_point, int param_7, float param_8, unsigned char param_9, unsigned char param_10)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x7f800000, %%ecx\n\t"
-      "cmpl $0x7f800000, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00060ea0_1\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1b8\n\t"
-      "pushl $0x25ea14\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "movl %%eax, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x253f04\n\t"
-      "pushl $0x25eb8c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060ea0_1:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7f800000, %%edx\n\t"
-      "cmpl $0x7f800000, %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "je .LFUN_00060ea0_2\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "andl $0x7f800000, %%edx\n\t"
-      "cmpl $0x7f800000, %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00060ea0_3\n\t"
-      ".LFUN_00060ea0_2:\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1b9\n\t"
-      "pushl $0x25ea14\n\t"
-      "subl $0x10, %%esp\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%eax)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x25eb84\n\t"
-      "pushl $0x25eb5c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060ea0_3:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x7f800000, %%ecx\n\t"
-      "cmpl $0x7f800000, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_00060ea0_4\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "andl $0x7f800000, %%eax\n\t"
-      "cmpl $0x7f800000, %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00060ea0_5\n\t"
-      ".LFUN_00060ea0_4:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ba\n\t"
-      "pushl $0x25ea14\n\t"
-      "subl $0x10, %%esp\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x25eb54\n\t"
-      "pushl $0x25eb5c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00060ea0_5:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "movb 0x10(%%ebp), %%cl\n\t"
-      "movl %%edx, 0xc(%%edi)\n\t"
-      "movb %%cl, 0x4(%%edi)\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      "movb $0, 0x28(%%edi)\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl %%edx, 0x10(%%edi)\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x14(%%edi)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, 0x18(%%edi)\n\t"
-      "call *%[c62410]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw %%si, %%ax\n\t"
-      "je .LFUN_00060ea0_6\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c60070]\n\t"
-      "movswl 0x2(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_00060ea0_7\n\t"
-      ".LFUN_00060ea0_6:\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".LFUN_00060ea0_7:\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "movb 0x28(%%ebp), %%cl\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "movw %%ax, 0x1c(%%edi)\n\t"
-      "movb 0x24(%%ebp), %%al\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "movb %%al, 0x29(%%edi)\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movw %%si, 0x1e(%%edi)\n\t"
-      "movl $0x7f7fffff, 0x24(%%edi)\n\t"
-      "movw %%si, 0x20(%%edi)\n\t"
-      "movb %%cl, 0x2a(%%edi)\n\t"
-      "movw $0, 0x2c(%%edi)\n\t"
-      "movw $0, 0x1430(%%edi)\n\t"
-      "call *%[c60c80]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8d9d0] "m"(b60ea0_c8d9d0), [assert] "m"(b60ea0_assert), [exitfn] "m"(b60ea0_exitfn), [c62410] "m"(b60ea0_c62410), [c60070] "m"(b60ea0_c60070), [c60c80] "m"(b60ea0_c60c80)
-      : "memory");
+  int16_t disc_index;
+  int16_t link_index;
+  void *obstacles;
+
+  (void)param_7;
+  (void)param_8;
+
+  *(float *)avoidance_record = end_point[0];
+  *(unsigned char *)((char *)avoidance_record + 4) = param_4;
+  *(void **)((char *)avoidance_record + 8) = param_2;
+  *(void **)((char *)avoidance_record + 0xc) = scenario;
+  *(float *)((char *)avoidance_record + 0x10) = start_point[0];
+  *(float *)((char *)avoidance_record + 0x14) = start_point[1];
+  *(void **)((char *)avoidance_record + 0x18) = end_point;
+  *(int16_t *)((char *)avoidance_record + 0x1c) = -1;
+  *(int16_t *)((char *)avoidance_record + 0x1e) = -1;
+  *(int16_t *)((char *)avoidance_record + 0x20) = -1;
+  *(uint32_t *)((char *)avoidance_record + 0x24) = 0x7f7fffffU;
+  *(unsigned char *)((char *)avoidance_record + 0x28) = 0;
+  *(unsigned char *)((char *)avoidance_record + 0x29) = param_9;
+  *(unsigned char *)((char *)avoidance_record + 0x2a) = param_10;
+  *(int16_t *)((char *)avoidance_record + 0x2c) = 0;
+  *(int16_t *)((char *)avoidance_record + 0x1430) = 0;
+
+  obstacles = *(void **)((char *)avoidance_record + 8);
+  disc_index =
+      FUN_00062410(obstacles, -1, end_point, radius);
+  if (disc_index == -1)
+    link_index = -1;
+  else
+    link_index = FUN_000600c0(obstacles, disc_index);
+  *(int16_t *)((char *)avoidance_record + 0x1c) = link_index;
+
+  path_add_step(avoidance_record, end_point, link_index, 0, 0.0f, -1);
 }
-#else
-#error "FUN_00060ea0: clang naked draft required"
-#endif
 
 
 /* FUN_00061080 (0x61080) — readable C lift (restored pre-naked). */
@@ -680,152 +541,40 @@ void path_add_steps(void *path, int16_t seed_disc_index, int16_t step_index)
 }
 
 
-/* FUN_000615b0 (0x615b0) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-static int16_t (*const b615b0_c60970)(void *path) = FUN_00060970;
-static void * (*const b615b0_c600f0)(void *path, int16_t step_index) = FUN_000600f0;
-static void (*const b615b0_c61080)(void *structure_bsp, unsigned char path_surface_flag, void *obstacles, int16_t disc_index, int surface_hint, float max_cost, float ray_t, unsigned char skip_ray_march, unsigned char use_cost_delta, char check_extant, void *out_result, float *step_data, float *direction) = FUN_00061080;
-static bool (*const b615b0_c638f0)(int def, float *point, int surf_a, int surf_b) = FUN_000638f0;
-static int16_t (*const b615b0_c60c80)(void *path, float *delta, int16_t zone_index, char surface_flag, float step_cost, int16_t parent_step) = path_add_step;
-static void (*const b615b0_c61280)(void *path, int16_t seed_disc_index, int16_t step_index) = path_add_steps;
-
-__attribute__((naked, noinline))
-int FUN_000615b0(void *avoidance_record __attribute__((unused)))
+/* FUN_000615b0 (0x615b0) — readable C lift (restored pre-naked). */
+int FUN_000615b0(void *avoidance_record)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c60970]\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_000615b0_5\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c600f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x2a(%%esi), %%cl\n\t"
-      "cmpw $-1, 0x24(%%edi)\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x14(%%edi), %%eax\n\t"
-      "sete %%dl\n\t"
-      "leal 0xc(%%edi), %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x4(%%esi), %%cl\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c61080]\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "addl $0x34, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000615b0_4\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "jne .LFUN_000615b0_2\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_000615b0_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "leal 0x10(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c638f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000615b0_4\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      ".LFUN_000615b0_1:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "fmuls (%%ebx)\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "fadds (%%edi)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls 0x4(%%ebx)\n\t"
-      "fadds 0x4(%%edi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x20(%%edi)\n\t"
-      "fsubs 0x14(%%edi)\n\t"
-      "movl %%esi, %%edi\n\t"
-      "fadds -0x1c(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c60c80]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movw %%ax, 0x1e(%%esi)\n\t"
-      "jmp .LFUN_000615b0_4\n\t"
-      ".LFUN_000615b0_2:\n\t"
-      "movw -0xe(%%ebp), %%dx\n\t"
-      "cmpw 0x1c(%%esi), %%dx\n\t"
-      "jne .LFUN_000615b0_3\n\t"
-      "flds 0x14(%%edi)\n\t"
-      "fcomps 0x24(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000615b0_3\n\t"
-      "movl 0x14(%%edi), %%eax\n\t"
-      "movw -0x4(%%ebp), %%dx\n\t"
-      "movl %%eax, 0x24(%%esi)\n\t"
-      "movw %%dx, 0x20(%%esi)\n\t"
-      ".LFUN_000615b0_3:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "call *%[c61280]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000615b0_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000615b0_5:\n\t"
-      "cmpw $-1, 0x1e(%%esi)\n\t"
-      "jne .LFUN_000615b0_6\n\t"
-      "cmpw $0, 0x1430(%%esi)\n\t"
-      "jle .LFUN_000615b0_6\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000615b0_6:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c60970] "m"(b615b0_c60970), [c600f0] "m"(b615b0_c600f0), [c61080] "m"(b615b0_c61080), [c638f0] "m"(b615b0_c638f0), [c60c80] "m"(b615b0_c60c80), [c61280] "m"(b615b0_c61280)
-      : "memory");
+  int16_t step_index;
+  char *step;
+  float target_point[2];
+  float step_cost;
+  float scale;
+
+  step_index = FUN_00060970(avoidance_record);
+  if (step_index == -1)
+    return 0;
+
+  step = (char *)FUN_000600f0(avoidance_record, step_index);
+  if (*(int16_t *)(step + 0x24) == -1)
+    scale = *(float *)((char *)avoidance_record + 0x18);
+  else
+    scale = *(float *)(step + 0x20) - *(float *)(step + 0x14) +
+            *(float *)((char *)avoidance_record + 0x18);
+
+  target_point[0] = *(float *)(step + 0xc) * scale + *(float *)step;
+  target_point[1] = *(float *)(step + 0x10) * scale + *(float *)(step + 4);
+  step_cost = *(float *)(step + 0x20) - *(float *)(step + 0x14) + scale;
+
+  path_add_step(avoidance_record, target_point,
+                *(int16_t *)((char *)avoidance_record + 0x1c), 0, step_cost,
+                -1);
+  *(int16_t *)((char *)avoidance_record + 0x1e) = step_index;
+
+  if (*(int16_t *)((char *)avoidance_record + 0x1e) == -1 &&
+      *(int16_t *)((char *)avoidance_record + 0x1430) > 0)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_000615b0: clang naked draft required"
-#endif
 
 
 /* FUN_000616e0 (0x616e0) — readable C lift. */

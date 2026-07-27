@@ -117,112 +117,44 @@ void actor_perception_acknowledge(int actor_handle, int prop_handle,
 }
 
 
-/* FUN_0002f380 (0x2f380) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void *(*const b2f380_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b2f380_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b2f380_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-uint16_t FUN_0002f380(int actor_handle __attribute__((unused)), int prop_handle __attribute__((unused)))
+/* FUN_0002f380 (0x2f380) — readable C lift (restored pre-naked)
+ * Returns the engagement level (0-3) for a prop relative to actor.
+ * 3 = actively targeting/seen; 2/3 = based on orphan state; 0/1/2 = based
+ * on actor awareness level when no prop or no orphan.
+ */
+uint16_t FUN_0002f380(int actor_handle, int prop_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0002f380_5\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LFUN_0002f380_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x572\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x255f88\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0002f380_1:\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .LFUN_0002f380_2\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jle .LFUN_0002f380_3\n\t"
-      ".LFUN_0002f380_2:\n\t"
-      "movw 0x66(%%esi), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .LFUN_0002f380_3\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .LFUN_0002f380_3\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0002f380_4\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0002f380_3\n\t"
-      "cmpw $3, 0x6a(%%ebx)\n\t"
-      "jl .LFUN_0002f380_4\n\t"
-      ".LFUN_0002f380_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $3, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0002f380_4:\n\t"
-      "movl 0xc(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_0002f380_5\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0xb8(%%eax), %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%dl, %%dl\n\t"
-      "setne %%cl\n\t"
-      "addl $2, %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .LFUN_0002f380_6\n\t"
-      ".LFUN_0002f380_5:\n\t"
-      "movl $2, %%eax\n\t"
-      "cmpw %%ax, 0x6e(%%ebx)\n\t"
-      "jge .LFUN_0002f380_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw $3, 0x6a(%%ebx)\n\t"
-      "setge %%al\n\t"
-      ".LFUN_0002f380_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2f380_dget), [assert] "m"(b2f380_assert), [exitfn] "m"(b2f380_exitfn)
-      : "memory");
+  char *actor;
+  char *prop;
+  char *orphan;
+  uint16_t r;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  if (prop_handle != -1) {
+    prop = (char *)datum_get(*(data_t **)0x5ab23c, prop_handle);
+    if (*(int *)(prop + 4) != actor_handle) {
+      display_assert("prop->owner_actor_index == actor_index",
+                     "c:\\halo\\SOURCE\\ai\\actor_perception.c", 0x572, 1);
+      system_exit(-1);
+    }
+    if ((*(short *)(prop + 0x24) >= 2 && *(short *)(prop + 0x24) <= 3) ||
+        *(short *)(prop + 0x66) == 1 || *(short *)(prop + 0x66) == 2 ||
+        (*(char *)(prop + 0x60) == 0 &&
+         (*(char *)(prop + 0x127) == 0 || *(short *)(actor + 0x6a) >= 3))) {
+      return 3;
+    }
+    if (*(int *)(prop + 0xc) != -1) {
+      orphan = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(prop + 0xc));
+      r = (uint16_t)((*(char *)(orphan + 0xb8) != 0) + 2);
+      if (r != 0xffff) {
+        return r;
+      }
+    }
+  }
+  if (*(short *)(actor + 0x6e) >= 2)
+    return 2;
+  return (uint16_t)(*(short *)(actor + 0x6a) >= 3);
 }
-#else
-#error "FUN_0002f380: clang naked draft required"
-#endif
 
 
 /* FUN_0002f5b0 (0x2f5b0) — readable C lift from XBE leaf (compare z). */

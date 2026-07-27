@@ -67,124 +67,69 @@ void ai_debug_actor_deleted(int actor_handle)
   }
 }
 
-/* ai_debug_get_path_storage (0x49120) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void (*const b49120_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b49120_exitfn)(int) = system_exit;
-static void *(*const b49120_memset)(void *, int, unsigned int) = csmemset;
-static int (*const b49120_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void * ai_debug_get_path_storage(int actor_handle __attribute__((unused)))
+/* ai_debug_get_path_storage (0x49120) — readable C lift (restored pre-naked) — find or allocate a path debug storage
+ * slot for actor_handle. Searches 0x20 entries (stride 0x1ca7c) in the
+ * actor_path_debug_array. Returns an exact match, first inactive slot, or
+ * evicts the oldest entry. Returns NULL if eviction finds no slot. */
+void *ai_debug_get_path_storage(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "orl $0xffffffff, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lai_debug_get_path_storage_1:\n\t"
-      "movl 0x331f5c, %%ebx\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "imull $0x1ca7c, %%eax, %%eax\n\t"
-      "movl (%%eax,%%ebx,1), %%edi\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jne .Lai_debug_get_path_storage_2\n\t"
-      "movb 0xd(%%eax), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lai_debug_get_path_storage_4\n\t"
-      ".Lai_debug_get_path_storage_2:\n\t"
-      "cmpw $-1, %%dx\n\t"
-      "jne .Lai_debug_get_path_storage_3\n\t"
-      "movb 0xc(%%eax), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lai_debug_get_path_storage_3\n\t"
-      "movl %%ecx, %%edx\n\t"
-      ".Lai_debug_get_path_storage_3:\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $0x20, %%cx\n\t"
-      "jl .Lai_debug_get_path_storage_1\n\t"
-      "jmp .Lai_debug_get_path_storage_5\n\t"
-      ".Lai_debug_get_path_storage_4:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      ".Lai_debug_get_path_storage_5:\n\t"
-      "cmpw $-1, %%dx\n\t"
-      "jne .Lai_debug_get_path_storage_9\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0xffffffff, -0x8(%%ebp)\n\t"
-      "movl $0x7fffffff, -0x4(%%ebp)\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      ".Lai_debug_get_path_storage_6:\n\t"
-      "movl 0x331f5c, %%eax\n\t"
-      "leal (%%ebx,%%eax,1), %%esi\n\t"
-      "movb 0xc(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lai_debug_get_path_storage_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x123\n\t"
-      "pushl $0x25ab74\n\t"
-      "pushl $0x25abc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_debug_get_path_storage_7:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "cmpl -0x4(%%ebp), %%eax\n\t"
-      "jge .Lai_debug_get_path_storage_8\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      ".Lai_debug_get_path_storage_8:\n\t"
-      "incl %%edi\n\t"
-      "addl $0x1ca7c, %%ebx\n\t"
-      "cmpw $0x20, %%di\n\t"
-      "jl .Lai_debug_get_path_storage_6\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "cmpw $-1, %%dx\n\t"
-      "je .Lai_debug_get_path_storage_10\n\t"
-      ".Lai_debug_get_path_storage_9:\n\t"
-      "movl 0x331f5c, %%ebx\n\t"
-      "movswl %%dx, %%esi\n\t"
-      "imull $0x1ca7c, %%esi, %%esi\n\t"
-      "pushl $0x1ca7c\n\t"
-      "addl %%ebx, %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0xc(%%esi)\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_debug_get_path_storage_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b49120_assert), [exitfn] "m"(b49120_exitfn), [memset] "m"(b49120_memset), [gtime] "m"(b49120_gtime)
-      : "memory");
+  char *base;
+  char *entry;
+  short best_slot;
+  short i;
+  short oldest_slot;
+  int oldest_time;
+  int off;
+
+  best_slot = -1;
+  i = 0;
+  do {
+    base = *(char **)0x331f5c;
+    entry = base + (int)i * 0x1ca7c;
+    if (*(int *)entry == actor_handle && *(char *)(entry + 0xd) == '\0') {
+      best_slot = i;
+      goto found;
+    }
+    if (best_slot == (short)-1 && *(char *)(entry + 0xc) == '\0') {
+      best_slot = i;
+    }
+    i++;
+  } while (i < 0x20);
+
+  if (best_slot == (short)-1) {
+    oldest_slot = -1;
+    oldest_time = 0x7fffffff;
+    off = 0;
+    i = 0;
+    do {
+      base = *(char **)0x331f5c;
+      entry = base + off;
+      if (*(char *)(entry + 0xc) == '\0') {
+        display_assert("path->valid", "c:\\halo\\SOURCE\\ai\\ai_debug.c",
+                       0x123, 1);
+        system_exit(-1);
+      }
+      if (*(int *)(entry + 4) < oldest_time) {
+        oldest_time = *(int *)(entry + 4);
+        oldest_slot = i;
+      }
+      off += 0x1ca7c;
+      i++;
+    } while (i < 0x20);
+    best_slot = oldest_slot;
+    if (best_slot == (short)-1) {
+      return 0;
+    }
+  }
+
+found:
+  entry = *(char **)0x331f5c + (int)best_slot * 0x1ca7c;
+  csmemset(entry, 0, 0x1ca7c);
+  *(char *)(entry + 0xc) = 1;
+  *(int *)entry = actor_handle;
+  *(int *)(entry + 4) = game_time_get();
+  return entry;
 }
-#else
-#error "ai_debug_get_path_storage: clang naked draft required"
-#endif
 
 
 /* ai_debug_select_encounter: reset debug encounter state when encounter_idx

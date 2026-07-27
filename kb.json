@@ -29504,7 +29504,7 @@
         {
           "addr": "0x1a68d0",
           "decl": "short FUN_001a68d0(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a68d0"
         },
         {
@@ -30142,7 +30142,7 @@
           "addr": "0x1ac680",
           "decl": "void FUN_001ac680(float initial_p, float initial_v, float max_v, float max_a, int plan);",
           "name": "FUN_001ac680",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1acb70",
@@ -35589,7 +35589,7 @@
           "decl": "uint16_t FUN_0002f380(int actor_handle, int prop_handle);",
           "name": "FUN_0002f380",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2f470",
@@ -36179,7 +36179,7 @@
           "addr": "0x49120",
           "decl": "void *ai_debug_get_path_storage(int actor_handle);",
           "name": "ai_debug_get_path_storage",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x49220",

@@ -10799,633 +10799,212 @@ done:
 }
 
 
-/* FUN_001ac680 (0x1ac680) — XBE naked draft (batch 50). */
-#if defined(__clang__)
-static void (*const b1ac680_c1ac680)(float initial_p, float initial_v, float max_v, float max_a, int plan) = (void *)FUN_001ac680;
-static void (*const b1ac680_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1ac680_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_001ac680(float initial_p __attribute__((unused)), float initial_v __attribute__((unused)), float max_v __attribute__((unused)), float max_a __attribute__((unused)), int plan __attribute__((unused)))
+/* FUN_001ac680 (0x1ac680) — readable C lift (restored pre-naked) — acceleration plan builder.
+ *
+ * Computes a piecewise acceleration/deceleration plan given initial
+ * position, velocity, maximum velocity, and maximum acceleration.
+ * The plan output structure at param_5 has layout:
+ *   +0x00: bool  at_rest
+ *   +0x04: float initial_p
+ *   +0x08: float initial_v
+ *   +0x0C: float accel_a
+ *   +0x10: float accel_t
+ *   +0x14: float coast_t
+ *   +0x18: float decel_a
+ *   +0x1C: float decel_t
+ *
+ * Recursive for the negative-velocity case (negates p and v, then
+ * negates the plan output). Source file: units.c lines 0x7b7-0x860.
+ */
+void FUN_001ac680(float initial_p, float initial_v, float max_v,
+                  float max_a, int plan)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl $0x7f7fffff, %%eax\n\t"
-      "fabs\n\t"
-      "fcompl 0x2549d8\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      "movl %%eax, 0x14(%%esi)\n\t"
-      "movl %%eax, 0x18(%%esi)\n\t"
-      "movl %%eax, 0x1c(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "pushl %%edi\n\t"
-      "testb $5, %%ah\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "jp .LFUN_001ac680_1\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2549d8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001ac680_1\n\t"
-      "movl $1, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "jmp .LFUN_001ac680_2\n\t"
-      ".LFUN_001ac680_1:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001ac680_2:\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%al, (%%esi)\n\t"
-      "je .LFUN_001ac680_3\n\t"
-      "movl %%edi, 0xc(%%esi)\n\t"
-      "movl %%edi, 0x10(%%esi)\n\t"
-      "movl %%edi, 0x14(%%esi)\n\t"
-      "movl %%edi, 0x18(%%esi)\n\t"
-      "movl %%edi, 0x1c(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ac680_3:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "fabs\n\t"
-      "fdivs 0x14(%%ebp)\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_4\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001ac680_5\n\t"
-      ".LFUN_001ac680_4:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_001ac680_5:\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls 0x253398\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fmuls 0x253398\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001ac680_6\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "fchs\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "subl $8, %%esp\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps (%%esp)\n\t"
-      "call *%[c1ac680]\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "addl $0x14, %%esp\n\t"
-      "fmuls 0x255e94\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fmuls 0x255e94\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      "flds 0xc(%%esi)\n\t"
-      "fmuls 0x255e94\n\t"
-      "fstps 0xc(%%esi)\n\t"
-      "flds 0x18(%%esi)\n\t"
-      "fmuls 0x255e94\n\t"
-      "fstps 0x18(%%esi)\n\t"
-      "jmp .LFUN_001ac680_10\n\t"
-      ".LFUN_001ac680_6:\n\t"
-      "fmuls 0x253398\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001ac680_16\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2b706c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_001ac680_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7b7\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b7050\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_7:\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_001ac680_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7b8\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b703c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_8:\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "movl %%edi, 0xc(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "movl %%edi, 0x10(%%esi)\n\t"
-      "fmulp %%st(1)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fsts 0x18(%%esi)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fchs\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      ".LFUN_001ac680_9:\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%edi, 0x14(%%esi)\n\t"
-      ".LFUN_001ac680_10:\n\t"
-      "cmpl $0x7f7fffff, 0xc(%%esi)\n\t"
-      "popl %%ebx\n\t"
-      "jne .LFUN_001ac680_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85c\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b7020\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_11:\n\t"
-      "cmpl $0x7f7fffff, 0x10(%%esi)\n\t"
-      "jne .LFUN_001ac680_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85d\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b7004\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_12:\n\t"
-      "cmpl $0x7f7fffff, 0x14(%%esi)\n\t"
-      "jne .LFUN_001ac680_13\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85e\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6fe8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_13:\n\t"
-      "cmpl $0x7f7fffff, 0x18(%%esi)\n\t"
-      "jne .LFUN_001ac680_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85f\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6fcc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_14:\n\t"
-      "cmpl $0x7f7fffff, 0x1c(%%esi)\n\t"
-      "jne .LFUN_001ac680_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0x860\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6fb0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_15:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ac680_16:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001ac680_17\n\t"
-      "fdivs 0x14(%%ebp)\n\t"
-      "fsqrt\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "jmp .LFUN_001ac680_22\n\t"
-      ".LFUN_001ac680_17:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "fsts 0xc(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x2533d8\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_001ac680_18\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7eb\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6fa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_18:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fsqrt\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fchs\n\t"
-      "fsub %%st(2), %%st(0)\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001ac680_20\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_001ac680_19\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001ac680_20\n\t"
-      ".LFUN_001ac680_19:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_001ac680_22\n\t"
-      ".LFUN_001ac680_20:\n\t"
-      "flds 0x2533c0\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_21\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_001ac680_23\n\t"
-      ".LFUN_001ac680_21:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      ".LFUN_001ac680_22:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_001ac680_23\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7fa\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6f9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_23:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_27\n\t"
-      "testb %%bl, %%bl\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "jne .LFUN_001ac680_24\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      ".LFUN_001ac680_24:\n\t"
-      "fdivs 0x14(%%ebp)\n\t"
-      "flds 0x2533c0\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_25\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      ".LFUN_001ac680_25:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_26\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "jmp .LFUN_001ac680_28\n\t"
-      ".LFUN_001ac680_26:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jmp .LFUN_001ac680_28\n\t"
-      ".LFUN_001ac680_27:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      ".LFUN_001ac680_28:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "fchs\n\t"
-      "fsts 0xc(%%esi)\n\t"
-      "movl %%edx, 0x18(%%esi)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x18(%%ebp)\n\t"
-      "je .LFUN_001ac680_29\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fstps 0x10(%%esi)\n\t"
-      "movl %%eax, 0x1c(%%esi)\n\t"
-      "jmp .LFUN_001ac680_30\n\t"
-      ".LFUN_001ac680_29:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      "movl %%ecx, 0x10(%%esi)\n\t"
-      ".LFUN_001ac680_30:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001ac680_9\n\t"
-      "fmuls 0x10(%%esi)\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x18(%%ebp)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_001ac680_31\n\t"
-      "pushl $1\n\t"
-      "pushl $0x850\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6f88\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_31:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fdivs 0x18(%%ebp)\n\t"
-      "fsts 0x14(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_001ac680_32\n\t"
-      "pushl $1\n\t"
-      "pushl $0x852\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6f74\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_32:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x14(%%esi)\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_001ac680_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x853\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6f54\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_001ac680_10\n\t"
-      "nop\n\t"
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpb $0, (%%ecx)\n\t"
-      "jne .LFUN_001ac680_43\n\t"
-      "cmpb $0, (%%esi)\n\t"
-      "jne .LFUN_001ac680_43\n\t"
-      "flds 0x1c(%%ecx)\n\t"
-      "fadds 0x14(%%ecx)\n\t"
-      "fadds 0x10(%%ecx)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fadds 0x14(%%esi)\n\t"
-      "fadds 0x10(%%esi)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x10(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_33\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001ac680_33\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "jmp .LFUN_001ac680_34\n\t"
-      ".LFUN_001ac680_33:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_43\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001ac680_43\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      ".LFUN_001ac680_34:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "je .LFUN_001ac680_43\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_001ac680_35\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8ae\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b70ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_35:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fadds 0x14(%%esi)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "fabs\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fchs\n\t"
-      "fmulp %%st(1)\n\t"
-      "fxch %%st(1)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fmuls 0x2533d8\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_001ac680_36\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8c4\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b6fa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001ac680_36:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fsqrt\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x1c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_37\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "jmp .LFUN_001ac680_38\n\t"
-      ".LFUN_001ac680_37:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      ".LFUN_001ac680_38:\n\t"
-      "fld %%st(1)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_40\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x1c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_39\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "jmp .LFUN_001ac680_40\n\t"
-      ".LFUN_001ac680_39:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      ".LFUN_001ac680_40:\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_001ac680_42\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fsub %%st(1), %%st(0)\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fsub %%st(2), %%st(0)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "fld %%st(1)\n\t"
-      "fadd %%st(0), %%st(0)\n\t"
-      "faddp %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001ac680_41\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_001ac680_43\n\t"
-      ".LFUN_001ac680_41:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8d8\n\t"
-      "pushl $0x2b68c0\n\t"
-      "pushl $0x2b7070\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001ac680_42:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_001ac680_43:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ac680] "m"(b1ac680_c1ac680), [assert] "m"(b1ac680_assert), [exitfn] "m"(b1ac680_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_001ac680: clang naked draft required"
-#endif
+  float fVar1;        /* |initial_v| / max_a */
+  float fVar4;        /* discriminant / intermediate */
+  float neg_max_a;
+  float doubled_v;
+  float t;
+  float actual_t;
+  float coasting_vel;
+  float coast_diff;
+  char bVar;          /* initial_v <= 0 */
 
+  *(int *)(plan + 0x0c) = 0x7f7fffff;
+  *(int *)(plan + 0x10) = 0x7f7fffff;
+  *(int *)(plan + 0x14) = 0x7f7fffff;
+  *(int *)(plan + 0x18) = 0x7f7fffff;
+  *(int *)(plan + 0x1c) = 0x7f7fffff;
+  *(float *)(plan + 4) = initial_p;
+  *(float *)(plan + 8) = initial_v;
+
+  /* Check if effectively at rest (MSVC intrinsic fabs → inline FABS) */
+  if (fabs(initial_p) < 0.001 && fabs(initial_v) < 0.001) {
+    *(uint8_t *)plan = 1;
+    *(int *)(plan + 0x0c) = 0;
+    *(int *)(plan + 0x10) = 0;
+    *(int *)(plan + 0x14) = 0;
+    *(int *)(plan + 0x18) = 0;
+    *(int *)(plan + 0x1c) = 0;
+    return;
+  }
+  *(uint8_t *)plan = 0;
+
+  fVar1 = (float)(fabs(initial_v) / max_a);
+  bVar = (initial_v > 0.0f) ? 1 : 0;
+
+  /* Check if we're moving in the wrong direction (need to reverse) */
+  if (fVar1 * 0.5f * initial_v * 0.5f + initial_p < 0.0f) {
+    /* Recursive case: negate and re-plan */
+    FUN_001ac680(-initial_p, -initial_v, max_v, max_a, plan);
+    *(float *)(plan + 0x04) = *(float *)(plan + 0x04) * -1.0f;
+    *(float *)(plan + 0x08) = *(float *)(plan + 0x08) * -1.0f;
+    *(float *)(plan + 0x0c) = *(float *)(plan + 0x0c) * -1.0f;
+    *(float *)(plan + 0x18) = *(float *)(plan + 0x18) * -1.0f;
+    goto validate;
+  }
+
+  fVar4 = initial_v * 0.5f * fVar1 + initial_p;
+
+  if (fVar4 < 0.0f) {
+    /* Overshoot case: initial_p near zero, velocity away from target */
+    if (initial_p <= -0.001f) {
+      display_assert("plan->initial_p > -1e-03f",
+                     "c:\\halo\\SOURCE\\units\\units.c", 0x7b7, 1);
+      system_exit(-1);
+    }
+    if (*(float *)(plan + 8) >= 0.0f) {
+      display_assert("plan->initial_v < 0",
+                     "c:\\halo\\SOURCE\\units\\units.c", 0x7b8, 1);
+      system_exit(-1);
+    }
+    *(int *)(plan + 0x0c) = 0;
+    *(int *)(plan + 0x10) = 0;
+    fVar4 = *(float *)(plan + 8) * *(float *)(plan + 8) /
+            (*(float *)(plan + 4) + *(float *)(plan + 4));
+    *(float *)(plan + 0x18) = fVar4;
+    *(float *)(plan + 0x1c) = -(*(float *)(plan + 8) / fVar4);
+    *(int *)(plan + 0x14) = 0;
+    goto validate;
+  }
+
+  /* Normal deceleration case */
+  if (!bVar) {
+    /* Decelerating (initial_v <= 0): quadratic formula */
+    neg_max_a = -max_a;
+    doubled_v = initial_v + initial_v;
+    fVar4 = doubled_v * doubled_v - neg_max_a * fVar4 * 4.0f;
+    if (fVar4 < 0.0f) {
+      display_assert("disc >= 0",
+                     "c:\\halo\\SOURCE\\units\\units.c", 0x7eb, 1);
+      system_exit(-1);
+    }
+    fVar4 = sqrtf(fVar4);
+    t = (-doubled_v - fVar4) / (neg_max_a + neg_max_a);
+    actual_t = (fVar4 - doubled_v) / (neg_max_a + neg_max_a);
+    if (t >= 0.0f && (actual_t < 0.0f || t < actual_t)) {
+      /* use t */
+    } else if (actual_t >= 0.0f) {
+      t = actual_t;
+    } else {
+      t = 0.0f;
+      goto check_t;
+    }
+    initial_v = t;
+    goto check_t;
+  } else {
+    /* Accelerating (initial_v > 0): direct sqrt */
+    initial_v = sqrtf(fVar4 / max_a);
+  }
+
+check_t:
+  if (initial_v < 0.0f) {
+    display_assert("t >= 0", "c:\\halo\\SOURCE\\units\\units.c", 0x7fa, 1);
+    system_exit(-1);
+  }
+
+  /* Apply maximum velocity constraint */
+  if (max_v <= 0.0f) {
+    actual_t = initial_v;
+  } else {
+    if (!bVar) {
+      max_v = max_v + *(float *)(plan + 8);
+    }
+    actual_t = max_v / max_a;
+    if (actual_t < 0.0f) {
+      actual_t = 0.0f;
+    }
+    if (initial_v <= actual_t) {
+      actual_t = initial_v;
+    }
+  }
+
+  /* Fill plan fields */
+  *(float *)(plan + 0x0c) = -max_a;
+  *(float *)(plan + 0x18) = max_a;
+  if (bVar) {
+    /* initial_v > 0: accel_t = actual_t + fVar1, decel_t = actual_t */
+    *(float *)(plan + 0x10) = actual_t + fVar1;
+    *(float *)(plan + 0x1c) = actual_t;
+  } else {
+    /* initial_v <= 0: accel_t = actual_t, decel_t = actual_t + fVar1 */
+    *(float *)(plan + 0x1c) = actual_t + fVar1;
+    *(float *)(plan + 0x10) = actual_t;
+  }
+
+  /* Check if we need a coasting phase */
+  if (actual_t < initial_v) {
+    coasting_vel = -max_a * *(float *)(plan + 0x10) + *(float *)(plan + 8);
+    coast_diff = initial_v - actual_t;
+    if (coasting_vel >= 0.0f) {
+      display_assert("coasting_vel < 0",
+                     "c:\\halo\\SOURCE\\units\\units.c", 0x850, 1);
+      system_exit(-1);
+    }
+    *(float *)(plan + 0x14) =
+      ((coast_diff * coasting_vel + coast_diff * coasting_vel) -
+       coast_diff * coast_diff * max_a) / coasting_vel;
+    if (*(float *)(plan + 0x14) < 0.0f) {
+      display_assert("plan->coast_t >= 0",
+                     "c:\\halo\\SOURCE\\units\\units.c", 0x852, 1);
+      system_exit(-1);
+    }
+    if (actual_t + *(float *)(plan + 0x14) < initial_v) {
+      display_assert("plan->coast_t + actual_t >= t",
+                     "c:\\halo\\SOURCE\\units\\units.c", 0x853, 1);
+      system_exit(-1);
+    }
+    goto validate;
+  }
+
+  *(int *)(plan + 0x14) = 0;
+
+validate:
+  if (*(int *)(plan + 0x0c) == 0x7f7fffff) {
+    display_assert("REAL_MAX != plan->accel_a",
+                   "c:\\halo\\SOURCE\\units\\units.c", 0x85c, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(plan + 0x10) == 0x7f7fffff) {
+    display_assert("REAL_MAX != plan->accel_t",
+                   "c:\\halo\\SOURCE\\units\\units.c", 0x85d, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(plan + 0x14) == 0x7f7fffff) {
+    display_assert("REAL_MAX != plan->coast_t",
+                   "c:\\halo\\SOURCE\\units\\units.c", 0x85e, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(plan + 0x18) == 0x7f7fffff) {
+    display_assert("REAL_MAX != plan->decel_a",
+                   "c:\\halo\\SOURCE\\units\\units.c", 0x85f, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(plan + 0x1c) == 0x7f7fffff) {
+    display_assert("REAL_MAX != plan->decel_t",
+                   "c:\\halo\\SOURCE\\units\\units.c", 0x860, 1);
+    system_exit(-1);
+  }
+}
 
 
 /* unit_adjust_projectile_ray (0x1acf90) — readable C lift (restored pre-naked) — adjust projectile ray origin
