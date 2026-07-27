@@ -11527,36 +11527,13 @@ int FUN_00168300(int a, int b)
 
 
 
-/* FUN_00168340 (0x168340) — XBE naked draft (batch 352). */
-#if defined(__clang__)
-static void (*const b168340_c1edd10)(void) = (void *)D3DCubeTexture_LockRect;
-
-__attribute__((naked, noinline))
-void FUN_00168340(void)
+/* FUN_00168340 (0x168340) — readable C lift. */
+int FUN_00168340(int a, int b, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1edd10]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1edd10] "m"(b168340_c1edd10)
-      : "memory");
+  D3DCubeTexture_LockRect(a, b, c, 0, 0, 0);
+  return 0;
 }
-#else
-#error "FUN_00168340: clang naked draft required"
-#endif
+
 
 
 /* FUN_00168370 (0x168370) — XBE naked draft (batch 317). */

@@ -39080,8 +39080,9 @@
         },
         {
           "addr": "0x168340",
-          "decl": "int FUN_00168340(int a0, int a1, int a2);",
-          "ported": false
+          "decl": "int FUN_00168340(int a, int b, int c);",
+          "ported": true,
+          "name": "FUN_00168340"
         },
         {
           "addr": "0x168370",
@@ -42392,7 +42393,7 @@
         },
         {
           "addr": "0x001edd10",
-          "decl": "void __stdcall D3DCubeTexture_LockRect(int a, int b, int c, int d, int e);",
+          "decl": "void __stdcall D3DCubeTexture_LockRect(int a, int b, int c, int d, int e, int f);",
           "ported": false
         },
         {
