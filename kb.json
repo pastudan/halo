@@ -35445,8 +35445,8 @@
         },
         {
           "addr": "0x4c170",
-          "decl": "void ai_debug_change_selected_actor(int actor_index);",
-          "ported": false
+          "decl": "void ai_debug_change_selected_actor(char forward);",
+          "ported": true
         },
         {
           "addr": "0x4c2a0",
