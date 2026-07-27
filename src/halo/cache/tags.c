@@ -774,75 +774,34 @@ int FUN_001baa50(char *base, int ptr)
   return *(int *)(base + 0x964 + ((int16_t)idx) * 4);
 }
 
-/* FUN_001bab60 (0x1bab60) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static unsigned int __stdcall (*const b1bab60_c1d01c4)(unsigned int milliseconds, int alertable) = SleepEx;
-static void (*const b1bab60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bab60_exitfn)(int) = system_exit;
-static void *(*const b1bab60_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void FUN_001bab60(void)
+/* FUN_001bab60 (0x1bab60) — readable C lift: wait for tag IO then clear slot. */
+void FUN_001bab60(void *ctx)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $0xb, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001bab60_1:\n\t"
-      "movl 0x994(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001bab60_2\n\t"
-      "movw %%di, %%ax\n\t"
-      "decl %%edi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_001bab60_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1388\n\t"
-      "call *%[c1d01c4]\n\t"
-      "cmpl $0xc0, %%eax\n\t"
-      "je .LFUN_001bab60_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69f\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8488\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_001bab60_1\n\t"
-      ".LFUN_001bab60_2:\n\t"
-      "movl 0x994(%%esi), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "setne %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001bab60_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a3\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8610\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bab60_3:\n\t"
-      "pushl $4\n\t"
-      "pushl $0\n\t"
-      "addl $0x998, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1d01c4] "m"(b1bab60_c1d01c4), [assert] "m"(b1bab60_assert), [exitfn] "m"(b1bab60_exitfn), [memset] "m"(b1bab60_memset)
-      : "memory");
+  extern char DAT_002b839c[];
+  extern char DAT_002b8488[];
+  extern char DAT_002b8610[];
+  int tries;
+  unsigned int status;
+
+  tries = 0xb;
+  while (*(int *)((char *)ctx + 0x994) != 0) {
+    short left = (short)tries;
+    tries -= 1;
+    if (left == 0)
+      break;
+    status = SleepEx(0x1388, 1);
+    if (status == 0xc0)
+      continue;
+    display_assert(DAT_002b8488, DAT_002b839c, 0x69f, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)ctx + 0x994) != 0) {
+    display_assert(DAT_002b8610, DAT_002b839c, 0x6a3, 1);
+    system_exit(-1);
+  }
+  csmemset((char *)ctx + 0x998, 0, 4);
 }
-#else
-#error "FUN_001bab60: clang naked draft required"
-#endif
+
 
 
 /* FUN_001bac00 (0x1bac00) — readable C lift. */

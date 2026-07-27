@@ -25561,8 +25561,9 @@
         },
         {
           "addr": "0x1bab60",
-          "decl": "void FUN_001bab60(void);",
-          "ported": false
+          "decl": "void FUN_001bab60(void *ctx@<eax>);",
+          "ported": true,
+          "name": "FUN_001bab60"
         },
         {
           "addr": "0x1bac00",
