@@ -38984,7 +38984,7 @@
         {
           "addr": "0x162790",
           "decl": "void FUN_00162790(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x162920",
@@ -39030,7 +39030,7 @@
         {
           "addr": "0x1643e0",
           "decl": "void FUN_001643e0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x164590",
