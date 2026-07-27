@@ -14916,7 +14916,7 @@ void rasterizer_dynamic_screen_geometry_draw(void)
   FUN_0015e9e0();
   FUN_00184690(0);
   FUN_00178ab0();
-  FUN_0017e040(0, 0);
+  FUN_0017e040();
   FUN_0017ff60();
   rasterizer_text_cache_dispose();
   FUN_0015c680();
@@ -15049,26 +15049,11 @@ void rasterizer_widget_get_occlusion_test_result(void)
 
 
 
-/* rasterizer_hud_motion_sensor_blip_begin (0x17ca10) — XBE naked draft (batch 398). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* rasterizer_hud_motion_sensor_blip_begin (0x17ca10) — readable C lift (jmp thunk). */
 void rasterizer_hud_motion_sensor_blip_begin(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xd7, 0xdd, 0xfd, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0015a7f0(0, 0, 0, 0);
 }
-#else
-#error "rasterizer_hud_motion_sensor_blip_begin: clang naked draft required"
-#endif
-
 
 /* rasterizer_hud_motion_sensor_blip_draw (0x17ca20) — readable C lift (jmp thunk). */
 void rasterizer_hud_motion_sensor_blip_draw(void)

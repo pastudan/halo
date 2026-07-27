@@ -21255,7 +21255,7 @@
         {
           "addr": "0x17ca10",
           "decl": "void rasterizer_hud_motion_sensor_blip_begin(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ca20",
