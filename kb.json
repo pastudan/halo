@@ -39202,7 +39202,7 @@
         {
           "addr": "0x1b98d0",
           "decl": "void tag_groups_checksum(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1b9ce0",
