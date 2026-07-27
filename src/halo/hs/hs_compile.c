@@ -2428,134 +2428,46 @@ bool FUN_000c6940(int datum_index)
 
 
 
-/* hs_macro_function_parse (0xc7e50) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void * (*const bc7e50_cc3d00)(int16_t function_index) = hs_function_table_get;
-static void *(*const bc7e50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bc7e50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc7e50_exitfn)(int) = system_exit;
-static bool (*const bc7e50_cc7d80)(int datum_index, int16_t check_type) = hs_type_check;
-static int (*const bc7e50_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-char hs_macro_function_parse(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
+/* hs_macro_function_parse (0xc7e50) — readable C lift from XBE leaf. */
+char hs_macro_function_parse(int16_t function_index, int root_datum)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "call *%[cc3d00]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%eax\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lhs_macro_function_parse_1\n\t"
-      "cmpw $0x31, %%ax\n\t"
-      "jl .Lhs_macro_function_parse_2\n\t"
-      ".Lhs_macro_function_parse_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x819\n\t"
-      "pushl $0x27bd0c\n\t"
-      "pushl $0x27ccc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_macro_function_parse_2:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lhs_macro_function_parse_3:\n\t"
-      "cmpw 0x18(%%esi), %%bx\n\t"
-      "jge .Lhs_macro_function_parse_6\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lhs_macro_function_parse_6\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x1a(%%esi,%%edx,2), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cc7d80]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lhs_macro_function_parse_4\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lhs_macro_function_parse_5\n\t"
-      ".Lhs_macro_function_parse_4:\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".Lhs_macro_function_parse_5:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "incl %%ebx\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lhs_macro_function_parse_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_macro_function_parse_6:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lhs_macro_function_parse_8\n\t"
-      "movw 0x18(%%esi), %%cx\n\t"
-      "cmpw %%cx, %%bx\n\t"
-      "jne .Lhs_macro_function_parse_7\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lhs_macro_function_parse_8\n\t"
-      ".Lhs_macro_function_parse_7:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x27cc90\n\t"
-      "pushl $0x46b704\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl $0x46b704, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%eax, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lhs_macro_function_parse_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [cc3d00] "m"(bc7e50_cc3d00), [dget] "m"(bc7e50_dget), [assert] "m"(bc7e50_assert), [exitfn] "m"(bc7e50_exitfn), [cc7d80] "m"(bc7e50_cc7d80), [c1d90f0] "m"(bc7e50_c1d90f0)
-      : "memory");
+  char *fn;
+  char *node;
+  int child;
+  int16_t i;
+  int16_t nparams;
+  int16_t ftype;
+  char ok;
+  int16_t check_type;
+
+  ok = 1;
+  fn = (char *)hs_function_table_get(function_index);
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  child = *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(node + 0x10)) + 8);
+  ftype = *(int16_t *)fn;
+  if (ftype < 4 || ftype >= 0x31) {
+    display_assert((const char *)0x27ccc0, (const char *)0x27bd0c, 0x819, true);
+    system_exit(-1);
+  }
+  nparams = *(int16_t *)(fn + 0x18);
+  for (i = 0; i < nparams && child != -1; i++) {
+    check_type = *(int16_t *)(fn + 0x1a + (int)i * 2);
+    if (!hs_type_check(child, check_type)) {
+      ok = 0;
+      break;
+    }
+    child = *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, child) + 8);
+  }
+  if (!ok)
+    return 0;
+  if (i == nparams && child == -1)
+    return 1;
+  crt_sprintf((char *)0x46b704, (const char *)0x27cc90, *(int *)(fn + 4), (int)nparams);
+  *(void **)0x46b6fc = (void *)0x46b704;
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(int *)0x46b700 = *(int *)(node + 0xc);
+  return 0;
 }
-#else
-#error "hs_macro_function_parse: clang naked draft required"
-#endif
 
 
 /* hs_parse_begin (0xc7f70) — XBE naked draft (batch 119). */

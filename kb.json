@@ -12145,7 +12145,8 @@
         {
           "addr": "0xc7e50",
           "decl": "char hs_macro_function_parse(int16_t function_index, int root_datum);",
-          "ported": false
+          "ported": true,
+          "name": "hs_macro_function_parse"
         },
         {
           "addr": "0xc7f70",
