@@ -38509,7 +38509,8 @@
         {
           "addr": "0x122450",
           "decl": "void overlay_animation_apply_scaled(void *animation, int frame, float scale, void *node_output);",
-          "ported": false
+          "ported": true,
+          "name": "overlay_animation_apply_scaled"
         },
         {
           "addr": "0x122690",
