@@ -38743,7 +38743,8 @@
         {
           "addr": "0x15ea70",
           "decl": "void *FUN_0015ea70(int dynamic_triangle_buffer_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0015ea70"
         },
         {
           "addr": "0x15eb90",
