@@ -13829,7 +13829,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcf3e0",
