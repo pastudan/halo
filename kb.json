@@ -13331,7 +13331,7 @@
           "decl": "void hud_messaging_initialize_for_new_map(void);",
           "addr": "0xd5ff0",
           "name": "hud_messaging_initialize_for_new_map",
-          "ported": false
+          "ported": true
         },
         {
           "decl": "void hud_messaging_dispose_from_old_map(void);",

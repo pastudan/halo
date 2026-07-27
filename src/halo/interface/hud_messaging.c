@@ -2416,29 +2416,11 @@ void hud_nav_points_initialize(void)
 #endif
 
 
-/* hud_messaging_initialize_for_new_map (0xd5ff0) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static void *(*const bd5ff0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* hud_messaging_initialize_for_new_map (0xd5ff0) — readable C lift. */
 void hud_messaging_initialize_for_new_map(void)
 {
-  __asm__ volatile(
-      "movl 0x46bd1c, %%eax\n\t"
-      "pushl $0xc0\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(bd5ff0_memset)
-      : "memory");
+  csmemset(*(void **)0x46bd1c, -1, 0xc0);
 }
-#else
-#error "hud_messaging_initialize_for_new_map: clang naked draft required"
-#endif
-
 
 /* hud_messaging_dispose_from_old_map: no-op stub.
  * Called from hud_dispose_from_old_map (0xd03e0). */
