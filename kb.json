@@ -40215,9 +40215,9 @@
         },
         {
           "addr": "0x80ca0",
-          "decl": "int create_message(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size);",
+          "decl": "int create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size);",
           "name": "create_message",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x80d30",
