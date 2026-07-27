@@ -1,0 +1,10 @@
+{
+  "description": "cmp stub returns 0; end pinned inside start scratch slot",
+  "regions": {
+    "0x60000000": "31c0c3"
+  },
+  "arg_overrides": {
+    "end": 268435486,
+    "cmp": 1610612736
+  }
+}

@@ -20178,13 +20178,13 @@
         {
           "addr": "0x91cf0",
           "decl": "void FUN_00091cf0(uint32_t end@<eax>, uint16_t *start, uint32_t cmp);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00091cf0"
         },
         {
           "addr": "0x91d50",
           "decl": "void FUN_00091d50(uint32_t end@<eax>, uint32_t *start, uint32_t cmp);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00091d50"
         },
         {

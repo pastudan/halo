@@ -3017,129 +3017,67 @@ void FUN_00091c70(void *rec, int a1, int a2, char force)
   *(int *)((char *)rec + 0x10c) = (int)now;
 }
 
-/* FUN_00091cf0 (0x91cf0) — XBE naked draft (batch 251). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00091cf0(void)
+/* FUN_00091cf0 (0x91cf0) — readable C lift.
+ * Selection-sort step over a uint16 array [start, end]: repeatedly pick the
+ * element preferred by cmp(curr, best) and swap it into *end, then shrink end.
+ * XBE ABI: end address in EAX; start / cmp on the stack. */
+void FUN_00091cf0(uint32_t end, uint16_t *start, uint32_t cmp)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jbe .LFUN_00091cf0_5\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "nop\n\t"
-      ".LFUN_00091cf0_1:\n\t"
-      "leal 0x2(%%eax), %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "ja .LFUN_00091cf0_4\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00091cf0_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%ebx), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%esi), %%cx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *0xc(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00091cf0_3\n\t"
-      "movl %%esi, %%ebx\n\t"
-      ".LFUN_00091cf0_3:\n\t"
-      "addl $2, %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jbe .LFUN_00091cf0_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".LFUN_00091cf0_4:\n\t"
-      "movw (%%edi), %%dx\n\t"
-      "movw (%%ebx), %%cx\n\t"
-      "movw %%dx, (%%ebx)\n\t"
-      "movw %%cx, (%%edi)\n\t"
-      "subl $2, %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "ja .LFUN_00091cf0_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00091cf0_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint16_t *hi = (uint16_t *)end;
+  uint8_t (*cmp_fn)(uint16_t, uint16_t) = (uint8_t (*)(uint16_t, uint16_t))cmp;
+  uint16_t *best;
+  uint16_t *curr;
+  uint16_t tmp;
+
+  if (hi <= start)
+    return;
+
+  do {
+    curr = start + 1;
+    best = start;
+    if (curr <= hi) {
+      do {
+        if (cmp_fn(*curr, *best))
+          best = curr;
+        curr++;
+      } while (curr <= hi);
+    }
+    tmp = *hi;
+    *hi = *best;
+    *best = tmp;
+    hi--;
+  } while (hi > start);
 }
-#else
-#error "FUN_00091cf0: clang naked draft required"
-#endif
 
-/* FUN_00091d50 (0x91d50) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00091d50(void)
+/* FUN_00091d50 (0x91d50) — readable C lift.
+ * Same selection-sort helper as FUN_00091cf0, but for uint32 elements. */
+void FUN_00091d50(uint32_t end, uint32_t *start, uint32_t cmp)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jbe .LFUN_00091d50_5\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "nop\n\t"
-      ".LFUN_00091d50_1:\n\t"
-      "leal 0x4(%%eax), %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "ja .LFUN_00091d50_4\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00091d50_2:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *0xc(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00091d50_3\n\t"
-      "movl %%esi, %%ebx\n\t"
-      ".LFUN_00091d50_3:\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jbe .LFUN_00091d50_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".LFUN_00091d50_4:\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "movl %%edx, (%%ebx)\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "subl $4, %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "ja .LFUN_00091d50_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00091d50_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  uint32_t *hi = (uint32_t *)end;
+  uint8_t (*cmp_fn)(uint32_t, uint32_t) = (uint8_t (*)(uint32_t, uint32_t))cmp;
+  uint32_t *best;
+  uint32_t *curr;
+  uint32_t tmp;
+
+  if (hi <= start)
+    return;
+
+  do {
+    curr = start + 1;
+    best = start;
+    if (curr <= hi) {
+      do {
+        if (cmp_fn(*curr, *best))
+          best = curr;
+        curr++;
+      } while (curr <= hi);
+    }
+    tmp = *hi;
+    *hi = *best;
+    *best = tmp;
+    hi--;
+  } while (hi > start);
 }
-#else
-#error "FUN_00091d50: clang naked draft required"
-#endif
 
 /* FUN_00091da0 (0x91da0) — XBE naked draft (batch 242). */
 #if defined(__clang__)
