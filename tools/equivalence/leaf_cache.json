@@ -662,7 +662,7 @@
     "coverage_pct": 0.0
   },
   "0x7bd90": {
-    "class": "unknown",
+    "class": "non_leaf",
     "confidence": "weak",
     "coverage_pct": 0.0
   },
