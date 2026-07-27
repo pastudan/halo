@@ -486,40 +486,15 @@ const char *FUN_001beb70(int handle)
 }
 
 
-/* FUN_001becc0 (0x1becc0) — XBE naked draft (batch 271). */
-#if defined(__clang__)
-static int (*const b1becc0_c183290)(void *bitmap) = FUN_00183290;
-
-__attribute__((naked, noinline))
-void FUN_001becc0(void)
+/* FUN_001becc0 (0x1becc0) — readable C lift. */
+int FUN_001becc0(void *a, void *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c183290]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c183290]\n\t"
-      "subl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%esi, %%esi\n\t"
-      "setg %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c183290] "m"(b1becc0_c183290)
-      : "memory");
+  int da;
+  int db;
+  da = FUN_00183290(a);
+  db = FUN_00183290(b);
+  return da > db;
 }
-#else
-#error "FUN_001becc0: clang naked draft required"
-#endif
-
 
 /* texture_cache_flush (0x1bed30) — readable C lift. */
 void texture_cache_flush(void)
