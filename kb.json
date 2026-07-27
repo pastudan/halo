@@ -21138,7 +21138,7 @@
         {
           "addr": "0x17ba10",
           "decl": "int FUN_0017ba10(float *position, int vis_index, int index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017ba10"
         },
         {
