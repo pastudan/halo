@@ -31156,7 +31156,7 @@
         {
           "addr": "0x17cf10",
           "decl": "void FUN_0017cf10(int pass_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cf20",
@@ -38962,8 +38962,9 @@
         },
         {
           "addr": "0x166890",
-          "decl": "void FUN_00166890(void);",
-          "ported": false
+          "decl": "void FUN_00166890(int pass_index);",
+          "ported": false,
+          "name": "FUN_00166890"
         },
         {
           "addr": "0x1677d0",
