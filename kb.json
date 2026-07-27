@@ -5456,7 +5456,7 @@
         },
         {
           "addr": "0x93710",
-          "decl": "void FUN_00093710(void);",
+          "decl": "void FUN_00093710(int *cursor, unsigned char mode);",
           "ported": false
         },
         {
@@ -23030,7 +23030,7 @@
         {
           "addr": "0x94ff0",
           "decl": "char recorded_animation_controlling_unit(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x95050",

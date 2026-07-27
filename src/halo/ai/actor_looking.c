@@ -1743,9 +1743,6 @@ void FUN_000151b0(int actor_handle)
   }
 }
 
-
-
-
 /* FUN_00015250 (0x15250)
  * Classify the actor's current looking state and configure the firing-position
  * state block fields from live actor data.
