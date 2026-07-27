@@ -40342,7 +40342,7 @@
         {
           "addr": "0x96510",
           "decl": "void device_group_set_actual_value(int a0, float a1);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x965f0",

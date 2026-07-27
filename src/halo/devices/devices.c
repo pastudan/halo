@@ -379,97 +379,38 @@ void device_set_never_appears_locked(int a0, int a1)
   }
 }
 
-/* device_group_set_actual_value (0x96510) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static void *(*const b96510_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b96510_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
-static void * (*const b96510_c13d730)(void *iter) = object_iterator_next;
-
-__attribute__((naked, noinline))
-void device_group_set_actual_value(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
+/* device_group_set_actual_value (0x96510) — readable C lift. */
+void device_group_set_actual_value(int a0, float a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Ldevice_group_set_actual_value_1\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "jmp .Ldevice_group_set_actual_value_2\n\t"
-      ".Ldevice_group_set_actual_value_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldevice_group_set_actual_value_2\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      ".Ldevice_group_set_actual_value_2:\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d6f0]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .Ldevice_group_set_actual_value_6\n\t"
-      "pushl %%ebx\n\t"
-      "movl $4, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Ldevice_group_set_actual_value_3:\n\t"
-      "cmpw %%si, 0x1a8(%%eax)\n\t"
-      "jne .Ldevice_group_set_actual_value_4\n\t"
-      "movl 0x1a4(%%eax), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "orl %%ebx, %%ecx\n\t"
-      "movl %%ecx, 0x1a4(%%eax)\n\t"
-      "movl %%edx, 0x1ac(%%eax)\n\t"
-      "movl %%edi, 0x1b0(%%eax)\n\t"
-      ".Ldevice_group_set_actual_value_4:\n\t"
-      "cmpw %%si, 0x1b4(%%eax)\n\t"
-      "jne .Ldevice_group_set_actual_value_5\n\t"
-      "orl %%ebx, 0x1a4(%%eax)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x1b8(%%eax)\n\t"
-      "movl %%edi, 0x1bc(%%eax)\n\t"
-      ".Ldevice_group_set_actual_value_5:\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jne .Ldevice_group_set_actual_value_3\n\t"
-      "popl %%ebx\n\t"
-      ".Ldevice_group_set_actual_value_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b96510_dget), [c13d6f0] "m"(b96510_c13d6f0), [c13d730] "m"(b96510_c13d730)
-      : "memory");
-}
-#else
-#error "device_group_set_actual_value: clang naked draft required"
-#endif
+  int16_t group_index;
+  char *group;
+  unsigned char iter[0x10];
+  char *obj;
+  float value;
 
+  value = a1;
+  if (!(value >= 0.0f))
+    value = 0.0f;
+  else if (value > 1.0f)
+    value = 1.0f;
+  group_index = (int16_t)a0;
+  group = (char *)datum_get(*(data_t **)0x5aa8c8, (int)group_index);
+  *(float *)(group + 4) = value;
+  object_iterator_new(iter, 0x380, 0);
+  for (obj = (char *)object_iterator_next(iter); obj != NULL;
+       obj = (char *)object_iterator_next(iter)) {
+    if (*(int16_t *)(obj + 0x1a8) == group_index) {
+      *(int *)(obj + 0x1a4) |= 4;
+      *(float *)(obj + 0x1ac) = value;
+      *(int *)(obj + 0x1b0) = 0;
+    }
+    if (*(int16_t *)(obj + 0x1b4) == group_index) {
+      *(int *)(obj + 0x1a4) |= 4;
+      *(float *)(obj + 0x1b8) = value;
+      *(int *)(obj + 0x1bc) = 0;
+    }
+  }
+}
 
 /* device_one_sided_set (0x965f0) — readable C lift (assert wrapper). */
 void device_one_sided_set(int a0, int a1)

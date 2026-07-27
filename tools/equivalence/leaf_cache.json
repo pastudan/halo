@@ -3,5 +3,10 @@
     "class": "leaf",
     "confidence": "high",
     "coverage_pct": 100.0
+  },
+  "0x96510": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 55.3
   }
 }
