@@ -15465,7 +15465,7 @@
           "addr": "0x11b850",
           "decl": "void hashtable_new(void *table, short key_size, short element_size, float load_factor, int param_5, int param_6);",
           "name": "hashtable_new",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b950",
