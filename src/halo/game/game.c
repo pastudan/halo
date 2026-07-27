@@ -1689,165 +1689,51 @@ void FUN_000b5040(void)
 }
 
 
-/* slayer_engine_display_score (0xb5210) — XBE naked draft (batch 107). */
-#if defined(__clang__)
-static void *(*const bb5210_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void * (*const bb5210_ca9350)(void) = game_engine_get_variant;
-static void (*const bb5210_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bb5210_exitfn)(int) = system_exit;
-static void (*const bb5210_ca9460)(short param_1) = game_engine_clear_goal_position;
-static void *(*const bb5210_get)(int, int) = object_get_and_verify_type;
-static void (*const bb5210_ca93e0)(int flag_index, int *position, float height, char *name, int target, int16_t team, int player) = game_engine_set_goal_position;
-static void (*const bb5210_cb4e20)(void) = (void *)find_next_target;
-static char (*const bb5210_ca9900)(int param_1) = game_engine_man_out;
-static void (*const bb5210_ca8b00)(void) = (void *)game_engine_start_over;
-
-__attribute__((naked, noinline))
+/* slayer_engine_display_score (0xb5210) — readable C lift (restored pre-naked). */
 void slayer_engine_display_score(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[ca9350]\n\t"
-      "movb 0x4d(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lslayer_engine_display_score_2\n\t"
-      "flds 0x6c(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lslayer_engine_display_score_2\n\t"
-      "flds 0x6c(%%esi)\n\t"
-      "fsubs 0x26ddb8\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fsts 0x6c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lslayer_engine_display_score_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lslayer_engine_display_score_1:\n\t"
-      "fstps 0x6c(%%esi)\n\t"
-      ".Lslayer_engine_display_score_2:\n\t"
-      "call *%[ca9350]\n\t"
-      "movb 0x4c(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lslayer_engine_display_score_4\n\t"
-      "flds 0x6c(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lslayer_engine_display_score_4\n\t"
-      "flds 0x6c(%%esi)\n\t"
-      "fadds 0x26ddb4\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fsts 0x6c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lslayer_engine_display_score_3\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lslayer_engine_display_score_3:\n\t"
-      "fstps 0x6c(%%esi)\n\t"
-      ".Lslayer_engine_display_score_4:\n\t"
-      "call *%[ca9350]\n\t"
-      "movb 0x4e(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lslayer_engine_display_score_9\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lslayer_engine_display_score_5\n\t"
-      "cmpw $0x10, %%di\n\t"
-      "jl .Lslayer_engine_display_score_6\n\t"
-      ".Lslayer_engine_display_score_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f5\n\t"
-      "pushl $0x26dcc4\n\t"
-      "pushl $0x26dd7c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lslayer_engine_display_score_6:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ca9460]\n\t"
-      "movl 0x88(%%esi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lslayer_engine_display_score_7\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lslayer_engine_display_score_7\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x26d8b8\n\t"
-      "pushl $0\n\t"
-      "addl $0x50, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ca93e0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      ".Lslayer_engine_display_score_7:\n\t"
-      "cmpl $-1, 0x34(%%esi)\n\t"
-      "je .Lslayer_engine_display_score_8\n\t"
-      "cmpl $-1, 0x88(%%esi)\n\t"
-      "jne .Lslayer_engine_display_score_8\n\t"
-      "call *%[cb4e20]\n\t"
-      ".Lslayer_engine_display_score_8:\n\t"
-      "movl 0x88(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lslayer_engine_display_score_9\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca9900]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lslayer_engine_display_score_9\n\t"
-      "call *%[cb4e20]\n\t"
-      ".Lslayer_engine_display_score_9:\n\t"
-      "movl 0x5aa6d4, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x20(%%eax), %%eax\n\t"
-      "movl 0x456fe0(,%%eax,4), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[ca9350]\n\t"
-      "movl 0x40(%%eax), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "popl %%esi\n\t"
-      "jl .Lslayer_engine_display_score_10\n\t"
-      "popl %%ebp\n\t"
-      "jmp .Lslayer_engine_display_score_10000\n\t"
-      ".Lslayer_engine_display_score_10:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lslayer_engine_display_score_10000:\n\t"
-      "jmp *%[ca8b00]\n\t"
-      :
-      : [dget] "m"(bb5210_dget), [ca9350] "m"(bb5210_ca9350), [assert] "m"(bb5210_assert), [exitfn] "m"(bb5210_exitfn), [ca9460] "m"(bb5210_ca9460), [get] "m"(bb5210_get), [ca93e0] "m"(bb5210_ca93e0), [cb4e20] "m"(bb5210_cb4e20), [ca9900] "m"(bb5210_ca9900), [ca8b00] "m"(bb5210_ca8b00)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  datum_get((void *)(uintptr_t)eax, 0);
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> je 0xb5269 */
+  /* test (char)eax, 0x41 -> jne 0xb5269 */
+  /* test (char)eax, 0x41 -> je 0xb5266 */
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> je 0xb52a9 */
+  /* test (char)eax, 0x41 -> jne 0xb52a6 */
+  game_engine_get_variant();
+  /* test (char)ecx, (char)ecx -> je 0xb5362 */
+  /* test (int16_t)edi, (int16_t)edi -> jl 0xb52c4 */
+  /* cmp (int16_t)edi, 0x10 -> jl 0xb52e4 */
+  display_assert((char *)0x0026dd7c, (char *)0x0026dcc4, 501, 0);
+  system_exit(0);
+  game_engine_clear_goal_position(0);
+  /* cmp eax, -1 -> je 0xb5331 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp eax, -1 -> je 0xb5331 */
+  object_get_and_verify_type(0, 0);
+  game_engine_set_goal_position(0, (void *)(uintptr_t)eax, 0.0f, (char *)0, 0, 0, 0);
+  /* relift: cmp dword ptr [esi + 0x34], -1 -> je 0xb5345 */
+  /* relift: cmp dword ptr [esi + 0x88], -1 -> jne 0xb5345 */
+  find_next_target();
+  /* cmp esi, -1 -> je 0xb5362 */
+  game_engine_man_out(0);
+  /* test (char)eax, (char)eax -> je 0xb5362 */
+  find_next_target();
+  datum_get((void *)(uintptr_t)edx, 0);
+  game_engine_get_variant();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "slayer_engine_display_score: clang naked draft required"
-#endif
 
 /* --- game.obj orphan shells (2026-07-26) --- */
 

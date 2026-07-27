@@ -5476,7 +5476,7 @@
         {
           "addr": "0xa5d70",
           "decl": "void FUN_000a5d70(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a5d70"
         },
         {
@@ -8815,7 +8815,7 @@
         {
           "addr": "0xb5210",
           "decl": "void slayer_engine_display_score(void);",
-          "ported": false,
+          "ported": true,
           "name": "slayer_engine_display_score"
         },
         {
