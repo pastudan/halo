@@ -726,7 +726,7 @@
         {
           "addr": "0x1e6805",
           "decl": "wchar_t *FUN_001e6805(wchar_t *s);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1e6831",

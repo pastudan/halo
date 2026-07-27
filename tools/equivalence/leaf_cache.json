@@ -1,4 +1,7 @@
 {
+  "0x1486e0": {
+    "class": "non_leaf"
+  },
   "0x165a00": {
     "class": "leaf",
     "confidence": "high",
@@ -6,6 +9,11 @@
   },
   "0x1c9c80": {
     "class": "non_leaf"
+  },
+  "0x1e6805": {
+    "class": "leaf",
+    "confidence": "weak",
+    "coverage_pct": 100.0
   },
   "0x2": {
     "confidence": "weak",
