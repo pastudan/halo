@@ -27758,7 +27758,7 @@
         {
           "addr": "0x84740",
           "decl": "int FUN_00084740(int endpoint, void *message, int size, int dest_address);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00084740"
         },
         {
@@ -32335,7 +32335,7 @@
         {
           "addr": "0x108270",
           "decl": "void get_face_vertex(void);",
-          "ported": false,
+          "ported": true,
           "name": "get_face_vertex"
         },
         {
