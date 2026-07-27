@@ -4892,94 +4892,38 @@ char FUN_000cb940(int16_t param, int thread_index /*@<eax>*/, const char *detail
   return 0;
 }
 
-/* hs_runtime_update (0xcde00) — XBE naked draft (batch 143). */
-#if defined(__clang__)
-static int (*const bcde00_gtime)(void) = game_time_get;
-static int (*const bcde00_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const bcde00_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bcde00_ccd840)(int thread_handle) = FUN_000cd840;
-static void (*const bcde00_cce3c0)(void) = FUN_000ce3c0;
-static void (*const bcde00_cc3ca0)(void) = hs_scripts_dispose;
 
-__attribute__((naked, noinline))
 void hs_runtime_update(void)
 {
-  __asm__ volatile(
-      "movb 0x46b810, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lhs_runtime_update_6\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5aa6c4, %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x46b810, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lhs_runtime_update_4\n\t"
-      ".Lhs_runtime_update_1:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lhs_runtime_update_4\n\t"
-      "movl 0x5aa6c4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x2(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpb $2, %%cl\n\t"
-      "jne .Lhs_runtime_update_2\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lhs_runtime_update_2:\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .Lhs_runtime_update_3\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jg .Lhs_runtime_update_3\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[ccd840]\n\t"
-      ".Lhs_runtime_update_3:\n\t"
-      "movl 0x5aa6c4, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x46b810, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lhs_runtime_update_1\n\t"
-      ".Lhs_runtime_update_4:\n\t"
-      "call *%[cce3c0]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "testb %%bl, %%bl\n\t"
-      "popl %%ebx\n\t"
-      "jne .Lhs_runtime_update_6\n\t"
-      "call *%[gtime]\n\t"
-      "andl $0x8000000f, %%eax\n\t"
-      "jns .Lhs_runtime_update_5\n\t"
-      "decl %%eax\n\t"
-      "orl $0xfffffff0, %%eax\n\t"
-      "incl %%eax\n\t"
-      ".Lhs_runtime_update_5:\n\t"
-      "jne .Lhs_runtime_update_6\n\t"
-      "jmp .Lhs_runtime_update_10000\n\t"
-      ".Lhs_runtime_update_6:\n\t"
-      "ret\n\t"
-      ".Lhs_runtime_update_10000:\n\t"
-      "jmp *%[cc3ca0]\n\t"
-      :
-      : [gtime] "m"(bcde00_gtime), [c1198f0] "m"(bcde00_c1198f0), [dget] "m"(bcde00_dget), [ccd840] "m"(bcde00_ccd840), [cce3c0] "m"(bcde00_cce3c0), [cc3ca0] "m"(bcde00_cc3ca0)
-      : "memory");
+  int idx;
+  char *thread;
+  int game_time;
+  char saw_script_thread;
+
+  if (*(uint8_t *)0x46b810 == 0)
+    return;
+
+  game_time = game_time_get();
+  saw_script_thread = 0;
+  idx = data_next_index(*(data_t **)0x5aa6c4, -1);
+  while (idx != -1 && *(uint8_t *)0x46b810 != 0) {
+    thread = (char *)datum_get(*(data_t **)0x5aa6c4, idx);
+    if (*(uint8_t *)(thread + 2) == 2)
+      saw_script_thread = 1;
+    if (*(int *)(thread + 8) >= 0 && *(int *)(thread + 8) <= game_time)
+      FUN_000cd840(idx);
+    idx = data_next_index(*(data_t **)0x5aa6c4, idx);
+  }
+
+  FUN_000ce3c0();
+
+  if (saw_script_thread)
+    return;
+
+  game_time = game_time_get();
+  if ((game_time & 0xf) == 0)
+    hs_scripts_dispose();
 }
-#else
-#error "hs_runtime_update: clang naked draft required"
-#endif
 
 
 /* FUN_000ce050 (0xce050) — readable C lift. */

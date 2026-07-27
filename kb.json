@@ -2763,19 +2763,19 @@
           "addr": "0x1fb80",
           "decl": "char actor_action_consider_grenade(int actor_handle);",
           "name": "actor_action_consider_grenade",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1fca0",
           "decl": "char actor_action_try_to_evade(int actor_handle);",
           "name": "actor_action_try_to_evade",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1fe70",
           "decl": "char actor_action_try_to_dive(int actor_handle, short direction_ref, float param_3, float *direction, float param_5);",
           "name": "actor_action_try_to_dive",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x20140",
@@ -12751,7 +12751,7 @@
         {
           "addr": "0xcde00",
           "decl": "void hs_runtime_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "hs_runtime_update"
         },
         {
@@ -29445,7 +29445,7 @@
           "addr": "0x1ab410",
           "decl": "void unit_aiming_vector(int unit_handle@<eax>);",
           "name": "unit_aiming_vector",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
@@ -29492,14 +29492,14 @@
           "addr": "0x1abb20",
           "decl": "void unit_drop_grenades_on_death(int unit_handle@<eax>);",
           "name": "unit_drop_grenades_on_death",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
           "addr": "0x1abbd0",
           "decl": "void unit_drop_weapons_on_death(int unit_handle@<eax>);",
           "name": "unit_drop_weapons_on_death",
-          "ported": false,
+          "ported": true,
           "obj": "units.obj"
         },
         {
@@ -29607,7 +29607,7 @@
           "addr": "0x1adfc0",
           "decl": "int16_t vehicle_scripting_find_available_seats(int unit_handle, int seat_substring, int16_t seat_desire_type, int16_t *seat_indices, int16_t max_seats);",
           "name": "vehicle_scripting_find_available_seats",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ae160",
@@ -29690,7 +29690,7 @@
           "addr": "0x1ae840",
           "decl": "void unit_cause_melee_damage(int unit_handle, char melee_hit, int target_handle, int param_4, int param_5, int param_6, int param_7);",
           "name": "unit_cause_melee_damage",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1aea90",
@@ -29801,7 +29801,7 @@
           "addr": "0x1b1b60",
           "decl": "char unit_melee_attack_begin(int unit_handle, char param_2, int param_3);",
           "name": "unit_melee_attack_begin",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b1b60.obj"
         },
         {
@@ -29842,14 +29842,14 @@
           "addr": "0x1b2290",
           "decl": "void unit_impact_melee_damage(int unit_handle, int param_2, int param_3, int param_4, int param_5, int param_6, float *param_7, int param_8);",
           "name": "unit_impact_melee_damage",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b1b60.obj"
         },
         {
           "addr": "0x1b24d0",
           "decl": "void unit_place(int unit_handle, void *placement);",
           "name": "unit_place",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b1b60.obj"
         },
         {
@@ -29862,7 +29862,7 @@
           "addr": "0x1b2660",
           "decl": "void unit_create_initial_weapons(int unit_handle);",
           "name": "unit_create_initial_weapons",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b2660.obj"
         },
         {
@@ -29886,13 +29886,13 @@
           "addr": "0x1b2dd0",
           "decl": "void unit_exit_seat_end(int unit_handle);",
           "name": "unit_exit_seat_end",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b3060",
           "decl": "void unit_died(int unit_handle, char feign_death);",
           "name": "unit_died",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b32d0",
@@ -29912,7 +29912,7 @@
           "addr": "0x1b3580",
           "decl": "char unit_try_and_exit_seat(int unit_handle);",
           "name": "unit_try_and_exit_seat",
-          "ported": false,
+          "ported": true,
           "delinked": "delinked/units_batch_1b3580.obj"
         },
         {
@@ -34520,13 +34520,13 @@
         {
           "addr": "0x2d350",
           "decl": "void actor_destination_update(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_destination_update"
         },
         {
           "addr": "0x2e560",
           "decl": "void actor_move_update(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_update"
         },
         {
@@ -34544,7 +34544,7 @@
         {
           "addr": "0x2cdb0",
           "decl": "char actor_path_refresh(int actor_handle, char store_distance, void *override_path);",
-          "ported": false,
+          "ported": true,
           "name": "actor_path_refresh"
         },
         {

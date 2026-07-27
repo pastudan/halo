@@ -32,141 +32,99 @@
  *   0x632500  int16_t[0x39]: index map built during initialize
  */
 
-/* ai_communication_initialize (0x42a30) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static void * (*const b42a30_c1bfbf0)(const char *name, const char *a2, int size) = game_state_malloc;
-static void (*const b42a30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b42a30_exitfn)(int) = system_exit;
-static data_t * (*const b42a30_c1bfe10)(char *name, __int16 maximum_count, __int16 size) = game_state_data_new;
-
-__attribute__((naked, noinline))
+/* ai_communication_initialize: count comm dialogue/reply table entries,
+ * allocate per-entry status tables via game_state_malloc, build a dialogue
+ * index map into 0x632500[], and allocate the "ai conversation" data table.
+ *
+ * Confirmed: __FILE__ = "c:\halo\SOURCE\ai\ai_communication.c"
+ *   line 0x286 (646) -> dialogue alloc assert
+ *   line 0x293 (659) -> reply alloc assert
+ *   line 0x2a8 (680) -> conversation data assert
+ * Called from ai_initialize (0x3f670). */
 void ai_communication_initialize(void)
 {
-  __asm__ volatile(
-      "xorw %%cx, %%cx\n\t"
-      "movl $0x257e48, %%eax\n\t"
-      "jmp .Lai_communication_initialize_1\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lai_communication_initialize_1:\n\t"
-      "addl $0x28, %%eax\n\t"
-      "incw %%cx\n\t"
-      "cmpw $-1, (%%eax)\n\t"
-      "jne .Lai_communication_initialize_1\n\t"
-      "movl 0x331f0c, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movw %%cx, 0x331f08\n\t"
-      "jne .Lai_communication_initialize_2\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0x2599dc\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x331f0c\n\t"
-      "jne .Lai_communication_initialize_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x286\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x259968\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_communication_initialize_2:\n\t"
-      "xorw %%cx, %%cx\n\t"
-      "movl $0x258eb0, %%eax\n\t"
-      ".Lai_communication_initialize_3:\n\t"
-      "addl $0x24, %%eax\n\t"
-      "incw %%cx\n\t"
-      "cmpw $-1, (%%eax)\n\t"
-      "jne .Lai_communication_initialize_3\n\t"
-      "movl 0x331f14, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movw %%cx, 0x331f10\n\t"
-      "jne .Lai_communication_initialize_4\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "shll $4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0x259948\n\t"
-      "call *%[c1bfbf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x331f14\n\t"
-      "jne .Lai_communication_initialize_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x293\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x259900\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_communication_initialize_4:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl $0x632500, %%esi\n\t"
-      "jmp .Lai_communication_initialize_5\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lai_communication_initialize_5:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw $0xffff, (%%esi)\n\t"
-      "movl $0x257e48, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lai_communication_initialize_6:\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "je .Lai_communication_initialize_7\n\t"
-      "movw 0x28(%%ecx), %%ax\n\t"
-      "addl $0x28, %%ecx\n\t"
-      "incl %%edx\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lai_communication_initialize_6\n\t"
-      "jmp .Lai_communication_initialize_8\n\t"
-      ".Lai_communication_initialize_7:\n\t"
-      "movw %%dx, (%%esi)\n\t"
-      ".Lai_communication_initialize_8:\n\t"
-      "incl %%edi\n\t"
-      "addl $2, %%esi\n\t"
-      "cmpw $0x39, %%di\n\t"
-      "jl .Lai_communication_initialize_5\n\t"
-      "pushl $0x64\n\t"
-      "pushl $8\n\t"
-      "pushl $0x2598f0\n\t"
-      "call *%[c1bfe10]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x6324ec\n\t"
-      "popl %%esi\n\t"
-      "jne .Lai_communication_initialize_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a8\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x2598dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_communication_initialize_9:\n\t"
-      "ret\n\t"
-      :
-      : [c1bfbf0] "m"(b42a30_c1bfbf0), [assert] "m"(b42a30_assert), [exitfn] "m"(b42a30_exitfn), [c1bfe10] "m"(b42a30_c1bfe10)
-      : "memory");
-}
-#else
-#error "ai_communication_initialize: clang naked draft required"
-#endif
+  int16_t i;
+  int16_t count;
 
+  /* --- count comm dialogue entries (stride 0x28, sentinel = -1 at [0]) */
+  count = 0;
+  {
+    int16_t *p = (int16_t *)0x257e48;
+    do {
+      p += 0x14; /* advance by 0x28 bytes (stride = 0x28) */
+      count++;
+    } while (*p != -1);
+  }
+  *(int16_t *)0x331f08 = count;
 
-/* ai_communication_dispose: no-op stub.
- * Called from ai_dispose (0x3f6f0). Binary is a single RET instruction. */
-void ai_communication_dispose(void)
-{
+  /* allocate dialogue status table if not already present */
+  if (*(void **)0x331f0c == 0) {
+    *(void **)0x331f0c =
+      game_state_malloc("ai communication dialogue", 0, (int)count << 4);
+    if (*(void **)0x331f0c == 0) {
+      display_assert("ai_communication_initialize: unable to allocate comm "
+                     "dialogue status table",
+                     "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0x286, 1);
+      system_exit(-1);
+    }
+  }
+
+  /* --- count comm reply entries (stride 0x24, sentinel = -1 at [0]) */
+  count = 0;
+  {
+    int16_t *p = (int16_t *)0x258eb0;
+    do {
+      p += 0x12; /* advance by 0x24 bytes (stride = 0x24) */
+      count++;
+    } while (*p != -1);
+  }
+  *(int16_t *)0x331f10 = count;
+
+  /* allocate reply status table if not already present */
+  if (*(void **)0x331f14 == 0) {
+    *(void **)0x331f14 =
+      game_state_malloc("ai communication replies", 0, (int)count << 4);
+    if (*(void **)0x331f14 == 0) {
+      display_assert("ai_communication_initialize: unable to allocate comm "
+                     "reply status table",
+                     "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0x293, 1);
+      system_exit(-1);
+    }
+  }
+
+  /* --- build dialogue index map into 0x632500[0..0x38].
+   * For each slot i (0..0x38), walk the dialogue table and store the
+   * sequential index of the entry whose sentinel-short equals i, or -1
+   * if not found. Confirmed: CMP DI,0x39 / JL loop in disassembly. */
+  {
+    int16_t *out = (int16_t *)0x632500;
+    for (i = 0; i < 0x39; i++, out++) {
+      int16_t j = 0;
+      int16_t *entry = (int16_t *)0x257e48;
+      int16_t cur_sentinel;
+      *out = -1;
+      cur_sentinel = 0;
+      do {
+        if (cur_sentinel == i) {
+          *out = j;
+          break;
+        }
+        cur_sentinel = entry[0x14]; /* next sentinel at stride offset */
+        entry += 0x14;
+        j++;
+      } while (cur_sentinel != -1);
+    }
+  }
+
+  /* allocate "ai conversation" data table: max 8 entries, each 100 bytes.
+   * Confirmed: PUSH 0x64; PUSH 0x8; PUSH name ->
+   * game_state_data_new(name,8,100) */
+  *(void **)0x6324ec = game_state_data_new("ai conversation", 8, 100);
+  if (*(void **)0x6324ec == 0) {
+    display_assert("conversation_data",
+                   "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0x2a8, 1);
+    system_exit(-1);
+  }
 }
 
 /* ai_communication_initialize_for_new_map (0x42b90) — readable C lift from XBE leaf. */

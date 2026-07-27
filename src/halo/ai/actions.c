@@ -2503,594 +2503,321 @@ int actor_pursuit_find_nearby_actors(int actor_handle __attribute__((unused)), c
 #endif
 
 
-/* actor_action_consider_grenade (0x1fb80) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void *(*const b1fb80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1fb80_tag)(int, int) = tag_get;
-static int (*const b1fb80_gtime)(void) = game_time_get;
-static float (*const b1fb80_cb55b0)(short value_type, int team) = FUN_000b55b0;
-static int *(*const b1fb80_gseed)(void) = get_global_random_seed_address;
-static float (*const b1fb80_rmreal)(unsigned int *) = random_math_real;
-static char (*const b1fb80_c1d180)(int actor_handle) = actor_action_test_grenade;
-static char (*const b1fb80_c1fa60)(int actor_handle, char flag) = actor_action_try_to_throw_grenade;
-
-__attribute__((naked, noinline))
-char actor_action_consider_grenade(int actor_handle __attribute__((unused)))
+/* actor_action_consider_grenade (0x1fb80) — Probabilistically decides whether
+ * the actor should begin a grenade throw this tick. Gated by: the "already
+ * considering" flag (actor+0x6a0), the global AI grenade-enable flag
+ * (*(char**)0x632574 + 0x3b4), and the actv tag having both grenade type
+ * fields present (tag+0x180 and tag+0x182 != -1). Enforces a cooldown: if the
+ * last-throw timestamp (actor+0x6a4) is valid (!= -1) and the cooldown window
+ * (tag+0x1a4 * 30.0f + stamp) has not yet elapsed relative to game_time, bail.
+ * Otherwise re-stamps the cooldown, rolls a random value against
+ * (team-scaled multiplier * tag throw-chance at 0x1a0), and if the roll
+ * succeeds and actor_action_test_grenade passes, sets the consider flag and
+ * kicks off the throw. Returns 1 while inside the consider window, else 0. */
+char actor_action_consider_grenade(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637476\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x6a0(%%esi), %%cl\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lactor_action_consider_grenade_2\n\t"
-      "movl 0x632574, %%ecx\n\t"
-      "movb 0x3b4(%%ecx), %%dl\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .Lactor_action_consider_grenade_4\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      "cmpw %%cx, 0x180(%%edi)\n\t"
-      "je .Lactor_action_consider_grenade_4\n\t"
-      "cmpw %%cx, 0x182(%%edi)\n\t"
-      "je .Lactor_action_consider_grenade_4\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x6a4(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "je .Lactor_action_consider_grenade_1\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "flds 0x1a4(%%edi)\n\t"
-      "fmuls 0x253394\n\t"
-      "fiaddl -0x8(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .Lactor_action_consider_grenade_3\n\t"
-      ".Lactor_action_consider_grenade_1:\n\t"
-      "movl 0x1a0(%%edi), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x3e(%%esi), %%ax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x17\n\t"
-      "call *%[cb55b0]\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "movl %%ebx, 0x6a4(%%esi)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rmreal]\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lactor_action_consider_grenade_3\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d180]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_consider_grenade_3\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, 0x6a0(%%esi)\n\t"
-      "call *%[c1fa60]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lactor_action_consider_grenade_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_consider_grenade_3:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lactor_action_consider_grenade_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1fb80_dget), [tag] "m"(b1fb80_tag), [gtime] "m"(b1fb80_gtime), [cb55b0] "m"(b1fb80_cb55b0), [gseed] "m"(b1fb80_gseed), [rmreal] "m"(b1fb80_rmreal), [c1d180] "m"(b1fb80_c1d180), [c1fa60] "m"(b1fb80_c1fa60)
-      : "memory");
+  char *actor;
+  char *actv_tag;
+  int current_time;
+  int *seed;
+  float expiry;
+  float throw_chance;
+  float team_mult;
+  float roll;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  actv_tag = (char *)tag_get(0x61637476, *(int *)(actor + 0x5c));
+  if (*(char *)(actor + 0x6a0) == '\0') {
+    if (*(char *)(*(char **)0x632574 + 0x3b4) == '\0')
+      return 0;
+    if (*(short *)(actv_tag + 0x180) == -1)
+      return 0;
+    if (*(short *)(actv_tag + 0x182) == -1)
+      return 0;
+    current_time = game_time_get();
+    if (*(int *)(actor + 0x6a4) != -1) {
+      expiry = *(float *)(actv_tag + 0x1a4) * *(float *)0x253394 +
+               (float)*(int *)(actor + 0x6a4);
+      if (expiry > (float)current_time)
+        return 0;
+    }
+    throw_chance = *(float *)(actv_tag + 0x1a0);
+    team_mult = FUN_000b55b0(0x17, *(short *)(actor + 0x3e));
+    *(int *)(actor + 0x6a4) = current_time;
+    seed = get_global_random_seed_address();
+    roll = random_math_real((unsigned int *)seed);
+    if (team_mult * throw_chance <= roll ||
+        actor_action_test_grenade(actor_handle) == '\0')
+      return 0;
+    *(char *)(actor + 0x6a0) = 1;
+    actor_action_try_to_throw_grenade(actor_handle, 1);
+  }
+  return 1;
 }
-#else
-#error "actor_action_consider_grenade: clang naked draft required"
-#endif
 
 
-/* actor_action_try_to_evade (0x1fca0) — XBE naked draft (batch 83). */
-#if defined(__clang__)
-static void *(*const b1fca0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b1fca0_c2a360)(int actor_handle) = FUN_0002a360;
-static void *(*const b1fca0_tag)(int, int) = tag_get;
-static void *(*const b1fca0_get)(int, int) = object_get_and_verify_type;
-static float (*const b1fca0_c13070)(float *a, float *b) = FUN_00013070;
-static float (*const b1fca0_mag)(float *) = magnitude3d;
-static char (*const b1fca0_c2ab40)(int actor_handle, float *alignment_vector, float param_3, unsigned short *evade_direction_reference, float param_5, char *out_flag, void *result) = actor_move_try_evasion_direction;
-static void (*const b1fca0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1fca0_exitfn)(int) = system_exit;
-static uint32_t (*const b1fca0_c1a97c0)(int unit_handle, int impulse_index) = unit_test_animation_impulse;
-static int (*const b1fca0_c2a7e0)(int actor_handle, int16_t param_2, int *param_3) = actor_move_animation_impulse;
-
-__attribute__((naked, noinline))
-char actor_action_try_to_evade(int actor_handle __attribute__((unused)))
+/* actor_action_try_to_evade (0x1fca0) - Attempt to start an evade (sidestep)
+ * action away from the actor's current target/attractor.
+ *
+ * Pre-screen guards (all fall through to a false return):
+ *   1. actor+0x158 (swarm element handle) must be NONE (-1).
+ *   2. FUN_0002a360(actor_handle) must be false (some blocking condition).
+ *   3. actor+0x504 (a boolean flag) must be clear.
+ *   4. actor+0x270 (target prop/attractor datum handle) must be valid (!= -1).
+ *   5. unit_tag+0x234 (evade-enable / max-evade scalar) must be > 0.0f.
+ *
+ * Reads the attractor direction (2D vector at prop+0xe0) and measures its
+ * alignment with the actor's facing (actor+0x174/0x178). When actr_tag flag
+ * 0x200000 is set the alignment is a 3-component dot (FUN_00013070); otherwise
+ * the attractor vector is copied, normalized (magnitude3d), and dotted in 2D.
+ * A zero-length attractor vector skips the alignment gate. The alignment must
+ * exceed 0.4f (0x253524) to proceed.
+ *
+ * Builds the alignment vector (normalized copy of prop+0xe0), requests a
+ * feasible evade direction from actor_move_try_evasion_direction with the
+ * "random" reference mode (4). On success the returned direction index selects
+ * an animation impulse (1 -> 7, 0 -> 6; anything else asserts), which is
+ * validated via unit_test_animation_impulse before being committed with
+ * actor_move_animation_impulse.
+ *
+ * Confirmed: datum_get(actor_data, actor_handle); tag_get('actr', actor+0x58);
+ * object_get_and_verify_type(actor+0x18, 3); tag_get('unit', *object);
+ * datum_get(prop_data 0x5ab23c, actor+0x270). Confirmed float constants
+ * 0x2533c0 = 0.0f, 0x253524 = 0.4f. Confirmed FUN_0002ab40 result buffer is a
+ * pathfinding-location scratch (28-byte frame reservation, callee reads +0xc).
+ * Confirmed default-case assert "evade_direction == _actor_evade_left",
+ * line 0xce3, + system_exit(-1). Returns bool in AL. */
+char actor_action_try_to_evade(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x158(%%esi), %%eax\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jne .Lactor_action_try_to_evade_7\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2a360]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_try_to_evade_7\n\t"
-      "movb 0x504(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_try_to_evade_7\n\t"
-      "cmpl %%ebx, 0x270(%%esi)\n\t"
-      "je .Lactor_action_try_to_evade_7\n\t"
-      "movl 0x58(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x270(%%esi), %%ecx\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[dget]\n\t"
-      "flds 0x234(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $0x20, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_try_to_evade_7\n\t"
-      "testl $0x200000, (%%edi)\n\t"
-      "leal 0xe0(%%ecx), %%edi\n\t"
-      "je .Lactor_action_try_to_evade_1\n\t"
-      "leal 0x174(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c13070]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lactor_action_try_to_evade_2\n\t"
-      ".Lactor_action_try_to_evade_1:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "call *%[mag]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_try_to_evade_3\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x178(%%esi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x174(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".Lactor_action_try_to_evade_2:\n\t"
-      "fcomps 0x253524\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_try_to_evade_7\n\t"
-      ".Lactor_action_try_to_evade_3:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl $4, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "call *%[mag]\n\t"
-      "fstp %%st(0)\n\t"
-      "leal -0x30(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x234(%%ebx), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "leal -0x2(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c2ab40]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_try_to_evade_7\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .Lactor_action_try_to_evade_4\n\t"
-      "movl $7, %%edi\n\t"
-      "jmp .Lactor_action_try_to_evade_6\n\t"
-      ".Lactor_action_try_to_evade_4:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lactor_action_try_to_evade_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0xce3\n\t"
-      "pushl $0x2544b0\n\t"
-      "pushl $0x254874\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_action_try_to_evade_5:\n\t"
-      "movl $6, %%edi\n\t"
-      ".Lactor_action_try_to_evade_6:\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1a97c0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_try_to_evade_7\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c2a7e0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      ".Lactor_action_try_to_evade_7:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1fca0_dget), [c2a360] "m"(b1fca0_c2a360), [tag] "m"(b1fca0_tag), [get] "m"(b1fca0_get), [c13070] "m"(b1fca0_c13070), [mag] "m"(b1fca0_mag), [c2ab40] "m"(b1fca0_c2ab40), [assert] "m"(b1fca0_assert), [exitfn] "m"(b1fca0_exitfn), [c1a97c0] "m"(b1fca0_c1a97c0), [c2a7e0] "m"(b1fca0_c2a7e0)
-      : "memory");
+  char *actor;
+  int *actr_tag;
+  char *unit_tag;
+  char *prop;
+  float *attractor_vec;
+  float scratch[2];
+  float alignment_vec[2];
+  float dot;
+  int evade_dir_ref;
+  char out_flag;
+  char result;
+  int impulse;
+  char path_result[0x1c];
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  result = 0;
+  if (*(int *)(actor + 0x158) != -1) {
+    return result;
+  }
+  if (FUN_0002a360(actor_handle) != 0) {
+    return result;
+  }
+  if (*(char *)(actor + 0x504) != '\0') {
+    return result;
+  }
+  if (*(int *)(actor + 0x270) == -1) {
+    return result;
+  }
+
+  actr_tag = (int *)tag_get(0x61637472, *(int *)(actor + 0x58));
+  unit_tag = (char *)tag_get(
+      0x756e6974,
+      *(int *)object_get_and_verify_type(*(int *)(actor + 0x18), 3));
+  prop = (char *)datum_get(*(data_t **)0x5ab23c, *(int *)(actor + 0x270));
+  if (*(float *)(unit_tag + 0x234) <= *(float *)0x2533c0) {
+    return result;
+  }
+
+  attractor_vec = (float *)(prop + 0xe0);
+  if ((*actr_tag & 0x200000) != 0) {
+    dot = FUN_00013070(attractor_vec, (float *)(actor + 0x174));
+  } else {
+    scratch[0] = attractor_vec[0];
+    scratch[1] = attractor_vec[1];
+    if (magnitude3d(scratch) <= *(float *)0x2533c0) {
+      goto do_evade;
+    }
+    dot = scratch[1] * *(float *)(actor + 0x178) +
+          scratch[0] * *(float *)(actor + 0x174);
+  }
+  if (dot <= *(float *)0x253524) {
+    return result;
+  }
+
+do_evade:
+  alignment_vec[0] = attractor_vec[0];
+  alignment_vec[1] = attractor_vec[1];
+  evade_dir_ref = 4;
+  magnitude3d(alignment_vec);
+  if (actor_move_try_evasion_direction(actor_handle, alignment_vec,
+                                       *(float *)(unit_tag + 0x234),
+                                       (unsigned short *)&evade_dir_ref, 0.0f,
+                                       &out_flag, path_result) != '\0') {
+    if ((unsigned short)evade_dir_ref == 1) {
+      impulse = 7;
+    } else if ((unsigned short)evade_dir_ref == 0) {
+      impulse = 6;
+    } else {
+      display_assert("evade_direction == _actor_evade_left",
+                     "c:\\halo\\SOURCE\\ai\\actions.c", 0xce3, 1);
+      system_exit(-1);
+    }
+    if (unit_test_animation_impulse(*(int *)(actor + 0x18), impulse) != 0) {
+      result = (char)actor_move_animation_impulse(
+        actor_handle, (int16_t)impulse, (int *)alignment_vec);
+    }
+  }
+  return result;
 }
-#else
-#error "actor_action_try_to_evade: clang naked draft required"
-#endif
 
 
-/* actor_action_try_to_dive (0x1fe70) — XBE naked draft (batch 80). */
-#if defined(__clang__)
-static void *(*const b1fe70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b1fe70_gtime)(void) = game_time_get;
-static char (*const b1fe70_c2ab40)(int actor_handle, float *alignment_vector, float param_3, unsigned short *evade_direction_reference, float param_5, char *out_flag, void *result) = actor_move_try_evasion_direction;
-static void (*const b1fe70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1fe70_exitfn)(int) = system_exit;
-static uint32_t (*const b1fe70_c1a97c0)(int unit_handle, int impulse_index) = unit_test_animation_impulse;
-static int (*const b1fe70_c2a7e0)(int actor_handle, int16_t param_2, int *param_3) = actor_move_animation_impulse;
-static void (*const b1fe70_c46f10)(int16_t type, int unit_handle, int param3, int param4, int16_t param5, int16_t param6, int16_t param7) = FUN_00046f10;
-
-__attribute__((naked, noinline))
-char actor_action_try_to_dive(int actor_handle __attribute__((unused)), short direction_ref __attribute__((unused)), float param_3 __attribute__((unused)), float *direction __attribute__((unused)), float param_5 __attribute__((unused)))
+/* actor_action_try_to_dive (0x1fe70) - Attempt to start a dive/dodge action in
+ * a lateral direction chosen relative to the actor's facing frame.
+ *
+ * On entry the actor's avoidance-state record (base *(int*)0x331f58, stride
+ * 0x657c, indexed by the low 16 bits of the handle) is stamped at +0x184 with
+ * the current game time; the final outcome is written at +0x188:
+ *   1 = pre-screen / evasion-direction rejection, 2 = no feasible dive
+ *   possibility, 3 = animation impulse rejected, 4 = success.
+ *
+ * Pre-screen (outcome 1): the actor must not be in a vehicle (actor+0x158 ==
+ * NONE) and actor_move_try_evasion_direction must accept the requested
+ * direction. direction_ref is an IN/OUT reference-mode word: on success the
+ * callee overwrites it with the chosen reference direction (0..3), which then
+ * selects how the input 2D vector is rotated into (dive_x, dive_y).
+ *
+ * (dive_x, dive_y) is projected onto the actor's facing axes (actor+0x174 /
+ * +0x178) to build four candidate alignment scores. The static dive-possibility
+ * table at 0x2542b2 is walked; each 8-byte entry carries {impulse index (-2),
+ * animation_direction (0), score bias (+2, float)}. A possibility wins when its
+ * biased score beats the running best (seeded to -0.5f) and
+ * unit_test_animation_impulse accepts its impulse on the actor's object. If a
+ * winner is found the output direction is re-derived from the winning
+ * animation_direction and committed via actor_move_animation_impulse; on success
+ * a 0x2c event is fired (FUN_00046f10) and the impulse result is returned.
+ *
+ * Confirmed: datum_get(actor_data, actor_handle); avoidance record
+ * *(int*)0x331f58 + (handle & 0xffff)*0x657c; game_time_get() stamp at +0x184;
+ * actor_move_try_evasion_direction 7-arg call (float scalars arg3/arg5, IN/OUT
+ * unsigned-short ref arg4, out flag + 28-byte path scratch); asserts at
+ * actions.c 0xd24 / 0xd3e / 0xd69 each followed by system_exit(-1); float
+ * constant 0xbf000000 = -0.5f. cases 2 and 3 are byte-identical in both
+ * switches (separate jump-table slots). Returns bool in AL. */
+char actor_action_try_to_dive(int actor_handle, short direction_ref, float param_3,
+                              float *direction, float param_5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x4c, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x331f58, %%ecx\n\t"
-      "movl %%esi, %%edi\n\t"
-      "andl $0xffff, %%edi\n\t"
-      "imull $0x657c, %%edi, %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebx, -0x18(%%ebp)\n\t"
-      "addl %%ecx, %%edi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x184(%%edi)\n\t"
-      "cmpl $-1, 0x158(%%ebx)\n\t"
-      "jne .Lactor_action_try_to_dive_19\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "leal -0x4c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x1(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "leal 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c2ab40]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_try_to_dive_19\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "cmpl $3, %%eax\n\t"
-      "ja .Lactor_action_try_to_dive_5\n\t"
-      "jmp *.Lactor_action_try_to_dive_jt0(,%%eax,4)\n\t"
-      ".Lactor_action_try_to_dive_1:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "fchs\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_6\n\t"
-      ".Lactor_action_try_to_dive_2:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "fchs\n\t"
-      "movl %%edx, -0x20(%%ebp)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_6\n\t"
-      ".Lactor_action_try_to_dive_3:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "movl %%ecx, -0x20(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_6\n\t"
-      ".Lactor_action_try_to_dive_4:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "movl %%edx, -0x20(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_6\n\t"
-      ".Lactor_action_try_to_dive_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd24\n\t"
-      "pushl $0x2544b0\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_action_try_to_dive_6:\n\t"
-      "flds 0x178(%%ebx)\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "fchs\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "flds 0x174(%%ebx)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "movl $0xbf000000, -0xc(%%ebp)\n\t"
-      "fmuls 0x178(%%ebx)\n\t"
-      "movl $0x2542b2, %%esi\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fmuls 0x174(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls -0x20(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps -0x2c(%%ebp)\n\t"
-      ".Lactor_action_try_to_dive_7:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lactor_action_try_to_dive_8\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_action_try_to_dive_9\n\t"
-      ".Lactor_action_try_to_dive_8:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd3e\n\t"
-      "pushl $0x2544b0\n\t"
-      "pushl $0x2548a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_action_try_to_dive_9:\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "flds -0x30(%%ebp,%%eax,4)\n\t"
-      "fadds 0x2(%%esi)\n\t"
-      "fcomps -0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_action_try_to_dive_10\n\t"
-      "movl 0x18(%%ebx), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw -0x2(%%esi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1a97c0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_try_to_dive_10\n\t"
-      "movw -0x2(%%esi), %%ax\n\t"
-      "movw %%ax, -0x8(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "flds -0x30(%%ebp,%%ecx,4)\n\t"
-      "fadds 0x2(%%esi)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      ".Lactor_action_try_to_dive_10:\n\t"
-      "addl $8, %%esi\n\t"
-      "cmpw $-1, -0x2(%%esi)\n\t"
-      "jne .Lactor_action_try_to_dive_7\n\t"
-      "cmpw $-1, -0x8(%%ebp)\n\t"
-      "jne .Lactor_action_try_to_dive_11\n\t"
-      "movw $2, 0x188(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_try_to_dive_11:\n\t"
-      "movswl -0x10(%%ebp), %%eax\n\t"
-      "cmpl $3, %%eax\n\t"
-      "ja .Lactor_action_try_to_dive_16\n\t"
-      "jmp *.Lactor_action_try_to_dive_jt1(,%%eax,4)\n\t"
-      ".Lactor_action_try_to_dive_12:\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "fchs\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_17\n\t"
-      ".Lactor_action_try_to_dive_13:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "fchs\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_17\n\t"
-      ".Lactor_action_try_to_dive_14:\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_17\n\t"
-      ".Lactor_action_try_to_dive_15:\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "jmp .Lactor_action_try_to_dive_17\n\t"
-      ".Lactor_action_try_to_dive_16:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd69\n\t"
-      "pushl $0x2544b0\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_action_try_to_dive_17:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c2a7e0]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lactor_action_try_to_dive_18\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "movl 0x18(%%edx), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2c\n\t"
-      "call *%[c46f10]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movw $4, 0x188(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_try_to_dive_18:\n\t"
-      "movw $3, 0x188(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_try_to_dive_19:\n\t"
-      "movw $1, 0x188(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lactor_action_try_to_dive_jt0:\n\t"
-      ".long .Lactor_action_try_to_dive_1\n\t"
-      ".long .Lactor_action_try_to_dive_2\n\t"
-      ".long .Lactor_action_try_to_dive_3\n\t"
-      ".long .Lactor_action_try_to_dive_4\n\t"
-      ".text\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lactor_action_try_to_dive_jt1:\n\t"
-      ".long .Lactor_action_try_to_dive_12\n\t"
-      ".long .Lactor_action_try_to_dive_13\n\t"
-      ".long .Lactor_action_try_to_dive_14\n\t"
-      ".long .Lactor_action_try_to_dive_15\n\t"
-      ".text\n\t"
-      :
-      : [dget] "m"(b1fe70_dget), [gtime] "m"(b1fe70_gtime), [c2ab40] "m"(b1fe70_c2ab40), [assert] "m"(b1fe70_assert), [exitfn] "m"(b1fe70_exitfn), [c1a97c0] "m"(b1fe70_c1a97c0), [c2a7e0] "m"(b1fe70_c2a7e0), [c46f10] "m"(b1fe70_c46f10)
-      : "memory");
+  char *actor;
+  int record;
+  char out_flag;
+  char path_result[0x1c];
+  float dive_x;
+  float dive_y;
+  float scores[4];
+  short best_index;
+  float best_score;
+  float out_vec[2];
+  unsigned short *poss;
+  char result;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  record = (actor_handle & 0xffff) * 0x657c + *(int *)0x331f58;
+  out_flag = 0;
+  *(int *)(record + 0x184) = game_time_get();
+
+  if (*(int *)(actor + 0x158) != -1 ||
+      actor_move_try_evasion_direction(actor_handle, direction, param_3,
+                                       (unsigned short *)&direction_ref, param_5,
+                                       &out_flag, path_result) == '\0') {
+    *(short *)(record + 0x188) = 1;
+    return '\0';
+  }
+
+  switch (direction_ref) {
+  case 0:
+    dive_x = *direction;
+    dive_y = -direction[1];
+    break;
+  case 1:
+    dive_y = direction[1];
+    dive_x = -*direction;
+    break;
+  case 2:
+    dive_x = direction[1];
+    dive_y = *direction;
+    break;
+  case 3:
+    dive_x = direction[1];
+    dive_y = *direction;
+    break;
+  default:
+    display_assert(0, "c:\\halo\\SOURCE\\ai\\actions.c", 0xd24, 1);
+    system_exit(-1);
+  }
+
+  /* The winning animation_direction shares out_vec[1]'s stack slot: it lives
+   * during the possibility scan, is read by the second switch's dispatch, then
+   * the slot is overwritten with the output vector's Y component. */
+  best_index = -1;
+  *(int *)(out_vec + 1) = -1;
+  best_score = -0.5f;
+  scores[2] = dive_y * *(float *)(actor + 0x174) + dive_x * *(float *)(actor + 0x178);
+  scores[0] = *(float *)(actor + 0x174) * dive_x + -*(float *)(actor + 0x178) * dive_y;
+  scores[3] = -scores[2];
+  scores[1] = -scores[0];
+
+  poss = (unsigned short *)0x2542b2;
+  do {
+    if ((short)poss[0] < 0 || 3 < (short)poss[0]) {
+      display_assert(
+          "(possibility->animation_direction >= 0) && (possibility->animation_direction < 4)",
+          "c:\\halo\\SOURCE\\ai\\actions.c", 0xd3e, 1);
+      system_exit(-1);
+    }
+    if (best_score < scores[(short)poss[0]] + *(float *)(poss + 1) &&
+        unit_test_animation_impulse(*(int *)(actor + 0x18), poss[-1]) != 0) {
+      best_index = poss[-1];
+      *(int *)(out_vec + 1) = poss[0];
+      best_score = scores[(short)poss[0]] + *(float *)(poss + 1);
+    }
+    poss = poss + 4;
+  } while (poss[-1] != 0xffff);
+
+  if (best_index == -1) {
+    *(short *)(record + 0x188) = 2;
+    return '\0';
+  }
+
+  switch (*(short *)(out_vec + 1)) {
+  case 0:
+    out_vec[1] = -dive_y;
+    out_vec[0] = dive_x;
+    break;
+  case 1:
+    out_vec[0] = -dive_x;
+    out_vec[1] = dive_y;
+    break;
+  case 2:
+    out_vec[0] = dive_y;
+    out_vec[1] = dive_x;
+    break;
+  case 3:
+    out_vec[0] = dive_y;
+    out_vec[1] = dive_x;
+    break;
+  default:
+    display_assert(0, "c:\\halo\\SOURCE\\ai\\actions.c", 0xd69, 1);
+    system_exit(-1);
+  }
+
+  result = (char)actor_move_animation_impulse(actor_handle, best_index,
+                                              (int *)out_vec);
+  if (result == '\0') {
+    *(short *)(record + 0x188) = 3;
+    return result;
+  }
+  FUN_00046f10(0x2c, *(int *)(actor + 0x18), -1, -1, -1, -1, 0);
+  *(short *)(record + 0x188) = 4;
+  return result;
 }
-#else
-#error "actor_action_try_to_dive: clang naked draft required"
-#endif
 
 
 /* actor_action_handle_berserk_transition (0x20470) — readable C lift. */
