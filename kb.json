@@ -27773,8 +27773,9 @@
         },
         {
           "addr": "0xeaba0",
-          "decl": "char FUN_000eaba0(void *widget, void *event_data);",
-          "ported": false
+          "decl": "char FUN_000eaba0(void *widget, void *event_data, char *out_flag);",
+          "ported": true,
+          "name": "FUN_000eaba0"
         },
         {
           "addr": "0xead60",
@@ -28195,7 +28196,7 @@
         {
           "addr": "0xf3400",
           "decl": "void game_options_menu_update_pic_desc(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "game_options_menu_update_pic_desc"
         },
         {

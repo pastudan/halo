@@ -6323,154 +6323,73 @@ void FUN_000f3320(void *widget)
     *(int16_t *)((char *)widget + 0x40) = 8;
 }
 
-/* game_options_menu_update_pic_desc (0xf3400) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static int (*const bf3400_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static void * (*const bf3400_c12a1d0)(void) = (void *)network_game_server_get;
-static void (*const bf3400_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf3400_exitfn)(int) = (void *)system_exit;
-static bool (*const bf3400_c12a170)(void) = (void *)network_game_is_splitscreen_local;
-static void * (*const bf3400_c12a240)(void) = (void *)network_game_client_get;
-static int16_t (*const bf3400_c124d00)(void *client) = (void *)FUN_00124d00;
-static bool (*const bf3400_c12ac80)(void *client) = (void *)network_player_is_valid;
-
-__attribute__((naked, noinline))
+/* game_options_menu_update_pic_desc (0xf3400) — readable C lift from XBE leaf. */
 void game_options_menu_update_pic_desc(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12a0a0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c12a1d0]\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "cmpw $1, 0xe(%%ebx)\n\t"
-      "movl %%eax, %%edi\n\t"
-      "je .Lgame_options_menu_update_pic_desc_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xbad\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x2893fc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_options_menu_update_pic_desc_1:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lgame_options_menu_update_pic_desc_4\n\t"
-      "call *%[c12a170]\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $2, %%edi\n\t"
-      "jne .Lgame_options_menu_update_pic_desc_2\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lgame_options_menu_update_pic_desc_2\n\t"
-      "cmpw %%di, 0x112(%%esi)\n\t"
-      "jl .Lgame_options_menu_update_pic_desc_3\n\t"
-      ".Lgame_options_menu_update_pic_desc_2:\n\t"
-      "call *%[c12a170]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lgame_options_menu_update_pic_desc_4\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lgame_options_menu_update_pic_desc_9\n\t"
-      "cmpw %%di, 0x224(%%esi)\n\t"
-      "jge .Lgame_options_menu_update_pic_desc_4\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw $0x23, 0x40(%%ebx)\n\t"
-      "movb $1, 0x10(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgame_options_menu_update_pic_desc_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw $0x22, 0x40(%%ebx)\n\t"
-      "movb $1, 0x10(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgame_options_menu_update_pic_desc_4:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lgame_options_menu_update_pic_desc_9\n\t"
-      "cmpb $1, 0xc0(%%esi)\n\t"
-      "jne .Lgame_options_menu_update_pic_desc_9\n\t"
-      "call *%[c12a240]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c124d00]\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .Lgame_options_menu_update_pic_desc_9\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "addl $0x244, %%esi\n\t"
-      "movl $0x10, %%edi\n\t"
-      ".Lgame_options_menu_update_pic_desc_5:\n\t"
-      "leal -0x1e(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lgame_options_menu_update_pic_desc_7\n\t"
-      "movsbl (%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lgame_options_menu_update_pic_desc_6\n\t"
-      "decl %%eax\n\t"
-      "jne .Lgame_options_menu_update_pic_desc_7\n\t"
-      "incl -0x4(%%ebp)\n\t"
-      "jmp .Lgame_options_menu_update_pic_desc_7\n\t"
-      ".Lgame_options_menu_update_pic_desc_6:\n\t"
-      "incl %%ebx\n\t"
-      ".Lgame_options_menu_update_pic_desc_7:\n\t"
-      "addl $0x20, %%esi\n\t"
-      "decl %%edi\n\t"
-      "jne .Lgame_options_menu_update_pic_desc_5\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lgame_options_menu_update_pic_desc_8\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgame_options_menu_update_pic_desc_8\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movw $0x1a, 0x40(%%ecx)\n\t"
-      "movb $1, 0x10(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgame_options_menu_update_pic_desc_8:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movw $0x1b, 0x40(%%edx)\n\t"
-      "movb $1, 0x10(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgame_options_menu_update_pic_desc_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $0, 0x10(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12a0a0] "m"(bf3400_c12a0a0), [c12a1d0] "m"(bf3400_c12a1d0), [assert] "m"(bf3400_assert), [exitfn] "m"(bf3400_exitfn), [c12a170] "m"(bf3400_c12a170), [c12a240] "m"(bf3400_c12a240), [c124d00] "m"(bf3400_c124d00), [c12ac80] "m"(bf3400_c12ac80)
-      : "memory");
+  void *server;
+  void *net;
+  int count0;
+  int count1;
+  void *client;
+  int16_t idx;
+  int i;
+  char *slot;
+
+  server = (void *)FUN_0012a0a0();
+  net = network_game_server_get();
+  if (*(short *)((char *)widget + 0xe) != 1) {
+    display_assert((const char *)0x2893fc, (const char *)0x288938, 0xbad, 1);
+    system_exit(-1);
+  }
+  if (net != 0) {
+    if (!network_game_is_splitscreen_local() && server != 0 &&
+        *(short *)((char *)server + 0x112) < 2) {
+      *(short *)((char *)widget + 0x40) = 0x22;
+      *((unsigned char *)widget + 0x10) = 1;
+      return;
+    }
+    if (network_game_is_splitscreen_local()) {
+      if (server == 0) {
+        *((unsigned char *)widget + 0x10) = 0;
+        return;
+      }
+      if (*(short *)((char *)server + 0x224) < 2) {
+        *(short *)((char *)widget + 0x40) = 0x23;
+        *((unsigned char *)widget + 0x10) = 1;
+        return;
+      }
+    }
+  }
+  if (server == 0 || *((unsigned char *)server + 0xc0) != 1) {
+    *((unsigned char *)widget + 0x10) = 0;
+    return;
+  }
+  client = network_game_client_get();
+  idx = FUN_00124d00(client);
+  if (idx >= 0) {
+    *((unsigned char *)widget + 0x10) = 0;
+    return;
+  }
+  count0 = 0;
+  count1 = 0;
+  slot = (char *)server + 0x244;
+  for (i = 0; i < 0x10; i++) {
+    if (network_player_is_valid(slot - 0x1e)) {
+      if (slot[0] == 0)
+        count0++;
+      else if (slot[0] == 1)
+        count1++;
+    }
+    slot += 0x20;
+  }
+  if (count0 != 0 && count1 != 0) {
+    *(short *)((char *)widget + 0x40) = 0x1a;
+    *((unsigned char *)widget + 0x10) = 1;
+    return;
+  }
+  *(short *)((char *)widget + 0x40) = 0x1b;
+  *((unsigned char *)widget + 0x10) = 1;
 }
-#else
-#error "game_options_menu_update_pic_desc: clang naked draft required"
-#endif
 
 
 /* mp_level_select_list_update_displayed_items (0xf3540) — readable C lift from XBE leaf. */
