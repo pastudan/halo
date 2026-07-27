@@ -26515,7 +26515,7 @@
         {
           "addr": "0x1913c0",
           "comment": "Walk a reference list and unlink the entry whose +4 field matches value.",
-          "decl": "void reference_list_remove(void *data, int *head, int value);",
+          "decl": "void reference_list_remove(data_t *data, int *head, int value);",
           "name": "reference_list_remove",
           "ported": false,
           "source_path": "src/halo/structures/structures.c"
