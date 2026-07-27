@@ -1262,38 +1262,13 @@ unsigned int FUN_0006f120(void *tif)
   return (b + a - 1) / a;
 }
 
-/* FUN_0006f150 (0x6f150) — XBE naked draft (batch 351). */
-#if defined(__clang__)
-static void (*const b6f150_c6d820)(void) = (void *)TIFFScanlineSize;
-
-__attribute__((naked, noinline))
-void FUN_0006f150(void)
+/* FUN_0006f150 (0x6f150) — readable C lift. */
+unsigned int FUN_0006f150(void *tif, int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_0006f150_1\n\t"
-      "movl 0x20(%%eax), %%esi\n\t"
-      ".LFUN_0006f150_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6d820]\n\t"
-      "addl $4, %%esp\n\t"
-      "imull %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6d820] "m"(b6f150_c6d820)
-      : "memory");
+  if (count == -1)
+    count = *(int *)((char *)tif + 0x20);
+  return (unsigned int)TIFFScanlineSize(tif) * (unsigned int)count;
 }
-#else
-#error "FUN_0006f150: clang naked draft required"
-#endif
-
 
 /* FUN_0006f180 (0x6f180) — XBE naked draft (batch 351). */
 #if defined(__clang__)

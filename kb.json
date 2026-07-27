@@ -37136,8 +37136,8 @@
         },
         {
           "addr": "0x6f150",
-          "decl": "void FUN_0006f150(void);",
-          "ported": false
+          "decl": "unsigned int FUN_0006f150(void *tif, int count);",
+          "ported": true
         },
         {
           "addr": "0x6f180",
