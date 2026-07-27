@@ -7893,9 +7893,9 @@
         },
         {
           "addr": "0x1997f0",
-          "decl": "int16_t file_reference_get_location(file_ref_t *info);",
+          "decl": "uint16_t file_reference_get_location(void *info);",
           "name": "file_reference_get_location",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1999a0",
