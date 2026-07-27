@@ -37293,8 +37293,8 @@
         },
         {
           "addr": "0x704c0",
-          "decl": "void FUN_000704c0(void);",
-          "ported": false
+          "decl": "void FUN_000704c0(float *out@<eax>, const unsigned char *in@<ecx>);",
+          "ported": true
         },
         {
           "addr": "0x70570",

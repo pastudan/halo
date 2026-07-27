@@ -3372,46 +3372,13 @@ void FUN_00070460(void)
 #endif
 
 
-/* FUN_000704c0 (0x704c0) — XBE naked draft (batch 330). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000704c0(void)
+/* FUN_000704c0 (0x704c0) — readable C lift. */
+void FUN_000704c0(float *out, const unsigned char *in)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movzbl (%%ecx), %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x2ed08c\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps (%%eax)\n\t"
-      "movzbl 0x1(%%ecx), %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x2ed090\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "movzbl 0x2(%%ecx), %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fmuls 0x2ed094\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  out[0] = (float)in[0] * *(float *)0x2ed08c * *(float *)0x261518;
+  out[1] = (float)in[1] * *(float *)0x2ed090 * *(float *)0x261518;
+  out[2] = (float)in[2] * *(float *)0x2ed094 * *(float *)0x261518;
 }
-#else
-#error "FUN_000704c0: clang naked draft required"
-#endif
-
 
 /* FUN_00070570 (0x70570) — readable C lift: pack RGB888→RGB565. */
 void FUN_00070570(unsigned char *rgb, unsigned short *out)
