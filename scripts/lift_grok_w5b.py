@@ -33,7 +33,7 @@ L(
     "create_message",
     """
 /* create_message (0x80ca0) — readable C lift. */
-void *create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size)
+int create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size)
 {
   unsigned short total;
   void *buf;
@@ -51,10 +51,10 @@ void *create_message(int type, void *payload, unsigned int payload_len, void *bu
     if (payload != 0)
       csmemcpy((char *)buf + 2, payload, (unsigned short)payload_len);
   }
-  return buf;
+  return (int)buf;
 }
 """,
-    "void *create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size);",
+    "int create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size);",
 )
 
 L(
@@ -63,13 +63,13 @@ L(
     "FUN_0012f040",
     """
 /* FUN_0012f040 (0x12f040) — readable C lift. */
-char FUN_0012f040(int server, int machine, void *message_data, int message_size)
+bool FUN_0012f040(int server, int machine, void *message_data, int message_size)
 {
   int size_left;
   short field_size;
   short field_count;
   int value;
-  char ok;
+  bool ok;
 
   (void)machine;
   if (network_game_server_get_state(server, (short *)0) != 0) {
@@ -94,7 +94,7 @@ char FUN_0012f040(int server, int machine, void *message_data, int message_size)
   return 1;
 }
 """,
-    "char FUN_0012f040(int server@<esi>, int machine, void *message_data, int message_size);",
+    "bool FUN_0012f040(int server@<esi>, int machine, void *message_data, int message_size);",
 )
 
 L(
@@ -103,13 +103,13 @@ L(
     "FUN_0012f170",
     """
 /* FUN_0012f170 (0x12f170) — readable C lift. */
-char FUN_0012f170(int server, int machine, void *message_data, int message_size)
+bool FUN_0012f170(int server, int machine, void *message_data, int message_size)
 {
   int size_left;
   short field_size;
   short field_count;
   int value;
-  char ok;
+  bool ok;
 
   if (network_game_server_get_state(server, (short *)0) != 0) {
     network_game_log((const char *)0x298b30);
@@ -133,7 +133,7 @@ char FUN_0012f170(int server, int machine, void *message_data, int message_size)
   return 0;
 }
 """,
-    "char FUN_0012f170(int server@<esi>, int machine, void *message_data, int message_size);",
+    "bool FUN_0012f170(int server@<esi>, int machine, void *message_data, int message_size);",
 )
 
 L(
@@ -142,13 +142,13 @@ L(
     "FUN_0012f200",
     """
 /* FUN_0012f200 (0x12f200) — readable C lift. */
-char FUN_0012f200(int server, int machine, void *message_data, int message_size)
+bool FUN_0012f200(int server, int machine, void *message_data, int message_size)
 {
   int size_left;
   short field_size;
   short field_count;
   char value[0x20];
-  char ok;
+  bool ok;
 
   (void)machine;
   if (network_game_server_get_state(server, (short *)0) != 1) {
@@ -166,14 +166,14 @@ char FUN_0012f200(int server, int machine, void *message_data, int message_size)
       &field_count,
       5);
   if (ok) {
-    FUN_0012cf60((void *)server, value);
+    network_game_server_queue_player_for_addition(server, (int)value);
     return 1;
   }
   network_game_log((const char *)0x298c20);
   return 1;
 }
 """,
-    "char FUN_0012f200(int server@<esi>, int machine, void *message_data, int message_size);",
+    "bool FUN_0012f200(int server@<esi>, int machine, void *message_data, int message_size);",
 )
 
 L(
