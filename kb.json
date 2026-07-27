@@ -36866,7 +36866,8 @@
         {
           "addr": "0x68c40",
           "decl": "void FUN_00068c40(unsigned char value, void *dest@<edx>, int count@<ecx>);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_00068c40"
         },
         {
           "addr": "0x68c70",
@@ -37430,12 +37431,14 @@
         {
           "addr": "0x6f1f0",
           "decl": "void FUN_0006f1f0(unsigned char *p, int count);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0006f1f0"
         },
         {
           "addr": "0x6f220",
           "decl": "void FUN_0006f220(unsigned char *p, int count);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0006f220"
         },
         {
           "addr": "0x6f260",
