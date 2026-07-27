@@ -255,8 +255,8 @@
         },
         {
           "addr": "0x67a70",
-          "decl": "void FUN_00067a70(void);",
-          "ported": false
+          "decl": "int FUN_00067a70(unsigned short tag@<ax>, void *out@<ecx>, const char *s@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x67ac0",

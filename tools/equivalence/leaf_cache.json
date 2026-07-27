@@ -1625,6 +1625,11 @@
     "confidence": "moderate",
     "coverage_pct": 39.4
   },
+  "0x67a70": {
+    "class": "non_leaf",
+    "confidence": "weak",
+    "coverage_pct": 77.3
+  },
   "0x68": {
     "confidence": "high",
     "coverage_pct": 63.3

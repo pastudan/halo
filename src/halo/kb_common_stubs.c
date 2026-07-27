@@ -403,53 +403,26 @@ void FUN_000679f0(void)
 #endif
 
 
-/* FUN_00067a70 (0x67a70) — XBE naked draft (batch 384). */
-#if defined(__clang__)
-static int (*const b67a70_c8df60)(const char *s1) = (void *)csstrlen;
-static void (*const b67a70_c67760)(void) = (void *)FUN_00067760;
-static void * (*const b67a70_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
-
-__attribute__((naked, noinline))
-void FUN_00067a70(void)
+/* FUN_00067a70 (0x67a70) — readable C lift.
+ * ABI: tag@<ax>, out@<ecx>, s@<esi>. */
+int FUN_00067a70(unsigned short tag /*@<ax>*/, void *out /*@<ecx>*/,
+                 const char *s /*@<esi>*/)
 {
-  __asm__ volatile(
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movw %%ax, (%%edi)\n\t"
-      "movw $2, 0x2(%%edi)\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "incl %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "movl %%eax, 0x4(%%edi)\n\t"
-      "jbe .LFUN_00067a70_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c67760]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00067a70_2\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      ".LFUN_00067a70_1:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "addl $8, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00067a70_2:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      : [c8df60] "m"(b67a70_c8df60), [c67760] "m"(b67a70_c67760), [c8e0b0] "m"(b67a70_c8e0b0)
-      : "memory");
-}
-#else
-#error "FUN_00067a70: clang naked draft required"
-#endif
+  unsigned int len;
+  int (*alloc_ascii)(const char *) = (int (*)(const char *))FUN_00067760;
 
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = 2;
+  len = (unsigned int)csstrlen(s) + 1u;
+  *((unsigned int *)out + 1) = len;
+  if (len > 4u) {
+    if (!alloc_ascii(s))
+      return 0;
+  } else {
+    csmemcpy((char *)out + 8, (void *)s, len);
+  }
+  return 1;
+}
 
 /* FUN_00067ac0 (0x67ac0) — XBE naked draft (batch 345). */
 #if defined(__clang__)
@@ -676,7 +649,7 @@ static void (*const b67c50_c67b40)(void) = FUN_00067b40;
 static void (*const b67c50_c67b80)(void) = FUN_00067b80;
 static void (*const b67c50_c67960)(void) = FUN_00067960;
 static void (*const b67c50_c67760)(void) = FUN_00067760;
-static void (*const b67c50_c67a70)(void) = FUN_00067a70;
+static void (*const b67c50_c67a70)(void) = (void *)FUN_00067a70;
 
 __attribute__((naked, noinline))
 void FUN_00067c50(void)
