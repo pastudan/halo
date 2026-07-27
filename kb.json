@@ -23983,7 +23983,7 @@
           "addr": "0x18e500",
           "decl": "void *FUN_0018e500(int16_t material_type);",
           "name": "FUN_0018e500",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x18e910",
