@@ -270,13 +270,13 @@
         {
           "addr": "0x67c50",
           "decl": "void FUN_00067c50(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00067c50"
         },
         {
           "addr": "0x680a0",
           "decl": "void FUN_000680a0(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000680a0"
         },
         {
@@ -479,7 +479,7 @@
         {
           "addr": "0x149ce0",
           "decl": "void FUN_00149ce0(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00149ce0"
         },
         {
@@ -4913,7 +4913,7 @@
         {
           "addr": "0x1bb970",
           "decl": "void FUN_001bb970(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001bb970"
         },
         {
@@ -13929,7 +13929,7 @@
         {
           "addr": "0xdf4e0",
           "decl": "void FUN_000df4e0(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000df4e0"
         },
         {
@@ -17983,7 +17983,7 @@
         {
           "addr": "0xb6bd0",
           "decl": "void FUN_000b6bd0(char *input@<esi>);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000b6bd0"
         },
         {
@@ -20012,7 +20012,7 @@
         {
           "addr": "0x8fb60",
           "decl": "void FUN_0008fb60(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0008fb60"
         },
         {
@@ -21132,7 +21132,7 @@
         {
           "addr": "0x17ba10",
           "decl": "int FUN_0017ba10(float *position, int vis_index, int index);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0017ba10"
         },
         {
@@ -24170,7 +24170,7 @@
         {
           "addr": "0x190240",
           "decl": "char FUN_00190240(float *position, float *wind_out, int wind_flags, int object_handle);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00190240"
         },
         {
@@ -24879,7 +24879,7 @@
         {
           "addr": "0x1ca130",
           "decl": "void FUN_001ca130(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001ca130"
         },
         {
@@ -25349,7 +25349,7 @@
         {
           "addr": "0x1cc5b0",
           "decl": "void FUN_001cc5b0(int sound_tag_index, void *source);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001cc5b0"
         },
         {
@@ -25365,7 +25365,7 @@
         {
           "addr": "0x1cd190",
           "decl": "int FUN_001cd190(int sound_tag_index@<eax>, void *track, void *source);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001cd190"
         },
         {
@@ -26599,7 +26599,7 @@
         {
           "addr": "0x196850",
           "decl": "void FUN_00196850(int param_1);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00196850"
         },
         {
@@ -26688,7 +26688,7 @@
         {
           "addr": "0x131280",
           "decl": "void FUN_00131280(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00131280"
         },
         {
@@ -26756,13 +26756,13 @@
         {
           "addr": "0x131e00",
           "decl": "void FUN_00131e00(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00131e00"
         },
         {
           "addr": "0x131ed0",
           "decl": "void FUN_00131ed0(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00131ed0"
         },
         {
@@ -27567,7 +27567,7 @@
         {
           "addr": "0xe5b10",
           "decl": "void FUN_000e5b10(void *widget /* @<ebx> */, void *draw_state /* @<esi> */);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000e5b10"
         },
         {
@@ -28050,7 +28050,7 @@
         {
           "addr": "0xf04c0",
           "decl": "void FUN_000f04c0(void *widget);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000f04c0"
         },
         {
@@ -34531,7 +34531,7 @@
         {
           "addr": "0x2b5d0",
           "decl": "void actor_move_get_avoidance_direction(void);",
-          "ported": true,
+          "ported": false,
           "name": "actor_move_get_avoidance_direction"
         },
         {
@@ -34646,7 +34646,7 @@
         {
           "addr": "0x2b310",
           "decl": "char FUN_0002b310(float *direction, short count, int records, float *values, float *out_index, float *out_value);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0002b310"
         },
         {
@@ -35226,7 +35226,7 @@
         {
           "addr": "0x46530",
           "decl": "void FUN_00046530(int unit_handle, uint16_t priority, uint16_t type, int unk, int unk2, void *comm_data);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00046530"
         },
         {
@@ -35394,7 +35394,7 @@
         {
           "addr": "0x49d60",
           "decl": "void FUN_00049d60(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00049d60"
         },
         {
@@ -35406,7 +35406,7 @@
         {
           "addr": "0x4a030",
           "decl": "void FUN_0004a030(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0004a030"
         },
         {
@@ -35458,7 +35458,7 @@
         {
           "addr": "0x4a770",
           "decl": "void FUN_0004a770(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0004a770"
         },
         {
@@ -35537,7 +35537,7 @@
         {
           "addr": "0x4bc70",
           "decl": "void FUN_0004bc70(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0004bc70"
         },
         {
@@ -35560,7 +35560,7 @@
         {
           "addr": "0x4c560",
           "decl": "void FUN_0004c560(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_0004c560"
         },
         {
@@ -35586,7 +35586,7 @@
         {
           "addr": "0x52bb0",
           "decl": "void FUN_00052bb0(int clump_handle);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00052bb0"
         },
         {
@@ -36739,7 +36739,7 @@
         {
           "addr": "0x63e90",
           "decl": "char FUN_00063e90(int scenario, unsigned char bsp_idx, float *origin, int node_handle, float *target, int flags, float param_7, int param_8, unsigned int *result);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00063e90"
         },
         {
@@ -39653,7 +39653,7 @@
         {
           "addr": "0x1063f0",
           "decl": "bool convex_hull2d_test_vector(int16_t num_verts, float *polygon2d, float *ray_origin, float *ray_dir, float *out_tmin, float *out_tmax);",
-          "ported": true,
+          "ported": false,
           "name": "convex_hull2d_test_vector"
         },
         {
@@ -39676,7 +39676,7 @@
           "addr": "0x106dc0",
           "name": "convex_polygon3d_verify",
           "decl": "bool convex_polygon3d_verify(int16_t vertex_count, float *vertices);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x106f50",
@@ -40402,7 +40402,7 @@
         {
           "addr": "0x1be7b0",
           "decl": "void FUN_001be7b0(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001be7b0"
         }
       ],
@@ -41109,13 +41109,13 @@
         {
           "addr": "0x604e0",
           "decl": "void FUN_000604e0(void *path, int16_t heap_index);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000604e0"
         },
         {
           "addr": "0x60670",
           "decl": "void FUN_00060670(void *path, int16_t heap_index);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00060670"
         },
         {
@@ -41281,7 +41281,7 @@
         {
           "addr": "0x1d76fc",
           "decl": "void FUN_001d76fc(void);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001d76fc"
         },
         {
@@ -44142,7 +44142,7 @@
         {
           "addr": "0x1336a0",
           "decl": "void FUN_001336a0(float *out, float *p0, float *p1, float *p2, float *p3, float t0, float t1, float t2, float t3, float time);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_001336a0"
         }
       ],
@@ -44155,13 +44155,13 @@
         {
           "addr": "0x67760",
           "decl": "int FUN_00067760(void *out@<edi>, void *typeinfo@<ebx>, void *data);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_00067760"
         },
         {
           "addr": "0x679f0",
           "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
-          "ported": true,
+          "ported": false,
           "name": "FUN_000679f0"
         },
         {
