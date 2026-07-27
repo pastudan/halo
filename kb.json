@@ -35121,13 +35121,13 @@
         },
         {
           "addr": "0x454a0",
-          "decl": "void FUN_000454a0(int actor /* @<eax> */, int stack_a, float *pos, int stack_c, float radius, float rating, int16_t anim_a, int16_t anim_b, int stack_d, int stack_e, char flags);",
+          "decl": "float FUN_000454a0(int actor /* @<eax> */, int candidate, float *actor_pos, int target, float *target_pos, int p0, int p1, int p2, int p3, int p4, int p5, int p6);",
           "ported": false
         },
         {
           "addr": "0x45830",
-          "decl": "int FUN_00045830(int type /* @<ebx> */, int unit /* @<eax> */, int actor /* @<edi> */, int target /* @<esi> */, int16_t subtype, int16_t index, float max_dist);",
-          "ported": false
+          "decl": "int FUN_00045830(int type /* @<eax> */, int actor /* @<edi> */, int target /* @<esi> */, int p0, int p1, int p2, int p3, int p4, int p5, int p6);",
+          "ported": true
         },
         {
           "addr": "0x458f0",

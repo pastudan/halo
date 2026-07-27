@@ -531,8 +531,8 @@ void ai_communication_update_speech_timers(int unit, int16_t type, int a,
 int ai_communication_find_global_actor_to_talk(
     int comm_type, int unit, int16_t subtype, int16_t index, int stack_a,
     int stack_b, float max_dist, int mode);
-int FUN_00045830(int type, int unit, int actor, int target, int16_t subtype,
-                 int16_t index, float max_dist);
+int FUN_00045830(int type, int actor, int target, int p0, int p1, int p2,
+                 int p3, int p4, int p5, int p6);
 
 /* ai_communication_consider_speech (0x430d0) — XBE naked draft (batch 119). */
 #if defined(__clang__)
@@ -3304,7 +3304,7 @@ static int16_t (*const b454a0_c314f0)(int actor_handle, float *out_pos, float *h
 static int (*const b454a0_c64ab0)(int actor_handle, int object_handle) = prop_get_active_by_unit_index;
 
 __attribute__((naked, noinline))
-void FUN_000454a0(int actor /* */ __attribute__((unused)), int stack_a __attribute__((unused)), float *pos __attribute__((unused)), int stack_c __attribute__((unused)), float radius __attribute__((unused)), float rating __attribute__((unused)), int16_t anim_a __attribute__((unused)), int16_t anim_b __attribute__((unused)), int stack_d __attribute__((unused)), int stack_e __attribute__((unused)), char flags __attribute__((unused)))
+float FUN_000454a0(int actor /* */ __attribute__((unused)), int candidate __attribute__((unused)), float *actor_pos __attribute__((unused)), int target __attribute__((unused)), float *target_pos __attribute__((unused)), int p0 __attribute__((unused)), int p1 __attribute__((unused)), int p2 __attribute__((unused)), int p3 __attribute__((unused)), int p4 __attribute__((unused)), int p5 __attribute__((unused)), int p6 __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3637,109 +3637,51 @@ void FUN_000454a0(int actor /* */ __attribute__((unused)), int stack_a __attribu
 #endif
 
 
-/* FUN_00045830 (0x45830) — XBE naked draft (batch 134). */
-#if defined(__clang__)
-static void (*const b45830_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
-static void (*const b45830_c54680)(unsigned int combined_index, void *iter) = FUN_00054680;
-static int (*const b45830_c54750)(void *iter) = FUN_00054750;
-static void (*const b45830_c454a0)(int actor /* */, int stack_a, float *pos, int stack_c, float radius, float rating, int16_t anim_a, int16_t anim_b, int stack_d, int stack_e, char flags) = FUN_000454a0;
-
-__attribute__((naked, noinline))
-int FUN_00045830(int type /* */ __attribute__((unused)), int unit /* */ __attribute__((unused)), int actor /* */ __attribute__((unused)), int target /* */ __attribute__((unused)), int16_t subtype __attribute__((unused)), int16_t index __attribute__((unused)), float max_dist __attribute__((unused)))
+/* FUN_00045830 (0x45830) — readable C lift.
+ * ABI: type@<eax>, actor@<edi>, target@<esi>; seven stack params forwarded to
+ * FUN_000454a0. Walk actors via FUN_00054680/FUN_00054750 and keep the handle
+ * with the highest FUN_000454a0 score (x87 ST0). */
+int FUN_00045830(int type, int actor, int target, int p0, int p1, int p2,
+                 int p3, int p4, int p5, int p6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x38, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "je .LFUN_00045830_7\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00045830_1\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a9200]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00045830_1:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_00045830_2\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1a9200]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00045830_2:\n\t"
-      "leal -0x38(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c54680]\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c54750]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00045830_6\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      ".LFUN_00045830_3:\n\t"
-      "movl 0x20(%%ebp), %%ecx\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x28(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c454a0]\n\t"
-      "fcoms -0x8(%%ebp)\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00045830_4\n\t"
-      "movl -0x28(%%ebp), %%ecx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00045830_5\n\t"
-      ".LFUN_00045830_4:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00045830_5:\n\t"
-      "leal -0x38(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c54750]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00045830_3\n\t"
-      ".LFUN_00045830_6:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".LFUN_00045830_7:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1a9200] "m"(b45830_c1a9200), [c54680] "m"(b45830_c54680), [c54750] "m"(b45830_c54750), [c454a0] "m"(b45830_c454a0)
-      : "memory");
+  int best;
+  float best_score;
+  float actor_pos[3];
+  float target_pos[3];
+  char iter[24];
+  int more;
+  int candidate;
+  float score;
+
+  best = -1;
+  best_score = 0.0f;
+  if (type == -1)
+    return -1;
+
+  if (actor != -1)
+    unit_get_head_position(actor, actor_pos);
+  if (target != -1)
+    unit_get_head_position(target, target_pos);
+
+  FUN_00054680((unsigned int)type, iter);
+  more = FUN_00054750(iter);
+  if (more == 0)
+    return best;
+
+  do {
+    candidate = *(int *)(iter + 0x10);
+    score = FUN_000454a0(actor, candidate, actor_pos, target, target_pos, p0, p1,
+                         p2, p3, p4, p5, p6);
+    if (score > best_score) {
+      best_score = score;
+      best = candidate;
+    }
+    more = FUN_00054750(iter);
+  } while (more != 0);
+
+  return best;
 }
-#else
-#error "FUN_00045830: clang naked draft required"
-#endif
+
 
 
 /* ai_communication_find_global_actor_to_talk (0x458f0) — XBE naked draft (batch 126). */
@@ -3750,7 +3692,7 @@ static int (*const b458f0_c59b50)(void *iter) = FUN_00059b50;
 static bool (*const b458f0_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
 static void (*const b458f0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b458f0_exitfn)(int) = system_exit;
-static void (*const b458f0_c454a0)(int actor /* */, int stack_a, float *pos, int stack_c, float radius, float rating, int16_t anim_a, int16_t anim_b, int stack_d, int stack_e, char flags) = FUN_000454a0;
+static float (*const b458f0_c454a0)(int actor, int candidate, float *actor_pos, int target, float *target_pos, int p0, int p1, int p2, int p3, int p4, int p5, int p6) = FUN_000454a0;
 
 __attribute__((naked, noinline))
 int ai_communication_find_global_actor_to_talk(int comm_type __attribute__((unused)), int unit __attribute__((unused)), int16_t subtype __attribute__((unused)), int16_t index __attribute__((unused)), int stack_a __attribute__((unused)), int stack_b __attribute__((unused)), float max_dist __attribute__((unused)), int mode __attribute__((unused)))
@@ -4967,7 +4909,7 @@ static void (*const b46530_assert)(const char *, const char *, int, bool) = disp
 static void (*const b46530_exitfn)(int) = system_exit;
 static int (*const b46530_c458f0)(int comm_type, int unit, int16_t subtype, int16_t index, int stack_a, int stack_b, float max_dist, int mode) = ai_communication_find_global_actor_to_talk;
 static void *(*const b46530_tryget)(int, int) = object_try_and_get_and_verify_type;
-static int (*const b46530_c45830)(int type /* */, int unit /* */, int actor /* */, int target /* */, int16_t subtype, int16_t index, float max_dist) = FUN_00045830;
+static int (*const b46530_c45830)(int type, int actor, int target, int p0, int p1, int p2, int p3, int p4, int p5, int p6) = FUN_00045830;
 static int *(*const b46530_gseed)(void) = get_global_random_seed_address;
 static float (*const b46530_rmreal)(unsigned int *) = random_math_real;
 static short (*const b46530_cfff80)(void) = game_connection;
@@ -5845,7 +5787,7 @@ static short (*const b46f10_cfff80)(void) = game_connection;
 static char * (*const b46f10_c1a67b0)(short param_1, unsigned char param_2) = FUN_001a67b0;
 static char * (*const b46f10_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static char (*const b46f10_c1cb990)(void) = (void *)sound_scripted_dialog_is_playing;
-static int (*const b46f10_c45830)(int type /* */, int unit /* */, int actor /* */, int target /* */, int16_t subtype, int16_t index, float max_dist) = FUN_00045830;
+static int (*const b46f10_c45830)(int type, int actor, int target, int p0, int p1, int p2, int p3, int p4, int p5, int p6) = FUN_00045830;
 static void (*const b46f10_c460e0)(int actor /* */, int stack_a, float *pos, int stack_c, float radius, float rating, int16_t anim_a, int16_t anim_b, int stack_d, int stack_e, char flags) = FUN_000460e0;
 static float (*const b46f10_c441c0)(int unit, char use_teams, int *out_unit, int *out_handle) = ai_communication_get_player_rating;
 static int16_t (*const b46f10_c430d0)(void *packet /* */, int unit /* */, int param /* */, int stack_a, int16_t dialogue_type, int16_t start_tick, int stack_b, char flag, float *timer, char *out_buf) = ai_communication_consider_speech;
