@@ -20003,7 +20003,7 @@
         {
           "addr": "0x8f8e0",
           "decl": "void find_profile_section(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x8fa40",

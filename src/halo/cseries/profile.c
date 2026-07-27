@@ -484,122 +484,39 @@ void profile_lapsed_msec(int value)
   *(char *)0x449cd4 = value > 0;
 }
 
-/* find_profile_section (0x8f8e0) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-static void (*const b8f8e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b8f8e0_exitfn)(int) = system_exit;
-static void *(*const b8f8e0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* find_profile_section (0x8f8e0) — readable C lift (restored pre-naked). */
 void find_profile_section(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .Lfind_profile_section_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22f\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x2684a4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfind_profile_section_1:\n\t"
-      "cmpb %%bl, 0x8(%%esi)\n\t"
-      "jne .Lfind_profile_section_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x230\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x268494\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfind_profile_section_2:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lfind_profile_section_4\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jl .Lfind_profile_section_3\n\t"
-      "movswl 0x3361b0, %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .Lfind_profile_section_3\n\t"
-      "cmpl %%esi, 0x3361b4(,%%eax,4)\n\t"
-      "je .Lfind_profile_section_6\n\t"
-      ".Lfind_profile_section_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x236\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x268458\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lfind_profile_section_4:\n\t"
-      "cmpw $0x100, 0x3361b0\n\t"
-      "jl .Lfind_profile_section_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x23a\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x268420\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfind_profile_section_5:\n\t"
-      "movswl 0x3361b0, %%edx\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "incw 0x3361b0\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "pushl $0x3c0\n\t"
-      "leal 0x208(%%esi), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%esi, 0x3361b4(,%%eax,4)\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x1e0\n\t"
-      "leal 0x28(%%esi), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movl %%ebx, 0x18(%%esi)\n\t"
-      "movl %%ebx, 0x20(%%esi)\n\t"
-      "movl %%ebx, 0x24(%%esi)\n\t"
-      "movw $0xffff, 0xa(%%esi)\n\t"
-      "movl %%ebx, 0x5c8(%%esi)\n\t"
-      "movl %%ebx, 0x5d0(%%esi)\n\t"
-      "movl %%ebx, 0x5d4(%%esi)\n\t"
-      "movl %%ebx, 0x5cc(%%esi)\n\t"
-      "movl %%ebx, 0x5e0(%%esi)\n\t"
-      "movl %%ebx, 0x5e4(%%esi)\n\t"
-      "movl %%ebx, 0x5d8(%%esi)\n\t"
-      "movl %%ebx, 0x5f0(%%esi)\n\t"
-      "movl %%ebx, 0x5f4(%%esi)\n\t"
-      "movl %%ebx, 0x5e8(%%esi)\n\t"
-      ".Lfind_profile_section_6:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b8f8e0_assert), [exitfn] "m"(b8f8e0_exitfn), [memset] "m"(b8f8e0_memset)
-      : "memory");
-}
-#else
-#error "find_profile_section: clang naked draft required"
-#endif
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
 
+  /* cmp esi, ebx -> jne 0x8f90e */
+  display_assert((char *)0x002684a4, (char *)0x002683fc, 559, 0);
+  system_exit(0);
+  /* relift: cmp byte ptr [esi + 8], (char)ebx -> jne 0x8f933 */
+  display_assert((char *)0x00268494, (char *)0x002683fc, 560, 0);
+  system_exit(0);
+  /* cmp eax, -1 -> je 0x8f97b */
+  /* cmp eax, ebx -> jl 0x8f957 */
+  /* cmp eax, ecx -> jge 0x8f957 */
+  /* relift: cmp dword ptr [eax*4 + 0x3361b4], esi -> je 0x8fa30 */
+  display_assert((char *)0x00268458, (char *)0x002683fc, 566, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x3361b0], 0x100 -> jl 0x8f9a6 */
+  display_assert((char *)0x00268420, (char *)0x002683fc, 570, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)ecx, 0, 960);
+  csmemset((void *)(uintptr_t)edx, 0, 480);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+}
 
 /* 0x8fb60 */
 void FUN_0008fb60(void)
