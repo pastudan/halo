@@ -21702,20 +21702,20 @@
         },
         {
           "addr": "0x155380",
-          "decl": "int FUN_00155380(int a, int b, int c, int d, int e);",
-          "ported": false,
+          "decl": "int __stdcall FUN_00155380(int a, int b, int c, int d, int e);",
+          "ported": true,
           "name": "FUN_00155380"
         },
         {
           "addr": "0x1553a0",
-          "decl": "int FUN_001553a0(int a, int b, int c, int d, int e, int f);",
-          "ported": false,
+          "decl": "int __stdcall FUN_001553a0(int a, int b, int c, int d, int e, int f);",
+          "ported": true,
           "name": "FUN_001553a0"
         },
         {
           "addr": "0x1553d0",
-          "decl": "int FUN_001553d0(int a, int b, int c, int d);",
-          "ported": false,
+          "decl": "int __stdcall FUN_001553d0(int a, int b, int c, int d);",
+          "ported": true,
           "name": "FUN_001553d0"
         },
         {
@@ -39054,18 +39054,21 @@
         },
         {
           "addr": "0x168230",
-          "decl": "void FUN_00168230(void);",
-          "ported": false
+          "decl": "int __stdcall FUN_00168230(int a, int b, int c, int d, int e);",
+          "ported": true,
+          "name": "FUN_00168230"
         },
         {
           "addr": "0x168250",
-          "decl": "void FUN_00168250(void);",
-          "ported": false
+          "decl": "int __stdcall FUN_00168250(int a, int b, int c, int d, int e, int f);",
+          "ported": true,
+          "name": "FUN_00168250"
         },
         {
           "addr": "0x168280",
-          "decl": "void FUN_00168280(void);",
-          "ported": false
+          "decl": "int __stdcall FUN_00168280(int a, int b, int c, int d);",
+          "ported": true,
+          "name": "FUN_00168280"
         },
         {
           "addr": "0x1682c0",
@@ -39856,7 +39859,7 @@
         },
         {
           "addr": "0x1e6ae0",
-          "decl": "void __stdcall D3DDevice_CreateTexture(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture);",
+          "decl": "int __stdcall D3DDevice_CreateTexture(uint32_t width, uint32_t height, uint32_t levels, uint32_t usage, uint32_t format, uint32_t pool, void *out_texture);",
           "ported": false
         },
         {
@@ -41834,12 +41837,12 @@
         },
         {
           "addr": "0x001e6b10",
-          "decl": "void __stdcall D3DDevice_CreateVolumeTexture(int a, int b, int c, int d, int e, int f, int g);",
+          "decl": "int __stdcall D3DDevice_CreateVolumeTexture(int a, int b, int c, int d, int e, int f, int g, int h);",
           "ported": false
         },
         {
           "addr": "0x001e6b40",
-          "decl": "void __stdcall D3DDevice_CreateCubeTexture(int a, int b, int c, int d, int e, int f);",
+          "decl": "int __stdcall D3DDevice_CreateCubeTexture(int a, int b, int c, int d, int e, int f);",
           "ported": false
         },
         {
