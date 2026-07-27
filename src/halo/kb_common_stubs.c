@@ -11267,57 +11267,25 @@ void get_particle_world_position(int glow_widget, int particle_ptr, float param_
 
 
 
-/* FUN_00149c60 (0x149c60) — XBE naked draft (batch 363). */
-#if defined(__clang__)
-static char (*const b149c60_c149680)(void *state, int node_index) = (void *)FUN_00149680;
-
-__attribute__((naked, noinline))
-char FUN_00149c60(int *block_ptr __attribute__((unused)), void *transformed_2c __attribute__((unused)), void *transformed_20 __attribute__((unused)), float scale __attribute__((unused)), float best_dist __attribute__((unused)), float *result __attribute__((unused)))
+/* FUN_00149c60 (0x149c60) — readable C lift. */
+char FUN_00149c60(int *block_ptr, void *a, void *b, float scale, float best_dist, float *result)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x22c, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x22c(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x220(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "movl %%ecx, -0x228(%%ebp)\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0x224(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb $5, %%ah\n\t"
-      "movl %%ecx, -0x21c(%%ebp)\n\t"
-      "movl %%edx, -0x218(%%ebp)\n\t"
-      "jp .LFUN_00149c60_1\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .LFUN_00149c60_2\n\t"
-      ".LFUN_00149c60_1:\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      ".LFUN_00149c60_2:\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl %%edx, 0x1c(%%ecx)\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x22c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c149680]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c149680] "m"(b149c60_c149680)
-      : "memory");
-}
-#else
-#error "FUN_00149c60: clang naked draft required"
-#endif
+  char state[0x22c];
 
+  *(int **)(state + 0) = block_ptr;
+  *(void **)(state + 4) = a;
+  *(void **)(state + 8) = b;
+  *(float *)(state + 0xc) = scale;
+  *(float **)(state + 0x10) = result;
+  *(int *)(state + 0x14) = 0;
+
+  if (best_dist < *(float *)0x2533c0)
+    *result = *(float *)0x2533c0;
+  else
+    *result = best_dist;
+  *(int *)((char *)result + 0x1c) = 0;
+  return FUN_00149680(state, 0);
+}
 
 /* FUN_00149ce0 (0x149ce0) — XBE naked draft (batch 297). */
 #if defined(__clang__)
