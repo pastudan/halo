@@ -7177,212 +7177,40 @@ void FUN_000f2b00(void *widget)
   }
 }
 
-/* FUN_000f2b90 (0xf2b90) — XBE naked draft (batch 116). */
-#if defined(__clang__)
-static void (*const bf2b90_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf2b90_exitfn)(int) = (void *)system_exit;
-static int (*const bf2b90_c12a0a0)(void) = (void *)FUN_0012a0a0;
-static char * (*const bf2b90_c1d9690)(const char *haystack, const char *needle) = (void *)crt_strstr;
-static void (*const bf2b90_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* FUN_000f2b90 (0xf2b90) — readable C lift. */
 void FUN_000f2b90(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpw $1, 0xe(%%edi)\n\t"
-      "je .LFUN_000f2b90_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa39\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x28932c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2b90_1:\n\t"
-      "call *%[c12a0a0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_14\n\t"
-      "leal 0x24(%%eax), %%esi\n\t"
-      "pushl $0x288c70\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_2\n\t"
-      "movw $0, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_2:\n\t"
-      "pushl $0x288c64\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_3\n\t"
-      "movw $1, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_3:\n\t"
-      "pushl $0x288c58\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_4\n\t"
-      "movw $2, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_4:\n\t"
-      "pushl $0x288c50\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_5\n\t"
-      "movw $3, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_5:\n\t"
-      "pushl $0x288c44\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_6\n\t"
-      "movw $4, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_6:\n\t"
-      "pushl $0x288c38\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_7\n\t"
-      "movw $5, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_7:\n\t"
-      "pushl $0x288c2c\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_8\n\t"
-      "movw $6, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_8:\n\t"
-      "pushl $0x288c20\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_9\n\t"
-      "movw $7, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_9:\n\t"
-      "pushl $0x288c10\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_10\n\t"
-      "movw $8, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_10:\n\t"
-      "pushl $0x288c04\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_11\n\t"
-      "movw $9, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_11:\n\t"
-      "pushl $0x288bfc\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_12\n\t"
-      "movw $0xa, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_12:\n\t"
-      "pushl $0x288bf4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2b90_13\n\t"
-      "movw $0xb, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_13:\n\t"
-      "pushl $0x288bec\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $0xd, %%eax\n\t"
-      "movw %%ax, 0x40(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2b90_14:\n\t"
-      "pushl $0x28931c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf2b90_assert), [exitfn] "m"(bf2b90_exitfn), [c12a0a0] "m"(bf2b90_c12a0a0), [c1d9690] "m"(bf2b90_c1d9690), [c8f390] "m"(bf2b90_c8f390)
-      : "memory");
+  short *w;
+  char *net;
+  char *hay;
+  static const unsigned int needles[13] = {
+      0x288c70u, 0x288c64u, 0x288c58u, 0x288c50u, 0x288c44u, 0x288c38u,
+      0x288c2cu, 0x288c20u, 0x288c10u, 0x288c04u, 0x288bfcu, 0x288bf4u,
+      0x288becu};
+  int i;
+
+  w = (short *)widget;
+  if (w[7] != 1) {
+    display_assert((char *)0x28932c, (char *)0x288938, 0xa39, 1);
+    system_exit(-1);
+  }
+  net = (char *)FUN_0012a0a0();
+  if (!net) {
+    error(2, (const char *)0x28931c);
+    return;
+  }
+  hay = net + 0x24;
+  for (i = 0; i < 12; i++) {
+    if (crt_strstr(hay, (const char *)needles[i])) {
+      w[0x20] = (short)i;
+      return;
+    }
+  }
+  if (crt_strstr(hay, (const char *)needles[12]))
+    w[0x20] = 0xc;
+  else
+    w[0x20] = 0xd;
 }
-#else
-#error "FUN_000f2b90: clang naked draft required"
-#endif
-
-
 /* FUN_000f2d50 (0xf2d50) — XBE naked draft (batch 129). */
 #if defined(__clang__)
 static void (*const bf2d50_assert)(const char *, const char *, int, bool) = (void *)display_assert;

@@ -28035,7 +28035,7 @@
         {
           "addr": "0xf2b90",
           "decl": "void FUN_000f2b90(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf2d50",
