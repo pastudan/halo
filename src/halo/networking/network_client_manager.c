@@ -3454,11 +3454,10 @@ char FUN_00127610(void *client /* */ __attribute__((unused)), void *source_addre
 char FUN_00127710(void *client, void *source_address, void *message, int message_size)
 {
   short state;
-  int decoded_type;
-  short a, b;
+  int packet_type;
+  int packet_version;
+  short decoded_dummy;
 
-  __asm__ volatile("movl %%esi, %0" : "=r"(client));
-  __asm__ volatile("movl %%edi, %0" : "=r"(source_address));
   if (!client) {
     display_assert((const char *)0x2919a4, (const char *)0x293754, 0x1c4, 1);
     system_exit(-1);
@@ -3477,10 +3476,11 @@ char FUN_00127710(void *client, void *source_address, void *message, int message
     return 1;
   }
   message_size -= 2;
-  decoded_type = 0xa;
-  a = 1;
-  b = 0;
-  if (!FUN_0012bce0((int)((char *)message + 2), message_size, &b, &decoded_type, &a, 2)) {
+  packet_type = 0xa;
+  packet_version = 1;
+  if (!FUN_0012bce0((int)&decoded_dummy, (int)((char *)message + 2),
+                    (short *)&message_size, (short *)&packet_type,
+                    (short *)&packet_version, 2)) {
     network_game_log((const char *)0x293904);
     return 1;
   }
