@@ -7929,7 +7929,7 @@
         {
           "addr": "0x199a60",
           "decl": "void directory_create_or_delete_contents(const char *directory);",
-          "ported": false,
+          "ported": true,
           "name": "directory_create_or_delete_contents"
         },
         {
