@@ -15628,7 +15628,7 @@
         {
           "addr": "0x1274e0",
           "decl": "char FUN_001274E0(void *client /* @<esi> */, void *source_address /* @<eax> */, void *message, int message_size);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001274E0"
         },
         {
@@ -15810,7 +15810,7 @@
           "addr": "0x11b750",
           "decl": "bool FUN_0011b750(int definition, int encoded_packet, short encoded_packet_size, int decoded_packet, unsigned short *version_out, short *bytes_consumed_out);",
           "name": "FUN_0011b750",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11b850",

@@ -1074,129 +1074,59 @@ bool FUN_0011b650(int definition, short version, void *data,
 }
 
 
-/* FUN_0011b750 (0x11b750) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static void (*const b11b750_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const b11b750_exitfn)(int) = (void *)system_exit;
-static void (*const b11b750_c11b540)(packet_definition *def) = (void *)verify_packet_definition;
-static void (*const b11b750_c11a2d0)(int *state, void *buffer, int buffer_size) = (void *)FUN_0011a2d0;
-static unsigned char (*const b11b750_c11a560)(int *state) = (void *)FUN_0011a560;
-static void (*const b11b750_c11b2a0)(int definition, int *decode_state, unsigned short version, unsigned short *output, short *decoded_size_out, short *field_defs, short *field_count_out) = (void *)FUN_0011b2a0;
-
-__attribute__((naked, noinline))
-bool FUN_0011b750(int definition __attribute__((unused)), int encoded_packet __attribute__((unused)), short encoded_packet_size __attribute__((unused)), int decoded_packet __attribute__((unused)), unsigned short *version_out __attribute__((unused)), short *bytes_consumed_out __attribute__((unused)))
+/* FUN_0011b750 (0x11b750) — readable C lift (restored pre-naked). */
+bool FUN_0011b750(int definition, int encoded_packet, short encoded_packet_size,
+                  int decoded_packet, unsigned short *version_out,
+                  short *bytes_consumed_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jne .LFUN_0011b750_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5f\n\t"
-      "pushl $0x28f498\n\t"
-      "pushl $0x28f634\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011b750_1:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0011b750_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0x28f498\n\t"
-      "pushl $0x28f340\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011b750_2:\n\t"
-      "movw 0x10(%%ebp), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jge .LFUN_0011b750_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x61\n\t"
-      "pushl $0x28f498\n\t"
-      "pushl $0x28f61c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011b750_3:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11b540]\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c11a2d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0, 0xa(%%esi)\n\t"
-      "jne .LFUN_0011b750_4\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "jmp .LFUN_0011b750_5\n\t"
-      ".LFUN_0011b750_4:\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c11a560]\n\t"
-      "addl $4, %%esp\n\t"
-      "movzbw %%al, %%di\n\t"
-      ".LFUN_0011b750_5:\n\t"
-      "cmpw 0xa(%%esi), %%di\n\t"
-      "jg .LFUN_0011b750_6\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11b2a0]\n\t"
-      "movb -0x8(%%ebp), %%al\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, %%cl\n\t"
-      "je .LFUN_0011b750_7\n\t"
-      ".LFUN_0011b750_6:\n\t"
-      "movb -0x1(%%ebp), %%cl\n\t"
-      ".LFUN_0011b750_7:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0011b750_8\n\t"
-      "movw %%di, (%%eax)\n\t"
-      ".LFUN_0011b750_8:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "je .LFUN_0011b750_9\n\t"
-      "movw -0x10(%%ebp), %%dx\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      ".LFUN_0011b750_9:\n\t"
-      "movb %%cl, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11b750_assert), [exitfn] "m"(b11b750_exitfn), [c11b540] "m"(b11b750_c11b540), [c11a2d0] "m"(b11b750_c11a2d0), [c11a560] "m"(b11b750_c11a560), [c11b2a0] "m"(b11b750_c11b2a0)
-      : "memory");
+  unsigned char version_byte;
+  unsigned short version;
+  bool result;
+  int decode_state[4];
+
+  result = 0;
+  if (encoded_packet == 0) {
+    display_assert("encoded_packet",
+                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x5f, 1);
+    system_exit(-1);
+  }
+  if (decoded_packet == 0) {
+    display_assert("decoded_packet",
+                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x60, 1);
+    system_exit(-1);
+  }
+  if (encoded_packet_size < 0) {
+    display_assert("encoded_packet_size>=0",
+                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x61, 1);
+    system_exit(-1);
+  }
+  verify_packet_definition((packet_definition *)definition);
+  FUN_0011a2d0(decode_state, (void *)encoded_packet,
+               (int)encoded_packet_size);
+  if (*(short *)(definition + 10) == 0) {
+    version = 0;
+  }
+  else {
+    version_byte = FUN_0011a560(decode_state);
+    version = (unsigned short)version_byte;
+  }
+  if ((short)version <= *(short *)(definition + 10)) {
+    FUN_0011b2a0(definition, decode_state, version,
+                 (unsigned short *)decoded_packet, 0,
+                 *(short **)(definition + 0xc), 0);
+    result = 1;
+    if ((char)decode_state[3] == '\0') goto done;
+  }
+  result = 0;
+done:
+  if (version_out != NULL) {
+    *version_out = version;
+  }
+  if (bytes_consumed_out != NULL) {
+    *bytes_consumed_out = (short)decode_state[1];
+  }
+  return result;
 }
-#else
-#error "FUN_0011b750: clang naked draft required"
-#endif
 
 
 /* ========================================================================
