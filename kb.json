@@ -39090,8 +39090,8 @@
         },
         {
           "addr": "0x168be0",
-          "decl": "void FUN_00168be0(void);",
-          "ported": false
+          "decl": "int FUN_00168be0(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x168c40",
@@ -42424,7 +42424,7 @@
         },
         {
           "addr": "0x001eef80",
-          "decl": "void D3DDevice_CreateIndexBuffer(void);",
+          "decl": "int __stdcall D3DDevice_CreateIndexBuffer(int a, int b, int c, int d, int e);",
           "ported": false
         },
         {

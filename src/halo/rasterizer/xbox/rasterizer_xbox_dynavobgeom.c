@@ -12615,33 +12615,12 @@ int FUN_00168bc0(int a, int b, int c)
 
 
 
-/* FUN_00168be0 (0x168be0) — XBE naked draft (batch 384). */
-#if defined(__clang__)
-static void (*const b168be0_c1eef80)(void) = (void *)D3DDevice_CreateIndexBuffer;
-
-__attribute__((naked, noinline))
-void FUN_00168be0(void)
+/* FUN_00168be0 (0x168be0) — readable C lift. */
+int FUN_00168be0(int a, int b, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1eef80]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1eef80] "m"(b168be0_c1eef80)
-      : "memory");
+  return D3DDevice_CreateIndexBuffer(a, b, c, 0, 0);
 }
-#else
-#error "FUN_00168be0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00168c40 (0x168c40) — XBE naked draft (batch 359). */
