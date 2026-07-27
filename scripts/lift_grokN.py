@@ -346,22 +346,37 @@ def set_decl(addr: int, decl: str, name: str | None = None) -> None:
 def sync_decl_h(name: str, decl: str) -> None:
     path = ROOT / "build" / "generated" / "decl.h"
     if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+        subprocess.run(
+            [
+                sys.executable,
+                str(ROOT / "tools/analysis/knowledge.py"),
+                "--gen-header",
+                str(path),
+            ],
+            cwd=ROOT,
+            capture_output=True,
+            text=True,
+        )
+    if not path.exists():
         return
-    text = path.read_text(encoding="utf-8", errors="replace")
-    if not decl.endswith(";"):
-        decl += ";"
-    pat = re.compile(rf"^HFUNC\([^)]*\b{re.escape(name)}\s*\([^;]*;", re.M)
-    repl = f"HFUNC({decl}"
-    # keep simple: replace lines containing the name
-    lines = text.splitlines(True)
+    d = decl.strip()
+    if d.endswith(";"):
+        d = d[:-1]
+    # Strip @ annotations for the C header line.
+    d_h = re.sub(r"\s*/\*\s*@<[^>]+>\s*\*/", "", d)
+    d_h = re.sub(r"\s*@<\w+>", "", d_h)
+    lines = path.read_text(encoding="utf-8", errors="replace").splitlines(True)
     out = []
+    replaced = False
     for line in lines:
-        if f" {name}(" in line or f"*{name}(" in line:
-            # crude HFUNC line replace
-            if line.startswith("HFUNC("):
-                out.append(f"HFUNC({decl}\n")
-                continue
-        out.append(line)
+        if line.startswith("HFUNC") and re.search(rf"\b{re.escape(name)}\s*\(", line):
+            out.append(f"HFUNC {d_h};\n")
+            replaced = True
+        else:
+            out.append(line)
+    if not replaced:
+        out.append(f"HFUNC {d_h};\n")
     path.write_text("".join(out), encoding="utf-8")
 
 
