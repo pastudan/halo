@@ -277,12 +277,12 @@ void _rtinit(void)
 #endif
 
 
-/* 0x1d8750 */
+/* FUN_001d8750 (0x1d8750) — readable C lift (bsf). */
 unsigned int FUN_001d8750(unsigned int val)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  unsigned int bit;
+  __asm__ volatile("bsfl %1, %0" : "=r"(bit) : "r"(val) : "cc");
+  return bit;
 }
 
 /* 0x1d8766 */

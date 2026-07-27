@@ -33673,7 +33673,8 @@
         {
           "addr": "0x1d8750",
           "decl": "unsigned int FUN_001d8750(unsigned int val@<ecx>);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001d8750"
         },
         {
           "addr": "0x1d8766",
