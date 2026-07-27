@@ -32418,7 +32418,7 @@
           "addr": "0x11c870",
           "decl": "void *lrar_cache_new(const char *name, unsigned int minimum_address, unsigned int maximum_address, short block_count, short alignment_bit, short boundary_bit, void (*lock_proc)(short *, short), void (*unlock_proc)(short *));",
           "name": "lrar_cache_new",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/memory/lruv_cache.c"
         },
         {

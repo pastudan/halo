@@ -436,182 +436,80 @@ done:
   *(short *)(cache + 0x36) = (short)0xffff;
 }
 
-/* lrar_cache_new (0x11c870) — XBE naked draft (batch 83). */
-#if defined(__clang__)
-static void * (*const b11c870_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b11c870_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11c870_exitfn)(int) = system_exit;
-static void *(*const b11c870_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b11c870_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-static void (*const b11c870_c11c820)(int cache) = lruv_update_function_pointers;
-static void (*const b11c870_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-void * lrar_cache_new(const char *name __attribute__((unused)), unsigned int minimum_address __attribute__((unused)), unsigned int maximum_address __attribute__((unused)), short block_count __attribute__((unused)), short alignment_bit __attribute__((unused)), short boundary_bit __attribute__((unused)), void (*lock_proc)(short * __attribute__((unused)), short), void (*unlock_proc)(short *) __attribute__((unused)))
+/* lrar_cache_new (0x11c870) — readable C lift (restored pre-naked). */
+void *lrar_cache_new(const char *name, unsigned int minimum_address,
+                     unsigned int maximum_address, short block_count,
+                     short alignment_bit, short boundary_bit,
+                     void (*lock_proc)(short *, short),
+                     void (*unlock_proc)(short *))
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x56\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl $0\n\t"
-      "pushl $0x48\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edi, %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jb .Llrar_cache_new_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x58\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl $0x28f8a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llrar_cache_new_1:\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl $1, %%eax\n\t"
-      "movb %%dl, %%cl\n\t"
-      "shll %%cl, %%eax\n\t"
-      "decl %%eax\n\t"
-      "testl %%eax, %%ebx\n\t"
-      "je .Llrar_cache_new_2\n\t"
-      "orl %%ebx, %%eax\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".Llrar_cache_new_2:\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Llrar_cache_new_3\n\t"
-      "movl 0x24(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Llrar_cache_new_4\n\t"
-      ".Llrar_cache_new_3:\n\t"
-      "movl $0x11c780, 0x20(%%ebp)\n\t"
-      "movl $0x11c790, 0x24(%%ebp)\n\t"
-      ".Llrar_cache_new_4:\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jge .Llrar_cache_new_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x66\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl $0x28f88c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llrar_cache_new_5:\n\t"
-      "movw 0x1c(%%ebp), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Llrar_cache_new_6\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .Llrar_cache_new_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x67\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl $0x28f864\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llrar_cache_new_6:\n\t"
-      "movw 0x14(%%ebp), %%bx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jg .Llrar_cache_new_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x68\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl $0x28f854\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llrar_cache_new_7:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Llrar_cache_new_8\n\t"
-      "pushl $0x6c\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "pushl $0x28f808\n\t"
-      "shll $4, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Llrar_cache_new_9\n\t"
-      "pushl $0x48\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $0x1f\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8de70]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movw 0x18(%%ebp), %%dx\n\t"
-      "movw 0x14(%%ebp), %%cx\n\t"
-      "movl %%eax, 0x24(%%esi)\n\t"
-      "movl %%edi, 0x28(%%esi)\n\t"
-      "subl %%eax, %%edi\n\t"
-      "movw 0x1c(%%ebp), %%ax\n\t"
-      "movw %%ax, 0x22(%%esi)\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "movw %%ax, 0x34(%%esi)\n\t"
-      "movw %%ax, 0x36(%%esi)\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movw %%dx, 0x20(%%esi)\n\t"
-      "movl 0x24(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x3c(%%esi)\n\t"
-      "addl $0x24, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movb $0, 0x1f(%%esi)\n\t"
-      "movl %%edi, 0x2c(%%esi)\n\t"
-      "movl %%ebx, 0x30(%%esi)\n\t"
-      "movw %%cx, 0x38(%%esi)\n\t"
-      "movl %%edx, 0x40(%%esi)\n\t"
-      "movl $0x6c726172, 0x44(%%esi)\n\t"
-      "call *%[c11c820]\n\t"
-      ".Llrar_cache_new_8:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Llrar_cache_new_9:\n\t"
-      "pushl $0x8a\n\t"
-      "pushl $0x28f808\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b11c870_c8ee60), [assert] "m"(b11c870_assert), [exitfn] "m"(b11c870_exitfn), [memset] "m"(b11c870_memset), [c8de70] "m"(b11c870_c8de70), [c11c820] "m"(b11c870_c11c820), [c8ef70] "m"(b11c870_c8ef70)
-      : "memory");
-}
-#else
-#error "lrar_cache_new: clang naked draft required"
-#endif
+  char *cache;
+  unsigned int alignment_mask;
+  void *blocks;
 
+  cache = (char *)debug_malloc(0x48, 0,
+                               "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x56);
+
+  if (maximum_address <= minimum_address) {
+    display_assert("minimum_address<maximum_address",
+                   "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x58, 1);
+    system_exit(-1);
+  }
+
+  alignment_mask = (1 << ((unsigned char)alignment_bit & 0x1f)) - 1;
+  if ((minimum_address & alignment_mask) != 0) {
+    minimum_address = (alignment_mask | minimum_address) + 1;
+  }
+
+  if (lock_proc == 0 || unlock_proc == 0) {
+    lock_proc = FUN_0011c780;
+    unlock_proc = FUN_0011c790;
+  }
+
+  if (alignment_bit < 0) {
+    display_assert("alignment_bit>=0", "c:\\halo\\SOURCE\\memory\\lrar_cache.c",
+                   0x66, 1);
+    system_exit(-1);
+  }
+  if (boundary_bit != -1 && boundary_bit < 0) {
+    display_assert("boundary_bit==NONE || boundary_bit>=0",
+                   "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x67, 1);
+    system_exit(-1);
+  }
+  if (block_count < 1) {
+    display_assert("block_count>0", "c:\\halo\\SOURCE\\memory\\lrar_cache.c",
+                   0x68, 1);
+    system_exit(-1);
+  }
+
+  if (cache != 0) {
+    blocks = debug_malloc((int)block_count << 4, 0,
+                          "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x6c);
+    if (blocks == 0) {
+      debug_free(cache, "c:\\halo\\SOURCE\\memory\\lrar_cache.c", 0x8a);
+      return 0;
+    }
+    csmemset(cache, 0, 0x48);
+    csmemset(blocks, 0, (int)block_count << 4);
+    csstrncpy(cache, name, 0x1f);
+    *(unsigned int *)(cache + 0x24) = minimum_address;
+    *(unsigned int *)(cache + 0x28) = maximum_address;
+    *(short *)(cache + 0x22) = boundary_bit;
+    *(unsigned short *)(cache + 0x34) = 0xffff;
+    *(unsigned short *)(cache + 0x36) = 0xffff;
+    *(short *)(cache + 0x20) = alignment_bit;
+    *(void (**)(short *, short))(cache + 0x3c) = lock_proc;
+    *(unsigned char *)(cache + 0x1f) = 0;
+    *(unsigned int *)(cache + 0x2c) = maximum_address - minimum_address;
+    *(void **)(cache + 0x30) = blocks;
+    *(short *)(cache + 0x38) = block_count;
+    *(void (**)(short *))(cache + 0x40) = unlock_proc;
+    *(unsigned int *)(cache + 0x44) = 0x6c726172;
+    lruv_update_function_pointers((int)cache);
+  }
+
+  return cache;
+}
 
 /* 0x11ca20: Dispose of an lrar_cache. Refreshes the cache's function-pointer
  * table (lruv_update_function_pointers, cache passed in EAX), then frees the
