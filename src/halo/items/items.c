@@ -1060,42 +1060,17 @@ short FUN_000f68b0(int item_handle __attribute__((unused)))
 #endif
 
 
-/* item_activate (0xf6910) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-static void *(*const bf6910_get)(int, int) = object_get_and_verify_type;
-static int (*const bf6910_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-char item_activate(int item_handle __attribute__((unused)))
+/* item_activate (0xf6910) — readable C lift. */
+char item_activate(int item_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x1c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "orl $0x6000, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x1b4(%%esi)\n\t"
-      "movl $0xffffffff, 0x1b0(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bf6910_get), [gtime] "m"(bf6910_gtime)
-      : "memory");
-}
-#else
-#error "item_activate: clang naked draft required"
-#endif
+  char *item;
 
+  item = (char *)object_get_and_verify_type(item_handle, 0x1c);
+  *(uint32_t *)(item + 4) |= 0x6000u;
+  *(int *)(item + 0x1b4) = game_time_get();
+  *(int *)(item + 0x1b0) = -1;
+  return 1;
+}
 
 /* Iterate all item objects (type 0x1c) and return true if any have
  * a positive danger count, indicating a dangerous item is near a player. */

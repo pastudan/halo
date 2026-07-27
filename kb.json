@@ -14123,7 +14123,7 @@
           "addr": "0xf6910",
           "decl": "char item_activate(int item_handle);",
           "name": "item_activate",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6970",
