@@ -38813,7 +38813,8 @@
         {
           "addr": "0x160c00",
           "decl": "void FUN_00160c00(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00160c00"
         },
         {
           "addr": "0x160c10",
