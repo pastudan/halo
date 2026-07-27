@@ -2913,110 +2913,42 @@ void FUN_001be2b0(void *perm_entry __attribute__((unused)))
 #endif
 
 
-/* FUN_001c7b40 (0x1c7b40) — XBE naked draft (batch 264). */
-#if defined(__clang__)
-static void * (*const b1c7b40_c18e3c0)(void) = global_scenario_get;
-static void *(*const b1c7b40_memset)(void *, int, unsigned int) = csmemset;
-static int (*const b1c7b40_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void * (*const b1c7b40_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
-static uint8_t (*const b1c7b40_c193870)(void *bsp, int16_t from_cluster, int16_t to_cluster) = structure_bsp_cluster_sound_encoding;
-
-__attribute__((naked, noinline))
+/* FUN_001c7b40 (0x1c7b40) — readable C lift: build audible-cluster bitfield. */
 void FUN_001c7b40(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x134(%%ebx), %%eax\n\t"
-      "addl $0x1f, %%eax\n\t"
-      "sarl $5, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5054a0\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      ".LFUN_001c7b40_1:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001c7b40_5\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8a4e0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $-1, 0x10(%%eax)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "je .LFUN_001c7b40_5\n\t"
-      "movl 0x134(%%ebx), %%ecx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_001c7b40_5\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "jmp .LFUN_001c7b40_3\n\t"
-      ".LFUN_001c7b40_2:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001c7b40_3:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x10(%%eax), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c193870]\n\t"
-      "movzbl %%al, %%edx\n\t"
-      "andl $0xffffff7f, %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fmuls 0x256148\n\t"
-      "fcomps 0x2642a0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_001c7b40_4\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "sarl $5, %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x5054a0(,%%eax,4), %%ecx\n\t"
-      "leal 0x5054a0(,%%eax,4), %%eax\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".LFUN_001c7b40_4:\n\t"
-      "movl 0x134(%%ebx), %%eax\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jl .LFUN_001c7b40_2\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      ".LFUN_001c7b40_5:\n\t"
-      "incl %%esi\n\t"
-      "cmpw $4, %%si\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jl .LFUN_001c7b40_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b1c7b40_c18e3c0), [memset] "m"(b1c7b40_memset), [cba3c0] "m"(b1c7b40_cba3c0), [c8a4e0] "m"(b1c7b40_c8a4e0), [c193870] "m"(b1c7b40_c193870)
-      : "memory");
+  void *bsp;
+  int cluster_count;
+  int player_i;
+  void *camera;
+  int cluster_j;
+  int encoding_bits;
+  unsigned int *bitfield;
+
+  bsp = scenario_get();
+  cluster_count = *(int *)((char *)bsp + 0x134);
+  bitfield = (unsigned int *)0x5054a0;
+  csmemset(bitfield, 0, (unsigned int)(((cluster_count + 0x1f) >> 5) << 2));
+
+  for (player_i = 0; player_i < 4; player_i++) {
+    if (local_player_get_player_index((int16_t)player_i) == -1)
+      continue;
+    camera = observer_get_camera((unsigned __int16)player_i);
+    if (*(int16_t *)((char *)camera + 0x10) == -1)
+      continue;
+    cluster_count = *(int *)((char *)bsp + 0x134);
+    if (cluster_count <= 0)
+      continue;
+    for (cluster_j = 0; cluster_j < cluster_count; cluster_j++) {
+      encoding_bits =
+          (int)(structure_bsp_cluster_sound_encoding(
+                    bsp, (int16_t)cluster_j,
+                    *(int16_t *)((char *)camera + 0x10)) &
+                0x7f);
+      if ((float)encoding_bits * *(float *)0x256148 < *(float *)0x2642a0)
+        bitfield[cluster_j >> 5] |= 1u << (cluster_j & 0x1f);
+    }
+  }
 }
-#else
-#error "FUN_001c7b40: clang naked draft required"
-#endif
 
 
 /* FUN_001c8700 (0x1c8700) — XBE naked draft (batch 263). */

@@ -25190,7 +25190,8 @@
         {
           "addr": "0x1c7b40",
           "decl": "void FUN_001c7b40(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001c7b40"
         },
         {
           "addr": "0x1c8700",
