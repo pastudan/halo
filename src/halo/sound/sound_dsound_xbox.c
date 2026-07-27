@@ -632,7 +632,7 @@ static void * (*const b1c9670_c1c9290)(short index) = sound_dsound_channel_get;
 static int (*const b1c9670_c1bdd70)(void) = FUN_001bdd70;
 static void (*const b1c9670_ftol)(void) = FUN_001d9068;
 static void (*const b1c9670_c1be100)(void *cache_entry) = FUN_001be100;
-static void (*const b1c9670_c1c9350)(void) = FUN_001c9350;
+static void (*const b1c9670_c1c9350)(int *slot, char *suffix) = FUN_001c9350;
 static int (*const b1c9670_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
 static int (*const b1c9670_c8df60)(const char *s1) = csstrlen;
 
@@ -1707,9 +1707,9 @@ void FUN_001ca900(int channel_index)
 /* FUN_001ca970 (0x1ca970) — XBE naked draft (batch 263). */
 #if defined(__clang__)
 static void * (*const b1ca970_c1c9290)(short index) = sound_dsound_channel_get;
-static void (*const b1ca970_c1c9350)(void) = FUN_001c9350;
+static void (*const b1ca970_c1c9350)(int *slot, char *suffix) = FUN_001c9350;
 static void (*const b1ca970_c1be140)(void *cache_entry) = FUN_001be140;
-static void (*const b1ca970_c1ca900)(void) = FUN_001ca900;
+static void (*const b1ca970_c1ca900)(int channel_index) = FUN_001ca900;
 static int (*const b1ca970_c8df60)(const char *s1) = csstrlen;
 static int (*const b1ca970_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
 
@@ -1831,7 +1831,7 @@ static bool __stdcall (*const b1caab0_c20f069)(void *stream) = dsound_stream_is_
 static void (*const b1caab0_ftol)(void) = FUN_001d9068;
 static void (*const b1caab0_c2053ac)(void) = DirectSoundDoWork;
 static void (*const b1caab0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1caab0_c1ca900)(void) = FUN_001ca900;
+static void (*const b1caab0_c1ca900)(int channel_index) = FUN_001ca900;
 
 __attribute__((naked, noinline))
 void FUN_001caab0(void)

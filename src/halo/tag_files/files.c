@@ -929,7 +929,7 @@ static char * (*const b199d40_c8dff0)(char *destination, const char *source) = c
 static void * (*const b199d40_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static bool (*const b199d40_c19a490)(file_ref_t *info) = FUN_0019a490;
 static bool (*const b199d40_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b199d40_c19ac00)(file_ref_t *info, void *buffer, int size) = file_write;
+static bool (*const b199d40_c19ac00)(file_ref_t *info, int size, void *buffer) = file_write;
 static bool (*const b199d40_c19a930)(file_ref_t *info) = file_close;
 
 __attribute__((naked, noinline))

@@ -30,7 +30,80 @@ int FUN_001b9920(void) {
   return *(uint32_t *)0x4e4d68;
 }
 
+/* tag_instance_resolve (0x1b9bf0) — readable C lift.
+ * tag_index arrives in EDI (@<edi>). Returns pointer to 0x20-byte tag instance. */
+int *tag_instance_resolve(int tag_index)
+{
+  int *table;
+  int *entry;
+  int count;
 
+  if (*(unsigned char *)0x4e4d00 == 0) {
+    display_assert((const char *)0x2b7da8, (const char *)0x2b7dc8, 0x1d3, 1);
+    system_exit(-1);
+  }
+  if (*(int *)0x5054f0 == 0) {
+    display_assert((const char *)0x2b7dec, (const char *)0x2b7dc8, 0x1d4, 1);
+    system_exit(-1);
+  }
+  count = *(int *)(*(int *)0x4e5504 + 0xc);
+  if ((short)tag_index < 0 || (int)(short)tag_index >= count) {
+    csprintf((char *)0x5ab100, (const char *)0x2b8000, tag_index);
+    display_assert((const char *)0x5ab100, (const char *)0x2b7dc8, 0x1d7, 1);
+    system_exit(-1);
+  }
+  table = *(int **)0x5054f0;
+  entry = (int *)((char *)table + ((int)(short)tag_index << 5));
+  if ((tag_index & 0xffff0000) != 0 && entry[3] != tag_index) {
+    csprintf((char *)0x5ab100, (const char *)0x2b8000, tag_index);
+    display_assert((const char *)0x5ab100, (const char *)0x2b7dc8, 0x1db, 1);
+    system_exit(-1);
+  }
+  return entry;
+}
+
+/* cache_file_header_verify (0x1b9ce0) — readable C lift. */
+bool cache_file_header_verify(void *header, const char *path, int report_errors)
+{
+  char *hdr;
+  char *map_name;
+  char *build;
+  int file_size;
+
+  hdr = (char *)header;
+  if (*(int *)hdr != 0x68656164 || *(int *)(hdr + 0x7fc) != 0x666f6f74)
+    goto bad_header;
+  file_size = *(int *)(hdr + 8);
+  if (file_size < 0 || file_size > 0x11600000)
+    goto bad_header;
+  map_name = hdr + 0x20;
+  if ((unsigned int)csstrlen(map_name) > 0x1f)
+    goto bad_header;
+  if (*(int *)(hdr + 4) != 5) {
+    if (!report_errors)
+      return 0;
+    csprintf((char *)0x5ab100, (const char *)0x2b8084, path);
+    display_assert((const char *)0x5ab100, (const char *)0x2b7dc8, 0x1f1, 1);
+    system_exit(-1);
+  }
+  build = hdr + 0x40;
+  if (csstrcmp(build, (const char *)0x288bdc) == 0)
+    return 1;
+  if (!report_errors)
+    return 0;
+  csprintf((char *)0x5ab100, (const char *)0x2b804c, map_name, build);
+  display_assert((const char *)0x5ab100, (const char *)0x2b7dc8, 0x1f6, 1);
+  system_exit(-1);
+  return 0;
+
+bad_header:
+  if (!report_errors)
+    return 0;
+  csprintf((char *)0x5ab100, (const char *)0x2b8024, path);
+  display_assert((const char *)0x5ab100, (const char *)0x2b7dc8, 0x1ed, 1);
+  system_exit(-1);
+  return 0;
+}
 
 /* cache_files_give_time_to_precache (0x1b9de0) — readable C lift. */
 bool cache_files_give_time_to_precache(const char *name)
