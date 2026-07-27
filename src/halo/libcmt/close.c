@@ -121,12 +121,12 @@ void FUN_001e3a50(void);
 void FUN_001e3a9a(void);
 void FUN_001e3c37(void);
 void __callnewh(void);
-void __ZeroTail(void);
+int __ZeroTail(unsigned int *man, int bit);
 void __IncMan(void);
 void __RoundMan(void);
-void __CopyMan(void);
+void __CopyMan(unsigned int *dst, unsigned int *src);
 void FUN_001e3da8(void);
-void __IsZeroMan(void);
+int __IsZeroMan(unsigned int *man);
 void __ShrMan(void);
 void __ld12cvt(void);
 void __ld12tod(void);
@@ -333,7 +333,7 @@ void FUN_001defd9(void)
   int esi = 0;
 
   /* relift: cmp dword ptr [esi], 0 -> je 0x1defef */
-  _malloc();
+  _malloc(0);
   FUN_001db777();
   FUN_001df055();
   FUN_001e4432();
@@ -366,7 +366,7 @@ void __stbuf(void)
   /* cmp esi, 0x331050 -> jne 0x1df0a1 */
   /* cmp esi, 0x331070 -> jne 0x1df107 */
   /* relift: test word ptr [esi + 0xc], 0x10c -> jne 0x1df107 */
-  _malloc();
+  _malloc(0);
 
   (void)esi;
 }
@@ -381,7 +381,7 @@ void __ftbuf(void)
   /* relift: cmp dword ptr [esp + 4], 0 -> je 0x1df134 */
   /* relift: test byte ptr [esi + 0xd], 0x10 -> je 0x1df133 */
   __flush();
-  _malloc();
+  _malloc(0);
   /* mem[0x00632cc0] = eax */
   /* mem[0x00632ca8] = 0x20 */
   /* cmp eax, ecx -> jb 0x1df15f */
@@ -404,7 +404,7 @@ void FUN_001df1bd(void)
   /* cmp esi, -0x20 -> ja 0x1df1f4 */
   /* relift: cmp dword ptr [0x632ca0], 3 -> jne 0x1df1e2 */
   FUN_001d0bb3();
-  FUN_001d5c66();
+  FUN_001d5c66(0, 0, 0);
   /* test eax, eax -> jne 0x1df208 */
   /* relift: cmp dword ptr [0x4fc36c], 0 -> je 0x1df208 */
   __callnewh();
@@ -1016,7 +1016,7 @@ void __getstream(void)
   __lock_file2();
   /* relift: test byte ptr [eax + 0xc], 0x83 -> je 0x1e04cd */
   __unlock_file2();
-  _malloc();
+  _malloc(0);
   /* cmp eax, ebx -> je 0x1e0535 */
   FUN_001e4432();
   FUN_001dde24();
@@ -1258,7 +1258,7 @@ void FUN_001e0984(void)
   /* relift: cmp byte ptr [edi], 0x5e -> jne 0x1e0fb6 */
   /* relift: cmp dword ptr [ebp - 0x1c], 0 -> jne 0x1e1006 */
   FUN_001d90e0();
-  _malloc();
+  _malloc(0);
   /* test eax, eax -> jne 0x1e0ff5 */
   /* relift: cmp dword ptr [ebp - 0x64], 0x7b -> jne 0x1e1026 */
   /* relift: cmp byte ptr [esi], 0x5d -> jne 0x1e1026 */
@@ -1473,7 +1473,7 @@ void _gmtime(void)
 
   FUN_001dff91();
   /* relift: cmp dword ptr [edi + 0x44], 0 -> jne 0x1e19ee */
-  _malloc();
+  _malloc(0);
   /* cmp esi, eax -> jl 0x1e1a30 */
   /* cmp esi, eax -> jl 0x1e1a30 */
   /* cmp esi, eax -> jl 0x1e1a2d */
@@ -1717,7 +1717,7 @@ void FUN_001e2125(void)
   /* cmp esi, 0xb -> jne 0x1e22d3 */
   FUN_001dff91();
   /* relift: cmp dword ptr [ebx + 0x54], edi -> jne 0x1e2227 */
-  _malloc();
+  _malloc(0);
   /* test eax, eax -> je 0x1e22d3 */
   /* relift: FUN_001e2149(0, 0); */
   /* test eax, eax -> je 0x1e22d3 */
@@ -1922,7 +1922,7 @@ void FUN_001e2879(void)
 /* 0x1e28a4 */
 void __getbuf(void)
 {
-  _malloc();
+  _malloc(0);
 }
 
 /* 0x1e28e8 */
@@ -2166,7 +2166,7 @@ void FUN_001e33e4(void)
   /* cmp esi, eax -> jb 0x1e3426 */
   /* cmp ebp, -1 -> jne 0x1e3520 */
   FUN_001defb3();
-  _malloc();
+  _malloc(0);
   /* cmp eax, edx -> jb 0x1e34f3 */
   FUN_001e334f();
   FUN_001defb3();
@@ -2420,7 +2420,7 @@ void __RoundMan(void)
   int edx = 0;
 
   /* relift: test dword ptr [eax + ebx*4], edx -> je 0x1e3d6a */
-  __ZeroTail();
+  __ZeroTail(0, 0);
   __IncMan();
   /* cmp ebx, ecx -> jge 0x1e3d85 */
 
@@ -2472,13 +2472,13 @@ void __ld12cvt(void)
   int esi = 0;
   int edi = 0;
 
-  __IsZeroMan();
-  __CopyMan();
+  __IsZeroMan(0);
+  __CopyMan(0, 0);
   __RoundMan();
   /* test eax, eax -> je 0x1e3ece */
   /* cmp edi, ecx -> jge 0x1e3ee4 */
   /* cmp edi, eax -> jg 0x1e3f24 */
-  __CopyMan();
+  __CopyMan(0, 0);
   __ShrMan();
   __RoundMan();
   __ShrMan();
@@ -2779,7 +2779,7 @@ void FUN_001e484a(void)
   /* relift: cmp edi, dword ptr [0x632b64] -> je 0x1e4a6c */
   /* cmp esi, ebx -> je 0x1e49c4 */
   /* relift: cmp dword ptr [esi], ebx -> je 0x1e49d4 */
-  _malloc();
+  _malloc(0);
   /* cmp esi, ebx -> je 0x1e4a55 */
   /* relift: tail-call FUN_001e484a(); */
   /* cmp eax, ebx -> jne 0x1e4a55 */

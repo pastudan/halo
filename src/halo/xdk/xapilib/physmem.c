@@ -1,7 +1,7 @@
 #include <stdint.h>
 /* kb object stubs -> xdk/xapilib/physmem.c */
 
-#include "../xdk_stubs_protos.h"
+/* #include "../xdk_stubs_protos.h" — conflicts with decl.h */
 #include "../xdk_cross_protos.h"
 
 /* --- XAPILIB:physmem.obj batch drafts (2026-07-26) --- */

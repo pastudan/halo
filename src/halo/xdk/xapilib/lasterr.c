@@ -1,4 +1,5 @@
 #include <stdint.h>
+extern int __stdcall ReadFile(int handle, void *buffer, unsigned int size, unsigned int *bytes_read, void *overlapped);
 /* kb object stubs -> xdk/xapilib/lasterr.c */
 
 /* --- XAPILIB:lasterr.obj batch drafts (2026-07-26) --- */

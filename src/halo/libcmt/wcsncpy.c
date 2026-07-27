@@ -292,20 +292,18 @@ void __seh_longjmp_unwind(void)
 
 }
 
-/* _memchr (0x1dbed0) — XBE naked draft (batch 310). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* _memchr (0x1dbed0) — readable C lift (stub compile fix; not proving here). */
 void *_memchr(const void *s, int c, size_t n)
 {
-  (void)s; (void)c; (void)n;
+  const unsigned char *p = (const unsigned char *)s;
+  unsigned char ch = (unsigned char)c;
+  while (n--) {
+    if (*p == ch)
+      return (void *)p;
+    p++;
+  }
   return 0;
 }
-#else
-#error "_memchr: clang naked draft required"
-#endif
-
 
 /* _wcscmp (0x1dbf75) — XBE naked draft (batch 340). */
 #if defined(__clang__)
@@ -486,19 +484,28 @@ int _wcsncmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attr
 wchar_t *_wcsncpy(wchar_t *dest, const wchar_t *src, size_t count)
 {
   wchar_t *d = dest;
-  if (count != 0) {
-    do {
-      wchar_t c = *src++;
-      *d++ = c;
-      if (c == 0) {
-        while (--count != 0)
-          *d++ = 0;
-        break;
+  if (count == 0)
+    return dest;
+  for (;;) {
+    wchar_t c = *src++;
+    *d++ = c;
+    if (c == 0) {
+      /* remaining count includes the NUL just written; pad count-1 zeros */
+      if (--count != 0) {
+        unsigned int *p = (unsigned int *)d;
+        size_t words = count >> 1;
+        while (words--)
+          *p++ = 0;
+        if (count & 1)
+          *(wchar_t *)p = 0;
       }
-    } while (--count != 0);
+      return dest;
+    }
+    if (--count == 0)
+      return dest;
   }
-  return dest;
 }
+
 
 /* _wcspbrk (0x1dc09e) — readable C lift. */
 wchar_t *_wcspbrk(const wchar_t *s, const wchar_t *accept)

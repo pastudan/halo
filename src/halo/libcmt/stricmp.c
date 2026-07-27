@@ -426,7 +426,7 @@ wchar_t *__wasctime(const void *timeptr)
 
   FUN_001dff91();
   /* relift: cmp dword ptr [esi + 0x40], 0 -> jne 0x1dd4bf */
-  _malloc();
+  _malloc(0);
   /* cmp ecx, 3 -> jl 0x1dd4d6 */
   _store_dt();
   _store_dt();
