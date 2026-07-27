@@ -11651,7 +11651,8 @@
         {
           "addr": "0xc3db0",
           "decl": "int16_t hs_find_tag_reference_by_index(int tag_index);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000c3db0"
         },
         {
           "addr": "0xc3e10",
@@ -16498,7 +16499,8 @@
         {
           "addr": "0x13c560",
           "decl": "void FUN_0013c560(int param_1);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0013c560"
         },
         {
           "decl": "int FUN_0013c5c0(int param_1);",
@@ -16508,7 +16510,8 @@
         {
           "addr": "0x13c620",
           "decl": "void FUN_0013c620(int param_1);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0013c620"
         },
         {
           "addr": "0x13c680",
@@ -16543,7 +16546,8 @@
         {
           "addr": "0x13c8c0",
           "decl": "void FUN_0013c8c0(int param_1);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0013c8c0"
         },
         {
           "addr": "0x13c920",

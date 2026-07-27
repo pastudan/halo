@@ -74,59 +74,31 @@ int key_agreement_peek_packet_type(unsigned char *msgptr __attribute__((unused))
 #endif
 
 
-/* key_message_xor_keystream (0x807d0) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void key_message_xor_keystream(int msg __attribute__((unused)), int len __attribute__((unused)), int keystream __attribute__((unused)), int key_len __attribute__((unused)))
+/* key_message_xor_keystream (0x807d0) — readable C lift from XBE leaf. */
+void key_message_xor_keystream(int msg, int len, int keystream, int key_len)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%edx, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl $1, %%esi\n\t"
-      "jle .Lkey_message_xor_keystream_4\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lkey_message_xor_keystream_1:\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "movb (%%eax,%%ebx,1), %%bl\n\t"
-      "xorb (%%ecx,%%edi,1), %%bl\n\t"
-      "addl %%esi, %%eax\n\t"
-      "notb %%bl\n\t"
-      "movb %%bl, (%%ecx,%%edi,1)\n\t"
-      "incl %%ecx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .Lkey_message_xor_keystream_2\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .Lkey_message_xor_keystream_3\n\t"
-      ".Lkey_message_xor_keystream_2:\n\t"
-      "negl %%esi\n\t"
-      "addl %%esi, %%eax\n\t"
-      ".Lkey_message_xor_keystream_3:\n\t"
-      "cmpl 0xc(%%ebp), %%ecx\n\t"
-      "jl .Lkey_message_xor_keystream_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lkey_message_xor_keystream_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int i;
+  int k;
+  int dir;
+  unsigned char b;
+
+  if (len <= 0)
+    return;
+  k = 0;
+  dir = 1;
+  for (i = 0; i < len; i++) {
+    b = *(unsigned char *)(keystream + k);
+    b = (unsigned char)(b ^ *(unsigned char *)(msg + i));
+    b = (unsigned char)~b;
+    *(unsigned char *)(msg + i) = b;
+    k += dir;
+    if (k == key_len || k < 0) {
+      dir = -dir;
+      k += dir;
+    }
+  }
 }
-#else
-#error "key_message_xor_keystream: clang naked draft required"
-#endif
+
 
 
 /* tea_encrypt (0x80820) — readable C lift. */

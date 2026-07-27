@@ -4106,62 +4106,30 @@ void FUN_0013c500(int param_1 __attribute__((unused)), int param_2 __attribute__
 #endif
 
 
-/* FUN_0013c560 (0x13c560) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void *(*const b13c560_get)(int, int) = object_get_and_verify_type;
-static void * (*const b13c560_c13c100)(int16_t object_type) = FUN_0013c100;
-
-__attribute__((naked, noinline))
-void FUN_0013c560(int param_1 __attribute__((unused)))
+/* FUN_0013c560 (0x13c560) — readable C lift from XBE leaf. */
+void FUN_0013c560(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x64(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13c100]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5c(%%edi), %%ecx\n\t"
-      "leal 0x5c(%%edi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0013c560_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0013c560_1:\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x2c(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0013c560_2\n\t"
-      "pushl %%ebx\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0013c560_2:\n\t"
-      "incl %%esi\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "leal 0x5c(%%edi,%%ecx,4), %%eax\n\t"
-      "cmpl $0, (%%eax)\n\t"
-      "jne .LFUN_0013c560_1\n\t"
-      ".LFUN_0013c560_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b13c560_get), [c13c100] "m"(b13c560_c13c100)
-      : "memory");
+  void *obj;
+  void *type_data;
+  void **slot;
+  void (*cb)(int);
+  short i;
+
+  obj = object_get_and_verify_type(object_handle, -1);
+  type_data = FUN_0013c100((int16_t)*(short *)((char *)obj + 0x64));
+  slot = (void **)((char *)type_data + 0x5c);
+  if (*slot == 0)
+    return;
+  i = 0;
+  do {
+    cb = *(void (**)(int))((char *)*slot + 44);
+    if (cb)
+      cb(object_handle);
+    i = (short)(i + 1);
+    slot = (void **)((char *)type_data + 0x5c + (int)i * 4);
+  } while (*slot != 0);
 }
-#else
-#error "FUN_0013c560: clang naked draft required"
-#endif
+
 
 
 /* FUN_0013c5c0 (0x13c5c0) — XBE naked draft (batch 66). */
@@ -4229,62 +4197,30 @@ int FUN_0013c5c0(int param_1 __attribute__((unused)))
 #endif
 
 
-/* FUN_0013c620 (0x13c620) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void *(*const b13c620_get)(int, int) = object_get_and_verify_type;
-static void * (*const b13c620_c13c100)(int16_t object_type) = FUN_0013c100;
-
-__attribute__((naked, noinline))
-void FUN_0013c620(int param_1 __attribute__((unused)))
+/* FUN_0013c620 (0x13c620) — readable C lift from XBE leaf. */
+void FUN_0013c620(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x64(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13c100]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5c(%%edi), %%ecx\n\t"
-      "leal 0x5c(%%edi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0013c620_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0013c620_1:\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0013c620_2\n\t"
-      "pushl %%ebx\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0013c620_2:\n\t"
-      "incl %%esi\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "leal 0x5c(%%edi,%%ecx,4), %%eax\n\t"
-      "cmpl $0, (%%eax)\n\t"
-      "jne .LFUN_0013c620_1\n\t"
-      ".LFUN_0013c620_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b13c620_get), [c13c100] "m"(b13c620_c13c100)
-      : "memory");
+  void *obj;
+  void *type_data;
+  void **slot;
+  void (*cb)(int);
+  short i;
+
+  obj = object_get_and_verify_type(object_handle, -1);
+  type_data = FUN_0013c100((int16_t)*(short *)((char *)obj + 0x64));
+  slot = (void **)((char *)type_data + 0x5c);
+  if (*slot == 0)
+    return;
+  i = 0;
+  do {
+    cb = *(void (**)(int))((char *)*slot + 52);
+    if (cb)
+      cb(object_handle);
+    i = (short)(i + 1);
+    slot = (void **)((char *)type_data + 0x5c + (int)i * 4);
+  } while (*slot != 0);
 }
-#else
-#error "FUN_0013c620: clang naked draft required"
-#endif
+
 
 
 /* FUN_0013c680 (0x13c680) — XBE naked draft (batch 67). */
@@ -4715,62 +4651,30 @@ void FUN_0013c860(int object_handle __attribute__((unused)))
 #endif
 
 
-/* FUN_0013c8c0 (0x13c8c0) — XBE naked draft (batch 68). */
-#if defined(__clang__)
-static void *(*const b13c8c0_get)(int, int) = object_get_and_verify_type;
-static void * (*const b13c8c0_c13c100)(int16_t object_type) = FUN_0013c100;
-
-__attribute__((naked, noinline))
-void FUN_0013c8c0(int param_1 __attribute__((unused)))
+/* FUN_0013c8c0 (0x13c8c0) — readable C lift from XBE leaf. */
+void FUN_0013c8c0(int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movswl 0x64(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13c100]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5c(%%edi), %%ecx\n\t"
-      "leal 0x5c(%%edi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0013c8c0_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0013c8c0_1:\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x50(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0013c8c0_2\n\t"
-      "pushl %%ebx\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0013c8c0_2:\n\t"
-      "incl %%esi\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "leal 0x5c(%%edi,%%ecx,4), %%eax\n\t"
-      "cmpl $0, (%%eax)\n\t"
-      "jne .LFUN_0013c8c0_1\n\t"
-      ".LFUN_0013c8c0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b13c8c0_get), [c13c100] "m"(b13c8c0_c13c100)
-      : "memory");
+  void *obj;
+  void *type_data;
+  void **slot;
+  void (*cb)(int);
+  short i;
+
+  obj = object_get_and_verify_type(object_handle, -1);
+  type_data = FUN_0013c100((int16_t)*(short *)((char *)obj + 0x64));
+  slot = (void **)((char *)type_data + 0x5c);
+  if (*slot == 0)
+    return;
+  i = 0;
+  do {
+    cb = *(void (**)(int))((char *)*slot + 80);
+    if (cb)
+      cb(object_handle);
+    i = (short)(i + 1);
+    slot = (void **)((char *)type_data + 0x5c + (int)i * 4);
+  } while (*slot != 0);
 }
-#else
-#error "FUN_0013c8c0: clang naked draft required"
-#endif
+
 
 
 /* FUN_0013c920 (0x13c920) — XBE naked draft (batch 68). */

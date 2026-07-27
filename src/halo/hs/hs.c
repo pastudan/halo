@@ -3704,65 +3704,30 @@ char hs_scenario_merge(void *dst_scenario __attribute__((unused)), void *src_sce
 #endif
 
 
-/* hs_find_tag_reference_by_index (0xc3db0) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static scenario_t * (*const bc3db0_c18e380)(void) = global_scenario_get;
-static void *(*const bc3db0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int16_t hs_find_tag_reference_by_index(int tag_index __attribute__((unused)))
+/* hs_find_tag_reference_by_index (0xc3db0) — readable C lift from XBE leaf. */
+int16_t hs_find_tag_reference_by_index(int tag_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $-1, 0x326a08\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lhs_find_tag_reference_by_index_2\n\t"
-      "call *%[c18e380]\n\t"
-      "leal 0x4b4(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lhs_find_tag_reference_by_index_2\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lhs_find_tag_reference_by_index_1:\n\t"
-      "pushl $0x28\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x24(%%eax), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "je .Lhs_find_tag_reference_by_index_3\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lhs_find_tag_reference_by_index_1\n\t"
-      ".Lhs_find_tag_reference_by_index_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_find_tag_reference_by_index_3:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bc3db0_c18e380), [elem] "m"(bc3db0_elem)
-      : "memory");
+  scenario_t *scenario;
+  void *block;
+  void *elem;
+  short i;
+  int count;
+
+  if (*(int *)0x326a08 == -1)
+    return -1;
+  scenario = global_scenario_get();
+  block = (char *)scenario + 0x4b4;
+  count = *(int *)block;
+  if (count <= 0)
+    return -1;
+  for (i = 0; i < count; i++) {
+    elem = tag_block_get_element(block, i, 0x28);
+    if (*(int *)((char *)elem + 0x24) == tag_index)
+      return i;
+  }
+  return -1;
 }
-#else
-#error "hs_find_tag_reference_by_index: clang naked draft required"
-#endif
+
 
 
 /* FUN_000c4010 (0xc4010) — readable C lift. */
