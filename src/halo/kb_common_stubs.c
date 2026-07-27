@@ -39,7 +39,7 @@ static void (*const b67760_c66380)(void) = TIFFDefaultDirectory;
 static void (*const b67760_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
 
 __attribute__((naked, noinline))
-void FUN_00067760(void)
+int FUN_00067760(void *data __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -490,45 +490,19 @@ void FUN_00067ac0(void)
 #endif
 
 
-/* FUN_00067b40 (0x67b40) — XBE naked draft (batch 376). */
-#if defined(__clang__)
-static void (*const b67b40_c67760)(void) = (void *)FUN_00067760;
-
-__attribute__((naked, noinline))
-void FUN_00067b40(void)
+/* FUN_00067b40 (0x67b40) — readable C lift.
+ * ABI: count@<eax>, tag@<dx>, src@<ecx>, type cdecl, out cdecl. */
+int FUN_00067b40(unsigned int count /*@<eax>*/, unsigned short tag /*@<dx>*/,
+                 unsigned int *src /*@<ecx>*/, unsigned short type, void *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $1, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movw %%dx, (%%edi)\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "movw %%dx, 0x2(%%edi)\n\t"
-      "movl %%eax, 0x4(%%edi)\n\t"
-      "jne .LFUN_00067b40_1\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00067b40_1:\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c67760]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c67760] "m"(b67b40_c67760)
-      : "memory");
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = type;
+  *((unsigned int *)out + 1) = count;
+  if (count != 1u)
+    return ((int (*)(void *))FUN_00067760)(src);
+  *((unsigned int *)out + 2) = *src;
+  return 1;
 }
-#else
-#error "FUN_00067b40: clang naked draft required"
-#endif
-
 
 /* FUN_00067b80 (0x67b80) — XBE naked draft (batch 376). */
 #if defined(__clang__)
@@ -645,7 +619,7 @@ void FUN_00067c10(void)
 #if defined(__clang__)
 static void (*const b67c50_c65f70)(void) = _TIFFgetfield;
 static void (*const b67c50_c67ac0)(void) = FUN_00067ac0;
-static void (*const b67c50_c67b40)(void) = FUN_00067b40;
+static void (*const b67c50_c67b40)(void) = (void *)FUN_00067b40;
 static void (*const b67c50_c67b80)(void) = FUN_00067b80;
 static void (*const b67c50_c67960)(void) = FUN_00067960;
 static void (*const b67c50_c67760)(void) = FUN_00067760;
@@ -1108,7 +1082,7 @@ static void * (*const b680a0_c8ee60)(uint32_t size, bool zero, const char *file,
 static void (*const b680a0_c677f0)(void) = FUN_000677f0;
 static void (*const b680a0_c1e24d2)(void) = __lseek;
 static void * (*const b680a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b680a0_c67b40)(void) = FUN_00067b40;
+static void (*const b680a0_c67b40)(void) = (void *)FUN_00067b40;
 static void (*const b680a0_c679f0)(void) = FUN_000679f0;
 static void (*const b680a0_c67710)(void) = (void *)FUN_00067710;
 static void (*const b680a0_c67960)(void) = FUN_00067960;

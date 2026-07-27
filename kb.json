@@ -235,7 +235,7 @@
         },
         {
           "addr": "0x67760",
-          "decl": "void FUN_00067760(void);",
+          "decl": "int FUN_00067760(void *data);",
           "ported": false
         },
         {
@@ -265,8 +265,9 @@
         },
         {
           "addr": "0x67b40",
-          "decl": "void FUN_00067b40(void);",
-          "ported": false
+          "decl": "int FUN_00067b40(unsigned int count@<eax>, unsigned short tag@<dx>, unsigned int *src@<ecx>, unsigned short type, void *out);",
+          "ported": true,
+          "name": "FUN_00067b40"
         },
         {
           "addr": "0x67b80",
@@ -690,7 +691,7 @@
         },
         {
           "addr": "0x1b8f10",
-          "decl": "void FUN_001b8f10(int vehicle_handle@<esi>, void *wheel_buffer@<eax>, void *scratch_buffer@<ebx>);",
+          "decl": "void FUN_001b8f10(void);",
           "ported": true,
           "name": "FUN_001b8f10"
         },
@@ -15697,7 +15698,7 @@
         },
         {
           "addr": "0x12dc20",
-          "decl": "bool FUN_0012dc20(int server /* @<ebx> */);",
+          "decl": "bool FUN_0012dc20(int server@<ebx>);",
           "ported": true,
           "name": "FUN_0012dc20"
         },
@@ -15941,7 +15942,7 @@
         },
         {
           "addr": "0x12da90",
-          "decl": "void FUN_0012da90(int endpoint /* @<ebx> */, unsigned short reason /* @<ax> */);",
+          "decl": "void FUN_0012da90(int endpoint @<ebx>, unsigned short reason @<ax>);",
           "ported": true,
           "name": "FUN_0012da90"
         },
@@ -16026,7 +16027,7 @@
         },
         {
           "addr": "0x12f8d0",
-          "decl": "char FUN_0012f8d0(int server /* @<ecx> */, void *decoded_msg /* @<eax> */, void *client_message);",
+          "decl": "char FUN_0012f8d0(int server @<ecx>, void *decoded_msg @<eax>, void *client_message);",
           "ported": true,
           "name": "FUN_0012f8d0"
         },
@@ -33575,7 +33576,7 @@
         },
         {
           "addr": "0x1d0c16",
-          "decl": "void *__stdcall FUN_001d0c16(void *ptr);",
+          "decl": "void __stdcall FUN_001d0c16(void *ptr);",
           "ported": true,
           "name": "FUN_001d0c16"
         },
@@ -34623,7 +34624,7 @@
         },
         {
           "addr": "0x2f470",
-          "decl": "void actor_get_vision_distances(int actor_handle, float p1, float p2, float range_param, float *out_a, float *out_b);",
+          "decl": "void actor_get_vision_distances(void);",
           "ported": true
         },
         {
@@ -34727,7 +34728,7 @@
         },
         {
           "addr": "0x30d10",
-          "decl": "char FUN_00030d10(int actor_handle, float *chance_inout);",
+          "decl": "unsigned int FUN_00030d10(int actor_handle, float *chance_inout);",
           "ported": true
         },
         {
@@ -38968,7 +38969,7 @@
         },
         {
           "addr": "0x160dc0",
-          "decl": "void FUN_00160dc0(void *bitmap);",
+          "decl": "void FUN_00160dc0(void);",
           "ported": true
         },
         {
@@ -39198,7 +39199,7 @@
         },
         {
           "addr": "0x168370",
-          "decl": "unsigned char FUN_00168370(void *bitmap);",
+          "decl": "char FUN_00168370(void *bitmap);",
           "ported": true
         },
         {
@@ -39255,7 +39256,7 @@
         },
         {
           "addr": "0x168cd0",
-          "decl": "unsigned char FUN_00168cd0(void *obj, short type, int count, void *src, int nbytes);",
+          "decl": "void FUN_00168cd0(int a0, float a1, float a2, float a3);",
           "ported": true
         },
         {
