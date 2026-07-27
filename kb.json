@@ -20049,13 +20049,15 @@
         },
         {
           "addr": "0x91190",
-          "decl": "void profile_frame_get_messages(void);",
-          "ported": false
+          "decl": "void profile_frame_get_messages(int16_t *frame_ref);",
+          "ported": true,
+          "name": "profile_frame_get_messages"
         },
         {
           "addr": "0x91220",
-          "decl": "void profile_frame_get_stalls(void);",
-          "ported": false
+          "decl": "int profile_frame_get_stalls(int16_t *frame_ref, int16_t *out_count, int *out_val);",
+          "ported": true,
+          "name": "profile_frame_get_stalls"
         },
         {
           "addr": "0x912c0",
@@ -24146,12 +24148,14 @@
         {
           "addr": "0x190d90",
           "decl": "void numeric_countdown_timer_stop(void);",
-          "ported": false
+          "ported": true,
+          "name": "numeric_countdown_timer_stop"
         },
         {
           "addr": "0x190da0",
           "decl": "void numeric_countdown_timer_restart(void);",
-          "ported": false
+          "ported": true,
+          "name": "numeric_countdown_timer_restart"
         },
         {
           "addr": "0x190db0",
@@ -31398,7 +31402,8 @@
         {
           "addr": "0x17eb90",
           "decl": "void FUN_0017eb90(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_0017eb90"
         },
         {
           "addr": "0x17ebb0",

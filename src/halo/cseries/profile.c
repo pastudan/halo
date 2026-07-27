@@ -2813,131 +2813,53 @@ char profile_frame_iterator_next(int16_t *iter, uint32_t *out_cycles)
   return ok;
 }
 
-/* profile_frame_get_messages (0x91190) — XBE naked draft (batch 268). */
-#if defined(__clang__)
-static void (*const b91190_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b91190_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void profile_frame_get_messages(void)
+/* profile_frame_get_messages (0x91190) — readable C lift from XBE leaf. */
+void profile_frame_get_messages(int16_t *frame_ref)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lprofile_frame_get_messages_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b7\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x25c3b4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprofile_frame_get_messages_1:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lprofile_frame_get_messages_2\n\t"
-      "cmpw 0x3365c2, %%ax\n\t"
-      "jl .Lprofile_frame_get_messages_3\n\t"
-      ".Lprofile_frame_get_messages_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b8\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x268860\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprofile_frame_get_messages_3:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "cmpw 0x3365c4, %%ax\n\t"
-      "popl %%esi\n\t"
-      "jne .Lprofile_frame_get_messages_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5b9\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x268810\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprofile_frame_get_messages_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b91190_assert), [exitfn] "m"(b91190_exitfn)
-      : "memory");
+  extern char DAT_0025c3b4[];
+  extern char DAT_002683fc[];
+  extern char DAT_00268860[];
+  extern char DAT_00268810[];
+  int16_t idx;
+
+  if (frame_ref == 0) {
+    display_assert(DAT_0025c3b4, DAT_002683fc, 0x5b7, true);
+    system_exit(-1);
+  }
+  idx = *frame_ref;
+  if (idx < 0 || idx >= *(int16_t *)0x3365c2) {
+    display_assert(DAT_00268860, DAT_002683fc, 0x5b8, true);
+    system_exit(-1);
+  }
+  if (idx == *(int16_t *)0x3365c4) {
+    display_assert(DAT_00268810, DAT_002683fc, 0x5b9, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "profile_frame_get_messages: clang naked draft required"
-#endif
 
-
-/* profile_frame_get_stalls (0x91220) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static void (*const b91220_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b91220_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void profile_frame_get_stalls(void)
+/* profile_frame_get_stalls (0x91220) — readable C lift from XBE leaf. */
+int profile_frame_get_stalls(int16_t *frame_ref, int16_t *out_count, int *out_val)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "imull $0x1128, %%esi, %%esi\n\t"
-      "addl $0x3365c8, %%esi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lprofile_frame_get_stalls_1\n\t"
-      "cmpw 0x3365c2, %%ax\n\t"
-      "jl .Lprofile_frame_get_stalls_2\n\t"
-      ".Lprofile_frame_get_stalls_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5c8\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x268860\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprofile_frame_get_stalls_2:\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "cmpw 0x3365c4, %%ax\n\t"
-      "jne .Lprofile_frame_get_stalls_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5c9\n\t"
-      "pushl $0x2683fc\n\t"
-      "pushl $0x268810\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lprofile_frame_get_stalls_3:\n\t"
-      "movw 0x111c(%%esi), %%cx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movw %%cx, (%%edx)\n\t"
-      "movl 0x1120(%%esi), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x1118(%%esi), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b91220_assert), [exitfn] "m"(b91220_exitfn)
-      : "memory");
+  extern char DAT_002683fc[];
+  extern char DAT_00268860[];
+  extern char DAT_00268810[];
+  int16_t idx;
+  char *slot;
+
+  idx = *frame_ref;
+  slot = (char *)0x3365c8 + (int)idx * 0x1128;
+  if (idx < 0 || idx >= *(int16_t *)0x3365c2) {
+    display_assert(DAT_00268860, DAT_002683fc, 0x5c8, true);
+    system_exit(-1);
+  }
+  if (idx == *(int16_t *)0x3365c4) {
+    display_assert(DAT_00268810, DAT_002683fc, 0x5c9, true);
+    system_exit(-1);
+  }
+  *out_count = *(int16_t *)(slot + 0x111c);
+  *out_val = *(int *)(slot + 0x1120);
+  return *(int *)(slot + 0x1118);
 }
-#else
-#error "profile_frame_get_stalls: clang naked draft required"
-#endif
 
 
 /* profile_rasterizer_stalls (0x912c0) — readable C lift. */
