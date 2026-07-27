@@ -21190,7 +21190,7 @@
         {
           "addr": "0x17c940",
           "decl": "void rasterizer_dynamic_screen_geometry_draw(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17c950",
