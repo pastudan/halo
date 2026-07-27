@@ -4974,7 +4974,7 @@
         {
           "addr": "0x1bc5c0",
           "decl": "short FUN_001bc5c0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1bc620",
