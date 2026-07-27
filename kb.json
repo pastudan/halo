@@ -10395,7 +10395,7 @@
         {
           "addr": "0x1c0f70",
           "decl": "void player_profile_save_last_level_played(void *profile, short *out_level, short *out_difficulty);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1c1280",
