@@ -1893,7 +1893,7 @@ void FUN_0015f1f0(void)
 
 
 /* FUN_0015f540 (0x15f540) — readable C lift. */
-void FUN_0015f540(void)
+void FUN_0015f540(int arg1 __attribute__((unused)), int arg2 __attribute__((unused)), uint32_t handle __attribute__((unused)), int subcount2 __attribute__((unused)))
 {
   display_assert((const char *)0x2a1704, (const char *)0x2a16c4, 0xff, 1);
   system_exit(-1);
@@ -1902,10 +1902,15 @@ void FUN_0015f540(void)
 
 
 /* FUN_0015f5e0 (0x15f5e0) — readable C lift. */
-int FUN_0015f5e0(int a, int b, int c)
+void FUN_0015f5e0(void)
 {
-  D3DDevice_SetVertexData2f(a, b, c);
-  return 0;
+  void (*const f)(int, int, int) = (void (*)(int, int, int))D3DDevice_SetVertexData2f;
+  /* cdecl args at [esp+4..] when entered without prologue — use frame. */
+  int a, b, c;
+  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
+  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
+  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
+  f(a, b, c);
 }
 
 
@@ -12630,17 +12635,27 @@ void FUN_00168b10(void *bitmap __attribute__((unused)))
 
 
 /* FUN_00168bc0 (0x168bc0) — readable C lift. */
-int FUN_00168bc0(int a, int b, int c)
+void FUN_00168bc0(void)
 {
-  return D3DDevice_CreateVertexBuffer(a, b, c, 0, 0);
+  int a, b, c;
+  int (*f)(int, int, int, int, int) = (int (*)(int, int, int, int, int))(void *)D3DDevice_CreateVertexBuffer;
+  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
+  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
+  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
+  f(a, b, c, 0, 0);
 }
 
 
 
 /* FUN_00168be0 (0x168be0) — readable C lift. */
-int FUN_00168be0(int a, int b, int c)
+void FUN_00168be0(void)
 {
-  return D3DDevice_CreateIndexBuffer(a, b, c, 0, 0);
+  int a, b, c;
+  int (*f)(int, int, int, int, int) = (int (*)(int, int, int, int, int))(void *)D3DDevice_CreateIndexBuffer;
+  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
+  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
+  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
+  f(a, b, c, 0, 0);
 }
 
 
@@ -12864,10 +12879,11 @@ void FUN_00168cd0(int a0, float a1, float a2, float a3)
 
 
 /* FUN_00168e40 (0x168e40) — readable C lift. */
-void FUN_00168e40(void *obj)
+void FUN_00168e40(void)
 {
+  void *obj;
   void *p;
-
+  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(obj));
   if (!obj)
     return;
   p = *(void **)((char *)obj + 0x10);
@@ -13223,10 +13239,14 @@ void FUN_00169200(void)
 
 
 /* FUN_00169650 (0x169650) — readable C lift. */
-int FUN_00169650(int a, int b, int c)
+void FUN_00169650(void)
 {
-  D3DDevice_SetVertexData2f(a, b, c);
-  return 0;
+  int a, b, c;
+  void (*f)(int, int, int) = (void (*)(int, int, int))(void *)D3DDevice_SetVertexData2f;
+  __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
+  __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
+  __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
+  f(a, b, c);
 }
 
 
