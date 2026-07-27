@@ -1460,45 +1460,18 @@ float FUN_00012ad0(int actor_handle __attribute__((unused)), int action_type __a
 #endif
 
 
-/* FUN_00012be0 (0x12be0) — XBE naked draft (batch 280). */
-#if defined(__clang__)
-static void *(*const b12be0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_00012be0(void)
+/* FUN_00012be0 (0x12be0) — readable C lift. */
+void FUN_00012be0(int datum_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $3, 0xa0(%%eax)\n\t"
-      "jne .LFUN_00012be0_1\n\t"
-      "movb 0xa7(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_00012be0_1\n\t"
-      "movb 0xa2(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_00012be0_1\n\t"
-      "movb 0x15c(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_00012be0_1\n\t"
-      "incw 0xaa(%%eax)\n\t"
-      ".LFUN_00012be0_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b12be0_dget)
-      : "memory");
+  char *obj;
+  obj = (char *)datum_get(*(void **)0x6325a4, datum_index);
+  if (*(short *)(obj + 0xa0) == 3
+      && *(unsigned char *)(obj + 0xa7)
+      && !*(unsigned char *)(obj + 0xa2)
+      && !*(unsigned char *)(obj + 0x15c)) {
+    *(short *)(obj + 0xaa) += 1;
+  }
 }
-#else
-#error "FUN_00012be0: clang naked draft required"
-#endif
-
 
 /* FUN_00012c30 (0x12c30) — XBE naked draft (batch 252). */
 #if defined(__clang__)
