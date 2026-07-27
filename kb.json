@@ -21081,7 +21081,7 @@
         {
           "addr": "0x17ae90",
           "decl": "void FUN_0017ae90(int object_handle, int datum, float *position, int callback);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017ae90"
         },
         {
@@ -30632,7 +30632,7 @@
         },
         {
           "addr": "0x001ef200",
-          "decl": "void __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
+          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
           "ported": true,
           "name": "D3DSurface_LockRect"
         }
@@ -38756,8 +38756,8 @@
         },
         {
           "addr": "0x15e650",
-          "decl": "void FUN_0015e650(void);",
-          "ported": false
+          "decl": "void FUN_0015e650(void *a, int a_idx, int b, int c, void *d, int d_idx);",
+          "ported": true
         },
         {
           "addr": "0x15e770",
@@ -38930,7 +38930,7 @@
         {
           "addr": "0x160c30",
           "decl": "void FUN_00160c30(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x160dc0",
@@ -39056,8 +39056,8 @@
         },
         {
           "addr": "0x165cb0",
-          "decl": "void FUN_00165cb0(void);",
-          "ported": false
+          "decl": "void FUN_00165cb0(void *shader, int unused, int a2, int a3, int a4, unsigned short *block);",
+          "ported": true
         },
         {
           "addr": "0x165dd0",
@@ -39108,8 +39108,8 @@
         },
         {
           "addr": "0x1677d0",
-          "decl": "void FUN_001677d0(void);",
-          "ported": false
+          "decl": "void FUN_001677d0(void *shader, int unused, int a2, int a3, int a4, unsigned short *block);",
+          "ported": true
         },
         {
           "addr": "0x167920",
@@ -39118,7 +39118,7 @@
         },
         {
           "addr": "0x167ee0",
-          "decl": "void FUN_00167ee0(void);",
+          "decl": "unsigned char FUN_00167ee0(float *obj);",
           "ported": false
         },
         {
@@ -39231,7 +39231,7 @@
         },
         {
           "addr": "0x168e70",
-          "decl": "void FUN_00168e70(void);",
+          "decl": "unsigned char FUN_00168e70(void *obj, short type, int count, void *src);",
           "ported": false
         },
         {
