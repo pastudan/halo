@@ -15457,7 +15457,7 @@
           "addr": "0x11b960",
           "decl": "void hashtable_dispose(short *table);",
           "name": "hashtable_dispose",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11ba00",

@@ -45,92 +45,32 @@
 /* last decode error string global at 0x46e804 */
 #define s_last_decode_error (*(char **)0x46e804)
 
-/* FUN_0011a230 (0x11a230) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static int (*const b11a230_c8d8d0)(const char *s, int n) = strnlen;
-static void (*const b11a230_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a230_exitfn)(int) = system_exit;
-static void * (*const b11a230_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
+/* FUN_0011a230 (0x11a230) — readable C lift. */
+extern char DAT_0028eef8[];
+extern char DAT_0028f010[];
 
-__attribute__((naked, noinline))
-bool FUN_0011a230(int *state __attribute__((unused)), const char *source __attribute__((unused)), short max_length __attribute__((unused)))
+bool FUN_0011a230(int *state, const char *source, short max_length)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8d8d0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl (%%esi), %%ebx\n\t"
-      "movswl %%ax, %%edi\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "leal 0x1(%%edi,%%ecx,1), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "addl %%ecx, %%ebx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jle .LFUN_0011a230_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb6\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f010\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a230_1:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "leal 0x1(%%eax,%%edi,1), %%ecx\n\t"
-      "cmpl 0x8(%%esi), %%ecx\n\t"
-      "jg .LFUN_0011a230_2\n\t"
-      "movb 0xc(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0011a230_2\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c8de70]\n\t"
-      "movb $0, (%%edi,%%ebx,1)\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%edi\n\t"
-      "addl %%edi, %%eax\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "popl %%esi\n\t"
-      "sete %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a230_2:\n\t"
-      "movb $1, 0xc(%%esi)\n\t"
-      "movb 0xc(%%esi), %%cl\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "popl %%esi\n\t"
-      "sete %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8d8d0] "m"(b11a230_c8d8d0), [assert] "m"(b11a230_assert), [exitfn] "m"(b11a230_exitfn), [c8de70] "m"(b11a230_c8de70)
-      : "memory");
-}
-#else
-#error "FUN_0011a230: clang naked draft required"
-#endif
+  short len;
+  int used;
+  char *dest;
 
+  len = (short)strnlen(source, (int)max_length);
+  used = state[1];
+  dest = (char *)state[0] + used;
+  if (used + (int)len + 1 > state[2]) {
+    display_assert(DAT_0028f010, DAT_0028eef8, 0xb6, true);
+    system_exit(-1);
+  }
+  if (used + (int)len + 1 <= state[2] && *(unsigned char *)((char *)state + 0xc) == 0) {
+    csstrncpy(dest, source, (unsigned)len);
+    dest[len] = 0;
+    state[1] = state[1] + (int)len + 1;
+    return *(unsigned char *)((char *)state + 0xc) == 0;
+  }
+  *(unsigned char *)((char *)state + 0xc) = 1;
+  return 0;
+}
 
 /* FUN_0011a2d0 (0x11a2d0) — readable C lift from XBE leaf. */
 void FUN_0011a2d0(int *state, void *buffer, int buffer_size)
@@ -1610,78 +1550,35 @@ void hashtable_set_user_data(void *table, int user_data)
   *(int *)(t + 0x0c) = user_data;
 }
 
-/* hashtable_dispose (0x11b960) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void (*const b11b960_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11b960_exitfn)(int) = system_exit;
-static void (*const b11b960_c117cf0)(int *table) = FUN_00117cf0;
-static void (*const b11b960_c8ef70)(void *ptr, const char *file, int line) = debug_free;
+/* hashtable_dispose (0x11b960) — readable C lift. */
+extern char DAT_0028f678[];
+extern char DAT_0028f69c[];
 
-__attribute__((naked, noinline))
-void hashtable_dispose(short *table __attribute__((unused)))
+void hashtable_dispose(short *table)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lhashtable_dispose_1\n\t"
-      "cmpw $0, (%%esi)\n\t"
-      "jle .Lhashtable_dispose_1\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "jle .Lhashtable_dispose_1\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lhashtable_dispose_1\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .Lhashtable_dispose_1\n\t"
-      "movw 0x6(%%esi), %%cx\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .Lhashtable_dispose_2\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "cmpl 0x20(%%esi), %%eax\n\t"
-      "je .Lhashtable_dispose_2\n\t"
-      ".Lhashtable_dispose_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6e\n\t"
-      "pushl $0x28f678\n\t"
-      "pushl $0x28f69c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhashtable_dispose_2:\n\t"
-      "leal 0x1c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c117cf0]\n\t"
-      "movl 0x18(%%esi), %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lhashtable_dispose_3\n\t"
-      "pushl $0x74\n\t"
-      "pushl $0x28f678\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lhashtable_dispose_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11b960_assert), [exitfn] "m"(b11b960_exitfn), [c117cf0] "m"(b11b960_c117cf0), [c8ef70] "m"(b11b960_c8ef70)
-      : "memory");
-}
-#else
-#error "hashtable_dispose: clang naked draft required"
-#endif
+  float load;
+  int shift;
+  void *ptr;
+  char ok;
 
+  ok = 0;
+  if (table != NULL && table[0] > 0 && table[1] > 0) {
+    load = *(float *)((char *)table + 8);
+    if (load > *(float *)0x2533c0 && load <= *(float *)0x2533c8) {
+      shift = (int)*(short *)((char *)table + 6);
+      if (shift == -1 || (1 << (shift & 0xff)) == *(int *)((char *)table + 0x20))
+        ok = 1;
+    }
+  }
+  if (!ok) {
+    display_assert(DAT_0028f69c, DAT_0028f678, 0x6e, true);
+    system_exit(-1);
+  }
+  FUN_00117cf0((int *)((char *)table + 0x1c));
+  ptr = *(void **)((char *)table + 0x18);
+  if (ptr != NULL)
+    debug_free(ptr, DAT_0028f678, 0x74);
+}
 
 /* FUN_0011ba00 (0x11ba00) — readable C lift. */
 int FUN_0011ba00(unsigned char *key, unsigned int key_size)
