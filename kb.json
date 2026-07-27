@@ -34770,8 +34770,9 @@
         },
         {
           "addr": "0x2f470",
-          "decl": "void actor_get_vision_distances(void);",
-          "ported": true
+          "decl": "void actor_get_vision_distances(int actor_handle, float p1, float p2, float range_param, float *out_a, float *out_b);",
+          "ported": true,
+          "name": "actor_get_vision_distances"
         },
         {
           "addr": "0x2f5b0",
@@ -34874,8 +34875,9 @@
         },
         {
           "addr": "0x30d10",
-          "decl": "unsigned int FUN_00030d10(int actor_handle, float *chance_inout);",
-          "ported": true
+          "decl": "char FUN_00030d10(int actor_handle, float *chance_inout);",
+          "ported": true,
+          "name": "FUN_00030d10"
         },
         {
           "addr": "0x30e60",
@@ -34918,7 +34920,7 @@
           "decl": "int actor_perception_unit_from_swarm(int owner_handle, int unit_handle, char verify_flag, float *swarm_origin);",
           "name": "actor_perception_unit_from_swarm",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x31df0",
@@ -34939,7 +34941,7 @@
           "decl": "void actor_perception_refresh_danger_zone(int actor_handle);",
           "name": "actor_perception_refresh_danger_zone",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32940",
