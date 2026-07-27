@@ -27191,8 +27191,9 @@
         },
         {
           "addr": "0x843a0",
-          "decl": "short FUN_000843a0(int endpoint);",
-          "ported": false
+          "decl": "short FUN_000843a0(int *endpoint);",
+          "ported": true,
+          "name": "FUN_000843a0"
         },
         {
           "addr": "0x84450",
@@ -33812,6 +33813,24 @@
         {
           "addr": "0x2251ad",
           "decl": "int __stdcall xnet_accept(int socket, void *addr, int *addrlen);",
+          "ported": false
+        },
+        {
+          "addr": "0x2249ec",
+          "name": "xnet_listen",
+          "decl": "int __stdcall xnet_listen(int s, int backlog);",
+          "ported": false
+        },
+        {
+          "addr": "0x2251b8",
+          "name": "xnet_select",
+          "decl": "int __stdcall xnet_select(int nfds, void *readfds, void *writefds, void *exceptfds, void *timeout);",
+          "ported": false
+        },
+        {
+          "addr": "0x2235f3",
+          "name": "xnet_fd_isset",
+          "decl": "int __stdcall xnet_fd_isset(int fd, void *fds);",
           "ported": false
         }
       ],

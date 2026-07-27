@@ -1951,7 +1951,7 @@ static void (*const b83bd0_c2235c4)(void) = GetLastError;
 static const char * (*const b83bd0_c83310)(int error_code) = winsock_error_report;
 
 __attribute__((naked, noinline))
-short FUN_00083bd0(int endpoint __attribute__((unused)), int flag __attribute__((unused)))
+short FUN_00083bd0(int *endpoint __attribute__((unused)), int flag __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2538,89 +2538,32 @@ short FUN_000841b0(int endpoint __attribute__((unused)), int address __attribute
 #endif
 
 
-/* FUN_000843a0 (0x843a0) — XBE naked draft (batch 259). */
-#if defined(__clang__)
-static void (*const b843a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b843a0_exitfn)(int) = system_exit;
-static void b843a0_c2249ec_tgt(void) { return; }
-static void (*const b843a0_c2249ec)(void) = b843a0_c2249ec_tgt;
-static void (*const b843a0_c2235c4)(void) = GetLastError;
-static const char * (*const b843a0_c83310)(int error_code) = winsock_error_report;
-
-__attribute__((naked, noinline))
-short FUN_000843a0(int endpoint __attribute__((unused)))
+/* FUN_000843a0 (0x843a0) — readable C lift: listen_endpoint. */
+short FUN_000843a0(int *endpoint)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000843a0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2b0\n\t"
-      "pushl $0x266618\n\t"
-      "pushl $0x266658\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000843a0_1:\n\t"
-      "movb 0x335090, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000843a0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2b1\n\t"
-      "pushl $0x266618\n\t"
-      "pushl $0x265fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000843a0_2:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000843a0_4\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c2249ec]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000843a0_3\n\t"
-      "orb $2, 0x4(%%esi)\n\t"
-      "movw %%di, 0x6(%%esi)\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000843a0_3:\n\t"
-      "call *%[c2235c4]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c83310]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0xffffffef, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x6(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000843a0_4:\n\t"
-      "movl $0xfffffff4, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x6(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b843a0_assert), [exitfn] "m"(b843a0_exitfn), [c2249ec] "m"(b843a0_c2249ec), [c2235c4] "m"(b843a0_c2235c4), [c83310] "m"(b843a0_c83310)
-      : "memory");
-}
-#else
-#error "FUN_000843a0: clang naked draft required"
-#endif
+  int sock;
+  int ok;
 
+  assert_halt(endpoint != 0);
+  assert_halt(*(uint8_t *)0x335090);
+
+  sock = *endpoint;
+  if (sock == -1) {
+    *(int16_t *)((char *)endpoint + 6) = -12;
+    return -12;
+  }
+
+  ok = xnet_listen(sock, 0x20);
+  if (ok == 0) {
+    *(uint8_t *)((char *)endpoint + 4) |= 2;
+    *(int16_t *)((char *)endpoint + 6) = 0;
+    return 0;
+  }
+
+  winsock_error_report(xapi_GetLastError());
+  *(int16_t *)((char *)endpoint + 6) = -17;
+  return -17;
+}
 
 /* FUN_00084450 (0x84450) — readable C lift: accept into new endpoint. */
 void *FUN_00084450(int *listening_endpoint)
