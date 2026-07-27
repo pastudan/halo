@@ -2966,78 +2966,26 @@ void ui_widget_display_deferred_errors(void)
 bool cache_files_give_time_to_precache(const char *name);
 void main_menu_active(char active);
 
-/* gamepad_button_is_down (0xffef0) — XBE naked draft (batch 149). */
-#if defined(__clang__)
-static void (*const bffef0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bffef0_exitfn)(int) = system_exit;
-static bool (*const bffef0_ccf6c0)(int16_t gamepad_index) = input_has_gamepad;
-static void * (*const bffef0_ccf710)(int gamepad_index) = input_get_gamepad_state;
-
-__attribute__((naked, noinline))
-char gamepad_button_is_down(int16_t button __attribute__((unused)))
+/* gamepad_button_is_down (0xffef0) — readable C lift. */
+char gamepad_button_is_down(int16_t button)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x8(%%ebp), %%di\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .Lgamepad_button_is_down_1\n\t"
-      "cmpw $0x10, %%di\n\t"
-      "jl .Lgamepad_button_is_down_2\n\t"
-      ".Lgamepad_button_is_down_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf5\n\t"
-      "pushl $0x28b0b4\n\t"
-      "pushl $0x28b078\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgamepad_button_is_down_2:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lgamepad_button_is_down_3:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccf6c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgamepad_button_is_down_5\n\t"
-      "incl %%esi\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lgamepad_button_is_down_3\n\t"
-      ".Lgamepad_button_is_down_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgamepad_button_is_down_5:\n\t"
-      "cmpw $4, %%si\n\t"
-      "jge .Lgamepad_button_is_down_4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccf710]\n\t"
-      "addl $4, %%esp\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movb 0x10(%%ecx,%%eax,1), %%dl\n\t"
-      "popl %%edi\n\t"
-      "testb %%dl, %%dl\n\t"
-      "popl %%esi\n\t"
-      "seta %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bffef0_assert), [exitfn] "m"(bffef0_exitfn), [ccf6c0] "m"(bffef0_ccf6c0), [ccf710] "m"(bffef0_ccf710)
-      : "memory");
+  int i;
+  unsigned char *state;
+
+  if (button < 0 || button >= 0x10) {
+    display_assert((const char *)0x28b078, (const char *)0x28b0b4, 0xf5, 1);
+    system_exit(-1);
+  }
+  for (i = 0; i < 4; i++) {
+    if (input_has_gamepad(i))
+      break;
+  }
+  if (i >= 4)
+    return 0;
+  state = (unsigned char *)input_get_gamepad_state(i);
+  return (char)(state[0x10 + button] > 0);
 }
-#else
-#error "gamepad_button_is_down: clang naked draft required"
-#endif
+
 
 
 void main_disallow_persistent_storage(void)
@@ -3045,78 +2993,29 @@ void main_disallow_persistent_storage(void)
   *(char *)0x46da54 = 0;
 }
 
-/* main_set_map_name (0xfffa0) — XBE naked draft (batch 203). */
-#if defined(__clang__)
-static void * (*const bfffa0_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-static bool (*const bfffa0_c977f0)(void) = game_in_editor;
-static bool (*const bfffa0_cb5be0)(void) = game_in_progress;
-
-__attribute__((naked, noinline))
-void main_set_map_name(const char *name __attribute__((unused)))
+/* main_set_map_name (0xfffa0) — readable C lift. */
+void main_set_map_name(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x46da55\n\t"
-      "movb $0, 0x46da43\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $0, 0x46db54\n\t"
-      "movb $1, 0x46da54\n\t"
-      "call *%[c977f0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lmain_set_map_name_1\n\t"
-      "call *%[cb5be0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lmain_set_map_name_2\n\t"
-      ".Lmain_set_map_name_1:\n\t"
-      "cmpw $0, 0x46da0c\n\t"
-      "jne .Lmain_set_map_name_2\n\t"
-      "movb $1, 0x46da25\n\t"
-      ".Lmain_set_map_name_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8de70] "m"(bfffa0_c8de70), [c977f0] "m"(bfffa0_c977f0), [cb5be0] "m"(bfffa0_cb5be0)
-      : "memory");
+  *(unsigned char *)0x46da43 = 0;
+  csstrncpy((char *)0x46da55, name, 0xff);
+  *(unsigned char *)0x46db54 = 0;
+  *(unsigned char *)0x46da54 = 1;
+  if (game_in_editor() || game_in_progress()) {
+    if (*(short *)0x46da0c == 0)
+      *(unsigned char *)0x46da25 = 1;
+  }
 }
-#else
-#error "main_set_map_name: clang naked draft required"
-#endif
 
 
-/* main_set_multiplayer_map_name (0x100010) — XBE naked draft (batch 204). */
-#if defined(__clang__)
-static void * (*const b100010_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-static bool (*const b100010_c1b9de0)(const char *name) = cache_files_give_time_to_precache;
 
-__attribute__((naked, noinline))
-void main_set_multiplayer_map_name(const char *name __attribute__((unused)))
+/* main_set_multiplayer_map_name (0x100010) — readable C lift. */
+void main_set_multiplayer_map_name(const char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x46db55\n\t"
-      "call *%[c8de70]\n\t"
-      "pushl $0x46db55\n\t"
-      "movb $0, 0x46dc54\n\t"
-      "call *%[c1b9de0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8de70] "m"(b100010_c8de70), [c1b9de0] "m"(b100010_c1b9de0)
-      : "memory");
+  csstrncpy((char *)0x46db55, name, 0xff);
+  *(unsigned char *)0x46dc54 = 0;
+  cache_files_give_time_to_precache((char *)0x46db55);
 }
-#else
-#error "main_set_multiplayer_map_name: clang naked draft required"
-#endif
+
 
 
 const char *main_get_map_name(void)
@@ -3224,7 +3123,7 @@ void main_save_core_name(const char *name)
   if ((unsigned)csstrlen(name) >= 0x40) {
     display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3a5, 0);
   }
-  csstrncpy(0x46dd55, name, 0x3f);
+  csstrncpy((char *)0x46dd55, name, 0x3f);
   *(uint8_t *)0x46da3d = 1;
 }
 
@@ -3248,7 +3147,7 @@ void main_load_core_name(const char *name)
   if ((unsigned)csstrlen(name) >= 0x40) {
     display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3c9, 0);
   }
-  csstrncpy(0x46dd55, name, 0x3f);
+  csstrncpy((char *)0x46dd55, name, 0x3f);
   *(uint8_t *)0x46da3e = 1;
 }
 
@@ -3258,7 +3157,7 @@ void main_load_core_name_at_startup(const char *name)
   if ((unsigned)csstrlen(name) >= 0x40) {
     display_assert((const char *)0x28b1a4, (const char *)0x28b0b4, 0x3d7, 0);
   }
-  csstrncpy(0x46dd55, name, 0x3f);
+  csstrncpy((char *)0x46dd55, name, 0x3f);
   *(uint8_t *)0x46da3f = 1;
 }
 
@@ -3509,7 +3408,7 @@ int main_get_solo_level_from_name(const char *map_name __attribute__((unused)))
 /* main_get_current_solo_level (0x100860) — readable C lift (thin wrapper). */
 int main_get_current_solo_level(void)
 {
-  return main_get_solo_level_from_name(0x46da55);
+  return main_get_solo_level_from_name((const char *)0x46da55);
 }
 
 const char *main_get_solo_level_name(int16_t index)
@@ -4005,7 +3904,7 @@ void FUN_000ffeb0(char param_1 __attribute__((unused)))
 static int (*const b102700_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
 static void (*const b102700_c19b800)(short style, short justify, int flags) = draw_string_set_style_justify_flags;
 static void (*const b102700_c19b640)(const void *color) = draw_string_set_color;
-static void (*const b102700_c19b7e0)(void) = FUN_0019B7E0;
+static void (*const b102700_c19b7e0)(int) = FUN_0019B7E0;
 static void (*const b102700_c183e60)(void *screen_pos, short *bounds, const void *color, int flags, const char *text) = rasterizer_text_draw;
 static bool (*const b102700_c1bc6b0)(void) = cache_files_precache_in_progress;
 static __int16 (*const b102700_c1bcf00)(float *) = cache_files_precache_map_status;

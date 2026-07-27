@@ -1063,56 +1063,20 @@ bool transport_nonce_is_equal(const void *a, const void *b)
 }
 
 
-/* FUN_00081fa0 (0x81fa0) — XBE naked draft (batch 275). */
-#if defined(__clang__)
-static void (*const b81fa0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81fa0_exitfn)(int) = system_exit;
-static void (*const b81fa0_c81f30)(void) = transport_nonce_is_equal;
-
-__attribute__((naked, noinline))
-void FUN_00081fa0(void)
+/* FUN_00081fa0 (0x81fa0) — readable C lift: compare nonce to transport nonce. */
+bool FUN_00081fa0(void *nonce, int bytes)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00081fa0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xaf\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2664ec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081fa0_1:\n\t"
-      "cmpl $8, 0xc(%%ebp)\n\t"
-      "je .LFUN_00081fa0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb0\n\t"
-      "pushl $0x266458\n\t"
-      "pushl $0x2664c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081fa0_2:\n\t"
-      "pushl $0x5ab228\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c81f30]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b81fa0_assert), [exitfn] "m"(b81fa0_exitfn), [c81f30] "m"(b81fa0_c81f30)
-      : "memory");
+  if (nonce == NULL) {
+    display_assert((const char *)0x2664ec, (const char *)0x266458, 0xaf, 1);
+    system_exit(-1);
+  }
+  if (bytes != 8) {
+    display_assert((const char *)0x2664c0, (const char *)0x266458, 0xb0, 1);
+    system_exit(-1);
+  }
+  return transport_nonce_is_equal(nonce, (void *)0x5ab228);
 }
-#else
-#error "FUN_00081fa0: clang naked draft required"
-#endif
+
 
 
 /* transport_get_xnaddr (0x82060) — readable C lift. */
@@ -1738,7 +1702,7 @@ int FUN_000829b0(void *endpoint_set)
 /* FUN_00082a30 (0x82a30) — readable C lift. */
 int FUN_00082a30(int endpoint_set)
 {
-  if (endpoint_set == NULL) {
+  if (endpoint_set == 0) {
     display_assert((const char *)0x266450, (const char *)0x266458, 0x289, 1);
     system_exit(-1);
   }
@@ -1756,7 +1720,7 @@ static void (*const b82a90_exitfn)(int) = system_exit;
 static int __stdcall (*const b82a90_c222df7)(void *key) = FUN_00222df7;
 static void b82a90_c222da0_tgt(void) { return; }
 static void (*const b82a90_c222da0)(void) = b82a90_c222da0_tgt;
-static void (*const b82a90_c81e00)(void) = FUN_00081e00;
+static void (*const b82a90_c81e00)(uint32_t *, uint32_t *) = FUN_00081e00;
 
 __attribute__((naked, noinline))
 void FUN_00082a90(void)
@@ -1829,7 +1793,7 @@ void FUN_00082a90(void)
 static void (*const b82bd0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b82bd0_exitfn)(int) = system_exit;
 static int __stdcall (*const b82bd0_c222df7)(void *key) = FUN_00222df7;
-static void (*const b82bd0_c81e00)(void) = FUN_00081e00;
+static void (*const b82bd0_c81e00)(uint32_t *, uint32_t *) = FUN_00081e00;
 static void b82bd0_c222e31_tgt(void) { return; }
 static void (*const b82bd0_c222e31)(void) = b82bd0_c222e31_tgt;
 
@@ -2547,8 +2511,8 @@ static bool (*const b84080_c81870)(int *mutex_reference, int timeout_ms) = take_
 static void (*const b84080_c84000)(int *ep) = close_endpoint;
 static void (*const b84080_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 static void (*const b84080_c818d0)(int *mutex_reference) = release_mutex;
-static void (*const b84080_c81910)(void) = FUN_00081910;
-static void (*const b84080_c82cf0)(void) = FUN_00082cf0;
+static void (*const b84080_c81910)(void *a0) = FUN_00081910;
+static void (*const b84080_c82cf0)(void *endpoint) = FUN_00082cf0;
 
 __attribute__((naked, noinline))
 void FUN_00084080(void)
@@ -2677,9 +2641,9 @@ static void (*const b841b0_exitfn)(int) = system_exit;
 static void * (*const b841b0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
 static void (*const b841b0_c817e0)(void) = create_mutex;
 static bool (*const b841b0_c81630)(int priority_flags, void *function, int param, void **thread_reference) = thread_new;
-static void (*const b841b0_c82c90)(void) = FUN_00082c90;
+static char (*const b841b0_c82c90)(void *endpoint) = FUN_00082c90;
 static void (*const b841b0_c81770)(void *thread_reference) = thread_close;
-static void (*const b841b0_c81910)(void) = FUN_00081910;
+static void (*const b841b0_c81910)(void *a0) = FUN_00081910;
 static void (*const b841b0_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
 __attribute__((naked, noinline))
@@ -2907,7 +2871,7 @@ static void (*const b84450_assert)(const char *, const char *, int, bool) = disp
 static void (*const b84450_exitfn)(int) = system_exit;
 static void b84450_c2251ad_tgt(void) { return; }
 static void (*const b84450_c2251ad)(void) = b84450_c2251ad_tgt;
-static int (*const b84450_c82d70)(int type) = get_next_endpoint_from_set;
+static void *(*const b84450_c82d70)(int type) = get_next_endpoint_from_set;
 static void (*const b84450_c2235c4)(void) = GetLastError;
 static const char * (*const b84450_c83310)(int error_code) = winsock_error_report;
 
@@ -3165,7 +3129,7 @@ int FUN_00084740(int endpoint __attribute__((unused)), void *message __attribute
 /* FUN_00084940 (0x84940) — readable C lift. */
 int FUN_00084940(int listening_endpoint)
 {
-  void *p = FUN_00084450(listening_endpoint);
+  void *p = (void *)FUN_00084450(listening_endpoint);
   if (p)
     destroy_endpoint(p);
   return 0;

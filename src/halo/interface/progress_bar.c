@@ -1300,49 +1300,23 @@ void FUN_000e1a10(void)
 #endif
 
 
-/* FUN_000e1d00 (0xe1d00) — XBE naked draft (batch 141). */
-#if defined(__clang__)
-static float *__stdcall (*const be1d00_c1ff03f)(float *out, float *in, float *matrix) = mat4x4_transform_vec4;
-
-__attribute__((naked, noinline))
-void FUN_000e1d00(void)
+/* FUN_000e1d00 (0xe1d00) — readable C lift: project vec through matrix. */
+void FUN_000e1d00(float x, float y, float z, float *out_x, float *out_y)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "pushl $0x46c2d8\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl $0x3f800000, -0x4(%%ebp)\n\t"
-      "call *%[c1ff03f]\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs -0x14(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps (%%edx)\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "fstps (%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ff03f] "m"(be1d00_c1ff03f)
-      : "memory");
+  float in[4];
+  float out[4];
+  float w;
+
+  in[0] = x;
+  in[1] = y;
+  in[2] = z;
+  in[3] = *(float *)0x2533c8; /* 1.0f */
+  mat4x4_transform_vec4(out, in, (float *)0x46c2d8);
+  w = *(float *)0x2533c8 / out[3];
+  *out_x = out[0] * w;
+  *out_y = out[1] * w;
 }
-#else
-#error "FUN_000e1d00: clang naked draft required"
-#endif
+
 
 
 /* FUN_000e1f00 (0xe1f00) — readable C lift. */
@@ -1741,10 +1715,10 @@ void SetRenderStateSmart(int state, int value)
 /* SetTextureStageStateSmart (0xe2470) — XBE naked draft (batch 149). */
 #if defined(__clang__)
 static void (*const be2470_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = D3DDevice_SetTextureStageState;
-static void (*const be2470_c1e9ae0)(void) = D3DDevice_SetTextureState_TexCoordIndex;
+static void (__stdcall *const be2470_c1e9ae0)(uint32_t, uint32_t) = D3DDevice_SetTextureState_TexCoordIndex;
 static void __stdcall (*const be2470_c1e9c20)(uint32_t stage, uint32_t color) = D3DDevice_SetTextureState_BorderColor;
-static void (*const be2470_c1e9c60)(void) = D3DDevice_SetTextureState_ColorKeyColor;
-static void (*const be2470_c1e9bc0)(void) = D3DDevice_SetTextureState_BumpEnv;
+static void (__stdcall *const be2470_c1e9c60)(uint32_t, uint32_t) = D3DDevice_SetTextureState_ColorKeyColor;
+static void (__stdcall *const be2470_c1e9bc0)(uint32_t, uint32_t, uint32_t) = D3DDevice_SetTextureState_BumpEnv;
 
 __attribute__((naked, noinline))
 void SetTextureStageStateSmart(int stage, int state, int value)
