@@ -547,7 +547,7 @@ static unsigned int (*const b81480_c1d9d28)(int *timer) = crt_time;
 static void (*const b81480_c1d9cf9)(void) = FUN_001d9cf9;
 static int (*const b81480_c1d9d06)(void) = rand;
 static void (*const b81480_ftol)(void) = FUN_001d9068;
-static void (*const b81480_c7ff40)(void) = FUN_0007ff40;
+static void (*const b81480_c7ff40)(void) = (void (*)(void))(void *)FUN_0007ff40;
 
 __attribute__((naked, noinline))
 void FUN_00081480(void)
