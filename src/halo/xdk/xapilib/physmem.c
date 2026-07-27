@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* kb object stubs -> xdk/xapilib/physmem.c */
 
 #include "../xdk_stubs_protos.h"
@@ -328,7 +329,7 @@ static int (*const b1d2f22_c1d3410)(const char *path, int access) = CreateDirect
 static int (*const b1d2f22_c1d2240)(void) = xapi_GetLastError;
 static void (*const b1d2f22_c1d2ec6)(void) = FUN_001d2ec6;
 static void (*const b1d2f22_c1dd6f5)(void) = FUN_001dd6f5;
-static size_t (*const b1d2f22_c1db11e)(const wchar_t *str) = _wcslen;
+static size_t (*const b1d2f22_c1db11e)(const wchar_t *str) = (void *)_wcslen;
 static int __stdcall (*const b1d2f22_c1d14b6)(int handle, void *buffer, uint32_t size, uint32_t *bytes_written, void *overlapped) = (void *)WriteFile;
 static int __stdcall (*const b1d2f22_c1cf900)(int handle) = (void *)CloseHandle;
 static char * __stdcall (*const b1d2f22_c1d789a)(char *dst, const char *src, int count) = (void *)FUN_001d789a;
@@ -2626,41 +2627,17 @@ void XapiFormatObjectAttributes(void)
 #endif
 
 
-/* FUN_001d4436 (0x1d4436) — XBE naked draft (batch 328). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001d4436(void)
+/* FUN_001d4436 (0x1d4436) — readable C lift: ms → relative LARGE_INTEGER. */
+long long *__stdcall FUN_001d4436(long long *out, unsigned int ms)
 {
-  __asm__ volatile(
-      "movl 0x8(%%esp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_001d4436_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_001d4436_2\n\t"
-      ".LFUN_001d4436_1:\n\t"
-      "movl $0x2710, %%ecx\n\t"
-      "mull %%ecx\n\t"
-      "movl 0x4(%%esp), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "negl %%eax\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "adcl $0, %%edx\n\t"
-      "negl %%edx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      ".LFUN_001d4436_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned long long prod;
+  if (ms == 0xffffffffu) {
+    return 0;
+  }
+  prod = (unsigned long long)ms * 10000ull;
+  *out = -(long long)prod;
+  return out;
 }
-#else
-#error "FUN_001d4436: clang naked draft required"
-#endif
-
 
 /* FUN_001d4464 (0x1d4464) — XBE naked draft (batch 388). */
 #if defined(__clang__)
@@ -3788,33 +3765,13 @@ void FUN_001d4cd9(void)
 #endif
 
 
-/* FUN_001d4dd3 (0x1d4dd3) — XBE naked draft (batch 349). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001d4dd3(void)
+/* FUN_001d4dd3 (0x1d4dd3) — readable C lift: Rtl heap entry → base. */
+void *__stdcall FUN_001d4dd3(unsigned char *entry)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "testb $8, 0x5(%%eax)\n\t"
-      "je .LFUN_001d4dd3_1\n\t"
-      "addl $-0x18, %%eax\n\t"
-      "jmp .LFUN_001d4dd3_2\n\t"
-      ".LFUN_001d4dd3_1:\n\t"
-      "movzwl (%%eax), %%ecx\n\t"
-      "shll $4, %%ecx\n\t"
-      "leal -0x10(%%ecx,%%eax,1), %%eax\n\t"
-      ".LFUN_001d4dd3_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (entry[5] & 8)
+    return entry - 0x18;
+  return entry + (((unsigned int)*(unsigned short *)entry) << 4) - 0x10;
 }
-#else
-#error "FUN_001d4dd3: clang naked draft required"
-#endif
-
 
 /* FUN_001d4e37 (0x1d4e37) — XBE naked draft (batch 316). */
 #if defined(__clang__)

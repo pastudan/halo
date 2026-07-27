@@ -2,20 +2,25 @@
 
 /* --- LIBCMT:wcslen.obj batch drafts (2026-07-26) --- */
 
-/* 0x1db11e */
+/* _wcslen (0x1db11e) — readable C lift. */
 size_t _wcslen(const wchar_t *str)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  const wchar_t *p = str;
+  while (*p != 0)
+    p++;
+  return (size_t)(p - str);
 }
 
-/* 0x1db134 */
+/* _wcschr (0x1db134) — readable C lift. */
 wchar_t *_wcschr(const wchar_t *s, wchar_t c)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  for (;;) {
+    if (*s == c)
+      return (wchar_t *)s;
+    if (*s == 0)
+      return 0;
+    s++;
+  }
 }
 
 /* 0x1db156 */

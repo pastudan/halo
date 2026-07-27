@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* kb object stubs -> xdk/xapilib/lasterr.c */
 
 /* --- XAPILIB:lasterr.obj batch drafts (2026-07-26) --- */
@@ -151,7 +152,7 @@ void FUN_001d22ad(void)
 
 /* FUN_001d2367 (0x1d2367) — XBE naked draft (batch 316). */
 #if defined(__clang__)
-static void (*const b1d2367_c1d4436)(void) = FUN_001d4436;
+static void (*const b1d2367_c1d4436)(void) = (void *)FUN_001d4436;
 static void __stdcall (*const b1d2367_c1d2268)(unsigned int error) = (void *)SetLastError;
 static void __stdcall (*const b1d2367_c1d2296)(int status) = (void *)XapiSetLastNTError;
 
@@ -546,7 +547,7 @@ int XSetNicknameW(void *param_1, int param_2)
 
 /* FUN_001d292e (0x1d292e) — XBE naked draft (batch 327). */
 #if defined(__clang__)
-static size_t (*const b1d292e_c1db11e)(const wchar_t *str) = _wcslen;
+static size_t (*const b1d292e_c1db11e)(const wchar_t *str) = (void *)_wcslen;
 static int (*const b1d292e_c1dc2c3)(const wchar_t *s1, const wchar_t *s2) = __wcsicmp;
 static void (*const b1d292e_c1db180)(void) = _wcscpy;
 
@@ -677,38 +678,20 @@ int FUN_001d29eb(int param_1, void *param_2, int param_3)
   (void)ebp;
 }
 
-/* FUN_001d2ad3 (0x1d2ad3) — XBE naked draft (batch 362). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001d2ad3(void)
+/* FUN_001d2ad3 (0x1d2ad3) — readable C lift: nibble → ASCII hex. */
+int __stdcall FUN_001d2ad3(int nibble)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "cmpl $9, %%eax\n\t"
-      "jg .LFUN_001d2ad3_1\n\t"
-      "addl $0x30, %%eax\n\t"
-      "jmp .LFUN_001d2ad3_2\n\t"
-      ".LFUN_001d2ad3_1:\n\t"
-      "addl $0x37, %%eax\n\t"
-      ".LFUN_001d2ad3_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (nibble <= 9)
+    return nibble + 0x30;
+  return nibble + 0x37;
 }
-#else
-#error "FUN_001d2ad3: clang naked draft required"
-#endif
-
 
 /* FUN_001d2ae7 (0x1d2ae7) — XBE naked draft (batch 320). */
 #if defined(__clang__)
 static void (*const b1d2ae7_c1dd620)(void) = __allmul;
 static void (*const b1d2ae7_c1dd680)(void) = __aullrem;
 static void (*const b1d2ae7_c1dd660)(void) = __aullshr;
-static void (*const b1d2ae7_c1d2ad3)(void) = FUN_001d2ad3;
+static void (*const b1d2ae7_c1d2ad3)(void) = (void *)FUN_001d2ad3;
 
 __attribute__((naked, noinline))
 void FUN_001d2ae7(void)
@@ -839,11 +822,11 @@ void FUN_001d2b79(void)
 
 /* FUN_001d2bbd (0x1d2bbd) — XBE naked draft (batch 345). */
 #if defined(__clang__)
-static size_t (*const b1d2bbd_c1db11e)(const wchar_t *str) = _wcslen;
+static size_t (*const b1d2bbd_c1db11e)(const wchar_t *str) = (void *)_wcslen;
 static int __stdcall (*const b1d2bbd_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = (void *)ReadFile;
-static wchar_t * (*const b1d2bbd_c1dc154)(const wchar_t *haystack, const wchar_t *needle) = _wcsstr;
+static wchar_t * (*const b1d2bbd_c1dc154)(const wchar_t *haystack, const wchar_t *needle) = (void *)_wcsstr;
 static void * (*const b1d2bbd_c1da290)(void *dest, const void *src, size_t size) = memmove;
-static wchar_t * (*const b1d2bbd_c1dc061)(wchar_t *dest, const wchar_t *src, size_t count) = _wcsncpy;
+static wchar_t * (*const b1d2bbd_c1dc061)(wchar_t *dest, const wchar_t *src, size_t count) = (void *)_wcsncpy;
 static unsigned int __stdcall (*const b1d2bbd_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = (void *)SetFilePointer;
 
 __attribute__((naked, noinline))

@@ -13,7 +13,7 @@ void __global_unwind2(void);
 void __local_unwind2(void);
 void FUN_001dbdca(void);
 void __seh_longjmp_unwind(void);
-void _memchr(void);
+void *_memchr(const void *s, int c, size_t n);
 int _wcscmp(const wchar_t *s1, const wchar_t *s2);
 int FUN_001dbfa7(const wchar_t *s1, const wchar_t *s2);
 size_t _wcscspn(const wchar_t *s, const wchar_t *reject);
@@ -26,7 +26,7 @@ size_t _wcsspn(const wchar_t *s, const wchar_t *accept);
 wchar_t *_wcsstr(const wchar_t *haystack, const wchar_t *needle);
 wchar_t *_wcstok(wchar_t *s, const wchar_t *delim);
 size_t FUN_001dc257(wchar_t *dest, const wchar_t *src, size_t count);
-wchar_t *FUN_001dc27c(wchar_t *s, size_t count);
+unsigned short FUN_001dc27c(unsigned short c);
 int __wcsicmp(const wchar_t *s1, const wchar_t *s2);
 int __wcsnicmp(const wchar_t *s1, const wchar_t *s2, size_t count);
 int FUN_001dc3e9(int c, int mask);
@@ -297,101 +297,10 @@ void __seh_longjmp_unwind(void)
 
 
 __attribute__((naked, noinline))
-void _memchr(void)
+void *_memchr(const void *s, int c, size_t n)
 {
-  __asm__ volatile(
-      "movl 0xc(%%esp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .L_memchr_6\n\t"
-      "movl 0x8(%%esp), %%edx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movb 0xc(%%esp), %%bl\n\t"
-      "testl $3, %%edx\n\t"
-      "je .L_memchr_2\n\t"
-      ".L_memchr_1:\n\t"
-      "movb (%%edx), %%cl\n\t"
-      "incl %%edx\n\t"
-      "xorb %%bl, %%cl\n\t"
-      "je .L_memchr_10\n\t"
-      "decl %%eax\n\t"
-      "je .L_memchr_6\n\t"
-      "testl $3, %%edx\n\t"
-      "jne .L_memchr_1\n\t"
-      ".L_memchr_2:\n\t"
-      "subl $4, %%eax\n\t"
-      "jb .L_memchr_4\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "shll $8, %%ebx\n\t"
-      "addl %%edi, %%ebx\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "shll $0x10, %%ebx\n\t"
-      "addl %%edi, %%ebx\n\t"
-      "jmp .L_memchr_8\n\t"
-      ".L_memchr_3:\n\t"
-      "popl %%edi\n\t"
-      ".L_memchr_4:\n\t"
-      "addl $4, %%eax\n\t"
-      "je .L_memchr_6\n\t"
-      ".L_memchr_5:\n\t"
-      "movb (%%edx), %%cl\n\t"
-      "incl %%edx\n\t"
-      "xorb %%bl, %%cl\n\t"
-      "je .L_memchr_10\n\t"
-      "decl %%eax\n\t"
-      "jne .L_memchr_5\n\t"
-      ".L_memchr_6:\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".L_memchr_7:\n\t"
-      "subl $4, %%eax\n\t"
-      "jb .L_memchr_3\n\t"
-      ".L_memchr_8:\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "xorl %%ebx, %%ecx\n\t"
-      "movl $0x7efefeff, %%edi\n\t"
-      "addl %%ecx, %%edi\n\t"
-      "xorl $0xffffffff, %%ecx\n\t"
-      "xorl %%edi, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      "andl $0x81010100, %%ecx\n\t"
-      "je .L_memchr_7\n\t"
-      "movl -0x4(%%edx), %%ecx\n\t"
-      "xorb %%bl, %%cl\n\t"
-      "je .L_memchr_13\n\t"
-      "xorb %%bl, %%ch\n\t"
-      "je .L_memchr_12\n\t"
-      "shrl $0x10, %%ecx\n\t"
-      "xorb %%bl, %%cl\n\t"
-      "je .L_memchr_11\n\t"
-      "xorb %%bl, %%ch\n\t"
-      "je .L_memchr_9\n\t"
-      "jmp .L_memchr_7\n\t"
-      ".L_memchr_9:\n\t"
-      "popl %%edi\n\t"
-      ".L_memchr_10:\n\t"
-      "leal -0x1(%%edx), %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".L_memchr_11:\n\t"
-      "leal -0x2(%%edx), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".L_memchr_12:\n\t"
-      "leal -0x3(%%edx), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".L_memchr_13:\n\t"
-      "leal -0x4(%%edx), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  (void)s; (void)c; (void)n;
+  return 0;
 }
 #else
 #error "_memchr: clang naked draft required"
@@ -446,12 +355,10 @@ int _wcscmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attri
 #endif
 
 
-/* 0x1dbfa7 */
+/* FUN_001dbfa7 (0x1dbfa7) — readable C lift: jmp thunk to _wcscmp. */
 int FUN_001dbfa7(const wchar_t *s1, const wchar_t *s2)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  return _wcscmp(s1, s2);
 }
 
 /* _wcscspn (0x1dbfac) — XBE naked draft (batch 345). */
@@ -506,12 +413,27 @@ size_t _wcscspn(const wchar_t *s __attribute__((unused)), const wchar_t *reject 
 #endif
 
 
-/* 0x1dbfef */
+/* _wcsncat (0x1dbfef) — readable C lift. */
 wchar_t *_wcsncat(wchar_t *dest, const wchar_t *src, size_t count)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  wchar_t *d = dest;
+  while (*d != 0)
+    d++;
+  if (count == 0) {
+    *d = 0;
+    return dest;
+  }
+  for (;;) {
+    wchar_t c = *src++;
+    count--;
+    *d++ = c;
+    if (c == 0)
+      return dest;
+    if (count == 0) {
+      *d = 0;
+      return dest;
+    }
+  }
 }
 
 /* _wcsncmp (0x1dc02c) — XBE naked draft (batch 353). */
@@ -560,90 +482,83 @@ int _wcsncmp(const wchar_t *s1 __attribute__((unused)), const wchar_t *s2 __attr
 #endif
 
 
-/* 0x1dc061 */
+/* _wcsncpy (0x1dc061) — readable C lift. */
 wchar_t *_wcsncpy(wchar_t *dest, const wchar_t *src, size_t count)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  wchar_t *d = dest;
+  if (count != 0) {
+    do {
+      wchar_t c = *src++;
+      *d++ = c;
+      if (c == 0) {
+        while (--count != 0)
+          *d++ = 0;
+        break;
+      }
+    } while (--count != 0);
+  }
+  return dest;
 }
 
-/* 0x1dc09e */
+/* _wcspbrk (0x1dc09e) — readable C lift. */
 wchar_t *_wcspbrk(const wchar_t *s, const wchar_t *accept)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  for (; *s != 0; s++) {
+    const wchar_t *a;
+    for (a = accept; *a != 0; a++) {
+      if (*a == *s)
+        return (wchar_t *)s;
+    }
+  }
+  return 0;
 }
 
-/* 0x1dc0de */
+/* _wcsrchr (0x1dc0de) — readable C lift. */
 wchar_t *_wcsrchr(const wchar_t *s, wchar_t c)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  const wchar_t *start = s;
+  while (*s != 0)
+    s++;
+  for (;;) {
+    if (*s == c)
+      return (wchar_t *)s;
+    if (s == start)
+      return 0;
+    s--;
+  }
 }
 
-/* _wcsspn (0x1dc10e) — XBE naked draft (batch 341). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-size_t _wcsspn(const wchar_t *s __attribute__((unused)), const wchar_t *accept __attribute__((unused)))
+/* _wcsspn (0x1dc10e) — readable C lift. */
+size_t _wcsspn(const wchar_t *s, const wchar_t *accept)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .L_wcsspn_4\n\t"
-      "movl 0x14(%%esp), %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw (%%ebx), %%di\n\t"
-      ".L_wcsspn_1:\n\t"
-      "cmpw %%cx, %%di\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "je .L_wcsspn_3\n\t"
-      "movl %%edi, %%edx\n\t"
-      ".L_wcsspn_2:\n\t"
-      "testw %%dx, %%dx\n\t"
-      "je .L_wcsspn_4\n\t"
-      "incl %%esi\n\t"
-      "incl %%esi\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "cmpw %%cx, %%dx\n\t"
-      "jne .L_wcsspn_2\n\t"
-      ".L_wcsspn_3:\n\t"
-      "incl %%eax\n\t"
-      "incl %%eax\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jne .L_wcsspn_1\n\t"
-      ".L_wcsspn_4:\n\t"
-      "subl 0x10(%%esp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "sarl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  const wchar_t *p = s;
+  while (*p != 0) {
+    const wchar_t *a = accept;
+    while (*a != 0 && *a != *p)
+      a++;
+    if (*a == 0)
+      break;
+    p++;
+  }
+  return (size_t)(p - s);
 }
-#else
-#error "_wcsspn: clang naked draft required"
-#endif
 
-
-/* 0x1dc154 */
+/* _wcsstr (0x1dc154) — readable C lift. */
 wchar_t *_wcsstr(const wchar_t *haystack, const wchar_t *needle)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return NULL;
+  if (*needle == 0)
+    return (wchar_t *)haystack;
+  for (; *haystack != 0; haystack++) {
+    const wchar_t *h = haystack;
+    const wchar_t *n = needle;
+    while (*n != 0 && *h == *n) {
+      h++;
+      n++;
+    }
+    if (*n == 0)
+      return (wchar_t *)haystack;
+  }
+  return 0;
 }
 
 /* 0x1dc1b2 */
@@ -674,53 +589,27 @@ wchar_t *_wcstok(wchar_t *s, const wchar_t *delim)
   (void)edi;
 }
 
-/* FUN_001dc257 (0x1dc257) — XBE naked draft (batch 384). */
-#if defined(__clang__)
-static wchar_t * (*const b1dc257_c1dc061)(wchar_t *dest, const wchar_t *src, size_t count) = (void *)_wcsncpy;
-static size_t (*const b1dc257_c1db11e)(const wchar_t *str) = (void *)_wcslen;
-
-__attribute__((naked, noinline))
-size_t FUN_001dc257(wchar_t *dest __attribute__((unused)), const wchar_t *src __attribute__((unused)), size_t count __attribute__((unused)))
+/* FUN_001dc257 (0x1dc257) — readable C lift: wcsncpy then wcslen(src). */
+size_t FUN_001dc257(wchar_t *dest, const wchar_t *src, size_t count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "cmpl $0, 0x8(%%ebp)\n\t"
-      "je .LFUN_001dc257_1\n\t"
-      "pushl 0x10(%%ebp)\n\t"
-      "pushl 0xc(%%ebp)\n\t"
-      "pushl 0x8(%%ebp)\n\t"
-      "call *%[c1dc061]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001dc257_1:\n\t"
-      "pushl 0xc(%%ebp)\n\t"
-      "call *%[c1db11e]\n\t"
-      "popl %%ecx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1dc061] "m"(b1dc257_c1dc061), [c1db11e] "m"(b1dc257_c1db11e)
-      : "memory");
+  if (dest)
+    _wcsncpy(dest, src, count);
+  return _wcslen(src);
 }
-#else
-#error "FUN_001dc257: clang naked draft required"
-#endif
 
-
-/* 0x1dc27c */
-wchar_t *FUN_001dc27c(wchar_t *s, size_t count)
+/* FUN_001dc27c (0x1dc27c) — readable C lift: towupper-ish. */
+unsigned short FUN_001dc27c(unsigned short c)
 {
-  int esi = 0;
-
-  /* cmp (int16_t)esi, (int16_t)eax -> je 0x1dc2c1 */
-  /* relift: cmp dword ptr [0x4fc25c], 0 -> jne 0x1dc2ad */
-  /* cmp (int16_t)esi, 0x61 -> jb 0x1dc2a8 */
-  /* cmp (int16_t)esi, 0x7a -> ja 0x1dc2a8 */
-  /* cmp (int16_t)esi, 0x100 -> jae 0x1dc2be */
-  FUN_001dc3e9(0, 0);
-  return NULL;
-
-  (void)esi;
+  if (c == 0xffff)
+    return c;
+  if (*(int *)0x4fc25c == 0) {
+    if (c >= 0x61 && c <= 0x7a)
+      return (unsigned short)(c - 0x20);
+    return c;
+  }
+  if (c < 0x100)
+    ((void (*)(unsigned short, int))FUN_001dc3e9)(c, 2);
+  return c;
 }
 
 /* __wcsicmp (0x1dc2c3) — XBE naked draft (batch 339). */

@@ -187,7 +187,7 @@ void FUN_001e643e(void);
 void FUN_001e6520(void);
 void RtlUnwind(void *a, void *b, void *c, void *d);
 int __strnicmp(const char *a, const char *b, size_t n);
-void FUN_001e65eb(void);
+int FUN_001e65eb(int a0, void *tmp);
 
 void __trandisp1(void)
 {
@@ -2375,11 +2375,25 @@ void __callnewh(void)
   (void)0;
 }
 
-/* 0x1e3c9c */
-void __ZeroTail(void)
+/* __ZeroTail (0x1e3c9c) — readable C lift. */
+int __ZeroTail(unsigned int *man, int bit)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  int idx;
+  int rem;
+  unsigned int mask;
+  unsigned int tmp;
+
+  idx = bit / 32;
+  rem = bit % 32;
+  tmp = 0xffffffffu;
+  mask = ~(tmp << (31 - rem));
+  if (man[idx] & mask)
+    return 0;
+  for (idx = idx + 1; idx < 3; idx++) {
+    if (man[idx] != 0)
+      return 0;
+  }
+  return 1;
 }
 
 /* 0x1e3cce */
@@ -2416,11 +2430,13 @@ void __RoundMan(void)
   (void)edx;
 }
 
-/* 0x1e3d8d */
-void __CopyMan(void)
+/* __CopyMan (0x1e3d8d) — readable C lift: copy 3 dwords src→dst. */
+void __CopyMan(unsigned int *dst, unsigned int *src)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  int i;
+  for (i = 0; i < 3; i++) {
+    *dst++ = *src++;
+  }
 }
 
 /* 0x1e3da8 */
@@ -2430,11 +2446,15 @@ void FUN_001e3da8(void)
   (void)0;
 }
 
-/* 0x1e3db4 */
-void __IsZeroMan(void)
+/* __IsZeroMan (0x1e3db4) — readable C lift. */
+int __IsZeroMan(unsigned int *man)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  int i;
+  for (i = 0; i < 3; i++) {
+    if (man[i] != 0)
+      return 0;
+  }
+  return 1;
 }
 
 /* 0x1e3dcd */
@@ -2690,7 +2710,7 @@ void FUN_001e4601(void)
   /* cmp ecx, 0xc000008d -> jne 0x1e4717 */
   /* cmp ecx, 0xc000008f -> jne 0x1e4728 */
   /* cmp ecx, 0xc0000092 -> jne 0x1e4737 */
-  UnhandledExceptionFilter();
+  UnhandledExceptionFilter(0);
   /* cmp eax, -4 -> jne 0x1e477f */
   /* mem[0x004fc374] = 1 */
 
@@ -3584,8 +3604,9 @@ int __strnicmp(const char *a, const char *b, size_t n)
 }
 
 /* 0x1e65eb */
-void FUN_001e65eb(void)
+int FUN_001e65eb(int a0, void *tmp)
 {
+  (void)a0; (void)tmp;
   int eax = 0;
   int ebx = 0;
   int ecx = 0;

@@ -955,7 +955,7 @@
         {
           "addr": "0x1db11e",
           "decl": "size_t _wcslen(const wchar_t *str);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1db134",
@@ -2086,7 +2086,7 @@
         },
         {
           "addr": "0x1e3c9c",
-          "decl": "void __ZeroTail(void);",
+          "decl": "int __ZeroTail(unsigned int *man, int bit);",
           "ported": false
         },
         {
@@ -2101,7 +2101,7 @@
         },
         {
           "addr": "0x1e3d8d",
-          "decl": "void __CopyMan(void);",
+          "decl": "void __CopyMan(unsigned int *dst, unsigned int *src);",
           "ported": false
         },
         {
@@ -2111,7 +2111,7 @@
         },
         {
           "addr": "0x1e3db4",
-          "decl": "void __IsZeroMan(void);",
+          "decl": "int __IsZeroMan(unsigned int *man);",
           "ported": false
         },
         {
@@ -32188,7 +32188,7 @@
         },
         {
           "addr": "0x1ddcc6",
-          "decl": "void FUN_001ddcc6(void);",
+          "decl": "int FUN_001ddcc6(double x);",
           "ported": false
         },
         {
@@ -32218,7 +32218,7 @@
         },
         {
           "addr": "0x1dde12",
-          "decl": "void _malloc(void);",
+          "decl": "void *_malloc(size_t size);",
           "ported": false
         },
         {
@@ -33168,7 +33168,7 @@
         },
         {
           "addr": "0x1d2ad3",
-          "decl": "void FUN_001d2ad3(void);",
+          "decl": "int __stdcall FUN_001d2ad3(int nibble);",
           "ported": false
         },
         {
@@ -33376,7 +33376,7 @@
         },
         {
           "addr": "0x1d4436",
-          "decl": "void FUN_001d4436(void);",
+          "decl": "long long *__stdcall FUN_001d4436(long long *out, unsigned int ms);",
           "ported": false
         },
         {
@@ -33451,7 +33451,7 @@
         },
         {
           "addr": "0x1d4dd3",
-          "decl": "void FUN_001d4dd3(void);",
+          "decl": "void *__stdcall FUN_001d4dd3(void *entry);",
           "ported": false
         },
         {
@@ -33684,8 +33684,8 @@
         },
         {
           "addr": "0x1d8b64",
-          "decl": "void XGetSectionSize(void);",
-          "ported": false
+          "decl": "unsigned int __stdcall XGetSectionSize(void *section);",
+          "ported": true
         },
         {
           "addr": "0x1d8b76",

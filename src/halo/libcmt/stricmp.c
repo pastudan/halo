@@ -2,61 +2,26 @@
 
 /* --- LIBCMT:stricmp.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001dd1d1 (0x1dd1d1) — XBE naked draft (batch 375). */
-#if defined(__clang__)
-static void (*const b1dd1d1_c1dd00c)(void) = (void *)FUN_001dd00c;
-
-__attribute__((naked, noinline))
-long FUN_001dd1d1(const wchar_t *s __attribute__((unused)), wchar_t **endptr __attribute__((unused)), int base __attribute__((unused)))
+/* FUN_001dd1d1 (0x1dd1d1) — readable C lift: wcstol wrapper (signed). */
+long FUN_001dd1d1(const wchar_t *s, wchar_t **endptr, int base)
 {
-  __asm__ volatile(
-      "pushl $0\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "call *%[c1dd00c]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c1dd00c] "m"(b1dd1d1_c1dd00c)
-      : "memory");
+  return ((long (*)(const wchar_t *, wchar_t **, int, int))FUN_001dd00c)(s, endptr, base, 0);
 }
-#else
-#error "FUN_001dd1d1: clang naked draft required"
-#endif
 
-
-/* FUN_001dd1e8 (0x1dd1e8) — XBE naked draft (batch 375). */
-#if defined(__clang__)
-static void (*const b1dd1e8_c1dd00c)(void) = (void *)FUN_001dd00c;
-
-__attribute__((naked, noinline))
-unsigned long FUN_001dd1e8(const wchar_t *s __attribute__((unused)), wchar_t **endptr __attribute__((unused)), int base __attribute__((unused)))
+/* FUN_001dd1e8 (0x1dd1e8) — readable C lift: wcstoul wrapper (unsigned). */
+unsigned long FUN_001dd1e8(const wchar_t *s, wchar_t **endptr, int base)
 {
-  __asm__ volatile(
-      "pushl $1\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "call *%[c1dd00c]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [c1dd00c] "m"(b1dd1e8_c1dd00c)
-      : "memory");
+  return ((unsigned long (*)(const wchar_t *, wchar_t **, int, int))FUN_001dd00c)(
+      s, endptr, base, 1);
 }
-#else
-#error "FUN_001dd1e8: clang naked draft required"
-#endif
-
 
 /* FUN_001dd1ff (0x1dd1ff) — XBE naked draft (batch 326). */
 #if defined(__clang__)
 static void (*const b1dd1ff_c1dd5c8)(void) = FUN_001dd5c8;
 static int (*const b1dd1ff_c1dc3e9)(int c, int mask) = FUN_001dc3e9;
-static size_t (*const b1dd1ff_c1db11e)(const wchar_t *str) = _wcslen;
+static size_t (*const b1dd1ff_c1db11e)(const wchar_t *str) = (void *)_wcslen;
 static void (*const b1dd1ff_chkstk)(void) = FUN_001d90e0;
-static void (*const b1dd1ff_c1dde12)(void) = _malloc;
+static void (*const b1dd1ff_c1dde12)(void) = (void *)_malloc;
 static int * (*const b1dd1ff_c1db777)(void) = FUN_001db777;
 static void (*const b1dd1ff_c1e2879)(void) = FUN_001e2879;
 static void (*const b1dd1ff_c1e1e20)(void) = FUN_001e1e20;
@@ -478,7 +443,7 @@ wchar_t *__wasctime(const void *timeptr)
 /* FUN_001dd576 (0x1dd576) — XBE naked draft (batch 340). */
 #if defined(__clang__)
 static void (*const b1dd576_c1dff91)(void) = FUN_001dff91;
-static void (*const b1dd576_c1dde12)(void) = _malloc;
+static void (*const b1dd576_c1dde12)(void) = (void *)_malloc;
 
 __attribute__((naked, noinline))
 int FUN_001dd576(int param __attribute__((unused)))
@@ -1507,29 +1472,12 @@ void FUN_001dda3d(void)
 #endif
 
 
-/* FUN_001ddcc6 (0x1ddcc6) — XBE naked draft (batch 362). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001ddcc6(void)
+/* FUN_001ddcc6 (0x1ddcc6) — readable C lift: non-NaN/Inf double check. */
+int FUN_001ddcc6(double x)
 {
-  __asm__ volatile(
-      "movw 0xa(%%esp), %%ax\n\t"
-      "andw $0x7ff0, %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpw $0x7ff0, %%ax\n\t"
-      "setne %%cl\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned short hi = *(unsigned short *)((char *)&x + 6);
+  return (hi & 0x7ff0) != 0x7ff0;
 }
-#else
-#error "FUN_001ddcc6: clang naked draft required"
-#endif
-
 
 /* FUN_001ddd09 (0x1ddd09) — XBE naked draft (batch 313). */
 #if defined(__clang__)
@@ -1633,7 +1581,7 @@ static void (*const b1ddda3_c1dddbf)(void) = FUN_001dddbf;
 static void (*const b1ddda3_c1e3c81)(void) = __callnewh;
 static void (*const b1ddda3_c1dd5c8)(void) = FUN_001dd5c8;
 static void (*const b1ddda3_c1df055)(void) = FUN_001df055;
-static void (*const b1ddda3_c1dde73)(void) = FUN_001dde73;
+static void (*const b1ddda3_c1dde73)(void) = (void *)FUN_001dde73;
 static void (*const b1ddda3_c1d0b9c)(void) = FUN_001d0b9c;
 static void (*const b1ddda3_c1dd601)(void) = __SEH_epilog;
 
@@ -1807,34 +1755,17 @@ void __nh_malloc(void)
 #endif
 
 
-/* _malloc (0x1dde12) — XBE naked draft (batch 377). */
-#if defined(__clang__)
-static void (*const b1dde12_c1ddde6)(void) = (void *)__nh_malloc;
-
-__attribute__((naked, noinline))
-void _malloc(void)
+/* _malloc (0x1dde12) — readable C lift: nh_malloc(size, heap_flag). */
+void *_malloc(size_t size)
 {
-  __asm__ volatile(
-      "pushl 0x4fc36c\n\t"
-      "pushl 0x8(%%esp)\n\t"
-      "call *%[c1ddde6]\n\t"
-      "popl %%ecx\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c1ddde6] "m"(b1dde12_c1ddde6)
-      : "memory");
+  return ((void *(*)(size_t, int))__nh_malloc)(size, *(int *)0x4fc36c);
 }
-#else
-#error "_malloc: clang naked draft required"
-#endif
-
 
 /* FUN_001dde24 (0x1dde24) — XBE naked draft (batch 340). */
 #if defined(__clang__)
 static void (*const b1dde24_c1dd5c8)(void) = FUN_001dd5c8;
 static void (*const b1dde24_c1df055)(void) = FUN_001df055;
-static void (*const b1dde24_c1dde73)(void) = FUN_001dde73;
+static void (*const b1dde24_c1dde73)(void) = (void *)FUN_001dde73;
 static void (*const b1dde24_c1d0bb3)(void) = FUN_001d0bb3;
 static void (*const b1dde24_c1d0b9c)(void) = FUN_001d0b9c;
 static void (*const b1dde24_c1dd601)(void) = __SEH_epilog;
@@ -1878,26 +1809,11 @@ void FUN_001dde24(void)
 #endif
 
 
-/* FUN_001dde73 (0x1dde73) — XBE naked draft (batch 394). */
-#if defined(__clang__)
-static void (*const b1dde73_c1defb3)(void) = (void *)FUN_001defb3;
-
-__attribute__((naked, noinline))
+/* FUN_001dde73 (0x1dde73) — readable C lift. */
 void FUN_001dde73(void)
 {
-  __asm__ volatile(
-      "pushl $4\n\t"
-      "call *%[c1defb3]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c1defb3] "m"(b1dde73_c1defb3)
-      : "memory");
+  ((void (*)(int))FUN_001defb3)(4);
 }
-#else
-#error "FUN_001dde73: clang naked draft required"
-#endif
-
 
 /* __forcdecpt (0x1dde7c) — XBE naked draft (batch 345). */
 #if defined(__clang__)
@@ -2488,28 +2404,11 @@ void __cfltcvt(void)
 #endif
 
 
-/* FUN_001de27a (0x1de27a) — XBE naked draft (batch 368). */
-#if defined(__clang__)
-static void (*const b1de27a_c1db6b1)(void) = (void *)__controlfp;
-
-__attribute__((naked, noinline))
+/* FUN_001de27a (0x1de27a) — readable C lift: __controlfp(0x10000, 0x30000). */
 void FUN_001de27a(void)
 {
-  __asm__ volatile(
-      "pushl $0x30000\n\t"
-      "pushl $0x10000\n\t"
-      "call *%[c1db6b1]\n\t"
-      "popl %%ecx\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c1db6b1] "m"(b1de27a_c1db6b1)
-      : "memory");
+  ((void (*)(unsigned int, unsigned int))__controlfp)(0x10000u, 0x30000u);
 }
-#else
-#error "FUN_001de27a: clang naked draft required"
-#endif
-
 
 /* __flsbuf (0x1de28c) — XBE naked draft (batch 312). */
 #if defined(__clang__)

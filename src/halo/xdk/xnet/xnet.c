@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* kb object stubs -> xdk/xnet/xnet.c */
 
 /* --- XNET:xnet.obj batch drafts (2026-07-26) --- */
@@ -620,25 +621,11 @@ void FUN_001d8b10(void)
 #endif
 
 
-/* XGetSectionSize (0x1d8b64) — XBE naked draft (batch 394). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void XGetSectionSize(void)
+/* XGetSectionSize (0x1d8b64) — readable C lift. */
+unsigned int __stdcall XGetSectionSize(void *section)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return *(unsigned int *)((char *)section + 8);
 }
-#else
-#error "XGetSectionSize: clang naked draft required"
-#endif
-
 
 /* XNetGetEthernetLinkStatus (0x1d8b76) — XBE naked draft (batch 327). */
 #if defined(__clang__)
