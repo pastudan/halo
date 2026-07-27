@@ -2571,65 +2571,31 @@ void FUN_001bc280(void)
 #endif
 
 
-/* FUN_001bc620 (0x1bc620) — XBE naked draft (batch 262). */
-#if defined(__clang__)
-static void (*const b1bc620_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bc620_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_001bc620 (0x1bc620) — readable C lift. */
 void FUN_001bc620(void)
 {
-  __asm__ volatile(
-      "cmpw $-1, 0x4e9244\n\t"
-      "jne .LFUN_001bc620_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x285\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8d90\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc620_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".LFUN_001bc620_2:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_001bc620_3\n\t"
-      "cmpw $0x200, %%si\n\t"
-      "jl .LFUN_001bc620_4\n\t"
-      ".LFUN_001bc620_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x260\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8d48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc620_4:\n\t"
-      "movl 0x4e9250, %%eax\n\t"
-      "leal 0x1d(%%edi,%%eax,1), %%eax\n\t"
-      ".LFUN_001bc620_5:\n\t"
-      "cmpb $0, (%%eax)\n\t"
-      "jne .LFUN_001bc620_5\n\t"
-      "incl %%esi\n\t"
-      "addl $0x20, %%edi\n\t"
-      "cmpw $0x200, %%si\n\t"
-      "jl .LFUN_001bc620_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bc620_assert), [exitfn] "m"(b1bc620_exitfn)
-      : "memory");
+  extern char DAT_002b8c98[];
+  extern char DAT_002b8d90[];
+  extern char DAT_002b8d48[];
+  short i;
+  int off;
+  if (*(int16_t *)0x4e9244 == (int16_t)0xffff) {
+    display_assert(DAT_002b8d90, DAT_002b8c98, 0x285, true);
+    system_exit(-1);
+  }
+  off = 0;
+  for (i = 0; i < 0x200; i++) {
+    unsigned char *p;
+    if ((uint16_t)i >= 0x200u) {
+      display_assert(DAT_002b8d48, DAT_002b8c98, 0x260, true);
+      system_exit(-1);
+    }
+    p = *(unsigned char **)0x4e9250 + off + 0x1d;
+    while (*p)
+      ;
+    off += 0x20;
+  }
 }
-#else
-#error "FUN_001bc620: clang naked draft required"
-#endif
-
 
 /* cache_file_read_header_into_slot (0x1bd020) — XBE naked draft (batch 84). */
 #if defined(__clang__)
