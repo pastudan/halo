@@ -25588,8 +25588,9 @@
         },
         {
           "addr": "0x1ba7c0",
-          "decl": "void cache_copy_initialize_and_fill_with_garbage(void);",
-          "ported": false
+          "decl": "void cache_copy_initialize_and_fill_with_garbage(char *ctx@<esi>);",
+          "ported": true,
+          "name": "cache_copy_initialize_and_fill_with_garbage"
         },
         {
           "addr": "0x1ba8b0",
