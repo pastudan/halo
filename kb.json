@@ -38725,14 +38725,14 @@
         },
         {
           "addr": "0x15f540",
-          "decl": "void FUN_0015f540(int arg1, int arg2, uint32_t handle, int subcount2);",
-          "ported": false,
+          "decl": "void FUN_0015f540(void);",
+          "ported": true,
           "name": "FUN_0015f540"
         },
         {
           "addr": "0x15f5e0",
-          "decl": "void FUN_0015f5e0(void);",
-          "ported": false
+          "decl": "int FUN_0015f5e0(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x15f630",
@@ -39085,8 +39085,8 @@
         },
         {
           "addr": "0x168bc0",
-          "decl": "void FUN_00168bc0(void);",
-          "ported": false
+          "decl": "int FUN_00168bc0(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x168be0",
@@ -39135,8 +39135,8 @@
         },
         {
           "addr": "0x169650",
-          "decl": "void FUN_00169650(void);",
-          "ported": false
+          "decl": "int FUN_00169650(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x169670",
