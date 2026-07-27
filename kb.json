@@ -21853,7 +21853,7 @@
         },
         {
           "addr": "0x128c0",
-          "decl": "int action_avoid_setup(int * a0, int * a1);",
+          "decl": "void action_avoid_setup(void);",
           "ported": false
         },
         {
@@ -26664,8 +26664,8 @@
         },
         {
           "addr": "0x81910",
-          "decl": "void FUN_00081910(void * a0);",
-          "ported": true
+          "decl": "void FUN_00081910(void);",
+          "ported": false
         },
         {
           "addr": "0x81980",
