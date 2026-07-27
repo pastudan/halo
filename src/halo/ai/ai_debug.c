@@ -1128,94 +1128,34 @@ void FUN_00049280(int16_t count, float *points, float *point_a, void *color)
 
 
 
-/* FUN_00049300 (0x49300) — XBE naked draft (batch 138). */
-#if defined(__clang__)
-static void *(*const b49300_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b49300_c189450)(int flag, float *point_a, float *point_b, void *color, float scale) = FUN_00189450;
-
-__attribute__((naked, noinline))
-void FUN_00049300(void)
+/* FUN_00049300 (0x49300) — readable C lift.
+ * Oracle: scenario/surface block base in eax. */
+void FUN_00049300(void *block_base, int index, float height, void *color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x60\n\t"
-      "addl $0xb0, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x3c(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds 0x25abcc\n\t"
-      "movl 0x4(%%eax), %%esi\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "leal 0x48(%%edi), %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "addl $0x54, %%edi\n\t"
-      ".LFUN_00049300_1:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%esi), %%ebx\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "cmpl %%edx, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "sete %%bl\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "call *%[c189450]\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movzbl %%bl, %%eax\n\t"
-      "movl 0x8(%%esi,%%eax,4), %%esi\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "addl $0x38, %%esp\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jne .LFUN_00049300_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b49300_elem), [c189450] "m"(b49300_c189450)
-      : "memory");
-}
-#else
-#error "FUN_00049300: clang naked draft required"
-#endif
+  unsigned char *surface;
+  unsigned char *edge_hdr;
+  unsigned char *edge;
+  float *pt_a;
+  float *pt_b;
+  int link;
+  int limit;
+  char use_b;
 
+  surface = (unsigned char *)tag_block_get_element((char *)block_base + 0xb0, 0, 0x60);
+  edge_hdr = (unsigned char *)tag_block_get_element((char *)surface + 0x3c, index, 0xc);
+  height = height + *(float *)0x25abcc;
+  limit = *(int *)(edge_hdr + 4);
+  link = limit;
+  do {
+    edge = (unsigned char *)tag_block_get_element((char *)surface + 0x48, link, 0x18);
+    use_b = (*(int *)(edge + 0x14) == index);
+    pt_a = (float *)tag_block_get_element((char *)surface + 0x54, *(int *)edge, 0x10);
+    pt_b = (float *)tag_block_get_element(
+        (char *)surface + 0x54, *(int *)(edge + 4), 0x10);
+    FUN_00189450(1, pt_a, pt_b, color, height);
+    link = *(int *)(edge + 8 + (int)use_b * 4);
+  } while (link != limit);
+}
 
 /* FUN_000493B0 (0x493b0) — readable C lift from XBE leaf. */
 void FUN_000493B0(float *out, float value, int field_4, int field_8)
@@ -2520,7 +2460,7 @@ float *FUN_0004b2b0(void)
 static void * (*const b4b320_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
 static void (*const b4b320_c189450)(int flag, float *point_a, float *point_b, void *color, float scale) = FUN_00189450;
 static void (*const b4b320_c1893e0)(int flag, float *point, float *dir, float scale, void *color) = FUN_001893e0;
-static void (*const b4b320_c49300)(void) = FUN_00049300;
+static void (*const b4b320_c49300)(void) = (void *)FUN_00049300;
 static char * (*const b4b320_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static void (*const b4b320_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
 static void (*const b4b320_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
@@ -3937,7 +3877,7 @@ static void (*const b4c560_c189cb0)(char flag, void *position, void *string, int
 static void (*const b4c560_c189450)(int flag, float *point_a, float *point_b, void *color, float scale) = FUN_00189450;
 static void (*const b4c560_c189150)(char flag, float *position, float scale, void *color) = FUN_00189150;
 static void (*const b4c560_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
-static void (*const b4c560_c49300)(void) = FUN_00049300;
+static void (*const b4c560_c49300)(void) = (void *)FUN_00049300;
 static void (*const b4c560_c49280)(int16_t, float *, float *, void *) = FUN_00049280;
 static void (*const b4c560_c62960)(void *obstacles, float radius) = path_obstacles_debug_render;
 static void (*const b4c560_c609e0)(void *path) = FUN_000609e0;
@@ -4262,7 +4202,7 @@ static void *(*const b4c920_tryget)(int, int) = object_try_and_get_and_verify_ty
 static vector3_t * (*const b4c920_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
 static void (*const b4c920_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
 static void * (*const b4c920_c18e3c0)(void) = global_scenario_get;
-static void (*const b4c920_c49300)(void) = FUN_00049300;
+static void (*const b4c920_c49300)(void) = (void *)FUN_00049300;
 static float (*const b4c920_c441c0)(int unit, char use_teams, int *out_unit, int *out_handle) = ai_communication_get_player_rating;
 static char * (*const b4c920_c8dc30)(char *destination, const char *source) = FUN_0008dc30;
 static void (*const b4c920_assert)(const char *, const char *, int, bool) = display_assert;
