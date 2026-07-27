@@ -15557,13 +15557,13 @@
         {
           "addr": "0x126140",
           "decl": "char network_game_client_leave_game(void *client);",
-          "ported": false,
+          "ported": true,
           "name": "network_game_client_leave_game"
         },
         {
           "addr": "0x1263a0",
           "decl": "char network_game_client_request_remove_player(void *client, void *record);",
-          "ported": false,
+          "ported": true,
           "name": "network_game_client_request_remove_player"
         },
         {
