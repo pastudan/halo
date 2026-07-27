@@ -6765,109 +6765,35 @@ void hs_evaluate_wake(int16_t function_index __attribute__((unused)), int thread
 #endif
 
 
-/* FUN_000cdf70 (0xcdf70) — XBE naked draft (batch 134). */
-#if defined(__clang__)
-static void (*const bcdf70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bcdf70_exitfn)(int) = system_exit;
-static int (*const bcdf70_c8da40)(const void *a, const void *b, int size) = csmemcmp;
-static void (*const bcdf70_c118be0)(void *definition, void *data, int count) = FUN_00118be0;
-
-__attribute__((naked, noinline))
-void FUN_000cdf70(void *header __attribute__((unused)), void *src __attribute__((unused)), int size __attribute__((unused)))
+/* FUN_000cdf70 (0xcdf70) — readable C lift. */
+void FUN_000cdf70(void *header, void *src, int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000cdf70_6\n\t"
-      "cmpl $0x38, %%esi\n\t"
-      "jae .LFUN_000cdf70_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6d\n\t"
-      "pushl $0x280e68\n\t"
-      "pushl $0x280e48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000cdf70_1:\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl $0xc\n\t"
-      "pushl $0x280e38\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000cdf70_2\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2f664c\n\t"
-      "call *%[c118be0]\n\t"
-      "pushl $0x4000\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2f6688\n\t"
-      "call *%[c118be0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000cdf70_2:\n\t"
-      "addl $-0x38, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .LFUN_000cdf70_3\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl $0x14, %%ecx\n\t"
-      "divl %%ecx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .LFUN_000cdf70_4\n\t"
-      ".LFUN_000cdf70_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x79\n\t"
-      "pushl $0x280e68\n\t"
-      "pushl $0x280df8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000cdf70_4:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .LFUN_000cdf70_5\n\t"
-      "movl %%esi, %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x14, %%ecx\n\t"
-      "divl %%ecx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jne .LFUN_000cdf70_5\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2f664c\n\t"
-      "call *%[c118be0]\n\t"
-      "pushl %%esi\n\t"
-      "addl $0x38, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2f6688\n\t"
-      "call *%[c118be0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_000cdf70_5:\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_000cdf70_6:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bcdf70_assert), [exitfn] "m"(bcdf70_exitfn), [c8da40] "m"(bcdf70_c8da40), [c118be0] "m"(bcdf70_c118be0)
-      : "memory");
-}
-#else
-#error "FUN_000cdf70: clang naked draft required"
-#endif
+  int rem;
+  int n;
 
+  (void)header;
+  if (size == 0)
+    return;
+  if ((unsigned int)size < 0x38u) {
+    display_assert((const char *)0x280e48, (const char *)0x280e68, 0x6d, 1);
+    system_exit(-1);
+  }
+  if (csmemcmp(src, (void *)0x280e38, 0xc) == 0) {
+    FUN_00118be0((void *)0x2f664c, src, 1);
+    FUN_00118be0((void *)0x2f6688, src, 0x4000);
+    return;
+  }
+  rem = size - 0x38;
+  if (rem < 0 || (rem % 0x14) != 0) {
+    display_assert((const char *)0x280df8, (const char *)0x280e68, 0x79, 1);
+    system_exit(-1);
+  }
+  if (rem < 0 || (rem % 0x14) != 0)
+    return;
+  n = rem / 0x14;
+  FUN_00118be0((void *)0x2f664c, src, 1);
+  FUN_00118be0((void *)0x2f6688, (char *)src + 0x38, n);
+}
 
 /* FUN_000ce4a0 (0xce4a0) — readable C lift. */
 void FUN_000ce4a0(void)
