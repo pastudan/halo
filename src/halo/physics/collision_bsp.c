@@ -3717,55 +3717,25 @@ char FUN_00148440(void *state __attribute__((unused)), int node_index __attribut
 #endif
 
 
-/* collision_bsp_test_pill_new (0x148b20) — XBE naked draft (batch 235). */
-#if defined(__clang__)
-static char (*const b148b20_c148440)(void *state, int node_index, float t0, float t1) = FUN_00148440;
-
-__attribute__((naked, noinline))
-char collision_bsp_test_pill_new(int bsp __attribute__((unused)), short flags __attribute__((unused)), int breakable_surfaces __attribute__((unused)), int origin __attribute__((unused)), int direction __attribute__((unused)), float radius __attribute__((unused)), float *result __attribute__((unused)), float *normal_out __attribute__((unused)))
+/* collision_bsp_test_pill_new (0x148b20) — readable C (pack pill state, seed FLT_MAX, walk). */
+char collision_bsp_test_pill_new(int bsp, short flags, int breakable_surfaces, int origin, int direction, float radius, float *result, float *normal_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x2c, %%esp\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw %%cx, -0x28(%%ebp)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0x24(%%ebp)\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "pushl $0x3f800000\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movb $0, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl $0x7f7fffff, (%%eax)\n\t"
-      "call *%[c148440]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c148440] "m"(b148b20_c148440)
-      : "memory");
+  collision_bsp_pill_state state;
+
+  state.bsp = bsp;
+  state.flags = (unsigned short)flags;
+  state.breakable_surfaces = breakable_surfaces;
+  state.origin = (float *)origin;
+  state.direction = (float *)direction;
+  state.radius = radius;
+  state.result = result;
+  state.normal_out = normal_out;
+  state.field_20 = -1;
+  state.leaf_side = 0;
+  state.plane_index = -1;
+  *(unsigned int *)result = 0x7f7fffffu;
+  return FUN_00148440(&state, 0, 0.0f, 1.0f);
 }
-#else
-#error "collision_bsp_test_pill_new: clang naked draft required"
-#endif
 
 
 /* FUN_00149570 (0x149570) — XBE naked draft (batch 227). */
