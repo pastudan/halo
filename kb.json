@@ -31208,7 +31208,7 @@
         {
           "addr": "0x17cfa0",
           "decl": "void rasterizer_sprites_render(void *render_data, void *vertices);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cfb0",
