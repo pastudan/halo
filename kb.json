@@ -27233,7 +27233,7 @@
         {
           "addr": "0xe4370",
           "decl": "void widget_instance_set_visibility_recursive(void *widget, char visible);",
-          "ported": false,
+          "ported": true,
           "name": "widget_instance_set_visibility_recursive"
         },
         {
