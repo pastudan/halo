@@ -38769,7 +38769,7 @@
         {
           "addr": "0x160970",
           "decl": "void _rasterizer_hud_end(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x160980",
@@ -39161,7 +39161,8 @@
         {
           "addr": "0x16b180",
           "decl": "void FUN_0016b180(int flag);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_0016b180"
         },
         {
           "addr": "0x16b1c0",

@@ -992,7 +992,7 @@ static void (*const b15e650_assert)(const char *, const char *, int, bool) = dis
 static void (*const b15e650_exitfn)(int) = system_exit;
 static void (*const b15e650_c15e430)(void) = FUN_0015e430;
 static void (*const b15e650_c15e0f0)(void) = FUN_0015e0f0;
-static void (*const b15e650_c15dc10)(void) = FUN_0015dc10;
+static void (*const b15e650_c15dc10)(void) = (void *)FUN_0015dc10;
 static void (*const b15e650_c15d8b0)(void) = FUN_0015d8b0;
 
 __attribute__((naked, noinline))
@@ -4762,7 +4762,7 @@ static void (*const b162560_c190a90)(void) = shader_environment_texture_animatio
 static void __stdcall (*const b162560_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
 static unsigned int (*const b162560_cd1dd0)(float *color) = FUN_000d1dd0;
 static void (*const b162560_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void (*const b162560_c15dc10)(void) = FUN_0015dc10;
+static void (*const b162560_c15dc10)(void) = (void *)FUN_0015dc10;
 static void (*const b162560_c17edd0)(void) = rasterizer_frame_statistics_count_static_vertices;
 
 __attribute__((naked, noinline))
@@ -5079,7 +5079,7 @@ static void __stdcall (*const b162920_c1eb8d0)(int register_index, const void *d
 static void *(*const b162920_memset)(void *, int, unsigned int) = csmemset;
 static uint32_t (*const b162920_c159070)(float a1) = FUN_00159070;
 static void (*const b162920_c156510)(void *state) = rasterizer_set_pixel_shader;
-static void (*const b162920_c15dc10)(void) = FUN_0015dc10;
+static void (*const b162920_c15dc10)(void) = (void *)FUN_0015dc10;
 static void (*const b162920_c17edd0)(void) = rasterizer_frame_statistics_count_static_vertices;
 
 __attribute__((naked, noinline))
@@ -6197,7 +6197,7 @@ static void __stdcall (*const b163910_c1eb8d0)(int register_index, const void *d
 static uint32_t (*const b163910_c159070)(float a1) = FUN_00159070;
 static unsigned int (*const b163910_cd1dd0)(float *color) = FUN_000d1dd0;
 static void (*const b163910_c156510)(void *state) = rasterizer_set_pixel_shader;
-static void (*const b163910_c15dc10)(void) = FUN_0015dc10;
+static void (*const b163910_c15dc10)(void) = (void *)FUN_0015dc10;
 static void (*const b163910_c17edd0)(void) = rasterizer_frame_statistics_count_static_vertices;
 
 __attribute__((naked, noinline))
@@ -7168,7 +7168,7 @@ static void *(*const b164690_memset)(void *, int, unsigned int) = csmemset;
 static unsigned int (*const b164690_cd1dd0)(float *color) = FUN_000d1dd0;
 static uint32_t (*const b164690_c99530)(float alpha, float *color) = real_a_rgb_color_to_pixel32;
 static void (*const b164690_c156510)(void *state) = rasterizer_set_pixel_shader;
-static void (*const b164690_c15dc10)(void) = FUN_0015dc10;
+static void (*const b164690_c15dc10)(void) = (void *)FUN_0015dc10;
 static void (*const b164690_c17edd0)(void) = rasterizer_frame_statistics_count_static_vertices;
 
 __attribute__((naked, noinline))
@@ -8121,7 +8121,7 @@ static void (*const b165420_exitfn)(int) = system_exit;
 static void (*const b165420_c190a30)(void) = (void *)shader_type_is_valid_for_environment;
 static char (*const b165420_c1908a0)(void *shader) = shader_is_decal;
 static void * (*const b165420_c184330)(void) = rasterizer_transparent_geometry_group_new;
-static void (*const b165420_c182590)(int data, int size) = rasterizer_memory_pool_copy;
+static void (*const b165420_c182590)(int data, int size) = (void *)rasterizer_memory_pool_copy;
 static void (*const b165420_c1792c0)(int param_1) = (void *)FUN_001792C0;
 static void * (*const b165420_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static void (*const b165420_c174d10)(void *group, int dirty) = rasterizer_transparent_geometry_group_draw;
@@ -8537,7 +8537,7 @@ static void (*const b165cb0_exitfn)(int) = system_exit;
 static void * (*const b165cb0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static int (*const b165cb0_c190710)(void *shader) = shader_get_vertex_shader_permutation;
 static void (*const b165cb0_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void (*const b165cb0_c15dc10)(void) = FUN_0015dc10;
+static void (*const b165cb0_c15dc10)(void) = (void *)FUN_0015dc10;
 static void (*const b165cb0_c17edd0)(void) = rasterizer_frame_statistics_count_static_vertices;
 
 __attribute__((naked, noinline))
@@ -8653,7 +8653,7 @@ void FUN_00165dd0(void)
 
 /* FUN_00165ea0 (0x165ea0) — XBE naked draft (batch 328). */
 #if defined(__clang__)
-static void (*const b165ea0_c182590)(int data, int size) = rasterizer_memory_pool_copy;
+static void (*const b165ea0_c182590)(int data, int size) = (void *)rasterizer_memory_pool_copy;
 static void (*const b165ea0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))
@@ -9423,7 +9423,7 @@ void FUN_00166400(void)
 static void (*const b166890_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b166890_exitfn)(int) = system_exit;
 static void (*const b166890_c16f910)(int16_t profile) = FUN_0016f910;
-static void (*const b166890_c166010)(void) = FUN_00166010;
+static void (*const b166890_c166010)(void) = (void *)FUN_00166010;
 static void *(*const b166890_tag)(int, int) = tag_get;
 static void *(*const b166890_memset)(void *, int, unsigned int) = csmemset;
 static unsigned int *(*const b166890_lseed)(void) = random_math_get_local_seed_address;
@@ -10615,10 +10615,10 @@ void FUN_00166890(int pass_index)
 #if defined(__clang__)
 static void (*const b1677d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1677d0_exitfn)(int) = system_exit;
-static void (*const b1677d0_c166010)(void) = FUN_00166010;
+static void (*const b1677d0_c166010)(void) = (void *)FUN_00166010;
 static int (*const b1677d0_c190710)(void *shader) = shader_get_vertex_shader_permutation;
 static void (*const b1677d0_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void (*const b1677d0_c15dc10)(void) = FUN_0015dc10;
+static void (*const b1677d0_c15dc10)(void) = (void *)FUN_0015dc10;
 static void (*const b1677d0_c17edd0)(void) = rasterizer_frame_statistics_count_static_vertices;
 
 __attribute__((naked, noinline))
@@ -10744,7 +10744,7 @@ void FUN_001677d0(void)
 #if defined(__clang__)
 static void (*const b167920_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b167920_exitfn)(int) = system_exit;
-static void (*const b167920_c166010)(void) = FUN_00166010;
+static void (*const b167920_c166010)(void) = (void *)FUN_00166010;
 static void (*const b167920_c155cf0)(int stage, int bitmap_tag_index, int frame_index) = rasterizer_set_texture_direct;
 static void __stdcall (*const b167920_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
 static void __stdcall (*const b167920_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
@@ -11194,7 +11194,7 @@ void FUN_00167920(void)
 
 /* FUN_00167ee0 (0x167ee0) — XBE naked draft (batch 305). */
 #if defined(__clang__)
-static void (*const b167ee0_c166010)(void) = FUN_00166010;
+static void (*const b167ee0_c166010)(void) = (void *)FUN_00166010;
 static void (*const b167ee0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b167ee0_exitfn)(int) = system_exit;
 
@@ -16176,7 +16176,7 @@ static short (*const b16c090_c1844b0)(unsigned int group) = rasterizer_transpare
 static void (*const b16c090_c174ce0)(void) = FUN_00174ce0;
 static void (*const b16c090_c174d10)(void *group, int dirty) = rasterizer_transparent_geometry_group_draw;
 static void (*const b16c090_c1749b0)(void) = FUN_001749b0;
-static void (*const b16c090_c182590)(int data, int size) = rasterizer_memory_pool_copy;
+static void (*const b16c090_c182590)(int data, int size) = (void *)rasterizer_memory_pool_copy;
 static void (*const b16c090_c17ed90)(void) = (void *)FUN_0017ed90;
 static void (*const b16c090_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
@@ -16600,7 +16600,7 @@ static void (*const b16c5a0_assert)(const char *, const char *, int, bool) = dis
 static void (*const b16c5a0_exitfn)(int) = system_exit;
 static void * (*const b16c5a0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
 static void (*const b16c5a0_c16c090)(void) = FUN_0016c090;
-static int (*const b16c5a0_c182530)(int data, int size) = rasterizer_memory_pool_alloc;
+static int (*const b16c5a0_c182530)(int data, int size) = (void *)rasterizer_memory_pool_alloc;
 static void (*const b16c5a0_c17cbd0)(int shader, int p2, int p3, int widget_handle, int p5, int p6, int zbuf_handle, float *position, int p9) = FUN_0017cbd0;
 static void (*const b16c5a0_c1592e0)(char enable) = FUN_001592e0;
 static void (*const b16c5a0_c16b2b0)(void) = FUN_0016b2b0;
