@@ -49,25 +49,11 @@ void GetLocalTime(void *system_time)
   (void)0;
 }
 
-/* FUN_001d0581 (0x1d0581) — XBE naked draft (batch 394). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_001d0581 (0x1d0581) — readable C lift (deref global). */
 int FUN_001d0581(void)
 {
-  __asm__ volatile(
-      "movl 0x253140, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  return **(int **)0x253140;
 }
-#else
-#error "FUN_001d0581: clang naked draft required"
-#endif
-
 
 /* FUN_001d0589 (0x1d0589) — XBE naked draft (batch 321). */
 #if defined(__clang__)
@@ -1068,3 +1054,22 @@ bool FUN_001d0df0(const char *path __attribute__((unused)), unsigned int attribu
 #error "FUN_001d0df0: clang naked draft required"
 #endif
 
+/* WaitForSingleObject (0x1d0336) — readable C lift. */
+int __stdcall WaitForSingleObject(int handle, int timeout_ms)
+{
+  return FUN_001d00b9(handle, timeout_ms, 0);
+}
+
+/* FUN_001d0362 (0x1d0362) — readable C lift (Sleep-style). */
+void __stdcall FUN_001d0362(int ms)
+{
+  FUN_001d01c4(ms, 0);
+}
+
+/* FUN_001cfde0 (0x1cfde0) — readable C lift (TEB TLS slot). */
+int FUN_001cfde0(void)
+{
+  void *teb;
+  __asm__ volatile("movl %%fs:0x28, %0" : "=r"(teb));
+  return *(int *)((char *)teb + 0x12c);
+}

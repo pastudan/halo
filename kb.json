@@ -33506,7 +33506,8 @@
         {
           "addr": "0x1d0581",
           "decl": "int FUN_001d0581(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001d0581"
         },
         {
           "addr": "0x1d0589",
@@ -39850,8 +39851,9 @@
         },
         {
           "addr": "0x1cfde0",
-          "decl": "void FUN_001cfde0(void);",
-          "ported": false
+          "decl": "int FUN_001cfde0(void);",
+          "ported": false,
+          "name": "FUN_001cfde0"
         },
         {
           "addr": "0x1cfded",
@@ -39900,8 +39902,9 @@
         },
         {
           "addr": "0x1d00b9",
-          "decl": "int __stdcall FUN_001d00b9(void *handle, unsigned int timeout, int flag);",
-          "ported": false
+          "decl": "int __stdcall FUN_001d00b9(int handle, int timeout_ms, int alertable);",
+          "ported": false,
+          "name": "FUN_001d00b9"
         },
         {
           "addr": "0x1d00fd",
@@ -39915,8 +39918,9 @@
         },
         {
           "addr": "0x1d01c4",
-          "decl": "unsigned int __stdcall SleepEx(unsigned int milliseconds, int alertable);",
-          "ported": false
+          "decl": "void __stdcall FUN_001d01c4(int ms, int unused);",
+          "ported": false,
+          "name": "FUN_001d01c4"
         },
         {
           "addr": "0x1d0216",
@@ -39936,7 +39940,8 @@
         {
           "addr": "0x1d0336",
           "decl": "int __stdcall WaitForSingleObject(int handle, int timeout_ms);",
-          "ported": false
+          "ported": false,
+          "name": "WaitForSingleObject"
         },
         {
           "addr": "0x1d0348",
@@ -39945,8 +39950,9 @@
         },
         {
           "addr": "0x1d0362",
-          "decl": "void FUN_001d0362(void);",
-          "ported": false
+          "decl": "void __stdcall FUN_001d0362(int ms);",
+          "ported": false,
+          "name": "FUN_001d0362"
         },
         {
           "addr": "0x1d0370",

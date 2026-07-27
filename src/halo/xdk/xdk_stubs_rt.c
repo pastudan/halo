@@ -431,25 +431,7 @@ void * CreateThread(void *security, int stack_size, void *func, void *param, int
   (void)eax;
 }
 
-/* FUN_001cfde0 (0x1cfde0) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001cfde0(void)
-{
-  __asm__ volatile(
-      "movl 0x28, %%eax\n\t"
-      "movl 0x12c(%%eax), %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_001cfde0: clang naked draft required"
-#endif
-
+/* FUN_001cfde0 — implemented in xapilib/xvutil.c */
 
 /* 0x1cfded */
 void * CreateEventA(void *security, int manual_reset, int initial_state, const char *name)
@@ -1146,12 +1128,7 @@ void FUN_001d02d0(void)
 #endif
 
 
-/* 0x1d0336 */
-int WaitForSingleObject(int handle, int timeout_ms)
-{
-  FUN_001d00b9();
-  return 0;
-}
+/* WaitForSingleObject — implemented in xapilib/xvutil.c */
 
 /* FUN_001d0348 (0x1d0348) — XBE naked draft (batch 377). */
 #if defined(__clang__)
