@@ -30599,8 +30599,8 @@
         },
         {
           "addr": "0x001ef200",
-          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
-          "ported": false,
+          "decl": "void __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
+          "ported": true,
           "name": "D3DSurface_LockRect"
         }
       ],

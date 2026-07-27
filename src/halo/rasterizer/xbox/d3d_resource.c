@@ -158,11 +158,10 @@ void __stdcall D3DCubeTexture_LockRect(void *texture, unsigned int face,
 }
 
 /* D3DSurface_LockRect (0x1ef200) — readable C lift (transparent Lock2DSurface wrapper). */
-int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect,
-                                  uint32_t flags)
+void __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect,
+                                   uint32_t flags)
 {
   Lock2DSurface(surface, 0, 0, locked_rect, rect, flags);
-  return 0;
 }
 
 /* D3DVolumeTexture_LockBox (0x1edd80) — readable C lift (jmp thunk to Lock3DSurface). */

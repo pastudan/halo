@@ -11,8 +11,8 @@
   },
   "0x001ef200": {
     "class": "non_leaf",
-    "confidence": "weak",
-    "coverage_pct": 1.9
+    "confidence": "high",
+    "coverage_pct": 100.0
   },
   "0x1": {
     "confidence": "weak",
