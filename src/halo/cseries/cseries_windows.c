@@ -67,33 +67,11 @@ uint32_t system_seconds(void)
   return crt_time(NULL);
 }
 
-/* system_get_user_name (0x8e390) — XBE naked draft (batch 101). */
-#if defined(__clang__)
-static void * (*const b8e390_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-
-__attribute__((naked, noinline))
-void system_get_user_name(char *buffer __attribute__((unused)), int16_t max_len __attribute__((unused)))
+/* system_get_user_name (0x8e390) — readable C lift. */
+void system_get_user_name(char *buffer, int16_t max_len)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x267a68\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8de70] "m"(b8e390_c8de70)
-      : "memory");
+  csstrncpy(buffer, (const char *)0x267a68, (size_t)(int32_t)max_len);
 }
-#else
-#error "system_get_user_name: clang naked draft required"
-#endif
-
 
 /* system_calloc (0x8e3b0) — XBE naked draft (batch 102). */
 #if defined(__clang__)

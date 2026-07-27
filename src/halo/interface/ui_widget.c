@@ -3135,7 +3135,7 @@ char display_error_abort_to_dashboard(void *widget, void *event_data, bool *widg
     display_assert(DAT_00285b10, DAT_002859a4, 0x369, true);
     system_exit(-1);
   }
-  FUN_000e0840(*(uint16_t *)((char *)widget + 8));
+  player_ui_local_player_joined_multiplayer_game(*(int16_t *)((char *)widget + 8));
   return 1;
 }
 

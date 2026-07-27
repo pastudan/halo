@@ -13132,14 +13132,16 @@
         {
           "addr": "0xd46d0",
           "decl": "void FUN_000d46d0(void);",
-          "ported": false,
-          "source_path": "src/halo/interface/hud_messaging.c"
+          "ported": true,
+          "source_path": "src/halo/interface/hud_messaging.c",
+          "name": "FUN_000d46d0"
         },
         {
           "addr": "0xd46e0",
           "decl": "void FUN_000d46e0(void);",
-          "ported": false,
-          "source_path": "src/halo/interface/hud_messaging.c"
+          "ported": true,
+          "source_path": "src/halo/interface/hud_messaging.c",
+          "name": "FUN_000d46e0"
         },
         {
           "addr": "0xd46f0",
@@ -13228,13 +13230,13 @@
         },
         {
           "addr": "0xd4e90",
-          "decl": "void hud_set_state_message_text(short param_1, short param_2, short param_3, unsigned char param_4);",
+          "decl": "void hud_set_state_message_text(int16_t slot, int16_t index, uint16_t text_id, char flag);",
           "name": "hud_set_state_message_text",
           "ported": true
         },
         {
           "addr": "0xd4f00",
-          "decl": "void hud_enable_custom_state_message(short param_1, char param_2);",
+          "decl": "void hud_enable_custom_state_message(int16_t player_index, unsigned char enable);",
           "name": "hud_enable_custom_state_message",
           "ported": true
         },
@@ -13257,7 +13259,7 @@
         },
         {
           "addr": "0xd50f0",
-          "decl": "int hud_messaging_slot_compare(int *param_1, int *param_2);",
+          "decl": "int hud_messaging_slot_compare(const void *a, const void *b);",
           "name": "hud_messaging_slot_compare",
           "ported": true,
           "source_path": "src/halo/interface/hud_messaging.c"
@@ -13276,7 +13278,7 @@
         },
         {
           "addr": "0xd5180",
-          "decl": "int *hud_get_text_color(int *param_1);",
+          "decl": "void *hud_get_text_color(void *out_argb);",
           "name": "hud_get_text_color",
           "ported": true,
           "source_path": "src/halo/interface/hud_messaging.c"
@@ -14248,7 +14250,8 @@
         {
           "addr": "0xffeb0",
           "decl": "void FUN_000ffeb0(char param_1);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000ffeb0"
         },
         {
           "addr": "0xffef0",
@@ -15482,7 +15485,7 @@
         },
         {
           "addr": "0x11c1d0",
-          "decl": "void FUN_0011c1d0(int *ptr, int user_data);",
+          "decl": "void FUN_0011c1d0(int *dst, int value);",
           "name": "FUN_0011c1d0",
           "ported": true
         },
@@ -19888,8 +19891,9 @@
         },
         {
           "addr": "0x8f880",
-          "decl": "void profile_lapsed_frames(short frames, char flag, char *str);",
-          "ported": true
+          "decl": "void profile_lapsed_frames(int16_t frames, char flag, char *str);",
+          "ported": true,
+          "name": "profile_lapsed_frames"
         },
         {
           "addr": "0x8f8c0",
@@ -20370,7 +20374,8 @@
         {
           "addr": "0xe1d00",
           "decl": "void FUN_000e1d00(float x, float y, float z, float *out_x, float *out_y);",
-          "ported": true
+          "ported": true,
+          "name": "FUN_000e1d00"
         },
         {
           "addr": "0xe1f00",
@@ -27436,8 +27441,9 @@
         },
         {
           "addr": "0xe9cb0",
-          "decl": "char display_error_abort_to_dashboard(void *widget, void *event_data, bool *widget_deleted);",
-          "ported": false
+          "decl": "char display_error_abort_to_dashboard(void *widget);",
+          "ported": true,
+          "name": "display_error_abort_to_dashboard"
         },
         {
           "addr": "0xe9d40",
@@ -27507,7 +27513,8 @@
         {
           "addr": "0xeab70",
           "decl": "char FUN_000eab70(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000eab70"
         },
         {
           "addr": "0xeaba0",
@@ -38257,7 +38264,8 @@
         {
           "addr": "0x12b0c0",
           "decl": "bool network_game_player_is_valid(void *player, void *game);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_player_is_valid"
         },
         {
           "addr": "0x12b150",

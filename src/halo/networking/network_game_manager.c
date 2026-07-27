@@ -454,40 +454,6 @@ bool network_game_spawn_player(void *player)
   return false;
 }
 
-bool FUN_0012b0c0(void *player, void *game)
-{
-  char *p = (char *)player;
-  char *g = (char *)game;
-  char machine_index;
-  char controller_index;
-  int i;
-  char *controller_ptr;
-
-  if (p == NULL || g == NULL) {
-    display_assert("player && game", "c:\\halo\\SOURCE\\networking\\network_game_manager.c", 0x247, 1);
-    system_exit(-1);
-  }
-
-  if (p != NULL) {
-    controller_index = p[0x1d];
-    if (controller_index >= 0 && controller_index < 4) {
-      machine_index = p[0x1c];
-      if (machine_index >= 0 && machine_index < 4) {
-        i = 0;
-        controller_ptr = g + 0x226 + 0x1d;
-        while (controller_ptr[-1] != machine_index || *controller_ptr != controller_index) {
-          i++;
-          controller_ptr += 0x20;
-          if (i > 15) {
-            return false;
-          }
-        }
-        return true;
-      }
-    }
-  }
-  return false;
-}
 
 void network_game_invalidate(void *game)
 {
