@@ -264,8 +264,8 @@ void D3DDevice_SetVertexData4ub(uint32_t reg, uint32_t r, uint32_t g, uint32_t b
 void D3DResource_GetType(void);
 void D3DTexture_GetSurfaceLevel(void);
 void D3DCubeTexture_GetCubeMapSurface(void);
-void D3DCubeTexture_LockRect(void);
-void D3DVolumeTexture_LockBox(void);
+/* D3DCubeTexture_LockRect — see d3d_resource.c */
+/* D3DVolumeTexture_LockBox — see d3d_resource.c */
 void D3D_CreateTexture(void);
 void D3D_SetPushBufferSize(void);
 void Direct3D_CreateDevice(void);
@@ -284,7 +284,7 @@ void D3DVertexBuffer_Lock(void);
 void D3DVertexBuffer_GetDesc(void);
 void D3DDevice_CreatePalette(void);
 int D3DSurface_GetDesc(void *surface, void *desc);
-int D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);
+/* D3DSurface_LockRect — see d3d_resource.c */
 void D3DDevice_IsFencePending(void);
 void D3DDevice_InsertCallback(uint32_t type, void *callback, uint32_t context);
 void CDevice_KickOff(void);
@@ -8905,24 +8905,9 @@ void D3DCubeTexture_GetCubeMapSurface(void)
 #endif
 
 
-/* 0x001edd10 */
-void D3DCubeTexture_LockRect(void)
-{
-  int eax = 0;
+/* D3DCubeTexture_LockRect — implemented in rasterizer/xbox/d3d_resource.c */
 
-  D3D_BlockOnResource();
-  /* relift: FUN_001f4270(0, 0, 0, 0); */
-  /* test eax, eax -> je 0x1f4578 */
-
-  (void)eax;
-}
-
-/* 0x001edd80 */
-void D3DVolumeTexture_LockBox(void)
-{
-  D3D_BlockOnResource();
-  /* relift: FUN_001f4270(0, 0, 0, 0); */
-}
+/* D3DVolumeTexture_LockBox — implemented in rasterizer/xbox/d3d_resource.c */
 
 /* D3D_CreateTexture (0x1eddd0) — XBE naked draft (batch 337). */
 #if defined(__clang__)
@@ -9835,50 +9820,8 @@ int D3DSurface_GetDesc(void *surface, void *desc)
   (void)ecx;
 }
 
-/* 0x001ef200 */
-int D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags)
-{
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
+/* D3DSurface_LockRect — implemented in rasterizer/xbox/d3d_resource.c */
 
-  Lock2DSurface((void *)(uintptr_t)eax, 0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, eax);
-  /* relift: FUN_001f4200(0, 0, 0); */
-  Lock3DSurface();
-  FUN_001d0bb9(64, 24);
-  /* test esi, esi -> jne 0x1ef2b9 */
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: FUN_001f4630(0, 0, 0, 0); */
-  FUN_001d0bb9(64, 24);
-  /* test esi, esi -> je 0x1ef38f */
-  /* test eax, eax -> jne 0x1ef399 */
-  LocalFree((void *)(uintptr_t)esi);
-  /* relift: FUN_001f4630(0, 0, 0, 0); */
-  /* test eax, eax -> jne 0x1ef41e */
-  /* relift: FUN_001ed8f0(0); */
-  FUN_001d0bb9(64, 24);
-  /* cmp esi, ecx -> jne 0x1ef4ab */
-  /* relift: FUN_001ed8f0(0); */
-  /* relift: FUN_001ed8f0(0); */
-  /* mem[0x001fe6ac] = eax */
-  /* cmp eax, edx -> jb 0x1ef75a */
-  /* relift: cmp eax, dword ptr [ecx + 0x14] -> jb 0x1ef76e */
-  /* cmp eax, esi -> jb 0x1ef78b */
-  /* relift: cmp eax, dword ptr [ecx + 0x14] -> jb 0x1ef79f */
-  /* cmp esi, 0x80 -> ja 0x1ef80c */
-  /* cmp ebx, esi -> jbe 0x1ef836 */
-  /* cmp ebx, esi -> ja 0x1ef836 */
-  /* relift: test dword ptr [eax + 0x100410], 0x10000 -> jne 0x1ef880 */
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-}
 
 /* D3DDevice_IsFencePending (0x1ef890) — XBE naked draft (batch 342). */
 #if defined(__clang__)

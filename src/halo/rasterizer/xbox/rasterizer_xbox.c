@@ -1295,7 +1295,7 @@ void rasterizer_set_vertex_shader(void)
 static void (*const b156510_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b156510_exitfn)(int) = system_exit;
 static void (*const b156510_c1e9320)(void) = (void *)D3DDevice_SetRenderState_PSTextureModes;
-static void (*const b156510_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
+static void (*const b156510_c1e9350)(uint32_t reg, uint32_t value) = (void *)D3DDevice_SetRenderState_Simple;
 static void (*const b156510_c1e93a0)(void) = (void *)D3DDevice_SetRenderStateNotInline;
 static void __stdcall (*const b156510_c1ec120)(void *program) = (void *)D3DDevice_SetPixelShaderProgram;
 
@@ -2306,9 +2306,9 @@ static void __stdcall (*const b157010_c1e6ae0)(uint32_t width, uint32_t height, 
 static void (*const b157010_c1edc20)(void) = (void *)D3DTexture_GetSurfaceLevel;
 static void (*const b157010_c1eb590)(void) = (void *)D3DDevice_SetShaderConstantMode;
 static void __stdcall (*const b157010_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
-static void (*const b157010_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
+static void (*const b157010_c1e9350)(uint32_t reg, uint32_t value) = (void *)D3DDevice_SetRenderState_Simple;
 static void __stdcall (*const b157010_c1e98e0)(uint32_t value) = (void *)D3DDevice_SetRenderState_ZBias;
-static void (*const b157010_c1e9380)(uint32_t reg_index, uint32_t value) = D3DDevice_SetRenderState_Deferred;
+static void (*const b157010_c1e9380)(uint32_t reg_index, uint32_t value) = (void *)D3DDevice_SetRenderState_Deferred;
 static void (*const b157010_c1e9ae0)(void) = (void *)D3DDevice_SetTextureState_TexCoordIndex;
 static void (*const b157010_c1e72a0)(void) = (void *)D3DDevice_SetFlickerFilter;
 static void (*const b157010_c1e72c0)(void) = (void *)D3DDevice_SetSoftDisplayFilter;

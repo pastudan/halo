@@ -1133,14 +1133,12 @@ int FUN_0015e770(int a, int b)
 
 
 /* FUN_0015e7a0 (0x15e7a0) — readable C lift. */
-__attribute__((stdcall))
 void FUN_0015e7a0(void *obj, int *out, int addend)
 {
   *out = *(int *)((char *)obj + 4) + addend;
 }
 
 /* FUN_0015e7d0 (0x15e7d0) — readable C lift. */
-__attribute__((stdcall))
 int FUN_0015e7d0(void *obj, int *out, int addend)
 {
   *out = *(int *)((char *)obj + 4) + addend;
@@ -12147,7 +12145,6 @@ void FUN_00168c70(void *obj, int *out, int addend)
 }
 
 /* FUN_00168ca0 (0x168ca0) — readable C lift. */
-__attribute__((stdcall))
 int FUN_00168ca0(void *obj, int *out, int addend)
 {
   *out = *(int *)((char *)obj + 4) + addend;

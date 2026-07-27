@@ -247,7 +247,7 @@ void D3DDevice_SetVertexData4ub(uint32_t reg, uint32_t r, uint32_t g, uint32_t b
 void D3DResource_GetType(void);
 void D3DTexture_GetSurfaceLevel(void);
 void D3DCubeTexture_GetCubeMapSurface(void);
-void D3DCubeTexture_LockRect(void);
+void __stdcall D3DCubeTexture_LockRect(void *texture, unsigned int face, unsigned int level, void *locked_rect, void *rect, unsigned int flags);
 void D3DVolumeTexture_LockBox(void);
 void D3D_CreateTexture(void);
 void D3D_SetPushBufferSize(void);

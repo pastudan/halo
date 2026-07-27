@@ -20454,7 +20454,7 @@
         },
         {
           "addr": "0xe1a10",
-          "decl": "int __stdcall FUN_000e1a10(int a, int b, int c, int d, int e);",
+          "decl": "int FUN_000e1a10(int a, int b, int c, int d, int e);",
           "ported": true
         },
         {
@@ -21737,7 +21737,7 @@
         },
         {
           "addr": "0x155880",
-          "decl": "int FUN_00155880(int a /* @<eax> */, int b /* @<ecx> */, int unused, int *out);",
+          "decl": "int FUN_00155880(int stage@<eax>, int sub_index@<ecx>, int unused, unsigned int *result);",
           "ported": true
         },
         {
@@ -30579,6 +30579,24 @@
           "addr": "0x1edc70",
           "decl": "void __stdcall D3DTexture_LockRect(void *texture, unsigned int level, void *locked_rect, void *rect, unsigned int flags);",
           "ported": true
+        },
+        {
+          "addr": "0x001edd10",
+          "decl": "void __stdcall D3DCubeTexture_LockRect(void *texture, unsigned int face, unsigned int level, void *locked_rect, void *rect, unsigned int flags);",
+          "ported": true,
+          "name": "D3DCubeTexture_LockRect"
+        },
+        {
+          "addr": "0x001edd80",
+          "decl": "void __stdcall D3DVolumeTexture_LockBox(void *texture, unsigned int level, void *locked_box, void *box, unsigned int flags);",
+          "ported": true,
+          "name": "D3DVolumeTexture_LockBox"
+        },
+        {
+          "addr": "0x001ef200",
+          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
+          "ported": false,
+          "name": "D3DSurface_LockRect"
         }
       ],
       "name": "d3d_resource.obj",
@@ -41831,17 +41849,17 @@
         },
         {
           "addr": "0x001e6a10",
-          "decl": "void D3DDevice_GetCreationParameters(void);",
+          "decl": "void __stdcall D3DDevice_GetCreationParameters(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001e6a50",
-          "decl": "void D3DDevice_SetGammaRamp(void);",
+          "decl": "void __stdcall D3DDevice_SetGammaRamp(uint32_t a0, uint32_t a1);",
           "ported": true
         },
         {
           "addr": "0x001e6ab0",
-          "decl": "void D3DDevice_GetGammaRamp(void);",
+          "decl": "void __stdcall D3DDevice_GetGammaRamp(uint32_t a0);",
           "ported": true
         },
         {
@@ -41856,7 +41874,7 @@
         },
         {
           "addr": "0x001e6ba0",
-          "decl": "void D3DDevice_CreateImageSurface(void);",
+          "decl": "void __stdcall D3DDevice_CreateImageSurface(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3);",
           "ported": false
         },
         {
@@ -41866,47 +41884,47 @@
         },
         {
           "addr": "0x001e6d10",
-          "decl": "void D3DDevice_MultiplyTransform(void);",
+          "decl": "void __stdcall D3DDevice_MultiplyTransform(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001e6d60",
-          "decl": "void D3DDevice_GetViewport(void);",
+          "decl": "void __stdcall D3DDevice_GetViewport(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001e6d80",
-          "decl": "void D3DDevice_SetMaterial(void);",
+          "decl": "void __stdcall D3DDevice_SetMaterial(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001e6db0",
-          "decl": "void D3DDevice_GetMaterial(void);",
+          "decl": "void __stdcall D3DDevice_GetMaterial(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001e6dd0",
-          "decl": "void D3DDevice_SetBackMaterial(void);",
+          "decl": "void __stdcall D3DDevice_SetBackMaterial(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001e6e00",
-          "decl": "void D3DDevice_GetBackMaterial(void);",
+          "decl": "void __stdcall D3DDevice_GetBackMaterial(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001e6e30",
-          "decl": "void D3DDevice_GetLight(void);",
+          "decl": "void __stdcall D3DDevice_GetLight(uint32_t a0, uint32_t a1);",
           "ported": true
         },
         {
           "addr": "0x001e6e60",
-          "decl": "void D3DDevice_GetLightEnable(void);",
+          "decl": "void __stdcall D3DDevice_GetLightEnable(uint32_t a0, uint32_t a1);",
           "ported": true
         },
         {
           "addr": "0x001e6ed0",
-          "decl": "void D3DDevice_SwitchTexture(void);",
+          "decl": "void __stdcall D3DDevice_SwitchTexture(uint32_t a0);",
           "ported": false
         },
         {
@@ -41921,17 +41939,17 @@
         },
         {
           "addr": "0x001e6fa0",
-          "decl": "void D3DDevice_BlockOnFence(void);",
+          "decl": "void __stdcall D3DDevice_BlockOnFence(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e6fb0",
-          "decl": "void D3DDevice_KickPushBuffer(void);",
+          "decl": "void __stdcall D3DDevice_KickPushBuffer(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e7030",
-          "decl": "void D3DDevice_GetVisibilityTestResult(void);",
+          "decl": "void __stdcall D3DDevice_GetVisibilityTestResult(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": true
         },
         {
@@ -41941,32 +41959,32 @@
         },
         {
           "addr": "0x001e7140",
-          "decl": "void D3DDevice_GetProjectionViewportMatrix(void);",
+          "decl": "void __stdcall D3DDevice_GetProjectionViewportMatrix(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e7180",
-          "decl": "void D3DDevice_GetModelView(void);",
+          "decl": "void __stdcall D3DDevice_GetModelView(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001e7200",
-          "decl": "void D3DDevice_GetTile(void);",
+          "decl": "void __stdcall D3DDevice_GetTile(uint32_t a0, uint32_t a1);",
           "ported": true
         },
         {
           "addr": "0x001e7230",
-          "decl": "void D3DDevice_GetScissors(void);",
+          "decl": "void __stdcall D3DDevice_GetScissors(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": true
         },
         {
           "addr": "0x001e72a0",
-          "decl": "void D3DDevice_SetFlickerFilter(void);",
+          "decl": "void __stdcall D3DDevice_SetFlickerFilter(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e72c0",
-          "decl": "void D3DDevice_SetSoftDisplayFilter(void);",
+          "decl": "void __stdcall D3DDevice_SetSoftDisplayFilter(uint32_t a0);",
           "ported": false
         },
         {
@@ -41976,22 +41994,22 @@
         },
         {
           "addr": "0x001e73b0",
-          "decl": "void D3DResource_AddRef(void);",
+          "decl": "void __stdcall D3DResource_AddRef(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e76b0",
-          "decl": "void D3DBaseTexture_GetLevelCount(void);",
+          "decl": "void __stdcall D3DBaseTexture_GetLevelCount(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e79d0",
-          "decl": "void D3DDevice_GetDisplayMode(void);",
+          "decl": "void __stdcall D3DDevice_GetDisplayMode(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e7a30",
-          "decl": "void D3DDevice_Reset(void);",
+          "decl": "void __stdcall D3DDevice_Reset(uint32_t a0);",
           "ported": false
         },
         {
@@ -42001,7 +42019,7 @@
         },
         {
           "addr": "0x001e8250",
-          "decl": "void D3DDevice_GetRenderTarget(void);",
+          "decl": "void __stdcall D3DDevice_GetRenderTarget(uint32_t a0);",
           "ported": true
         },
         {
@@ -42011,22 +42029,22 @@
         },
         {
           "addr": "0x001e8400",
-          "decl": "void D3DDevice_SetLight(void);",
+          "decl": "void __stdcall D3DDevice_SetLight(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001e85e0",
-          "decl": "void D3DDevice_LightEnable(void);",
+          "decl": "void __stdcall D3DDevice_LightEnable(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001e86c0",
-          "decl": "void D3DDevice_GetTexture2(void);",
+          "decl": "void __stdcall D3DDevice_GetTexture2(uint32_t a0, uint32_t a1);",
           "ported": true
         },
         {
           "addr": "0x001e88a0",
-          "decl": "void D3DDevice_SetPalette(void);",
+          "decl": "void __stdcall D3DDevice_SetPalette(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
@@ -42046,12 +42064,12 @@
         },
         {
           "addr": "0x001e8a70",
-          "decl": "void D3DDevice_EndVisibilityTest(void);",
+          "decl": "void __stdcall D3DDevice_EndVisibilityTest(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001e8ad0",
-          "decl": "void D3DDevice_GetDisplayFieldStatus(void);",
+          "decl": "void __stdcall D3DDevice_GetDisplayFieldStatus(uint32_t a0);",
           "ported": true
         },
         {
@@ -42061,12 +42079,12 @@
         },
         {
           "addr": "0x001e8b40",
-          "decl": "void D3DDevice_SetModelView(void);",
+          "decl": "void __stdcall D3DDevice_SetModelView(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
           "addr": "0x001e8d30",
-          "decl": "void D3DDevice_SetTile(void);",
+          "decl": "void __stdcall D3DDevice_SetTile(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
@@ -42086,7 +42104,7 @@
         },
         {
           "addr": "0x001e93a0",
-          "decl": "void D3DDevice_SetRenderStateNotInline(void);",
+          "decl": "void __stdcall D3DDevice_SetRenderStateNotInline(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
@@ -42181,7 +42199,7 @@
         },
         {
           "addr": "0x001e9cb0",
-          "decl": "void D3DDevice_SetTextureStageStateNotInline(void);",
+          "decl": "void __stdcall D3DDevice_SetTextureStageStateNotInline(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
@@ -42241,7 +42259,7 @@
         },
         {
           "addr": "0x001eac90",
-          "decl": "void D3DDevice_GetShaderConstantMode(void);",
+          "decl": "void __stdcall D3DDevice_GetShaderConstantMode(uint32_t a0);",
           "ported": true
         },
         {
@@ -42251,17 +42269,17 @@
         },
         {
           "addr": "0x001eb0b0",
-          "decl": "void D3DDevice_GetVertexShader(void);",
+          "decl": "void __stdcall D3DDevice_GetVertexShader(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001eb0d0",
-          "decl": "void D3DDevice_GetVertexShaderConstant(void);",
+          "decl": "void __stdcall D3DDevice_GetVertexShaderConstant(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": true
         },
         {
           "addr": "0x001eb110",
-          "decl": "void D3DDevice_GetVertexShaderInput(void);",
+          "decl": "void __stdcall D3DDevice_GetVertexShaderInput(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
@@ -42271,32 +42289,32 @@
         },
         {
           "addr": "0x001eb3b0",
-          "decl": "void D3DDevice_RunVertexStateShader(void);",
+          "decl": "void __stdcall D3DDevice_RunVertexStateShader(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001eb400",
-          "decl": "void D3DDevice_LoadVertexShader(void);",
+          "decl": "void __stdcall D3DDevice_LoadVertexShader(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001eb460",
-          "decl": "void D3DDevice_LoadVertexShaderProgram(void);",
+          "decl": "void __stdcall D3DDevice_LoadVertexShaderProgram(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001eb4d0",
-          "decl": "void D3DDevice_SelectVertexShader(void);",
+          "decl": "void __stdcall D3DDevice_SelectVertexShader(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001eb540",
-          "decl": "void D3DDevice_GetVertexShaderSize(void);",
+          "decl": "void __stdcall D3DDevice_GetVertexShaderSize(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001eb560",
-          "decl": "void D3DDevice_GetVertexShaderType(void);",
+          "decl": "void __stdcall D3DDevice_GetVertexShaderType(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
@@ -42316,37 +42334,37 @@
         },
         {
           "addr": "0x001eb970",
-          "decl": "void D3DDevice_GetVertexShaderDeclaration(void);",
+          "decl": "void __stdcall D3DDevice_GetVertexShaderDeclaration(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
           "addr": "0x001ebda0",
-          "decl": "void D3DDevice_GetVertexShaderFunction(void);",
+          "decl": "void __stdcall D3DDevice_GetVertexShaderFunction(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
           "addr": "0x001ebe60",
-          "decl": "void D3DDevice_SetVertexShaderInput(void);",
+          "decl": "void __stdcall D3DDevice_SetVertexShaderInput(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
           "addr": "0x001ec0b0",
-          "decl": "void D3DDevice_CreatePixelShader(void);",
+          "decl": "void __stdcall D3DDevice_CreatePixelShader(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001ec100",
-          "decl": "void D3DDevice_DeletePixelShader(void);",
+          "decl": "void __stdcall D3DDevice_DeletePixelShader(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001ec160",
-          "decl": "void D3DDevice_GetPixelShader(void);",
+          "decl": "void __stdcall D3DDevice_GetPixelShader(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001ec5c0",
-          "decl": "void D3DDevice_SetPixelShader(void);",
+          "decl": "void __stdcall D3DDevice_SetPixelShader(uint32_t a0);",
           "ported": false
         },
         {
@@ -42376,12 +42394,12 @@
         },
         {
           "addr": "0x001ed200",
-          "decl": "void D3DDevice_PrimeVertexCache(void);",
+          "decl": "void __stdcall D3DDevice_PrimeVertexCache(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001ed360",
-          "decl": "void D3DDevice_SetVertexData4s(void);",
+          "decl": "void __stdcall D3DDevice_SetVertexData4s(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4);",
           "ported": false
         },
         {
@@ -42391,37 +42409,27 @@
         },
         {
           "addr": "0x001ed570",
-          "decl": "void D3DResource_GetType(void);",
+          "decl": "void __stdcall D3DResource_GetType(uint32_t a0);",
           "ported": true
         },
         {
           "addr": "0x001edc20",
-          "decl": "void D3DTexture_GetSurfaceLevel(void);",
+          "decl": "void __stdcall D3DTexture_GetSurfaceLevel(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
           "addr": "0x001edcb0",
-          "decl": "void D3DCubeTexture_GetCubeMapSurface(void);",
-          "ported": false
-        },
-        {
-          "addr": "0x001edd10",
-          "decl": "void __stdcall D3DCubeTexture_LockRect(int a, int b, int c, int d, int e, int f);",
-          "ported": false
-        },
-        {
-          "addr": "0x001edd80",
-          "decl": "void __stdcall D3DVolumeTexture_LockBox(int a, int b, int c, int d, int e);",
+          "decl": "void __stdcall D3DCubeTexture_GetCubeMapSurface(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3);",
           "ported": false
         },
         {
           "addr": "0x001eddd0",
-          "decl": "void D3D_CreateTexture(void);",
+          "decl": "void __stdcall D3D_CreateTexture(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5, uint32_t a6, uint32_t a7, uint32_t a8);",
           "ported": false
         },
         {
           "addr": "0x001edea0",
-          "decl": "void D3D_SetPushBufferSize(void);",
+          "decl": "void __stdcall D3D_SetPushBufferSize(uint32_t a0, uint32_t a1);",
           "ported": true
         },
         {
@@ -42436,32 +42444,32 @@
         },
         {
           "addr": "0x001eeac0",
-          "decl": "void D3D_GetAdapterIdentifier(void);",
+          "decl": "void __stdcall D3D_GetAdapterIdentifier(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": true
         },
         {
           "addr": "0x001eeaf0",
-          "decl": "void D3D_GetAdapterModeCount(void);",
+          "decl": "void __stdcall D3D_GetAdapterModeCount(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001eeb90",
-          "decl": "void D3D_EnumAdapterModes(void);",
+          "decl": "void __stdcall D3D_EnumAdapterModes(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
           "addr": "0x001eecf0",
-          "decl": "void D3D_GetDeviceCaps(void);",
+          "decl": "void __stdcall D3D_GetDeviceCaps(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
           "addr": "0x001eed40",
-          "decl": "void D3D_GetAdapterDisplayMode(void);",
+          "decl": "void __stdcall D3D_GetAdapterDisplayMode(uint32_t a0, uint32_t a1);",
           "ported": true
         },
         {
           "addr": "0x001eee20",
-          "decl": "void D3D_CheckDeviceFormat(void);",
+          "decl": "void __stdcall D3D_CheckDeviceFormat(uint32_t a0, uint32_t a1, uint32_t a2, uint32_t a3, uint32_t a4, uint32_t a5);",
           "ported": true
         },
         {
@@ -42476,7 +42484,7 @@
         },
         {
           "addr": "0x001eefe0",
-          "decl": "void D3DPalette_Lock(void);",
+          "decl": "void __stdcall D3DPalette_Lock(uint32_t a0, uint32_t a1, uint32_t a2);",
           "ported": false
         },
         {
@@ -42491,12 +42499,12 @@
         },
         {
           "addr": "0x001ef150",
-          "decl": "void D3DVertexBuffer_GetDesc(void);",
+          "decl": "void __stdcall D3DVertexBuffer_GetDesc(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001ef170",
-          "decl": "void D3DDevice_CreatePalette(void);",
+          "decl": "void __stdcall D3DDevice_CreatePalette(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
@@ -42505,13 +42513,8 @@
           "ported": false
         },
         {
-          "addr": "0x001ef200",
-          "decl": "int __stdcall D3DSurface_LockRect(void *surface, void *locked_rect, void *rect, uint32_t flags);",
-          "ported": false
-        },
-        {
           "addr": "0x001ef890",
-          "decl": "void D3DDevice_IsFencePending(void);",
+          "decl": "void __stdcall D3DDevice_IsFencePending(uint32_t a0);",
           "ported": true
         },
         {
@@ -42526,7 +42529,7 @@
         },
         {
           "addr": "0x001ef9e0",
-          "decl": "void D3D_SetFence(void);",
+          "decl": "void __stdcall D3D_SetFence(uint32_t a0);",
           "ported": false
         },
         {
@@ -42536,7 +42539,7 @@
         },
         {
           "addr": "0x001efd80",
-          "decl": "void D3D_BlockOnResource(void);",
+          "decl": "void __stdcall D3D_BlockOnResource(uint32_t a0);",
           "ported": true
         },
         {
@@ -42576,7 +42579,7 @@
         },
         {
           "addr": "0x001f4590",
-          "decl": "void Lock3DSurface(void);",
+          "decl": "void __stdcall Lock3DSurface(void *texture, unsigned int level, void *locked_box, void *box, unsigned int flags);",
           "ported": false
         },
         {
@@ -42591,7 +42594,7 @@
         },
         {
           "addr": "0x001f5390",
-          "decl": "void D3D_AllocContiguousMemory(void);",
+          "decl": "void __stdcall D3D_AllocContiguousMemory(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
@@ -42636,17 +42639,17 @@
         },
         {
           "addr": "0x001f9b53",
-          "decl": "void D3DDevice_DeleteStateBlock(void);",
+          "decl": "void __stdcall D3DDevice_DeleteStateBlock(uint32_t a0);",
           "ported": false
         },
         {
           "addr": "0x001f9be4",
-          "decl": "void D3DDevice_CreateStateBlock(void);",
+          "decl": "void __stdcall D3DDevice_CreateStateBlock(uint32_t a0, uint32_t a1);",
           "ported": false
         },
         {
           "addr": "0x001f9d0f",
-          "decl": "void D3DDevice_EndStateBlock(void);",
+          "decl": "void __stdcall D3DDevice_EndStateBlock(uint32_t a0);",
           "ported": false
         },
         {
