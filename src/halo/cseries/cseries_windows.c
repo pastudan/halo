@@ -73,30 +73,13 @@ void system_get_user_name(char *buffer, int16_t max_len)
   csstrncpy(buffer, (const char *)0x267a68, (size_t)(int32_t)max_len);
 }
 
-/* system_calloc (0x8e3b0) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static void (*const b8e3b0_c1d0c48)(void) = FUN_001d0c48;
-
-__attribute__((naked, noinline))
-void * system_calloc(int count __attribute__((unused)), int size __attribute__((unused)))
+/* system_calloc (0x8e3b0) — readable C lift from XBE leaf. */
+void *system_calloc(int count, int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "imull 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x40\n\t"
-      "call *%[c1d0c48]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d0c48] "m"(b8e3b0_c1d0c48)
-      : "memory");
+  return FUN_001d0c48(0x40, count * size);
 }
-#else
-#error "system_calloc: clang naked draft required"
-#endif
+
+
 
 
 void *system_malloc(int size)

@@ -6417,8 +6417,9 @@
         },
         {
           "addr": "0x1cf840",
-          "decl": "void FUN_001cf840(void);",
-          "ported": false
+          "decl": "char FUN_001cf840(int object_handle);",
+          "ported": false,
+          "name": "FUN_001cf840"
         },
         {
           "addr": "0x1cf900",
@@ -7728,8 +7729,9 @@
         },
         {
           "addr": "0xdb1e0",
-          "decl": "void FUN_000db1e0(void);",
-          "ported": true
+          "decl": "void FUN_000db1e0(float *xy, char flag, int16_t value);",
+          "ported": true,
+          "name": "FUN_000db1e0"
         },
         {
           "addr": "0xdb250",
@@ -7758,8 +7760,9 @@
         },
         {
           "addr": "0xdbfb0",
-          "decl": "void FUN_000dbfb0(int param_1, int param_2, int param_3);",
-          "ported": true
+          "decl": "void FUN_000dbfb0(int16_t local_player_index, int param_2, void *pt);",
+          "ported": true,
+          "name": "FUN_000dbfb0"
         },
         {
           "addr": "0xdc000",
@@ -33327,8 +33330,9 @@
         },
         {
           "addr": "0x1d0c48",
-          "decl": "void FUN_001d0c48(void);",
-          "ported": false
+          "decl": "void *FUN_001d0c48(int flags, int size);",
+          "ported": false,
+          "name": "FUN_001d0c48"
         },
         {
           "addr": "0x1d0c65",
