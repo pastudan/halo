@@ -457,8 +457,8 @@
         },
         {
           "addr": "0x133170",
-          "decl": "void FUN_00133170(void);",
-          "ported": false
+          "decl": "void FUN_00133170(void *obj@<eax>, void *state@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x133260",

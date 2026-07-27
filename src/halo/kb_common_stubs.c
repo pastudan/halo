@@ -10027,54 +10027,24 @@ void FUN_001330f0(int glow_widget)
 }
 #endif
 
-/* FUN_00133170 (0x133170) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-static void *(*const b133170_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
-void FUN_00133170(void)
+/* FUN_00133170 (0x133170) — readable C lift.
+ * ABI: obj@<eax>, state@<esi>. */
+void FUN_00133170(void *obj /*@<eax>*/, void *state /*@<esi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x224(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x676c7721\n\t"
-      "call *%[tag]\n\t"
-      "movb 0x28(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $0x10, %%cl\n\t"
-      "je .LFUN_00133170_2\n\t"
-      "movswl 0x50(%%esi), %%edx\n\t"
-      "movswl 0x52(%%esi), %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fidivl -0x4(%%ebp)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "flds 0x2533c0\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00133170_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      ".LFUN_00133170_1:\n\t"
-      "fmuls 0x20(%%esi)\n\t"
-      "fstps 0x24(%%esi)\n\t"
-      ".LFUN_00133170_2:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b133170_tag)
-      : "memory");
-}
-#else
-#error "FUN_00133170: clang naked draft required"
-#endif
+  char *tag;
+  float ratio;
+  float v;
 
+  tag = (char *)tag_get(0x676c7721, *(int *)((char *)obj + 0x224));
+  if ((tag[0x28] & 0x10) == 0)
+    return;
+  ratio = (float)*(short *)((char *)state + 0x50) /
+          (float)*(short *)((char *)state + 0x52);
+  v = 1.0f - ratio;
+  if (!(v >= 0.0f))
+    v = 0.0f;
+  *(float *)((char *)state + 0x24) = v * *(float *)((char *)state + 0x20);
+}
 
 /* 0x1331d0 */
 #if 0 /* ported in objects.c */
