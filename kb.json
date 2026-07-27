@@ -26084,7 +26084,7 @@
           "comment": "Find clusters overlapping position+radius and add the object to both per-object and per-cluster reference lists.",
           "decl": "void cluster_partition_add_object(void *partition, int object_handle, void *first_cluster_ref, void *position, uint32_t radius_fp, void *location);",
           "name": "cluster_partition_add_object",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c"
         },
         {
@@ -31033,7 +31033,7 @@
         {
           "addr": "0x183880",
           "decl": "void rasterizer_text_cache_character(void *font_character@<edi>, void *font);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_text_cache_character"
         },
         {

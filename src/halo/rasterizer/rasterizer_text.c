@@ -3064,284 +3064,178 @@ void rasterizer_text_evict_character(int **slot)
 
 
 
-/* rasterizer_text_cache_character (0x183880) — XBE naked draft (batch 80). */
-#if defined(__clang__)
-static void (*const b183880_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b183880_exitfn)(int) = system_exit;
-static void (*const b183880_c183820)(int **slot) = rasterizer_text_evict_character;
-static void (*const b183880_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void * (*const b183880_c7c940)(void *bitmap, short x, short y, short mipmap_index) = bitmap_2d_address;
-static void (*const b183880_c168b10)(void *bitmap) = FUN_00168b10;
-
-__attribute__((naked, noinline))
-void rasterizer_text_cache_character(void *font_character __attribute__((unused)), void *font __attribute__((unused)))
+/* rasterizer_text_cache_character: cache a hardware character into the texture cache.
+ * Original ABI: EDI=character pointer, stack=font pointer
+ */
+void rasterizer_text_cache_character(void *font_character, void *font)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movb 0x4d04a0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_text_cache_character_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x279\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0a9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_cache_character_1:\n\t"
-      "movw 0xc(%%edi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lrasterizer_text_cache_character_4\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lrasterizer_text_cache_character_2\n\t"
-      "cmpw $0x100, %%ax\n\t"
-      "jl .Lrasterizer_text_cache_character_3\n\t"
-      ".Lrasterizer_text_cache_character_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x27d\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0bf8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_cache_character_3:\n\t"
-      "movswl 0xc(%%edi), %%eax\n\t"
-      "cmpl 0x4d04b0(,%%eax,8), %%edi\n\t"
-      "je .Lrasterizer_text_cache_character_22\n\t"
-      "pushl $1\n\t"
-      "pushl $0x27e\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0b90\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_text_cache_character_4:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x80, %%esi\n\t"
-      "cmpw %%si, 0x4(%%edi)\n\t"
-      "jle .Lrasterizer_text_cache_character_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x285\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0b48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_cache_character_5:\n\t"
-      "cmpw %%si, 0x6(%%edi)\n\t"
-      "jle .Lrasterizer_text_cache_character_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x286\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0b00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_cache_character_6:\n\t"
-      "movw 0x325748, %%cx\n\t"
-      "movswl 0x4(%%edi), %%edx\n\t"
-      "movw %%cx, 0xe(%%edi)\n\t"
-      "movswl 0x4d04a6, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jle .Lrasterizer_text_cache_character_7\n\t"
-      "movw 0x4d04aa, %%cx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "addw %%cx, 0x4d04a8\n\t"
-      "movw %%ax, 0x4d04a6\n\t"
-      "movw %%ax, 0x4d04aa\n\t"
-      ".Lrasterizer_text_cache_character_7:\n\t"
-      "movswl 0x6(%%edi), %%edx\n\t"
-      "movswl 0x4d04a8, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jle .Lrasterizer_text_cache_character_9\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x4d04a8\n\t"
-      "movw %%ax, 0x4d04a6\n\t"
-      "movw %%ax, 0x4d04aa\n\t"
-      "movw 0x4d04a2, %%ax\n\t"
-      "cmpw 0x4d04a4, %%ax\n\t"
-      "je .Lrasterizer_text_cache_character_10\n\t"
-      "jmp .Lrasterizer_text_cache_character_8\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".Lrasterizer_text_cache_character_8:\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "cmpw $0, 0x4d04b6(,%%esi,8)\n\t"
-      "leal 0x4d04b0(,%%esi,8), %%esi\n\t"
-      "jle .Lrasterizer_text_cache_character_10\n\t"
-      "call *%[c183820]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x4d04a2, %%al\n\t"
-      "incb %%al\n\t"
-      "andl $0xff, %%eax\n\t"
-      "cmpw 0x4d04a4, %%ax\n\t"
-      "movw %%ax, 0x4d04a2\n\t"
-      "jne .Lrasterizer_text_cache_character_8\n\t"
-      "jmp .Lrasterizer_text_cache_character_10\n\t"
-      ".Lrasterizer_text_cache_character_9:\n\t"
-      "movw 0x4d04a2, %%ax\n\t"
-      ".Lrasterizer_text_cache_character_10:\n\t"
-      "movw 0x6(%%edi), %%cx\n\t"
-      "movw 0x4d04aa, %%dx\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "jle .Lrasterizer_text_cache_character_13\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movw 0x4d04a8, %%bx\n\t"
-      "addw %%dx, %%bx\n\t"
-      "movl 0x4d04a8, %%edx\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "cmpw 0x4d04a4, %%ax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "je .Lrasterizer_text_cache_character_12\n\t"
-      "nop\n\t"
-      ".Lrasterizer_text_cache_character_11:\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movw 0x4d04b6(,%%esi,8), %%cx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "leal 0x4d04b0(,%%esi,8), %%esi\n\t"
-      "jl .Lrasterizer_text_cache_character_12\n\t"
-      "cmpw -0x4(%%ebp), %%cx\n\t"
-      "jge .Lrasterizer_text_cache_character_12\n\t"
-      "call *%[c183820]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x4d04a2, %%al\n\t"
-      "incb %%al\n\t"
-      "andl $0xff, %%eax\n\t"
-      "cmpw 0x4d04a4, %%ax\n\t"
-      "movw %%ax, 0x4d04a2\n\t"
-      "jne .Lrasterizer_text_cache_character_11\n\t"
-      ".Lrasterizer_text_cache_character_12:\n\t"
-      "movw 0x6(%%edi), %%cx\n\t"
-      "movw %%cx, 0x4d04aa\n\t"
-      ".Lrasterizer_text_cache_character_13:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x4d04a4, %%dl\n\t"
-      "incb %%dl\n\t"
-      "andl $0xff, %%edx\n\t"
-      "cmpw %%ax, %%dx\n\t"
-      "jne .Lrasterizer_text_cache_character_17\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "leal 0x4d04b0(,%%esi,8), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lrasterizer_text_cache_character_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x262\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0aec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_cache_character_14:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_text_cache_character_16\n\t"
-      "movw 0x325748, %%cx\n\t"
-      "movw $0xffff, 0xc(%%eax)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpw %%cx, 0xe(%%eax)\n\t"
-      "jne .Lrasterizer_text_cache_character_15\n\t"
-      "pushl $0x2b0ac4\n\t"
-      "pushl $3\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_text_cache_character_15:\n\t"
-      "movl $0, (%%esi)\n\t"
-      ".Lrasterizer_text_cache_character_16:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x4d04a2, %%dl\n\t"
-      "incb %%dl\n\t"
-      "andl $0xff, %%edx\n\t"
-      "movw %%dx, 0x4d04a2\n\t"
-      ".Lrasterizer_text_cache_character_17:\n\t"
-      "movw 0x4d04a4, %%ax\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "movw %%ax, 0xc(%%edi)\n\t"
-      "leal 0x4d04b0(,%%ebx,8), %%ebx\n\t"
-      "movl %%edi, (%%ebx)\n\t"
-      "movw 0x4d04a6, %%ax\n\t"
-      "movw %%ax, 0x4(%%ebx)\n\t"
-      "movw 0x4d04a8, %%cx\n\t"
-      "movw %%cx, 0x6(%%ebx)\n\t"
-      "movl 0x94(%%edx), %%esi\n\t"
-      "addl 0x10(%%edi), %%esi\n\t"
-      "cmpw $0, 0x6(%%edi)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jle .Lrasterizer_text_cache_character_21\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lrasterizer_text_cache_character_18:\n\t"
-      "movl 0x4d04ac, %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%ebx), %%ax\n\t"
-      "addw -0x4(%%ebp), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x4(%%ebx), %%cx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c7c940]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw %%cx, 0x4(%%edi)\n\t"
-      "jle .Lrasterizer_text_cache_character_20\n\t"
-      "jmp .Lrasterizer_text_cache_character_19\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lrasterizer_text_cache_character_19:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb (%%esi), %%dh\n\t"
-      "addl $2, %%eax\n\t"
-      "orl $0xfff, %%edx\n\t"
-      "movw %%dx, -0x2(%%eax)\n\t"
-      "incl %%esi\n\t"
-      "incl %%ecx\n\t"
-      "cmpw 0x4(%%edi), %%cx\n\t"
-      "jl .Lrasterizer_text_cache_character_19\n\t"
-      ".Lrasterizer_text_cache_character_20:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw 0x6(%%edi), %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .Lrasterizer_text_cache_character_18\n\t"
-      ".Lrasterizer_text_cache_character_21:\n\t"
-      "movl 0x4d04ac, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c168b10]\n\t"
-      "movw 0x4(%%edi), %%cx\n\t"
-      "addw %%cx, 0x4d04a6\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x4d04a4, %%dl\n\t"
-      "addl $4, %%esp\n\t"
-      "incb %%dl\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "andl $0xff, %%edx\n\t"
-      "movw %%dx, 0x4d04a4\n\t"
-      ".Lrasterizer_text_cache_character_22:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b183880_assert), [exitfn] "m"(b183880_exitfn), [c183820] "m"(b183880_c183820), [c8f390] "m"(b183880_c8f390), [c7c940] "m"(b183880_c7c940), [c168b10] "m"(b183880_c168b10)
-      : "memory");
+  int character = (int)font_character;
+  short char_width;
+  short char_height;
+  int **character_slot;
+  short hw_index;
+  short y;
+  short x;
+  short *pixel_out;
+  unsigned char *pixel_data;
+  int i;
+  int cache_top;
+  int cache_bottom;
+  unsigned short read_index;
+  unsigned short write_index;
+
+  if (*(char *)0x4d04a0 == 0) {
+    display_assert("hardware_character_cache.initialized",
+                   "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x279, 1);
+    system_exit(-1);
+  }
+
+  hw_index = *(short *)(character + 0xc);
+
+  if (hw_index == -1) {
+    char_width = *(short *)(character + 4);
+    char_height = *(short *)(character + 6);
+
+    if (char_width > 128) {
+      display_assert(
+        "font_character->bitmap_width<=HARDWARE_CHARACTER_CACHE_BITMAP_WIDTH",
+        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x285, 1);
+      system_exit(-1);
+    }
+    if (char_height > 128) {
+      display_assert(
+        "font_character->bitmap_height<=HARDWARE_CHARACTER_CACHE_BITMAP_HEIGHT",
+        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x286, 1);
+      system_exit(-1);
+    }
+
+    *(short *)(character + 0xe) = *(short *)0x325748;
+
+    /* Advance to next row if needed. Original writes _DAT_004d04a8 =
+       (uint)cursor_y as a single 32-bit store, which zero-extends cursor_y
+       into the high half — i.e. max_char_height (0x4d04aa) is reset to 0. */
+    if (128 < (int)*(short *)0x4d04a6 + (int)char_width) {
+      *(short *)0x4d04a8 += *(short *)0x4d04aa;
+      *(short *)0x4d04a6 = 0;
+      *(short *)0x4d04aa = 0;
+    }
+
+    /* Wrap back to top if needed, evicting characters. Original writes
+       _DAT_004d04a8 = 0 as a single 32-bit store, clearing both cursor_y
+       (0x4d04a8) and max_char_height (0x4d04aa). */
+    if (128 < (int)*(short *)0x4d04a8 + (int)char_height) {
+      *(short *)0x4d04a6 = 0;
+      *(short *)0x4d04a8 = 0;
+      *(short *)0x4d04aa = 0;
+
+      read_index = *(unsigned short *)0x4d04a2;
+      write_index = *(unsigned short *)0x4d04a4;
+
+      if (read_index != write_index) {
+        i = read_index & 0xFF;
+        while (i != (write_index & 0xFF)) {
+          if (*(short *)(0x4d04b6 + i * 8) <= 0) {
+            break;
+          }
+          rasterizer_text_evict_character((int **)(0x4d04b0 + i * 8));
+          i = (i + 1) & 0xFF;
+        }
+        *(unsigned short *)0x4d04a2 = (unsigned short)i;
+      }
+    }
+
+    /* Evict characters that overlap */
+    if (*(short *)0x4d04aa < char_height) {
+      cache_top = *(short *)0x4d04a8 + *(short *)0x4d04aa;
+      cache_bottom = char_height + (int)*(short *)0x4d04a8;
+
+      read_index = *(unsigned short *)0x4d04a2;
+      write_index = *(unsigned short *)0x4d04a4;
+
+      if (read_index != write_index) {
+        i = read_index & 0xFF;
+        /* Original is a FIFO drain: break at the first slot whose y is
+           outside [cache_top, cache_bottom); only the contiguous front
+           entries are evicted and read_index advances past them. cache_bottom
+           is exclusive. The prior lift instead scanned the whole queue and
+           then set read_index = write_index, draining the entire character
+           cache whenever a taller glyph arrived, which dropped already-cached
+           menu text. */
+        do {
+          if (*(short *)(0x4d04b6 + i * 8) < (short)cache_top ||
+              (short)cache_bottom <= *(short *)(0x4d04b6 + i * 8)) {
+            break;
+          }
+          rasterizer_text_evict_character((int **)(0x4d04b0 + i * 8));
+          i = (i + 1) & 0xFF;
+        } while (i != (write_index & 0xFF));
+        *(unsigned short *)0x4d04a2 = (unsigned short)i;
+      }
+      /* Original writes _DAT_004d04a8 = CONCAT22(char_height, cursor_y):
+         a 32-bit store that sets max_char_height (0x4d04aa, high half) to
+         char_height while leaving cursor_y (0x4d04a8, low half) UNCHANGED.
+         The prior lift mistranslated this as `cursor_y += char_height`,
+         which advanced the pen down a full row each character until a
+         glyph was placed at cursor_y=128, overflowing the 128-tall cache
+         texture (bitmaps.c:421 "y>=0 && y<bitmap->height"). */
+      *(short *)0x4d04aa = char_height;
+    }
+
+    /* Handle full cache: evict oldest character. Original compares
+       (byte)(write_index + 1) against read_index, so the +1 wraps at 256;
+       truncate to unsigned char before comparing or the 255->0 wrap is
+       missed and the cache-full case is never detected. */
+    if ((unsigned char)(*(unsigned char *)0x4d04a4 + 1) ==
+        *(unsigned char *)0x4d04a2) {
+      character_slot = (int **)(0x4d04b0 + *(short *)0x4d04a2 * 8);
+      rasterizer_text_evict_character(character_slot);
+      *(unsigned short *)0x4d04a2 =
+        (unsigned short)(unsigned char)(*(unsigned char *)0x4d04a2 + 1);
+    }
+
+    /* Allocate slot and copy bitmap to texture */
+    i = *(short *)0x4d04a4;
+    *(short *)(character + 0xc) = (short)i;
+    *(int *)(0x4d04b0 + i * 8) = character;
+    *(short *)(0x4d04b4 + i * 8) = *(short *)0x4d04a6;
+    *(short *)(0x4d04b6 + i * 8) = *(short *)0x4d04a8;
+
+    pixel_data =
+      (unsigned char *)(*(int *)((int)font + 0x94) + *(int *)(character + 0x10));
+
+    for (y = 0; y < char_height; y++) {
+      pixel_out = (short *)bitmap_2d_address(
+        *(void **)0x4d04ac, *(short *)(0x4d04b4 + i * 8),
+        *(short *)(0x4d04b6 + i * 8) + y, 0);
+      for (x = 0; x < char_width; x++) {
+        *pixel_out = (short)((*pixel_data << 8) | 0xfff);
+        pixel_data++;
+        pixel_out++;
+      }
+    }
+
+    FUN_00168b10(*(void **)0x4d04ac);
+
+    *(short *)0x4d04a6 += char_width;
+    *(unsigned short *)0x4d04a4 =
+      (unsigned short)(unsigned char)(*(unsigned char *)0x4d04a4 + 1);
+  } else {
+    if (hw_index < 0 || hw_index >= 256) {
+      display_assert(
+        "font_character->hardware_character_index>=0 && "
+        "font_character->hardware_character_index<MAXIMUM_HARDWARE_CHARACTERS",
+        "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x27d, 1);
+      system_exit(-1);
+    }
+    if (character != *(int *)(0x4d04b0 + hw_index * 8)) {
+      display_assert("font_character==hardware_character_cache.characters[font_"
+                     "character->hardware_character_index].character",
+                     "c:\\halo\\SOURCE\\rasterizer\\rasterizer_text.c", 0x27e,
+                     1);
+      system_exit(-1);
+    }
+  }
 }
-#else
-#error "rasterizer_text_cache_character: clang naked draft required"
-#endif
 
 
 /* rasterizer_text_draw_cached_char (0x183c00) — XBE naked draft (batch 86). */

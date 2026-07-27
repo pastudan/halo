@@ -2777,214 +2777,93 @@ bad:    display_assert(DAT_002b2668, DAT_002b26b8, 0xd5, true);
 
 
 
-/* cluster_partition_add_object (0x1917a0) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void (*const b1917a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1917a0_exitfn)(int) = system_exit;
-static int16_t (*const b1917a0_c199230)(uint16_t cluster_count, float *position, float radius, int max_count, short *out_indices) = structure_find_in_cluster;
-static void (*const b1917a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const b1917a0_c119610)(data_t *data) = data_new_at_index;
-static void *(*const b1917a0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void * (*const b1917a0_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
-
-__attribute__((naked, noinline))
-void cluster_partition_add_object(void *partition __attribute__((unused)), int object_handle __attribute__((unused)), void *first_cluster_ref __attribute__((unused)), void *position __attribute__((unused)), uint32_t radius_fp __attribute__((unused)), void *location __attribute__((unused)))
+/* Add an object to a cluster partition (0x1917a0).
+ * Finds all clusters overlapping position+radius via structure_find_in_cluster,
+ * then for each cluster: allocates a per-object cluster reference
+ * (partition[2]) linking into *first_cluster_ref, and a per-cluster object
+ * reference (partition[1]) linking into the cluster head array (partition[0]).
+ */
+void cluster_partition_add_object(void *partition, int object_handle,
+                                  void *first_cluster_ref, void *position,
+                                  uint32_t radius_fp, void *location)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x80, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lcluster_partition_add_object_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6f\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x2b2748\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_add_object_1:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lcluster_partition_add_object_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x70\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x2b2730\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_add_object_2:\n\t"
-      "cmpl $-1, (%%esi)\n\t"
-      "je .Lcluster_partition_add_object_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x71\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x2b2710\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_add_object_3:\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lcluster_partition_add_object_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x72\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x267114\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_add_object_4:\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lcluster_partition_add_object_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x73\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x29c114\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_add_object_5:\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "leal -0x80(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%esi), %%dx\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c199230]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $0x40, %%ax\n\t"
-      "jle .Lcluster_partition_add_object_6\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b26e8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0x40, %%eax\n\t"
-      ".Lcluster_partition_add_object_6:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lcluster_partition_add_object_14\n\t"
-      "movzwl %%ax, %%edx\n\t"
-      "leal -0x80(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x14(%%ebp)\n\t"
-      "movl %%edx, 0x1c(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "jmp .Lcluster_partition_add_object_7\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lcluster_partition_add_object_7:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ecx), %%esi\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movw (%%eax), %%bx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lcluster_partition_add_object_8\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "jmp .Lcluster_partition_add_object_9\n\t"
-      ".Lcluster_partition_add_object_8:\n\t"
-      "movswl 0x20(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x280ea4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lcluster_partition_add_object_9:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lcluster_partition_add_object_10\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x134(%%eax), %%edx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .Lcluster_partition_add_object_11\n\t"
-      ".Lcluster_partition_add_object_10:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd5\n\t"
-      "pushl $0x2b26b8\n\t"
-      "pushl $0x2b2668\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcluster_partition_add_object_11:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "leal (%%ecx,%%edx,4), %%ebx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl 0x4(%%edx), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lcluster_partition_add_object_12\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movl (%%ebx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, (%%ebx)\n\t"
-      "jmp .Lcluster_partition_add_object_13\n\t"
-      ".Lcluster_partition_add_object_12:\n\t"
-      "movswl 0x20(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x280ea4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lcluster_partition_add_object_13:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "addl $2, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, 0x14(%%ebp)\n\t"
-      "movl %%eax, 0x1c(%%ebp)\n\t"
-      "jne .Lcluster_partition_add_object_7\n\t"
-      "popl %%ebx\n\t"
-      ".Lcluster_partition_add_object_14:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1917a0_assert), [exitfn] "m"(b1917a0_exitfn), [c199230] "m"(b1917a0_c199230), [c8f390] "m"(b1917a0_c8f390), [c119610] "m"(b1917a0_c119610), [dget] "m"(b1917a0_dget), [c18e3c0] "m"(b1917a0_c18e3c0)
-      : "memory");
+  int **part = (int **)partition;
+  int *first_ref = (int *)first_cluster_ref;
+  short *pos = (short *)position;
+  char *loc = (char *)location;
+  short local_clusters[64];
+  uint16_t cluster_bsp_index;
+  union {
+    uint32_t u;
+    float f;
+  } rad;
+  int16_t cluster_count;
+
+  assert_halt(partition);
+  assert_halt(first_cluster_ref);
+  assert_halt(*first_ref == -1);
+  assert_halt(position);
+  assert_halt(location);
+
+  cluster_bsp_index = *(uint16_t *)(loc + 4);
+  rad.u = radius_fp;
+
+  cluster_count = structure_find_in_cluster(cluster_bsp_index, (float *)pos,
+                                            rad.f, 0x40, local_clusters);
+
+  if (cluster_count > 0x40) {
+    error(2, "an object or light spanned %d clusters.", (int)cluster_count);
+    cluster_count = 0x40;
+  }
+
+  {
+    int i;
+    short *cluster_ptr = local_clusters;
+    for (i = 0; i < (int)(uint16_t)cluster_count; i++, cluster_ptr++) {
+      short cluster_index = *cluster_ptr;
+
+      {
+        data_t *obj_ref_data = (data_t *)part[2];
+        int obj_ref_handle = data_new_at_index(obj_ref_data);
+        if (obj_ref_handle == -1) {
+          error(2, "WARNING: maximum %ss per map (%d) exceeded.", obj_ref_data,
+                (int)*(short *)((char *)obj_ref_data + 0x20));
+        } else {
+          int *obj_ref = (int *)datum_get(obj_ref_data, obj_ref_handle);
+          obj_ref[1] = (int)cluster_index;
+          obj_ref[2] = *first_ref;
+          *first_ref = obj_ref_handle;
+        }
+      }
+
+      if (cluster_index < 0 ||
+          (int)cluster_index >= *(int *)((char *)scenario_get() + 0x134)) {
+        display_assert(
+          "cluster_index>=0 && "
+          "cluster_index<global_structure_bsp_get()->clusters.count",
+          "c:\\halo\\SOURCE\\structures\\cluster_partitions.c", 0xd5, true);
+        system_exit(-1);
+      }
+
+      {
+        int *cluster_head = &part[0][(int)cluster_index];
+        data_t *cluster_ref_data = (data_t *)part[1];
+        int cluster_ref_handle = data_new_at_index(cluster_ref_data);
+        if (cluster_ref_handle == -1) {
+          error(2, "WARNING: maximum %ss per map (%d) exceeded.",
+                cluster_ref_data,
+                (int)*(short *)((char *)cluster_ref_data + 0x20));
+        } else {
+          int *cluster_ref =
+            (int *)datum_get(cluster_ref_data, cluster_ref_handle);
+          cluster_ref[1] = object_handle;
+          cluster_ref[2] = *cluster_head;
+          *cluster_head = cluster_ref_handle;
+        }
+      }
+    }
+  }
 }
-#else
-#error "cluster_partition_add_object: clang naked draft required"
-#endif
 
 
 /* cluster_partition_remove_object (0x1919a0) — readable C lift.
