@@ -2767,7 +2767,7 @@ static void * (*const b7ece0_c7d000)(void *bitmap, short mipmap_index) = bitmap_
 static void * (*const b7ece0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
 __attribute__((naked, noinline))
-void bitmap_cube_map_face_insert(void)
+void bitmap_cube_map_face_insert(void *bitmap_2d __attribute__((unused)), void *bitmap_cube __attribute__((unused)), int mipmap __attribute__((unused)), int face __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
