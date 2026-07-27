@@ -2632,104 +2632,42 @@ void FUN_000e76b0(void *widget, void *tag, void *a, float d, int e, int f)
 #endif
 
 
-/* network_game_reset_to_pregame_ui (0xe8830) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static void (*const be8830_ce58c0)(void) = (void *)ui_widgets_close_all;
-static bool (*const be8830_c12a170)(void) = (void *)network_game_is_splitscreen_local;
-static unsigned int (*const be8830_c12a1a0)(void) = (void *)FUN_0012a1a0;
-static void * (*const be8830_ce84e0)(const char *name, int tag_index, int is_child, int widget_stack, int parent_tag_index, int a6, int a7) = (void *)ui_widget_load_by_name_or_tag;
-static void (*const be8830_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void * (*const be8830_c12a1d0)(void) = (void *)network_game_server_get;
-static void (*const be8830_c12d690)(void *server, char flag) = (void *)network_game_server_pause_countdown;
-
-__attribute__((naked, noinline))
+/* network_game_reset_to_pregame_ui (0xe8830) — readable C lift. */
 void network_game_reset_to_pregame_ui(void)
 {
-  __asm__ volatile(
-      "call *%[ce58c0]\n\t"
-      "call *%[c12a170]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_reset_to_pregame_ui_2\n\t"
-      "call *%[c12a1a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "je .Lnetwork_game_reset_to_pregame_ui_1\n\t"
-      "pushl $0x284370\n\t"
-      "call *%[ce84e0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lnetwork_game_reset_to_pregame_ui_4\n\t"
-      "pushl $0x284338\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_reset_to_pregame_ui_1:\n\t"
-      "pushl $0x2842d8\n\t"
-      "call *%[ce84e0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lnetwork_game_reset_to_pregame_ui_4\n\t"
-      "pushl $0x2842ac\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_reset_to_pregame_ui_2:\n\t"
-      "call *%[c12a1d0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_game_reset_to_pregame_ui_3\n\t"
-      "pushl $1\n\t"
-      "call *%[c12a1d0]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12d690]\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x284250\n\t"
-      "call *%[ce84e0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lnetwork_game_reset_to_pregame_ui_4\n\t"
-      "pushl $0x2842ac\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_reset_to_pregame_ui_3:\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x2828e0\n\t"
-      "call *%[ce84e0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lnetwork_game_reset_to_pregame_ui_4\n\t"
-      "pushl $0x284220\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lnetwork_game_reset_to_pregame_ui_4:\n\t"
-      "ret\n\t"
-      :
-      : [ce58c0] "m"(be8830_ce58c0), [c12a170] "m"(be8830_c12a170), [c12a1a0] "m"(be8830_c12a1a0), [ce84e0] "m"(be8830_ce84e0), [c8f390] "m"(be8830_c8f390), [c12a1d0] "m"(be8830_c12a1d0), [c12d690] "m"(be8830_c12d690)
-      : "memory");
-}
-#else
-#error "network_game_reset_to_pregame_ui: clang naked draft required"
-#endif
+  extern char DAT_00284370[];
+  extern char DAT_00284338[];
+  extern char DAT_002842d8[];
+  extern char DAT_002842ac[];
+  extern char DAT_00284250[];
+  extern char DAT_002828e0[];
+  extern char DAT_00284220[];
+  void *w;
 
+  ui_widgets_close_all();
+  if (network_game_is_splitscreen_local()) {
+    if (FUN_0012a1a0()) {
+      w = ui_widget_load_by_name_or_tag(DAT_00284370, -1, 0, -1, -1, -1, -1);
+      if (w == 0)
+        error(2, DAT_00284338);
+    } else {
+      w = ui_widget_load_by_name_or_tag(DAT_002842d8, -1, 0, -1, -1, -1, -1);
+      if (w == 0)
+        error(2, DAT_002842ac);
+    }
+    return;
+  }
+  if (network_game_server_get()) {
+    network_game_server_pause_countdown(network_game_server_get(), 1);
+    w = ui_widget_load_by_name_or_tag(DAT_00284250, -1, 0, -1, -1, -1, -1);
+    if (w == 0)
+      error(2, DAT_002842ac);
+    return;
+  }
+  w = ui_widget_load_by_name_or_tag(DAT_002828e0, -1, 0, -1, -1, -1, -1);
+  if (w == 0)
+    error(2, DAT_00284220);
+}
 
 /* FUN_000e9a60 (0xe9a60) — readable C lift. */
 char FUN_000e9a60(void *widget)
