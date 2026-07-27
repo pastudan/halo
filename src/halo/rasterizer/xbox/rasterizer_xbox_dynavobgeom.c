@@ -8399,101 +8399,50 @@ void FUN_00165de0(short index, float scale, float *out)
 
 
 
-/* FUN_00165ea0 (0x165ea0) — XBE naked draft (batch 328). */
-#if defined(__clang__)
-static void (*const b165ea0_c182590)(int data, int size) = (void *)rasterizer_memory_pool_copy;
-static void (*const b165ea0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_00165ea0(void)
+/* FUN_00165ea0 (0x165ea0) — readable C lift. */
+void FUN_00165ea0(int a0, short a1, int a2, int a3, int a4, int a5, int a6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x3256d5, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00165ea0_3\n\t"
-      "cmpw $0, 0x3256bc\n\t"
-      "jne .LFUN_00165ea0_3\n\t"
-      "movl 0x47df04, %%eax\n\t"
-      "cmpl $0x80, %%eax\n\t"
-      "jge .LFUN_00165ea0_2\n\t"
-      "movl 0x47df00, %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "leal (%%eax,%%eax,4), %%esi\n\t"
-      "shll $5, %%esi\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0x47df04\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x48(%%esi)\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movw %%cx, 0x10(%%esi)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x44(%%esi)\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x58(%%esi)\n\t"
-      "movl 0x47df34, %%eax\n\t"
-      "movl %%ecx, 0x50(%%esi)\n\t"
-      "movl $0, 0x4c(%%esi)\n\t"
-      "movl %%edx, 0x54(%%esi)\n\t"
-      "movl 0xc4(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x3c(%%esi)\n\t"
-      "movb 0x47df38, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0xc8(%%eax), %%edx\n\t"
-      "movl %%edx, 0x40(%%esi)\n\t"
-      "jne .LFUN_00165ea0_1\n\t"
-      "movswl 0xc(%%eax), %%ecx\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "imull $0x34, %%ecx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c182590]\n\t"
-      "movl %%eax, 0x47dcb4\n\t"
-      "movl 0x47df34, %%eax\n\t"
-      "movw 0xc(%%eax), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%cx, 0x47dcb0\n\t"
-      "movb $1, 0x47df38\n\t"
-      ".LFUN_00165ea0_1:\n\t"
-      "movl 0x47dcb4, %%edx\n\t"
-      "movw 0x47dcb0, %%ax\n\t"
-      "movl 0x47df3c, %%ecx\n\t"
-      "movl %%edx, 0x60(%%esi)\n\t"
-      "movl 0x47df40, %%edx\n\t"
-      "movw %%ax, 0x64(%%esi)\n\t"
-      "movl %%ecx, 0x68(%%esi)\n\t"
-      "movl %%edx, 0x6c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00165ea0_2:\n\t"
-      "movb 0x47df44, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00165ea0_3\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0x2a1d48\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, 0x47df44\n\t"
-      ".LFUN_00165ea0_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c182590] "m"(b165ea0_c182590), [c8f390] "m"(b165ea0_c8f390)
-      : "memory");
+  int n;
+  char *slot;
+  int *obj;
+
+  if (!*(unsigned char *)0x3256d5)
+    return;
+  if (*(short *)0x3256bc != 0)
+    return;
+  n = *(int *)0x47df04;
+  if (n >= 0x80) {
+    if (!*(unsigned char *)0x47df44) {
+      error(2, (const char *)0x2a1d48, 0x80);
+      *(unsigned char *)0x47df44 = 1;
+    }
+    return;
+  }
+  slot = (char *)(*(int *)0x47df00) + n * 0xa0;
+  *(int *)0x47df04 = n + 1;
+  *(int *)(slot + 0xc) = a0;
+  *(int *)(slot + 0x48) = a2;
+  *(short *)(slot + 0x10) = a1;
+  *(int *)(slot + 0x44) = a3;
+  *(int *)(slot + 0x58) = a5;
+  *(int *)(slot + 0x50) = a4;
+  *(int *)(slot + 0x4c) = 0;
+  *(int *)(slot + 0x54) = a6;
+  obj = *(int **)0x47df34;
+  *(int *)(slot + 0x3c) = *(int *)((char *)obj + 0xc4);
+  *(int *)(slot + 0x40) = *(int *)((char *)obj + 0xc8);
+  if (!*(unsigned char *)0x47df38) {
+    *(int *)0x47dcb4 = rasterizer_memory_pool_copy(
+        *(int *)((char *)obj + 8), (int)*(short *)((char *)obj + 0xc) * 0x34);
+    obj = *(int **)0x47df34;
+    *(short *)0x47dcb0 = *(short *)((char *)obj + 0xc);
+    *(unsigned char *)0x47df38 = 1;
+  }
+  *(int *)(slot + 0x60) = *(int *)0x47dcb4;
+  *(short *)(slot + 0x64) = *(short *)0x47dcb0;
+  *(int *)(slot + 0x68) = *(int *)0x47df3c;
+  *(int *)(slot + 0x6c) = *(int *)0x47df40;
 }
-#else
-#error "FUN_00165ea0: clang naked draft required"
-#endif
-
-
 /* FUN_00165fc0 (0x165fc0) — readable C lift. */
 void FUN_00165fc0(void)
 {

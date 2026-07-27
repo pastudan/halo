@@ -39028,8 +39028,9 @@
         },
         {
           "addr": "0x165ea0",
-          "decl": "void FUN_00165ea0(void);",
-          "ported": false
+          "decl": "void FUN_00165ea0(int a0, short a1, int a2, int a3, int a4, int a5, int a6);",
+          "ported": true,
+          "name": "FUN_00165ea0"
         },
         {
           "addr": "0x165fc0",
