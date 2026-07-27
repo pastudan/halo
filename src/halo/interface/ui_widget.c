@@ -3274,48 +3274,18 @@ char ui_widget_event_handler_set_difficulty(void *widget, void *event_data, bool
 #endif
 
 
-/* display_error_abort_to_dashboard (0xe9cb0) — XBE naked draft (batch 144). */
-#if defined(__clang__)
-static void (*const be9cb0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be9cb0_exitfn)(int) = (void *)system_exit;
-static void (*const be9cb0_ce0840)(int16_t) = (void *)player_ui_local_player_joined_multiplayer_game;
-
-__attribute__((naked, noinline))
-char display_error_abort_to_dashboard(void *widget, void *event_data, bool *widget_deleted)
+/* display_error_abort_to_dashboard (0xe9cb0) — readable C lift. */
+extern char DAT_002859a4[];
+extern char DAT_00285b10[];
+char display_error_abort_to_dashboard(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $-1, 0x8(%%esi)\n\t"
-      "jne .Ldisplay_error_abort_to_dashboard_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x369\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285b10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldisplay_error_abort_to_dashboard_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x8(%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce0840]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be9cb0_assert), [exitfn] "m"(be9cb0_exitfn), [ce0840] "m"(be9cb0_ce0840)
-      : "memory");
+  if (*(int16_t *)((char *)widget + 8) == -1) {
+    display_assert(DAT_00285b10, DAT_002859a4, 0x369, true);
+    system_exit(-1);
+  }
+  FUN_000e0840(*(uint16_t *)((char *)widget + 8));
+  return 1;
 }
-#else
-#error "display_error_abort_to_dashboard: clang naked draft required"
-#endif
-
 
 /* FUN_000E9D40 (0xe9d40) — XBE naked draft (batch 151). */
 #if defined(__clang__)
