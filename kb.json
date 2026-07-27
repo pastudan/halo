@@ -31302,8 +31302,9 @@
         },
         {
           "addr": "0x17d8f0",
-          "decl": "void FUN_0017d8f0(void);",
-          "ported": false
+          "decl": "float FUN_0017d8f0(void);",
+          "ported": true,
+          "name": "FUN_0017d8f0"
         },
         {
           "addr": "0x17d910",
@@ -31313,7 +31314,7 @@
         {
           "addr": "0x17d950",
           "decl": "void FUN_0017d950(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d980",
@@ -31457,7 +31458,7 @@
         {
           "addr": "0x17ed30",
           "decl": "void FUN_0017ed30(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17ed70",
