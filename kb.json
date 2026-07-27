@@ -10680,7 +10680,7 @@
           "addr": "0xc11d0",
           "decl": "void FUN_000c11d0(int16_t function_index, int thread_datum, char init);",
           "name": "FUN_000c11d0",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/hs/hs.c"
         },
         {

@@ -487,51 +487,17 @@ void FUN_000c1190(int16_t function_index, int thread_datum, char init)
   hs_return(thread_datum, 0);
 }
 
-/* FUN_000c11d0 (0xc11d0) — XBE naked draft (batch 96). */
-#if defined(__clang__)
-static int (*const bc11d0_ccc560)(int16_t function_index, int thread_datum, char init) = hs_macro_function_evaluate;
-static void (*const bc11d0_c588d0)(int param_1, char param_2) = FUN_000588d0;
-static void (*const bc11d0_ccbf80)(int thread_handle, int value) = hs_return;
-
-__attribute__((naked, noinline))
-void FUN_000c11d0(int16_t function_index __attribute__((unused)), int thread_datum __attribute__((unused)), char init __attribute__((unused)))
+/* FUN_000c11d0 (0xc11d0) — readable C lift. */
+void FUN_000c11d0(int16_t function_index, int thread_datum, char init)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ccc560]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c11d0_1\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x4(%%eax), %%dl\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c588d0]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ccbf80]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_000c11d0_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ccc560] "m"(bc11d0_ccc560), [c588d0] "m"(bc11d0_c588d0), [ccbf80] "m"(bc11d0_ccbf80)
-      : "memory");
-}
-#else
-#error "FUN_000c11d0: clang naked draft required"
-#endif
+  char *args;
 
+  args = (char *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (args == NULL)
+    return;
+  FUN_000588d0(*(int *)args, args[4]);
+  hs_return(thread_datum, 0);
+}
 
 /* 0xc1210 — HS built-in evaluator: dispatch a macro function call and commit
  * an AI-reference predicate result to the thread. Evaluates the macro function
