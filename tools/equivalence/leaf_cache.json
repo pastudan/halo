@@ -1828,6 +1828,10 @@
     "confidence": "moderate",
     "coverage_pct": 41.8
   },
+  "0x49c70": {
+    "confidence": "weak",
+    "coverage_pct": 16.2
+  },
   "0x4a290": {
     "class": "non_leaf"
   },
@@ -1835,11 +1839,18 @@
     "confidence": "moderate",
     "coverage_pct": 59.0
   },
+  "0x4ffffc": {
+    "confidence": "high",
+    "coverage_pct": 77.5
+  },
   "0x50": {
     "confidence": "weak",
     "coverage_pct": 26.6
   },
   "0x534d0": {
+    "class": "non_leaf"
+  },
+  "0x53680": {
     "class": "non_leaf"
   },
   "0x53f40": {
