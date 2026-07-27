@@ -38714,7 +38714,7 @@
         {
           "addr": "0x15f200",
           "decl": "void FUN_0015f200(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015f200"
         },
         {
