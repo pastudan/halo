@@ -203,171 +203,30 @@ char FUN_000f5700(void)
   return 1;
 }
 
-/* FUN_000f5750 (0xf5750) — XBE naked draft (batch 54). */
-#if defined(__clang__)
-static void (*const bf5750_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
-static wchar_t * (*const bf5750_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static void (*const bf5750_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf5750_exitfn)(int) = system_exit;
-static unsigned short (*const bf5750_cf5800)(int16_t slot_index /* */) = (void *)FUN_000f5800;
-
-__attribute__((naked, noinline))
+/* FUN_000f5750 (0xf5750) — readable C lift. */
 char FUN_000f5750(void)
 {
-  __asm__ volatile(
-      "movw 0x46cef8, %%ax\n\t"
-      "movswl 0x46cefa, %%ecx\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "imull $0xb, %%edx, %%edx\n\t"
-      "movb 0x28a790(%%edx,%%ecx,1), %%dl\n\t"
-      "pushl %%esi\n\t"
-      "jmp .LFUN_000f5750_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_000f5750_1:\n\t"
-      "incw %%ax\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jne .LFUN_000f5750_2\n\t"
-      "xorw %%ax, %%ax\n\t"
-      ".LFUN_000f5750_2:\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "imull $0xb, %%esi, %%esi\n\t"
-      "cmpb %%dl, 0x28a790(%%esi,%%ecx,1)\n\t"
-      "je .LFUN_000f5750_1\n\t"
-      "pushl $1\n\t"
-      "movw %%ax, 0x46cef8\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movl 0x46cf08, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "movb %%bl, 0x46cef0\n\t"
-      "je .LFUN_000f5750_3\n\t"
-      "movzwl 0x46cefc, %%ecx\n\t"
-      "shrl $1, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x46cf18\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19dc90]\n\t"
-      "movzwl 0x46cefc, %%edx\n\t"
-      "movl 0x46cf08, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "shrl $1, %%edx\n\t"
-      "movw %%bx, -0x2(%%eax,%%edx,2)\n\t"
-      ".LFUN_000f5750_3:\n\t"
-      "pushl $3\n\t"
-      "movl %%ebx, 0x46cf08\n\t"
-      "movw %%bx, 0x46cf18\n\t"
-      "movb %%bl, 0x46cf06\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f5750_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3da\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28a97c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5750_4:\n\t"
-      "cmpw $0x24, %%si\n\t"
-      "jb .LFUN_000f5750_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3db\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28a94c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5750_5:\n\t"
-      "movl 0x46cef4, %%ecx\n\t"
-      "movl 0x34(%%ecx), %%edx\n\t"
-      "movb 0x46cef1, %%cl\n\t"
-      "movzwl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movb 0x46cef2, %%cl\n\t"
-      "je .LFUN_000f5750_8\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000f5750_6\n\t"
-      "movw 0xa(%%eax), %%ax\n\t"
-      "jmp .LFUN_000f5750_12\n\t"
-      ".LFUN_000f5750_6:\n\t"
-      "movb 0x46cef3, %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000f5750_7\n\t"
-      "movw 0xc(%%eax), %%ax\n\t"
-      "jmp .LFUN_000f5750_12\n\t"
-      ".LFUN_000f5750_7:\n\t"
-      "movw 0x4(%%eax), %%ax\n\t"
-      "jmp .LFUN_000f5750_12\n\t"
-      ".LFUN_000f5750_8:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movb 0x46cef3, %%cl\n\t"
-      "je .LFUN_000f5750_10\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000f5750_9\n\t"
-      "movw 0xe(%%eax), %%ax\n\t"
-      "jmp .LFUN_000f5750_12\n\t"
-      ".LFUN_000f5750_9:\n\t"
-      "movw 0x6(%%eax), %%ax\n\t"
-      "jmp .LFUN_000f5750_12\n\t"
-      ".LFUN_000f5750_10:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_000f5750_11\n\t"
-      "movw 0x8(%%eax), %%ax\n\t"
-      "jmp .LFUN_000f5750_12\n\t"
-      ".LFUN_000f5750_11:\n\t"
-      "movw 0x2(%%eax), %%ax\n\t"
-      ".LFUN_000f5750_12:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_000f5750_13\n\t"
-      "movl $0x7f, %%eax\n\t"
-      ".LFUN_000f5750_13:\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "movswl 0x46cef8, %%eax\n\t"
-      "movswl 0x46cefa, %%ecx\n\t"
-      "imull $0xb, %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movsbw 0x28a790(%%eax,%%ecx,1), %%si\n\t"
-      "call *%[cf5800]\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      :
-      : [ce5ab0] "m"(bf5750_ce5ab0), [c19dc90] "m"(bf5750_c19dc90), [assert] "m"(bf5750_assert), [exitfn] "m"(bf5750_exitfn), [cf5800] "m"(bf5750_cf5800)
-      : "memory");
-}
-#else
-#error "FUN_000f5750: clang naked draft required"
-#endif
+  short idx;
+  short base;
+  unsigned char first;
+  int off;
 
+  idx = *(short *)0x46cef8;
+  base = *(short *)0x46cefa;
+  off = (int)idx * 11;
+  first = *(unsigned char *)(0x28a790 + off + base);
+  for (;;) {
+    idx = (short)(idx + 1);
+    if (idx == 5)
+      idx = 0;
+    off = (int)idx * 11;
+    if (*(unsigned char *)(0x28a790 + off + base) != first)
+      break;
+  }
+  *(short *)0x46cef8 = idx;
+  ui_play_audio_feedback_sound(1);
+  return 1;
+}
 
 /* Virtual keyboard edit-buffer commit/flush handler (0xf57a0).
  * Commits the working edit buffer into the caller's target pointer: if a

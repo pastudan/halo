@@ -14047,7 +14047,7 @@
           "addr": "0xf5750",
           "decl": "char FUN_000f5750(void);",
           "name": "FUN_000f5750",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf57a0",
@@ -15520,15 +15520,15 @@
         },
         {
           "addr": "0x11c210",
-          "decl": "void FUN_0011c210(int cache @<ebx>, int block @<esi>);",
+          "decl": "void FUN_0011c210(int cache@<ebx>, int block@<esi>);",
           "name": "FUN_0011c210",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c290",
-          "decl": "void FUN_0011c290(int cache @<eax>);",
+          "decl": "void FUN_0011c290(int cache@<eax>);",
           "name": "FUN_0011c290",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c310",
@@ -28790,7 +28790,8 @@
         {
           "addr": "0x1a7ad0",
           "decl": "void FUN_001a7ad0(int parent_handle, int param_2, int param_3);",
-          "ported": false
+          "ported": false,
+          "name": "FUN_001a7ad0"
         },
         {
           "addr": "0x1a7b50",
