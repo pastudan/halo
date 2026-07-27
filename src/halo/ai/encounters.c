@@ -5314,118 +5314,69 @@ char FUN_0005ac60(int *samples, int score, float y, float x, float z)
   }
   return inserted;
 }
-/* FUN_00059c40 (0x59c40) — XBE naked draft (batch 233). */
-#if defined(__clang__)
-static void *(*const b59c40_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b59c40_c119610)(data_t *data) = data_new_at_index;
-static void (*const b59c40_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void *(*const b59c40_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-int FUN_00059c40(int encounter_handle __attribute__((unused)), int16_t pursuit_index __attribute__((unused)), int min_time __attribute__((unused)), char create __attribute__((unused)))
+/* FUN_00059c40 (0x59c40) — readable C lift.
+ *
+ * Find-or-create an ai-pursuit record for (encounter, pursuit_index).
+ * encounter_handle @ eax, pursuit_index @ bx; stack: min_time, create.
+ *
+ * Walks encounter+0x38 linked list (next at pursuit+0x24). On a match whose
+ * time field (+4) is still below min_time, reinitializes the record. When
+ * create is set and no record exists, allocates via data_new_at_index and
+ * prepends to the list.
+ */
+int FUN_00059c40(int encounter_handle /* @<eax> */, int16_t pursuit_index /* @<bx> */,
+                 int min_time, char create)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x38(%%edi), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "je .LFUN_00059c40_4\n\t"
-      ".LFUN_00059c40_1:\n\t"
-      "movl 0x5ab26c, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%bx, 0x2(%%eax)\n\t"
-      "je .LFUN_00059c40_2\n\t"
-      "movl 0x24(%%eax), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_00059c40_1\n\t"
-      "jmp .LFUN_00059c40_4\n\t"
-      ".LFUN_00059c40_2:\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "cmpl 0x8(%%ebp), %%eax\n\t"
-      "jge .LFUN_00059c40_3\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".LFUN_00059c40_3:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_00059c40_6\n\t"
-      ".LFUN_00059c40_4:\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00059c40_6\n\t"
-      "movl 0x5ab26c, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_00059c40_5\n\t"
-      "movl 0x5ab26c, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movw %%bx, 0x2(%%eax)\n\t"
-      "movl 0x38(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x24(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%esi, 0x38(%%edi)\n\t"
-      "jmp .LFUN_00059c40_7\n\t"
-      ".LFUN_00059c40_5:\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x25d540\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00059c40_6:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00059c40_8\n\t"
-      ".LFUN_00059c40_7:\n\t"
-      "movl 0x5ab26c, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "pushl $0x18\n\t"
-      "movl $0xffffffff, 0x4(%%eax)\n\t"
-      "movw %%cx, 0x8(%%eax)\n\t"
-      "movw %%cx, 0xa(%%eax)\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "je .LFUN_00059c40_9\n\t"
-      ".LFUN_00059c40_8:\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".LFUN_00059c40_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b59c40_dget), [c119610] "m"(b59c40_c119610), [c8f390] "m"(b59c40_c8f390), [memset] "m"(b59c40_memset)
-      : "memory");
-}
-#else
-#error "FUN_00059c40: clang naked draft required"
-#endif
+  char *encounter;
+  char *pursuit;
+  int handle;
+  char needs_init;
 
+  encounter = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
+  handle = *(int *)(encounter + 0x38);
+  needs_init = 0;
+
+  if (handle != -1) {
+    for (;;) {
+      pursuit = (char *)datum_get(*(data_t **)0x5ab26c, handle);
+      if (*(int16_t *)(pursuit + 2) == pursuit_index) {
+        if (*(int *)(pursuit + 4) < min_time)
+          needs_init = 1;
+        break;
+      }
+      handle = *(int *)(pursuit + 0x24);
+      if (handle == -1)
+        break;
+    }
+  }
+
+  if (handle == -1) {
+    if (!create)
+      return handle;
+    handle = data_new_at_index(*(data_t **)0x5ab26c);
+    if (handle == -1) {
+      error(2, (const char *)0x25d540, 0x100);
+      return -1;
+    }
+    pursuit = (char *)datum_get(*(data_t **)0x5ab26c, handle);
+    *(int16_t *)(pursuit + 2) = pursuit_index;
+    *(int *)(pursuit + 0x24) = *(int *)(encounter + 0x38);
+    *(int *)(encounter + 0x38) = handle;
+    needs_init = 1;
+  }
+
+  if (!needs_init)
+    return handle;
+
+  pursuit = (char *)datum_get(*(data_t **)0x5ab26c, handle);
+  *(int *)(pursuit + 4) = -1;
+  *(int16_t *)(pursuit + 8) = 0;
+  *(int16_t *)(pursuit + 0xa) = 0;
+  csmemset(pursuit + 0xc, -1, 0x18);
+  if (!create)
+    return -1;
+  return handle;
+}
 
 /* encounter_modify_pursuit_desires (0x59d30) — readable C lift. */
 void encounter_modify_pursuit_desires(int encounter_handle, int16_t profile_index,
