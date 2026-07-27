@@ -5660,90 +5660,14 @@ void FUN_0016FEB0(void)
 {
 }
 
-/* 0x16fec0 */
+/* FUN_0016fec0 (0x16fec0) — readable C lift (ret thunk). */
+__attribute__((noinline))
 void FUN_0016fec0(void)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* cmp esi, 0x52 -> jge 0x16feeb */
-  D3DDevice_SetRenderState_Simple(0, 0);
-  /* cmp esi, 0x74 -> jge 0x16fef9 */
-  ((void (*)(void))D3DDevice_SetRenderState_PSTextureModes)();
-  /* cmp esi, 0x75 -> jne 0x16ff0e */
-  ((void (*)(void))D3DDevice_SetRenderState_VertexBlend)();
-  /* cmp esi, 0x76 -> jne 0x16ff1a */
-  ((void (*)(void))D3DDevice_SetRenderState_FogColor)();
-  /* cmp esi, 0x77 -> jne 0x16ff26 */
-  D3DDevice_SetRenderState_FillMode(edi);
-  /* cmp esi, 0x78 -> jne 0x16ff32 */
-  ((void (*)(void))D3DDevice_SetRenderState_BackFillMode)();
-  /* cmp esi, 0x79 -> jne 0x16ff3e */
-  ((void (*)(void))D3DDevice_SetRenderState_TwoSidedLighting)();
-  /* cmp esi, 0x7a -> jne 0x16ff4a */
-  ((void (*)(void))D3DDevice_SetRenderState_NormalizeNormals)();
-  /* cmp esi, 0x7b -> jne 0x16ff56 */
-  D3DDevice_SetRenderState_ZEnable(edi);
-  /* cmp esi, 0x7c -> jne 0x16ff62 */
-  D3DDevice_SetRenderState_StencilEnable(edi);
-  /* cmp esi, 0x7d -> jne 0x16ff6e */
-  D3DDevice_SetRenderState_StencilFail(edi);
-  /* cmp esi, 0x7f -> jne 0x16ff7a */
-  D3DDevice_SetRenderState_CullMode(edi);
-  /* cmp esi, 0x7e -> jne 0x16ff86 */
-  ((void (*)(void))D3DDevice_SetRenderState_FrontFace)();
-  /* cmp esi, 0x80 -> jne 0x16ff95 */
-  ((void (*)(void))D3DDevice_SetRenderState_TextureFactor)();
-  /* cmp esi, 0x81 -> jne 0x16ffa4 */
-  D3DDevice_SetRenderState_ZBias(edi);
-  /* cmp esi, 0x82 -> jne 0x16ffb3 */
-  ((void (*)(void))D3DDevice_SetRenderState_LogicOp)();
-  /* cmp esi, 0x83 -> jne 0x16ffc2 */
-  ((void (*)(void))D3DDevice_SetRenderState_EdgeAntiAlias)();
-  /* cmp esi, 0x84 -> jne 0x16ffd1 */
-  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleAntiAlias)();
-  /* cmp esi, 0x85 -> jne 0x16ffe0 */
-  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleMask)();
-  /* cmp esi, 0x86 -> jne 0x16ffef */
-  ((void (*)(void))D3DDevice_SetRenderState_MultiSampleType)();
-  /* cmp esi, 0x87 -> jne 0x16fffe */
-  ((void (*)(void))D3DDevice_SetRenderState_ShadowFunc)();
-  /* cmp esi, 0x88 -> jne 0x17000d */
-  ((void (*)(void))D3DDevice_SetRenderState_LineWidth)();
-  /* cmp esi, 0x89 -> jne 0x17001c */
-  ((void (*)(void))D3DDevice_SetRenderState_Dxt1NoiseEnable)();
-  /* cmp esi, 0x8a -> jne 0x17002b */
-  ((void (*)(void))D3DDevice_SetRenderState_YuvEnable)();
-  /* cmp esi, 0x8b -> jne 0x17003a */
-  ((void (*)(void))D3DDevice_SetRenderState_OcclusionCullEnable)();
-  /* cmp esi, 0x8c -> jne 0x170049 */
-  ((void (*)(void))D3DDevice_SetRenderState_StencilCullEnable)();
-  /* cmp esi, 0x8d -> jne 0x170058 */
-  ((void (*)(void))D3DDevice_SetRenderState_RopZCmpAlwaysRead)();
-  /* cmp esi, 0x8e -> jne 0x170067 */
-  ((void (*)(void))D3DDevice_SetRenderState_RopZRead)();
-  /* cmp esi, 0x8f -> jne 0x170075 */
-  ((void (*)(void))D3DDevice_SetRenderState_DoNotCullUncompressed)();
-  /* cmp edx, 0x16 -> jge 0x17008c */
-  D3DDevice_SetTextureStageState(eax, 0, 0);
-  /* cmp edx, 0x1c -> jne 0x170099 */
-  ((void (*)(void))D3DDevice_SetTextureState_TexCoordIndex)();
-  /* cmp edx, 0x1d -> jne 0x1700a6 */
-  D3DDevice_SetTextureState_BorderColor(ecx, eax);
-  /* cmp edx, 0x1e -> jne 0x1700b3 */
-  ((void (*)(void))D3DDevice_SetTextureState_ColorKeyColor)();
-  /* cmp edx, 0x1b -> jg 0x1700c0 */
-  ((void (*)(void))D3DDevice_SetTextureState_BumpEnv)();
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  __asm__ volatile("");
 }
+
+
 
 /* FUN_001700d0 (0x1700d0) — XBE naked draft (batch 357). */
 #if defined(__clang__)

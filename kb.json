@@ -20833,7 +20833,7 @@
         {
           "addr": "0x16fec0",
           "decl": "void FUN_0016fec0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0016fec0"
         },
         {
