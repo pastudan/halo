@@ -27754,7 +27754,7 @@
         {
           "addr": "0xeaa10",
           "decl": "char FUN_000eaa10(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000eaa10"
         },
         {

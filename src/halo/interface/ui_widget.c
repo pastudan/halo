@@ -7116,150 +7116,63 @@ char FUN_000ea900(void *widget, void *event_data)
   return 1;
 }
 
-/* FUN_000eaa10 (0xeaa10) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static void *(*const beaa10_tag)(int, int) = (void *)tag_get;
-static void *(*const beaa10_memset)(void *, int, unsigned int) = (void *)csmemset;
-static void (*const beaa10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const beaa10_exitfn)(int) = (void *)system_exit;
-static void * (*const beaa10_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
-static void (*const beaa10_c1c0d50)(int, int, int, int) = (void *)FUN_001c0d50;
-static int (*const beaa10_ce0c90)(void) = (void *)player_ui_get_player1_last_used_profile_index;
-
-__attribute__((naked, noinline))
+/* FUN_000eaa10 (0xeaa10) — readable C lift from XBE leaf. */
 char FUN_000eaa10(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "pushl $0x9c\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x5aa3c0\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl $0xffffffff, 0x31e494\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .LFUN_000eaa10_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x696\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2861f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eaa10_1:\n\t"
-      "movl 0x3e0(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $3, %%ebx\n\t"
-      "je .LFUN_000eaa10_2\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .LFUN_000eaa10_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x698\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2861b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000eaa10_2:\n\t"
-      "movl 0x40(%%esi), %%ecx\n\t"
-      "pushl $0x69d\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x190\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce3d20]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x40(%%esi)\n\t"
-      "je .LFUN_000eaa10_8\n\t"
-      "cmpl %%ebx, 0x3e0(%%edi)\n\t"
-      "movl $0x64, 0x8(%%ebp)\n\t"
-      "movb $1, -0x4(%%ebp)\n\t"
-      "jne .LFUN_000eaa10_3\n\t"
-      "movb $0, -0x4(%%ebp)\n\t"
-      ".LFUN_000eaa10_3:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x8(%%esi), %%cx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c0d50]\n\t"
-      "movl 0x3e0(%%edi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .LFUN_000eaa10_5\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "jae .LFUN_000eaa10_5\n\t"
-      "movzwl %%cx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "subl %%ecx, %%ebx\n\t"
-      "movzwl %%bx, %%ecx\n\t"
-      ".LFUN_000eaa10_4:\n\t"
-      "movl 0x40(%%esi), %%edx\n\t"
-      "movl $0xffffffff, (%%eax,%%edx,1)\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "incl %%ebx\n\t"
-      "addl $4, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ebx, 0x8(%%ebp)\n\t"
-      "jne .LFUN_000eaa10_4\n\t"
-      ".LFUN_000eaa10_5:\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "movw %%ax, 0x44(%%esi)\n\t"
-      "call *%[ce0c90]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000eaa10_8\n\t"
-      "movl 0x40(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpw %%cx, 0x44(%%esi)\n\t"
-      "jbe .LFUN_000eaa10_8\n\t"
-      ".LFUN_000eaa10_6:\n\t"
-      "cmpl %%eax, (%%edx,%%ecx,4)\n\t"
-      "je .LFUN_000eaa10_7\n\t"
-      "movzwl 0x44(%%esi), %%edi\n\t"
-      "incl %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "jl .LFUN_000eaa10_6\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000eaa10_7:\n\t"
-      "movw %%cx, 0x3c(%%esi)\n\t"
-      ".LFUN_000eaa10_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(beaa10_tag), [memset] "m"(beaa10_memset), [assert] "m"(beaa10_assert), [exitfn] "m"(beaa10_exitfn), [ce3d20] "m"(beaa10_ce3d20), [c1c0d50] "m"(beaa10_c1c0d50), [ce0c90] "m"(beaa10_ce0c90)
-      : "memory");
+  void *tag;
+  int mode;
+  void *buf;
+  unsigned short count;
+  char flag;
+  unsigned short n;
+  int last;
+  unsigned i;
+  int left;
+  int *slots;
+
+  tag = tag_get(0x44654c61, *(int *)widget);
+  *(int *)0x31e494 = -1;
+  csmemset((void *)0x5aa3c0, -1, 0x9c);
+  if (*(short *)tag != 2) {
+    display_assert((const char *)0x2861f8, (const char *)0x2859a4, 0x696, 1);
+    system_exit(-1);
+  }
+  mode = *(int *)((char *)tag + 0x3e0);
+  if (mode != 0 && mode != 3) {
+    display_assert((const char *)0x2861b0, (const char *)0x2859a4, 0x698, 1);
+    system_exit(-1);
+  }
+  buf = ui_widget_realloc(*(int *)((char *)widget + 0x40), 0x190,
+                          (const char *)0x2859a4, 0x69d);
+  *(void **)((char *)widget + 0x40) = buf;
+  if (buf == 0)
+    return 1;
+
+  count = 0x64;
+  flag = (*(int *)((char *)tag + 0x3e0) == 3) ? 0 : 1;
+  FUN_001c0d50((int)*(unsigned short *)((char *)widget + 8), (int)&count,
+               (int)buf, (int)flag);
+  if (*(int *)((char *)tag + 0x3e0) == 3 && count < 3) {
+    slots = (int *)buf;
+    left = 3 - (int)count;
+    for (i = (unsigned)count; left > 0; i++, left--)
+      slots[i] = -1;
+    count = 3;
+  }
+  *(unsigned short *)((char *)widget + 0x44) = count;
+  last = player_ui_get_player1_last_used_profile_index();
+  if (last != -1) {
+    n = *(unsigned short *)((char *)widget + 0x44);
+    slots = *(int **)((char *)widget + 0x40);
+    for (i = 0; i < (unsigned)n; i++) {
+      if (slots[i] == last) {
+        *(short *)((char *)widget + 0x3c) = (short)i;
+        break;
+      }
+    }
+  }
+  return 1;
 }
-#else
-#error "FUN_000eaa10: clang naked draft required"
-#endif
 
 
 /* FUN_000eaba0 (0xeaba0) — XBE naked draft (batch 118). */
