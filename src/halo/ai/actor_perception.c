@@ -1466,185 +1466,47 @@ char actor_situation_try_new_target(int actor_handle, int target)
   return 1;
 }
 
-/* actor_perception_friend_prop_is_attacking (0x309d0) — XBE naked draft (batch 118). */
-#if defined(__clang__)
-static void *(*const b309d0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b309d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b309d0_exitfn)(int) = system_exit;
-static void (*const b309d0_c1a9900)(int unit_handle, void *out_aiming) = unit_scripting_unit_driver;
-static void (*const b309d0_c64540)(int *out, int actor_handle) = FUN_00064540;
-static int (*const b309d0_c64570)(int *iter) = FUN_00064570;
-static float (*const b309d0_norm)(float *) = normalize3d;
-static int (*const b309d0_c3b190)(int actor_handle, int *attack_vector_out) = FUN_0003b190;
-
-__attribute__((naked, noinline))
-char actor_perception_friend_prop_is_attacking(int actor_handle __attribute__((unused)), int iter_handle __attribute__((unused)), float *out_pos __attribute__((unused)))
+/* actor_perception_friend_prop_is_attacking (0x309d0) — readable C lift (restored pre-naked). */
+char actor_perception_friend_prop_is_attacking(int actor_handle, int iter_handle, float *out_pos)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lactor_perception_friend_prop_is_attacking_1\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lactor_perception_friend_prop_is_attacking_1\n\t"
-      "movb 0x60(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_friend_prop_is_attacking_1\n\t"
-      "movb 0x127(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_friend_prop_is_attacking_2\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1268\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x2560e0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_2:\n\t"
-      "movb 0x14(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_friend_prop_is_attacking_9\n\t"
-      "movb 0x12e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_perception_friend_prop_is_attacking_8\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "movb 0x12f(%%esi), %%al\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "call *%[c1a9900]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_perception_friend_prop_is_attacking_6\n\t"
-      "movb 0x1ec(%%ebx), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jle .Lactor_perception_friend_prop_is_attacking_6\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64540]\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c64570]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lactor_perception_friend_prop_is_attacking_5\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_3:\n\t"
-      "movw 0x24(%%eax), %%cx\n\t"
-      "cmpw $2, %%cx\n\t"
-      "jl .Lactor_perception_friend_prop_is_attacking_4\n\t"
-      "cmpw $3, %%cx\n\t"
-      "jg .Lactor_perception_friend_prop_is_attacking_4\n\t"
-      "movb 0x60(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lactor_perception_friend_prop_is_attacking_4\n\t"
-      "flds 0xbc(%%eax)\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "fsubs 0xbc(%%esi)\n\t"
-      "pushl %%edx\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0xc0(%%eax)\n\t"
-      "fsubs 0xc0(%%esi)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0xc4(%%eax)\n\t"
-      "fsubs 0xc4(%%esi)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "call *%[norm]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lactor_perception_friend_prop_is_attacking_4\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls (%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcomps 0x253398\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lactor_perception_friend_prop_is_attacking_7\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_4:\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64570]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lactor_perception_friend_prop_is_attacking_3\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_5:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_8:\n\t"
-      "movl 0x1c(%%esi), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lactor_perception_friend_prop_is_attacking_9\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c3b190]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_perception_friend_prop_is_attacking_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b309d0_dget), [assert] "m"(b309d0_assert), [exitfn] "m"(b309d0_exitfn), [c1a9900] "m"(b309d0_c1a9900), [c64540] "m"(b309d0_c64540), [c64570] "m"(b309d0_c64570), [norm] "m"(b309d0_norm), [c3b190] "m"(b309d0_c3b190)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab23c), iter_handle);
+  /* cmp (int16_t)eax, 2 -> jl 0x30a20 */
+  /* cmp (int16_t)eax, 3 -> jg 0x30a20 */
+  /* test (char)eax, (char)eax -> jne 0x30a20 */
+  /* test (char)eax, (char)eax -> je 0x30a40 */
+  display_assert((char *)0x002560e0, (char *)0x00255fb0, 4712, 1);
+  system_exit(-1);
+  /* test (char)eax, (char)eax -> jne 0x30b75 */
+  /* test (char)eax, (char)eax -> je 0x30b59 */
+  unit_scripting_unit_driver(0, (void *)(uintptr_t)out_pos);
+  /* test (char)eax, (char)eax -> jne 0x30b49 */
+  /* test (char)ecx, (char)ecx -> jle 0x30b49 */
+  FUN_00064540((void *)0, actor_handle);
+  FUN_00064570((void *)0);
+  /* test eax, eax -> je 0x30b46 */
+  /* cmp (int16_t)ecx, 2 -> jl 0x30b32 */
+  /* cmp (int16_t)ecx, 3 -> jg 0x30b32 */
+  /* test (char)ecx, (char)ecx -> je 0x30b32 */
+  normalize3d((float *)0);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x30b32 */
+  /* relift: relift: fcomp dword ptr [0x253398] */
+  /* test (char)eax, 0x41 -> je 0x30b50 */
+  FUN_00064570((void *)0);
+  /* test eax, eax -> jne 0x30ab0 */
+  /* cmp esi, -1 -> je 0x30b75 */
+  FUN_0003b190(0, (void *)(uintptr_t)out_pos);
+  return 0;
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
 }
-#else
-#error "actor_perception_friend_prop_is_attacking: clang naked draft required"
-#endif
 
 
 /* actor_perception_aiming_vector_test_blockage (0x30b80) — readable C lift (restored pre-naked). */

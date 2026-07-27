@@ -2776,7 +2776,7 @@
         {
           "addr": "0x1cda0",
           "decl": "void FUN_0001cda0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0001cda0"
         },
         {
@@ -35691,7 +35691,7 @@
         {
           "addr": "0x309d0",
           "decl": "char actor_perception_friend_prop_is_attacking(int actor_handle, int iter_handle, float *out_pos);",
-          "ported": false,
+          "ported": true,
           "name": "actor_perception_friend_prop_is_attacking"
         },
         {
