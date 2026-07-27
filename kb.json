@@ -32741,7 +32741,7 @@
         {
           "addr": "0x79480",
           "decl": "void FUN_00079480(short passes, void *bitmap /* @<edi> */);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x79590",
@@ -32862,7 +32862,7 @@
         {
           "addr": "0x7b940",
           "decl": "void FUN_0007b940(float bump_height, void *bitmap /* @<ebx> */);",
-          "ported": false
+          "ported": true
         }
       ],
       "name": "bitmap_utilities.obj",

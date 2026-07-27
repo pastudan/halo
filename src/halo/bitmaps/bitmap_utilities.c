@@ -6944,133 +6944,53 @@ void FUN_0007b510(float bump_height __attribute__((unused)), void *bitmap /* */ 
 #endif
 
 
-/* FUN_0007b940 (0x7b940) — XBE naked draft (batch 257). */
-#if defined(__clang__)
-static bool (*const b7b940_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b7b940_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7b940_exitfn)(int) = system_exit;
-static void * (*const b7b940_c7e0b0)(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format) = bitmap_2d_new;
-static void (*const b7b940_c7e560)(void) = bitmap_3d_slice_insert;
-static void (*const b7b940_c7b510)(float bump_height, void *bitmap /* */) = FUN_0007b510;
-static void (*const b7b940_c7e7e0)(void *src_bitmap, void *dst_bitmap, int face, int slice) = bitmap_cube_map_face_extract;
-static void (*const b7b940_c7c8f0)(void *) = bitmap_delete;
-static void (*const b7b940_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_0007b940(float bump_height __attribute__((unused)), void *bitmap /* */ __attribute__((unused)))
+/* FUN_0007b940 (0x7b940) — 3D bitmap bump-height helper.
+ *
+ * Verifies bitmap (@ebx) is type 3D and bump_height>0, allocates a temporary
+ * 2D bitmap, then for each depth slice: copy slice into temp, run 2D bump
+ * helper (FUN_0007b510), copy back. Deletes the temp.
+ * Source: c:\halo\SOURCE\bitmaps\bitmap_utilities.c, lines 0x52d-0x52f.
+ */
+void FUN_0007b940(float bump_height, void *bitmap /* @<ebx> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl $1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0007b940_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x52d\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261814\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0007b940_1:\n\t"
-      "cmpw $1, 0xa(%%ebx)\n\t"
-      "je .LFUN_0007b940_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x52e\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264354\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0007b940_2:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_0007b940_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x52f\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2644b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0007b940_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0xc(%%ebx), %%ax\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x6(%%ebx), %%cx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%ebx), %%dx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c7e0b0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0007b940_5\n\t"
-      "movl 0x2c(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0007b940_5\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpw %%di, 0x8(%%ebx)\n\t"
-      "jle .LFUN_0007b940_6\n\t"
-      "nop\n\t"
-      ".LFUN_0007b940_4:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7e560]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7b510]\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7e7e0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x8(%%ebx), %%di\n\t"
-      "jl .LFUN_0007b940_4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7c8f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0007b940_5:\n\t"
-      "pushl $0x264194\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_0007b940_6:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7c8f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b7b940_c7d470), [assert] "m"(b7b940_assert), [exitfn] "m"(b7b940_exitfn), [c7e0b0] "m"(b7b940_c7e0b0), [c7e560] "m"(b7b940_c7e560), [c7b510] "m"(b7b940_c7b510), [c7e7e0] "m"(b7b940_c7e7e0), [c7c8f0] "m"(b7b940_c7c8f0), [c8f390] "m"(b7b940_c8f390)
-      : "memory");
+  void *temp;
+  int slice;
+  short depth;
+
+  if (!bitmap_verify(bitmap, 1)) {
+    display_assert("bitmap_verify(bitmap, TRUE)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x52d, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)bitmap + 0xa) != 1) {
+    display_assert("bitmap->type==_bitmap_type_3d",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x52e, 1);
+    system_exit(-1);
+  }
+  if (!(bump_height > *(float *)0x2533c0)) {
+    display_assert("bump_height>0.0f", "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x52f, 1);
+    system_exit(-1);
+  }
+
+  temp = bitmap_2d_new(*(unsigned short *)((char *)bitmap + 4),
+                       *(unsigned short *)((char *)bitmap + 6), 0,
+                       *(unsigned short *)((char *)bitmap + 0xc));
+  if (temp == 0 || *(void **)((char *)temp + 0x2c) == 0) {
+    error(2, "### ERROR failed to allocate temporary bitmap");
+    bitmap_delete(temp);
+    return;
+  }
+
+  depth = *(short *)((char *)bitmap + 8);
+  if (depth > 0) {
+    for (slice = 0; slice < depth; slice++) {
+      bitmap_3d_slice_insert(bitmap, 0, slice, temp);
+      FUN_0007b510(bump_height, temp);
+      bitmap_cube_map_face_extract(temp, bitmap, 0, slice);
+    }
+  }
+  bitmap_delete(temp);
 }
-#else
-#error "FUN_0007b940: clang naked draft required"
-#endif
 
 /* --- bitmap_utilities.obj orphan shells (2026-07-26) --- */
 
@@ -7372,11 +7292,11 @@ void *FUN_00077cd0(void *bitmap, short mipmap_count, int param_3, int param_4)
   bitmap_2d_new(0, 0, 0, 11);
   /* test ebx, ebx -> je 0x77e21 */
   /* test eax, eax -> je 0x77e21 */
-  FUN_0007ea60();
+  FUN_0007ea60(0, 0, 0, 0);
   FUN_00077720(0, (void *)(uintptr_t)eax, 0, 0);
   /* test esi, esi -> je 0x77dfc */
   /* test eax, eax -> je 0x77dfc */
-  bitmap_cube_map_face_insert();
+  bitmap_cube_map_face_insert(0, 0, 0, 0);
   bitmap_delete((void *)(uintptr_t)esi);
   /* cmp (int16_t)edi, 6 -> jl 0x77dbe */
   bitmap_delete((void *)(uintptr_t)ebx);
@@ -7391,127 +7311,51 @@ void *FUN_00077cd0(void *bitmap, short mipmap_count, int param_3, int param_4)
   (void)edi;
 }
 
-/* FUN_00079480 (0x79480) — XBE naked draft (batch 258). */
-#if defined(__clang__)
-static bool (*const b79480_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b79480_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b79480_exitfn)(int) = system_exit;
-static void * (*const b79480_c7e0b0)(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format) = bitmap_2d_new;
-static void (*const b79480_c7e560)(void) = bitmap_3d_slice_insert;
-static void (*const b79480_c79250)(short passes /* */, void *bitmap) = FUN_00079250;
-static void (*const b79480_c7e7e0)(void *src_bitmap, void *dst_bitmap, int face, int slice) = bitmap_cube_map_face_extract;
-static void (*const b79480_c7c8f0)(void *) = bitmap_delete;
-static void (*const b79480_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_00079480(short passes __attribute__((unused)), void *bitmap /* */ __attribute__((unused)))
+/* FUN_00079480 (0x79480) — 3D bitmap alpha-bleed helper.
+ *
+ * Verifies bitmap (@edi) is type 3D and passes>0, allocates a temporary 2D
+ * bitmap, then for each depth slice: copy slice into temp, run 2D alpha-bleed
+ * (FUN_00079250), copy back. Deletes the temp.
+ * Source: c:\halo\SOURCE\bitmaps\bitmap_utilities.c, lines 0x472-0x474.
+ */
+void FUN_00079480(short passes, void *bitmap /* @<edi> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00079480_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x472\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261814\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00079480_1:\n\t"
-      "cmpw $1, 0xa(%%edi)\n\t"
-      "je .LFUN_00079480_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x473\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264354\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00079480_2:\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "jg .LFUN_00079480_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x474\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264434\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00079480_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0xc(%%edi), %%ax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x6(%%edi), %%cx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%edi), %%dx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c7e0b0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_00079480_5\n\t"
-      "movl 0x2c(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00079480_5\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpw %%si, 0x8(%%edi)\n\t"
-      "jle .LFUN_00079480_6\n\t"
-      ".LFUN_00079480_4:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7e560]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c79250]\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7e7e0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "incl %%esi\n\t"
-      "cmpw 0x8(%%edi), %%si\n\t"
-      "jl .LFUN_00079480_4\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7c8f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00079480_5:\n\t"
-      "pushl $0x264194\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00079480_6:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7c8f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b79480_c7d470), [assert] "m"(b79480_assert), [exitfn] "m"(b79480_exitfn), [c7e0b0] "m"(b79480_c7e0b0), [c7e560] "m"(b79480_c7e560), [c79250] "m"(b79480_c79250), [c7e7e0] "m"(b79480_c7e7e0), [c7c8f0] "m"(b79480_c7c8f0), [c8f390] "m"(b79480_c8f390)
-      : "memory");
+  void *temp;
+  int slice;
+  short depth;
+
+  if (!bitmap_verify(bitmap, 1)) {
+    display_assert("bitmap_verify(bitmap, TRUE)",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x472, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)bitmap + 0xa) != 1) {
+    display_assert("bitmap->type==_bitmap_type_3d",
+                   "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x473, 1);
+    system_exit(-1);
+  }
+  if (passes <= 0) {
+    display_assert("passes>0", "c:\\halo\\SOURCE\\bitmaps\\bitmap_utilities.c", 0x474, 1);
+    system_exit(-1);
+  }
+
+  temp = bitmap_2d_new(*(unsigned short *)((char *)bitmap + 4),
+                       *(unsigned short *)((char *)bitmap + 6), 0,
+                       *(unsigned short *)((char *)bitmap + 0xc));
+  if (temp == 0 || *(void **)((char *)temp + 0x2c) == 0) {
+    error(2, "### ERROR failed to allocate temporary bitmap");
+    bitmap_delete(temp);
+    return;
+  }
+
+  depth = *(short *)((char *)bitmap + 8);
+  if (depth > 0) {
+    for (slice = 0; slice < depth; slice++) {
+      bitmap_3d_slice_insert(bitmap, 0, slice, temp);
+      FUN_00079250(passes, temp);
+      bitmap_cube_map_face_extract(temp, bitmap, 0, slice);
+    }
+  }
+  bitmap_delete(temp);
 }
-#else
-#error "FUN_00079480: clang naked draft required"
-#endif
 
