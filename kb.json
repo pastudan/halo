@@ -5471,28 +5471,28 @@
         },
         {
           "addr": "0x93880",
-          "decl": "void FUN_00093880(void);",
-          "ported": false
+          "decl": "void FUN_00093880(void *unused, void *dest, unsigned char *typeinfo, unsigned char **cursor);",
+          "ported": true
         },
         {
           "addr": "0x93910",
-          "decl": "void FUN_00093910(void);",
-          "ported": false
+          "decl": "void FUN_00093910(void *unused, void *dest, unsigned char *typeinfo, unsigned char **cursor);",
+          "ported": true
         },
         {
           "addr": "0x939a0",
-          "decl": "void FUN_000939a0(void);",
-          "ported": false
+          "decl": "void FUN_000939a0(void *unused, void *dest, unsigned char *typeinfo, unsigned char **cursor);",
+          "ported": true
         },
         {
           "addr": "0x93a30",
-          "decl": "void FUN_00093a30(void);",
-          "ported": false
+          "decl": "void FUN_00093a30(void *unused, void *dest, unsigned char *typeinfo, unsigned char **cursor);",
+          "ported": true
         },
         {
           "addr": "0x93ac0",
-          "decl": "void FUN_00093ac0(void);",
-          "ported": false
+          "decl": "void FUN_00093ac0(void *unused, void *dest, unsigned char *typeinfo, unsigned char **cursor);",
+          "ported": true
         },
         {
           "addr": "0x93b60",
@@ -41857,17 +41857,17 @@
         },
         {
           "addr": "0x001e9ae0",
-          "decl": "void D3DDevice_SetTextureState_TexCoordIndex(void);",
+          "decl": "void __stdcall D3DDevice_SetTextureState_TexCoordIndex(uint32_t stage, uint32_t value);",
           "ported": false
         },
         {
           "addr": "0x001e9bc0",
-          "decl": "void D3DDevice_SetTextureState_BumpEnv(void);",
+          "decl": "void __stdcall D3DDevice_SetTextureState_BumpEnv(uint32_t stage, uint32_t state, uint32_t value);",
           "ported": false
         },
         {
           "addr": "0x001e9c60",
-          "decl": "void D3DDevice_SetTextureState_ColorKeyColor(void);",
+          "decl": "void __stdcall D3DDevice_SetTextureState_ColorKeyColor(uint32_t stage, uint32_t value);",
           "ported": false
         },
         {
