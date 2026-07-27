@@ -31297,8 +31297,9 @@
         },
         {
           "addr": "0x17d080",
-          "decl": "void FUN_0017d080(void);",
-          "ported": false
+          "decl": "void FUN_0017d080(float *v, float t, float *color);",
+          "ported": true,
+          "name": "FUN_0017d080"
         },
         {
           "addr": "0x17d150",

@@ -439,100 +439,25 @@ void FUN_0017d070(void)
   FUN_0016e2e0();
 }
 
-/* FUN_0017d080 (0x17d080) — XBE naked draft (batch 356). */
-#if defined(__clang__)
-static void (*const b17d080_c15a7f0)(float *p0, float *p1, float *color0, float *color1) = (void *)FUN_0015a7f0;
-
-__attribute__((naked, noinline))
-void FUN_0017d080(void)
+/* FUN_0017d080 (0x17d080) — readable C lift. */
+void FUN_0017d080(float *v, float t, float *color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "fmuls 0x253398\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "flds (%%esi)\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "movl %%eax, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "fadds (%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[c15a7f0]\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "fadds 0x4(%%esi)\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[c15a7f0]\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[c15a7f0]\n\t"
-      "addl $0x30, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c15a7f0] "m"(b17d080_c15a7f0)
-      : "memory");
+  float scale;
+  float p0[3];
+  float p1[3];
+
+  scale = t * *(float *)0x253398;
+  p0[0] = v[0] - scale; p0[1] = v[1]; p0[2] = v[2];
+  p1[0] = v[0] + scale; p1[1] = v[1]; p1[2] = v[2];
+  FUN_0015a7f0(p0, p1, color, color);
+  p0[0] = v[0]; p0[1] = v[1] - scale; p0[2] = v[2];
+  p1[0] = v[0]; p1[1] = v[1] + scale; p1[2] = v[2];
+  FUN_0015a7f0(p0, p1, color, color);
+  p0[0] = v[0]; p0[1] = v[1]; p0[2] = v[2] - scale;
+  p1[0] = v[0]; p1[1] = v[1]; p1[2] = v[2] + scale;
+  FUN_0015a7f0(p0, p1, color, color);
 }
-#else
-#error "FUN_0017d080: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017d150 (0x17d150) — readable C lift. */
