@@ -15119,7 +15119,8 @@
         {
           "addr": "0x125050",
           "decl": "char network_game_client_game_settings_updated(void *client, void *message);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_game_settings_updated"
         },
         {
           "addr": "0x125180",

@@ -987,123 +987,36 @@ void network_game_client_accepted_into_game(void *client, void *source, void *me
     network_game_log((const char *)0x291ae0);
 }
 
-/* network_game_client_game_settings_updated (0x125050) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void (*const b125050_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b125050_exitfn)(int) = system_exit;
-static int (*const b125050_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-static void (*const b125050_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b125050_c100010)(const char *name) = main_set_multiplayer_map_name;
-static void * (*const b125050_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-char network_game_client_game_settings_updated(void *client __attribute__((unused)), void *message __attribute__((unused)))
+/* network_game_client_game_settings_updated (0x125050) — readable C lift. */
+char network_game_client_game_settings_updated(void *client, void *message)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x434, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "je .Lnetwork_game_client_game_settings_updated_1\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_game_client_game_settings_updated_2\n\t"
-      ".Lnetwork_game_client_game_settings_updated_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x375\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291cd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_game_settings_updated_2:\n\t"
-      "movw 0x112(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lnetwork_game_client_game_settings_updated_4\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jg .Lnetwork_game_client_game_settings_updated_4\n\t"
-      "movw 0x224(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lnetwork_game_client_game_settings_updated_4\n\t"
-      "cmpw $0x10, %%cx\n\t"
-      "jg .Lnetwork_game_client_game_settings_updated_4\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x880(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x24(%%esi), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_game_client_game_settings_updated_3\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x291cc0\n\t"
-      "call *%[c12b650]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c100010]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lnetwork_game_client_game_settings_updated_3:\n\t"
-      "pushl $0x434\n\t"
-      "leal 0x85c(%%ebx), %%edi\n\t"
-      "leal -0x434(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x434\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $4\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0xc8c, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movswl 0x112(%%esi), %%eax\n\t"
-      "movswl 0x224(%%esi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x291c60\n\t"
-      "call *%[c12b650]\n\t"
-      "movswl 0x112(%%esi), %%edx\n\t"
-      "movswl 0x224(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x291c38\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $0x3c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_game_settings_updated_4:\n\t"
-      "movswl 0x224(%%esi), %%edx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x291bd8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b125050_assert), [exitfn] "m"(b125050_exitfn), [c8dcb0] "m"(b125050_c8dcb0), [c12b650] "m"(b125050_c12b650), [c100010] "m"(b125050_c100010), [c8e0b0] "m"(b125050_c8e0b0)
-      : "memory");
+  int16_t max_players;
+  int16_t something;
+  char *map_name;
+  char old_settings[0x434];
+
+  if (!client || !message) {
+    display_assert((const char *)0x291cd8, (const char *)0x291774, 0x375, 1);
+    system_exit(-1);
+  }
+  max_players = *(int16_t *)((char *)message + 0x112);
+  something = *(int16_t *)((char *)message + 0x224);
+  if (max_players < 0 || max_players > 4 || something < 0 || something > 0x10) {
+    network_game_log((const char *)0x291bd8, (int)something, (int)max_players);
+    return 0;
+  }
+  map_name = (char *)message + 0x24;
+  if (csstrcmp(map_name, (char *)client + 0x880) != 0) {
+    network_game_log((const char *)0x291cc0, map_name);
+    main_set_multiplayer_map_name(map_name);
+  }
+  csmemcpy(old_settings, (char *)client + 0x85c, 0x434);
+  csmemcpy((char *)client + 0x85c, message, 0x434);
+  csmemcpy((char *)client + 0xc8c, old_settings + 0x430, 4);
+  network_game_log((const char *)0x291c60, (int)something, (int)max_players);
+  network_game_log((const char *)0x291c38, (int)something, (int)max_players);
+  return 1;
 }
-#else
-#error "network_game_client_game_settings_updated: clang naked draft required"
-#endif
 
 
 /* unstrip_player_index (0x125180) — readable C lift. */
