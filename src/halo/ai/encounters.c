@@ -7101,129 +7101,52 @@ void encounter_determine_pursuit_availability(int encounter_handle __attribute__
 #endif
 
 
-/* encounter_verify_firing_position_owner_actor_indices (0x5b370) — XBE naked draft (batch 220). */
-#if defined(__clang__)
-static scenario_t * (*const b5b370_c18e380)(void) = global_scenario_get;
-static void *(*const b5b370_elem)(void *, int, int) = tag_block_get_element;
-static void *(*const b5b370_memset)(void *, int, unsigned int) = csmemset;
-static void *(*const b5b370_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b5b370_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5b370_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void encounter_verify_firing_position_owner_actor_indices(int encounter_handle __attribute__((unused)))
+/* encounter_verify_firing_position_owner_actor_indices (0x5b370) — readable C lift (restored pre-naked). */
+void encounter_verify_firing_position_owner_actor_indices(int encounter_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x80c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x98(%%eax), %%ecx\n\t"
-      "shll $2, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x80c(%%ebp), %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x632574, %%eax\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lencounter_verify_firing_position_owner_actor_indices_2\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .Lencounter_verify_firing_position_owner_actor_indices_1\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "jmp .Lencounter_verify_firing_position_owner_actor_indices_3\n\t"
-      ".Lencounter_verify_firing_position_owner_actor_indices_1:\n\t"
-      "movl 0x5ab270, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x14(%%eax), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lencounter_verify_firing_position_owner_actor_indices_3\n\t"
-      ".Lencounter_verify_firing_position_owner_actor_indices_2:\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      "jmp .Lencounter_verify_firing_position_owner_actor_indices_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lencounter_verify_firing_position_owner_actor_indices_3:\n\t"
-      "movl 0x632574, %%ecx\n\t"
-      "movb 0x1(%%ecx), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lencounter_verify_firing_position_owner_actor_indices_7\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "je .Lencounter_verify_firing_position_owner_actor_indices_7\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x3b8(%%esi), %%ax\n\t"
-      "movl 0x2c(%%esi), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lencounter_verify_firing_position_owner_actor_indices_3\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lencounter_verify_firing_position_owner_actor_indices_4\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x98(%%ecx), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .Lencounter_verify_firing_position_owner_actor_indices_5\n\t"
-      ".Lencounter_verify_firing_position_owner_actor_indices_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12e\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25d908\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounter_verify_firing_position_owner_actor_indices_5:\n\t"
-      "movswl 0x3b8(%%esi), %%edx\n\t"
-      "cmpl $-1, -0x80c(%%ebp,%%edx,4)\n\t"
-      "je .Lencounter_verify_firing_position_owner_actor_indices_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12f\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25d8b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounter_verify_firing_position_owner_actor_indices_6:\n\t"
-      "movswl 0x3b8(%%esi), %%eax\n\t"
-      "movl %%ebx, -0x80c(%%ebp,%%eax,4)\n\t"
-      "jmp .Lencounter_verify_firing_position_owner_actor_indices_3\n\t"
-      ".Lencounter_verify_firing_position_owner_actor_indices_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c18e380] "m"(b5b370_c18e380), [elem] "m"(b5b370_elem), [memset] "m"(b5b370_memset), [dget] "m"(b5b370_dget), [assert] "m"(b5b370_assert), [exitfn] "m"(b5b370_exitfn)
-      : "memory");
+  char *enc_def;
+  int count;
+  int *seen;
+  int actor_handle;
+  char *actor;
+  int16_t fp_index;
+  char stack_seen[0x80c];
+
+  enc_def = (char *)tag_block_get_element((char *)global_scenario_get() + 0x42c,
+                                          encounter_handle & 0xffff, 0xb0);
+  count = *(int *)(enc_def + 0x98);
+  seen = (int *)stack_seen;
+  csmemset(seen, 0xff, count * 4);
+
+  actor_handle = -1;
+  if (*(char *)(*(char **)0x632574 + 1) != 0) {
+    if (encounter_handle == -1)
+      actor_handle = *(int *)(*(char **)0x632574 + 8);
+    else
+      actor_handle = *(int *)((char *)datum_get(*(data_t **)0x5ab270,
+                                                encounter_handle) +
+                              0x14);
+  }
+
+  while (*(char *)(*(char **)0x632574 + 1) != 0 && actor_handle != -1) {
+    actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+    fp_index = *(int16_t *)(actor + 0x3b8);
+    if (fp_index != -1) {
+      if (fp_index < 0 || fp_index >= count) {
+        display_assert("firing_position_index>=0 && firing_position_index<count",
+                       (const char *)0x25d908, 0x12e, 1);
+        system_exit(-1);
+      }
+      if (seen[fp_index] != -1) {
+        display_assert("!firing_position_owner_actor_indices[firing_position_index]",
+                       (const char *)0x25d8b8, 0x12f, 1);
+        system_exit(-1);
+      }
+      seen[fp_index] = actor_handle;
+    }
+    actor_handle = *(int *)(actor + 0x2c);
+  }
 }
-#else
-#error "encounter_verify_firing_position_owner_actor_indices: clang naked draft required"
-#endif
 
 
 /* encounter_build_firing_position_owner_actor_indices (0x5b4b0) — XBE naked draft (batch 220). */

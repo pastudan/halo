@@ -4562,7 +4562,7 @@
         {
           "addr": "0x40460",
           "decl": "void ai_handle_damage(int victim_handle, int source_handle, int16_t damage_type, float damage_amount, int param_4, char skip_provoke);",
-          "ported": false,
+          "ported": true,
           "name": "ai_handle_damage"
         },
         {
@@ -37428,7 +37428,7 @@
         {
           "addr": "0x5b370",
           "decl": "void encounter_verify_firing_position_owner_actor_indices(int encounter_handle);",
-          "ported": false,
+          "ported": true,
           "name": "encounter_verify_firing_position_owner_actor_indices"
         },
         {
