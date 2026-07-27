@@ -2883,54 +2883,26 @@ void playlist_profile_initialize_racing_rules(void *widget)
 #endif
 
 
-/* FUN_000ef900 (0xef900) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static void (*const bef900_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bef900_exitfn)(int) = system_exit;
-static void (*const bef900_c12a6c0)(short player) = network_game_client_local_player_quit;
-
-__attribute__((naked, noinline))
-char FUN_000ef900(void *widget, void *item)
+/* FUN_000ef900 (0xef900) — readable C lift. */
+extern char DAT_002859a4[];
+extern char DAT_00288368[];
+char FUN_000ef900(void *unused, void *player_slot)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000ef900_1\n\t"
-      "movw 0x2(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_000ef900_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .LFUN_000ef900_2\n\t"
-      ".LFUN_000ef900_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xfe9\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x288368\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ef900_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2(%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12a6c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bef900_assert), [exitfn] "m"(bef900_exitfn), [c12a6c0] "m"(bef900_c12a6c0)
-      : "memory");
-}
-#else
-#error "FUN_000ef900: clang naked draft required"
-#endif
+  int16_t idx;
 
+  (void)unused;
+  if (player_slot == NULL) {
+    display_assert(DAT_00288368, DAT_002859a4, 0xfe9, true);
+    system_exit(-1);
+  }
+  idx = *(int16_t *)((char *)player_slot + 2);
+  if (idx < 0 || idx >= 4) {
+    display_assert(DAT_00288368, DAT_002859a4, 0xfe9, true);
+    system_exit(-1);
+  }
+  network_game_client_local_player_quit((uint16_t)idx);
+  return 1;
+}
 
 /* FUN_000ef970 (0xef970) — XBE naked draft (batch 133). */
 #if defined(__clang__)

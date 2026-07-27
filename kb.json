@@ -27668,8 +27668,8 @@
         },
         {
           "addr": "0xef900",
-          "decl": "char FUN_000ef900(void *widget, void *item);",
-          "ported": false
+          "decl": "char FUN_000ef900(void *unused, void *player_slot);",
+          "ported": true
         },
         {
           "addr": "0xef970",
