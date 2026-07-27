@@ -1,3 +1,26 @@
+/* Reserve a server-side update-queue slot for a player datum handle.
+ *
+ * Server-side mirror of update_client_add_player (0xb8f00): allocates a
+ * datum in the update-server queue data_t at 0x4570c8 keyed by the caller's
+ * player handle. NONE (-1) is fatal.
+ *
+ * Naming is INFERRED, not string-proven: the assert file string is
+ * player_queues_new.c and the assert line (0xeb = 235) falls between
+ * update_server_start (0xcf) and update_server_get_update (0x11a), i.e. the
+ * exact source position mirroring update_client_add_player relative to
+ * update_client_start. Shape is byte-for-byte the client sibling with the
+ * server global substituted. */
+void update_server_add_player(int handle)
+{
+  int queue_index;
+  queue_index = data_new_datum(*(data_t **)0x4570c8, handle);
+  if (queue_index == -1) {
+    display_assert("queue_index!=NONE",
+                   "c:\\halo\\SOURCE\\game\\player_queues_new.c", 0xeb, 1);
+    system_exit(-1);
+  }
+}
+
 /* Initialize the client-side update queue subsystem.
  *
  * Asserts that the client globals are NOT already initialized, then zeros
@@ -96,7 +119,8 @@ void update_client_queue_push(void)
  * first_action_index to last_action_index in the client globals). */
 int update_get_maximum_actions(void)
 {
-  return *(int *)0x45b1d8 - *(int *)0x45b1d4 + 1; /* hazard-ok: value-arithmetic (queue count = last-first+1) */
+  return *(int *)0x45b1d8 - *(int *)0x45b1d4 +
+         1; /* hazard-ok: value-arithmetic (queue count = last-first+1) */
 }
 
 /* Copy the current client action collection from update_client_globals.

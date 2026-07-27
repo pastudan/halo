@@ -311,7 +311,9 @@ char FUN_00076a70(void *plate, void *group, int param_3)
     size, 0, "c:\\halo\\SOURCE\\bitmaps\\bitmap_extract.c", 0x8a);
   if (*(int *)((char *)group + 0x28)) {
     if (FUN_00119b40((int)bitmap_mipmap_address(plate, 0), (unsigned int)size,
-                     (unsigned int *)*(int *)((char *)group + 0x28), &size, /* dup-args-ok: size is both source limit and output capacity. */
+                     (unsigned int *)*(int *)((char *)group + 0x28),
+                     &size, /* dup-args-ok: size is both source limit and output
+                               capacity. */
                      (unsigned int)size)) {
       t = debug_realloc((void *)*(int *)((char *)group + 0x28), size,
                         "c:\\halo\\SOURCE\\bitmaps\\bitmap_extract.c", 0x90);
@@ -737,8 +739,8 @@ short FUN_00077120(void *group, short type, short width, short height,
   last_end = 0;
 
   if (group == NULL) {
-    display_assert("group", "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c",
-                   0x2db, 1);
+    display_assert("group", "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x2db,
+                   1);
     system_exit(-1);
   }
 
@@ -747,13 +749,13 @@ short FUN_00077120(void *group, short type, short width, short height,
   *(short *)(new_bitmap + 0x12) = 0;
   *(short *)(new_bitmap + 0x10) = 0;
   *(short *)(new_bitmap + 0x14) = mipmap_count;
-  *(int   *)(new_bitmap + 0x18) = 0;
-  *(int   *)(new_bitmap + 0x28) = 0;
-  *(int   *)(new_bitmap + 0x2c) = 0;
+  *(int *)(new_bitmap + 0x18) = 0;
+  *(int *)(new_bitmap + 0x28) = 0;
+  *(int *)(new_bitmap + 0x2c) = 0;
 
   group_type = *(short *)group;
 
-  *(int   *)(new_bitmap + 0x00) = 0x6269746d;
+  *(int *)(new_bitmap + 0x00) = 0x6269746d;
   *(short *)(new_bitmap + 0x04) = type;
   *(short *)(new_bitmap + 0x06) = width;
   *(short *)(new_bitmap + 0x08) = height;
@@ -762,8 +764,7 @@ short FUN_00077120(void *group, short type, short width, short height,
   if (group_type == 4) {
     *(short *)(new_bitmap + 0x0e) = 0x10;
   } else {
-    if ((type & (type - 1)) != 0 ||
-        (width & (width - 1)) != 0 ||
+    if ((type & (type - 1)) != 0 || (width & (width - 1)) != 0 ||
         (height & (height - 1)) != 0) {
       crt_fprintf((void *)0x331050,
                   "skipping bitmap with non-power-of-two dimensions "
@@ -828,8 +829,8 @@ after_pow2_guard:
         if (*(int *)((char *)cur + 0x2c) != 0) {
           if (*(int *)((char *)cur + 0x28) != 0) {
             display_assert("!bitmap->hardware_format",
-                           "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c",
-                           0x34d, 1);
+                           "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x34d,
+                           1);
             system_exit(-1);
           }
           *(int *)((char *)cur + 0x2c) =
@@ -843,7 +844,7 @@ after_pow2_guard:
           }
           cur_size = bitmap_get_pixel_data_size((void *)cur);
           if ((unsigned int)(*(int *)((char *)group + 0x30) +
-                              *(int *)((char *)group + 0x1e)) <
+                             *(int *)((char *)group + 0x1e)) <
               (unsigned int)(cur_size + *(int *)((char *)cur + 0x2c))) {
             display_assert(
               "(byte*)bitmap->base_address + bitmap_get_pixel_data_size(bitmap)"
@@ -853,11 +854,12 @@ after_pow2_guard:
           }
           if (prev != 0) {
             prev_size = bitmap_get_pixel_data_size((void *)prev);
-            space = *(int *)((char *)cur + 0x18) - *(int *)((char *)prev + 0x18);
+            space =
+              *(int *)((char *)cur + 0x18) - *(int *)((char *)prev + 0x18);
             if (space - prev_size < 0) {
               display_assert("space_between>=0",
-                             "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c",
-                             0x35b, 1);
+                             "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c", 0x35b,
+                             1);
               system_exit(-1);
             }
             if (space != prev_size) {
@@ -872,7 +874,8 @@ after_pow2_guard:
       } while ((int)i < *(int *)((char *)group + 0x60));
     }
 
-    new_element = (int)tag_block_get_element((char *)group + 0x60, old_count, 0x30);
+    new_element =
+      (int)tag_block_get_element((char *)group + 0x60, old_count, 0x30);
     if (new_element == 0) {
       display_assert("new_bitmap", "c:\\halo\\SOURCE\\bitmaps\\bitmap_group.c",
                      0x371, 1);
@@ -881,9 +884,9 @@ after_pow2_guard:
 
     csmemcpy((void *)new_element, new_bitmap, 0x30);
     *(int *)(new_element + 0x18) = last_end;
-    *(int *)(new_element + 0x2c) =
-      *(int *)((char *)group + 0x1e) + last_end;
-    csmemset((void *)(*(int *)((char *)group + 0x1e) + last_end), 0, pixel_size);
+    *(int *)(new_element + 0x2c) = *(int *)((char *)group + 0x1e) + last_end;
+    csmemset((void *)(*(int *)((char *)group + 0x1e) + last_end), 0,
+             pixel_size);
 
     return (short)old_count;
   }
@@ -1384,9 +1387,9 @@ void bitmap_fade(void *bitmap, unsigned int color, float fade_amount)
 
     /* Pre-compute color_channel * alpha once before the pixel loop */
     cb2 = (int)((color >> 16) & 0xff) * alpha; /* red   */
-    cb3 = (int)(color >> 24) * alpha;           /* alpha */
-    cb1 = (int)((color >> 8) & 0xff) * alpha;  /* green */
-    cb0 = (int)(color & 0xff) * alpha;          /* blue  */
+    cb3 = (int)(color >> 24) * alpha; /* alpha */
+    cb1 = (int)((color >> 8) & 0xff) * alpha; /* green */
+    cb0 = (int)(color & 0xff) * alpha; /* blue  */
 
     pixels = (unsigned int *)bitmap_mipmap_address(bitmap, 0);
     count = bitmap_get_pixel_count(bitmap);
@@ -2001,8 +2004,7 @@ void FUN_00079250(short passes , void *bitmap)
                       if (dx > 1)
                         break;
                       if ((short)ix >= 0 && (short)iy >= 0 &&
-                          (short)ix < width &&
-                          (short)iy < height) {
+                          (short)ix < width && (short)iy < height) {
                         neighbor_ptr =
                           (unsigned int *)bitmap_2d_address(bitmap, ix, iy, 0);
                         if (*neighbor_ptr != 0) {
@@ -2018,8 +2020,8 @@ void FUN_00079250(short passes , void *bitmap)
                   iy++;
                 } while (!found);
               }
-              *(unsigned int *)((unsigned char *)temp_buf +
-                                x * 4 + (int)width * y * 4) = pixel;
+              *(unsigned int *)((unsigned char *)temp_buf + x * 4 +
+                                (int)width * y * 4) = pixel;
               x++;
             } while ((short)x < width);
           }
@@ -2109,7 +2111,8 @@ void FUN_00079630(float bump_height, void *bitmap )
 }
 
 /*
- * real_rgb_color_brightness -- real_rgb_color_brightness: compute luminance of an RGB color.
+ * real_rgb_color_brightness -- real_rgb_color_brightness: compute luminance of
+ * an RGB color.
  *
  * Returns the dot product of the color with standard luminance coefficients
  * (0.299, 0.587, 0.114) stored at globals 0x2647c0-c8.
@@ -2270,8 +2273,8 @@ float *real_hsv_color_to_real_rgb_color(float *hsv, float *rgb_out)
 }
 
 /*
- * argb_color_to_real_argb_color -- argb_color_to_real_argb_color: convert 4 unsigned shorts
- * to 4 floats, scaled by 1/65535.
+ * argb_color_to_real_argb_color -- argb_color_to_real_argb_color: convert 4
+ * unsigned shorts to 4 floats, scaled by 1/65535.
  *
  * Each component is zero-extended from ushort to int, then converted to float
  * and multiplied by the scale factor at 0x264154.
@@ -2291,8 +2294,8 @@ void argb_color_to_real_argb_color(unsigned short *src, float *dst)
 }
 
 /*
- * rgb_color_to_real_rgb_color -- rgb_color_to_real_rgb_color: convert 3 unsigned shorts
- * to 3 floats, scaled by 1/65535.
+ * rgb_color_to_real_rgb_color -- rgb_color_to_real_rgb_color: convert 3
+ * unsigned shorts to 3 floats, scaled by 1/65535.
  *
  * Same pattern as argb_color_to_real_argb_color but only 3 components.
  */
@@ -2309,8 +2312,8 @@ void rgb_color_to_real_rgb_color(unsigned short *src, float *dst)
 }
 
 /*
- * pixel32_to_real_argb_color -- pixel32_to_real_argb_color: extract ARGB from a packed
- * uint32 into 4 floats, scaled by 1/255.
+ * pixel32_to_real_argb_color -- pixel32_to_real_argb_color: extract ARGB from a
+ * packed uint32 into 4 floats, scaled by 1/255.
  *
  * Byte layout: bits 31-24 = A, 23-16 = R, 15-8 = G, 7-0 = B.
  * Uses MSVC's unsigned-to-float pattern (FILD + TEST/JGE/FADD fixup).
@@ -2330,8 +2333,8 @@ void pixel32_to_real_argb_color(unsigned int color, float *dst)
 }
 
 /*
- * pixel32_to_real_rgb_color -- pixel32_to_real_rgb_color: extract RGB from a packed
- * uint32 into 3 floats, scaled by 1/255.
+ * pixel32_to_real_rgb_color -- pixel32_to_real_rgb_color: extract RGB from a
+ * packed uint32 into 3 floats, scaled by 1/255.
  *
  * Byte layout: bits 23-16 = R, 15-8 = G, 7-0 = B (alpha ignored).
  * Uses MSVC's unsigned-to-float pattern (FILD + TEST/JGE/FADD fixup).
@@ -2481,8 +2484,8 @@ void bitmap_smooth(void *pixel_data, float smooth_factor)
 }
 
 /*
- * bitmap_alpha_bleed -- bitmap_alpha_bleed: dispatcher for alpha bleed by bitmap
- * type.
+ * bitmap_alpha_bleed -- bitmap_alpha_bleed: dispatcher for alpha bleed by
+ * bitmap type.
  *
  * Validates the bitmap, checks that passes > 0, then dispatches based on
  * bitmap->type: 2D -> FUN_00079250, 3D -> FUN_00079480 (bitmap in EDI),

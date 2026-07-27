@@ -162,6 +162,8 @@
 	halo/objects/damage.c
 	halo/objects/objects.c
 	halo/objects/widgets/widgets.c
+	halo/objects/widgets/glow.c
+	halo/objects/widgets/lightning.c
 	halo/text/draw_string.c
 	halo/text/international_strings.c
 	halo/text/unicode.c

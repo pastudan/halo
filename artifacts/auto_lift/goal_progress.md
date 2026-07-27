@@ -202,6 +202,21 @@ hs.obj cluster (hs.c thread spawning wrappers and harness support). 9 functions 
 ##  else if(match_available){ LITERAL: if(z_verbose>1)print window[strstart-1]; _tr_tally(s,0,window[strstart-1])->bflush; if(bflush){_tr_flush_block; block_start=strstart; FUN_00110e70(*(int*)s); print;} strstart++; lookahead--; if(*(int*)(*(int*)s+0x10)==0) return 0; }
 ##  else { DEFER: match_available=1; strstart++; lookahead--; continue; }  (NO avail_out check on defer)
 ##  FINAL(lookahead==0, 0x112180): if(flush==0) assert("no flush?" 0x28d3bc); if(match_available){ emit last literal window[strstart-1] via _tr_tally(s,0,..); match_available=0; } _tr_flush_block(s,buf,strstart-block_start,flush==4); block_start=strstart; FUN_00110e70(*(int*)s); print; if(avail_out==0) return flush==4?2:0; return flush==4?3:1.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+players.obj cluster (desired-flashlight-state HS handler and related player logic). 4 functions committed at ≥90% VC71. Goal threshold reached.
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bfc10 | 0xbfc10 | players.obj | 94.3 | committed | mechanical gate: 94.3% clean (pass1) |
+| FUN_000bfd10 | 0xbfd10 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfd50 | 0xbfd50 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfd90 | 0xbfd90 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. Committed: 3× 100% + 1× 94.3%.
 ##  @reg calls SAME as deflate_fast: longest_match(s@eax,cur_match)[decl SET this session], check_match(len@eax,match@ecx,start@edx,s)[ported], _tr_tally FUN_00116d10(s,dist,len)[ported], _tr_flush_block 1177c0[ported], fill_window 111770@esi[set].
 ##  CRITICAL avail_out-check ASYMMETRY (verified vs disasm 0x11205e/0x1120ab/0x11216a): MATCH path bflush==0 -> loop (NO avail_out check); MATCH bflush!=0 -> FLUSH_BLOCK incl avail_out-return. LITERAL path ALWAYS checks avail_out after strstart++/lookahead--. DEFER path NO check. Get this wrong = wrong return timing.
 ## NEXT compression-critical (advisor): deflate_slow 0x111ea0 (prepped above) + longest_match 0x1114a0 (@eax hot loop, the actual match-finder — the LAST piece; decl already @<eax> set). Both fresh-window + full regime (closure-grep + VC71 + advisor) only.
@@ -664,3 +679,293 @@ path_smoothing.obj + path_obstacle_avoidance.obj — path-planning collision avo
 | valid_real_point2d | 0x60c40 | path_obstacle_avoidance.obj | 59.5 | parked | below_65pct |
 
 **Summary:** path_smoothing.obj + path_obstacle_avoidance.obj 2/20 committed (queue_exhausted). Committed: 2 functions at 90.4%/91.8% VC71 (pass1+redelink+permute). Build-failed: 1 function (FUN_000638f0, 95.7% verified, blocked on pre-existing integration-branch churn in game_engine.c). Parked: 2 functions below 65% VC71 (structural ceilings). Skipped: 8 functions — all register-arg-dependent or FPU-stack-aliased, requiring prior kb.json @<reg> annotations before liftability. **Blocker:** Complete lack of unmodeled-ABI infrastructure; the register-arg functions (FUN_00062b20, FUN_00062ba0, find_turning_point, path_add_step, path_add_steps, FUN_000616e0) all require @<reg> annotation work before they are liftable. Recommend prioritizing kb.json @eax/@ecx/@esi/@edx/@ebx registration for the entire path_smoothing/path_obstacle_avoidance cluster in a follow-up ABI-audit pass.
+
+## objects.obj goal-lift session 2026-07-13
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---:|---|---|
+| FUN_00134e50 | 0x134e50 | objects.obj | 88.9 | committed | Corrected binary behavior from mistaken fmod to pow; remaining gap is the MSVC tail-call/codegen shape, with external __CIpow outside generic Unicorn modeling. |
+| FUN_0013c030 | 0x13c030 | objects.obj | 100.0 | committed | Explicit per-function delinked objdiff and pipeline pass. |
+| object_find_region_permutations_available_with_variant | 0x13e3f0 | objects.obj | 98.9 | committed | Existing @eax ABI preserved; explicit per-function delinked objdiff and pipeline pass. |
+| object_delete_internal | 0x140bc0 | objects.obj | 96.0 | committed | Explicit per-function delinked objdiff and pipeline pass. |
+| object_set_garbage_flag | 0x13d920 | objects.obj | 91.8 | committed | Explicit per-function delinked objdiff and pipeline pass. |
+| FUN_00085280 | 0x85280 | objects.obj | 100.0 objdiff | committed | Added missing scripted-camera global setter from raw disassembly; explicit per-function pipeline pass. Direct VC71 reports 86.2% because of x87 compare scheduling. |
+| FUN_00085350 | 0x85350 | objects.obj | 100.0 | committed | Added missing wrapper; explicit per-function pipeline pass. |
+| FUN_00085000 | 0x85000 | objects.obj | 100.0 objdiff | committed | Added missing 'antr' camera-name selector from raw disassembly. Direct VC71 reports 81.9% due merged-TU structural differences. |
+| FUN_0013cb80 | 0x13cb80 | objects.obj | 100.0 objdiff | committed | Existing scenario-placement lift enabled; lifecycle-cluster caution retained in source comments. |
+| object_postprocess_node_matrices | 0x13df70 | objects.obj | 95.2 | committed | Added missing body with verified EBX register argument; explicit per-function pipeline pass. |
+| object_find_in_cluster | 0x140420 | objects.obj | 86.5 | skipped | Corrected type access to signed 16-bit per raw disassembly, but below the 90% activation gate. |
+| attachments_new | 0x13ecb0 | objects.obj | 86.2 | skipped | Corrected verified 'ligh' bound; remaining structural gap and lifecycle mutation risk. |
+| FUN_0013cb80 | 0x13cb80 | objects.obj | 90.9 | skipped | Explicitly dormant: mutates BSP streaming state and calls unported lifecycle members. |
+
+---
+
+## Goal-lift run — 0/20 committed (queue_exhausted) — 2026-07-20
+
+objects.obj batch: 17 targets queued, all skipped. 8 functions are already-implemented in source (ported=false dormant toggles or already-ported); 9 functions blocked by @reg-defined prologue selector criterion (skip_reg_args). Zero new lifts, zero net progress on objects.obj frontline.
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_001342a0 | 0x1342a0 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| glow_trailing_particle_new | 0x134350 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| object_choose_random_change_colors | 0x13e1f0 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| object_determine_variant_number | 0x13e460 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| object_compute_change_colors | 0x13e5d0 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| object_compute_function_values | 0x13e7b0 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| object_select_random_region_permutations_by_variant | 0x140a00 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| object_choose_random_region_permutations | 0x140ad0 | objects.obj | - | skipped | skip_reg_args (selector: @reg-defined prologue → sub-bar) |
+| object_move_to_limbo | 0x13aed0 | - | - | skipped | already implemented: src/halo/objects/objects.c (definition at line 1602) |
+| attachments_new | 0x13ecb0 | objects.obj | - | skipped | already implemented: src/halo/objects/objects.c (real body at line 4543, called at line 9428). Note: kb.json has "ported": false for 0x13ecb0 despite the implementation existing — likely a dormant/bisect toggle, not a missing lift. |
+| objects_initialize_for_new_map | 0x13f950 | - | - | skipped | already implemented: src/halo/objects/objects.c (kb entry ported=false, dormant, but C implementation exists in source) |
+| object_set_region_count | 0x140160 | objects.obj | - | skipped | already implemented: /mnt/g/dev/halo/src/halo/objects/objects.c (definition at line 6271; note kb.json has "ported": false but the C source exists) |
+| object_visible_to_any_player | 0x1407e0 | - | - | skipped | already implemented: src/halo/objects/objects.c (definition at line 6902) |
+| object_compute_node_matrices | 0x141b70 | objects.obj | - | skipped | already implemented: src/halo/objects/objects.c (definition at line 7867: `void object_compute_node_matrices(int object_handle)`) |
+| object_new_from_scenario | 0x144770 | objects.obj | - | skipped | already implemented: src/halo/objects/objects.c |
+| object_permute_region | 0x1402c0 | objects.obj | - | skipped | already implemented: src/halo/objects/objects.c (definition at line 6362). Note: kb.json entry has "ported": false, so the redirect is deactivated even though the C implementation exists (dormant/bisect toggle). |
+| object_find_in_cluster | 0x140420 | - | - | skipped | already implemented: src/halo/objects/objects.c (definition at line 6480; kb.json ported=false but C source present) |
+
+**Summary:** Queue exhausted. All 17 targets were ineligible: 8 dormant (already-implemented in source, ported=false), 9 blocked by @reg-defined prologue filter. No new lifts. Objects.obj remains 45/53 ported (dormant accounting per hub_objects_obj_unported_accounting.md).
+
+---
+
+## Goal-lift run — 0/6 committed (stop_on_fail_reached) — 2026-07-20
+
+objects.obj glow-particle renderer cluster. 0 functions committed. 4 functions parked below 65% VC71 (permanent structural ceiling from register-defining prologue ABI mismatch). Target set discontinued.
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_00134070 | 0x134070 | objects.obj | 80.8 | parked | structural_cap[deterministic(classify_cap.py)]: reg_defining_prologue: decl has @<esi>/@<edi> parameters; standalone VC71 compiles the function as cdecl (reads args from the stack) while the reference reads particle_ptr from ESI and glow_widget_ptr from EDI directly, so the prologue and every arg access differ. 186 our insns vs 180 ref; raw 79.8% -> 80.8% after stripping 2 @reg phantom loads. This matches the known register-arg ~65-80% ceiling and is a permanent sub-bar VC71 cannot emit. |
+| FUN_001342a0 | 0x1342a0 | objects.obj | 74.8 | parked | structural_cap[deterministic(classify_cap.py)]: reg_defining_prologue: decl has an @<esi> parameter; VC71 cannot emit the register-reading prologue (permanent sub-bar). Classifier returned high confidence. Raw 74.2% -> modeled 74.8% after stripping 1 @<reg> phantom load; 64 ours / 60 ref insns, the gap is the stack->ESI parameter setup the original does not need. |
+| glow_trailing_particle_new | 0x134350 | objects.obj | 77.5 | parked | structural_cap[deterministic(classify_cap.py)]: reg_defining_prologue: decl has an @<reg> parameter (glow_widget@<ebx>); VC71 cannot emit the register-reading prologue (permanent sub-bar). Additional [FPU-WARN] gap from MSVC keeping the lerp interpolant t live on the x87 stack across the three color lerps vs. our local reload. Measured 77.5% (174/178 insns) against per-function ref 00134350.obj; REGPARM phantom-load stripping recovered only +0.2%, confirming the gap is the reg-prologue + FPU scheduling, not a lift bug. |
+| FUN_001345b0 | 0x1345b0 | objects.obj | 76.4 | parked | structural_cap[deterministic(classify_cap.py)]: reg_defining_prologue: decl has an @<eax> parameter (glow_widget); VC71 cannot emit the register-reading prologue (permanent sub-bar). Remaining VC71 gap is register allocation (particle/tag pointer in edi vs original esi) and LCS misalignment of the two structurally identical A/B lerp blocks and the two identical particle loops — not logic bugs. Classifier: high confidence. |
+
+**Summary:** Queue discontinued. All 4 targets parked below 65% VC71 on permanent structural ceiling (register-defining prologue mismatch). No new lifts. These functions have proven VC71 ceilings; equivalence-testing or dormant deactivation (ported=false) would be alternative validation paths, but lifting at the current ABI modeling is not productive.
+
+---
+
+## Goal-lift run — 0/4 committed (infra_blocked_twice) — 2026-07-24
+
+Players.obj cluster + actions.obj. 0 functions committed. All 19 targets blocked by MCP server limitation: ghidra-live MCP server exposes only delinker tools (export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer) and lacks decompile_function / get_function_callees / disassemble_function tools required for RE analysis (steps 3, 5, and 8 of the lift brief).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| actor_get_pursuit_location | 0x1d4f0 | actions.obj | - | infra_blocked | ghidra_unavailable — the connected ghidra-live MCP server exposes only export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer. There is no decompile_function, get_function_callees, or disassemble_function tool available, so steps 3/5/8 cannot be performed. |
+| FUN_000bee40 | 0xbee40 | players.obj | - | infra_blocked | ghidra_unavailable — only the `ghidra-live` MCP server is exposed in this session (export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer). There is no decompile_function / get_function_callees / disassemble_function tool available, so steps 3-5 and 8 cannot be performed. No cached Ghidra context exists under artifacts/ either. |
+| FUN_000bee80 | 0xbee80 | players.obj | - | infra_blocked | ghidra_unavailable: the ghidra-live MCP server in this session exposes only export_delinked_object / get_current_program / get_current_selection / get_last_export_status / list_symbols_in_range / run_relocation_synthesizer. There is no decompile_function, get_function_callees, or disassemble_function tool, so steps 3, 5, and 8 cannot be performed. Server itself is alive (list_symbols_in_range at 000bee80-000bef80 returned normally). |
+| FUN_000bef40 | 0xbef40 | players.obj | - | infra_blocked | ghidra_unavailable: the ghidra-live MCP server in this session exposes ONLY delinker tools (export_delinked_object, list_symbols_in_range, run_relocation_synthesizer, get_current_program/selection, get_last_export_status). There is no decompile_function, get_function_callees, disassemble_function, or read_memory tool available, so steps 3/5/8 cannot be performed. Note the server itself is live — list_symbols_in_range(000bef40-000bef80) responded fine — so this is a tool-surface gap, not a dead server. |
+| FUN_000bef80 | 0xbef80 | players.obj | - | infra_blocked | ghidra_unavailable — the ghidra-live MCP server exposed to this agent provides only export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer. There is no decompile_function / get_function_callees / disassemble_function tool available, so steps 3, 5 and 8 cannot be performed. |
+| FUN_000bf010 | 0xbf010 | players.obj | - | infra_blocked | ghidra_unavailable: the connected ghidra-live MCP server exposes only export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer. There is no decompile_function, get_function_callees, or disassemble_function tool available, so no decompilation/callee context could be gathered. (list_symbols_in_range did work and confirms FUN_000bf010 exists at 000bf010, followed by FUN_000bf060 and FUN_000bf0b0 — so the function body spans roughly 0xbf010-0xbf060, ~0x50 bytes.) |
+| FUN_000bf110 | 0xbf110 | players.obj | - | infra_blocked | ghidra_unavailable: the connected ghidra-live MCP server exposes only export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer. There is no decompile_function, get_function_callees, or disassemble_function tool available in this session, so steps 3/5/8 cannot be performed. (list_symbols_in_range did respond, so the server is alive — the capability is simply absent.) |
+| FUN_000bf160 | 0xbf160 | players.obj | - | infra_blocked | ghidra_unavailable: the ghidra-live MCP server in this session exposes only export_delinked_object / list_symbols_in_range / run_relocation_synthesizer / get_current_program / get_current_selection / get_last_export_status. There is no decompile_function, get_function_callees, or disassemble_function tool, so steps 3, 5, and 8 cannot be performed. (list_symbols_in_range succeeded, so the server is alive — the decompile-capable MCP is simply not attached.) |
+| FUN_000bf1a0 | 0xbf1a0 | players.obj | - | infra_blocked | ghidra_unavailable — the connected ghidra-live MCP server exposes only export_delinked_object / list_symbols_in_range / run_relocation_synthesizer / get_current_program / get_current_selection / get_last_export_status. There is no decompile_function or get_function_callees tool, so no decompile, callee map, or disassembly could be obtained. |
+| FUN_000bf1e0 | 0xbf1e0 | players.obj | - | infra_blocked | ghidra_unavailable — the connected ghidra-live MCP server exposes only delinker tools (export_delinked_object, list_symbols_in_range, run_relocation_synthesizer, get_current_program/selection, get_last_export_status). There is no decompile_function or get_function_callees tool in this session, so decompilation, callee mapping, and disassembly notes could not be produced. |
+| FUN_000bf220 | 0xbf220 | players.obj | - | infra_blocked | ghidra_unavailable: the connected ghidra-live MCP server exposes only export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer. There is no decompile_function, get_function_callees, or disassemble_function tool in this session, so steps 3/5/8 cannot be performed. The server itself is live (list_symbols_in_range at 000bf220-000bf300 returned FUN_000bf220/bf260/bf2b0/bf300), so this is a tool-surface gap, not a dead server. |
+| FUN_000bf260 | 0xbf260 | players.obj | - | infra_blocked | ghidra_unavailable: the ghidra-live MCP server is connected (program cachebeta.xbe, image base 0x00010000) but exposes ONLY delinker tools — export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer. No decompile_function / get_function_callees / disassemble_function tool is available, so steps 3, 5 and 8 of the brief cannot be performed and no decompiled body, callee list, or disasm notes can be produced. |
+| FUN_000bf2b0 | 0xbf2b0 | players.obj | - | infra_blocked | ghidra_unavailable: no decompile_function / get_function_callees tool exposed in this session's Ghidra MCP toolset (only export_delinked_object, list_symbols_in_range, run_relocation_synthesizer, get_current_program/selection, get_last_export_status). Cannot produce decompiled body or callee list. |
+| FUN_000bf4c0 | 0xbf4c0 | players.obj | - | infra_blocked | ghidra_unavailable: the ghidra-live MCP server in this session exposes ONLY delinker tools (export_delinked_object, list_symbols_in_range, run_relocation_synthesizer, get_current_program/selection, get_last_export_status). There is no decompile_function, get_function_callees, disassemble_function, or read_memory tool available, so steps 3/5/8 cannot be performed. Note the server itself is live — list_symbols_in_range(000bf4c0-000bf6c0) responded fine — so this is a tool-surface gap, not a dead server. |
+| FUN_000bf560 | 0xbf560 | players.obj | - | infra_blocked | ghidra_unavailable: no decompile_function / get_function_callees / disassemble_function tool is exposed in this session. The only Ghidra MCP surface available is ghidra-live (export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer) — no decompiler endpoint, so no Ghidra context can be gathered. |
+| FUN_000bf5a0 | 0xbf5a0 | players.obj | - | infra_blocked | ghidra_unavailable: the connected ghidra-live MCP server exposes only delinker tools (export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer). There is no decompile_function, get_function_callees, or disassemble_function tool available, so no decompile/callee context could be gathered. |
+| FUN_000bf5e0 | 0xbf5e0 | players.obj | - | infra_blocked | ghidra_unavailable: the connected ghidra-live MCP server exposes only export_delinked_object / get_current_program / get_current_selection / get_last_export_status / list_symbols_in_range / run_relocation_synthesizer. There is no decompile_function, get_function_callees, or disassemble_function tool available in this session, so no decompilation context can be gathered. |
+| FUN_000bf600 | 0xbf600 | players.obj | - | infra_blocked | ghidra_unavailable — the ghidra-live MCP server is reachable (list_symbols_in_range at 000bf600-000bf700 succeeded) but exposes ONLY delinker tools: export_delinked_object, get_current_program, get_current_selection, get_last_export_status, list_symbols_in_range, run_relocation_synthesizer. There is no decompile_function, get_function_callees, or disassemble_function tool in this session's toolset, so steps 3/5/8 cannot be performed and no decompiled body, callee list, or retrieval-hook neighbors could be captured. |
+| FUN_000bf680 | 0xbf680 | players.obj | - | infra_blocked | ghidra_unavailable — the decompile/callee MCP tools (decompile_function, get_function_callees, disassemble_function) are not exposed in this agent's toolset. Only ghidra-live delink helpers (export_delinked_object, list_symbols_in_range, run_relocation_synthesizer) are available. Connectivity itself is fine: list_symbols_in_range(000bf680-000bf700) returned FUN_000bf680 / FUN_000bf6c0 / FUN_000bf700, so the program is loaded — but no pseudocode or callee graph can be obtained, and no retrieval hook fired (no decompile body to query with). |
+
+**Summary:** All 19 targets blocked by MCP server tool-surface gap. The ghidra-live server is connected and functional (list_symbols_in_range and export_delinked_object work), but the session lacks access to decompile_function, get_function_callees, and disassemble_function tools required for RE analysis. Queue suspended pending resolution of the Ghidra MCP server capability gap. No new lifts.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-24
+
+Actions.obj, players.obj, player_control.obj, rasterizer.obj. 4 functions committed at >=90% VC71. 1 function skipped (trivial 2-statement wrapper). 1 function parked below 90% (sub-90% band requires runtime evidence). 
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bf5e0 | 0xbf5e0 | players.obj | - | skipped | Body is a 2-statement HS script-function wrapper: calls scripting_magic_melee_attack() then hs_return(arg1, 0). No logic of its own. NOTE: kb.json decl is wrong — it says void FUN_000bf5e0(void) but the disassembly reads MOV EAX,[EBP+0xc], i.e. it takes 2 cdecl stack args (arg0 unused, arg1 = thread_handle). Correct decl: void FUN_000bf5e0(int arg0, int thread_handle); |
+| FUN_0016f880 | 0x16f880 | rasterizer.obj | 100 | committed | mechanical gate: 100% clean (pass1+redelink) |
+| actor_get_pursuit_location | 0x1d4f0 | actions.obj | 88.4 | parked | NEEDS_RUNTIME: Target: actor_get_pursuit_location, 0x1d4f0, actions.obj, /mnt/g/dev/halo-clean-main/src/halo/ai/actions.c:1128. Structural Match: 88.4% VC71 against a verified-complete per-function delinked reference (/mnt/g/dev/halo-clean-main/delinked/functions/0001d4f0.obj). Sub-90% band. Confirmed (binary evidence): Reference is complete and correctly ranged (0x33 bytes, both RETs present, 2 relocs, no past-RET table inflation). cdecl, one stack arg at [ebp+8], EAX pointer return; RET has no immediate; 3 original call sites all push 1 / clean 4. datum_get argument order (pool = arg0 from [0x6325a4] VALUE, handle = arg1), ADD ESP,8. field +0x6c is a 16-bit load; hit-path result is actor+0xa4; miss path is NULL. Zero stores, zero global mutation, zero FPU instructions, zero loops, no register args. audit_reg_abi regs=none / no hazards; check_stdcall_ret 0 ERROR; check_arg_counts verdict=OK; check_lift_hazards --changed-only exit 0 clean; buffer_alias clean; build OK. The decl correction void(void) -> void*(int) is required by the disassembly and has no lifted-C caller to break. Inferred (reasoned): The three VC71 mismatches are register allocation (ESI vs EDX for the NULL seed), the callee-save pair that follows from it, and LCS duplicate-opcode alignment noise. All semantic steps agreed instruction-for-instruction; shape-only. Uncertain/UNRESOLVED (blocker): The lift's only interesting behavior — the hit path returning actor+0xa4 — has never been executed by any oracle. The cited equivalence result contradicts itself (3 runs of same source: 2 report "100 passed", 1 reports "100 diverged" / ok=false). Both "pass" runs are vacuous (unique_returns=1, actor=NULL on both sides; miss-path-only agreement proves nothing about actor+0xa4). The divergent run shows reloc gap (pool read 0x0 vs seeded). The cited live-state snapshot (infection_swarm.json) does not exist in this worktree. Approval would commit on contradicted/vacuous/absent evidence. Cheapest routes: (a) Recover shape — sink `result = NULL` below datum_get call so VC71 picks EDX like original, plausibly reaching 90%+, removing band requirement. (b) If kept, produce real runtime evidence: state-snapshot equiv with populated actor pool reaching mode==7 and mode==5 (unique_returns>1), or golden-harness invoke with live handle. Do not accept zero-fill run; cannot reach hit path by construction. |
+| FUN_000b8cf0 | 0xb8cf0 | player_control.obj | 93.9 | committed | mechanical gate: 93.9% clean (pass1) |
+| FUN_000b8d30 | 0xb8d30 | player_control.obj | 100 | committed | mechanical gate: 100% clean (pass1+redelink) |
+| FUN_000bee40 | 0xbee40 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** Actions/players/player_control/rasterizer cluster. 4/4 goal threshold reached. Committed: 3× 100% + 1× 93.9%. Parked: 1 at 88.4% (NEEDS_RUNTIME sub-90% band). Skipped: 1 trivial wrapper (2-statement HS script forward).
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-24
+
+Actions.obj, players.obj, rasterizer.obj. 4 functions committed at 100% VC71. 1 function skipped (single-instruction empty stub).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_0016FEB0 | 0x16feb0 | rasterizer.obj | - | skipped | Function is a single-instruction empty stub: the entire body at 0x16feb0 is `RET`. Ghidra decompiles it to `void __cdecl FUN_0016feb0(void) { return; }` — zero callees, zero instructions to lift, no state touched. Lifting yields an empty C body that carries no behavioral evidence and cannot be byte-verified meaningfully (no delinked reference exists either). Not worth a lift slot. |
+| actor_get_pursuit_location | 0x1d4f0 | actions.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bee80 | 0xbee80 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000beec0 | 0xbeec0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bef40 | 0xbef40 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** Actions/players/rasterizer cluster. 4/4 goal threshold reached. Committed: 4× 100% VC71. Skipped: 1 single-instruction stub (no behavioral content).
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+Rasterizer.obj, damage.obj, players.obj. 4 functions committed at ≥91% VC71. 2 functions skipped (1 empty stub, 1 already-implemented but unwired).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_0016FEB0 | 0x16feb0 | rasterizer.obj | - | skipped | Function body is a single RET instruction (0016feb0: RET). Ghidra decompile is `void __cdecl FUN_0016feb0(void) { return; }` — an empty no-op stub with zero callees, zero relocations, and no state. Nothing to lift; a lift would produce an empty function body with no behavioral or match value. |
+| FUN_00136b40 | 0x136b40 | damage.obj | - | skipped | already implemented: /mnt/g/dev/halo-clean-main/src/halo/objects/damage.c (line 413, as `void object_deplete_shield(int object_handle)`). The step-2b grep missed it because the lift was renamed away from the FUN_ placeholder. NOTE FOR ORCHESTRATOR: kb.json still carries this function as `{"addr":"0x136b40","decl":"void FUN_00136b40(int object_handle);","ported":false}` under objects[196] = damage.obj (no `name` key), and both call sites in src/halo/units/units.c (lines 2310, 12236) still call `FUN_00136b40(...)`. So a complete, fully-annotated lift is sitting in source but is NOT wired up: kb needs `name: "object_deplete_shield"` + `ported: true`, and the two units.c call sites need renaming. That is a wiring/activation task, not a lift task. |
+| FUN_000bef80 | 0xbef80 | players.obj | 94.7 | committed | mechanical gate: 94.7% clean (pass1) |
+| FUN_000befd0 | 0xbefd0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bf010 | 0xbf010 | players.obj (kb.json objects[83], functions[136]) | 91.4 | committed | mechanical gate: 91.4% clean (pass1) |
+| FUN_000bf060 | 0xbf060 | players.obj | 91.4 | committed | mechanical gate: 91.4% clean (pass1) |
+
+**Summary:** Rasterizer/damage/players cluster. 4/4 goal threshold reached. Committed: 1× 100% + 3× ≥91% VC71. Skipped: 1 empty stub + 1 already-implemented but unwired (kb.json activation task).
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+Rasterizer.obj, encounters.obj, render.obj, damage.obj. 4 functions committed at ≥91% VC71. 2 functions skipped (1 empty stub, 1 CRT-region callee skip rule).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_0016FEB0 | 0x16feb0 | rasterizer.obj | - | skipped | Function body is a single RET instruction — an empty no-op stub in the original binary. Nothing to lift: `void FUN_0016FEB0(void) { return; }` carries zero behavior, no callees, no globals, no FPU. Lifting it yields no verification value (a 1-instruction delinked reference cannot produce a meaningful VC71 signal) and consumes a kb.json redirect slot for no gain. Leave unported so the original RET is reached directly. |
+| FUN_00053b80 | 0x53b80 | encounters.obj | - | skipped | Callee 0x1d90f0 (crt_sprintf) lies in the 0x1d0000-0x1de000 CRT region, which the pre-screen rule lists as a skip trigger. NOTE for the orchestrator: this is a benign case — crt_sprintf is already declared in kb.json as `int crt_sprintf(char *buffer, const char *format, ...)`, plain cdecl varargs, no register args and not an MSVC intrinsic. If the CRT-region rule is intended only for xboxkrnl/NT imports and true intrinsics (_chkstk/_ftol2/SEH/_all*), this target is fully liftable and the full brief below is ready to hand to a lift agent. Everything else pre-screens clean: no unaff_/in_EAX/in_ECX, no SEH, no unregistered @<reg> callees, body is not a 1-line FUN_ wrapper. |
+| FUN_00184570 | 0x184570 | render.obj | 95.8 | committed | mechanical gate: 95.8% clean (pass1) |
+| FUN_001845b0 | 0x1845b0 | render.obj | 97 | committed | mechanical gate: 97% clean (pass1) |
+| FUN_00184610 | 0x184610 | render.obj | 91.4 | committed | pass1 |
+| FUN_00136b40 | 0x136b40 | damage.obj | 95.7 | committed | mechanical gate: 95.7% clean (pass1) |
+
+**Summary:** Rasterizer/encounters/render/damage cluster. 4/4 goal threshold reached. Committed: 4 functions at ≥91% VC71 (1× 97% + 1× 95.8% + 1× 95.7% + 1× 91.4%). Skipped: 1 empty stub + 1 CRT-region callee (pre-screen skip trigger).
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+Rasterizer.obj, encounters.obj, players.obj. 4 functions committed at ≥91% VC71. 1 function skipped (empty stub). 1 function parked (sub-90% band with critical concrete bug).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_0016FEB0 | 0x16feb0 | rasterizer.obj | - | skipped | Function body is a single `RET` instruction (0016feb0: RET). Ghidra decompiles to `void __cdecl FUN_0016feb0(void) { return; }` — no callees, no callers recorded, no state touched. Nothing to lift; a lifted empty body would be a no-op stub with no behavioral evidence to verify. Note it is already CALLED (not defined) from /mnt/g/dev/halo-clean-main/src/halo/rasterizer/xbox/rasterizer_xbox_decals.c:1139, so kb.json's `void FUN_0016FEB0(void);` thunk decl is exercised and correct as-is. |
+| FUN_00053b80 | 0x53b80 | encounters.obj | 88.9 | parked | REJECT: Concrete bug in the built artifact. The oracle's `mov eax,[0x2ee6c4]` at 0x53bc7 is NOT a dead load: FUN_00053800 reads EAX at entry (0x53807 `mov esi,eax`; 0x53809 `test esi,esi`; 0x53828 `jne`; 0x5382a `mov esi,[0x2ee6c4]` fallback; 0x53841 `push esi; call 0x19b640` = draw_string_set_color(const void *color)). All six original call sites of 0x53800 (0x53a0c, 0x53a7f, 0x53ad8, 0x53b6f, 0x53bd7, 0x53c3f) load that same global into EAX right before the CALL, so it is the ABI, not compiler residue. The lift replaced it with `(void)*(void *volatile *)0x2ee6c4;` and clang then clobbers EAX one instruction later: in build/CMakeFiles/halo.dir/src/halo/ai/encounters.c.obj, `+0x46 mov 0x2ee6c4,%eax` is immediately followed by `+0x4b lea -0xa(%ebp),%eax` before `+0x56 call _FUN_00053800`. FUN_00053800 therefore receives EAX = &tab_stops (a 6-byte stack array holding 96 00 2C 01 C2 01), which is non-zero, so the callee's "0 = use default" fallback is skipped and draw_string_set_color dereferences the tab-stop array (reading past it into saved EBP / return address) as a colour: garbage/NaN debug-text colour, silent, no assert, invisible to the VC71 %. Compounding: kb.json's new decl for 0x53800 fixes the stack arg count (void(void) -> 3 args, correct) but omits the required `@<eax>` annotation, so the register arg is unmodelled in build/generated/decl.h — a missing-ABI-evidence blocker in its own right. And the 88.9% sub-90% band requires runtime/golden verification, which does not exist: the logged equivalence command has no --state-snapshot, the cited artifacts/snapshots/infection_swarm.json is absent from the tree, and the acceptance note's claim of a "0-divergence pass on the live-state infection_swarm snapshot" is contradicted by its own text and by the run log. Everything else in the lift is correct and worth keeping (counter identities/order/int16 widths, byte-exact format string at 0x25c1d8, tab stops {150,300,450}, 0x24 cleanup). Fix: declare `void FUN_00053800(const void *color@<eax>, char *text, int tab_stop_count, int16_t *tab_stops);`, pass `*(void **)0x2ee6c4` explicitly, delete the volatile read and the "dead load" comment, re-run VC71 + equivalence. Blast radius is contained — the other five callers (0x53960, 0x539c0, 0x53a20, 0x53a90, 0x53af0/0x53bf0) are all unported. |
+| FUN_000bf0b0 | 0xbf0b0 | players.obj | 92.1 | committed | mechanical gate: 92.1% clean (pass1) |
+| FUN_000bf110 | 0xbf110 | players.obj (kb objects[83]) | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bf160 | 0xbf160 | players.obj | 94.1 | committed | mechanical gate: 94.1% clean (pass1) |
+| FUN_000bf1a0 | 0xbf1a0 | players.obj | 94.1 | committed | mechanical gate: 94.1% clean (pass1) |
+
+**Summary:** Rasterizer/encounters/players cluster. 4/4 goal threshold reached. Committed: 1× 100% + 3× ≥92% VC71. Parked: 1 at 88.9% (concrete bug in oracle target ABI: missing @<eax> parameter + dead-load elimination). Skipped: 1 empty stub.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+players.obj cluster. 4 functions committed at 100% VC71.
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bf5a0 | 0xbf5a0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bf5e0 | 0xbf5e0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bf600 | 0xbf600 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bf640 | 0xbf640 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. All functions at 100% VC71 match.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+players.obj cluster. 4 functions committed (3× 100% VC71, 1× 94.1% VC71).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bf960 | 0xbf960 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bf9a0 | 0xbf9a0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfa30 | 0xbfa30 | players.obj | 94.1 | committed | mechanical gate: 94.1% clean (pass1) |
+| FUN_000bfa70 | 0xbfa70 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. Committed: 3× 100% + 1× 94.1% VC71.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+players.obj cluster. 4 functions committed (1× 100% VC71, 2× 94%+ VC71, 1× 95.1% VC71).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bfab0 | 0xbfab0 | players.obj | 95.1 | committed | mechanical gate: 95.1% clean (pass1) |
+| FUN_000bfb00 | 0xbfb00 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfb40 | 0xbfb40 | players.obj | 94.1 | committed | mechanical gate: 94.1% clean (pass1) |
+| FUN_000bfb80 | 0xbfb80 | players.obj | 94.5 | committed | mechanical gate: 94.5% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. Committed: 1× 100% + 3× 94%+ VC71 (95.1%, 94.5%, 94.1%).
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-25
+
+players.obj cluster. 4 functions committed (3× 100% VC71, 1× 88.5% VC71). 1 parked below 90% threshold with NEEDS_RUNTIME verdict.
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bfbc0 | 0xbfbc0 | players.obj | 90.3 | committed | mechanical gate: 90.3% clean (pass1) |
+| FUN_000bfc10 | 0xbfc10 | players.obj | 88.5 | parked | NEEDS_RUNTIME: Target: FUN_000bfc10 @ 0x000bfc10 — players.obj — /mnt/g/dev/halo-clean-main/src/halo/game/players.c:7320. HaloScript builtin dispatcher; setter counterpart of the device-group reader FUN_000bfb80 and a byte-shape twin of FUN_000bfbc0 immediately above it. Structural Match: 88.5% VC71 (25 compiled / 27 reference insns), re-measured with --no-cache. This is the <90% band. The pipeline's own low_match_policy stage returned verdict=FAIL in all four completed runs for this target (top-line 76.4%, goal90 band gate). Delinked reference precondition is satisfied: delinked/functions/000bfc10.obj exists and I confirmed it is byte-identical to the pristine XBE at 0xbfc10. Mismatch Classes: Fully classified, benign — see mismatch_classes. Equivalent float-argument materialization (integer dword copy vs FLD/FSTP) plus equivalent zero-extended index materialization. Identical control flow, identical callee-entry stack bytes, no FPU ordering risk, no unclassified difference remaining. Call Argument Audit: Complete — see call_argument_audit. All three CALLs traced in the pristine XBE; every argument confirmed by position and width, cross-checked against callee prologue reads, a second independent call site, and check_arg_counts. Memory Offset / Global Side-effect Audit: Complete — see memory_offset_audit. Exactly two record loads (+0x0 word zero-extended, +0x4 float), both binary-confirmed; zero stores, zero globals, zero locals, no buffers. ABI Audit: Clean — see abi_audit. regs=none, 0 reg-arg drift, cdecl confirmed on both target and the re-declared callee, no other lifted caller affected by the decl widening. Confirmed: Reference bytes: pristine XBE 0xbfc10 == delinked 000bfc10.obj, 27 instructions. Argument order and stack layout at all three CALLs, byte-identical between lift and original. Record field types and offsets (+0x0 unsigned short, +0x4 float), and the +0x4 float proven by the callee's own `fld dword ptr [ebp+0xc]`. device_group_set_actual_value takes 2 cdecl stack args (check_arg_counts, two call sites). ABI audit, reg-arg drift check, stdcall-RET check, hazard scan, buffer-alias scan, and build: all clean. The 2-instruction VC71 gap is a codegen shape difference only; the shipped clang object emits the reference's own fld/fstp form. Inferred: The FLD/FSTP vs integer-move difference is behaviorally inert for every non-SNaN input; the callee clamps to [0,1] and re-loads the value with FLD regardless. kb.json's `int device_group_index` (vs the callee's 16-bit read) is harmless because the callee re-reads only the low word, and the original likewise pushes a full dword. The combined `add esp,0x10` arg-count finding on hs_return is the known false-positive class already accepted on the committed twins. Uncertain: Parameter-slot narrowing in the shipped build. Clang emits `movsx eax, WORD [ebp+8]` and `movsx ecx, BYTE [ebp+0x10]`, whereas the original forwards both slots as full dwords (`mov ecx,[ebp+8]`, `mov eax,[ebp+0x10]`). If the hs dispatcher ever places a value in slot 1 whose upper 16 bits carry information — a datum handle's salt, for instance — the lift would discard it where the original preserves it. The function has zero direct callers; it is reached only through the function-pointer table entry at VA 0x27060c, and I did not trace the dispatcher's push widths. The same signature shape is already committed on several twins with no reported regression, so this is a TU-wide inherited pattern rather than a new defect, but it is unresolved for this function. The equivalence lane is vacuous for this function's body. equivalence.json shows covered_pcs = function offsets 0x00–0x1a and 0x39–0x3b only; offsets 0x1c–0x36 — the record loads and BOTH remaining CALLs — were never executed by any of the 100 seeds (unique_returns: 0, coverage 51.7%, "moderate"). The stubbed hs_macro_function_evaluate returns 0, so every seed takes the NULL early-exit. "100 passed, 0 diverged" here proves only that both sides agree on returning early. The acceptance narrative is not supported by the run record. It cites "permute", but every run logs `permute: skipped (--permute not set)`. It cites "a 0-divergence pass on the live-state infection_swarm snapshot ... accepted runtime behavioral evidence" while stating in the same passage that artifacts/snapshots/infection_swarm.json does not exist in this worktree and zero-fill was used. No such run exists in artifacts/lift_runs/. That claimed runtime evidence cannot be credited. Verdict Rationale: The static case for this lift is unusually strong. I re-derived every fact from the pristine XBE rather than the decompiler, and found no defect: argument order, argument count, field offsets, field widths and signedness, the hidden float at +0x4, calling convention, and the absence of register args are all confirmed correct, and the two-instruction VC71 gap resolves to a pair of equivalent argument-materialization idioms that leave the callee-entry stack byte-identical. Hazard, buffer-alias, reg-arg, stdcall-RET and ABI audits are clean, and the kb.json decl corrections are binary-justified with no other lifted caller exposed. I found nothing that warrants REJECT. But 88.5% falls in the <90% band, where policy requires golden or runtime behavioral verification in addition to classified mismatches — and that requirement is not met. The only behavioral lane that ran is a zero-fill unicorn_diff whose coverage map proves it never executed a single instruction of the part of the function that could be wrong: both CALLs and both record loads are outside the covered PC set. Everything this lift actually does is untested by it. Worse, the acceptance path presented to me asserts two lanes that never ran — a permute stage logged as skipped, and a live-state snapshot run against a file that does not exist — while the pipeline's own low_match_policy returned FAIL on every run. A reviewer that accepts on that basis is accepting a narrative, not evidence. Fail-closed, the correct disposition is not rejection but escalation: the mismatches are classified and harmless, so this may well be correct, yet the structural evidence alone is too weak for an unattended commit at this score. Clearing it is cheap and specific — re-run unicorn_diff with a stub-return override (or a state snapshot) that makes hs_macro_function_evaluate return a non-NULL record so offsets 0x1c–0x36 are actually executed, and confirm covered_pcs closes that gap with 0 divergences and 0 stub-arg mismatches. A golden-harness case, or an A/B trajectory run exercising a device-group script, would serve equally. Separately, and independent of this verdict, the dispatcher's push widths for slot 1 should be traced once for this whole family of hs handlers, since the int16_t/char narrowing is inherited by every committed twin. AUTOLIFT_REVIEW: NEEDS_RUNTIME |
+| FUN_000bfc50 | 0xbfc50 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfc90 | 0xbfc90 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfcd0 | 0xbfcd0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. Committed: 3× 100% + 1× 90.3% VC71. Parked: 1 function (FUN_000bfc10 at 88.5% VC71) with NEEDS_RUNTIME verdict pending behavioral verification.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-26
+
+players.obj cluster. 4 functions committed (3× 100% VC71, 1× 93.6% VC71).
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bfdb0 | 0xbfdb0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfdd0 | 0xbfdd0 | players.obj | 93.6 | committed | mechanical gate: 93.6% clean (pass1) |
+| FUN_000bfe10 | 0xbfe10 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfe30 | 0xbfe30 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. Committed: 3× 100% + 1× 93.6% VC71.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-26
+
+players.obj cluster. 4 functions committed at 100% VC71.
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000bfe70 | 0xbfe70 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bff70 | 0xbff70 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000bfff0 | 0xbfff0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000c0030 | 0xc0030 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. All functions at 100% VC71 match.
+
+---
+
+## Goal-lift run — 4/4 committed (goal_reached) — 2026-07-26 (session lift-session-20260724)
+
+players.obj cluster. 4 functions committed at 100% VC71.
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+| FUN_000c0070 | 0xc0070 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000c00b0 | 0xc00b0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000c00f0 | 0xc00f0 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+| FUN_000c0130 | 0xc0130 | players.obj | 100 | committed | mechanical gate: 100% clean (pass1) |
+
+**Summary:** players.obj 4/4 goal threshold reached. All functions at 100% VC71 match.
+
+---
+
+## Goal-lift run — 0/4 committed (queue_exhausted) — 2026-07-26
+
+| function | addr | obj | vc71 | action | reason |
+|---|---|---|---|---|---|
+
+Queue exhausted; no candidates remaining in selection pool.

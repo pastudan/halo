@@ -236,18 +236,53 @@ _ORACLE_SWITCH_TABLE_FIXUPS = {
             0x0002005C, 0x0002006C, 0x0002007C, 0x0002008A,
         ),
     },
+    # FUN_00141970: two-level MSVC switch — 8-entry pointer table @0x141b38
+    # followed by a byte index-map @0x141b58 (codes->table index), both carried
+    # by ONE symbol (the movzbl addresses the map as switchdata+0x20).  Entries
+    # that are `bytes` are emitted verbatim after the packed pointers; values
+    # read from the pristine cachebeta.xbe (ghidra read_memory 0x141b38, 52B).
+    0x00141970: {
+        "switchD_001419d6::switchdataD_00141b38": (
+            0x001419F7, 0x00141A04, 0x001419DD, 0x001419EA,
+            0x00141A2A, 0x00141A4B, 0x00141A62, 0x00141ACE,
+            # Byte index-map @0x141b58 keyed on ecx=code-1, dispatch bounded to
+            # ecx<=0x12 (code 0x13).  Read verbatim from pristine cachebeta.xbe
+            # (VA 0x141b58): 00 01 02 03 04, twelve 07 (indices 5..16 -> region
+            # default), 05 (index 17 = code 0x12 -> caseD_12), 06 (index 18 =
+            # code 0x13 -> caseD_13).  A prior hand-authored copy had THIRTEEN
+            # 07s, shifting code 0x12->region (assert) and code 0x13->caseD_12.
+            b"\x00\x01\x02\x03\x04" + b"\x07" * 12 + b"\x05\x06",
+        ),
+    },
 }
 
 
 def _apply_oracle_switch_table_fixups(func_addr: int, function_slice,
                                       rdata_map: dict,
-                                      maps_full_text: bool) -> dict:
-    """Add binary-backed switch table bytes missing from delinked COFF."""
+                                      maps_full_text: bool) -> tuple[dict, dict]:
+    """Add binary-backed switch table bytes missing from delinked COFF.
+
+    Returns (patched_rdata_map, identity_seeds).
+
+    ``identity_seeds`` maps the switchdata symbol's ORIGINAL XBE virtual
+    address -> the same fixup bytes, so they are mapped verbatim at that VA in
+    the emulator.  MSVC two-level ``switch`` dispatch emits a byte index-map
+    (code -> pointer-table index) read via an ABSOLUTE displacement with NO
+    relocation (``movzbl <switchdata+0x20>(ecx), edx``), then an indirect jump
+    through the reloc'd pointer table (``jmp [switchdata + edx*4]``).  The
+    pointer-table read is redirected to a globals slot by patch_dir32_relocs,
+    but the absolute index-map read has no reloc to redirect — left unseeded it
+    reads zero, so ``edx`` is always 0 and every code dispatches to table[0]
+    (e.g. FUN_00141970 wrote the case-1 value to all four function slots).
+    Seeding the block at its original VA makes the absolute read resolve while
+    the reloc'd pointer-table read keeps using its slot.
+    """
     fixups = _ORACLE_SWITCH_TABLE_FIXUPS.get(func_addr)
     if not fixups:
-        return rdata_map
+        return rdata_map, {}
 
     patched = dict(rdata_map)
+    identity_seeds = {}
     section_base_delta = (func_addr - function_slice.section_offset
                           if maps_full_text else func_addr)
     for symbol_name, target_vas in fixups.items():
@@ -255,9 +290,15 @@ def _apply_oracle_switch_table_fixups(func_addr: int, function_slice,
             continue
         data = bytearray()
         for target_va in target_vas:
-            data.extend(struct.pack("<I", CODE_BASE + target_va - section_base_delta))
+            if isinstance(target_va, (bytes, bytearray)):
+                data.extend(target_va)  # raw suffix (e.g. byte index-map)
+            else:
+                data.extend(struct.pack("<I", CODE_BASE + target_va - section_base_delta))
         patched[symbol_name] = bytes(data)
-    return patched
+        m = re.search(r'switchdataD_([0-9a-fA-F]+)', symbol_name)
+        if m:
+            identity_seeds[int(m.group(1), 16)] = bytes(data)
+    return patched, identity_seeds
 
 
 def _relocate_rdata_text_refs(function_slice, rdata_map: dict,
@@ -287,6 +328,65 @@ def _relocate_rdata_text_refs(function_slice, rdata_map: dict,
         patched[symbol_name] = bytes(chunk)
     return patched
 
+
+def _relocate_text_label_refs(function_slice, code: bytes,
+                              maps_full_text: bool) -> bytes:
+    """Relocate DIR32 references to intra-.text labels (MSVC switch tables).
+
+    MSVC/VC71 emits ``switch`` jump tables inside the function's own .text
+    section: the indirect ``jmp dword ptr [reg*4 + $LNNNNN]`` disp32 and each
+    table entry are DIR32 relocations to internal labels ($LNNNNN) defined in
+    that same section.  ``patch_dir32_relocs`` skips them (they are in
+    ``defined_symbols``), leaving the encoded field at its raw addend (usually
+    0), so the jump reads a garbage/zero target and control escapes into
+    unmapped memory.  Clang instead parks its tables in .rdata, which the
+    rdata_map/_relocate_rdata_text_refs path already handles.
+
+    We resolve each such label to its section-relative offset (captured in
+    ``FunctionSlice.text_symbol_offsets``) and patch the field to the address
+    the code is loaded at: ``CODE_BASE + (offset - base_delta) + addend``.
+    ``base_delta`` is 0 when the full .text section is mapped at CODE_BASE
+    (a label at section offset V lands at CODE_BASE+V) and the function's
+    ``section_offset`` when only the extracted slice is mapped at CODE_BASE
+    (matching ``_relocate_rdata_text_refs``).
+    """
+    text_offsets = getattr(function_slice, "text_symbol_offsets", None)
+    if not text_offsets:
+        return code
+    patched = bytearray(code)
+    base_delta = 0 if maps_full_text else function_slice.section_offset
+    slice_lo = function_slice.section_offset
+    slice_hi = slice_lo + len(function_slice.code)
+    for reloc in function_slice.relocs:
+        if reloc.reloc_type != 0x0006:  # IMAGE_REL_I386_DIR32
+            continue
+        sym = reloc.symbol_name
+        # Section symbols (".text"/".rdata"/...) are handled elsewhere; only
+        # named intra-section labels are rebased here.
+        if sym.startswith("."):
+            continue
+        # Ghidra-delinked switch DATA symbols (switchD_*::switchdataD_*) are
+        # served by _apply_oracle_switch_table_fixups / the globals-slot path;
+        # rebasing them here pointed the jmp at slice-relative addresses whose
+        # bytes are NOT loaded (table lives outside the extracted slice) ->
+        # jmp *0 -> ORACLE-CRASH eip=0 (FUN_000d04d0 regression, 2026-07-23).
+        if "switchdata" in sym or sym.startswith("switchD_"):
+            continue
+        target_off = text_offsets.get(sym)
+        if target_off is None:
+            continue
+        # Only rebase labels whose bytes are actually inside the extracted
+        # slice; a label outside it (another function's table/label in a
+        # whole-TU delinked obj) cannot be a valid target in this mapping.
+        if not maps_full_text and not (slice_lo <= target_off < slice_hi):
+            continue
+        off = reloc.virtual_address
+        if off + 4 <= len(patched):
+            addend = struct.unpack_from("<I", patched, off)[0]
+            struct.pack_into("<I", patched, off,
+                             CODE_BASE + (target_off - base_delta) + addend)
+    return bytes(patched)
+
 # ---------------------------------------------------------------------------
 # kb.json helpers
 # ---------------------------------------------------------------------------
@@ -297,33 +397,18 @@ def _load_kb() -> dict:
 
 
 def _find_kb_entry(kb: dict, func_name: str) -> Optional[dict]:
-    """Find a function entry in kb.json by name or hex address.
-
-    Prefer exact ``name`` / address matches before scanning decl text — duplicate
-    or stale decls (same identifier, wrong addr) are common in this kb.
-    """
+    """Find a function entry in kb.json by name or hex address."""
     addr_query = func_name if func_name.startswith("0x") else None
-    decl_fallback = None
     for obj in kb.get("objects", []):
         for fn in obj.get("functions", []):
-            enriched = dict(
-                fn, _obj_name=obj.get("name", ""), _obj_source=obj.get("source", "")
-            )
-            if addr_query and fn.get("addr", "") == addr_query:
-                return enriched
-            if fn.get("name") == func_name:
-                return enriched
             decl = fn.get("decl", "")
-            m = re.search(r"\b(\w+)\s*\(", decl)
+            # Match function name in decl
+            m = re.search(r'\b(\w+)\s*\(', decl)
             fn_name = m.group(1) if m else ""
-            if fn_name != func_name:
-                continue
-            kb_name = fn.get("name")
-            if kb_name and kb_name != func_name:
-                continue
-            if decl_fallback is None:
-                decl_fallback = enriched
-    return decl_fallback
+            if fn_name == func_name or fn.get("addr", "") == addr_query:
+                return dict(fn, _obj_name=obj.get("name", ""),
+                            _obj_source=obj.get("source", ""))
+    return None
 
 
 def _find_kb_entry_by_addr(kb: dict, addr: str) -> Optional[dict]:
@@ -627,6 +712,22 @@ def _canonicalize_callee_key(sym_key: str) -> str:
     return _load_function_addr_to_name().get(addr, sym_key)
 
 
+# Ghidra-labeled globals in delinked refs whose name does NOT match kb.json's
+# name for the same address (or matches a DIFFERENT kb global).  Resolved by
+# explicit address, checked before the kb name lookup.  Do NOT generic-strip
+# the g_ prefix instead: g_object_header_data labels 0x5a8d50 (the object
+# table pointer) while kb's object_header_data is 0x5abc10 — a bare strip
+# would seed the wrong slot (2026-07-21, object_iterator_next campaign).
+_GLOBAL_NAME_ALIASES = {
+    "g_object_header_data": 0x5a8d50,
+    # Glow trailing-particle datum pool pointer.  The delinked oracle labels it
+    # g_glow_particle_data; kb.json has no named global at this address, so the
+    # candidate references it as the raw pointer *(data_t**)0x5a90cc.  Alias so
+    # both sides seed the same pool (glow.obj equivalence, 2026-07-21).
+    "g_glow_particle_data": 0x5a90cc,
+}
+
+
 def _normalize_global_symbol(sym_name: str) -> str:
     """Strip MSVC/clang decoration to recover the bare C identifier:
     '__imp__actor_data' -> 'actor_data', '_actor_data@8' -> 'actor_data'."""
@@ -671,7 +772,10 @@ def _build_globals_seeds(*slot_maps: dict,
             if m:
                 orig_addr = int(m.group(1), 16)
             else:
-                orig_addr = name2addr.get(_normalize_global_symbol(sym_name))
+                bare = _normalize_global_symbol(sym_name)
+                orig_addr = _GLOBAL_NAME_ALIASES.get(bare)
+                if orig_addr is None:
+                    orig_addr = name2addr.get(bare)
             if orig_addr is None:
                 continue
             snap = _snapshot_value_at(snapshot_overrides, orig_addr, 4)
@@ -794,7 +898,21 @@ def _run_function(code: bytes, abi: dict, arg_values: list,
         _seed_known_globals(uc, GLOBALS_BASE, GLOBALS_SIZE)
         if globals_seeds:
             for addr, data in globals_seeds.items():
-                uc.mem_write(addr, data)
+                try:
+                    uc.mem_write(addr, data)
+                except unicorn.UcError:
+                    # Seed lands outside the pre-mapped globals region (e.g. a
+                    # switch index-map seeded at its original low VA). Map the
+                    # spanned pages first, then write.
+                    start_page = addr & ~0xFFFF
+                    end_page = (addr + len(data) + 0xFFFF) & ~0xFFFF
+                    for page in range(start_page, end_page, 0x10000):
+                        try:
+                            uc.mem_map(page, 0x10000)
+                            uc.mem_write(page, b'\x00' * 0x10000)
+                        except unicorn.UcError:
+                            pass
+                    uc.mem_write(addr, data)
 
     # Apply memory overrides (state snapshot replay)
     _override_mapped = set()
@@ -1283,10 +1401,15 @@ def _record_leaf_classification(addr: str, is_leaf: bool) -> None:
     cat = "leaf" if is_leaf else "non_leaf"
     existing = data.get(norm)
     if isinstance(existing, dict):
-        existing["class"] = cat
-        data[norm] = existing
+        entry = dict(existing)
+        entry["class"] = cat
     else:
-        data[norm] = {"class": cat}
+        entry = {"class": cat}
+    # Skip the write when nothing changed: the equivalence cron runs in the
+    # MAIN worktree, and an unconditional rewrite dirties it (parking lands).
+    if data.get(norm) == entry:
+        return
+    data[norm] = entry
     try:
         _LEAF_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
         _LEAF_CACHE_PATH.write_text(
@@ -1297,8 +1420,22 @@ def _record_leaf_classification(addr: str, is_leaf: bool) -> None:
         pass
 
 
+_CONFIDENCE_RANK = {"weak": 0, "moderate": 1, "high": 2}
+
+
 def _record_confidence(addr, confidence: str, coverage_pct: float) -> None:
-    """Persist confidence and coverage to leaf_cache.json."""
+    """Persist confidence and coverage to leaf_cache.json, per-key BEST-OF.
+
+    A re-measurement must never DOWNGRADE a recorded entry. Coverage varies run
+    to run (stub availability, snapshot state, concolic luck), and the previous
+    unconditional overwrite silently replaced good measurements with worse ones
+    -- e.g. 0x6c high/86.3 -> weak/75.0 and 0xa83a0 100.0 -> 73.4, both from
+    routine cron sweeps.
+
+    The write is also skipped when nothing actually changes. The equivalence
+    cron (run_local_equiv.sh) runs in the MAIN worktree, so an unconditional
+    rewrite left main dirty and parked every auto-session land.
+    """
     if not addr:
         return
     if isinstance(addr, int):
@@ -1315,11 +1452,23 @@ def _record_confidence(addr, confidence: str, coverage_pct: float) -> None:
         data = {}
     existing = data.get(norm)
     if isinstance(existing, dict):
-        existing["confidence"] = confidence
-        existing["coverage_pct"] = coverage_pct
-        data[norm] = existing
+        old_cov = existing.get("coverage_pct")
+        old_conf = existing.get("confidence")
+        if isinstance(old_cov, (int, float)):
+            better = (coverage_pct > old_cov
+                      or (coverage_pct == old_cov
+                          and _CONFIDENCE_RANK.get(confidence, -1)
+                          > _CONFIDENCE_RANK.get(old_conf, -1)))
+            if not better:
+                return
+        entry = dict(existing)
+        entry["confidence"] = confidence
+        entry["coverage_pct"] = coverage_pct
     else:
-        data[norm] = {"confidence": confidence, "coverage_pct": coverage_pct}
+        entry = {"confidence": confidence, "coverage_pct": coverage_pct}
+    if data.get(norm) == entry:
+        return
+    data[norm] = entry
     try:
         _LEAF_CACHE_PATH.parent.mkdir(parents=True, exist_ok=True)
         _LEAF_CACHE_PATH.write_text(
@@ -1487,43 +1636,23 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
         build_path = _find_build_obj_for_source(entry["_obj_source"])
 
     if not delinked_path:
-        # Prefer address-named per-function exports (xbe_to_coff / Ghidra).
-        per_func_early = _per_function_ref(func_name)
-        if per_func_early:
-            delinked_path = per_func_early
-
-    if not delinked_path:
         # Try matching address to a FUN_XXXXXXXX name in delinked/
         addr_int_for_search = int(addr, 16) if addr.startswith("0x") else None
         if addr_int_for_search is not None:
             addr_sym_upper = f"FUN_{addr_int_for_search:08X}"
             addr_sym_lower = f"FUN_{addr_int_for_search:08x}"
-            addr_file = DELINKED_DIR / "functions" / f"{addr_int_for_search:08x}.obj"
-            if addr_file.exists():
-                delinked_path = addr_file
-            else:
-                for d in list(DELINKED_DIR.glob("*.obj")) + \
-                         sorted(DELINKED_DIR.glob("functions/*.obj")):
-                    try:
-                        # Prefer coff_loader (no llvm-objdump dependency).
-                        from coff_loader import load_coff
-                        _secs, syms, _st = load_coff(str(d))
-                        names = {s.name for s in syms}
-                        if addr_sym_upper in names or addr_sym_lower in names:
-                            delinked_path = d
-                            break
-                    except Exception:
-                        pass
-                    try:
-                        result = subprocess.run(
-                            ["llvm-objdump", "-t", str(d)],
-                            capture_output=True, text=True
-                        )
-                        if addr_sym_upper in result.stdout or addr_sym_lower in result.stdout:
-                            delinked_path = d
-                            break
-                    except Exception:
-                        pass
+            for d in list(DELINKED_DIR.glob("*.obj")) + \
+                     sorted(DELINKED_DIR.glob("functions/*.obj")):
+                try:
+                    result = subprocess.run(
+                        ["llvm-objdump", "-t", str(d)],
+                        capture_output=True, text=True
+                    )
+                    if addr_sym_upper in result.stdout or addr_sym_lower in result.stdout:
+                        delinked_path = d
+                        break
+                except Exception:
+                    pass
 
     if not delinked_path:
         log(f"ERROR: cannot find delinked .obj for '{obj_name}'")
@@ -1556,44 +1685,20 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
 
     # Prefer per-function delinked refs — they isolate callees as external
     # stubs, avoiding intra-object call resolution issues.
-    def _named_oracle_syms() -> list[str]:
-        names: list[str] = []
-        m_decl = re.search(r"\b(\w+)\s*\(", entry.get("decl") or "")
-        if m_decl:
-            names.append(m_decl.group(1))
-        if entry.get("name"):
-            names.append(entry["name"])
-        if func_name and not str(func_name).startswith("0x"):
-            names.append(func_name)
-        # de-dupe, preserve order
-        out: list[str] = []
-        for n in names:
-            if n and n not in out:
-                out.append(n)
-        return out
-
     per_func_ref = _per_function_ref(func_name)
     if per_func_ref:
         try:
-            oracle_slice = extract_function(str(per_func_ref), delinked_sym)
+            try:
+                oracle_slice = extract_function(str(per_func_ref), delinked_sym)
+            except CoffParseError:
+                # A kb-renamed function (e.g. glow_trailing_particle_new)
+                # exports its real name — not FUN_<addr> — in the per-function
+                # delinked ref, so fall back to the kb function name.
+                oracle_slice = extract_function(str(per_func_ref), func_name)
             delinked_path = per_func_ref
             info(f"  (using per-function delinked ref: {per_func_ref.name})")
         except CoffParseError:
-            # xbe_to_coff often exports the kb decl name, not FUN_<addr>.
-            recovered = False
-            for cand in _named_oracle_syms():
-                try:
-                    oracle_slice = extract_function(str(per_func_ref), cand)
-                    delinked_path = per_func_ref
-                    info(
-                        f"  (using per-function delinked ref: {per_func_ref.name}, sym {cand})"
-                    )
-                    recovered = True
-                    break
-                except CoffParseError:
-                    continue
-            if not recovered:
-                per_func_ref = None  # fall through to main delinked
+            per_func_ref = None  # fall through to main delinked
     if not per_func_ref:
         try:
             oracle_slice = extract_function(str(delinked_path), delinked_sym)
@@ -1608,23 +1713,10 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
                         oracle_slice = extract_function(str(per_func_ref2), delinked_sym)
                         delinked_path = per_func_ref2
                     except CoffParseError as e3:
-                        recovered = False
-                        for cand in _named_oracle_syms():
-                            try:
-                                oracle_slice = extract_function(str(per_func_ref2), cand)
-                                delinked_path = per_func_ref2
-                                recovered = True
-                                info(
-                                    f"  (using per-function delinked ref: {per_func_ref2.name}, sym {cand})"
-                                )
-                                break
-                            except CoffParseError:
-                                continue
-                        if not recovered:
-                            log(f"ERROR extracting oracle: {e}")
-                            log(f"  (also tried '{func_name}': {e2})")
-                            log(f"  (also tried split ref '{per_func_ref2.name}': {e3})")
-                            return finish("not_applicable", False, "oracle_extract_failed", 2)
+                        log(f"ERROR extracting oracle: {e}")
+                        log(f"  (also tried '{func_name}': {e2})")
+                        log(f"  (also tried split ref '{per_func_ref2.name}': {e3})")
+                        return finish("not_applicable", False, "oracle_extract_failed", 2)
                 else:
                     base_stem = delinked_path.stem
                     chunked_match = None
@@ -1701,20 +1793,6 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
     if record_leaf:
         _record_leaf_classification(addr, is_leaf)
 
-    # Leaves skip the stub/DIR32 path below; still honor --state-snapshot
-    # arg_overrides (e.g. clamp buffer lens) so size-like corners do not
-    # infinite-loop pure buffer walks.
-    if is_leaf and state_snapshot:
-        from state_snapshot import load_snapshot
-        _leaf_mem, snapshot_arg_overrides, snapshot_stub_returns = \
-            load_snapshot(str(state_snapshot))
-        if snapshot_overrides is None:
-            snapshot_overrides = {}
-        snapshot_overrides.update(_leaf_mem)
-        info(f"  snapshot (leaf): {len(_leaf_mem)} region(s) from {state_snapshot.name}")
-        if snapshot_arg_overrides:
-            info(f"  arg overrides: {list(snapshot_arg_overrides.keys())}")
-
     # Non-leaf: try stubs if allowed
     use_stubs = False
     stub_manager = None
@@ -1749,48 +1827,41 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
         # Patch DIR32 relocations for both, with non-overlapping slot ranges
         orc_defined = getattr(oracle_slice, 'defined_symbols', set())
         lft_defined = getattr(lifted_slice, 'defined_symbols', set())
-        orc_rdata = _apply_oracle_switch_table_fixups(
+        orc_rdata, orc_switch_identity_seeds = _apply_oracle_switch_table_fixups(
             int(addr, 16), oracle_slice, getattr(oracle_slice, 'rdata_map', {}),
             oracle_text is not None)
         orc_rdata = _relocate_rdata_text_refs(
             oracle_slice, orc_rdata, oracle_text is not None)
         lft_rdata = getattr(lifted_slice, 'rdata_map', {})
         lft_rdata = _relocate_rdata_text_refs(lifted_slice, lft_rdata, False)
-        # Local LAB_* DIR32 (switch jump tables): code VA = map_base + section off.
-        orc_map_base = CODE_BASE if oracle_text is not None else CODE_BASE
-        # When only the function slice is mapped at CODE_BASE, subtract section_offset
-        # so LAB section values land inside the loaded slice.
-        orc_lab_base = (
-            CODE_BASE
-            if oracle_text is not None
-            else (CODE_BASE - oracle_slice.section_offset)
-        )
-        lft_lab_base = CODE_BASE - lifted_slice.section_offset
         oracle_code_patched, orc_data_slots, orc_rdata_seeds = patch_dir32_relocs(
             oracle_slice.code, oracle_slice.relocs, orc_defined,
             return_slots=True, rdata_map=orc_rdata,
-            snapshot_regions=snapshot_overrides,
-            local_symbol_values=getattr(oracle_slice, "symbol_values", None),
-            local_code_base=orc_lab_base)
+            snapshot_regions=snapshot_overrides)
         oracle_code_patched = bytes(oracle_code_patched)
-        # Reuse oracle DAT_/PTR_ slot addresses for the candidate so
-        # address-of-global stores (`*out = DAT_x`) compare equal.  New
-        # non-matching symbols still allocate after the oracle range.
+        # Rebase intra-.text label refs (MSVC/VC71 switch jump tables) that
+        # patch_dir32_relocs leaves untouched because their labels are
+        # defined_symbols. Skipped harmlessly when no such labels exist.
+        oracle_code_patched = _relocate_text_label_refs(
+            oracle_slice, oracle_code_patched, oracle_text is not None)
         lft_globals_base = GLOBALS_BASE + len(orc_data_slots) * 256
         lifted_code_patched, lft_data_slots, lft_rdata_seeds = patch_dir32_relocs(
             lifted_slice.code, lifted_slice.relocs, lft_defined,
             globals_base=lft_globals_base,
             return_slots=True, rdata_map=lft_rdata,
-            snapshot_regions=snapshot_overrides,
-            preset_slots=orc_data_slots,
-            local_symbol_values=getattr(lifted_slice, "symbol_values", None),
-            local_code_base=lft_lab_base)
+            snapshot_regions=snapshot_overrides)
         lifted_code_patched = bytes(lifted_code_patched)
+        lifted_code_patched = _relocate_text_label_refs(
+            lifted_slice, lifted_code_patched, False)
 
         globals_seeds = _build_globals_seeds(orc_data_slots, lft_data_slots,
                                              snapshot_overrides=snapshot_overrides)
         globals_seeds.update(orc_rdata_seeds)
         globals_seeds.update(lft_rdata_seeds)
+        # Seed MSVC two-level switch index-maps at their original VA so the
+        # oracle's absolute (non-reloc'd) index-map read resolves; the reloc'd
+        # pointer-table read keeps using its globals slot from orc_rdata_seeds.
+        globals_seeds.update(orc_switch_identity_seeds)
         shared_stub_sentinels = {}
         orc_stub_map = {}
         lft_stub_map = {}
@@ -1837,7 +1908,8 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
             oracle_code_patched, orc_stub_map = patch_rel32_calls(
                 bytes(oracle_code_patched), orc_relocs_canon, orc_defined,
                 code_base=orc_code_base,
-                symbol_sentinels=shared_stub_sentinels)
+                symbol_sentinels=shared_stub_sentinels,
+                force_redirect_names=StubManager._INTERCEPT_NAMES)
 
         # For lifted code, also patch REL32 if present.
         # Lifted runs from CODE_BASE directly (no section prefix).
@@ -1852,17 +1924,42 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
         # --real-callees, _load_callee_code loads the *delinked* sibling body for
         # BOTH sides (same bytes), giving a valid, lift-isolating comparison.
         # Gated (additive) so the rest of the suite is unperturbed.
-        _sibling_resolve = os.environ.get("BIPED_SIBLING_RESOLVE") == "1"
+        # Defined-sibling redirect is REQUIRED whenever we load real callee
+        # bodies: the candidate maps only the target function slice, so a call
+        # to a DEFINED intra-object sibling (whole-.obj candidate) is otherwise
+        # left at its raw rel32 (disp 0 for a clang obj) — a `call $+5` that
+        # pushes a return address the (absent) callee never pops.  Each such
+        # call leaks 4 bytes; enough of them corrupt the frame so the epilogue
+        # RETs into a stack value and control escapes (eip=0x1ffffc wild fetch).
+        # Under --real-callees the sibling body is loaded at a shared sentinel
+        # for BOTH sides, so redirecting is both crash-safe and symmetric.
+        # Intercept-named siblings still route to their Python model: they are
+        # in force_redirect_names (→ the intercept sentinel), _load_real_callees
+        # skips _INTERCEPT_NAMES (no real code written), and should_intercept
+        # fires the model via hook_code before any sentinel byte executes.
+        _sibling_resolve = (os.environ.get("BIPED_SIBLING_RESOLVE") == "1"
+                            or real_callees)
         # call_count counts EXTERN calls only; a candidate whose only calls
         # are defined intra-object siblings (e.g. FUN_0018c370 -> FUN_0018c100)
         # has call_count == 0 yet still needs sibling-resolve patching, or its
         # unpatched rel32 (disp 0) falls through leaving the return address on
         # the stack -> epilogue RETs into the saved-EBP slot.
-        if lft_cls.call_count > 0 or _sibling_resolve:
+        # Intercept-named callees (object_get_and_verify_type, datum_get, ...)
+        # must always route to their Python model, even when the candidate's
+        # WHOLE .obj defines them as intra-object siblings while the oracle's
+        # per-function ref sees them as external.  Otherwise the defined
+        # sibling call is left unpatched (disp 0, no-op) and falls through with
+        # the caller's EAX standing in for the callee's result — see the
+        # force_redirect_names doc in patch_rel32_calls.
+        _intercept_names = StubManager._INTERCEPT_NAMES
+        if lft_cls.call_count > 0 or _sibling_resolve or (
+                lft_defined & {("_" + n) for n in _intercept_names}
+                or (lft_defined & _intercept_names)):
             lifted_code_patched, lft_stub_map = patch_rel32_calls(
                 bytes(lifted_code_patched), lft_relocs_canon, lft_defined,
                 symbol_sentinels=shared_stub_sentinels,
-                include_defined=_sibling_resolve)
+                include_defined=_sibling_resolve,
+                force_redirect_names=_intercept_names)
 
         combined_stub_map = dict(orc_stub_map)
         combined_stub_map.update(lft_stub_map)
@@ -1876,7 +1973,8 @@ def run_diff(func_name: str, num_seeds: int = 100, base_seed: int = 0,
                 combined_stub_map,
                 globals_base=callee_globals_base,
                 shared_sentinels=shared_stub_sentinels,
-                real_callees=real_callees)
+                real_callees=real_callees,
+                snapshot_regions=snapshot_overrides)
             info(f"  stubs prepared: {n_prepared}/{len(combined_stub_map)}")
             if real_callees and stub_mgr._callee_dir32_slots:
                 # Seed the globals the loaded callee code reads (DAT_ -> snapshot
