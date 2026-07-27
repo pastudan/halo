@@ -1534,85 +1534,53 @@ int build_damage_animation_index(int16_t a, int16_t b, int16_t c)
 
 
 
-/* FUN_00120710 (0x120710) — XBE naked draft (batch 248). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00120710(int anim_entry __attribute__((unused)), int tick_out __attribute__((unused)), int damage_time_out __attribute__((unused)))
+/* FUN_00120710 (0x120710) — readable C lift from XBE leaf.
+ * Sum per-frame event times from anim+0x54; snapshot sum at frame
+ * anim+0x34 into attack_time_out; write total into damage_time_out.
+ * Event stride depends on signed type at anim+0x26 (1→8, 2→0xc, 3→0x10). */
+void FUN_00120710(int anim_entry, int tick_out, int damage_time_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0x2533c0\n\t"
-      "movl 0x54(%%ecx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x22(%%ecx), %%di\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testw %%di, %%di\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "jle .LFUN_00120710_6\n\t"
-      "pushl %%ebx\n\t"
-      "movswl 0x26(%%ecx), %%ebx\n\t"
-      "movw 0x34(%%ecx), %%cx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00120710_1:\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "decl %%edx\n\t"
-      "je .LFUN_00120710_3\n\t"
-      "decl %%edx\n\t"
-      "je .LFUN_00120710_2\n\t"
-      "decl %%edx\n\t"
-      "jne .LFUN_00120710_4\n\t"
-      "fadds (%%eax)\n\t"
-      "addl $0x10, %%eax\n\t"
-      "jmp .LFUN_00120710_4\n\t"
-      ".LFUN_00120710_2:\n\t"
-      "fadds (%%eax)\n\t"
-      "addl $0xc, %%eax\n\t"
-      "jmp .LFUN_00120710_4\n\t"
-      ".LFUN_00120710_3:\n\t"
-      "fadds (%%eax)\n\t"
-      "addl $8, %%eax\n\t"
-      ".LFUN_00120710_4:\n\t"
-      "cmpw %%cx, %%si\n\t"
-      "jne .LFUN_00120710_5\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      ".LFUN_00120710_5:\n\t"
-      "incl %%esi\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jl .LFUN_00120710_1\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00120710_6:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_00120710_7\n\t"
-      "fstps (%%eax)\n\t"
-      "jmp .LFUN_00120710_8\n\t"
-      ".LFUN_00120710_7:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00120710_8:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00120710_9\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".LFUN_00120710_9:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  char *anim;
+  float acc;
+  float at_damage;
+  float *events;
+  float *attack_time_out;
+  float *total_time_out;
+  int16_t count;
+  int16_t damage_frame;
+  int16_t event_type;
+  int i;
+
+  anim = (char *)anim_entry;
+  attack_time_out = (float *)tick_out;
+  total_time_out = (float *)damage_time_out;
+  acc = *(float *)0x2533c0;
+  at_damage = 0.0f;
+  events = *(float **)(anim + 0x54);
+  count = *(int16_t *)(anim + 0x22);
+  if (count > 0) {
+    event_type = *(int16_t *)(anim + 0x26);
+    damage_frame = *(int16_t *)(anim + 0x34);
+    for (i = 0; i < (int)count; i++) {
+      if (event_type == 1) {
+        acc += *events;
+        events = (float *)((char *)events + 8);
+      } else if (event_type == 2) {
+        acc += *events;
+        events = (float *)((char *)events + 0xc);
+      } else if (event_type == 3) {
+        acc += *events;
+        events = (float *)((char *)events + 0x10);
+      }
+      if ((int16_t)i == damage_frame)
+        at_damage = acc;
+    }
+  }
+  if (total_time_out != NULL)
+    *total_time_out = acc;
+  if (attack_time_out != NULL)
+    *attack_time_out = at_damage;
 }
-#else
-#error "FUN_00120710: clang naked draft required"
-#endif
 
 
 /* animation_set_frame_size (0x120790) — readable C lift from XBE leaf. */

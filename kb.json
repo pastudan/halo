@@ -38113,7 +38113,7 @@
         {
           "addr": "0x120710",
           "decl": "void FUN_00120710(int anim_entry, int tick_out, int damage_time_out);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x120790",
