@@ -15186,12 +15186,14 @@
         {
           "addr": "0x126700",
           "decl": "void network_game_client_new_advertised_game(void *client, void *message);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_new_advertised_game"
         },
         {
           "addr": "0x126750",
           "decl": "void network_game_client_game_shutdown(void *client);",
-          "ported": false
+          "ported": true,
+          "name": "network_game_client_game_shutdown"
         },
         {
           "addr": "0x1267c0",
@@ -18745,7 +18747,8 @@
         {
           "addr": "0xbbb80",
           "decl": "char player_teleport(int player_handle, void *a, void *b);",
-          "ported": false
+          "ported": true,
+          "name": "player_teleport"
         },
         {
           "addr": "0xbbbe0",
@@ -27030,7 +27033,7 @@
         {
           "addr": "0xe3da0",
           "decl": "char ui_widgets_active_for_local_player(int16_t local_player_index);",
-          "ported": false,
+          "ported": true,
           "name": "ui_widgets_active_for_local_player"
         },
         {
@@ -27136,7 +27139,8 @@
         {
           "addr": "0xe4770",
           "decl": "void ui_widget_pending_load_pop(int *head@<edi>, void *record@<esi>);",
-          "ported": false
+          "ported": false,
+          "name": "ui_widget_pending_load_pop"
         },
         {
           "addr": "0xe4800",
@@ -27266,13 +27270,13 @@
         {
           "addr": "0xe59e0",
           "decl": "void ui_widgets_pop_stack(int16_t player_index);",
-          "ported": false,
+          "ported": true,
           "name": "ui_widgets_pop_stack"
         },
         {
           "addr": "0xe5a40",
           "decl": "void main_screen_shell_begin_fade(int fade_duration);",
-          "ported": false,
+          "ported": true,
           "name": "main_screen_shell_begin_fade"
         },
         {

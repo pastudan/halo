@@ -3257,65 +3257,22 @@ char FUN_000bb670(int player_handle __attribute__((unused)), void *a __attribute
 #endif
 
 
-/* player_teleport (0xbbb80) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void *(*const bbbb80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const bbbb80_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void (*const bbbb80_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
-static char (*const bbbb80_cbb670)(int player_handle, void *a, void *b) = FUN_000bb670;
-
-__attribute__((naked, noinline))
-char player_teleport(int player_handle __attribute__((unused)), void *a __attribute__((unused)), void *b __attribute__((unused)))
+/* player_teleport (0xbbb80) — readable C lift. */
+char player_teleport(int player_handle, void *a, void *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorb %%cl, %%cl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayer_teleport_2\n\t"
-      "cmpl $-1, 0xcc(%%eax)\n\t"
-      "je .Lplayer_teleport_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1b2dd0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lplayer_teleport_1:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cbb670]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_teleport_2:\n\t"
-      "popl %%edi\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bbbb80_dget), [tryget] "m"(bbbb80_tryget), [c1b2dd0] "m"(bbbb80_c1b2dd0), [cbb670] "m"(bbbb80_cbb670)
-      : "memory");
-}
-#else
-#error "player_teleport: clang naked draft required"
-#endif
+  void *player;
+  int unit_handle;
+  void *unit;
 
+  player = datum_get(*(void **)0x5aa6d4, player_handle);
+  unit_handle = *(int *)((char *)player + 0x34);
+  unit = object_try_and_get_and_verify_type(unit_handle, 1);
+  if (unit == 0)
+    return 0;
+  if (*(int *)((char *)unit + 0xcc) != -1)
+    unit_exit_seat_end(unit_handle);
+  return FUN_000bb670(player_handle, a, b);
+}
 
 /* debug_player_teleport (0xbc6c0) — XBE naked draft (batch 145). */
 #if defined(__clang__)

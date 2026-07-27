@@ -2035,69 +2035,25 @@ char ui_widgets_active(void)
   return 0;
 }
 
-/* ui_widgets_active_for_local_player (0xe3da0) — XBE naked draft (batch 155). */
-#if defined(__clang__)
-static void (*const be3da0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be3da0_exitfn)(int) = (void *)system_exit;
-
-__attribute__((naked, noinline))
+/* ui_widgets_active_for_local_player (0xe3da0) — readable C lift. */
 char ui_widgets_active_for_local_player(int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lui_widgets_active_for_local_player_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lui_widgets_active_for_local_player_2\n\t"
-      ".Lui_widgets_active_for_local_player_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x456\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x2832b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widgets_active_for_local_player_2:\n\t"
-      "movb 0x46cc82, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lui_widgets_active_for_local_player_5\n\t"
-      "movl $0x46cc20, %%eax\n\t"
-      ".Lui_widgets_active_for_local_player_3:\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lui_widgets_active_for_local_player_4\n\t"
-      "cmpw %%si, 0x8(%%ecx)\n\t"
-      "je .Lui_widgets_active_for_local_player_6\n\t"
-      ".Lui_widgets_active_for_local_player_4:\n\t"
-      "addl $4, %%eax\n\t"
-      "cmpl $0x46cc30, %%eax\n\t"
-      "jl .Lui_widgets_active_for_local_player_3\n\t"
-      ".Lui_widgets_active_for_local_player_5:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lui_widgets_active_for_local_player_6:\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be3da0_assert), [exitfn] "m"(be3da0_exitfn)
-      : "memory");
-}
-#else
-#error "ui_widgets_active_for_local_player: clang naked draft required"
-#endif
+  int *slot;
+  void *widget;
 
+  if (local_player_index < 0 || local_player_index >= 4) {
+    display_assert((const char *)0x2832b0, (const char *)0x283280, 0x456, 1);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x46cc82 == 0)
+    return 0;
+  for (slot = (int *)0x46cc20; (unsigned)slot < 0x46cc30u; slot++) {
+    widget = (void *)*slot;
+    if (widget != 0 && *(int16_t *)((char *)widget + 8) == local_player_index)
+      return 1;
+  }
+  return 0;
+}
 
 /* FUN_000e3e60 (0xe3e60) — readable C lift from XBE leaf.
  * fmod(a * b * *(float*)0x255ef8, *(double*)0x2573d8) via x87 FPREM. */
@@ -2816,125 +2772,51 @@ void ui_widgets_close_stack_for_player(int16_t player_index)
 #endif
 
 
-/* ui_widgets_pop_stack (0xe59e0) — XBE naked draft (batch 161). */
-#if defined(__clang__)
-static void (*const be59e0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be59e0_exitfn)(int) = (void *)system_exit;
-static void (*const be59e0_ce4770)(int *head, void *record) = (void *)ui_widget_pending_load_pop;
-
-__attribute__((naked, noinline))
+/* ui_widgets_pop_stack (0xe59e0) — readable C lift. */
 void ui_widgets_pop_stack(int16_t player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lui_widgets_pop_stack_1\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "jmp .Lui_widgets_pop_stack_3\n\t"
-      ".Lui_widgets_pop_stack_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lui_widgets_pop_stack_2\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lui_widgets_pop_stack_3\n\t"
-      ".Lui_widgets_pop_stack_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4b4\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x282750\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widgets_pop_stack_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal 0x46cc30(,%%eax,4), %%edi\n\t"
-      "cmpl $0, (%%edi)\n\t"
-      "je .Lui_widgets_pop_stack_4\n\t"
-      "leal -0xc(%%ebp), %%esi\n\t"
-      "call *%[ce4770]\n\t"
-      ".Lui_widgets_pop_stack_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(be59e0_assert), [exitfn] "m"(be59e0_exitfn), [ce4770] "m"(be59e0_ce4770)
-      : "memory");
+  int idx;
+  int *head;
+  char record[12];
+
+  idx = (int)player_index;
+  if (player_index == -1)
+    idx = 0;
+  else if (player_index < 0 || player_index >= 4) {
+    display_assert((const char *)0x282750, (const char *)0x283280, 0x4b4, 1);
+    system_exit(-1);
+  }
+  head = (int *)(0x46cc30 + idx * 4);
+  if (*head != 0)
+    ui_widget_pending_load_pop(head, record);
 }
-#else
-#error "ui_widgets_pop_stack: clang naked draft required"
-#endif
 
-
-/* main_screen_shell_begin_fade (0xe5a40) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static void (*const be5a40_ce4640)(void) = (void *)ui_widget_stop_attract_mode;
-static void (*const be5a40_c11f620)(void *pool, void *block) = (void *)stack_memory_pool_deallocate;
-
-__attribute__((naked, noinline))
+/* main_screen_shell_begin_fade (0xe5a40) — readable C lift. */
 void main_screen_shell_begin_fade(int fade_duration)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ce4640]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl $0x46cc20, %%esi\n\t"
-      ".Lmain_screen_shell_begin_fade_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_screen_shell_begin_fade_3\n\t"
-      "movb 0x15(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lmain_screen_shell_begin_fade_3\n\t"
-      "movl %%edi, 0x20(%%eax)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x18(%%eax), %%edx\n\t"
-      "movl 0x46cc40, %%ecx\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "addl $0x64, %%ecx\n\t"
-      "movl %%ecx, 0x1c(%%eax)\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_screen_shell_begin_fade_3\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmain_screen_shell_begin_fade_3\n\t"
-      ".Lmain_screen_shell_begin_fade_2:\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x31e04c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, 0x10(%%esi)\n\t"
-      "call *%[c11f620]\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lmain_screen_shell_begin_fade_2\n\t"
-      ".Lmain_screen_shell_begin_fade_3:\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpl $0x46cc30, %%esi\n\t"
-      "jl .Lmain_screen_shell_begin_fade_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce4640] "m"(be5a40_ce4640), [c11f620] "m"(be5a40_c11f620)
-      : "memory");
-}
-#else
-#error "main_screen_shell_begin_fade: clang naked draft required"
-#endif
+  int *slot;
+  char *widget;
+  void *rec;
+  void *next;
 
+  ui_widget_stop_attract_mode();
+  for (slot = (int *)0x46cc20; (unsigned)slot < 0x46cc30u; slot++) {
+    widget = (char *)*slot;
+    if (widget == 0)
+      continue;
+    if (widget[0x15] != 0)
+      continue;
+    *(int *)(widget + 0x20) = fade_duration;
+    *(int *)(widget + 0x1c) = *(int *)0x46cc40 - *(int *)(widget + 0x18) + 0x64;
+    rec = (void *)slot[4];
+    while (rec != 0) {
+      next = *(void **)((char *)rec + 0xc);
+      slot[4] = (int)next;
+      stack_memory_pool_deallocate(*(void **)0x31e04c, rec);
+      rec = (void *)slot[4];
+    }
+  }
+}
 
 /* ui_play_audio_feedback_sound (0xe5ab0) — XBE naked draft (batch 159). */
 #if defined(__clang__)

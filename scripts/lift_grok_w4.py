@@ -378,6 +378,101 @@ void ui_widgets_pop_stack(int16_t player_index)
 )
 
 
+L(
+    0x126700,
+    "networking/network_client_manager.c",
+    "network_game_client_new_advertised_game",
+    """
+/* network_game_client_new_advertised_game (0x126700) — readable C lift. */
+void network_game_client_new_advertised_game(void *client, void *message)
+{
+  if (client == 0 || message == 0) {
+    display_assert((const char *)0x291cd8, (const char *)0x291774, 0x2fc, 1);
+    system_exit(-1);
+  }
+  FUN_00125ce0((char *)client + 4, message);
+}
+""",
+    "void network_game_client_new_advertised_game(void *client, void *message);",
+)
+
+L(
+    0xBBB80,
+    "game/players.c",
+    "player_teleport",
+    """
+/* player_teleport (0xbbb80) — readable C lift. */
+char player_teleport(int player_handle, void *a, void *b)
+{
+  void *player;
+  int unit_handle;
+  void *unit;
+
+  player = datum_get(*(void **)0x5aa6d4, player_handle);
+  unit_handle = *(int *)((char *)player + 0x34);
+  unit = object_try_and_get_and_verify_type(unit_handle, 1);
+  if (unit == 0)
+    return 0;
+  if (*(int *)((char *)unit + 0xcc) != -1)
+    unit_exit_seat_end(unit_handle);
+  return FUN_000bb670(player_handle, a, b);
+}
+""",
+    "char player_teleport(int player_handle, void *a, void *b);",
+)
+
+L(
+    0xE4770,
+    "interface/ui_widget.c",
+    "ui_widget_pending_load_pop",
+    """
+/* ui_widget_pending_load_pop (0xe4770) — readable C lift. */
+void ui_widget_pending_load_pop(int *head, void *record)
+{
+  int *node;
+  int *dst;
+
+  if (head == 0 || record == 0) {
+    display_assert((const char *)0x283560, (const char *)0x283280, 0x9fc, 1);
+    system_exit(-1);
+  }
+  node = (int *)*head;
+  dst = (int *)record;
+  dst[0] = node[0];
+  dst[1] = node[1];
+  dst[2] = node[2];
+  *head = node[3];
+  stack_memory_pool_deallocate(*(void **)0x31e04c, node);
+}
+""",
+    "void ui_widget_pending_load_pop(int *head@<edi>, void *record@<esi>);",
+)
+
+
+L(
+    0x126750,
+    "networking/network_client_manager.c",
+    "network_game_client_game_shutdown",
+    """
+/* network_game_client_game_shutdown (0x126750) — readable C lift. */
+void network_game_client_game_shutdown(void *client)
+{
+  if (client == 0) {
+    display_assert((const char *)0x2917a8, (const char *)0x291774, 0x3fc, 1);
+    system_exit(-1);
+    display_assert((const char *)0x2917a8, (const char *)0x291774, 0x662, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)client + 0xca8) == 0)
+    *(short *)((char *)client + 0xca8) = 8;
+  network_game_log((const char *)0x292ad0);
+  network_game_client_all_local_players_have_quit();
+}
+""",
+    "void network_game_client_game_shutdown(void *client);",
+)
+
+
 def audit_naked_true() -> list[tuple[str, str, str]]:
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     bad = []
@@ -522,17 +617,13 @@ def commit_push(flips: list[str], touched: set[Path]) -> None:
 
 def main() -> int:
     order = [
-        0x11C480,
-        0x80C20,
         0xE3DA0,
         0xE5A40,
-        0x12A830,
-        0x11A560,
-        0x11A5D0,
-        0x11A650,
-        0xD4D90,
         0xE59E0,
-        0x11A8E0,
+        0xE4770,
+        0x126700,
+        0x126750,
+        0xBBB80,
     ]
     true0, _ = count_ported(json.loads(KB_PATH.read_text(encoding="utf-8")))
     print(f"start true={true0} naked_true={len(audit_naked_true())}", flush=True)

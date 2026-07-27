@@ -3368,104 +3368,30 @@ char network_game_client_remove_player(void *client __attribute__((unused)), voi
 #endif
 
 
-/* network_game_client_new_advertised_game (0x126700) — XBE naked draft (batch 173). */
-#if defined(__clang__)
-static void (*const b126700_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b126700_exitfn)(int) = system_exit;
-static char (*const b126700_c125ce0)(void *slot_array /* */, void *advertised_game) = FUN_00125ce0;
-
-__attribute__((naked, noinline))
-void network_game_client_new_advertised_game(void *client __attribute__((unused)), void *message __attribute__((unused)))
+/* network_game_client_new_advertised_game (0x126700) — readable C lift. */
+void network_game_client_new_advertised_game(void *client, void *message)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "je .Lnetwork_game_client_new_advertised_game_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lnetwork_game_client_new_advertised_game_2\n\t"
-      ".Lnetwork_game_client_new_advertised_game_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2fc\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291cd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_new_advertised_game_2:\n\t"
-      "addl $4, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c125ce0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b126700_assert), [exitfn] "m"(b126700_exitfn), [c125ce0] "m"(b126700_c125ce0)
-      : "memory");
+  if (client == 0 || message == 0) {
+    display_assert((const char *)0x291cd8, (const char *)0x291774, 0x2fc, 1);
+    system_exit(-1);
+  }
+  FUN_00125ce0((char *)client + 4, message);
 }
-#else
-#error "network_game_client_new_advertised_game: clang naked draft required"
-#endif
 
-
-/* network_game_client_game_shutdown (0x126750) — XBE naked draft (batch 170). */
-#if defined(__clang__)
-static void (*const b126750_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b126750_exitfn)(int) = system_exit;
-static void (*const b126750_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b126750_c12a790)(void) = network_game_client_all_local_players_have_quit;
-
-__attribute__((naked, noinline))
-void network_game_client_game_shutdown(void *client __attribute__((unused)))
+/* network_game_client_game_shutdown (0x126750) — readable C lift. */
+void network_game_client_game_shutdown(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lnetwork_game_client_game_shutdown_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3fc\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2917a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x662\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2917a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x28, %%esp\n\t"
-      ".Lnetwork_game_client_game_shutdown_1:\n\t"
-      "cmpw $0, 0xca8(%%esi)\n\t"
-      "jne .Lnetwork_game_client_game_shutdown_2\n\t"
-      "movw $8, 0xca8(%%esi)\n\t"
-      ".Lnetwork_game_client_game_shutdown_2:\n\t"
-      "pushl $0x292ad0\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "jmp *%[c12a790]\n\t"
-      :
-      : [assert] "m"(b126750_assert), [exitfn] "m"(b126750_exitfn), [c12b650] "m"(b126750_c12b650), [c12a790] "m"(b126750_c12a790)
-      : "memory");
+  if (client == 0) {
+    display_assert((const char *)0x2917a8, (const char *)0x291774, 0x3fc, 1);
+    system_exit(-1);
+    display_assert((const char *)0x2917a8, (const char *)0x291774, 0x662, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)client + 0xca8) == 0)
+    *(short *)((char *)client + 0xca8) = 8;
+  network_game_log((const char *)0x292ad0);
+  network_game_client_all_local_players_have_quit();
 }
-#else
-#error "network_game_client_game_shutdown: clang naked draft required"
-#endif
-
 
 /* network_game_client_reset (0x1267c0) — XBE naked draft (batch 144). */
 #if defined(__clang__)
@@ -3954,7 +3880,7 @@ void FUN_001271a0(void *client __attribute__((unused)), void *source __attribute
 static int16_t (*const b127260_c124a30)(void *server, void *out_param) = network_game_client_get_state;
 static bool (*const b127260_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
 static void (*const b127260_c81fa0)(void) = FUN_00081fa0;
-static void (*const b127260_c126700)(void *client, void *message) = network_game_client_new_advertised_game;
+static void (*const b127260_c126700)(void *client, void *message) = (void *)network_game_client_new_advertised_game;
 static void (*const b127260_c12b650)(const char *fmt, ...) = network_game_log;
 
 __attribute__((naked, noinline))
