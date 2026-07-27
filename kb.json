@@ -6581,7 +6581,7 @@
           "addr": "0x119df0",
           "decl": "bool FUN_00119df0(int *buf, int value, int size_class);",
           "name": "FUN_00119df0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x119ef0",
@@ -13829,7 +13829,7 @@
           "addr": "0xce620",
           "decl": "void input_state_process_packet(void *state);",
           "name": "input_state_process_packet",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xcf3e0",
@@ -15496,7 +15496,7 @@
           "addr": "0x11be10",
           "decl": "int FUN_0011be10(short *table /* @<eax> */, void *key);",
           "name": "FUN_0011be10",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11beb0",
@@ -18495,9 +18495,8 @@
         },
         {
           "addr": "0xe0ee0",
-          "decl": "char player_ui_edit_profile_is_dirty(void);",
-          "ported": false,
-          "name": "player_ui_edit_profile_is_dirty"
+          "decl": "void player_ui_edit_profile_is_dirty(void);",
+          "ported": false
         },
         {
           "addr": "0xe0fd0",
@@ -18543,15 +18542,13 @@
         },
         {
           "addr": "0xe15b0",
-          "decl": "char player_ui_save_profile(void);",
-          "ported": false,
-          "name": "player_ui_save_profile"
+          "decl": "void player_ui_save_profile(void);",
+          "ported": false
         },
         {
           "addr": "0xe1760",
           "decl": "void player_ui_end_editing_profile(void);",
-          "ported": true,
-          "name": "player_ui_end_editing_profile"
+          "ported": true
         },
         {
           "addr": "0xe1770",
@@ -24970,13 +24967,13 @@
           "addr": "0x1ccbe0",
           "comment": "Compute listener distance squared for a channel/source pair.",
           "decl": "float FUN_001ccbe0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccca0",
           "comment": "Compute distance for random scale checks.",
           "decl": "float FUN_001ccca0(int channel_index@<eax>, void *source@<edi>);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1ccd70",
@@ -27179,8 +27176,7 @@
         {
           "addr": "0xe4310",
           "decl": "void *ui_widget_get_last_child(void *widget);",
-          "ported": true,
-          "name": "ui_widget_get_last_child"
+          "ported": true
         },
         {
           "addr": "0xe4330",
@@ -27387,8 +27383,7 @@
         {
           "addr": "0xe5620",
           "decl": "void ui_widget_close(void *widget);",
-          "ported": true,
-          "name": "ui_widget_close"
+          "ported": true
         },
         {
           "addr": "0xe58c0",
@@ -39187,7 +39182,7 @@
         {
           "addr": "0x1b9de0",
           "decl": "bool cache_files_give_time_to_precache(const char *name);",
-          "ported": false,
+          "ported": true,
           "name": "cache_files_give_time_to_precache"
         },
         {
@@ -39204,7 +39199,7 @@
         {
           "addr": "0x1b98d0",
           "decl": "void tag_groups_checksum(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1b9ce0",

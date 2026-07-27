@@ -62,7 +62,7 @@
   "0x119df0": {
     "class": "non_leaf",
     "confidence": "high",
-    "coverage_pct": 67.2
+    "coverage_pct": 97.6
   },
   "0x11a230": {
     "class": "non_leaf",
