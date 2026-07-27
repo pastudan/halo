@@ -26217,7 +26217,8 @@
         {
           "addr": "0x1943e0",
           "decl": "void build_structure_lens_flares(void *scenario);",
-          "ported": false
+          "ported": true,
+          "name": "build_structure_lens_flares"
         },
         {
           "addr": "0x1954d0",
