@@ -15355,7 +15355,7 @@
         },
         {
           "addr": "0x11a6d0",
-          "decl": "int64_t FUN_0011a6d0(int *state);",
+          "decl": "unsigned long long FUN_0011a6d0(int *state);",
           "name": "FUN_0011a6d0",
           "ported": true
         },
@@ -15509,7 +15509,7 @@
         },
         {
           "addr": "0x11c430",
-          "decl": "void FUN_0011c430(int cache);",
+          "decl": "void FUN_0011c430(void *cache);",
           "name": "FUN_0011c430",
           "ported": true
         },
@@ -16842,7 +16842,7 @@
         },
         {
           "addr": "0x13f080",
-          "decl": "void FUN_0013f080(void);",
+          "decl": "int FUN_0013f080(int param_1, char (*param_2)(int, int), int param_3, int param_4, int param_5, int *param_6);",
           "ported": false,
           "source_path": "objects/objects.c"
         },
@@ -29348,7 +29348,7 @@
         },
         {
           "addr": "0x1ae700",
-          "decl": "char *unit_get_weapon_name(int unit_handle@<esi>, int unused);",
+          "decl": "char *unit_get_weapon_name(int unit_handle /* @<esi> */);",
           "name": "unit_get_weapon_name",
           "ported": true,
           "obj": "units.obj"
@@ -35036,9 +35036,9 @@
         },
         {
           "addr": "0x4b1b0",
-          "decl": "void ai_debug_select_actor(int encounter_idx, int param_2);",
+          "decl": "void ai_debug_select_actor(int encounter_idx, int actor_idx);",
           "name": "ai_debug_select_actor",
-          "ported": false,
+          "ported": true,
           "src": "src/halo/ai/ai_debug.c"
         },
         {

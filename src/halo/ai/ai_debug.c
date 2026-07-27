@@ -693,56 +693,26 @@ void ai_debug_update(void)
  *   3 args to csmemset(0x629d44,...) + 3 args to csmemset(0x62a3b4,...) +
  *   2 args to ai_debug_select_actor = 8 dwords = 0x20 bytes. */
 
-/* ai_debug_select_actor (0x4b1b0) — XBE naked draft (batch 94). */
-#if defined(__clang__)
-static void (*const b4b1b0_c49220)(int encounter_idx) = ai_debug_select_encounter;
-
-__attribute__((naked, noinline))
-void ai_debug_select_actor(int encounter_idx __attribute__((unused)), int param_2 __attribute__((unused)))
+/* ai_debug_select_actor (0x4b1b0) — readable C lift. */
+void ai_debug_select_actor(int encounter_idx, int actor_idx)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%eax, 0x5ac9f4\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "jne .Lai_debug_select_actor_1\n\t"
-      "cmpl %%esi, 0x5ac9f8\n\t"
-      "je .Lai_debug_select_actor_3\n\t"
-      ".Lai_debug_select_actor_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c49220]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%esi, 0x5ac9f8\n\t"
-      "movb %%dl, 0x629d40\n\t"
-      "movl $0x62a3b5, %%eax\n\t"
-      "movl $0x200, %%ecx\n\t"
-      "jmp .Lai_debug_select_actor_2\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lai_debug_select_actor_2:\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "addl $0x40, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lai_debug_select_actor_2\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "setne %%al\n\t"
-      "movb %%al, 0x6323d4\n\t"
-      "movl %%esi, 0x6323d8\n\t"
-      "movw %%dx, 0x6323dc\n\t"
-      ".Lai_debug_select_actor_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c49220] "m"(b4b1b0_c49220)
-      : "memory");
-}
-#else
-#error "ai_debug_select_actor: clang naked draft required"
-#endif
+  int i;
+  char *p;
 
+  if (*(int *)0x5ac9f4 == encounter_idx && *(int *)0x5ac9f8 == actor_idx)
+    return;
+  ai_debug_select_encounter(encounter_idx);
+  *(int *)0x5ac9f8 = actor_idx;
+  *(uint8_t *)0x629d40 = 0;
+  p = (char *)0x62a3b5;
+  for (i = 0; i < 0x200; i++) {
+    *p = 0;
+    p += 0x40;
+  }
+  *(uint8_t *)0x6323d4 = (actor_idx != -1);
+  *(int *)0x6323d8 = actor_idx;
+  *(uint16_t *)0x6323dc = 0;
+}
 
 /* ai_debug_initialize_for_new_map (0x4c0f0) — XBE naked draft (batch 95). */
 #if defined(__clang__)
