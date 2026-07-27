@@ -4271,33 +4271,13 @@ void * rasterizer_secondary_geometry_group_new(void)
 #endif
 
 
-/* rasterizer_secondary_geometry_groups_get (0x184390) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void * rasterizer_secondary_geometry_groups_get(short *out_count __attribute__((unused)))
+/* rasterizer_secondary_geometry_groups_get (0x184390) — readable C lift. */
+void *rasterizer_secondary_geometry_groups_get(uint16_t *out_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_secondary_geometry_groups_get_1\n\t"
-      "movw 0x4d0cf8, %%cx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".Lrasterizer_secondary_geometry_groups_get_1:\n\t"
-      "movl 0x4d0cf0, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (out_count != NULL)
+    *out_count = *(uint16_t *)0x4d0cf8;
+  return *(void **)0x4d0cf0;
 }
-#else
-#error "rasterizer_secondary_geometry_groups_get: clang naked draft required"
-#endif
-
 
 /* rasterizer_transparent_geometry_next_group (0x1843b0) — XBE naked draft (batch 91). */
 #if defined(__clang__)
