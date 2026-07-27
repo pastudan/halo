@@ -12792,7 +12792,8 @@
         {
           "addr": "0xce110",
           "decl": "void FUN_000ce110(data_t *data, int link);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000ce110"
         },
         {
           "addr": "0xce150",
