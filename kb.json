@@ -13240,9 +13240,9 @@
         },
         {
           "addr": "0xd4f70",
-          "decl": "void hud_set_state_text(short param_1, wchar_t *param_2);",
+          "decl": "void hud_set_state_text(int16_t slot, wchar_t *text);",
           "name": "hud_set_state_text",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd4fb0",

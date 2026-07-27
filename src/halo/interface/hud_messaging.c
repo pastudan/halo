@@ -800,40 +800,15 @@ void hud_enable_custom_state_message(short param_1, char param_2)
 #endif
 
 
-/* hud_set_state_text (0xd4f70) — XBE naked draft (batch 99). */
-#if defined(__clang__)
-static wchar_t * (*const bd4f70_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-
-__attribute__((naked, noinline))
-void hud_set_state_text(short param_1, wchar_t *param_2)
+/* hud_set_state_text (0xd4f70) — readable C lift. */
+void hud_set_state_text(int16_t slot, wchar_t *text)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x46bd18, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movswl 0x8(%%ebp), %%esi\n\t"
-      "imull $0x460, %%esi, %%esi\n\t"
-      "addl %%eax, %%esi\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x230(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19dc90]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0, 0x42e(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19dc90] "m"(bd4f70_c19dc90)
-      : "memory");
-}
-#else
-#error "hud_set_state_text: clang naked draft required"
-#endif
+  char *entry;
 
+  entry = *(char **)0x46bd18 + (int)slot * 0x460;
+  ustrncpy((wchar_t *)(entry + 0x230), text, 0xff);
+  *(uint16_t *)(entry + 0x42e) = 0;
+}
 
 /* hud_messaging_get_objective (0xd4fb0) — XBE naked draft (batch 90). */
 #if defined(__clang__)
