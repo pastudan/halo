@@ -404,138 +404,64 @@ void FUN_00012090(int actor_handle)
   }
 }
 
-/* action_alert_update (0x12200) — XBE naked draft (batch 258). */
-#if defined(__clang__)
-static void *(*const b12200_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b12200_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12200_exitfn)(int) = system_exit;
-static int (*const b12200_c2a3f0)(int actor_handle) = FUN_0002a3f0;
-static scenario_t * (*const b12200_c18e380)(void) = global_scenario_get;
-static void *(*const b12200_elem)(void *, int, int) = tag_block_get_element;
-static void *(*const b12200_get)(int, int) = object_get_and_verify_type;
-static void *(*const b12200_tag)(int, int) = tag_get;
-static char (*const b12200_c1ac180)(int actor, int anim_tag, void *entry, int do_flag) = FUN_001ac180;
-
-__attribute__((naked, noinline))
-void action_alert_update(void)
+/* action_alert_update (0x12200) — readable C lift from XBE leaf. */
+void action_alert_update(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x13(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Laction_alert_update_6\n\t"
-      "cmpw $-1, 0xa2(%%esi)\n\t"
-      "je .Laction_alert_update_6\n\t"
-      "flds 0xa8(%%esi)\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "fsubs 0x12c(%%esi)\n\t"
-      "flds 0xac(%%esi)\n\t"
-      "fsubs 0x130(%%esi)\n\t"
-      "flds 0xb0(%%esi)\n\t"
-      "fsubs 0x134(%%esi)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "je .Laction_alert_update_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xae\n\t"
-      "pushl $0x253358\n\t"
-      "pushl $0x253380\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Laction_alert_update_1:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c2a3f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Laction_alert_update_2\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x25337c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Laction_alert_update_6\n\t"
-      ".Laction_alert_update_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x9e(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Laction_alert_update_3\n\t"
-      "decl %%eax\n\t"
-      "movw %%ax, 0x9e(%%esi)\n\t"
-      ".Laction_alert_update_3:\n\t"
-      "movb 0xa6(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Laction_alert_update_6\n\t"
-      "movw 0xc4(%%esi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Laction_alert_update_5\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "pushl $0x3c\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x444, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x2c(%%edi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Laction_alert_update_4\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x44(%%eax), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Laction_alert_update_4:\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ac180]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Laction_alert_update_5:\n\t"
-      "movb $0, 0xa6(%%esi)\n\t"
-      ".Laction_alert_update_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b12200_dget), [assert] "m"(b12200_assert), [exitfn] "m"(b12200_exitfn), [c2a3f0] "m"(b12200_c2a3f0), [c18e380] "m"(b12200_c18e380), [elem] "m"(b12200_elem), [get] "m"(b12200_get), [tag] "m"(b12200_tag), [c1ac180] "m"(b12200_c1ac180)
-      : "memory");
+  void *actor;
+  float dx, dy, dz;
+  float dist_sq;
+  short timer;
+  short cue_index;
+  void *entry;
+  int anim_tag;
+  void *unit_tag;
+  void *obj;
+
+  actor = datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (*((unsigned char *)actor + 0x13))
+    return;
+  if (*(short *)((char *)actor + 0xa2) == (short)-1)
+    return;
+
+  dx = *(float *)((char *)actor + 0xa8) - *(float *)((char *)actor + 0x12c);
+  dy = *(float *)((char *)actor + 0xac) - *(float *)((char *)actor + 0x130);
+  dz = *(float *)((char *)actor + 0xb0) - *(float *)((char *)actor + 0x134);
+  dist_sq = dx * dx + dy * dy + dz * dz;
+
+  if (*((unsigned char *)actor + 6)) {
+    display_assert((const char *)0x253380, (const char *)0x253358, 0xae, 1);
+    system_exit(-1);
+  }
+
+  if (!FUN_0002a3f0(actor_handle)) {
+    if (!(dist_sq < *(float *)0x25337c))
+      return;
+  }
+
+  timer = *(short *)((char *)actor + 0x9e);
+  if (timer > 0) {
+    timer = (short)(timer - 1);
+    *(short *)((char *)actor + 0x9e) = timer;
+  }
+
+  if (!*((unsigned char *)actor + 0xa6))
+    return;
+
+  cue_index = *(short *)((char *)actor + 0xc4);
+  if (cue_index != (short)-1) {
+    entry = tag_block_get_element(
+        (char *)global_scenario_get() + 0x444, (int)cue_index, 0x3c);
+    anim_tag = *(int *)((char *)entry + 0x2c);
+    if (anim_tag == -1) {
+      obj = object_get_and_verify_type(*(int *)((char *)actor + 0x18), 3);
+      unit_tag = tag_get(0x756e6974, *(int *)obj);
+      anim_tag = *(int *)((char *)unit_tag + 0x44);
+    }
+    FUN_001ac180(*(int *)((char *)actor + 0x18), anim_tag, entry, 1);
+  }
+  *((unsigned char *)actor + 0xa6) = 0;
 }
-#else
-#error "action_alert_update: clang naked draft required"
-#endif
+
 
 
 /* action_alert_next_position (0x12350) — XBE naked draft (batch 244). */

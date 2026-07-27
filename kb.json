@@ -22003,8 +22003,9 @@
         },
         {
           "addr": "0x12200",
-          "decl": "void action_alert_update(void);",
-          "ported": false
+          "decl": "void action_alert_update(int actor_handle);",
+          "ported": true,
+          "name": "action_alert_update"
         },
         {
           "addr": "0x12350",
