@@ -2039,45 +2039,23 @@ void FUN_00082c90(void)
 #endif
 
 
-/* FUN_00082cf0 (0x82cf0) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static void (*const b82cf0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b82cf0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00082cf0(void)
+/* FUN_00082cf0 (0x82cf0) — readable C lift. */
+void FUN_00082cf0(void *endpoint)
 {
-  __asm__ volatile(
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00082cf0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f\n\t"
-      "pushl $0x266618\n\t"
-      "pushl $0x266610\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00082cf0_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00082cf0_2:\n\t"
-      "cmpl %%esi, 0x3350a0(,%%eax,8)\n\t"
-      "je .LFUN_00082cf0_3\n\t"
-      "incl %%eax\n\t"
-      "cmpl $0x40, %%eax\n\t"
-      "jl .LFUN_00082cf0_2\n\t"
-      "ret\n\t"
-      ".LFUN_00082cf0_3:\n\t"
-      "movb $1, 0x3350a4(,%%eax,8)\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b82cf0_assert), [exitfn] "m"(b82cf0_exitfn)
-      : "memory");
+  extern char DAT_00266618[];
+  extern char DAT_00266610[];
+  int i;
+  if (!endpoint) {
+    display_assert(DAT_00266610, DAT_00266618, 0x4f, 1);
+    system_exit(-1);
+  }
+  for (i = 0; i < 0x40; i++) {
+    if (*(void **)(0x3350a0 + i * 8) == endpoint) {
+      *(unsigned char *)(0x3350a4 + i * 8) = 1;
+      return;
+    }
+  }
 }
-#else
-#error "FUN_00082cf0: clang naked draft required"
-#endif
-
 
 /* get_next_endpoint_from_set (0x82d70) — XBE naked draft (batch 263). */
 #if defined(__clang__)

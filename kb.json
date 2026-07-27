@@ -26855,8 +26855,8 @@
         },
         {
           "addr": "0x82cf0",
-          "decl": "void FUN_00082cf0(void);",
-          "ported": false
+          "decl": "void FUN_00082cf0(void *endpoint@<esi>);",
+          "ported": true
         },
         {
           "addr": "0x82d70",
@@ -36539,7 +36539,7 @@
         },
         {
           "addr": "0x68970",
-          "decl": "int FUN_00068970(void *tif);",
+          "decl": "void FUN_00068970(void);",
           "ported": false
         },
         {
@@ -36932,7 +36932,7 @@
         },
         {
           "addr": "0x6d500",
-          "decl": "unsigned int FUN_0006d500(void *tif);",
+          "decl": "void FUN_0006d500(void);",
           "ported": false
         },
         {
