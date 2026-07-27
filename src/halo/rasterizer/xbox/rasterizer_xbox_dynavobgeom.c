@@ -6900,100 +6900,38 @@ void FUN_001643e0(void)
 #endif
 
 
-/* FUN_00164590 (0x164590) — XBE naked draft (batch 334). */
-#if defined(__clang__)
-static void (*const b164590_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b164590_exitfn)(int) = system_exit;
-static void (*const b164590_c155c20)(int stage, void *bitmap_data) = rasterizer_set_texture_bitmap_data;
-static void __stdcall (*const b164590_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
-
-__attribute__((naked, noinline))
-void FUN_00164590(void)
+/* FUN_00164590 (0x164590) — readable C lift. */
+void FUN_00164590(void *bitmap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00164590_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x848\n\t"
-      "pushl $0x2a18c0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00164590_1:\n\t"
-      "cmpw $0, 0x3256bc\n\t"
-      "jne .LFUN_00164590_3\n\t"
-      "movb 0x3256d0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00164590_3\n\t"
-      "movb 0x3256d2, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00164590_3\n\t"
-      "cmpw $0, 0x3256b0\n\t"
-      "jne .LFUN_00164590_3\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00164590_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $3\n\t"
-      "movl $0xa, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xb, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb 0x3256ed, %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "setne %%al\n\t"
-      "movl $0xd, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "incl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb 0x3256ed, %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%dl, %%dl\n\t"
-      "setne %%cl\n\t"
-      "movl $0xe, %%edx\n\t"
-      "incl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb 0x3256ed, %%al\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%al, %%al\n\t"
-      "setne %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "incl %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl $0xf, %%edx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb $0, 0x47dca4\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00164590_2:\n\t"
-      "movb $1, 0x47dca4\n\t"
-      ".LFUN_00164590_3:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b164590_assert), [exitfn] "m"(b164590_exitfn), [c155c20] "m"(b164590_c155c20), [c1e9410] "m"(b164590_c1e9410)
-      : "memory");
+  int v;
+
+  if (!*(int *)0x476ab0) {
+    display_assert((char *)0x29dc40, (char *)0x2a18c0, 0x848, 1);
+    system_exit(-1);
+  }
+  if (*(short *)0x3256bc != 0)
+    return;
+  if (!*(unsigned char *)0x3256d0)
+    return;
+  if (!*(unsigned char *)0x3256d2)
+    return;
+  if (*(short *)0x3256b0 != 0)
+    return;
+  if (!bitmap) {
+    *(unsigned char *)0x47dca4 = 1;
+    return;
+  }
+  rasterizer_set_texture_bitmap_data(0, bitmap);
+  D3DDevice_SetTextureStageState(0, 0xa, 3);
+  D3DDevice_SetTextureStageState(0, 0xb, 3);
+  v = (*(unsigned char *)0x3256ed != 0) + 1;
+  D3DDevice_SetTextureStageState(0, 0xd, v);
+  v = (*(unsigned char *)0x3256ed != 0) + 1;
+  D3DDevice_SetTextureStageState(0, 0xe, v);
+  v = (*(unsigned char *)0x3256ed != 0) + 1;
+  D3DDevice_SetTextureStageState(0, 0xf, v);
+  *(unsigned char *)0x47dca4 = 0;
 }
-#else
-#error "FUN_00164590: clang naked draft required"
-#endif
-
-
 /* FUN_00164690 (0x164690) — XBE naked draft (batch 300). */
 #if defined(__clang__)
 static void (*const b164690_assert)(const char *, const char *, int, bool) = display_assert;
