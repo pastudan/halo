@@ -9651,98 +9651,47 @@ void FUN_001a7790(int param_1 __attribute__((unused)))
 #endif
 
 
-/* FUN_001a6bf0 (0x1a6bf0) — XBE naked draft (batch 64). */
-#if defined(__clang__)
-static void *(*const b1a6bf0_get)(int, int) = object_get_and_verify_type;
-static void *(*const b1a6bf0_tag)(int, int) = tag_get;
-static void *(*const b1a6bf0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1a6bf0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_001a6bf0(int unit_handle __attribute__((unused)))
+/* FUN_001a6bf0 (0x1a6bf0) — readable C lift. */
+void FUN_001a6bf0(int unit_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x756e6974\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0, 0x6e(%%esi)\n\t"
-      "jne .LFUN_001a6bf0_6\n\t"
-      "pushl %%ebx\n\t"
-      "leal 0x2b4(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_001a6bf0_5\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001a6bf0_1:\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movw (%%eax), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0x64, %%ax\n\t"
-      "jge .LFUN_001a6bf0_2\n\t"
-      "cmpw $0x10, %%di\n\t"
-      "jae .LFUN_001a6bf0_3\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movw %%ax, -0x24(%%ebp,%%edx,2)\n\t"
-      "incl %%edi\n\t"
-      ".LFUN_001a6bf0_2:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_001a6bf0_1\n\t"
-      "jmp .LFUN_001a6bf0_4\n\t"
-      ".LFUN_001a6bf0_3:\n\t"
-      "pushl $0x2b6714\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001a6bf0_4:\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .LFUN_001a6bf0_5\n\t"
-      "movl 0x4e4cf4, %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movswl %%di, %%esi\n\t"
-      "cdq\n\t"
-      "idivl %%esi\n\t"
-      "incl %%ecx\n\t"
-      "movl %%ecx, 0x4e4cf4\n\t"
-      "movw -0x24(%%ebp,%%edx,2), %%ax\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movw %%ax, 0x6e(%%edx)\n\t"
-      ".LFUN_001a6bf0_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_001a6bf0_6:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b1a6bf0_get), [tag] "m"(b1a6bf0_tag), [elem] "m"(b1a6bf0_elem), [c8f390] "m"(b1a6bf0_c8f390)
-      : "memory");
-}
-#else
-#error "FUN_001a6bf0: clang naked draft required"
-#endif
+  char *unit;
+  char *unit_tag;
+  char *block;
+  char *elem;
+  int16_t choices[16];
+  int count;
+  int i;
+  int n;
+  int16_t val;
+  int counter;
+  int rem;
 
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  unit_tag = (char *)tag_get(0x756e6974, *(int *)unit);
+  if (*(int16_t *)(unit + 0x6e) != 0)
+    return;
+  block = unit_tag + 0x2b4;
+  n = 0;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    elem = (char *)tag_block_get_element(block, i, 0x18);
+    val = *(int16_t *)elem;
+    if (val < 0x64) {
+      if ((uint16_t)n >= 0x10) {
+        error(2, (const char *)0x2b6714);
+        break;
+      }
+      choices[n] = val;
+      n++;
+    }
+  }
+  if (n > 0) {
+    counter = *(int *)0x4e4cf4;
+    rem = counter % n;
+    *(int *)0x4e4cf4 = counter + 1;
+    *(int16_t *)(unit + 0x6e) = choices[rem];
+  }
+}
 
 /* FUN_001a70d0 (0x1a70d0) — XBE naked draft (batch 63). */
 #if defined(__clang__)

@@ -28790,7 +28790,7 @@
         {
           "addr": "0x1a6bf0",
           "decl": "void FUN_001a6bf0(int unit_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1a6ca0",
