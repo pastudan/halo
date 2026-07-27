@@ -246,7 +246,7 @@
         {
           "addr": "0x67960",
           "decl": "int FUN_00067960(unsigned short type@<ax>, unsigned short tag@<cx>, void *out@<edx>, void *ctx, float value);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00067960"
         },
         {
@@ -538,8 +538,9 @@
         },
         {
           "addr": "0x150790",
-          "decl": "void FUN_00150790(void);",
-          "ported": false
+          "decl": "char FUN_00150790(void *phys_state, float *origin, float radius, float param_5, float param_6, void *features);",
+          "ported": true,
+          "name": "FUN_00150790"
         },
         {
           "addr": "0x150840",
