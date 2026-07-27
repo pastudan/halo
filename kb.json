@@ -16021,7 +16021,7 @@
         {
           "addr": "0x12d880",
           "decl": "bool FUN_0012d880(int server@<eax>, int new_connection);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0012d880"
         },
         {
@@ -16068,7 +16068,7 @@
         {
           "addr": "0x12e580",
           "decl": "bool FUN_0012e580(int server@<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0012e580"
         },
         {
