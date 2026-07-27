@@ -13199,9 +13199,9 @@
         },
         {
           "addr": "0xd4a50",
-          "decl": "void scripted_hud_time_code_start(char param_1);",
+          "decl": "void scripted_hud_time_code_start(char start);",
           "name": "scripted_hud_time_code_start",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xd4a90",
