@@ -302,377 +302,211 @@ float collision_surface_perimeter(int bsp, int surface_index)
 }
 
 
-/* collision_surface_area (0x1477f0) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void *(*const b1477f0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b1477f0_c99640)(int structure_bsp, uint32_t plane_reference, float *out_plane) = bsp3d_get_plane_from_designator;
-
-__attribute__((naked, noinline))
-float collision_surface_area(int bsp __attribute__((unused)), int surface_index __attribute__((unused)))
+/* collision_surface_area — restored readable C from b5350bf74 */
+/* 0x1477f0 - collision_surface_area
+ *
+ * Computes the signed projected area of a collision-BSP surface polygon by
+ * fan-triangulating its edge loop from a fixed anchor vertex and summing
+ * dot(cross(e0, e1), plane_normal) over each triangle, where the plane normal
+ * comes from the surface's plane designator. Returns the accumulated area if
+ * positive, else 0.0f (both the >0 branch and the fall-through return 0.0f).
+ *
+ * bsp base tag_block headers (see collision_surface_polygon):
+ *   +0x3c surfaces (stride 0xc): surface[0] = plane designator,
+ *                                surface[+4] = first-edge index
+ *   +0x48 edges    (stride 0x18): +0x14 = owning surface index;
+ *                                 +0/+4 = start/end vertex refs;
+ *                                 +8/+0xc = next-edge refs (winged-edge slots)
+ *   +0x54 vertices (stride 0x10): first 0xc bytes = xyz float32
+ *
+ * `side` = (edge[+0x14] == surface_index) selects this surface's half-edge
+ * slot each iteration. The anchor vertex and plane normal are fetched once
+ * before the loop; each iteration walks the two vertices of the current edge.
+ *
+ * The plane normal is written contiguously into plane[3] by
+ * bsp3d_get_plane_from_designator (out_plane), so it reads back as
+ * plane[0..2]. Cross-product and accumulation operand order preserved exactly
+ * from the disassembly (x87 FLD/FMUL/FSUBP order); getting any subtraction
+ * backwards negates the area.
+ */
+float collision_surface_area(int bsp, int surface_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x3c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl $0xc\n\t"
-      "leal 0x3c(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "pushl $0x18\n\t"
-      "leal 0x48(%%esi), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "cmpl %%edi, 0x14(%%ebx)\n\t"
-      "sete %%al\n\t"
-      "movzbl %%al, %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl (%%ebx,%%ecx,4), %%ecx\n\t"
-      "pushl $0x10\n\t"
-      "leal 0x54(%%esi), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "leal -0x3c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c99640]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebx,%%edx,4), %%eax\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%esi), %%ebx\n\t"
-      "addl $0x3c, %%esp\n\t"
-      "cmpl %%edx, %%ebx\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "sete %%al\n\t"
-      "movzbl %%al, %%ebx\n\t"
-      "movb %%al, 0xb(%%ebp)\n\t"
-      "movl 0x8(%%esi,%%ebx,4), %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .Lcollision_surface_area_2\n\t"
-      ".Lcollision_surface_area_1:\n\t"
-      "movl (%%esi,%%ebx,4), %%edx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movb 0xb(%%ebp), %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%dl, %%dl\n\t"
-      "sete %%cl\n\t"
-      "pushl $0x10\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl (%%esi,%%ecx,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "fsubs (%%edi)\n\t"
-      "pushl $0x18\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "movl 0x8(%%esi,%%ebx,4), %%ecx\n\t"
-      "fsubs 0x8(%%edi)\n\t"
-      "pushl %%ecx\n\t"
-      "flds (%%eax)\n\t"
-      "pushl %%edx\n\t"
-      "fsubs (%%edi)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x8(%%edi)\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x2c(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls -0x20(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xca\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xea\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      "fmuls -0x28(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fmuls -0x3c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[elem]\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x14(%%esi), %%ecx\n\t"
-      "addl $0x24, %%esp\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "sete %%al\n\t"
-      "movzbl %%al, %%ebx\n\t"
-      "movl 0x8(%%esi,%%ebx,4), %%ecx\n\t"
-      "movb %%al, 0xb(%%ebp)\n\t"
-      "cmpl 0x4(%%edx), %%ecx\n\t"
-      "jne .Lcollision_surface_area_1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_surface_area_2\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_surface_area_2:\n\t"
-      "flds 0x2533c0\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b1477f0_elem), [c99640] "m"(b1477f0_c99640)
-      : "memory");
+  float plane[3];
+  volatile float cross_x; /* volatile = store-once/reload-each-use; the
+                             original spills exactly these four to stack
+                             slots and keeps pa_xyz, qa_z, cross_z
+                             ST-resident */
+  volatile float cross_y;
+  float cross_z;
+  float pa_x, pa_y, pa_z;          /* edge[side] vertex - anchor */
+  volatile float qa_x, qa_y;       /* edge[!side] vertex - anchor */
+  float qa_z;
+  float *anchor;
+  float *v0;
+  float *v1;
+  int *surface;
+  int edges_block;
+  int verts_block;
+  int edge;
+  unsigned char side;
+  unsigned char is_owner;
+  float area;
+
+  area = 0.0f;
+  surface =
+    (int *)tag_block_get_element((void *)(bsp + 0x3c), surface_index, 0xc);
+  edges_block = bsp + 0x48;
+  edge = (int)tag_block_get_element((void *)edges_block, surface[1], 0x18);
+  side = (*(int *)(edge + 0x14) == surface_index);
+  verts_block = bsp + 0x54;
+  anchor = (float *)tag_block_get_element((void *)verts_block,
+                                          *(int *)(edge + side * 4), 0x10);
+  bsp3d_get_plane_from_designator(bsp, (unsigned int)surface[0], plane);
+  edge = (int)tag_block_get_element((void *)edges_block,
+                                    *(int *)(edge + 8 + side * 4), 0x18);
+  is_owner = (*(int *)(edge + 0x14) == surface_index);
+  side = is_owner;
+  if (*(int *)(edge + 8 + side * 4) != surface[1]) {
+    do {
+      v1 = (float *)tag_block_get_element((void *)verts_block,
+                                          *(int *)(edge + side * 4), 0x10);
+      v0 = (float *)tag_block_get_element(
+        (void *)verts_block, *(int *)(edge + (!is_owner) * 4), 0x10);
+      pa_x = v1[0] - anchor[0];
+      pa_y = v1[1] - anchor[1];
+      pa_z = v1[2] - anchor[2];
+      qa_x = v0[0] - anchor[0];
+      qa_y = v0[1] - anchor[1];
+      qa_z = v0[2] - anchor[2];
+      cross_x = qa_z * pa_y - qa_y * pa_z;
+      cross_y = pa_z * qa_x - qa_z * pa_x;
+      cross_z = pa_x * qa_y - qa_x * pa_y;
+      area = plane[2] * cross_z + plane[1] * cross_y + cross_x * plane[0] +
+             area;
+      edge = (int)tag_block_get_element((void *)edges_block,
+                                        *(int *)(edge + 8 + side * 4), 0x18);
+      is_owner = (*(int *)(edge + 0x14) == surface_index);
+      side = is_owner;
+    } while (*(int *)(edge + 8 + side * 4) != surface[1]);
+    if (area > 0.0f) {
+      return area;
+    }
+  }
+  return 0.0f;
 }
-#else
-#error "collision_surface_area: clang naked draft required"
-#endif
 
-
-/* collision_surface_test_line2d (0x147d10) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void *(*const b147d10_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-int collision_surface_test_line2d(int bsp __attribute__((unused)), int surface_index __attribute__((unused)), int param3 __attribute__((unused)), int param4 __attribute__((unused)), float *point __attribute__((unused)), float *direction __attribute__((unused)), float *out_result __attribute__((unused)))
+/* collision_surface_test_line2d — restored readable C from b5350bf74 */
+/* 0x147d10 - collision_surface_test_line2d
+ *
+ * Clips a 2D line (point + direction) against one collision-BSP surface's
+ * bounding-edge loop, returning whether the line's entering and leaving
+ * parameters bracket a non-empty interval (i.e. the line crosses the surface's
+ * interior). Same tag_block geometry as collision_surface_polygon:
+ *   bsp+0x3c surfaces (stride 0xc): surface[+4] = first-edge index
+ *   bsp+0x48 edges    (stride 0x18)
+ *   bsp+0x54 vertices (stride 0x10): first 0xc bytes = xyz float32
+ *
+ * Winged edge: `side` = (edge[5] == surface_index) tells which half-edge slot
+ * belongs to this surface. Both endpoints (edge[0], edge[1]) are always read;
+ * the next-edge link is edge[2 + side] and the neighbor-surface index across
+ * the edge is edge[!side + 4] (i.e. edge[+0x10] or edge[+0x14]).
+ *
+ * out_result is a MIXED 6-dword record, NOT six floats:
+ *   +0x00 float  enter_t   (max entering parameter; init -FLT_MAX)
+ *   +0x04 int    enter_edge (edge index; init -1)
+ *   +0x08 int    enter_surface (neighbor surface index; init -1)
+ *   +0x0c float  leave_t   (min leaving parameter; init +FLT_MAX)
+ *   +0x10 int    leave_edge (init -1)
+ *   +0x14 int    leave_surface (init -1)
+ * The four index slots are raw dword stores (the current edge index and the
+ * neighbor-surface index). Ghidra prints the index stores as (float)..., but
+ * the disassembly is a plain MOV: they are int32 fields, not int->float
+ * conversions (lift-silent-bugs Check 1). They are written through the
+ * int-aliased pointer.
+ *
+ * Per edge, edge_cross = 2D cross of the edge vector (v1-v0) with the ray
+ * direction; pt_cross = 2D cross of (point-v0) with (v1-v0). FPU load/subtract
+ * order verified against the delinked reference (cross-product operand order,
+ * lift-decompiler-traps Trap 4). When edge_cross==0 (ray parallel to edge) and
+ * the point sits on the inner side, both enter/leave are forced to a crossing
+ * interval. Otherwise t = pt_cross/edge_cross updates the entering or leaving
+ * bound depending on sign(edge_cross) vs side. Returns 1 iff leave_t < enter_t.
+ */
+int collision_surface_test_line2d(int bsp, int surface_index, int param3,
+                                  int param4, float *point, float *direction,
+                                  float *out_result)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x3c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "movl 0x20(%%ebp), %%esi\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "leal 0x48(%%edi), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0x54, %%edi\n\t"
-      "movl $0xff7fffff, (%%esi)\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      "movl $0x7f7fffff, 0xc(%%esi)\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      "movl %%eax, 0x14(%%esi)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      ".Lcollision_surface_test_line2d_1:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "pushl $0x18\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl 0x14(%%edi), %%ebx\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "cmpl %%edx, %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "sete 0xb(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "pushl $0x10\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%ebx)\n\t"
-      "addl $0x24, %%esp\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%ebx)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls (%%eax)\n\t"
-      "fld %%st(4)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps 0x20(%%ebp)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      ".byte 0xde, 0xea\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lcollision_surface_test_line2d_5\n\t"
-      "fdivs 0x20(%%ebp)\n\t"
-      "flds 0x20(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_surface_test_line2d_2\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lcollision_surface_test_line2d_3\n\t"
-      ".Lcollision_surface_test_line2d_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lcollision_surface_test_line2d_3:\n\t"
-      "movb 0xb(%%ebp), %%cl\n\t"
-      "movzbl %%cl, %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .Lcollision_surface_test_line2d_4\n\t"
-      "fcoms (%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_surface_test_line2d_8\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "fstps (%%esi)\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "movl 0x10(%%edi,%%eax,4), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "jmp .Lcollision_surface_test_line2d_9\n\t"
-      ".Lcollision_surface_test_line2d_4:\n\t"
-      "fcoms 0xc(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_surface_test_line2d_8\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "fstps 0xc(%%esi)\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "sete %%al\n\t"
-      "movl 0x10(%%edi,%%eax,4), %%ecx\n\t"
-      "movl %%ecx, 0x14(%%esi)\n\t"
-      "jmp .Lcollision_surface_test_line2d_9\n\t"
-      ".Lcollision_surface_test_line2d_5:\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_surface_test_line2d_6\n\t"
-      "movl $1, %%ecx\n\t"
-      "jmp .Lcollision_surface_test_line2d_7\n\t"
-      ".Lcollision_surface_test_line2d_6:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".Lcollision_surface_test_line2d_7:\n\t"
-      "movb 0xb(%%ebp), %%al\n\t"
-      "movzbl %%al, %%edx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "je .Lcollision_surface_test_line2d_9\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%bl\n\t"
-      "movl $0x7f7fffff, (%%esi)\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "leal 0x10(%%edi,%%ebx,4), %%eax\n\t"
-      "movl (%%eax), %%ebx\n\t"
-      "movl %%ebx, 0x8(%%esi)\n\t"
-      "movl $0xff7fffff, 0xc(%%esi)\n\t"
-      "movl %%ecx, 0x10(%%esi)\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl %%eax, 0x14(%%esi)\n\t"
-      "jmp .Lcollision_surface_test_line2d_9\n\t"
-      ".Lcollision_surface_test_line2d_8:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lcollision_surface_test_line2d_9:\n\t"
-      "movl 0x8(%%edi,%%edx,4), %%edi\n\t"
-      "cmpl -0x10(%%ebp), %%edi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lcollision_surface_test_line2d_1\n\t"
-      "flds (%%esi)\n\t"
-      "popl %%edi\n\t"
-      "fcomps 0xc(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_surface_test_line2d_10\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_surface_test_line2d_10:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b147d10_elem)
-      : "memory");
+  int first_edge;
+  int edge_index;
+  int *edge;
+  float *v0;
+  float *v1;
+  unsigned char side;         /* sete to a byte slot in the original */
+  volatile float edge_cross;  /* store-once/reload: the original spills it
+                                 to the out_result param home slot and
+                                 reloads it 3x (==0 test, divide, sign) */
+  float pt_cross;
+  float ex, ey; /* v1 - v0 (edge vector), kept ST-resident */
+  float cx, cy; /* point - v0, kept ST-resident */
+  int *out_i;
+
+  out_i = (int *)out_result;
+
+  first_edge = *(int *)((char *)tag_block_get_element((void *)(bsp + 0x3c),
+                                                      surface_index, 0xc) +
+                        4);
+  edge_index = first_edge;
+
+  out_result[0] = -3.4028235e+38f;
+  out_i[1] = -1;
+  out_i[2] = -1;
+  out_result[3] = 3.4028235e+38f;
+  out_i[4] = -1;
+  out_i[5] = -1;
+
+  do {
+    edge = (int *)tag_block_get_element((void *)(bsp + 0x48), edge_index, 0x18);
+    side = (edge[5] == surface_index);
+    v0 = (float *)tag_block_get_element((void *)(bsp + 0x54), edge[0], 0x10);
+    v1 = (float *)tag_block_get_element((void *)(bsp + 0x54), edge[1], 0x10);
+
+    ex = v1[0] - v0[0];
+    ey = v1[1] - v0[1];
+    cx = point[0] - v0[0];
+    cy = point[1] - v0[1];
+    edge_cross = ey * direction[0] - ex * direction[1];
+    pt_cross = ex * cy - cx * ey;
+
+    if (edge_cross != 0.0f) {
+      pt_cross = pt_cross / edge_cross;
+      if ((edge_cross < 0.0f) != side) {
+        if (pt_cross > out_result[0]) {
+          out_result[0] = pt_cross;
+          out_i[1] = edge_index;
+          out_i[2] = edge[!side + 4];
+        }
+      } else if (pt_cross < out_result[3]) {
+        out_result[3] = pt_cross;
+        out_i[4] = edge_index;
+        out_i[5] = edge[!side + 4];
+      }
+    } else if ((pt_cross < 0.0f) != side) {
+      out_result[0] = 3.4028235e+38f;
+      out_i[1] = edge_index;
+      out_i[2] = edge[!side + 4];
+      out_result[3] = -3.4028235e+38f;
+      out_i[4] = edge_index;
+      out_i[5] = edge[!side + 4];
+    }
+
+    edge_index = edge[side + 2];
+  } while (edge_index != first_edge);
+
+  if (out_result[0] > out_result[3]) {
+    return 1;
+  }
+  return 0;
 }
-#else
-#error "collision_surface_test_line2d: clang naked draft required"
-#endif
-
-
 
 /* collision_surface_project_point2d (0x147990) — readable C lift. */
 float *collision_surface_project_point2d(void *bsp, int surface_index, int projection, int sign, float *point, float *out_point)
@@ -986,278 +820,6 @@ int collision_surface_find_closest_point2d(int bsp __attribute__((unused)), int 
 }
 #else
 #error "collision_surface_find_closest_point2d: clang naked draft required"
-#endif
-
-
-
-/* FUN_00148370 (0x148370) — segment vs sphere early hit test.
- * eax=origin, ecx=center, edx=direction, esi=out_t, stack=radius. */
-__attribute__((noinline, used)) char FUN_00148370(float *origin, float *center,
-                                                  float *direction, float *out_t,
-                                                  float radius)
-{
-  float dx = center[0] - origin[0];
-  float dy = center[1] - origin[1];
-  float dz = center[2] - origin[2];
-  float c_coeff = (dx * dx + dy * dy + dz * dz) - radius * radius;
-  float dot;
-  float dir_len_sq;
-  float disc;
-  float t;
-
-  if (c_coeff <= *(float *)0x2533c0) {
-    *out_t = 0.0f;
-    return 1;
-  }
-
-  dot = dx * direction[0] + dy * direction[1] + dz * direction[2];
-  if (dot <= *(float *)0x2533c0)
-    return 0;
-
-  dir_len_sq = direction[0] * direction[0] + direction[1] * direction[1] +
-               direction[2] * direction[2];
-  disc = dot * dot - dir_len_sq * c_coeff;
-  if (disc < *(float *)0x2533c0)
-    return 0;
-
-  t = (dot - sqrtf(disc)) / dir_len_sq;
-  if (t > *(float *)0x2533c8)
-    return 0;
-
-  *out_t = t;
-  return 1;
-}
-
-
-
-/* FUN_00148910 (0x148910) — XBE naked draft (batch 225). */
-#if defined(__clang__)
-static char (*const b148910_c148370)(float *origin /* */, float *center /* */, float *direction /* */, float *out_t /* */, float radius) = FUN_00148370;
-
-__attribute__((naked, noinline))
-char FUN_00148910(float *out_t /* */ __attribute__((unused)), float *origin /* */ __attribute__((unused)), float *edge_a /* */ __attribute__((unused)), float *direction /* */ __attribute__((unused)), float *edge_delta /* */ __attribute__((unused)), float radius __attribute__((unused)), float *out_u __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "flds (%%ebx)\n\t"
-      "pushl %%esi\n\t"
-      "fsubs (%%ecx)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "flds (%%edi)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%edi)\n\t"
-      "fmuls (%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x8(%%edx)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "flds (%%edx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_00148910_5\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "fld %%st(3)\n\t"
-      "fmuls (%%edi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts -0x10(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "fld %%st(3)\n\t"
-      "fmuls (%%edx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fld %%st(4)\n\t"
-      "fmul %%st(5), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstp %%st(3)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_00148910_7\n\t"
-      "fsqrt\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs -0x14(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fchs\n\t"
-      "fsts -0x14(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00148910_6\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fsub %%st(2), %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fchs\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_00148910_8\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00148910_1\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .LFUN_00148910_2\n\t"
-      ".LFUN_00148910_1:\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      ".LFUN_00148910_2:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds -0x10(%%ebp)\n\t"
-      "fsts -0x14(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00148910_3\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c148370]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00148910_8\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl $0, (%%ecx)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00148910_3:\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00148910_4\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%ecx)\n\t"
-      "pushl %%eax\n\t"
-      "fadds (%%edi)\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fadds 0x4(%%ecx)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fadds 0x8(%%ecx)\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "call *%[c148370]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00148910_8\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl $0x3f800000, (%%ecx)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00148910_4:\n\t"
-      "fstps (%%esi)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "movb $1, %%al\n\t"
-      "fdivs -0x4(%%ebp)\n\t"
-      "popl %%esi\n\t"
-      "fstps (%%edx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00148910_5:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00148910_6:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00148910_7:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00148910_8:\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c148370] "m"(b148910_c148370)
-      : "memory");
-}
-#else
-#error "FUN_00148910: clang naked draft required"
 #endif
 
 
