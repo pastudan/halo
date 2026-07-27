@@ -3556,89 +3556,41 @@ bool FUN_0012f290(int server, int machine, void *message_data, int message_size)
   return 1;
 }
 
-/* FUN_0012f330 (0x12f330) — XBE naked draft (batch 146). */
-#if defined(__clang__)
-static short (*const b12f330_c12c020)(int param_1, short *param_2) = network_game_server_get_state;
-static bool (*const b12f330_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
-static int (*const b12f330_c12cd60)(int param_1, int param_2) = network_game_server_switch_machine_from_postgame_to_pregame;
-static void (*const b12f330_c12b650)(const char *fmt, ...) = network_game_log;
-
-__attribute__((naked, noinline))
-char FUN_0012f330(int server __attribute__((unused)), int machine __attribute__((unused)), void *message_data __attribute__((unused)), int message_size __attribute__((unused)))
+/* FUN_0012f330 (0x12f330) — readable C lift. */
+bool FUN_0012f330(int server, int machine, void *message_data, int message_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "movl $1, %%ebx\n\t"
-      "call *%[c12c020]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .LFUN_0012f330_2\n\t"
-      "subl $2, 0x10(%%ebp)\n\t"
-      "pushl $7\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x21, -0x8(%%ebp)\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "call *%[c12bce0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0012f330_1\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c12cd60]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_0012f330_3\n\t"
-      "pushl $0x298dc0\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0012f330_1:\n\t"
-      "pushl $0x298cd8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0012f330_2:\n\t"
-      "pushl $0x298d60\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_0012f330_3:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12c020] "m"(b12f330_c12c020), [c12bce0] "m"(b12f330_c12bce0), [c12cd60] "m"(b12f330_c12cd60), [c12b650] "m"(b12f330_c12b650)
-      : "memory");
+  int size_left;
+  short field_size;
+  short field_count;
+  int value;
+  bool ok;
+  char result;
+
+  result = 1;
+  if (network_game_server_get_state(server, (short *)0) != 2) {
+    network_game_log((const char *)0x298d60);
+    return 1;
+  }
+  size_left = message_size - 2;
+  field_size = 0x21;
+  field_count = 1;
+  ok = FUN_0012bce0(
+      (int)&value,
+      (int)((char *)message_data + 2),
+      (short *)&size_left,
+      &field_size,
+      &field_count,
+      7);
+  if (ok) {
+    result = (char)network_game_server_switch_machine_from_postgame_to_pregame(server, machine);
+    if (!result)
+      network_game_log((const char *)0x298dc0);
+    return result != 0;
+  }
+  network_game_log((const char *)0x298cd8);
+  return 1;
 }
-#else
-#error "FUN_0012f330: clang naked draft required"
-#endif
+
 
 
 /* Fastcall wrapper: write message via network_connection_write (0x12f3d0).

@@ -15099,8 +15099,9 @@
         },
         {
           "addr": "0x124e90",
-          "decl": "void network_game_client_ponged(void *client, void *source, int timestamp);",
-          "ported": false
+          "decl": "void FUN_00124e90(void *client, int *token, unsigned int now_ms);",
+          "ported": true,
+          "name": "FUN_00124e90"
         },
         {
           "addr": "0x124f40",
@@ -15210,8 +15211,9 @@
         },
         {
           "addr": "0x1267c0",
-          "decl": "void network_game_client_reset(void *client, char flag);",
-          "ported": false
+          "decl": "void FUN_001267c0(void *client, char close_transport);",
+          "ported": true,
+          "name": "FUN_001267c0"
         },
         {
           "addr": "0x126fe0",
@@ -15225,8 +15227,9 @@
         },
         {
           "addr": "0x127260",
-          "decl": "char FUN_00127260(void *client /* @<esi> */, void *message, int message_size, void *source_address);",
-          "ported": false
+          "decl": "bool FUN_00127260(void *client, void *message_data, int message_size);",
+          "ported": true,
+          "name": "FUN_00127260"
         },
         {
           "addr": "0x127310",
@@ -15958,8 +15961,9 @@
         },
         {
           "addr": "0x12f330",
-          "decl": "char FUN_0012f330(int server @<esi>, int machine, void *message_data, int message_size);",
-          "ported": false
+          "decl": "bool FUN_0012f330(int server, int machine, void *message_data, int message_size);",
+          "ported": true,
+          "name": "FUN_0012f330"
         },
         {
           "addr": "0x12f3d0",
@@ -26873,7 +26877,7 @@
         },
         {
           "addr": "0x81fa0",
-          "decl": "void FUN_00081fa0(void);",
+          "decl": "bool FUN_00081fa0(void *addr, int len);",
           "ported": false
         },
         {
