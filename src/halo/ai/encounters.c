@@ -5514,133 +5514,57 @@ char encounter_pursuit_position_already_examined(
   return found;
 }
 
-/* encounter_mark_examined_pursuit_position (0x5b5e0) — XBE naked draft (batch 226). */
-#if defined(__clang__)
-static int (*const b5b5e0_c59c40)(int encounter_handle, int16_t pursuit_index, int min_time, char create) = FUN_00059c40;
-static void *(*const b5b5e0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b5b5e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5b5e0_exitfn)(int) = system_exit;
-static int (*const b5b5e0_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-char encounter_mark_examined_pursuit_position(int encounter_handle __attribute__((unused)), int position_hash __attribute__((unused)), int16_t pursuit_index __attribute__((unused)), int min_time __attribute__((unused)))
+/* encounter_mark_examined_pursuit_position (0x5b5e0) — readable C lift.
+ *
+ * Ensure a pursuit record exists (FUN_00059c40 create=1), then record
+ * position_hash in the 6-slot ring at pursuit+0xc. Updates the ring cursor
+ * at +0xa and stamp at +4 via game_time_get. Returns 1 when a new hash was
+ * inserted, 0 when the hash was already present (or allocation failed).
+ */
+char encounter_mark_examined_pursuit_position(int encounter_handle, int position_hash,
+                                              int16_t pursuit_index, int min_time)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c59c40]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lencounter_mark_examined_pursuit_position_8\n\t"
-      "movl 0x5ab26c, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%bx, 0x2(%%esi)\n\t"
-      "je .Lencounter_mark_examined_pursuit_position_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x407\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25da84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounter_mark_examined_pursuit_position_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lencounter_mark_examined_pursuit_position_2:\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "cmpl %%edi, 0xc(%%esi,%%edx,4)\n\t"
-      "je .Lencounter_mark_examined_pursuit_position_3\n\t"
-      "incl %%eax\n\t"
-      "cmpw $6, %%ax\n\t"
-      "jl .Lencounter_mark_examined_pursuit_position_2\n\t"
-      "jmp .Lencounter_mark_examined_pursuit_position_4\n\t"
-      ".Lencounter_mark_examined_pursuit_position_3:\n\t"
-      "cmpw $6, %%ax\n\t"
-      "jl .Lencounter_mark_examined_pursuit_position_7\n\t"
-      ".Lencounter_mark_examined_pursuit_position_4:\n\t"
-      "movw 0xa(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lencounter_mark_examined_pursuit_position_5\n\t"
-      "cmpw $6, %%ax\n\t"
-      "jl .Lencounter_mark_examined_pursuit_position_6\n\t"
-      ".Lencounter_mark_examined_pursuit_position_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x414\n\t"
-      "pushl $0x25d27c\n\t"
-      "pushl $0x25da00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lencounter_mark_examined_pursuit_position_6:\n\t"
-      "movswl 0xa(%%esi), %%eax\n\t"
-      "movl %%edi, 0xc(%%esi,%%eax,4)\n\t"
-      "movswl 0xa(%%esi), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cdq\n\t"
-      "movl $6, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "incw 0x8(%%esi)\n\t"
-      "movb $1, %%bl\n\t"
-      "movw %%dx, 0xa(%%esi)\n\t"
-      "call *%[gtime]\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lencounter_mark_examined_pursuit_position_7:\n\t"
-      "movb -0x1(%%ebp), %%bl\n\t"
-      "call *%[gtime]\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lencounter_mark_examined_pursuit_position_8:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c59c40] "m"(b5b5e0_c59c40), [dget] "m"(b5b5e0_dget), [assert] "m"(b5b5e0_assert), [exitfn] "m"(b5b5e0_exitfn), [gtime] "m"(b5b5e0_gtime)
-      : "memory");
+  int handle;
+  char *pursuit;
+  int16_t i;
+  int16_t cursor;
+  char inserted;
+
+  inserted = 0;
+  handle = FUN_00059c40(encounter_handle /* @<eax> */, pursuit_index /* @<bx> */,
+                        min_time, 1);
+  if (handle == -1)
+    return inserted;
+
+  pursuit = (char *)datum_get(*(data_t **)0x5ab26c, handle);
+  if (*(int16_t *)(pursuit + 2) != pursuit_index) {
+    display_assert((const char *)0x25da84, (const char *)0x25d27c, 0x407, true);
+    system_exit(-1);
+  }
+
+  for (i = 0; i < 6; i++) {
+    if (*(int *)(pursuit + 0xc + i * 4) == position_hash)
+      break;
+  }
+  if (i < 6) {
+    /* already examined — refresh timestamp only */
+    *(int *)(pursuit + 4) = game_time_get();
+    return inserted;
+  }
+
+  cursor = *(int16_t *)(pursuit + 0xa);
+  if (cursor < 0 || cursor >= 6) {
+    display_assert((const char *)0x25da00, (const char *)0x25d27c, 0x414, true);
+    system_exit(-1);
+  }
+
+  *(int *)(pursuit + 0xc + cursor * 4) = position_hash;
+  cursor = (int16_t)((cursor + 1) % 6);
+  (*(int16_t *)(pursuit + 8))++;
+  *(int16_t *)(pursuit + 0xa) = cursor;
+  *(int *)(pursuit + 4) = game_time_get();
+  return 1;
 }
-#else
-#error "encounter_mark_examined_pursuit_position: clang naked draft required"
-#endif
-
-
 
 /* FUN_00053c50 (0x53c50) — XBE naked draft (batch 233). */
 #if defined(__clang__)

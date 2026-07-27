@@ -36506,7 +36506,7 @@
         {
           "addr": "0x5b5e0",
           "decl": "char encounter_mark_examined_pursuit_position(int encounter_handle, int position_hash, int16_t pursuit_index, int min_time);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5b6e0",
