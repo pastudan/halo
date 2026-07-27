@@ -732,193 +732,84 @@ void path_heap_bubble_up(void *path, int16_t heap_index)
   *(int16_t *)(node_ptr + 0xb4) = idx;
 }
 
-/* path_heap_bubble_down (0x5e330) — XBE naked draft (batch 221). */
-#if defined(__clang__)
-static void (*const b5e330_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5e330_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void path_heap_bubble_down(void *path __attribute__((unused)), int16_t heap_index __attribute__((unused)))
+/* path_heap_bubble_down (0x5e330) — readable C lift.
+ * path@ebx, heap_index on stack. */
+void path_heap_bubble_down(void *path, int16_t heap_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x24, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "cmpw $1, %%di\n\t"
-      "jl .Lpath_heap_bubble_down_1\n\t"
-      "cmpw $0x400, %%di\n\t"
-      "jle .Lpath_heap_bubble_down_2\n\t"
-      ".Lpath_heap_bubble_down_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x524\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e06c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_bubble_down_2:\n\t"
-      "movswl %%di, %%eax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movw 0x11086(%%ebx,%%eax,4), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "movw 0x11088(%%ebx,%%eax,4), %%ax\n\t"
-      "movw %%ax, -0x8(%%ebp)\n\t"
-      "movl %%esi, -0x1c(%%ebp)\n\t"
-      "jl .Lpath_heap_bubble_down_3\n\t"
-      "cmpw $0x400, %%si\n\t"
-      "jl .Lpath_heap_bubble_down_4\n\t"
-      ".Lpath_heap_bubble_down_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x529\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e034\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_bubble_down_4:\n\t"
-      "movw -0x8(%%ebp), %%dx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "imull $0x44, %%ecx, %%ecx\n\t"
-      "cmpw %%dx, 0xb0(%%ecx,%%ebx,1)\n\t"
-      "leal (%%ecx,%%ebx,1), %%eax\n\t"
-      "movl %%eax, -0x24(%%ebp)\n\t"
-      "je .Lpath_heap_bubble_down_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x52a\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25dff0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lpath_heap_bubble_down_5:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl %%esi, -0x18(%%ebp)\n\t"
-      "movl %%edi, -0x14(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "leal (%%edi,%%edi,1), %%esi\n\t"
-      "jmp .Lpath_heap_bubble_down_6\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".Lpath_heap_bubble_down_6:\n\t"
-      "cmpw 0x11084(%%ebx), %%si\n\t"
-      "jge .Lpath_heap_bubble_down_12\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movw 0x11086(%%ebx,%%eax,4), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "movw 0x11088(%%ebx,%%eax,4), %%cx\n\t"
-      "movw %%cx, -0xc(%%ebp)\n\t"
-      "jl .Lpath_heap_bubble_down_7\n\t"
-      "cmpw $0x400, %%di\n\t"
-      "jl .Lpath_heap_bubble_down_8\n\t"
-      ".Lpath_heap_bubble_down_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x53e\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e160\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_bubble_down_8:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "imull $0x44, %%edx, %%edx\n\t"
-      "cmpw %%si, 0xb4(%%edx,%%ebx,1)\n\t"
-      "leal (%%edx,%%ebx,1), %%eax\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "je .Lpath_heap_bubble_down_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x53f\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e118\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_bubble_down_9:\n\t"
-      "movw -0xc(%%ebp), %%cx\n\t"
-      "cmpw %%cx, 0xb0(%%eax)\n\t"
-      "je .Lpath_heap_bubble_down_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x540\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e0c8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_heap_bubble_down_10:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "cmpw -0x4(%%ebp), %%ax\n\t"
-      "jge .Lpath_heap_bubble_down_11\n\t"
-      "movl %%esi, -0x14(%%ebp)\n\t"
-      "movl %%edi, -0x18(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".Lpath_heap_bubble_down_11:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "incl %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpw $2, %%ax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "jl .Lpath_heap_bubble_down_6\n\t"
-      ".Lpath_heap_bubble_down_12:\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "cmpw %%di, %%dx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "je .Lpath_heap_bubble_down_13\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "movw -0x4(%%ebp), %%si\n\t"
-      "movw %%si, 0x11088(%%ebx,%%eax,4)\n\t"
-      "movl -0x1c(%%ebp), %%esi\n\t"
-      "movw %%cx, 0x11086(%%ebx,%%eax,4)\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "imull $0x44, %%eax, %%eax\n\t"
-      "movw %%di, 0xb4(%%eax,%%ebx,1)\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "movl %%edx, %%edi\n\t"
-      "jmp .Lpath_heap_bubble_down_5\n\t"
-      ".Lpath_heap_bubble_down_13:\n\t"
-      "movw -0x1c(%%ebp), %%cx\n\t"
-      "movw -0x8(%%ebp), %%dx\n\t"
-      "movw %%cx, 0x11086(%%ebx,%%eax,4)\n\t"
-      "movw %%dx, 0x11088(%%ebx,%%eax,4)\n\t"
-      "movl -0x24(%%ebp), %%eax\n\t"
-      "movw %%di, 0xb4(%%eax)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b5e330_assert), [exitfn] "m"(b5e330_exitfn)
-      : "memory");
+  char *p;
+  int16_t idx;
+  int16_t node;
+  int16_t cost;
+  char *node_ptr;
+  int16_t best_idx;
+  int16_t best_node;
+  int16_t best_cost;
+  int16_t child;
+  int16_t child_i;
+  int16_t child_node;
+  int16_t child_cost;
+  char *child_ptr;
+
+  p = (char *)path;
+  idx = heap_index;
+  if (idx < 1 || idx > 0x400) {
+    display_assert((const char *)0x25e06c, (const char *)0x25e0ac, 0x524, 1);
+    system_exit(-1);
+  }
+  node = *(int16_t *)(p + 0x11086 + (int)idx * 4);
+  cost = *(int16_t *)(p + 0x11088 + (int)idx * 4);
+  if (node < 0 || node >= 0x400) {
+    display_assert((const char *)0x25e034, (const char *)0x25e0ac, 0x529, 1);
+    system_exit(-1);
+  }
+  node_ptr = p + (int)node * 0x44;
+  if (*(int16_t *)(node_ptr + 0xb0) != cost) {
+    display_assert((const char *)0x25dff0, (const char *)0x25e0ac, 0x52a, 1);
+    system_exit(-1);
+  }
+
+  for (;;) {
+    best_idx = idx;
+    best_node = node;
+    best_cost = cost;
+    child = (int16_t)(idx << 1);
+    for (child_i = 0; child_i < 2; child_i++) {
+      if (child >= *(int16_t *)(p + 0x11084))
+        break;
+      child_node = *(int16_t *)(p + 0x11086 + (int)child * 4);
+      child_cost = *(int16_t *)(p + 0x11088 + (int)child * 4);
+      if (child_node < 0 || child_node >= 0x400) {
+        display_assert((const char *)0x25e160, (const char *)0x25e0ac, 0x53e, 1);
+        system_exit(-1);
+      }
+      child_ptr = p + (int)child_node * 0x44;
+      if (*(int16_t *)(child_ptr + 0xb4) != child) {
+        display_assert((const char *)0x25e118, (const char *)0x25e0ac, 0x53f, 1);
+        system_exit(-1);
+      }
+      if (*(int16_t *)(child_ptr + 0xb0) != child_cost) {
+        display_assert((const char *)0x25e0c8, (const char *)0x25e0ac, 0x540, 1);
+        system_exit(-1);
+      }
+      if (child_cost < best_cost) {
+        best_idx = child;
+        best_node = child_node;
+        best_cost = child_cost;
+      }
+      child = (int16_t)(child + 1);
+    }
+    if (best_idx == idx) {
+      *(int16_t *)(p + 0x11086 + (int)idx * 4) = node;
+      *(int16_t *)(p + 0x11088 + (int)idx * 4) = cost;
+      *(int16_t *)(node_ptr + 0xb4) = idx;
+      return;
+    }
+    *(int16_t *)(p + 0x11086 + (int)idx * 4) = best_node;
+    *(int16_t *)(p + 0x11088 + (int)idx * 4) = best_cost;
+    *(int16_t *)(p + (int)best_node * 0x44 + 0xb4) = idx;
+    idx = best_idx;
+  }
 }
-#else
-#error "path_heap_bubble_down: clang naked draft required"
-#endif
 
 
 /* path_heap_pop_cheapest_node (0x5e560) — readable C lift. */

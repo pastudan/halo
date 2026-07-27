@@ -43,6 +43,10 @@
     "confidence": "high",
     "coverage_pct": 60.8
   },
+  "0x10500600": {
+    "confidence": "moderate",
+    "coverage_pct": 43.2
+  },
   "0x105008e4": {
     "confidence": "moderate",
     "coverage_pct": 43.2

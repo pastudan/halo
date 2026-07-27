@@ -40799,8 +40799,9 @@
         },
         {
           "addr": "0x5e330",
-          "decl": "void path_heap_bubble_down(void *path, int16_t heap_index);",
-          "ported": false
+          "decl": "void path_heap_bubble_down(void *path@<ebx>, int16_t heap_index);",
+          "ported": true,
+          "name": "path_heap_bubble_down"
         },
         {
           "addr": "0x5e560",
