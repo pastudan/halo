@@ -719,41 +719,24 @@ void FUN_00081480(void)
 #endif
 
 
-/* FUN_000815f0 (0x815f0) — XBE naked draft (batch 328). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_000815f0(void)
+/* FUN_000815f0 (0x815f0) — readable C lift. */
+void *FUN_000815f0(void)
 {
-  __asm__ volatile(
-      "xorl %%eax, %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x334ab4, %%ecx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000815f0_1:\n\t"
-      "cmpb $0, (%%ecx)\n\t"
-      "je .LFUN_000815f0_2\n\t"
-      "addl $0x28, %%ecx\n\t"
-      "incl %%edx\n\t"
-      "cmpl $0x334fb4, %%ecx\n\t"
-      "jl .LFUN_000815f0_1\n\t"
-      "ret\n\t"
-      ".LFUN_000815f0_2:\n\t"
-      "leal (%%edx,%%edx,4), %%eax\n\t"
-      "leal 0x334a90(,%%eax,8), %%eax\n\t"
-      "movb $0, 0x4(%%eax)\n\t"
-      "movl $0, (%%eax)\n\t"
-      "movb $1, 0x24(%%eax)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *slot = (unsigned char *)0x334ab4;
+  int index = 0;
+  while (slot < (unsigned char *)0x334fb4) {
+    if (*slot == 0) {
+      void *entry = (void *)(0x334a90 + index * 40);
+      *((unsigned char *)entry + 4) = 0;
+      *(unsigned int *)entry = 0;
+      *((unsigned char *)entry + 0x24) = 1;
+      return entry;
+    }
+    slot += 0x28;
+    index += 1;
+  }
+  return 0;
 }
-#else
-#error "FUN_000815f0: clang naked draft required"
-#endif
-
 
 /* create_mutex (0x817e0) — XBE naked draft (batch 341). */
 #if defined(__clang__)
