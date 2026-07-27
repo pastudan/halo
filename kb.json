@@ -6322,13 +6322,15 @@
         },
         {
           "addr": "0x11f460",
-          "decl": "void dispose_handle(void);",
-          "ported": false
+          "decl": "void dispose_handle(void *pool, void *block_hdr);",
+          "ported": false,
+          "name": "dispose_handle"
         },
         {
           "addr": "0x11f4e0",
-          "decl": "void lock_handle(void);",
-          "ported": false
+          "decl": "void lock_handle(void *pool, void **handle_slot);",
+          "ported": false,
+          "name": "lock_handle"
         },
         {
           "addr": "0x11f550",
@@ -6342,8 +6344,9 @@
         },
         {
           "addr": "0x11f810",
-          "decl": "void pool_new_handle(void);",
-          "ported": false
+          "decl": "void *pool_new_handle(void *pool, int alloc_size, const char *file, unsigned int line);",
+          "ported": true,
+          "name": "pool_new_handle"
         },
         {
           "addr": "0x11f880",

@@ -1138,131 +1138,45 @@ void FUN_0011f140(void)
 #endif
 
 
-/* dispose_handle (0x11f460) — XBE naked draft (batch 152). */
-#if defined(__clang__)
-static int (*const b11f460_c11ef50)(void *block_hdr, void *pool) = stack_memory_pool_valid_block;
-static void (*const b11f460_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11f460_exitfn)(int) = system_exit;
-static void (*const b11f460_c11efd0)(void *block_hdr, void *pool) = stack_memory_pool_unlink_block;
-
-__attribute__((naked, noinline))
-void dispose_handle(void)
+/* dispose_handle (0x11f460) — readable C lift from XBE leaf. */
+void dispose_handle(void *pool, void *block_hdr)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c11ef50]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Ldispose_handle_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe8\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2904a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldispose_handle_1:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Ldispose_handle_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x22f\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2901b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldispose_handle_2:\n\t"
-      "movl (%%esi), %%ebx\n\t"
-      "andl $0x7fffffff, %%ebx\n\t"
-      "call *%[c11efd0]\n\t"
-      "movl 0x14(%%edi), %%ecx\n\t"
-      "movl 0x1c(%%edi), %%eax\n\t"
-      "subl %%ebx, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, 0x14(%%edi)\n\t"
-      "movl %%eax, 0x1c(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11ef50] "m"(b11f460_c11ef50), [assert] "m"(b11f460_assert), [exitfn] "m"(b11f460_exitfn), [c11efd0] "m"(b11f460_c11efd0)
-      : "memory");
+  unsigned int usable;
+
+  if (!(stack_memory_pool_valid_block(block_hdr, pool) & 0xff)) {
+    display_assert((const char *)0x2904a0, (const char *)0x29018c, 0xe8, 1);
+    system_exit(-1);
+  }
+  if (!block_hdr) {
+    display_assert((const char *)0x2901b8, (const char *)0x29018c, 0x22f, 1);
+    system_exit(-1);
+  }
+  usable = *(unsigned int *)block_hdr & 0x7fffffff;
+  stack_memory_pool_unlink_block(block_hdr, pool);
+  *(unsigned int *)((char *)pool + 0x14) -= usable;
+  *(unsigned int *)((char *)pool + 0x1c) -= 1;
 }
-#else
-#error "dispose_handle: clang naked draft required"
-#endif
 
 
-/* lock_handle (0x11f4e0) — XBE naked draft (batch 156). */
-#if defined(__clang__)
-static void (*const b11f4e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11f4e0_exitfn)(int) = system_exit;
-static int (*const b11f4e0_c11ef50)(void *block_hdr, void *pool) = stack_memory_pool_valid_block;
-static void (*const b11f4e0_c11f070)(void *block_hdr, void *pool) = stack_memory_pool_mark_used;
 
-__attribute__((naked, noinline))
-void lock_handle(void)
+/* lock_handle (0x11f4e0) — readable C lift from XBE leaf. */
+void lock_handle(void *pool, void **handle_slot)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Llock_handle_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf7\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2904f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llock_handle_1:\n\t"
-      "movl (%%edi), %%esi\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "call *%[c11ef50]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Llock_handle_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xfa\n\t"
-      "pushl $0x29018c\n\t"
-      "pushl $0x2904c8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Llock_handle_2:\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "call *%[c11f070]\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11f4e0_assert), [exitfn] "m"(b11f4e0_exitfn), [c11ef50] "m"(b11f4e0_c11ef50), [c11f070] "m"(b11f4e0_c11f070)
-      : "memory");
+  void *block;
+
+  if (!handle_slot) {
+    display_assert((const char *)0x2904f8, (const char *)0x29018c, 0xf7, 1);
+    system_exit(-1);
+  }
+  block = *handle_slot;
+  if (!(stack_memory_pool_valid_block(block, pool) & 0xff)) {
+    display_assert((const char *)0x2904c8, (const char *)0x29018c, 0xfa, 1);
+    system_exit(-1);
+  }
+  stack_memory_pool_mark_used(block, pool);
+  *handle_slot = (char *)block + 0x1c;
 }
-#else
-#error "lock_handle: clang naked draft required"
-#endif
+
 
 
 /* unlock_handle (0x11f550) — XBE naked draft (batch 137). */
@@ -1372,70 +1286,35 @@ void *FUN_0011f6d0(int alloc_size, void *pool /* @<edx> */, const char *file /* 
   return stack_memory_pool_alloc_internal(alloc_size, pool, file, line);
 }
 
-/* pool_new_handle (0x11f810) — XBE naked draft (batch 151). */
-#if defined(__clang__)
-static void * (*const b11f810_c11f1e0)(int alloc_size, void *pool, const char *file, unsigned int line) = stack_memory_pool_alloc_internal;
-
-__attribute__((naked, noinline))
-void pool_new_handle(void)
+/* pool_new_handle (0x11f810) — readable C lift from XBE leaf. */
+void *pool_new_handle(void *pool, int alloc_size, const char *file, unsigned int line)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11f1e0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lpool_new_handle_3\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x1c(%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x14(%%esi), %%edi\n\t"
-      "andl $0x7fffffff, %%edx\n\t"
-      "addl %%edx, %%edi\n\t"
-      "incl %%ecx\n\t"
-      "movl %%edi, 0x14(%%esi)\n\t"
-      "movl %%ecx, 0x1c(%%esi)\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "cmpl 0x18(%%esi), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "jle .Lpool_new_handle_1\n\t"
-      "movl %%ecx, 0x18(%%esi)\n\t"
-      ".Lpool_new_handle_1:\n\t"
-      "cmpl 0x20(%%esi), %%edx\n\t"
-      "jbe .Lpool_new_handle_2\n\t"
-      "movl %%edx, 0x20(%%esi)\n\t"
-      ".Lpool_new_handle_2:\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x24(%%esi), %%edx\n\t"
-      "andl $0x7fffffff, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jbe .Lpool_new_handle_4\n\t"
-      "movl %%ecx, 0x24(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpool_new_handle_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lpool_new_handle_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11f1e0] "m"(b11f810_c11f1e0)
-      : "memory");
+  void *block;
+  unsigned int usable;
+  unsigned int bytes_used;
+  unsigned int alloc_count;
+
+  block = stack_memory_pool_alloc_internal(alloc_size, pool, file, line);
+  if (!block) {
+    return 0;
+  }
+  usable = *(unsigned int *)block & 0x7fffffff;
+  bytes_used = *(unsigned int *)((char *)pool + 0x14) + usable;
+  alloc_count = *(unsigned int *)((char *)pool + 0x1c) + 1;
+  *(unsigned int *)((char *)pool + 0x14) = bytes_used;
+  *(unsigned int *)((char *)pool + 0x1c) = alloc_count;
+  if ((int)bytes_used > *(int *)((char *)pool + 0x18)) {
+    *(unsigned int *)((char *)pool + 0x18) = bytes_used;
+  }
+  if (alloc_count > *(unsigned int *)((char *)pool + 0x20)) {
+    *(unsigned int *)((char *)pool + 0x20) = alloc_count;
+  }
+  if (usable > *(unsigned int *)((char *)pool + 0x24)) {
+    *(unsigned int *)((char *)pool + 0x24) = usable;
+  }
+  return block;
 }
-#else
-#error "pool_new_handle: clang naked draft required"
-#endif
+
 
 
 /* pool_new_handle_clear (0x11f880) — XBE naked draft (batch 137). */
@@ -1960,7 +1839,7 @@ static void (*const b11ff70_c1193f0)(data_t *data) = data_verify;
 static void *(*const b11ff70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 
 __attribute__((naked, noinline))
-void FUN_0011ff70(void)
+char FUN_0011ff70(void *anim __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
