@@ -19,17 +19,26 @@ wchar_t *_wcschr(const wchar_t *s, wchar_t c)
 }
 
 /* 0x1db156 */
-void _wcscat(void)
+wchar_t *_wcscat(wchar_t *dest, const wchar_t *src)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  wchar_t *d = dest;
+  if (*d != 0) {
+    do {
+      d++;
+    } while (*d != 0);
+  }
+  while ((*d++ = *src++) != 0)
+    ;
+  return dest;
 }
 
 /* 0x1db180 */
-void _wcscpy(void)
+wchar_t *_wcscpy(wchar_t *dest, const wchar_t *src)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  wchar_t *d = dest;
+  while ((*d++ = *src++) != 0)
+    ;
+  return dest;
 }
 
 /* 0x1db19c */
