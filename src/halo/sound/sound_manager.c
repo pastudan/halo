@@ -3239,12 +3239,12 @@ void FUN_001cb1d0(int channel_index, int a, int b, int c, int d, int e)
 static void * (*const b1cb210_c1c9290)(short index) = sound_dsound_channel_get;
 static int (*const b1cb210_c1c90e0)(int codec_index) = sound_dsound_get_sample_rate;
 static void *(*const b1cb210_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1cb210_c2060f8)(void) = IDirectSound_CreateSoundStream;
+static void (*const b1cb210_c2060f8)(void) = (void *)IDirectSound_CreateSoundStream;
 static void (*const b1cb210_c1cadd0)(int a, int b, int c, int d, int e, int f) = FUN_001cadd0;
-static void (*const b1cb210_c204c79)(void) = IDirectSound_GetSpeakerConfig;
+static void (*const b1cb210_c204c79)(void) = (void *)IDirectSound_GetSpeakerConfig;
 static int (*const b1cb210_c1c9130)(float gain, int ceiling) = sound_dsound_gain_to_volume;
-static void (*const b1cb210_c205bd8)(void) = IDirectSoundStream_SetMixBins;
-static void (*const b1cb210_c2052de)(void) = IDirectSoundStream_SetMixBinVolumes_12;
+static void (*const b1cb210_c205bd8)(void) = (void *)IDirectSoundStream_SetMixBins;
+static void (*const b1cb210_c2052de)(void) = (void *)IDirectSoundStream_SetMixBinVolumes_12;
 static void (*const b1cb210_c1ca5e0)(float *properties, short channel_index, int update_only) = sound_dsound_update_channel_properties;
 static void (*const b1cb210_c1c98f0)(int hresult, const char *message, ...) = sound_dsound_log_error;
 
@@ -3481,20 +3481,20 @@ char FUN_001cb210(short channel_index __attribute__((unused)), unsigned char fla
 #if defined(__clang__)
 static void (*const b1cb4c0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1cb4c0_exitfn)(int) = system_exit;
-static void (*const b1cb4c0_c206232)(void) = DirectSoundCreate;
-static void (*const b1cb4c0_c204c5d)(void) = IDirectSound_GetCaps;
-static void (*const b1cb4c0_c204d81)(void) = IDirectSound_SetDistanceFactor;
-static void (*const b1cb4c0_c204e48)(void) = IDirectSound_SetRolloffFactor;
+static void (*const b1cb4c0_c206232)(void) = (void *)DirectSoundCreate;
+static void (*const b1cb4c0_c204c5d)(void) = (void *)IDirectSound_GetCaps;
+static void (*const b1cb4c0_c204d81)(void) = (void *)IDirectSound_SetDistanceFactor;
+static void (*const b1cb4c0_c204e48)(void) = (void *)IDirectSound_SetRolloffFactor;
 static void *(*const b1cb4c0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1cb4c0_c204c95)(void) = IDirectSound_DownloadEffectsImage;
+static void (*const b1cb4c0_c204c95)(void) = (void *)IDirectSound_DownloadEffectsImage;
 static void (*const b1cb4c0_c1c98f0)(int hresult, const char *message, ...) = sound_dsound_log_error;
-static void (*const b1cb4c0_c204d41)(void) = IDirectSound_SetMixBinHeadroom;
-static void (*const b1cb4c0_c2038df)(void) = DirectSoundUseFullHRTF;
+static void (*const b1cb4c0_c204d41)(void) = (void *)IDirectSound_SetMixBinHeadroom;
+static void (*const b1cb4c0_c2038df)(void) = (void *)DirectSoundUseFullHRTF;
 static void (*const b1cb4c0_c1ca2b0)(void *buf) = FUN_001ca2b0;
 static void * (*const b1cb4c0_c1c92f0)(short index) = sound_dsound_vchannel_get;
 static char (*const b1cb4c0_c1cb210)(short channel_index, unsigned char flags) = FUN_001cb210;
-static void (*const b1cb4c0_c1c9cf0)(void) = FUN_001c9cf0;
-static void (*const b1cb4c0_c1c93f0)(void) = FUN_001c93f0;
+static void (*const b1cb4c0_c1c9cf0)(void) = (void *)FUN_001c9cf0;
+static void (*const b1cb4c0_c1c93f0)(void) = (void *)FUN_001c93f0;
 
 __attribute__((naked, noinline))
 char FUN_001cb4c0(void *driver_caps __attribute__((unused)))
@@ -3976,95 +3976,31 @@ int FUN_001cc440(int source)
   return -1;
 }
 
-/* FUN_001cc4f0 (0x1cc4f0) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static void *(*const b1cc4f0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1cc4f0_tag)(int, int) = tag_get;
-static float (*const b1cc4f0_c1c8d10)(int sound_tag_index) = sound_get_default_priority;
-static void (*const b1cc4f0_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
-static float (*const b1cc4f0_c1c8d50)(int sound_tag_index) = sound_class_get_min_distance;
-static const char * (*const b1cc4f0_c1ba1f0)(int tag_index) = tag_get_name;
-static int (*const b1cc4f0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b1cc4f0_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
-
-__attribute__((naked, noinline))
-void FUN_001cc4f0(int sound_handle __attribute__((unused)))
+/* FUN_001cc4f0 (0x1cc4f0) — readable C lift. */
+void FUN_001cc4f0(int sound_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x200, %%esp\n\t"
-      "movb 0x4fc382, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001cc4f0_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x4fdba4, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x2ee6e0, %%eax\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x20(%%esi), %%edi\n\t"
-      "call *%[c1c8d10]\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c189540]\n\t"
-      "movl 0x2ee6d0, %%edx\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c8d50]\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c189540]\n\t"
-      "flds 0x50(%%esi)\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds 0x4c(%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x200(%%ebp), %%edx\n\t"
-      "pushl $0x2c1538\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x200(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c189cb0]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_001cc4f0_1:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1cc4f0_dget), [tag] "m"(b1cc4f0_tag), [c1c8d10] "m"(b1cc4f0_c1c8d10), [c189540] "m"(b1cc4f0_c189540), [c1c8d50] "m"(b1cc4f0_c1c8d50), [c1ba1f0] "m"(b1cc4f0_c1ba1f0), [c1d90f0] "m"(b1cc4f0_c1d90f0), [c189cb0] "m"(b1cc4f0_c189cb0)
-      : "memory");
-}
-#else
-#error "FUN_001cc4f0: clang naked draft required"
-#endif
+  char *datum;
+  int tag_index;
+  char *center;
+  char buf[0x200];
+  const char *name;
+  float prio;
+  float mind;
 
+  if (!*(char *)0x4fc382)
+    return;
+  datum = (char *)datum_get(*(void **)0x4fdba4, sound_handle);
+  tag_index = *(int *)(datum + 8);
+  tag_get(tag_index, 0x736e6421);
+  center = datum + 0x20;
+  prio = sound_get_default_priority(tag_index);
+  FUN_00189540(0, center, prio, *(void **)0x2ee6e0);
+  mind = sound_class_get_min_distance(tag_index);
+  FUN_00189540(0, center, mind, *(void **)0x2ee6d0);
+  name = tag_get_name(tag_index);
+  crt_sprintf(buf, (const char *)0x2c1538, name, (double)*(float *)(datum + 0x4c), (double)*(float *)(datum + 0x50));
+  FUN_00189cb0(0, center, buf, *(int *)0x2ee6c4);
+}
 
 /* FUN_001cc5b0 (0x1cc5b0) — XBE naked draft (batch 253). */
 #if defined(__clang__)
@@ -4225,7 +4161,7 @@ void FUN_001cc5b0(int sound_tag_index __attribute__((unused)), void *source __at
 /* sound_initialize (0x1cc710) — XBE naked draft (batch 268). */
 #if defined(__clang__)
 static void (*const b1cc710_c1cf820)(void **out) = (void *)FUN_001cf820;
-static void (*const b1cc710_c1be3e0)(void) = sound_cache_new;
+static void (*const b1cc710_c1be3e0)(void) = (void *)sound_cache_new;
 static data_t * (*const b1cc710_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
 static void (*const b1cc710_c119b20)(data_t *data) = data_delete_all;
 static void (*const b1cc710_assert)(const char *, const char *, int, bool) = display_assert;
@@ -4888,7 +4824,7 @@ static short (*const b1cd690_c1cc050)(short channel_index) = sound_channel_updat
 static char (*const b1cd690_c1cbc40)(int sound_handle) = FUN_001cbc40;
 static float (*const b1cd690_c1c8d10)(int sound_tag_index) = sound_get_default_priority;
 static int16_t (*const b1cd690_c1cd5a0)(void *source, float priority) = sound_allocate_channel;
-static void (*const b1cd690_c1cc4f0)(int sound_handle) = FUN_001cc4f0;
+static void (*const b1cd690_c1cc4f0)(int sound_handle) = (void *)FUN_001cc4f0;
 static void (*const b1cd690_c1cc8f0)(short mode, float seconds, int fade_in_sound_index, int fade_out_sound_index) = sound_start_fade;
 static void (*const b1cd690_c1cca60)(int sound_handle) = sound_stop_channel;
 
@@ -5284,7 +5220,7 @@ static int (*const b1ce550_c1cd190)(int sound_tag_index, void *track, void *sour
 static void *(*const b1ce550_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void *(*const b1ce550_tag)(int, int) = tag_get;
 static void (*const b1ce550_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-static void (*const b1ce550_ca2d30)(void) = player_effect_continuous_refresh;
+static void (*const b1ce550_ca2d30)(void) = (void *)player_effect_continuous_refresh;
 static void *(*const b1ce550_elem)(void *, int, int) = tag_block_get_element;
 static int (*const b1ce550_c1cda50)(int sound_tag_handle, int looping_handle, int track_index, int type) = sound_create_looping_entry;
 static void (*const b1ce550_c1cc8f0)(short mode, float seconds, int fade_in_sound_index, int fade_out_sound_index) = sound_start_fade;

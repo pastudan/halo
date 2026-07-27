@@ -25267,7 +25267,7 @@
         {
           "addr": "0x1cc4f0",
           "decl": "void FUN_001cc4f0(int sound_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1cc5b0",
@@ -35107,8 +35107,9 @@
         },
         {
           "addr": "0x49300",
-          "decl": "void FUN_00049300(void);",
-          "ported": false
+          "decl": "void FUN_00049300(void *block_base@<eax>, int index, float height, void *color);",
+          "ported": true,
+          "name": "FUN_00049300"
         },
         {
           "addr": "0x493b0",
@@ -39080,7 +39081,7 @@
         },
         {
           "addr": "0x168340",
-          "decl": "int FUN_00168340(int a, int b, int c);",
+          "decl": "int FUN_00168340(int a0, int a1, int a2);",
           "ported": true,
           "name": "FUN_00168340"
         },
