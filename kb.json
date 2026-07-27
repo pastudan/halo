@@ -15223,8 +15223,9 @@
         },
         {
           "addr": "0x127310",
-          "decl": "char FUN_00127310(void *client /* @<esi> */, void *message, int message_size, void *source_address);",
-          "ported": false
+          "decl": "char FUN_00127310(void *client@<esi>, void *message, int message_size, void *source_address);",
+          "ported": true,
+          "name": "FUN_00127310"
         },
         {
           "addr": "0x1273a0",
@@ -15918,8 +15919,9 @@
         },
         {
           "addr": "0x12f040",
-          "decl": "bool FUN_0012f040(int server @<esi>, int machine, void *message_data, int message_size);",
-          "ported": false
+          "decl": "char FUN_0012f040(int server@<esi>, int machine, void *message_data, int message_size);",
+          "ported": false,
+          "name": "FUN_0012f040"
         },
         {
           "addr": "0x12f0d0",
@@ -15928,13 +15930,15 @@
         },
         {
           "addr": "0x12f170",
-          "decl": "bool FUN_0012f170(int server @<esi>, int machine, void *message_data, int message_size);",
-          "ported": false
+          "decl": "char FUN_0012f170(int server@<esi>, int machine, void *message_data, int message_size);",
+          "ported": false,
+          "name": "FUN_0012f170"
         },
         {
           "addr": "0x12f200",
-          "decl": "bool FUN_0012f200(int server @<esi>, int machine, void *message_data, int message_size);",
-          "ported": false
+          "decl": "char FUN_0012f200(int server@<esi>, int machine, void *message_data, int message_size);",
+          "ported": false,
+          "name": "FUN_0012f200"
         },
         {
           "addr": "0x12f290",
@@ -40099,7 +40103,7 @@
         },
         {
           "addr": "0x80ca0",
-          "decl": "int create_message(int type, int payload, unsigned int payload_len, int buffer, unsigned short buffer_size);",
+          "decl": "void *create_message(int type, void *payload, unsigned int payload_len, void *buffer, unsigned short buffer_size);",
           "name": "create_message",
           "ported": false
         },

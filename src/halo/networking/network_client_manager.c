@@ -3844,80 +3844,36 @@ char FUN_00127260(void *client /* */ __attribute__((unused)), void *message __at
 #endif
 
 
-/* FUN_00127310 (0x127310) — XBE naked draft (batch 147). */
-#if defined(__clang__)
-static int16_t (*const b127310_c124a30)(void *server, void *out_param) = network_game_client_get_state;
-static bool (*const b127310_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
-static void (*const b127310_c124e90)(void *client, void *source, int timestamp) = network_game_client_ponged;
-static void (*const b127310_c12b650)(const char *fmt, ...) = network_game_log;
-
-__attribute__((naked, noinline))
-char FUN_00127310(void *client /* */ __attribute__((unused)), void *message __attribute__((unused)), int message_size __attribute__((unused)), void *source_address __attribute__((unused)))
+/* FUN_00127310 (0x127310) — readable C lift. */
+char FUN_00127310(void *client, void *message, int message_size, void *source_address)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c124a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_00127310_2\n\t"
-      "subl $2, 0xc(%%ebp)\n\t"
-      "pushl $1\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $3, -0x8(%%ebp)\n\t"
-      "movl $1, -0x4(%%ebp)\n\t"
-      "call *%[c12bce0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00127310_1\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c124e90]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00127310_1:\n\t"
-      "pushl $0x2934b8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00127310_2:\n\t"
-      "pushl $0x293478\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c124a30] "m"(b127310_c124a30), [c12bce0] "m"(b127310_c12bce0), [c124e90] "m"(b127310_c124e90), [c12b650] "m"(b127310_c12b650)
-      : "memory");
-}
-#else
-#error "FUN_00127310: clang naked draft required"
-#endif
+  int size_left;
+  short field_size;
+  short field_count;
+  int value;
+  char ok;
 
+  if (network_game_client_get_state(client, (void *)0) != 0) {
+    network_game_log((const char *)0x293478);
+    return 1;
+  }
+  size_left = message_size - 2;
+  field_size = 3;
+  field_count = 1;
+  ok = FUN_0012bce0(
+      (int)&value,
+      (int)((char *)message + 2),
+      (short *)&size_left,
+      &field_size,
+      &field_count,
+      1);
+  if (ok) {
+    network_game_client_ponged(client, source_address, value);
+    return 1;
+  }
+  network_game_log((const char *)0x2934b8);
+  return 1;
+}
 
 /* FUN_001273a0 (0x1273a0) — XBE naked draft (batch 141). */
 #if defined(__clang__)
