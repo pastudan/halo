@@ -9431,33 +9431,12 @@ void FUN_001741d0(float *quad __attribute__((unused)))
 #endif
 
 
-/* FUN_001744f0 (0x1744f0) — XBE naked draft (batch 389). */
-#if defined(__clang__)
-static int __stdcall (*const b1744f0_c1ef0a0)(uint32_t length, uint32_t usage, uint32_t fvf, uint32_t pool, void **ppVertexBuffer) = (void *)D3DDevice_CreateVertexBuffer;
-
-__attribute__((naked, noinline))
-void FUN_001744f0(void)
+/* FUN_001744f0 (0x1744f0) — readable C lift. */
+int FUN_001744f0(int a, int b, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ef0a0]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ef0a0] "m"(b1744f0_c1ef0a0)
-      : "memory");
+  return D3DDevice_CreateVertexBuffer(a, b, c, 0, 0);
 }
-#else
-#error "FUN_001744f0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00174510 (0x174510) — XBE naked draft (batch 313). */
@@ -9677,8 +9656,6 @@ void FUN_00174980(void)
 #else
 #error "FUN_00174980: clang naked draft required"
 #endif
-
-
 /* FUN_001749b0 (0x1749b0) — XBE naked draft (batch 362). */
 #if defined(__clang__)
 static void (*const b1749b0_c1e8a70)(void) = (void *)D3DDevice_EndVisibilityTest;
@@ -10020,8 +9997,6 @@ void FUN_00178820(void)
 #else
 #error "FUN_00178820: clang naked draft required"
 #endif
-
-
 /* FUN_00178850 (0x178850) — XBE naked draft (batch 315). */
 #if defined(__clang__)
 static void (*const b178850_assert)(const char *, const char *, int, bool) = display_assert;

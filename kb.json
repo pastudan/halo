@@ -20929,8 +20929,8 @@
         },
         {
           "addr": "0x1744f0",
-          "decl": "void FUN_001744f0(void);",
-          "ported": false
+          "decl": "int FUN_001744f0(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x174510",
