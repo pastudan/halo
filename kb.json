@@ -23436,7 +23436,7 @@
         {
           "addr": "0x185830",
           "decl": "void render_camera_hack_frustum_z(void *camera, float z_near, float z_far);",
-          "ported": false,
+          "ported": true,
           "name": "render_camera_hack_frustum_z"
         },
         {
@@ -32138,7 +32138,8 @@
         {
           "addr": "0x1db04a",
           "decl": "long atol(const char *str);",
-          "ported": false
+          "ported": true,
+          "name": "atol"
         }
       ],
       "name": "LIBCMT:vsnprint.obj",
@@ -33019,7 +33020,8 @@
         {
           "addr": "0x1d91f0",
           "decl": "void _shortsort(void);",
-          "ported": false
+          "ported": true,
+          "name": "_shortsort"
         }
       ],
       "name": "LIBCMT:snprintf.obj",
