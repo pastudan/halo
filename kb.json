@@ -21079,13 +21079,13 @@
         {
           "addr": "0x17b540",
           "decl": "void FUN_0017b540(int tex_flags);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017b540"
         },
         {
           "addr": "0x17b580",
-          "decl": "void FUN_0017b580(void);",
-          "ported": false,
+          "decl": "void FUN_0017b580(unsigned char enable);",
+          "ported": true,
           "name": "FUN_0017b580"
         },
         {

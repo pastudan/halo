@@ -12761,82 +12761,25 @@ char FUN_0017b480(int param_1 __attribute__((unused)), int param_2 __attribute__
 #endif
 
 
-/* FUN_0017b540 (0x17b540) — XBE naked draft (batch 381). */
-#if defined(__clang__)
-static void (*const b17b540_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17b540_exitfn)(int) = system_exit;
-static void __stdcall (*const b17b540_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-
-__attribute__((naked, noinline))
-void FUN_0017b540(int tex_flags __attribute__((unused)))
+/* FUN_0017b540 (0x17b540) — readable C lift. */
+void FUN_0017b540(int tex_flags)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017b540_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13e\n\t"
-      "pushl $0x2ae7f0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017b540_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xa\n\t"
-      "call *%[c1ed280]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17b540_assert), [exitfn] "m"(b17b540_exitfn), [c1ed280] "m"(b17b540_c1ed280)
-      : "memory");
+  if (!*(int *)0x476ab0) {
+    display_assert((const char *)0x29dc40, (const char *)0x2ae7f0, 0x13e, 1);
+    system_exit(-1);
+  }
+  D3DDevice_SetVertexData2f(0xa, tex_flags, 0);
 }
-#else
-#error "FUN_0017b540: clang naked draft required"
-#endif
 
-
-/* FUN_0017b580 (0x17b580) — XBE naked draft (batch 384). */
-#if defined(__clang__)
-static void (*const b17b580_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17b580_exitfn)(int) = system_exit;
-static void __stdcall (*const b17b580_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
-
-__attribute__((naked, noinline))
-void FUN_0017b580(void)
+/* FUN_0017b580 (0x17b580) — readable C lift. */
+void FUN_0017b580(unsigned char enable)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017b580_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14e\n\t"
-      "pushl $0x2ae7f0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017b580_1:\n\t"
-      "movzbl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ea290]\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17b580_assert), [exitfn] "m"(b17b580_exitfn), [c1ea290] "m"(b17b580_c1ea290)
-      : "memory");
+  if (!*(int *)0x476ab0) {
+    display_assert((const char *)0x29dc40, (const char *)0x2ae7f0, 0x14e, 1);
+    system_exit(-1);
+  }
+  D3DDevice_SetRenderState_ZEnable(enable);
 }
-#else
-#error "FUN_0017b580: clang naked draft required"
-#endif
 
 
 /* FUN_0017b5c0 (0x17b5c0) — XBE naked draft (batch 310). */
