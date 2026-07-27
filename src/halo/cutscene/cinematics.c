@@ -204,74 +204,32 @@ void cinematic_suppress_bsp_object_creation(char suppress)
   g[0xb] = suppress;
 }
 
-/* cinematic_set_title_delayed (0x930b0) — XBE naked draft (batch 273). */
-#if defined(__clang__)
-static scenario_t * (*const b930b0_c18e380)(void) = global_scenario_get;
-static void *(*const b930b0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b930b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void cinematic_set_title_delayed(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
+/* cinematic_set_title_delayed (0x930b0) — readable C lift from XBE leaf. */
+void cinematic_set_title_delayed(int title_index, float delay_seconds)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x44df00, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "orl $0xffffffff, %%edx\n\t"
-      "pushl %%esi\n\t"
-      ".Lcinematic_set_title_delayed_1:\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "cmpw %%dx, 0xc(%%ecx,%%esi,4)\n\t"
-      "je .Lcinematic_set_title_delayed_3\n\t"
-      "incl %%eax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lcinematic_set_title_delayed_1\n\t"
-      ".Lcinematic_set_title_delayed_2:\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x60\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4fc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x268e9c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcinematic_set_title_delayed_3:\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jge .Lcinematic_set_title_delayed_2\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "fmuls 0x253394\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movw %%dx, 0xc(%%ecx,%%eax,4)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fistps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x44df00, %%edx\n\t"
-      "negl %%ecx\n\t"
-      "movw %%cx, 0xe(%%edx,%%eax,4)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b930b0_c18e380), [elem] "m"(b930b0_elem), [c8f390] "m"(b930b0_c8f390)
-      : "memory");
+  char *base;
+  int i;
+  void *elem;
+  int ticks;
+
+  base = *(char **)0x44df00;
+  for (i = 0; i < 4; i++) {
+    if (*(short *)(base + 0xc + i * 4) == (short)0xffff) {
+      break;
+    }
+  }
+  if (i >= 4) {
+    elem = tag_block_get_element((char *)global_scenario_get() + 0x4fc, title_index,
+                                 0x60);
+    error(2, (const char *)0x268e9c, (char *)elem + 4);
+    return;
+  }
+  *(short *)(base + 0xc + i * 4) = (short)title_index;
+  ticks = (int)(delay_seconds * *(float *)0x253394);
+  *(short *)(base + 0xe + i * 4) = (short)(-ticks);
 }
-#else
-#error "cinematic_set_title_delayed: clang naked draft required"
-#endif
+
+
 
 
 /* cinematic_render (0x93140) — XBE naked draft (batch 249). */
@@ -755,149 +713,69 @@ void FUN_00093710(int *cursor, unsigned char mode)
   }
 }
 
-/* FUN_00093780 (0x93780) — XBE naked draft (batch 265). */
-#if defined(__clang__)
-static void *(*const b93780_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b93780_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void FUN_00093780(int a __attribute__((unused)), int *cursor __attribute__((unused)), int c __attribute__((unused)))
+/* FUN_00093780 (0x93780) — readable C lift from XBE leaf. */
+void FUN_00093780(void *base, void **cursor, unsigned char mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x40\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[memset]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0xffff, 0x8(%%ebx)\n\t"
-      "movl $0, 0x8(%%ebp)\n\t"
-      ".LFUN_00093780_1:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "cmpb $1, %%al\n\t"
-      "movzbl %%al, %%ecx\n\t"
-      "ja .LFUN_00093780_2\n\t"
-      "movl $1, %%ecx\n\t"
-      ".LFUN_00093780_2:\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .LFUN_00093780_6\n\t"
-      "movl 0x2ee950(,%%eax,4), %%eax\n\t"
-      "leal 0x4(%%eax), %%esi\n\t"
-      "cmpl $-1, (%%esi)\n\t"
-      "je .LFUN_00093780_5\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00093780_3:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00093780_4\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00093780_4:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "addl %%eax, %%edx\n\t"
-      "addl $0xc, %%esi\n\t"
-      "movl %%edx, (%%edi)\n\t"
-      "cmpl $-1, (%%esi)\n\t"
-      "jne .LFUN_00093780_3\n\t"
-      ".LFUN_00093780_5:\n\t"
-      "incl 0x8(%%ebp)\n\t"
-      "jmp .LFUN_00093780_1\n\t"
-      ".LFUN_00093780_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b93780_memset), [c8e0b0] "m"(b93780_c8e0b0)
-      : "memory");
+  int i;
+  int limit;
+  int *rec;
+  int size;
+  int offset;
+
+  csmemset(base, 0, 0x40);
+  *(short *)((char *)base + 8) = (short)0xffff;
+  limit = mode;
+  if (limit <= 1) {
+    limit = 1;
+  }
+  for (i = 0; i < limit; i++) {
+    rec = (int *)(*(int *)(0x2ee950 + i * 4) + 4);
+    if (rec[0] == -1) {
+      continue;
+    }
+    do {
+      offset = rec[1];
+      size = rec[0];
+      if (offset != -1) {
+        csmemcpy((char *)base + offset, *cursor, (size_t)size);
+      }
+      *cursor = (char *)*cursor + size;
+      rec += 3;
+    } while (rec[0] != -1);
+  }
 }
-#else
-#error "FUN_00093780: clang naked draft required"
-#endif
 
 
-/* FUN_00093810 (0x93810) — XBE naked draft (batch 264). */
-#if defined(__clang__)
-static void * (*const b93810_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 
-__attribute__((naked, noinline))
-void FUN_00093810(void)
+
+/* FUN_00093810 (0x93810) — readable C lift from XBE leaf. */
+void FUN_00093810(void *base, void **cursor, unsigned char mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      ".LFUN_00093810_1:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "cmpb $1, %%al\n\t"
-      "movzbl %%al, %%ecx\n\t"
-      "ja .LFUN_00093810_2\n\t"
-      "movl $1, %%ecx\n\t"
-      ".LFUN_00093810_2:\n\t"
-      "movswl -0x4(%%ebp), %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .LFUN_00093810_5\n\t"
-      "movl 0x2ee950(,%%eax,4), %%eax\n\t"
-      "leal 0x4(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_00093810_4\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00093810_3:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "addl $0xc, %%esi\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_00093810_3\n\t"
-      ".LFUN_00093810_4:\n\t"
-      "incl -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00093810_1\n\t"
-      ".LFUN_00093810_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8e0b0] "m"(b93810_c8e0b0)
-      : "memory");
+  int i;
+  int limit;
+  int *rec;
+  int size;
+
+  limit = mode;
+  if (limit <= 1) {
+    limit = 1;
+  }
+  for (i = 0; i < limit; i++) {
+    rec = (int *)(*(int *)(0x2ee950 + i * 4) + 4);
+    size = rec[0];
+    if (size == -1) {
+      continue;
+    }
+    do {
+      csmemcpy(*cursor, (char *)base + rec[1], (size_t)size);
+      *cursor = (char *)*cursor + size;
+      rec += 3;
+      size = rec[0];
+    } while (size != -1);
+  }
 }
-#else
-#error "FUN_00093810: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00093880 (0x93880) — readable C lift. */

@@ -1868,85 +1868,36 @@ float FUN_001366b0(int object_handle, char use_raw_max)
 }
 
 
-/* FUN_00139810 (0x139810) — XBE naked draft (batch 64). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00139810(float *color __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_00139810 (0x139810) — readable C lift from XBE leaf. */
+void FUN_00139810(float *color, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fcomps 0x8(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00139810_1\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "jmp .LFUN_00139810_2\n\t"
-      ".LFUN_00139810_1:\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      ".LFUN_00139810_2:\n\t"
-      "fcomps (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00139810_3\n\t"
-      "flds (%%ecx)\n\t"
-      "jmp .LFUN_00139810_5\n\t"
-      ".LFUN_00139810_3:\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fcomps 0x8(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00139810_4\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "jmp .LFUN_00139810_5\n\t"
-      ".LFUN_00139810_4:\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      ".LFUN_00139810_5:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00139810_6\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .LFUN_00139810_7\n\t"
-      ".LFUN_00139810_6:\n\t"
-      "fcomps 0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00139810_8\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".LFUN_00139810_7:\n\t"
-      "fdiv %%st(1), %%st(0)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".LFUN_00139810_8:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "fstps (%%ecx)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "fstps 0x4(%%ecx)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "fstps 0x8(%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float one = *(float *)0x2533c8;
+  float m;
+  float t;
+  float factor;
+
+  /* max(color[0], color[1], color[2]) matching XBE fcom chain */
+  m = color[1];
+  if (color[1] <= color[2]) {
+    m = color[2];
+  }
+  if (m < color[0]) {
+    m = color[0];
+  }
+  t = (scale + one) * m;
+  if (t > one) {
+    factor = one / m;
+  } else if (t < scale) {
+    factor = scale / m;
+  } else {
+    factor = scale + one;
+  }
+  color[0] *= factor;
+  color[1] *= factor;
+  color[2] *= factor;
 }
-#else
-#error "FUN_00139810: clang naked draft required"
-#endif
+
+
 
 
 /* Call cluster_partition_iter_first on the object cluster partition at

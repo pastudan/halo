@@ -5431,8 +5431,9 @@
         },
         {
           "addr": "0x930b0",
-          "decl": "void cinematic_set_title_delayed(int a0, float a1);",
-          "ported": false
+          "decl": "void cinematic_set_title_delayed(int title_index, float delay_seconds);",
+          "ported": true,
+          "name": "cinematic_set_title_delayed"
         },
         {
           "addr": "0x93140",
@@ -5462,13 +5463,15 @@
         },
         {
           "addr": "0x93780",
-          "decl": "void FUN_00093780(int a, int *cursor, int c);",
-          "ported": false
+          "decl": "void FUN_00093780(void *base, void **cursor, unsigned char mode);",
+          "ported": false,
+          "name": "FUN_00093780"
         },
         {
           "addr": "0x93810",
-          "decl": "void FUN_00093810(void);",
-          "ported": false
+          "decl": "void FUN_00093810(void *base, void **cursor, unsigned char mode);",
+          "ported": false,
+          "name": "FUN_00093810"
         },
         {
           "addr": "0x93880",
@@ -16332,7 +16335,8 @@
           "ported": false,
           "reg_args": {
             "color": "ecx"
-          }
+          },
+          "name": "FUN_00139810"
         },
         {
           "addr": "0x1398b0",
