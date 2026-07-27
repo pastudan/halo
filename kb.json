@@ -22024,8 +22024,9 @@
         },
         {
           "addr": "0x12920",
-          "decl": "void action_avoid_perform(void);",
-          "ported": false
+          "decl": "char action_avoid_perform(int actor_handle);",
+          "ported": true,
+          "name": "action_avoid_perform"
         },
         {
           "addr": "0x129f0",

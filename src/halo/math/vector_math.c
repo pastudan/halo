@@ -1021,94 +1021,36 @@ char action_avoid_setup(void * a0, void * a1)
   }
 }
 
-/* action_avoid_perform (0x12920) — XBE naked draft (batch 267). */
-#if defined(__clang__)
-static void (*const b12920_chkstk)(void) = FUN_001d90e0;
-static void *(*const b12920_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b12920_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b12920_exitfn)(int) = system_exit;
-static void *(*const b12920_memset)(void *, int, unsigned int) = csmemset;
-static short (*const b12920_c27090)(int actor_handle, void *param_2, void *param_3, void *param_4, void *param_5, void *param_6) = FUN_00027090;
-static short (*const b12920_c272d0)(int actor_handle, short param_2, void *param_3, int param_4, unsigned int param_5, char param_6) = FUN_000272d0;
-
-__attribute__((naked, noinline))
-void action_avoid_perform(void)
+/* action_avoid_perform (0x12920) — readable C lift from XBE leaf. */
+char action_avoid_perform(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl $0x14740, %%eax\n\t"
-      "call *%[chkstk]\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x6(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Laction_avoid_perform_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x37\n\t"
-      "pushl $0x25339c\n\t"
-      "pushl $0x253380\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Laction_avoid_perform_1:\n\t"
-      "movb 0x4c(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Laction_avoid_perform_2\n\t"
-      "pushl $0x670\n\t"
-      "leal -0x6b4(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x14740(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x44(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x6b4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movw $6, -0x6b0(%%ebp)\n\t"
-      "call *%[c27090]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "leal -0x14740(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x44(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c272d0]\n\t"
-      "addl $0x3c, %%esp\n\t"
-      ".Laction_avoid_perform_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw %%ax, 0x280(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "sete %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [chkstk] "m"(b12920_chkstk), [dget] "m"(b12920_dget), [assert] "m"(b12920_assert), [exitfn] "m"(b12920_exitfn), [memset] "m"(b12920_memset), [c27090] "m"(b12920_c27090), [c272d0] "m"(b12920_c272d0)
-      : "memory");
+  void *actor;
+  char buf_a[0x670];
+  char buf_b[0x40];
+  static char big[0x14740];
+  int out0;
+  int out1;
+  short prep;
+  short (*prep_fn)(int, void *, void *, void *, void *, void *);
+  short (*finish_fn)(int, short, void *, int, void *, int);
+
+  actor = datum_get(*(data_t **)0x6325a4, actor_handle);
+  if (*((unsigned char *)actor + 6)) {
+    display_assert((const char *)0x253380, (const char *)0x25339c, 0x37, 1);
+    system_exit(-1);
+  }
+  if (*((unsigned char *)actor + 0x4c)) {
+    csmemset(buf_a, 0, 0x670);
+    *(short *)(buf_a + 4) = 6;
+    prep_fn = (short (*)(int, void *, void *, void *, void *, void *))FUN_00027090;
+    finish_fn =
+        (short (*)(int, short, void *, int, void *, int))FUN_000272d0;
+    prep = prep_fn(actor_handle, buf_a, buf_b, &out1, big, &out0);
+    finish_fn(actor_handle, prep, buf_b, out1, big, out0);
+  }
+  return (char)(*(short *)((char *)actor + 0x280) == 0);
 }
-#else
-#error "action_avoid_perform: clang naked draft required"
-#endif
+
 
 
 /* FUN_000129f0 (0x129f0) — readable C lift. */
