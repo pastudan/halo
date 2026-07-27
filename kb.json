@@ -38780,7 +38780,8 @@
         {
           "addr": "0x1609a0",
           "decl": "void _rasterizer_dynamic_lit_geometry_draw(void);",
-          "ported": false
+          "ported": true,
+          "name": "_rasterizer_dynamic_lit_geometry_draw"
         },
         {
           "addr": "0x1609b0",
