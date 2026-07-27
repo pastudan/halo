@@ -1340,61 +1340,34 @@ void FUN_0017da40(int a0, int a1, float a2, float a3, float a4)
 
 
 
-/* FUN_0017dab0 (0x17dab0) — XBE naked draft (batch 318). */
-#if defined(__clang__)
-static int (*const b17dab0_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-void FUN_0017dab0(int a0 __attribute__((unused)), float a1 __attribute__((unused)), float a2 __attribute__((unused)), float a3 __attribute__((unused)), int a4 __attribute__((unused)), float a5 __attribute__((unused)))
+/* FUN_0017dab0 (0x17dab0) — readable C lift. */
+void FUN_0017dab0(int a0, float a1, float a2, float a3, int a4, float a5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .LFUN_0017dab0_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movb %%bl, 0x23(%%eax)\n\t"
-      "movw %%bx, 0x24(%%eax)\n\t"
-      "movl %%ebx, 0x28(%%eax)\n\t"
-      "movl %%ebx, 0x2c(%%eax)\n\t"
-      "movl %%ebx, 0x30(%%eax)\n\t"
-      "movl %%ebx, 0x34(%%eax)\n\t"
-      "movl %%ecx, 0x4c(%%eax)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0x50(%%eax)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x54(%%eax)\n\t"
-      "movl %%edx, 0x58(%%eax)\n\t"
-      "call *%[gtime]\n\t"
-      "movb 0x18(%%ebp), %%cl\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl 0x47e4d4, %%eax\n\t"
-      "fmuls 0x2546a4\n\t"
-      "fld %%st(0)\n\t"
-      "fstps 0x5c(%%eax)\n\t"
-      "fadds 0x1c(%%ebp)\n\t"
-      "fstps 0x60(%%eax)\n\t"
-      "movb %%cl, 0x20(%%eax)\n\t"
-      "movb %%bl, 0x21(%%eax)\n\t"
-      "movb %%bl, 0x22(%%eax)\n\t"
-      ".LFUN_0017dab0_1:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [gtime] "m"(b17dab0_gtime)
-      : "memory");
+  unsigned char *p;
+  float t;
+
+  p = *(unsigned char **)0x47e4d4;
+  if (!p)
+    return;
+  p[0x23] = 0;
+  *(unsigned short *)(p + 0x24) = 0;
+  *(unsigned int *)(p + 0x28) = 0;
+  *(unsigned int *)(p + 0x2c) = 0;
+  *(unsigned int *)(p + 0x30) = 0;
+  *(unsigned int *)(p + 0x34) = 0;
+  *(int *)(p + 0x4c) = a0;
+  *(float *)(p + 0x50) = a1;
+  *(float *)(p + 0x54) = a2;
+  *(float *)(p + 0x58) = a3;
+  t = (float)game_time_get() * *(float *)0x2546a4;
+  p = *(unsigned char **)0x47e4d4;
+  *(float *)(p + 0x5c) = t;
+  *(float *)(p + 0x60) = t + a5;
+  p[0x20] = (unsigned char)a4;
+  p[0x21] = 0;
+  p[0x22] = 0;
 }
-#else
-#error "FUN_0017dab0: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017db20 (0x17db20) — readable C lift. */
@@ -1601,117 +1574,50 @@ float FUN_0017dee0(void)
   return v;
 }
 
-/* FUN_0017df10 (0x17df10) — XBE naked draft (batch 365). */
-#if defined(__clang__)
-static void (*const b17df10_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
-void FUN_0017df10(void)
+/* FUN_0017df10 (0x17df10) — readable C lift. */
+int FUN_0017df10(int *counter)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "cmpl $0x2000, %%eax\n\t"
-      "jge .LFUN_0017df10_1\n\t"
-      "cmpl $0x2000, 0x47e4f4\n\t"
-      "jge .LFUN_0017df10_1\n\t"
-      "leal 0x1(%%eax), %%edx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x47e4f4, %%edx\n\t"
-      "incl %%edx\n\t"
-      "cmpw $2, 0x3256ba\n\t"
-      "movl %%edx, 0x47e4f4\n\t"
-      "jne .LFUN_0017df10_3\n\t"
-      "incl 0x5a5540\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017df10_1:\n\t"
-      "movb 0x47e4f8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0017df10_2\n\t"
-      "pushl $0x2af460\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, 0x47e4f8\n\t"
-      ".LFUN_0017df10_2:\n\t"
-      "movl %%esi, %%eax\n\t"
-      ".LFUN_0017df10_3:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8f390] "m"(b17df10_c8f390)
-      : "memory");
+  int v;
+
+  v = *counter;
+  if (v >= 0x2000 || *(int *)0x47e4f4 >= 0x2000) {
+    if (!*(unsigned char *)0x47e4f8) {
+      error(2, (const char *)0x2af460);
+      *(unsigned char *)0x47e4f8 = 1;
+    }
+    return -1;
+  }
+  *counter = v + 1;
+  *(int *)0x47e4f4 = *(int *)0x47e4f4 + 1;
+  if (*(short *)0x3256ba == 2)
+    *(int *)0x5a5540 = *(int *)0x5a5540 + 1;
+  return v;
 }
-#else
-#error "FUN_0017df10: clang naked draft required"
-#endif
 
 
-/* FUN_0017df80 (0x17df80) — XBE naked draft (batch 384). */
-#if defined(__clang__)
-static void * (*const b17df80_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
-static void (*const b17df80_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
 
-__attribute__((naked, noinline))
-void FUN_0017df80(void)
+/* FUN_0017df80 (0x17df80) — readable C lift. */
+char FUN_0017df80(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x78000\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c8ee60]\n\t"
-      "pushl $0x61\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x78000\n\t"
-      "movl %%eax, 0x47e4dc\n\t"
-      "call *%[c8ee60]\n\t"
-      "pushl $0x62\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x78000\n\t"
-      "movl %%eax, 0x47e4e4\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl 0x47e4dc, %%ecx\n\t"
-      "addl $0x30, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, 0x47e4ec\n\t"
-      "je .LFUN_0017df80_1\n\t"
-      "movl 0x47e4e4, %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0017df80_1\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017df80_1\n\t"
-      "movb %%bl, 0x47e4d8\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_0017df80_1:\n\t"
-      "pushl $0x2af48c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "movb %%al, 0x47e4d8\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b17df80_c8ee60), [c8f390] "m"(b17df80_c8f390)
-      : "memory");
+  void *a;
+  void *b;
+  void *c;
+
+  a = debug_malloc(0x78000, 0, (const char *)0x2af4b8, 0x60);
+  *(void **)0x47e4dc = a;
+  b = debug_malloc(0x78000, 0, (const char *)0x2af4b8, 0x61);
+  *(void **)0x47e4e4 = b;
+  c = debug_malloc(0x78000, 0, (const char *)0x2af4b8, 0x62);
+  *(void **)0x47e4ec = c;
+  if (a && b && c) {
+    *(unsigned char *)0x47e4d8 = 1;
+    return 1;
+  }
+  error(2, (const char *)0x2af48c);
+  *(unsigned char *)0x47e4d8 = 0;
+  return 0;
 }
-#else
-#error "FUN_0017df80: clang naked draft required"
-#endif
+
 
 
 /* FUN_0017e010 (0x17e010) — readable C lift. */

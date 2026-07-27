@@ -31354,7 +31354,7 @@
         {
           "addr": "0x17dab0",
           "decl": "void FUN_0017dab0(int a0, float a1, float a2, float a3, int a4, float a5);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17db20",
@@ -31389,13 +31389,13 @@
         },
         {
           "addr": "0x17df10",
-          "decl": "void FUN_0017df10(void);",
-          "ported": false
+          "decl": "int FUN_0017df10(int *counter);",
+          "ported": true
         },
         {
           "addr": "0x17df80",
-          "decl": "void FUN_0017df80(void);",
-          "ported": false
+          "decl": "char FUN_0017df80(void);",
+          "ported": true
         },
         {
           "addr": "0x17e010",
