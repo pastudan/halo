@@ -735,74 +735,36 @@ int16_t FUN_00124730(int model_ref __attribute__((unused)), const char *marker_n
 #endif
 
 
-/* FUN_00124900 (0x124900) — XBE naked draft (batch 138). */
-#if defined(__clang__)
-static void *(*const b124900_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void FUN_00124900(void *model __attribute__((unused)))
+/* FUN_00124900 (0x124900) — readable C lift. */
+void FUN_00124900(void *model)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movl 0xd0(%%ebx), %%ecx\n\t"
-      "addl $0xd0, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jle .LFUN_00124900_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "nop\n\t"
-      ".LFUN_00124900_1:\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "leal 0x24(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00124900_3\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00124900_2:\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00124900_2\n\t"
-      ".LFUN_00124900_3:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00124900_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00124900_4:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b124900_elem)
-      : "memory");
+  void *block;
+  short i;
+  short j;
+  void *elem;
+  void *inner;
+
+  block = (char *)model + 0xd0;
+  i = 0;
+  if (*(int *)block <= 0)
+    return;
+  for (;;) {
+    elem = tag_block_get_element(block, (int)i, 0x30);
+    inner = (char *)elem + 0x24;
+    j = 0;
+    if (*(int *)inner > 0) {
+      for (;;) {
+        tag_block_get_element(inner, (int)j, 0x68);
+        j++;
+        if ((int)j >= *(int *)inner)
+          break;
+      }
+    }
+    i++;
+    if ((int)i >= *(int *)block)
+      break;
+  }
 }
-#else
-#error "FUN_00124900: clang naked draft required"
-#endif
 
 
 /* network_game_client_keep_alive (0x124a10) — readable C lift. */
@@ -1059,64 +1021,24 @@ char network_game_client_address_matches_server(void *client __attribute__((unus
 #endif
 
 
-/* network_game_client_game_out_of_sync (0x124e20) — XBE naked draft (batch 157). */
-#if defined(__clang__)
-static void (*const b124e20_c12b650)(const char *fmt, ...) = network_game_log;
-static __int16 (*const b124e20_cba4c0)(__int16 a1) = local_player_get_next;
-static void (*const b124e20_ce8910)(int16_t error_handle, int local_player_index, char is_modal, char pause_game) = ui_widget_display_error;
-
-__attribute__((naked, noinline))
-void network_game_client_game_out_of_sync(void *client __attribute__((unused)))
+/* network_game_client_game_out_of_sync (0x124e20) — readable C lift. */
+void network_game_client_game_out_of_sync(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movb 0x46e8b8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lnetwork_game_client_game_out_of_sync_4\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2919b4\n\t"
-      "call *%[c12b650]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movb 0xcac(%%edi), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lnetwork_game_client_game_out_of_sync_3\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "call *%[cba4c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lnetwork_game_client_game_out_of_sync_2\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lnetwork_game_client_game_out_of_sync_1:\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $8\n\t"
-      "call *%[ce8910]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba4c0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "jne .Lnetwork_game_client_game_out_of_sync_1\n\t"
-      ".Lnetwork_game_client_game_out_of_sync_2:\n\t"
-      "popl %%esi\n\t"
-      ".Lnetwork_game_client_game_out_of_sync_3:\n\t"
-      "movb $1, 0xcac(%%edi)\n\t"
-      "popl %%edi\n\t"
-      ".Lnetwork_game_client_game_out_of_sync_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c12b650] "m"(b124e20_c12b650), [cba4c0] "m"(b124e20_cba4c0), [ce8910] "m"(b124e20_ce8910)
-      : "memory");
+  extern char DAT_002919b4[];
+  __int16 player;
+
+  if (*(unsigned char *)0x46e8b8 != 0)
+    return;
+  network_game_log(DAT_002919b4);
+  if (*((unsigned char *)client + 0xcac) == 0) {
+    player = local_player_get_next(-1);
+    while (player != -1) {
+      ui_widget_display_error(8, player, 1, 0);
+      player = local_player_get_next(player);
+    }
+  }
+  *((unsigned char *)client + 0xcac) = 1;
 }
-#else
-#error "network_game_client_game_out_of_sync: clang naked draft required"
-#endif
 
 
 /* network_game_client_ponged (0x124e90) — XBE naked draft (batch 141). */

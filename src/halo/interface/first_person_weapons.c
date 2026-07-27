@@ -361,6 +361,8 @@ void FUN_000dce00(int16_t local_player_index)
 /* first_person_weapon_get_local_index (0xdd110) — readable C lift. */
 int first_person_weapon_get_local_index(int object_handle)
 {
+  extern char DAT_00266fc0[];
+  extern char DAT_00282294[];
   int i;
   char *base;
   char *fp;
@@ -368,7 +370,7 @@ int first_person_weapon_get_local_index(int object_handle)
 
   for (i = 0; i < 4; i++) {
     if ((int16_t)i < 0 || (int16_t)i >= 4) {
-      display_assert((const char *)0x266fc0, (const char *)0x282294, 0x599, 1);
+      display_assert(DAT_00266fc0, DAT_00282294, 0x599, 1);
       system_exit(-1);
     }
     base = *(char **)0x46bea8;
