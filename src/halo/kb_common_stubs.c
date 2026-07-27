@@ -32,76 +32,7 @@ void FUN_00067710(unsigned short tag /*@<ax>*/, unsigned int value /*@<ecx>*/,
   *((unsigned int *)out + 2) = masked;
 }
 
-/* FUN_00067760 (0x67760) — XBE naked draft (batch 346). */
-#if defined(__clang__)
-static void (*const b67760_c1e24d2)(void) = __lseek;
-static void (*const b67760_c1df419)(void) = __write;
-static void (*const b67760_c66380)(void) = TIFFDefaultDirectory;
-static void (*const b67760_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-
-__attribute__((naked, noinline))
-int FUN_00067760(void *data __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x3340b0, %%eax\n\t"
-      "movzwl 0x2(%%edi), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      "movswl 0x4(%%ebx), %%edx\n\t"
-      "movl 0x2ca024(,%%ecx,4), %%esi\n\t"
-      "imull 0x4(%%edi), %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1e24d2]\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jne .LFUN_00067760_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl 0x4(%%ebx), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1df419]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "jne .LFUN_00067760_1\n\t"
-      "movl 0x3340b0, %%eax\n\t"
-      "incl %%esi\n\t"
-      "andl $0xfffffffe, %%esi\n\t"
-      "addl %%esi, %%eax\n\t"
-      "movl %%eax, 0x3340b0\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00067760_1:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw (%%edi), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c66380]\n\t"
-      "movl 0x10(%%eax), %%eax\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25fe08\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1e24d2] "m"(b67760_c1e24d2), [c1df419] "m"(b67760_c1df419), [c66380] "m"(b67760_c66380), [c68a30] "m"(b67760_c68a30)
-      : "memory");
-}
-#else
-#error "FUN_00067760: clang naked draft required"
-#endif
-
+/* FUN_00067760 (0x67760) — implemented in bitmaps/libtiff/tif_dirwrite.c */
 
 /* FUN_000677f0 (0x677f0) — XBE naked draft (batch 342). */
 #if defined(__clang__)
