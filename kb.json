@@ -28096,7 +28096,8 @@
         {
           "addr": "0xf2560",
           "decl": "void FUN_000f2560(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2560"
         },
         {
           "addr": "0xf2690",
@@ -28106,7 +28107,8 @@
         {
           "addr": "0xf2720",
           "decl": "void FUN_000f2720(void *widget);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_000f2720"
         },
         {
           "addr": "0xf2850",

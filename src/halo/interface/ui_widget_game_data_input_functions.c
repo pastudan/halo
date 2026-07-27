@@ -5799,140 +5799,62 @@ void mutliplayer_settings_select_list_update_displayed_items(void *widget)
   *(int16_t *)((char *)extra + 0x50) = idx;
 }
 
-/* FUN_000f2560 (0xf2560) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static void (*const bf2560_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf2560_exitfn)(int) = (void *)system_exit;
-static void *(*const bf2560_tag)(int, int) = (void *)tag_get;
-
-__attribute__((naked, noinline))
+/* FUN_000f2560 (0xf2560) — readable C lift from XBE leaf. */
 void FUN_000f2560(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $3, 0xe(%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_000f2560_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8f5\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x2890bc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2560_1:\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2560_2\n\t"
-      "cmpw $1, 0xe(%%eax)\n\t"
-      "je .LFUN_000f2560_3\n\t"
-      ".LFUN_000f2560_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8f8\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x289070\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2560_3:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jg .LFUN_000f2560_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8fe\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x289034\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2560_4:\n\t"
-      "movl 0x38(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_000f2560_11\n\t"
-      "movl 0x34(%%esi), %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000f2560_10\n\t"
-      "nop\n\t"
-      ".LFUN_000f2560_5:\n\t"
-      "movl 0x34(%%edi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000f2560_7\n\t"
-      ".LFUN_000f2560_6:\n\t"
-      "cmpw $2, 0xe(%%esi)\n\t"
-      "je .LFUN_000f2560_8\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000f2560_6\n\t"
-      ".LFUN_000f2560_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x90c\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288fd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2560_8:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpl 0x38(%%ecx), %%edi\n\t"
-      "je .LFUN_000f2560_9\n\t"
-      "movzwl 0x44(%%esi), %%edx\n\t"
-      "movl 0x2c(%%edi), %%edi\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_000f2560_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x40(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2560_9:\n\t"
-      "movswl 0x3c(%%esi), %%ecx\n\t"
-      "addl %%ecx, %%ebx\n\t"
-      ".LFUN_000f2560_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x40(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2560_11:\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%dx, 0x40(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf2560_assert), [exitfn] "m"(bf2560_exitfn), [tag] "m"(bf2560_tag)
-      : "memory");
-}
-#else
-#error "FUN_000f2560: clang naked draft required"
-#endif
+  void *parent;
+  void *tag;
+  void *text_widget;
+  void *child;
+  void *sub;
+  int sum;
 
+  if (*(short *)((char *)widget + 0xe) != 3) {
+    display_assert((const char *)0x2890bc, (const char *)0x288938, 0x8f5, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x48);
+  if (parent == 0 || *(short *)((char *)parent + 0xe) != 1) {
+    display_assert((const char *)0x289070, (const char *)0x288938, 0x8f8, 1);
+    system_exit(-1);
+  }
+  tag = tag_get(0x44654c61, *(int *)widget);
+  if (*(int *)((char *)tag + 0x3e0) <= 0) {
+    display_assert((const char *)0x289034, (const char *)0x288938, 0x8fe, 1);
+    system_exit(-1);
+  }
+  text_widget = parent;
+  if (*(void **)((char *)widget + 0x38) == 0) {
+    *(short *)((char *)text_widget + 0x40) = (short)(int)widget;
+    return;
+  }
+  child = *(void **)((char *)widget + 0x34);
+  sum = 0;
+  if (child == 0) {
+    *(short *)((char *)text_widget + 0x40) = 0;
+    return;
+  }
+  for (;;) {
+    sub = *(void **)((char *)child + 0x34);
+    while (sub != 0 && *(short *)((char *)sub + 0xe) != 2)
+      sub = *(void **)((char *)sub + 0x2c);
+    if (sub == 0) {
+      display_assert((const char *)0x288fd8, (const char *)0x288938, 0x90c, 1);
+      system_exit(-1);
+    }
+    if (child == *(void **)((char *)widget + 0x38)) {
+      sum += (int)*(short *)((char *)sub + 0x3c);
+      *(short *)((char *)text_widget + 0x40) = (short)sum;
+      return;
+    }
+    sum += (int)*(unsigned short *)((char *)sub + 0x44);
+    child = *(void **)((char *)child + 0x2c);
+    if (child == 0) {
+      *(short *)((char *)text_widget + 0x40) = (short)sum;
+      return;
+    }
+  }
+}
 
 /* FUN_000f2690 (0xf2690) — readable C lift. */
 void FUN_000f2690(void *widget)
@@ -5959,140 +5881,62 @@ void FUN_000f2690(void *widget)
   *((unsigned short *)buf + len) = 0;
 }
 
-/* FUN_000f2720 (0xf2720) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static void (*const bf2720_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf2720_exitfn)(int) = (void *)system_exit;
-static void *(*const bf2720_tag)(int, int) = (void *)tag_get;
-
-__attribute__((naked, noinline))
+/* FUN_000f2720 (0xf2720) — readable C lift from XBE leaf. */
 void FUN_000f2720(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $3, 0xe(%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_000f2720_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x980\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x28919c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2720_1:\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f2720_2\n\t"
-      "cmpw $0, 0xe(%%eax)\n\t"
-      "je .LFUN_000f2720_3\n\t"
-      ".LFUN_000f2720_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x983\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x289150\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2720_3:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x3e0(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jg .LFUN_000f2720_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x988\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x28911c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2720_4:\n\t"
-      "movl 0x38(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl 0x48(%%esi), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_000f2720_11\n\t"
-      "movl 0x34(%%esi), %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000f2720_10\n\t"
-      "nop\n\t"
-      ".LFUN_000f2720_5:\n\t"
-      "movl 0x34(%%edi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000f2720_7\n\t"
-      ".LFUN_000f2720_6:\n\t"
-      "cmpw $2, 0xe(%%esi)\n\t"
-      "je .LFUN_000f2720_8\n\t"
-      "movl 0x2c(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000f2720_6\n\t"
-      ".LFUN_000f2720_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x996\n\t"
-      "pushl $0x288938\n\t"
-      "pushl $0x288fd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f2720_8:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpl 0x38(%%ecx), %%edi\n\t"
-      "je .LFUN_000f2720_9\n\t"
-      "movzwl 0x44(%%esi), %%edx\n\t"
-      "movl 0x2c(%%edi), %%edi\n\t"
-      "addl %%edx, %%ebx\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_000f2720_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x50(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2720_9:\n\t"
-      "movswl 0x3c(%%esi), %%ecx\n\t"
-      "addl %%ecx, %%ebx\n\t"
-      ".LFUN_000f2720_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x50(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f2720_11:\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%dx, 0x50(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf2720_assert), [exitfn] "m"(bf2720_exitfn), [tag] "m"(bf2720_tag)
-      : "memory");
-}
-#else
-#error "FUN_000f2720: clang naked draft required"
-#endif
+  void *parent;
+  void *tag;
+  void *text_widget;
+  void *child;
+  void *sub;
+  int sum;
 
+  if (*(short *)((char *)widget + 0xe) != 3) {
+    display_assert((const char *)0x28919c, (const char *)0x288938, 0x980, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x48);
+  if (parent == 0 || *(short *)((char *)parent + 0xe) != 0) {
+    display_assert((const char *)0x289150, (const char *)0x288938, 0x983, 1);
+    system_exit(-1);
+  }
+  tag = tag_get(0x44654c61, *(int *)widget);
+  if (*(int *)((char *)tag + 0x3e0) <= 0) {
+    display_assert((const char *)0x28911c, (const char *)0x288938, 0x988, 1);
+    system_exit(-1);
+  }
+  text_widget = parent;
+  if (*(void **)((char *)widget + 0x38) == 0) {
+    *(short *)((char *)text_widget + 0x50) = (short)(int)widget;
+    return;
+  }
+  child = *(void **)((char *)widget + 0x34);
+  sum = 0;
+  if (child == 0) {
+    *(short *)((char *)text_widget + 0x50) = 0;
+    return;
+  }
+  for (;;) {
+    sub = *(void **)((char *)child + 0x34);
+    while (sub != 0 && *(short *)((char *)sub + 0xe) != 2)
+      sub = *(void **)((char *)sub + 0x2c);
+    if (sub == 0) {
+      display_assert((const char *)0x288fd8, (const char *)0x288938, 0x996, 1);
+      system_exit(-1);
+    }
+    if (child == *(void **)((char *)widget + 0x38)) {
+      sum += (int)*(short *)((char *)sub + 0x3c);
+      *(short *)((char *)text_widget + 0x50) = (short)sum;
+      return;
+    }
+    sum += (int)*(unsigned short *)((char *)sub + 0x44);
+    child = *(void **)((char *)child + 0x2c);
+    if (child == 0) {
+      *(short *)((char *)text_widget + 0x50) = (short)sum;
+      return;
+    }
+  }
+}
 
 /* FUN_000f2850 (0xf2850) — readable C lift from XBE leaf. */
 void FUN_000f2850(void *widget)
