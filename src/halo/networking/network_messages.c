@@ -3160,47 +3160,15 @@ int FUN_0011c310(const char *name __attribute__((unused)), int size __attribute_
 #endif
 
 
-/* FUN_0011c430 (0x11c430) — XBE naked draft (batch 97). */
-#if defined(__clang__)
-static void (*const b11c430_c11c290)(int cache) = FUN_0011c290;
-static void (*const b11c430_c8ef70)(void *ptr, const char *file, int line) = debug_free;
-
-__attribute__((naked, noinline))
-void FUN_0011c430(int cache __attribute__((unused)))
+/* FUN_0011c430 (0x11c430) — readable C lift. */
+extern char DAT_0028f768[];
+void FUN_0011c430(void *cache)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c11c290]\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0011c430_1\n\t"
-      "movl 0x24(%%esi), %%eax\n\t"
-      "pushl $0x8c\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0011c430_1:\n\t"
-      "pushl $0x8d\n\t"
-      "pushl $0x28f768\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11c290] "m"(b11c430_c11c290), [c8ef70] "m"(b11c430_c8ef70)
-      : "memory");
+  FUN_0011c290((int)cache);
+  if (*((char *)cache + 0x28) != 0)
+    debug_free(*(void **)((char *)cache + 0x24), DAT_0028f768, 0x8c);
+  debug_free(cache, DAT_0028f768, 0x8d);
 }
-#else
-#error "FUN_0011c430: clang naked draft required"
-#endif
-
 
 /* FUN_0011c480 (0x11c480) — XBE naked draft (batch 93). */
 #if defined(__clang__)

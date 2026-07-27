@@ -15512,9 +15512,9 @@
         },
         {
           "addr": "0x11c430",
-          "decl": "void FUN_0011c430(int cache);",
+          "decl": "void FUN_0011c430(void *cache);",
           "name": "FUN_0011c430",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11c480",
