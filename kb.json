@@ -626,7 +626,7 @@
         {
           "addr": "0x16de80",
           "decl": "void FUN_0016de80(int a0, int a1, int a2, int a3, int a4, int a5);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x16dee0",
