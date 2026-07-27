@@ -20164,8 +20164,7 @@
         {
           "addr": "0x91ba0",
           "decl": "void FUN_00091ba0(void);",
-          "ported": true,
-          "name": "FUN_00091ba0"
+          "ported": true
         },
         {
           "addr": "0x91c10",
@@ -23825,9 +23824,8 @@
         },
         {
           "addr": "0x1c2890",
-          "decl": "char saved_game_file_close(void *info, int packed);",
-          "ported": true,
-          "name": "saved_game_file_close"
+          "decl": "void saved_game_file_close(void);",
+          "ported": true
         },
         {
           "addr": "0x1c29a0",
@@ -24001,7 +23999,7 @@
         {
           "addr": "0x1c4600",
           "decl": "wchar_t *saved_game_file_get_display_name(int file_index);",
-          "ported": false,
+          "ported": true,
           "name": "saved_game_file_get_display_name"
         },
         {
@@ -33190,12 +33188,12 @@
         },
         {
           "addr": "0x1d3254",
-          "decl": "void FUN_001d3254(void);",
+          "decl": "int __stdcall FUN_001d3254(char *path, void *find_data);",
           "ported": false
         },
         {
           "addr": "0x1d335b",
-          "decl": "void FUN_001d335b(void);",
+          "decl": "int __stdcall FUN_001d335b(int handle, void *find_data);",
           "ported": false
         },
         {
@@ -33260,7 +33258,7 @@
         },
         {
           "addr": "0x1d3739",
-          "decl": "void FUN_001d3739(void);",
+          "decl": "int __stdcall FUN_001d3739(char *path, void *avail, void *total, void *free_bytes);",
           "ported": false
         },
         {
@@ -33315,17 +33313,17 @@
         },
         {
           "addr": "0x1d426b",
-          "decl": "void XCalculateSignatureBegin(void);",
+          "decl": "int __stdcall XCalculateSignatureBegin(int flags);",
           "ported": false
         },
         {
           "addr": "0x1d42a9",
-          "decl": "void FUN_001d42a9(void);",
+          "decl": "int __stdcall FUN_001d42a9(int handle, void *buffer, unsigned int size);",
           "ported": false
         },
         {
           "addr": "0x1d42c3",
-          "decl": "void FUN_001d42c3(void);",
+          "decl": "int __stdcall FUN_001d42c3(int handle, void *out_sig);",
           "ported": false
         },
         {

@@ -1436,10 +1436,12 @@ int saved_game_perform_file_system_checks(void)
   char *path;
   int handle;
   unsigned int count;
-  int (*get_free)(char *, void *, void *, void *) =
-      (int (*)(char *, void *, void *, void *))(void *)FUN_001d3739;
-  int (*find_first)(char *, void *) = (int (*)(char *, void *))(void *)FUN_001d3254;
-  int (*find_next)(int, void *) = (int (*)(int, void *))(void *)FUN_001d335b;
+  int __attribute__((stdcall)) (*get_free)(char *, void *, void *, void *) =
+      (int __attribute__((stdcall)) (*)(char *, void *, void *, void *))(void *)FUN_001d3739;
+  int __attribute__((stdcall)) (*find_first)(char *, void *) =
+      (int __attribute__((stdcall)) (*)(char *, void *))(void *)FUN_001d3254;
+  int __attribute__((stdcall)) (*find_next)(int, void *) =
+      (int __attribute__((stdcall)) (*)(int, void *))(void *)FUN_001d335b;
 
   path = wide_to_ascii((const wchar_t *)*(void **)0x32eb94, ascii, 8);
   if (get_free(path, avail, total, free_bytes)) {
@@ -1836,10 +1838,12 @@ bool saved_game_file_retrieve_last_used_multiplayer_map(char *out_name __attribu
 void saved_game_file_generate_checksum(void *buffer, unsigned short size, void *out_sig)
 {
   int handle;
-  int (*sig_begin)(int) = (int (*)(int))(void *)XCalculateSignatureBegin;
-  int (*sig_update)(int, void *, unsigned int) =
-      (int (*)(int, void *, unsigned int))(void *)FUN_001d42a9;
-  int (*sig_end)(int, void *) = (int (*)(int, void *))(void *)FUN_001d42c3;
+  int __attribute__((stdcall)) (*sig_begin)(int) =
+      (int __attribute__((stdcall)) (*)(int))(void *)XCalculateSignatureBegin;
+  int __attribute__((stdcall)) (*sig_update)(int, void *, unsigned int) =
+      (int __attribute__((stdcall)) (*)(int, void *, unsigned int))(void *)FUN_001d42a9;
+  int __attribute__((stdcall)) (*sig_end)(int, void *) =
+      (int __attribute__((stdcall)) (*)(int, void *))(void *)FUN_001d42c3;
 
   if (buffer == 0) {
     display_assert((const char *)0x267900, (const char *)0x2ba8e8, 0x4eb, 1);
@@ -3442,8 +3446,6 @@ wchar_t *saved_game_file_get_display_name(int file_index)
   unsigned int idx;
   unsigned char record[0x208];
   char ok;
-  void (*load_rec)(void) = (void (*)(void))FUN_001c3e40;
-
   slot = (unsigned int)((file_index >> 8) & 0xff);
   idx = (unsigned int)((file_index >> 16) & 0xfff);
   if (slot != 0) {
@@ -3457,10 +3459,10 @@ wchar_t *saved_game_file_get_display_name(int file_index)
   }
   __asm__ volatile(
       "pushl %[buf]\n\t"
-      "call *%[fn]\n\t"
+      "call FUN_001c3e40\n\t"
       "addl $4, %%esp\n\t"
       : "=a"(ok)
-      : "a"(slot), "D"(idx), [buf] "r"(record), [fn] "m"(load_rec)
+      : "a"(slot), "D"(idx), [buf] "r"(record)
       : "ecx", "edx", "memory", "cc");
   if (!ok)
     return (wchar_t *)0x4eaab0;
