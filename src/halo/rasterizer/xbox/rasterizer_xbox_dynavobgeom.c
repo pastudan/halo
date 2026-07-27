@@ -1901,17 +1901,18 @@ void FUN_0015f540(int arg1 __attribute__((unused)), int arg2 __attribute__((unus
 
 
 
+
 /* FUN_0015f5e0 (0x15f5e0) — readable C lift. */
 void FUN_0015f5e0(void)
 {
-  void (*const f)(int, int, int) = (void (*)(int, int, int))D3DDevice_SetVertexData2f;
-  /* cdecl args at [esp+4..] when entered without prologue — use frame. */
   int a, b, c;
+  void (*f)(int, int, int) = (void (*)(int, int, int))(void *)D3DDevice_SetVertexData2f;
   __asm__ volatile("movl 0x8(%%ebp), %0" : "=r"(a));
   __asm__ volatile("movl 0xc(%%ebp), %0" : "=r"(b));
   __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
   f(a, b, c);
 }
+
 
 
 
@@ -12647,6 +12648,7 @@ void FUN_00168bc0(void)
 
 
 
+
 /* FUN_00168be0 (0x168be0) — readable C lift. */
 void FUN_00168be0(void)
 {
@@ -12657,6 +12659,7 @@ void FUN_00168be0(void)
   __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
   f(a, b, c, 0, 0);
 }
+
 
 
 
@@ -13248,6 +13251,7 @@ void FUN_00169650(void)
   __asm__ volatile("movl 0x10(%%ebp), %0" : "=r"(c));
   f(a, b, c);
 }
+
 
 
 
