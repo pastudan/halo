@@ -8078,7 +8078,7 @@
         {
           "addr": "0x19adf0",
           "decl": "bool file_get_size(file_ref_t *info, unsigned int *size_out);",
-          "ported": false,
+          "ported": true,
           "name": "file_get_size"
         },
         {
