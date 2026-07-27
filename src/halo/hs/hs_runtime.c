@@ -4138,105 +4138,34 @@ char FUN_000c9840(int list_handle, int16_t scenario_index, float distance)
   return 0;
 }
 
-/* FUN_000c9a50 (0xc9a50) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static void (*const bc9a50_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const bc9a50_c119810)(data_iter_t *iterator) = data_iterator_next;
-static int (*const bc9a50_c13d7f0)(int object_handle) = object_get_root_parent;
-static void (*const bc9a50_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
-static void (*const bc9a50_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
-static void * (*const bc9a50_c13d730)(void *iter) = object_iterator_next;
-static char (*const bc9a50_cc98e0)(int object_handle) = (void *)FUN_000c98e0;
-static void (*const bc9a50_odel)(int) = object_delete;
-
-__attribute__((naked, noinline))
+/* FUN_000c9a50 (0xc9a50) — readable C lift: exit seats / delete orphan objects. */
 void FUN_000c9a50(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c9a50_3\n\t"
-      "pushl %%esi\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000c9a50_1:\n\t"
-      "movl 0x34(%%eax), %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "je .LFUN_000c9a50_2\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c13d7f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "je .LFUN_000c9a50_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1b2dd0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000c9a50_2:\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000c9a50_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000c9a50_3:\n\t"
-      "pushl $0\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d6f0]\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000c9a50_6\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000c9a50_4:\n\t"
-      "cmpl %%edi, 0xcc(%%eax)\n\t"
-      "jne .LFUN_000c9a50_5\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cc98e0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000c9a50_5\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[odel]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000c9a50_5:\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000c9a50_4\n\t"
-      ".LFUN_000c9a50_6:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1197b0] "m"(bc9a50_c1197b0), [c119810] "m"(bc9a50_c119810), [c13d7f0] "m"(bc9a50_c13d7f0), [c1b2dd0] "m"(bc9a50_c1b2dd0), [c13d6f0] "m"(bc9a50_c13d6f0), [c13d730] "m"(bc9a50_c13d730), [cc98e0] "m"(bc9a50_cc98e0), [odel] "m"(bc9a50_odel)
-      : "memory");
+  char iter[0x10];
+  char *player;
+  char *obj;
+  int unit;
+
+  data_iterator_new((data_iter_t *)iter, *(data_t **)0x5aa6d4);
+  player = (char *)data_iterator_next((data_iter_t *)iter);
+  while (player) {
+    unit = *(int *)(player + 0x34);
+    if (unit != -1) {
+      if (object_get_root_parent(unit) != unit)
+        unit_exit_seat_end(unit);
+    }
+    player = (char *)data_iterator_next((data_iter_t *)iter);
+  }
+  object_iterator_new(iter, -1, 0);
+  obj = (char *)object_iterator_next(iter);
+  while (obj) {
+    if (*(int *)(obj + 0xcc) == -1) {
+      if (!FUN_000c98e0(*(int *)(iter + 8)))
+        object_delete(*(int *)(iter + 8));
+    }
+    obj = (char *)object_iterator_next(iter);
+  }
 }
-#else
-#error "FUN_000c9a50: clang naked draft required"
-#endif
 
 
 /* FUN_000c9bd0 (0xc9bd0) — readable C lift. */

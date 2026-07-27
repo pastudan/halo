@@ -12310,7 +12310,7 @@
         {
           "addr": "0xc9a50",
           "decl": "void FUN_000c9a50(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xc9b10",

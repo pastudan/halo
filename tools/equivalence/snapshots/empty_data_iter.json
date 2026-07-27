@@ -5,6 +5,12 @@
   "stub_returns": {
     "data_next_index": [
       -1
+    ],
+    "data_iterator_next": [
+      0
+    ],
+    "object_iterator_next": [
+      0
     ]
   }
 }
