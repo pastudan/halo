@@ -3007,78 +3007,34 @@ void rasterizer_text_cache_dispose(void)
  *       +0x6 (short):  screen_y
  */
 
-/* rasterizer_text_get_character_position (0x183770) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void (*const b183770_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b183770_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void rasterizer_text_get_character_position(short index __attribute__((unused)), short *out_y __attribute__((unused)), short *out_x __attribute__((unused)))
+/* rasterizer_text_get_character_position (0x183770) — readable C lift.
+ *
+ * index @<ax>, out_y @<ebx>, out_x on stack. Reads cached glyph UV/position
+ * from the 8-byte slot table at 0x4d04b0.
+ */
+void rasterizer_text_get_character_position(short index /* @<ax> */,
+                                            short *out_y /* @<ebx> */,
+                                            short *out_x)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw %%ax, %%si\n\t"
-      "movb 0x4d04a0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%edi\n\t"
-      "movswl %%si, %%edi\n\t"
-      "leal 0x4d04b0(,%%edi,8), %%edi\n\t"
-      "jne .Lrasterizer_text_get_character_position_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x255\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0a9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_get_character_position_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lrasterizer_text_get_character_position_2\n\t"
-      "cmpw $0x100, %%si\n\t"
-      "jl .Lrasterizer_text_get_character_position_3\n\t"
-      ".Lrasterizer_text_get_character_position_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x256\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0a48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_get_character_position_3:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lrasterizer_text_get_character_position_4\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .Lrasterizer_text_get_character_position_5\n\t"
-      ".Lrasterizer_text_get_character_position_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x257\n\t"
-      "pushl $0x2b0a0c\n\t"
-      "pushl $0x2b0a38\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_text_get_character_position_5:\n\t"
-      "movw 0x4(%%edi), %%ax\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "movw 0x6(%%edi), %%cx\n\t"
-      "popl %%edi\n\t"
-      "movw %%cx, (%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b183770_assert), [exitfn] "m"(b183770_exitfn)
-      : "memory");
+  short *slot;
+
+  if (*(char *)0x4d04a0 == 0) {
+    display_assert((const char *)0x2b0a9c, (const char *)0x2b0a0c, 0x255, true);
+    system_exit(-1);
+  }
+  if (index < 0 || index >= 0x100) {
+    display_assert((const char *)0x2b0a48, (const char *)0x2b0a0c, 0x256, true);
+    system_exit(-1);
+  }
+  if (out_x == NULL || out_y == NULL) {
+    display_assert((const char *)0x2b0a38, (const char *)0x2b0a0c, 0x257, true);
+    system_exit(-1);
+  }
+
+  slot = (short *)(0x4d04b0 + (int)index * 8);
+  *out_x = slot[2];
+  *out_y = slot[3];
 }
-#else
-#error "rasterizer_text_get_character_position: clang naked draft required"
-#endif
 
 
 /* rasterizer_text_evict_character (0x183820) — readable C lift from XBE leaf. */
@@ -3889,78 +3845,36 @@ void *rasterizer_secondary_geometry_groups_get(uint16_t *out_count)
   return *(void **)0x4d0cf0;
 }
 
-/* rasterizer_transparent_geometry_next_group (0x1843b0) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-static void (*const b1843b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1843b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void * rasterizer_transparent_geometry_next_group(void *group __attribute__((unused)))
+/* rasterizer_transparent_geometry_next_group (0x1843b0) — readable C lift.
+ *
+ * Advance from group->presorted_index (+0x90) to the next presorted group
+ * entry (stride 0xa0), or return NULL at the end of the list.
+ */
+void *rasterizer_transparent_geometry_next_group(void *group)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lrasterizer_transparent_geometry_next_group_5\n\t"
-      "movw 0x90(%%eax), %%si\n\t"
-      "movl 0x90(%%eax), %%eax\n\t"
-      "incw %%si\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .Lrasterizer_transparent_geometry_next_group_1\n\t"
-      "cmpl 0x4d0cf4, %%eax\n\t"
-      "jl .Lrasterizer_transparent_geometry_next_group_2\n\t"
-      ".Lrasterizer_transparent_geometry_next_group_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x89\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x2b0d00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_next_group_2:\n\t"
-      "movl 0x4d0cf4, %%eax\n\t"
-      "movswl %%si, %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jge .Lrasterizer_transparent_geometry_next_group_4\n\t"
-      "testw %%si, %%si\n\t"
-      "jge .Lrasterizer_transparent_geometry_next_group_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8d\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x2b0ce4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_next_group_3:\n\t"
-      "movl 0x4d0cfc, %%eax\n\t"
-      "movswl (%%eax,%%edi,2), %%eax\n\t"
-      "movl 0x4d0cec, %%ecx\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "shll $5, %%eax\n\t"
-      "popl %%edi\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_transparent_geometry_next_group_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_next_group_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1843b0_assert), [exitfn] "m"(b1843b0_exitfn)
-      : "memory");
+  int cur;
+  int16_t next;
+  int16_t sorted;
+
+  if (group == NULL)
+    return NULL;
+
+  cur = *(int *)((char *)group + 0x90);
+  next = (int16_t)((int16_t)cur + 1);
+  if (cur < 0 || cur >= *(int *)0x4d0cf4) {
+    display_assert((const char *)0x2b0d00, (const char *)0x2b0ca8, 0x89, true);
+    system_exit(-1);
+  }
+  if (next >= *(int *)0x4d0cf4)
+    return NULL;
+  if (next < 0) {
+    display_assert((const char *)0x2b0ce4, (const char *)0x2b0ca8, 0x8d, true);
+    system_exit(-1);
+  }
+
+  sorted = *(int16_t *)(*(char **)0x4d0cfc + (int)next * 2);
+  return *(char **)0x4d0cec + (int)sorted * 0xa0;
 }
-#else
-#error "rasterizer_transparent_geometry_next_group: clang naked draft required"
-#endif
 
 
 /* rasterizer_transparent_geometry_group_get (0x184460) — readable C lift from XBE leaf. */
