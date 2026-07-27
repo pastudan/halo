@@ -25365,7 +25365,8 @@
         {
           "addr": "0x1cd190",
           "decl": "int FUN_001cd190(int sound_tag_index@<eax>, void *track, void *source);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001cd190"
         },
         {
           "addr": "0x1cd390",
@@ -41280,7 +41281,8 @@
         {
           "addr": "0x1d76fc",
           "decl": "void FUN_001d76fc(void);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_001d76fc"
         },
         {
           "addr": "0x1d771c",
