@@ -379,6 +379,11 @@
   "0x191750": {
     "class": "non_leaf"
   },
+  "0x19d670": {
+    "class": "non_leaf",
+    "confidence": "high",
+    "coverage_pct": 66.7
+  },
   "0x19df80": {
     "confidence": "weak",
     "coverage_pct": 40.2
@@ -709,6 +714,11 @@
   },
   "0xdd110": {
     "class": "non_leaf"
+  },
+  "0xe4370": {
+    "class": "non_leaf",
+    "confidence": "moderate",
+    "coverage_pct": 34.1
   },
   "0xe4500": {
     "class": "non_leaf",
