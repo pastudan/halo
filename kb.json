@@ -21648,7 +21648,7 @@
         {
           "addr": "0x15d300",
           "decl": "void FUN_0015d300(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015d300"
         },
         {

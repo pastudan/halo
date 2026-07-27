@@ -4558,3 +4558,17 @@ void FUN_00158df0(unsigned short *parameters)
   D3DDevice_SetRenderState_FillMode(
     (*(unsigned char *)0x3256be != 0) ? 0x1b01 : 0x1b02);
 }
+
+/* FUN_0015d300 (0x15d300) — readable C lift (ret thunk). */
+__attribute__((noinline))
+void FUN_0015d300(void)
+{
+  __asm__ volatile("");
+}
+
+/* FUN_0015d5a0 (0x15d5a0) — readable C lift (ret thunk). */
+__attribute__((noinline))
+void FUN_0015d5a0(void)
+{
+  __asm__ volatile("");
+}
