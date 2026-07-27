@@ -39116,8 +39116,8 @@
         },
         {
           "addr": "0x168e40",
-          "decl": "void FUN_00168e40(void);",
-          "ported": false
+          "decl": "void FUN_00168e40(void *obj);",
+          "ported": true
         },
         {
           "addr": "0x168e70",

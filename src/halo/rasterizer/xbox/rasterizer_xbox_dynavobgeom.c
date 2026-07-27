@@ -12847,37 +12847,20 @@ void FUN_00168cd0(int a0, float a1, float a2, float a3)
 #endif
 
 
-/* FUN_00168e40 (0x168e40) — XBE naked draft (batch 380). */
-#if defined(__clang__)
-static uint32_t __stdcall (*const b168e40_c1ed930)(void *resource) = (void *)D3DResource_Release;
-
-__attribute__((naked, noinline))
-void FUN_00168e40(void)
+/* FUN_00168e40 (0x168e40) — readable C lift. */
+void FUN_00168e40(void *obj)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00168e40_1\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00168e40_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed930]\n\t"
-      "movl $0, 0x10(%%esi)\n\t"
-      ".LFUN_00168e40_1:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed930] "m"(b168e40_c1ed930)
-      : "memory");
+  void *p;
+
+  if (!obj)
+    return;
+  p = *(void **)((char *)obj + 0x10);
+  if (!p)
+    return;
+  D3DResource_Release(p);
+  *(void **)((char *)obj + 0x10) = 0;
 }
-#else
-#error "FUN_00168e40: clang naked draft required"
-#endif
+
 
 
 /* FUN_00168e70 (0x168e70) — XBE naked draft (batch 317). */
