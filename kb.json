@@ -6675,9 +6675,9 @@
         },
         {
           "addr": "0x993b0",
-          "decl": "float triple_product3d(float *a, float *b, float *c);",
+          "decl": "float triple_product3d(float *param_1, float *param_2, float *param_3);",
           "name": "triple_product3d",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x99400",
@@ -6867,7 +6867,7 @@
         {
           "addr": "0x17cba0",
           "decl": "void FUN_0017cba0(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17cbb0",
@@ -6887,7 +6887,7 @@
         {
           "addr": "0x17cbe0",
           "decl": "void FUN_0017cbe0(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17cbf0",
@@ -6897,7 +6897,7 @@
         {
           "addr": "0x17cc00",
           "decl": "void FUN_0017cc00(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x17cc10",
@@ -12956,7 +12956,7 @@
         {
           "addr": "0xd1540",
           "decl": "int FUN_000d1540(void);",
-          "ported": true,
+          "ported": false,
           "src": "src/halo/interface/hud.c"
         },
         {
@@ -15518,7 +15518,7 @@
           "addr": "0x11c480",
           "decl": "void FUN_0011c480(int cache);",
           "name": "FUN_0011c480",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x11c4d0",
@@ -23657,7 +23657,7 @@
         {
           "addr": "0x1c29b0",
           "decl": "void saved_game_files_notify_memory_units_changed(void);",
-          "ported": true
+          "ported": false
         },
         {
           "addr": "0x1c29c0",
@@ -34903,8 +34903,7 @@
         {
           "addr": "0x494e0",
           "decl": "void FUN_000494e0(void);",
-          "ported": true,
-          "name": "FUN_000494e0"
+          "ported": false
         },
         {
           "addr": "0x495b0",
@@ -38251,8 +38250,7 @@
         {
           "addr": "0x12b0c0",
           "decl": "bool network_game_player_is_valid(void *player, void *game);",
-          "ported": true,
-          "name": "network_game_player_is_valid"
+          "ported": false
         },
         {
           "addr": "0x12b150",
