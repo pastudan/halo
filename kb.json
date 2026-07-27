@@ -27283,8 +27283,9 @@
         },
         {
           "addr": "0xe4980",
-          "decl": "char widget_instance_is_visible_in_parent_chain(void *widget);",
-          "ported": false
+          "decl": "char widget_instance_is_visible_in_parent_chain(void *widget@<eax>);",
+          "ported": true,
+          "name": "widget_instance_is_visible_in_parent_chain"
         },
         {
           "addr": "0xe4a40",

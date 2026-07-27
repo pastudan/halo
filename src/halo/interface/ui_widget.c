@@ -2229,78 +2229,42 @@ float widget_instance_get_opacity_product(void *widget)
   return product;
 }
 
-/* widget_instance_is_visible_in_parent_chain (0xe4980) — XBE naked draft (batch 131). */
-#if defined(__clang__)
-static void *(*const be4980_tag)(int, int) = (void *)tag_get;
-
-__attribute__((naked, noinline))
+/* widget_instance_is_visible_in_parent_chain (0xe4980) — readable C lift from XBE leaf. */
 char widget_instance_is_visible_in_parent_chain(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x12(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lwidget_instance_is_visible_in_parent_chain_1\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lwidget_instance_is_visible_in_parent_chain_1:\n\t"
-      "movl 0x30(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lwidget_instance_is_visible_in_parent_chain_6\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x30(%%esi), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "je .Lwidget_instance_is_visible_in_parent_chain_5\n\t"
-      ".Lwidget_instance_is_visible_in_parent_chain_2:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lwidget_instance_is_visible_in_parent_chain_5\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb 0x2c(%%edi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%al\n\t"
-      "jne .Lwidget_instance_is_visible_in_parent_chain_3\n\t"
-      "movw 0xe(%%esi), %%ax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .Lwidget_instance_is_visible_in_parent_chain_3\n\t"
-      "cmpw $3, %%ax\n\t"
-      "je .Lwidget_instance_is_visible_in_parent_chain_3\n\t"
-      "xorb %%al, %%al\n\t"
-      "jmp .Lwidget_instance_is_visible_in_parent_chain_4\n\t"
-      ".Lwidget_instance_is_visible_in_parent_chain_3:\n\t"
-      "movb $1, %%al\n\t"
-      ".Lwidget_instance_is_visible_in_parent_chain_4:\n\t"
-      "movl 0x30(%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "jne .Lwidget_instance_is_visible_in_parent_chain_2\n\t"
-      ".Lwidget_instance_is_visible_in_parent_chain_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lwidget_instance_is_visible_in_parent_chain_6:\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(be4980_tag)
-      : "memory");
+  void *parent;
+  void *tag;
+  void *parent_tag;
+  char ok;
+  int16_t kind;
+
+  if (*(char *)((char *)widget + 0x12) != 0) {
+    return 0;
+  }
+  parent = *(void **)((char *)widget + 0x30);
+  if (parent == (void *)0) {
+    return 1;
+  }
+  tag = tag_get(0x44654c61, *(int *)parent);
+  ok = 1;
+  while (parent != (void *)0 && ok) {
+    parent_tag = tag_get(0x44654c61, *(int *)parent);
+    if ((*(char *)((char *)tag + 0x2c) & 1) == 0) {
+      kind = *(int16_t *)((char *)parent + 0xe);
+      if (kind != 2 && kind != 3) {
+        ok = 0;
+      } else {
+        ok = 1;
+      }
+    } else {
+      ok = 1;
+    }
+    parent = *(void **)((char *)parent + 0x30);
+    tag = parent_tag;
+  }
+  return ok;
 }
-#else
-#error "widget_instance_is_visible_in_parent_chain: clang naked draft required"
-#endif
+
 
 
 /* widget_instance_parent_allows_focus (0xe4a40) — readable C lift from XBE leaf. */
