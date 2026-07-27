@@ -890,47 +890,19 @@ void FUN_000f67f0(int equipment_tag_index)
   }
 }
 
-/* item_new (0xf6820) — XBE naked draft (batch 98). */
-#if defined(__clang__)
-static void *(*const bf6820_get)(int, int) = object_get_and_verify_type;
-static void (*const bf6820_odel)(int) = object_delete;
-
-__attribute__((naked, noinline))
-char item_new(int object_handle __attribute__((unused)))
+/* item_new (0xf6820) — readable C lift. */
+char item_new(int item_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "decw 0x1dc(%%eax)\n\t"
-      "movw 0x1dc(%%eax), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "setg %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Litem_new_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[odel]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Litem_new_1:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bf6820_get), [odel] "m"(bf6820_odel)
-      : "memory");
-}
-#else
-#error "item_new: clang naked draft required"
-#endif
+  char *item;
+  char ok;
 
+  item = (char *)object_get_and_verify_type(item_handle, 0x10);
+  *(int16_t *)(item + 0x1dc) = (int16_t)(*(int16_t *)(item + 0x1dc) - 1);
+  ok = *(int16_t *)(item + 0x1dc) > 0;
+  if (!ok)
+    object_delete(item_handle);
+  return ok;
+}
 
 /* item_begin_garbage_collection (0xf6860) — XBE naked draft (batch 96). */
 #if defined(__clang__)

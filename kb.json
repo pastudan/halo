@@ -14103,9 +14103,9 @@
         },
         {
           "addr": "0xf6820",
-          "decl": "char item_new(int object_handle);",
+          "decl": "char item_new(int item_handle);",
           "name": "item_new",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6860",
