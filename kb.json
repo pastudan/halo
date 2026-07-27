@@ -26759,8 +26759,8 @@
         },
         {
           "addr": "0x7ff40",
-          "decl": "void FUN_0007ff40(void);",
-          "ported": false
+          "decl": "void FUN_0007ff40(const unsigned short *a, const unsigned short *b, unsigned short *out);",
+          "ported": true
         },
         {
           "addr": "0x7ffe0",
