@@ -33847,7 +33847,7 @@
         {
           "addr": "0x19d670",
           "decl": "void *umemset(void *buf, int value, size_t count);",
-          "ported": false,
+          "ported": true,
           "name": "umemset"
         },
         {
