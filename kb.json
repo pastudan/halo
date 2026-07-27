@@ -15497,7 +15497,7 @@
           "addr": "0x11be10",
           "decl": "int FUN_0011be10(short *table /* @<eax> */, void *key);",
           "name": "FUN_0011be10",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x11beb0",

@@ -2004,92 +2004,29 @@ void FUN_0011bc20(short *table __attribute__((unused)), void *key __attribute__(
 #endif
 
 
-/* FUN_0011be10 (0x11be10) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static int (*const b11be10_c11ba50)(short *table, void *key, unsigned short *slot_index_out) = (void *)FUN_0011ba50;
-static void (*const b11be10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const b11be10_exitfn)(int) = (void *)system_exit;
-static int (*const b11be10_c117ee0)(int *array, int index, int element_size) = (void *)FUN_00117ee0;
-static void * (*const b11be10_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
-
-__attribute__((naked, noinline))
-int FUN_0011be10(short *table __attribute__((unused)), void *key __attribute__((unused)))
+/* FUN_0011be10 (0x11be10) — readable C lift. */
+int FUN_0011be10(short *table /* @<eax> */, void *key)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[c11ba50]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0011be10_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf1\n\t"
-      "pushl $0x28f678\n\t"
-      "pushl $0x28f6d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011be10_1:\n\t"
-      "movswl 0x2(%%esi), %%edx\n\t"
-      "movswl -0x4(%%ebp), %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x1c(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c117ee0]\n\t"
-      "movswl (%%esi), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "sarl $5, %%eax\n\t"
-      "leal (%%ecx,%%eax,4), %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "movl (%%eax), %%edi\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "orl %%edx, %%edi\n\t"
-      "movl %%edi, (%%eax)\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "incw 0x4(%%esi)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11ba50] "m"(b11be10_c11ba50), [assert] "m"(b11be10_assert), [exitfn] "m"(b11be10_exitfn), [c117ee0] "m"(b11be10_c117ee0), [c8e0b0] "m"(b11be10_c8e0b0)
-      : "memory");
-}
-#else
-#error "FUN_0011be10: clang naked draft required"
-#endif
+  unsigned short slot;
+  int dest;
+  unsigned int *bits;
+  unsigned int mask;
+  int idx;
 
+  if (FUN_0011ba50(table, key, &slot)) {
+    display_assert((const char *)0x28f6d4, (const char *)0x28f678, 0xf1, 1);
+    system_exit(-1);
+    return 0;
+  }
+  dest = FUN_00117ee0((int *)(table + 0xe), (int)slot, (int)table[1]);
+  csmemcpy((void *)dest, key, (unsigned int)(int)table[0]);
+  idx = (int)slot;
+  bits = (unsigned int *)(*(unsigned int *)(table + 0xc) + (unsigned int)((idx >> 5) * 4));
+  mask = 1u << (idx & 0x1f);
+  *bits |= mask;
+  table[2] = (short)((int)table[2] + 1);
+  return dest + (int)table[0];
+}
 
 /* FUN_0011beb0 (0x11beb0) — XBE naked draft (batch 81). */
 #if defined(__clang__)
