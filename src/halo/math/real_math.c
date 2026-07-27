@@ -1143,123 +1143,52 @@ void FUN_0010a570(void)
   }
 }
 
-/* FUN_0010a5e0 (0x10a5e0) — XBE naked draft (batch 250). */
-#if defined(__clang__)
-static void (*const b10a5e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b10a5e0_exitfn)(int) = system_exit;
-static void (*const b10a5e0_c1daf7e)(void) = FUN_001daf7e;
-
-__attribute__((naked, noinline))
-float FUN_0010a5e0(int16_t function_type __attribute__((unused)), float input __attribute__((unused)))
+/* FUN_0010a5e0 (0x10a5e0) — readable C lift: periodic_function_evaluate.
+ * Sample a 1024-entry periodic table (types 1..11); type 0 returns 1.0. */
+float FUN_0010a5e0(int16_t function_type, float input)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jne .LFUN_0010a5e0_1\n\t"
-      "flds 0x2533c8\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0010a5e0_1:\n\t"
-      "jl .LFUN_0010a5e0_2\n\t"
-      "cmpw $0xc, %%si\n\t"
-      "jl .LFUN_0010a5e0_3\n\t"
-      ".LFUN_0010a5e0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9d\n\t"
-      "pushl $0x28c80c\n\t"
-      "pushl $0x28c83c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0010a5e0_3:\n\t"
-      "movb 0x46e39c, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0010a5e0_6\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x28c838\n\t"
-      "fsts 0xc(%%ebp)\n\t"
-      "fldl 0x2573d8\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fistps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl 0x46e3b8(,%%ecx,4), %%edx\n\t"
-      "andl $0x3ff, %%eax\n\t"
-      "movzbl (%%edx,%%eax,1), %%esi\n\t"
-      "incl %%eax\n\t"
-      "andl $0x3ff, %%eax\n\t"
-      "movzbl (%%eax,%%edx,1), %%eax\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "movl $1, %%edx\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "fmuls 0x261518\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "testb $0xc0, %%dl\n\t"
-      "fmuls 0x261518\n\t"
-      "je .LFUN_0010a5e0_5\n\t"
-      "fld %%st(1)\n\t"
-      "fcomps 0x25afcc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0010a5e0_4\n\t"
-      "fcoms 0x25337c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0010a5e0_4\n\t"
-      "fadds 0x2533c8\n\t"
-      ".LFUN_0010a5e0_4:\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xca\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0010a5e0_7\n\t"
-      "fsubs 0x2533c8\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0010a5e0_5:\n\t"
-      "flds 0x2533c8\n\t"
-      "popl %%esi\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xca\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0010a5e0_6:\n\t"
-      "flds 0x2533c0\n\t"
-      ".LFUN_0010a5e0_7:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b10a5e0_assert), [exitfn] "m"(b10a5e0_exitfn), [c1daf7e] "m"(b10a5e0_c1daf7e)
-      : "memory");
+  unsigned char *table;
+  float scaled;
+  float weight;
+  float s0;
+  float s1;
+  float result;
+  int idx;
+  int type;
+  unsigned int type_bit;
+
+  if (function_type == 0)
+    return *(float *)0x2533c8;
+
+  if (function_type < 0 || function_type >= 0xc) {
+    display_assert((const char *)0x28c83c, (const char *)0x28c80c, 0x9d, 1);
+    system_exit(-1);
+  }
+
+  if (*(char *)0x46e39c == '\0')
+    return *(float *)0x2533c0;
+
+  type = (int)function_type;
+  scaled = input * *(float *)0x28c838;
+  weight = x87_fmod(scaled, *(double *)0x2573d8);
+  idx = x87_round_to_int(scaled - weight);
+  table = ((unsigned char **)0x46e3b8)[type];
+  idx &= 0x3ff;
+  s0 = (float)table[idx] * *(float *)0x261518;
+  s1 = (float)table[(idx + 1) & 0x3ff] * *(float *)0x261518;
+  type_bit = 1u << type;
+  if (type_bit & 0xc0u) {
+    if (s0 < *(float *)0x25afcc) {
+      if (s1 < *(float *)0x25337c)
+        s1 = s1 + *(float *)0x2533c8;
+    }
+    result = s0 * (*(float *)0x2533c8 - weight) + s1 * weight;
+    if (result > *(float *)0x2533c8)
+      result = result - *(float *)0x2533c8;
+    return result;
+  }
+  return s0 * (*(float *)0x2533c8 - weight) + s1 * weight;
 }
-#else
-#error "FUN_0010a5e0: clang naked draft required"
-#endif
 
 
 /* 0x10a710 — transition_function_evaluate: evaluate one of the built-in
