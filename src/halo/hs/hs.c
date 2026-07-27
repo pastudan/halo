@@ -409,17 +409,16 @@ void FUN_000c1090(int16_t function_index, int thread_datum, char init)
   }
 }
 
-/* FUN_000c10d0 (0xc10d0) — readable C lift (HS macro-eval wrapper). */
+/* FUN_000c10d0 (0xc10d0) — readable C lift from XBE leaf. */
 void FUN_000c10d0(int16_t function_index, int thread_datum, char init)
 {
-  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00058720(args[0], args[1]);
+  int *eval;
+  eval = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (eval) {
+    FUN_00058720((unsigned int)eval[0], eval[1]);
     hs_return(thread_datum, 0);
   }
 }
-
-
 
 /* 0xc1110 — Evaluate an HS built-in function call, then dispatch the result
  * to the ai_berserk script command (FUN_000587d0) and commit a 0 result to
@@ -475,29 +474,27 @@ void FUN_000c1150(int16_t function_index, int thread_datum, char init)
   }
 }
 
-/* FUN_000c1190 (0xc1190) — readable C lift (HS macro-eval wrapper). */
+/* FUN_000c1190 (0xc1190) — readable C lift from XBE leaf. */
 void FUN_000c1190(int16_t function_index, int thread_datum, char init)
 {
-  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_00057030(args[0], *(unsigned char *)((char *)args + 4));
+  int *eval;
+  eval = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (eval) {
+    FUN_00057030(eval[0], (char)(unsigned char)*((unsigned char *)eval + 4));
     hs_return(thread_datum, 0);
   }
 }
 
-
-
-/* FUN_000c11d0 (0xc11d0) — readable C lift (HS macro-eval wrapper). */
+/* FUN_000c11d0 (0xc11d0) — readable C lift from XBE leaf. */
 void FUN_000c11d0(int16_t function_index, int thread_datum, char init)
 {
-  int *args = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
-  if (args) {
-    FUN_000588d0(args[0], *(unsigned char *)((char *)args + 4));
+  int *eval;
+  eval = (int *)hs_macro_function_evaluate(function_index, thread_datum, init);
+  if (eval) {
+    FUN_000588d0(eval[0], (char)(unsigned char)*((unsigned char *)eval + 4));
     hs_return(thread_datum, 0);
   }
 }
-
-
 
 /* 0xc1210 — HS built-in evaluator: dispatch a macro function call and commit
  * an AI-reference predicate result to the thread. Evaluates the macro function

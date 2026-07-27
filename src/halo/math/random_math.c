@@ -588,17 +588,18 @@ __declspec(noinline) float random_math_real(unsigned int *seed)
 }
 
 /* random_real_range (0x10b270) — readable C lift from XBE leaf. */
-float random_real_range(int *seed, float min, float max)
+float random_real_range(int *seed, float min_v, float max_v)
 {
-  unsigned int s = (unsigned int)*seed * 0x19660Du + 0x3c6ef35Fu;
+  unsigned int s;
   float t;
+  s = (unsigned int)(*seed * 0x19660d + 0x3c6ef35f);
   *seed = (int)s;
-  t = (float)(s >> 16);
-  if ((int)(s >> 16) < 0) {
-    t += *(float *)0x25fb8c;
-  }
-  t *= *(float *)0x2647f4;
-  return min + t * (max - min);
+  s = s >> 16;
+  t = (float)s;
+  if ((int)s < 0)
+    t = t + *(float *)0x25fb8c;
+  t = t * *(float *)0x2647f4;
+  return t * (max_v - min_v) + min_v;
 }
 
 /* Advance an LCG seed and return the upper 16 bits. */

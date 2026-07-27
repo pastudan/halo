@@ -1965,10 +1965,13 @@ void vector_to_angles(float *out_angles, float *in_vector)
 /* angles_to_vector (0x10cc40) — readable C lift from XBE leaf. */
 void angles_to_vector(float *out, float *angles)
 {
-  float cp = x87_fcos(angles[1]);
-  out[0] = x87_fcos(angles[0]) * cp;
-  out[1] = x87_fsin(angles[0]) * cp;
-  out[2] = x87_fsin(angles[1]);
+  float cy = x87_fcos(angles[1]);
+  float sy = x87_fsin(angles[1]);
+  float cp = x87_fcos(angles[0]);
+  float sp = x87_fsin(angles[0]);
+  out[0] = cp * cy;
+  out[1] = sp * cy;
+  out[2] = sy;
 }
 
 /* Convert an angle to a 2D direction vector stored as (cos, sin, 0) (0x10cc70).

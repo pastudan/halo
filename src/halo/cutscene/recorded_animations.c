@@ -228,21 +228,68 @@ void recorded_animations_clear_debug_storage(void)
   csmemset(*(void **)0x44df0c, 0, 0x400);
 }
 
-/* recorded_animation_controlling_unit (0x94ff0) — readable C lift. */
-char recorded_animation_controlling_unit(int unit_handle)
-{
-  data_iter_t iter;
-  char *thread;
+/* recorded_animation_controlling_unit (0x94ff0) — XBE naked draft (batch 283). */
+#if defined(__clang__)
+static void (*const b94ff0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b94ff0_c119810)(data_iter_t *iterator) = data_iterator_next;
 
-  data_iterator_new(&iter, *(data_t **)0x44df04);
-  thread = (char *)data_iterator_next(&iter);
-  while (thread != NULL) {
-    if (*(int *)(thread + 4) == unit_handle && (thread[0xa] & 1) == 0)
-      return 1;
-    thread = (char *)data_iterator_next(&iter);
-  }
-  return 0;
+__attribute__((naked, noinline))
+char recorded_animation_controlling_unit(int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x44df04, %%eax\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "xorb %%bl, %%bl\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrecorded_animation_controlling_unit_3\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lrecorded_animation_controlling_unit_1:\n\t"
+      "cmpl %%esi, 0x4(%%eax)\n\t"
+      "jne .Lrecorded_animation_controlling_unit_2\n\t"
+      "testb $1, 0xa(%%eax)\n\t"
+      "je .Lrecorded_animation_controlling_unit_4\n\t"
+      ".Lrecorded_animation_controlling_unit_2:\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lrecorded_animation_controlling_unit_1\n\t"
+      ".Lrecorded_animation_controlling_unit_3:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_controlling_unit_4:\n\t"
+      "popl %%esi\n\t"
+      "movb $1, %%al\n\t"
+      "popl %%ebx\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b94ff0_c1197b0), [c119810] "m"(b94ff0_c119810)
+      : "memory");
 }
+#else
+#error "recorded_animation_controlling_unit: clang naked draft required"
+#endif
+
 
 /* FUN_00095050 (0x95050) — XBE naked draft (batch 287). */
 #if defined(__clang__)
@@ -300,22 +347,63 @@ void FUN_00095050(int unit __attribute__((unused)), int *out __attribute__((unus
 #endif
 
 
-/* recorded_animation_kill (0x952d0) — readable C lift. */
-void recorded_animation_kill(int unit_handle)
-{
-  data_iter_t iter;
-  char *thread;
+/* recorded_animation_kill (0x952d0) — XBE naked draft (batch 285). */
+#if defined(__clang__)
+static void (*const b952d0_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
+static void * (*const b952d0_c119810)(data_iter_t *iterator) = data_iterator_next;
 
-  data_iterator_new(&iter, *(data_t **)0x44df04);
-  thread = (char *)data_iterator_next(&iter);
-  while (thread != NULL) {
-    if (*(int *)(thread + 4) == unit_handle) {
-      thread[0xa] = (char)(thread[0xa] | 3);
-      return;
-    }
-    thread = (char *)data_iterator_next(&iter);
-  }
+__attribute__((naked, noinline))
+void recorded_animation_kill(int unit_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "subl $0x10, %%esp\n\t"
+      "movl 0x44df04, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "leal -0x10(%%ebp), %%ecx\n\t"
+      "pushl %%ecx\n\t"
+      "call *%[c1197b0]\n\t"
+      "leal -0x10(%%ebp), %%edx\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c119810]\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrecorded_animation_kill_4\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "leal (%%esp), %%esp\n\t"
+      ".Lrecorded_animation_kill_1:\n\t"
+      "cmpl %%esi, 0x4(%%eax)\n\t"
+      "je .Lrecorded_animation_kill_2\n\t"
+      "leal -0x10(%%ebp), %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c119810]\n\t"
+      "addl $4, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "jne .Lrecorded_animation_kill_1\n\t"
+      "popl %%esi\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".Lrecorded_animation_kill_2:\n\t"
+      "testl %%eax, %%eax\n\t"
+      "je .Lrecorded_animation_kill_3\n\t"
+      "orb $3, 0xa(%%eax)\n\t"
+      ".Lrecorded_animation_kill_3:\n\t"
+      "popl %%esi\n\t"
+      ".Lrecorded_animation_kill_4:\n\t"
+      "movl %%ebp, %%esp\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [c1197b0] "m"(b952d0_c1197b0), [c119810] "m"(b952d0_c119810)
+      : "memory");
 }
+#else
+#error "recorded_animation_kill: clang naked draft required"
+#endif
+
 
 /* recorded_animation_get_time_left (0x955b0) — XBE naked draft (batch 283). */
 #if defined(__clang__)
@@ -741,104 +829,324 @@ static void __attribute__((unused)) ra_check_ptr(void *p, int line, void *msg)
     RA_EVENT_ASSERT(line, msg);
 }
 
-/* FUN_000942a0 (0x942a0) — readable C lift: event type 2 byte -> out[0]. */
-void FUN_000942a0(char *out, void *event, int **stream)
+/* FUN_000942a0 (0x942a0) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b942a0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b942a0_exitfn)(int) = system_exit;
+
+__attribute__((naked, noinline))
+void FUN_000942a0(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  if (out == NULL) {
-    display_assert((const char *)0x2690a0, (const char *)0x269490, 0x19, 1);
-    system_exit(-1);
-  }
-  if (event == NULL) {
-    display_assert((const char *)0x269480, (const char *)0x269490, 0x19, 1);
-    system_exit(-1);
-  }
-  if (*(short *)event != 2) {
-    display_assert((const char *)0x269448, (const char *)0x269490, 0x19, 1);
-    system_exit(-1);
-  }
-  if (stream == NULL) {
-    display_assert((const char *)0x269358, (const char *)0x269490, 0x19, 1);
-    system_exit(-1);
-  }
-  *out = *((char *)event + 4);
-  *stream = (int *)((char *)*stream + 6);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_000942a0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_000942a0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_2:\n\t"
+      "cmpw $2, (%%edi)\n\t"
+      "je .LFUN_000942a0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269448\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000942a0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x19\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000942a0_4:\n\t"
+      "movb 0x4(%%edi), %%al\n\t"
+      "movb %%al, (%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b942a0_assert), [exitfn] "m"(b942a0_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_000942a0: clang naked draft required"
+#endif
 
 
+/* FUN_00094350 (0x94350) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b94350_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b94350_exitfn)(int) = system_exit;
 
-/* FUN_00094350 (0x94350) — readable C lift: event type 3 byte -> out[1]. */
-void FUN_00094350(char *out, void *event, int **stream)
+__attribute__((naked, noinline))
+void FUN_00094350(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  if (out == NULL) {
-    display_assert((const char *)0x2690a0, (const char *)0x269490, 0x1a, 1);
-    system_exit(-1);
-  }
-  if (event == NULL) {
-    display_assert((const char *)0x269480, (const char *)0x269490, 0x1a, 1);
-    system_exit(-1);
-  }
-  if (*(short *)event != 3) {
-    display_assert((const char *)0x2694cc, (const char *)0x269490, 0x1a, 1);
-    system_exit(-1);
-  }
-  if (stream == NULL) {
-    display_assert((const char *)0x269358, (const char *)0x269490, 0x1a, 1);
-    system_exit(-1);
-  }
-  out[1] = *((char *)event + 4);
-  *stream = (int *)((char *)*stream + 6);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_00094350_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00094350_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_2:\n\t"
+      "cmpw $3, (%%edi)\n\t"
+      "je .LFUN_00094350_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2694cc\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00094350_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1a\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094350_4:\n\t"
+      "movb 0x4(%%edi), %%al\n\t"
+      "movb %%al, 0x1(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b94350_assert), [exitfn] "m"(b94350_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00094350: clang naked draft required"
+#endif
 
 
+/* FUN_00094400 (0x94400) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b94400_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b94400_exitfn)(int) = system_exit;
 
-/* FUN_00094400 (0x94400) — readable C lift: event type 4 word -> out[1]. */
-void FUN_00094400(char *out, void *event, int **stream)
+__attribute__((naked, noinline))
+void FUN_00094400(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  if (out == NULL) {
-    display_assert((const char *)0x2690a0, (const char *)0x269490, 0x1b, 1);
-    system_exit(-1);
-  }
-  if (event == NULL) {
-    display_assert((const char *)0x269480, (const char *)0x269490, 0x1b, 1);
-    system_exit(-1);
-  }
-  if (*(short *)event != 4) {
-    display_assert((const char *)0x269500, (const char *)0x269490, 0x1b, 1);
-    system_exit(-1);
-  }
-  if (stream == NULL) {
-    display_assert((const char *)0x269358, (const char *)0x269490, 0x1b, 1);
-    system_exit(-1);
-  }
-  *(short *)(out + 2) = *(short *)((char *)event + 4);
-  *stream = (int *)((char *)*stream + 6);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_00094400_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_00094400_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_2:\n\t"
+      "cmpw $4, (%%edi)\n\t"
+      "je .LFUN_00094400_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269500\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_00094400_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1b\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_00094400_4:\n\t"
+      "movw 0x4(%%edi), %%ax\n\t"
+      "movw %%ax, 0x2(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b94400_assert), [exitfn] "m"(b94400_exitfn)
+      : "memory");
 }
+#else
+#error "FUN_00094400: clang naked draft required"
+#endif
 
 
+/* FUN_000944b0 (0x944b0) — XBE naked draft (batch 259). */
+#if defined(__clang__)
+static void (*const b944b0_assert)(const char *, const char *, int, bool) = display_assert;
+static void (*const b944b0_exitfn)(int) = system_exit;
 
-/* FUN_000944b0 (0x944b0) — readable C lift: event type 5 word -> out[2]. */
-void FUN_000944b0(char *out, void *event, int **stream)
+__attribute__((naked, noinline))
+void FUN_000944b0(char *out __attribute__((unused)), void *event __attribute__((unused)), int **stream __attribute__((unused)))
 {
-  if (out == NULL) {
-    display_assert((const char *)0x2690a0, (const char *)0x269490, 0x1c, 1);
-    system_exit(-1);
-  }
-  if (event == NULL) {
-    display_assert((const char *)0x269480, (const char *)0x269490, 0x1c, 1);
-    system_exit(-1);
-  }
-  if (*(short *)event != 5) {
-    display_assert((const char *)0x269534, (const char *)0x269490, 0x1c, 1);
-    system_exit(-1);
-  }
-  if (stream == NULL) {
-    display_assert((const char *)0x269358, (const char *)0x269490, 0x1c, 1);
-    system_exit(-1);
-  }
-  *(short *)(out + 4) = *(short *)((char *)event + 4);
-  *stream = (int *)((char *)*stream + 6);
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "movl 0x8(%%ebp), %%ebx\n\t"
+      "testl %%ebx, %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "pushl %%edi\n\t"
+      "jne .LFUN_000944b0_1\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x2690a0\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_1:\n\t"
+      "movl 0xc(%%ebp), %%edi\n\t"
+      "testl %%edi, %%edi\n\t"
+      "jne .LFUN_000944b0_2\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269480\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_2:\n\t"
+      "cmpw $5, (%%edi)\n\t"
+      "je .LFUN_000944b0_3\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269534\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_3:\n\t"
+      "movl 0x10(%%ebp), %%esi\n\t"
+      "testl %%esi, %%esi\n\t"
+      "jne .LFUN_000944b0_4\n\t"
+      "pushl $1\n\t"
+      "pushl $0x1c\n\t"
+      "pushl $0x269490\n\t"
+      "pushl $0x269358\n\t"
+      "call *%[assert]\n\t"
+      "pushl $-1\n\t"
+      "call *%[exitfn]\n\t"
+      "addl $0x14, %%esp\n\t"
+      ".LFUN_000944b0_4:\n\t"
+      "movw 0x4(%%edi), %%ax\n\t"
+      "movw %%ax, 0x4(%%ebx)\n\t"
+      "movl (%%esi), %%eax\n\t"
+      "addl $6, %%eax\n\t"
+      "popl %%edi\n\t"
+      "movl %%eax, (%%esi)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [assert] "m"(b944b0_assert), [exitfn] "m"(b944b0_exitfn)
+      : "memory");
 }
-
+#else
+#error "FUN_000944b0: clang naked draft required"
+#endif
 
 
 /* FUN_00094560 (0x94560) — XBE naked draft (batch 269). */
@@ -2040,7 +2348,7 @@ static void *(*const b95330_get)(int, int) = object_get_and_verify_type;
 static int (*const b95330_cba500)(int) = player_index_from_unit_index;
 static void (*const b95330_c95050)(int unit, int *out) = FUN_00095050;
 static void *(*const b95330_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b95330_c94ff0)(int unit_handle) = (void *)recorded_animation_controlling_unit;
+static char (*const b95330_c94ff0)(int unit_handle) = recorded_animation_controlling_unit;
 static int (*const b95330_c119610)(data_t *data) = data_new_at_index;
 static void *(*const b95330_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static void (*const b95330_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
@@ -2779,10 +3087,9 @@ char FUN_00095c60(int object __attribute__((unused)))
 #undef RA3_EVENT_ASSERT
 /* --- recorded_animations.obj orphan shells (2026-07-26) --- */
 
-/* recorded_animation_play (0x95640) — readable C lift. */
+/* recorded_animation_play (0x95640) — readable C lift from XBE leaf. */
 char recorded_animation_play(int actor, short anim_idx)
 {
-  return recorded_animation_play_internal(actor, anim_idx, 0);
+  return recorded_animation_play_internal(actor, (int)anim_idx, 0);
 }
-
 

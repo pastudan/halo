@@ -799,12 +799,11 @@ void virtual_keyboard_process_input(void)
 #endif
 
 
-/* items_dispose_from_old_map (0xf6740) — readable C lift. */
+/* items_dispose_from_old_map (0xf6740) — readable C lift from XBE leaf. */
 void items_dispose_from_old_map(void)
 {
-  if (*(char *)0x46cef0) {
+  if (*(char *)0x46cef0)
     virtual_keyboard_process_input();
-  }
 }
 
 /* FUN_000f6750 (0xf6750) — XBE naked draft (batch 69). */
@@ -890,19 +889,47 @@ void FUN_000f67f0(int equipment_tag_index)
   }
 }
 
-/* item_new (0xf6820) — readable C lift. */
-char item_new(int item_handle)
-{
-  char *item;
-  char ok;
+/* item_new (0xf6820) — XBE naked draft (batch 98). */
+#if defined(__clang__)
+static void *(*const bf6820_get)(int, int) = object_get_and_verify_type;
+static void (*const bf6820_odel)(int) = object_delete;
 
-  item = (char *)object_get_and_verify_type(item_handle, 0x10);
-  *(int16_t *)(item + 0x1dc) = (int16_t)(*(int16_t *)(item + 0x1dc) - 1);
-  ok = *(int16_t *)(item + 0x1dc) > 0;
-  if (!ok)
-    object_delete(item_handle);
-  return ok;
+__attribute__((naked, noinline))
+char item_new(int object_handle __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "pushl %%ebx\n\t"
+      "pushl %%esi\n\t"
+      "movl 0x8(%%ebp), %%esi\n\t"
+      "pushl $0x10\n\t"
+      "pushl %%esi\n\t"
+      "call *%[get]\n\t"
+      "addl $8, %%esp\n\t"
+      "decw 0x1dc(%%eax)\n\t"
+      "movw 0x1dc(%%eax), %%ax\n\t"
+      "testw %%ax, %%ax\n\t"
+      "setg %%bl\n\t"
+      "testb %%bl, %%bl\n\t"
+      "jne .Litem_new_1\n\t"
+      "pushl %%esi\n\t"
+      "call *%[odel]\n\t"
+      "addl $4, %%esp\n\t"
+      ".Litem_new_1:\n\t"
+      "popl %%esi\n\t"
+      "movb %%bl, %%al\n\t"
+      "popl %%ebx\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [get] "m"(bf6820_get), [odel] "m"(bf6820_odel)
+      : "memory");
 }
+#else
+#error "item_new: clang naked draft required"
+#endif
+
 
 /* item_begin_garbage_collection (0xf6860) — XBE naked draft (batch 96). */
 #if defined(__clang__)
@@ -956,20 +983,18 @@ bool item_begin_garbage_collection(int item_handle __attribute__((unused)))
 short FUN_000f68b0(int item_handle)
 {
   unsigned char *item;
-
   item = (unsigned char *)datum_get(*(data_t **)0x5a8d50, item_handle);
   return (short)item[3];
 }
 
-/* item_activate (0xf6910) — readable C lift. */
+/* item_activate (0xf6910) — readable C lift from XBE leaf. */
 char item_activate(int item_handle)
 {
-  char *item;
-
-  item = (char *)object_get_and_verify_type(item_handle, 0x1c);
-  *(uint32_t *)(item + 4) |= 0x6000u;
-  *(int *)(item + 0x1b4) = game_time_get();
-  *(int *)(item + 0x1b0) = -1;
+  int *obj;
+  obj = (int *)object_get_and_verify_type(item_handle, 0x1c);
+  obj[1] = obj[1] | 0x6000;
+  obj[0x1b4/4] = game_time_get();
+  obj[0x1b0/4] = -1;
   return 1;
 }
 
@@ -3857,7 +3882,7 @@ int object_get_type(void)
 }
 
 
-/* items_initialize (0xf5f90) — readable C lift. */
+/* items_initialize (0xf5f90) — readable C lift (jmp alias). */
 void items_initialize(void)
 {
   FUN_000f57a0();

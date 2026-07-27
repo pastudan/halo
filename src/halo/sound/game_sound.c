@@ -1453,13 +1453,12 @@ int unattached_looping_sound_start(int sound_tag, int param_2, int param_3)
   }
   return handle;
 }
-/* unattached_looping_sound_stop (0x1c7770) — readable C lift. */
-void unattached_looping_sound_stop(int sound_handle)
+/* unattached_looping_sound_stop (0x1c7770) — readable C lift from XBE leaf. */
+void unattached_looping_sound_stop(int sound_index)
 {
-  char *entry;
-
-  entry = (char *)datum_get(*(void **)0x5054e4, sound_handle);
-  *(uint32_t *)(entry + 4) |= 2u;
+  int *sound;
+  sound = (int *)datum_get(*(data_t **)0x5054e4, sound_index);
+  sound[1] = sound[1] | 2;
 }
 
 /* FUN_001c77a0 (0x1c77a0) — XBE naked draft (batch 254). */

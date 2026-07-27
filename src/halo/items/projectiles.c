@@ -1,4 +1,3 @@
-#include <stdint.h>
 #include "x87_math.h"
 
 /* Clear bit 1 of projectile flags at offset 0x1dc. */
@@ -4004,6 +4003,6 @@ void FUN_000face0(int animation_graph_tag_index, short *state, int *out_sound)
 /* FUN_000fad00 (0xfad00) — readable C lift from XBE leaf. */
 int16_t FUN_000fad00(int animation_graph_tag_index, int16_t animation_index)
 {
-  return model_animation_choose_random(1, animation_graph_tag_index, animation_index);
+  return (int16_t)model_animation_choose_random(1, animation_graph_tag_index, animation_index);
 }
 

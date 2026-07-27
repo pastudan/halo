@@ -166,18 +166,18 @@ char limit2d(float *vec, float max_len)
 
 
 
-/* interpolate_scalar (0xb6e60) — readable C lift. */
+/* interpolate_scalar (0xb6e60) — readable C lift from XBE leaf. */
 void interpolate_scalar(float *value, float target, float max_delta)
 {
   float delta;
-
   delta = target - *value;
-  if (delta < -max_delta)
-    *value = *value + (-max_delta);
-  else if (delta > max_delta)
+  if (delta < -max_delta) {
+    *value = *value - max_delta;
+  } else if (delta > max_delta) {
     *value = *value + max_delta;
-  else
-    *value = *value + delta;
+  } else {
+    *value = target;
+  }
 }
 
 /* evaluate_piecewise_linear_function (0xb64c0) — XBE naked draft (batch 129). */

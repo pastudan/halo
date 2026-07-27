@@ -1243,27 +1243,60 @@ char *FUN_0019d3c0(int index, short param_2)
   (void)edx;
 }
 
-/* FUN_0019d420 (0x19d420) — readable C lift: ustr string by index. */
-const wchar_t *FUN_0019d420(int tag_index, int16_t string_index)
-{
-  void *tag;
-  int *elem;
-  int len;
-  wchar_t *s;
+/* FUN_0019d420 (0x19d420) — XBE naked draft (batch 279). */
+#if defined(__clang__)
+static void *(*const b19d420_tag)(int, int) = tag_get;
+static void *(*const b19d420_elem)(void *, int, int) = tag_block_get_element;
 
-  if (tag_index == -1)
-    return (const wchar_t *)0x2b4574;
-  tag = tag_get(0x75737472, tag_index);
-  if (string_index < 0 || (int)string_index >= *(int *)tag)
-    return (const wchar_t *)0x2b4574;
-  elem = (int *)tag_block_get_element(tag, string_index, 0x14);
-  len = elem[0];
-  if (len <= 0)
-    return (const wchar_t *)0x2b4574;
-  s = (wchar_t *)elem[3];
-  s[(len >> 1) - 1] = 0;
-  return s;
+__attribute__((naked, noinline))
+const wchar_t *FUN_0019d420(int tag_index __attribute__((unused)), int16_t string_index __attribute__((unused)))
+{
+  __asm__ volatile(
+      "pushl %%ebp\n\t"
+      "movl %%esp, %%ebp\n\t"
+      "movl 0x8(%%ebp), %%eax\n\t"
+      "cmpl $-1, %%eax\n\t"
+      "pushl %%esi\n\t"
+      "movl $0x2b4574, %%esi\n\t"
+      "je .LFUN_0019d420_1\n\t"
+      "pushl %%eax\n\t"
+      "pushl $0x75737472\n\t"
+      "call *%[tag]\n\t"
+      "movw 0xc(%%ebp), %%cx\n\t"
+      "addl $8, %%esp\n\t"
+      "testw %%cx, %%cx\n\t"
+      "jl .LFUN_0019d420_1\n\t"
+      "movl (%%eax), %%edx\n\t"
+      "movswl %%cx, %%ecx\n\t"
+      "cmpl %%edx, %%ecx\n\t"
+      "jge .LFUN_0019d420_1\n\t"
+      "pushl $0x14\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "call *%[elem]\n\t"
+      "movl (%%eax), %%ecx\n\t"
+      "addl $0xc, %%esp\n\t"
+      "testl %%ecx, %%ecx\n\t"
+      "jle .LFUN_0019d420_1\n\t"
+      "movl 0xc(%%eax), %%eax\n\t"
+      "shrl $1, %%ecx\n\t"
+      "movw $0, -0x2(%%eax,%%ecx,2)\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      ".LFUN_0019d420_1:\n\t"
+      "movl %%esi, %%eax\n\t"
+      "popl %%esi\n\t"
+      "popl %%ebp\n\t"
+      "ret\n\t"
+      :
+      : [tag] "m"(b19d420_tag), [elem] "m"(b19d420_elem)
+      : "memory");
 }
+#else
+#error "FUN_0019d420: clang naked draft required"
+#endif
+
 
 /* umemchr (0x19d480) — readable C lift. */
 void *umemchr(void *buf, int value, size_t count)
