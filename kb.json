@@ -37018,8 +37018,8 @@
         },
         {
           "addr": "0x6d980",
-          "decl": "void FUN_0006d980(void);",
-          "ported": false
+          "decl": "int FUN_0006d980(unsigned char *tif);",
+          "ported": true
         },
         {
           "addr": "0x6d9c0",

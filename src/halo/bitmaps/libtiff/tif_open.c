@@ -2384,46 +2384,16 @@ int FUN_0006d8e0(const char *path __attribute__((unused)), const char *mode __at
 #endif
 
 
-/* FUN_0006d980 (0x6d980) — XBE naked draft (batch 336). */
-#if defined(__clang__)
-static void (*const b6d980_c6f890)(void) = FUN_0006f890;
-static void (*const b6d980_c6d820)(void) = (void *)TIFFScanlineSize;
-
-__attribute__((naked, noinline))
-void FUN_0006d980(void)
+/* FUN_0006d980 (0x6d980) — readable C lift. */
+int FUN_0006d980(unsigned char *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movb 0xa(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%esi\n\t"
-      "jns .LFUN_0006d980_1\n\t"
-      "call *%[c6f890]\n\t"
-      "movl %%eax, 0x120(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006d980_1:\n\t"
-      "call *%[c6d820]\n\t"
-      "movl %%eax, 0x120(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f890] "m"(b6d980_c6f890), [c6d820] "m"(b6d980_c6d820)
-      : "memory");
+  if (*(signed char *)(tif + 0xa) < 0) {
+    *(unsigned int *)(tif + 0x120) = FUN_0006f890(tif);
+  } else {
+    *(unsigned int *)(tif + 0x120) = (unsigned int)TIFFScanlineSize(tif);
+  }
+  return 1;
 }
-#else
-#error "FUN_0006d980: clang naked draft required"
-#endif
-
 
 /* FUN_0006d9c0 (0x6d9c0) — XBE naked draft (batch 299). */
 #if defined(__clang__)
