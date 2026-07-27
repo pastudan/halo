@@ -1756,104 +1756,61 @@ done:
 }
 
 
-/* FUN_000907c0 (0x907c0) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static int (*const b907c0_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-static char * (*const b907c0_c1d9690)(const char *haystack, const char *needle) = crt_strstr;
-
-__attribute__((naked, noinline))
-void FUN_000907c0(int a0)
+/* FUN_000907c0 (0x907c0) — readable C lift from XBE leaf.
+ * name@edi, flag@stack: enable matching profile sections. */
+void FUN_000907c0(char flag, const char *name /* name@edi in XBE */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x2686f4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8dcb0]\n\t"
-      "movb (%%edi), %%dl\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "negl %%ebx\n\t"
-      "sbbb %%bl, %%bl\n\t"
-      "incb %%bl\n\t"
-      "cmpb $0x5f, %%dl\n\t"
-      "sete -0x1(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw %%ax, 0x3361b0\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jle .LFUN_000907c0_6\n\t"
-      "pushl %%esi\n\t"
-      "jmp .LFUN_000907c0_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_000907c0_1:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl 0x3361b4(,%%eax,4), %%esi\n\t"
-      "jne .LFUN_000907c0_4\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000907c0_3\n\t"
-      "movb 0x1(%%edi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "leal 0x1(%%edi), %%eax\n\t"
-      "je .LFUN_000907c0_4\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "subl %%eax, %%edx\n\t"
-      ".LFUN_000907c0_2:\n\t"
-      "cmpb (%%edx,%%eax,1), %%cl\n\t"
-      "jne .LFUN_000907c0_5\n\t"
-      "movb 0x1(%%eax), %%cl\n\t"
-      "incl %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_000907c0_2\n\t"
-      "jmp .LFUN_000907c0_4\n\t"
-      ".LFUN_000907c0_3:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d9690]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000907c0_5\n\t"
-      ".LFUN_000907c0_4:\n\t"
-      "movb 0x8(%%ebp), %%dl\n\t"
-      "movb %%dl, 0x8(%%esi)\n\t"
-      ".LFUN_000907c0_5:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw 0x3361b0, %%ax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jl .LFUN_000907c0_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_000907c0_6:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8dcb0] "m"(b907c0_c8dcb0), [c1d9690] "m"(b907c0_c1d9690)
-      : "memory");
+  int skip_filters;
+  int underscore_prefix;
+  int i;
+  int n;
+  char *sec;
+  const char *needle;
+  const char *hay;
+  const char *p;
+  intptr_t rel;
+
+  skip_filters = (csstrcmp((const char *)0x2686f4, name) == 0);
+  underscore_prefix = (name[0] == '_');
+  n = *(int16_t *)0x3361b0;
+  for (i = 0; i < n; i++) {
+    sec = *(char **)(0x3361b4 + 4 * i);
+    if (!skip_filters) {
+      if (underscore_prefix) {
+        needle = name + 1;
+        if (*needle != 0) {
+          hay = *(const char **)sec;
+          p = needle;
+          rel = (intptr_t)hay - (intptr_t)needle;
+          while (*p) {
+            if (*p != p[rel])
+              goto next;
+            p++;
+          }
+        }
+      } else if (crt_strstr(*(char **)sec, name) == 0) {
+        goto next;
+      }
+    }
+    sec[8] = flag;
+  next:
+    ;
+  }
 }
-#else
-#error "FUN_000907c0: clang naked draft required"
-#endif
+
+
 
 
 /* profile_sections_activate (0x90860) — readable C lift. */
 void profile_sections_activate(int a0)
 {
-  (void)a0;
-  FUN_000907c0(1);
+  FUN_000907c0(1, (const char *)a0);
 }
 
 /* profile_sections_deactivate (0x90880) — readable C lift. */
 void profile_sections_deactivate(int a0)
 {
-  (void)a0;
-  FUN_000907c0(0);
+  FUN_000907c0(0, (const char *)a0);
 }
 
 /* profile_find_frame_value (0x908a0) — XBE naked draft (batch 241). */

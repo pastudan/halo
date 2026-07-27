@@ -20029,8 +20029,9 @@
         },
         {
           "addr": "0x907c0",
-          "decl": "void FUN_000907c0(int a0);",
-          "ported": false
+          "decl": "void FUN_000907c0(char flag, const char *name@<edi>);",
+          "ported": true,
+          "name": "FUN_000907c0"
         },
         {
           "addr": "0x90860",
