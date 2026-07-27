@@ -2868,148 +2868,53 @@ void FUN_00160c30(void)
   D3DDevice_SetRenderState_ZBias(0);
 }
 
-/* FUN_00160dc0 (0x160dc0) — XBE naked draft (batch 319). */
-#if defined(__clang__)
-static void (*const b160dc0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b160dc0_exitfn)(int) = system_exit;
-static void (*const b160dc0_c155c20)(int stage, void *bitmap_data) = rasterizer_set_texture_bitmap_data;
-static void __stdcall (*const b160dc0_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
-static void __stdcall (*const b160dc0_c1e8700)(uint32_t stage, void *texture) = (void *)D3DDevice_SetTexture;
-static float (*const b160dc0_rmreal)(unsigned int *) = random_math_real;
-
-__attribute__((naked, noinline))
-void FUN_00160dc0(void)
+/* FUN_00160dc0 (0x160dc0) — readable C lift. */
+void FUN_00160dc0(void *bitmap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00160dc0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x44\n\t"
-      "pushl $0x2a18c0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00160dc0_1:\n\t"
-      "movw 0x3256bc, %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_00160dc0_2\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .LFUN_00160dc0_2\n\t"
-      "cmpw $6, %%ax\n\t"
-      "je .LFUN_00160dc0_2\n\t"
-      "cmpw $3, %%ax\n\t"
-      "je .LFUN_00160dc0_2\n\t"
-      "cmpw $4, %%ax\n\t"
-      "je .LFUN_00160dc0_2\n\t"
-      "cmpw $7, %%ax\n\t"
-      "je .LFUN_00160dc0_2\n\t"
-      "cmpw $5, %%ax\n\t"
-      "je .LFUN_00160dc0_2\n\t"
-      "cmpw $8, %%ax\n\t"
-      "jne .LFUN_00160dc0_7\n\t"
-      ".LFUN_00160dc0_2:\n\t"
-      "movb 0x3256c9, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00160dc0_7\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00160dc0_3\n\t"
-      "pushl %%esi\n\t"
-      "pushl $2\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $3\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb 0x3256ed, %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "setne %%al\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "incl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb 0x3256ed, %%dl\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testb %%dl, %%dl\n\t"
-      "setne %%cl\n\t"
-      "movl $0xe, %%edx\n\t"
-      "incl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb 0x3256ed, %%al\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%al, %%al\n\t"
-      "setne %%dl\n\t"
-      "movl $2, %%ecx\n\t"
-      "incl %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl $0xf, %%edx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb $0, 0x47dca4\n\t"
-      "jmp .LFUN_00160dc0_4\n\t"
-      ".LFUN_00160dc0_3:\n\t"
-      "pushl $0\n\t"
-      "pushl $2\n\t"
-      "call *%[c1e8700]\n\t"
-      "movb $1, 0x47dca4\n\t"
-      ".LFUN_00160dc0_4:\n\t"
-      "movw 0x3256b0, %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00160dc0_6\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .LFUN_00160dc0_5\n\t"
-      "flds 0x3256e4\n\t"
-      "popl %%esi\n\t"
-      "fsts 0x47dca0\n\t"
-      "fsts 0x47dc9c\n\t"
-      "fstps 0x47dc98\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00160dc0_5:\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "call *%[rmreal]\n\t"
-      "fstps 0x47dc98\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[rmreal]\n\t"
-      "fstps 0x47dc9c\n\t"
-      "leal -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[rmreal]\n\t"
-      "fstps 0x47dca0\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00160dc0_6:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00160dc0_7:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b160dc0_assert), [exitfn] "m"(b160dc0_exitfn), [c155c20] "m"(b160dc0_c155c20), [c1e9410] "m"(b160dc0_c1e9410), [c1e8700] "m"(b160dc0_c1e8700), [rmreal] "m"(b160dc0_rmreal)
-      : "memory");
-}
-#else
-#error "FUN_00160dc0: clang naked draft required"
-#endif
+  short mode;
+  unsigned int v;
+  unsigned int seed;
 
+  if (!*(int *)0x476ab0) {
+    display_assert((const char *)0x29dc40, (const char *)0x2a18c0, 0x44, 1);
+    system_exit(-1);
+  }
+  mode = *(short *)0x3256bc;
+  if (mode != 0 && mode != 2 && mode != 6 && mode != 3 && mode != 4 &&
+      mode != 7 && mode != 5 && mode != 8)
+    return;
+  if (!*(unsigned char *)0x3256c9)
+    return;
+
+  if (bitmap) {
+    rasterizer_set_texture_bitmap_data(2, bitmap);
+    D3DDevice_SetTextureStageState(2, 0xa, 3);
+    D3DDevice_SetTextureStageState(2, 0xb, 3);
+    v = (*(unsigned char *)0x3256ed != 0) ? 1u : 0u;
+    D3DDevice_SetTextureStageState(2, 0xd, v + 1);
+    v = (*(unsigned char *)0x3256ed != 0) ? 1u : 0u;
+    D3DDevice_SetTextureStageState(2, 0xe, v + 1);
+    v = (*(unsigned char *)0x3256ed != 0) ? 1u : 0u;
+    D3DDevice_SetTextureStageState(2, 0xf, v + 1);
+    *(unsigned char *)0x47dca4 = 0;
+  } else {
+    D3DDevice_SetTexture(2, 0);
+    *(unsigned char *)0x47dca4 = 1;
+  }
+
+  if (*(short *)0x3256b0 <= 0)
+    return;
+  if (*(short *)0x3256b0 == 2) {
+    *(float *)0x47dca0 = *(float *)0x3256e4;
+    *(float *)0x47dc9c = *(float *)0x3256e4;
+    *(float *)0x47dc98 = *(float *)0x3256e4;
+    return;
+  }
+  seed = (unsigned int)(unsigned long)bitmap;
+  *(float *)0x47dc98 = random_math_real(&seed);
+  *(float *)0x47dc9c = random_math_real(&seed);
+  *(float *)0x47dca0 = random_math_real(&seed);
+}
 
 /* FUN_00160f50 (0x160f50) — XBE naked draft (batch 401). */
 #if defined(__clang__)
