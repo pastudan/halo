@@ -6677,7 +6677,7 @@
           "addr": "0x993b0",
           "decl": "float triple_product3d(float *param_1, float *param_2, float *param_3);",
           "name": "triple_product3d",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x99400",
@@ -34922,7 +34922,7 @@
         {
           "addr": "0x494e0",
           "decl": "void FUN_000494e0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x495b0",
