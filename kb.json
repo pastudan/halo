@@ -31211,7 +31211,7 @@
         {
           "addr": "0x17cfd0",
           "decl": "char FUN_0017cfd0(int param_1, int param_2, short param_3);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cfe0",
@@ -31227,7 +31227,7 @@
         {
           "addr": "0x17d000",
           "decl": "void FUN_0017d000(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d010",
@@ -31242,7 +31242,7 @@
         {
           "addr": "0x17d030",
           "decl": "int FUN_0017d030(float *position, int vis_index, int index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17d040",

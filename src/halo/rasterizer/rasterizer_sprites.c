@@ -465,26 +465,11 @@ void FUN_0017cfc0(int param_1 __attribute__((unused)), int param_2 __attribute__
 #endif
 
 
-/* FUN_0017cfd0 (0x17cfd0) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-char FUN_0017cfd0(int param_1 __attribute__((unused)), int param_2 __attribute__((unused)), short param_3 __attribute__((unused)))
+/* FUN_0017cfd0 (0x17cfd0) — readable C lift. */
+char FUN_0017cfd0(int param_1, int param_2, short param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xa7, 0xe4, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  return FUN_0017b480(param_1, param_2, param_3);
 }
-#else
-#error "FUN_0017cfd0: clang naked draft required"
-#endif
-
 
 /* FUN_0017cfe0 (0x17cfe0) — XBE naked draft (batch 400). */
 #if defined(__clang__)
@@ -514,26 +499,11 @@ void FUN_0017cff0(void)
 }
 
 
-/* FUN_0017d000 (0x17d000) — XBE naked draft (batch 400). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
+/* FUN_0017d000 (0x17d000) — readable C lift. */
 void FUN_0017d000(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xb7, 0xe5, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  FUN_0017b5c0();
 }
-#else
-#error "FUN_0017d000: clang naked draft required"
-#endif
-
 
 /* FUN_0017d010 (0x17d010) — readable C lift (jmp thunk). */
 void FUN_0017d010(float *position, float radius, float *scale2d, float angle, uint32_t color)
@@ -4731,24 +4701,9 @@ void FUN_0017ef00(void)
 
 /* --- rasterizer_sprites.obj orphan shells (2026-07-26) --- */
 
-/* FUN_0017d030 (0x17d030) — XBE naked draft (batch 395). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int FUN_0017d030(float *position __attribute__((unused)), int vis_index __attribute__((unused)), int index __attribute__((unused)))
+/* FUN_0017d030 (0x17d030) — readable C lift. */
+int FUN_0017d030(float *position, int vis_index, int index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0xd7, 0xe9, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
+  return FUN_0017ba10(position, vis_index, index);
 }
-#else
-#error "FUN_0017d030: clang naked draft required"
-#endif
-
 
