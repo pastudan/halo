@@ -28178,7 +28178,8 @@
         {
           "addr": "0x19df80",
           "decl": "wchar_t *ustrtok(wchar_t *s, const wchar_t *delim);",
-          "ported": false
+          "ported": true,
+          "name": "ustrtok"
         },
         {
           "addr": "0x19dff0",
