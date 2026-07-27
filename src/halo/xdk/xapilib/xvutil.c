@@ -814,29 +814,13 @@ void FUN_001d0bb3(void)
   (void)0;
 }
 
-/* FUN_001d0c02 (0x1d0c02) — XBE naked draft (batch 334). */
-#if defined(__clang__)
-static void (*const b1d0c02_c1d52c4)(void) = FUN_001d52c4;
-
-__attribute__((naked, noinline))
-void FUN_001d0c02(void)
+/* FUN_001d0c02 (0x1d0c02) — readable C lift (HeapFree-style). */
+void __stdcall FUN_001d0c02(void *ptr)
 {
-  __asm__ volatile(
-      "pushl 0x4(%%esp)\n\t"
-      "pushl $0\n\t"
-      "pushl 0x632a28\n\t"
-      "call *%[c1d52c4]\n\t"
-      "ret\n\t"
-      :
-      : [c1d52c4] "m"(b1d0c02_c1d52c4)
-      : "memory");
+  extern void *DAT_00632a28;
+  FUN_001d52c4(DAT_00632a28, 0, ptr);
 }
-#else
-#error "FUN_001d0c02: clang naked draft required"
-#endif
 
-
-/* 0x1d0c16 */
 void * LocalFree(void *ptr)
 {
   (void)FUN_001d6ca8(0, 0, ptr);

@@ -33463,8 +33463,9 @@
         },
         {
           "addr": "0x1d52c4",
-          "decl": "void FUN_001d52c4(void);",
-          "ported": false
+          "decl": "void __stdcall FUN_001d52c4(void *heap, unsigned int flags, void *ptr);",
+          "ported": false,
+          "name": "FUN_001d52c4"
         },
         {
           "addr": "0x1d52f3",
@@ -33576,8 +33577,9 @@
         },
         {
           "addr": "0x1d0c02",
-          "decl": "void FUN_001d0c02(void);",
-          "ported": false
+          "decl": "void __stdcall FUN_001d0c02(void *ptr);",
+          "ported": true,
+          "name": "FUN_001d0c02"
         },
         {
           "addr": "0x1d0c16",
