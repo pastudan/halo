@@ -20843,8 +20843,8 @@
         },
         {
           "addr": "0x1703f0",
-          "decl": "void FUN_001703f0(void);",
-          "ported": false
+          "decl": "int FUN_001703f0(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x170440",
@@ -20873,8 +20873,8 @@
         },
         {
           "addr": "0x172650",
-          "decl": "void FUN_00172650(void);",
-          "ported": false
+          "decl": "int FUN_00172650(int a, int b, int c);",
+          "ported": true
         },
         {
           "addr": "0x1726a0",

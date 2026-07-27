@@ -5732,33 +5732,12 @@ void FUN_001700d0(void)
 #endif
 
 
-/* FUN_001703f0 (0x1703f0) — XBE naked draft (batch 380). */
-#if defined(__clang__)
-static void __stdcall (*const b1703f0_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-
-__attribute__((naked, noinline))
-void FUN_001703f0(void)
+/* FUN_001703f0 (0x1703f0) — readable C lift. */
+int FUN_001703f0(int a, int b, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1ed280]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed280] "m"(b1703f0_c1ed280)
-      : "memory");
+  D3DDevice_SetVertexData2f(a, b, c);
+  return 0;
 }
-#else
-#error "FUN_001703f0: clang naked draft required"
-#endif
-
 
 /* FUN_00170440 (0x170440) — XBE naked draft (batch 298). */
 #if defined(__clang__)
@@ -7881,33 +7860,12 @@ void FUN_00172640(void)
   *(unsigned int *)0x47e4b0 = 0;
 }
 
-/* FUN_00172650 (0x172650) — XBE naked draft (batch 380). */
-#if defined(__clang__)
-static void __stdcall (*const b172650_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-
-__attribute__((naked, noinline))
-void FUN_00172650(void)
+/* FUN_00172650 (0x172650) — readable C lift. */
+int FUN_00172650(int a, int b, int c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1ed280]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1ed280] "m"(b172650_c1ed280)
-      : "memory");
+  D3DDevice_SetVertexData2f(a, b, c);
+  return 0;
 }
-#else
-#error "FUN_00172650: clang naked draft required"
-#endif
-
 
 /* FUN_001726a0 (0x1726a0) — XBE naked draft (batch 356). */
 #if defined(__clang__)
