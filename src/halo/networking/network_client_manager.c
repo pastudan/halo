@@ -1037,161 +1037,70 @@ int unstrip_player_index(int stripped_index)
   }
   return found;
 }
-/* network_game_client_game_has_started (0x1251e0) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static void (*const b1251e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1251e0_exitfn)(int) = system_exit;
-static void (*const b1251e0_c128d20)(int connection) = network_connection_keep_alive;
-static bool (*const b1251e0_c12b350)(void *game) = network_game_create_game_objects;
-static bool (*const b1251e0_c12ac80)(void *client) = network_player_is_valid;
-static int (*const b1251e0_c125180)(int stripped_index) = unstrip_player_index;
-static int (*const b1251e0_cba410)(unsigned __int16 a1, int a2) = local_player_set_player_index;
-static void * (*const b1251e0_c12b700)(int type, void *data, int16_t message_struct_size) = encode_network_game_message;
-static bool (*const b1251e0_c128e00)(void *connection, void *message, unsigned short size, int dest_address, bool reliable) = network_connection_write;
-static void (*const b1251e0_c12b650)(const char *fmt, ...) = network_game_log;
-static void (*const b1251e0_ce58c0)(void) = (void (*)(void))ui_widgets_close_all;
-static void (*const b1251e0_cb5f40)(void) = (void (*)(void))game_time_start;
-static void (*const b1251e0_ca73c0)(void) = (void (*)(void))game_initial_pulse;
-
-__attribute__((naked, noinline))
-char network_game_client_game_has_started(void *client __attribute__((unused)))
+/* network_game_client_game_has_started (0x1251e0) — readable C lift (restored pre-naked). */
+char network_game_client_game_has_started(void *client)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lnetwork_game_client_game_has_started_1\n\t"
-      "cmpw $2, 0xca6(%%esi)\n\t"
-      "je .Lnetwork_game_client_game_has_started_2\n\t"
-      ".Lnetwork_game_client_game_has_started_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b0\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291dd0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_game_has_started_2:\n\t"
-      "movl 0x82c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movw $0xffff, 0xca4(%%esi)\n\t"
-      "call *%[c128d20]\n\t"
-      "leal 0x85c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c12b350]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_client_game_has_started_9\n\t"
-      "movzwl (%%esi), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal 0xa9e(%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lnetwork_game_client_game_has_started_3:\n\t"
-      "movsbl (%%ecx), %%edi\n\t"
-      "cmpl %%edx, %%edi\n\t"
-      "je .Lnetwork_game_client_game_has_started_4\n\t"
-      "incl %%eax\n\t"
-      "addl $0x20, %%ecx\n\t"
-      "cmpl $0x10, %%eax\n\t"
-      "jl .Lnetwork_game_client_game_has_started_3\n\t"
-      "jmp .Lnetwork_game_client_game_has_started_6\n\t"
-      ".Lnetwork_game_client_game_has_started_4:\n\t"
-      "shll $5, %%eax\n\t"
-      "leal (%%eax,%%esi,1), %%edi\n\t"
-      "movsbl 0xa9e(%%edi), %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jne .Lnetwork_game_client_game_has_started_6\n\t"
-      ".Lnetwork_game_client_game_has_started_5:\n\t"
-      "leal 0xa82(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_client_game_has_started_6\n\t"
-      "movsbl 0xaa1(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c125180]\n\t"
-      "pushl %%eax\n\t"
-      "movsbw 0xa9f(%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cba410]\n\t"
-      "movsbl 0xabe(%%edi), %%ecx\n\t"
-      "movzwl (%%esi), %%edx\n\t"
-      "addl $0x20, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "je .Lnetwork_game_client_game_has_started_5\n\t"
-      ".Lnetwork_game_client_game_has_started_6:\n\t"
-      "movl 0x82c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c128d20]\n\t"
-      "pushl $4\n\t"
-      "leal 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x18\n\t"
-      "movl $0, 0x8(%%ebp)\n\t"
-      "call *%[c12b700]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "je .Lnetwork_game_client_game_has_started_8\n\t"
-      "movl 0x82c(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "shrw $4, %%cx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c128e00]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_client_game_has_started_7\n\t"
-      "pushl $0x291da4\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "movw $3, 0xca6(%%esi)\n\t"
-      "movl $0, 0xc98(%%esi)\n\t"
-      "movl $0, 0xc9c(%%esi)\n\t"
-      "movb $0, 0xcad(%%esi)\n\t"
-      "call *%[ce58c0]\n\t"
-      "call *%[cb5f40]\n\t"
-      "call *%[ca73c0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw $3, 0xca6(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "sete %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_game_has_started_7:\n\t"
-      "pushl $0x291d50\n\t"
-      "jmp .Lnetwork_game_client_game_has_started_10\n\t"
-      ".Lnetwork_game_client_game_has_started_8:\n\t"
-      "pushl $0x291d1c\n\t"
-      "jmp .Lnetwork_game_client_game_has_started_10\n\t"
-      ".Lnetwork_game_client_game_has_started_9:\n\t"
-      "pushl $0x291cf4\n\t"
-      ".Lnetwork_game_client_game_has_started_10:\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw $3, 0xca6(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "sete %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1251e0_assert), [exitfn] "m"(b1251e0_exitfn), [c128d20] "m"(b1251e0_c128d20), [c12b350] "m"(b1251e0_c12b350), [c12ac80] "m"(b1251e0_c12ac80), [c125180] "m"(b1251e0_c125180), [cba410] "m"(b1251e0_cba410), [c12b700] "m"(b1251e0_c12b700), [c128e00] "m"(b1251e0_c128e00), [c12b650] "m"(b1251e0_c12b650), [ce58c0] "m"(b1251e0_ce58c0), [cb5f40] "m"(b1251e0_cb5f40), [ca73c0] "m"(b1251e0_ca73c0)
-      : "memory");
+  int slot;
+  int16_t machine_index;
+  char *player_rec;
+  void *encoded;
+  int local_index;
+
+  if (client == NULL || *(int16_t *)((char *)client + 0xca6) != 2) {
+    display_assert("client && (client->state == _network_game_client_state_pregame)",
+                   "c:\\halo\\SOURCE\\networking\\network_client_manager.c",
+                   0x3b0, 1);
+    system_exit(-1);
+  }
+
+  *(int16_t *)((char *)client + 0xca4) = (int16_t)-1;
+  network_connection_keep_alive(*(int *)((char *)client + 0x82c));
+  if (!network_game_create_game_objects((char *)client + 0x85c))
+    goto fail;
+
+  machine_index = *(uint16_t *)client;
+  slot = 0;
+  player_rec = (char *)client + 0xa9e;
+  while (slot < 0x10) {
+    if (*(char *)(player_rec - 0x1c) == (char)machine_index &&
+        network_player_is_valid((void *)(player_rec - 0x1c))) {
+      local_index = unstrip_player_index((int)*(char *)(player_rec + 3));
+      local_player_set_player_index(local_index, *(int16_t *)(player_rec + 1));
+      player_rec += 0x20;
+      slot++;
+      continue;
+    }
+    break;
+  }
+
+  network_connection_keep_alive(*(int *)((char *)client + 0x82c));
+  {
+    int loaded_payload = 0;
+    encoded = encode_network_game_message(0x18, &loaded_payload, 4);
+  }
+  if (encoded == NULL) {
+    network_game_log("failed to create a message_client_loaded message");
+    goto fail;
+  }
+  if (!network_client_manager_send_encoded(client, encoded)) {
+    network_game_log("network_game_client_write() failed while sending a "
+                     "message_client_loaded message");
+    goto fail;
+  }
+  network_game_log("local machine is loaded & ready to play");
+  *(int16_t *)((char *)client + 0xca6) = 3;
+  *(int *)((char *)client + 0xc98) = 0;
+  *(int *)((char *)client + 0xc9c) = 0;
+  *(char *)((char *)client + 0xcad) = 0;
+  ui_widgets_close_all();
+  game_time_start();
+  game_initial_pulse();
+  return (char)(*(int16_t *)((char *)client + 0xca6) == 3);
+
+fail:
+  network_game_log("failed to load the necessary game data");
+  return (char)(*(int16_t *)((char *)client + 0xca6) == 3);
 }
-#else
-#error "network_game_client_game_has_started: clang naked draft required"
-#endif
 
 
 /* network_game_client_handle_game_update (0x125380) — XBE naked draft (batch 122). */
@@ -2473,171 +2382,67 @@ char network_game_client_request_remove_player(void *client __attribute__((unuse
 #endif
 
 
-/* network_game_client_remove_player (0x126590) — XBE naked draft (batch 122). */
-#if defined(__clang__)
-static void (*const b126590_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b126590_exitfn)(int) = system_exit;
-static bool (*const b126590_c12ac80)(void *client) = network_player_is_valid;
-static int (*const b126590_c125180)(int stripped_index) = unstrip_player_index;
-static bool (*const b126590_c12b290)(void *game, void *player) = network_game_remove_player;
-static void *(*const b126590_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b126590_gtime)(void) = game_time_get;
-static void (*const b126590_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b126590_c12a790)(void) = (void (*)(void))network_game_client_all_local_players_have_quit;
-static void (*const b126590_c12b650)(const char *fmt, ...) = network_game_log;
-
-__attribute__((naked, noinline))
-char network_game_client_remove_player(void *client __attribute__((unused)), void *message __attribute__((unused)), int tick __attribute__((unused)))
+/* network_game_client_remove_player (0x126590) — readable C lift (restored pre-naked). */
+char network_game_client_remove_player(void *client, void *message, int tick)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lnetwork_game_client_remove_player_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lnetwork_game_client_remove_player_2\n\t"
-      ".Lnetwork_game_client_remove_player_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x273\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x291f58\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_remove_player_2:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal 0xa9e(%%ebx), %%edi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lnetwork_game_client_remove_player_3:\n\t"
-      "leal -0x1c(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_client_remove_player_4\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movb (%%edi), %%cl\n\t"
-      "cmpb 0x1c(%%eax), %%cl\n\t"
-      "jne .Lnetwork_game_client_remove_player_4\n\t"
-      "movb 0x1(%%edi), %%dl\n\t"
-      "cmpb 0x1d(%%eax), %%dl\n\t"
-      "je .Lnetwork_game_client_remove_player_5\n\t"
-      ".Lnetwork_game_client_remove_player_4:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x20, %%edi\n\t"
-      "cmpl $0x10, %%esi\n\t"
-      "jl .Lnetwork_game_client_remove_player_3\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_remove_player_5:\n\t"
-      "shll $5, %%esi\n\t"
-      "movsbl 0xaa1(%%esi,%%ebx,1), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c125180]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x85c(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c12b290]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "je .Lnetwork_game_client_remove_player_11\n\t"
-      "movb 0xc8c(%%ebx), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lnetwork_game_client_remove_player_11\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lnetwork_game_client_remove_player_12\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lnetwork_game_client_remove_player_12\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "je .Lnetwork_game_client_remove_player_6\n\t"
-      "call *%[gtime]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x292aa8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%edi, 0xcc(%%ebx)\n\t"
-      ".Lnetwork_game_client_remove_player_6:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "addl $0xa9e, %%edi\n\t"
-      ".Lnetwork_game_client_remove_player_7:\n\t"
-      "leal -0x1c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c12ac80]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_client_remove_player_8\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movsbl (%%edi), %%edx\n\t"
-      "movzwl (%%eax), %%ecx\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "je .Lnetwork_game_client_remove_player_9\n\t"
-      ".Lnetwork_game_client_remove_player_8:\n\t"
-      "incl %%esi\n\t"
-      "addl $0x20, %%edi\n\t"
-      "cmpl $0x10, %%esi\n\t"
-      "jl .Lnetwork_game_client_remove_player_7\n\t"
-      ".Lnetwork_game_client_remove_player_9:\n\t"
-      "cmpl $0x10, %%esi\n\t"
-      "jne .Lnetwork_game_client_remove_player_10\n\t"
-      "call *%[c12a790]\n\t"
-      "pushl $0x292a6c\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lnetwork_game_client_remove_player_10:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      ".Lnetwork_game_client_remove_player_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_remove_player_12:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x292a20\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b126590_assert), [exitfn] "m"(b126590_exitfn), [c12ac80] "m"(b126590_c12ac80), [c125180] "m"(b126590_c125180), [c12b290] "m"(b126590_c12b290), [dget] "m"(b126590_dget), [gtime] "m"(b126590_gtime), [c8f390] "m"(b126590_c8f390), [c12a790] "m"(b126590_c12a790), [c12b650] "m"(b126590_c12b650)
-      : "memory");
+  int slot;
+  char *player_rec;
+  int local_index;
+  void *unit;
+  char result;
+
+  if (client == NULL || message == NULL) {
+    display_assert("client && player",
+                   "c:\\halo\\SOURCE\\networking\\network_client_manager.c",
+                   0x273, 1);
+    system_exit(-1);
+  }
+
+  slot = 0;
+  player_rec = (char *)client + 0xa9e;
+  while (slot < 0x10) {
+    if (network_player_is_valid((void *)(player_rec - 0x1c)) &&
+        *(char *)player_rec == *(char *)((char *)message + 0x1c) &&
+        *(char *)(player_rec + 1) == *(char *)((char *)message + 0x1d))
+      goto found;
+    slot++;
+    player_rec += 0x20;
+  }
+  return 0;
+
+found:
+  local_index = unstrip_player_index((int)*(char *)(player_rec + 3));
+  result = network_game_remove_player((char *)client + 0x85c, message);
+  if (!result)
+    return 0;
+  if (*(char *)((char *)client + 0xc8c) == 0)
+    return result;
+  if (local_index == 0 || local_index == -1) {
+    error(2, "network game tried to delete a player with a phony player index (#0x%08lX)",
+          (unsigned long)local_index);
+    return 0;
+  }
+  unit = datum_get(*(void **)0x5aa6d4, local_index);
+  if (tick != -1)
+    error(2, "%x quit of of game at tick %d (now %d)", local_index, tick,
+          game_time_get());
+  *(int *)((char *)unit + 0xcc) = tick;
+
+  slot = 0;
+  player_rec = (char *)client + 0xa9e;
+  while (slot < 0x10) {
+    if (network_player_is_valid((void *)(player_rec - 0x1c)) &&
+        (int)*(char *)player_rec == (int)*(uint16_t *)client)
+      return result;
+    slot++;
+    player_rec += 0x20;
+  }
+  if (slot == 0x10) {
+    network_game_client_all_local_players_have_quit();
+    network_game_log("no local players remain in the game, exiting the game now");
+  }
+  return result;
 }
-#else
-#error "network_game_client_remove_player: clang naked draft required"
-#endif
 
 
 /* network_game_client_new_advertised_game (0x126700) — readable C lift. */
@@ -3033,137 +2838,44 @@ void FUN_001271a0(void *client, void *source_address, unsigned short rejection_c
   FUN_001267c0(client, 1);
 }
 
-/* FUN_001274E0 (0x1274e0) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void (*const b1274e0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1274e0_exitfn)(int) = system_exit;
-static char (*const b1274e0_c124d50)(void *client, void *source_address) = network_game_client_address_matches_server;
-static int16_t (*const b1274e0_c124a30)(void *server, void *out_param) = network_game_client_get_state;
-static bool (*const b1274e0_c12bce0)(int param_1, int param_2, short *param_3, short *param_4, short *param_5, int param_6) = FUN_0012bce0;
-static char (*const b1274e0_c125050)(void *client, void *message) = network_game_client_game_settings_updated;
-static void (*const b1274e0_c12b650)(const char *fmt, ...) = network_game_log;
-
-__attribute__((naked, noinline))
-char FUN_001274E0(void *client /* */ __attribute__((unused)), void *source_address /* */ __attribute__((unused)), void *message __attribute__((unused)), int message_size __attribute__((unused)))
+/* FUN_001274E0 (0x1274e0) — readable C lift (restored pre-naked). */
+char FUN_001274E0(void *client /* @<esi> */, void *source_address /* @<eax> */,
+                    void *message, int message_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x43c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jne .LFUN_001274E0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x169\n\t"
-      "pushl $0x293754\n\t"
-      "pushl $0x2919a4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001274E0_1:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_001274E0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x16a\n\t"
-      "pushl $0x293754\n\t"
-      "pushl $0x29373c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001274E0_2:\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c124d50]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001274E0_6\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c124a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .LFUN_001274E0_5\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl $2\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x43c(%%ebp), %%ecx\n\t"
-      "subl $2, %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $6, -0x4(%%ebp)\n\t"
-      "movl $1, -0x8(%%ebp)\n\t"
-      "movl %%edi, 0xc(%%ebp)\n\t"
-      "call *%[c12bce0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001274E0_4\n\t"
-      "leal -0x43c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c125050]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_001274E0_3\n\t"
-      "pushl $0x293708\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001274E0_3:\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001274E0_4:\n\t"
-      "pushl $0x2936c8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001274E0_5:\n\t"
-      "pushl $0x293670\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001274E0_6:\n\t"
-      "pushl $0x293628\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1274e0_assert), [exitfn] "m"(b1274e0_exitfn), [c124d50] "m"(b1274e0_c124d50), [c124a30] "m"(b1274e0_c124a30), [c12bce0] "m"(b1274e0_c12bce0), [c125050] "m"(b1274e0_c125050), [c12b650] "m"(b1274e0_c12b650)
-      : "memory");
+  char decoded[0x43c];
+  int packet_type;
+  int packet_version;
+  char result;
+
+  if (client == NULL) {
+    display_assert("client != NULL",
+                   "c:\\halo\\SOURCE\\networking\\network_client_message_handler.c",
+                   0x169, 1);
+    system_exit(-1);
+  }
+  if (source_address == NULL) {
+    display_assert("source_address != NULL",
+                   "c:\\halo\\SOURCE\\networking\\network_client_message_handler.c",
+                   0x16a, 1);
+    system_exit(-1);
+  }
+  if (!network_game_client_address_matches_server(client, source_address))
+    return 1;
+  if (network_game_client_get_state(client, NULL) != 2)
+    return 1;
+  message_size -= 2;
+  packet_type = 6;
+  packet_version = 1;
+  if (!FUN_0012bce0((int)decoded, (int)message + 2, (short *)&message_size,
+                    (short *)&packet_type, (short *)&packet_version, 6)) {
+    network_game_log("failed to decode a message_server_game_settings_update packet");
+    return 1;
+  }
+  result = network_game_client_game_settings_updated(client, decoded);
+  if (!result)
+    network_game_log("network_game_client_game_settings_updated() failed");
+  return result;
 }
-#else
-#error "FUN_001274E0: clang naked draft required"
-#endif
 
 
 /* FUN_00127610 (0x127610) — readable C lift: handle countdown timer message. */
