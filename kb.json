@@ -34565,7 +34565,7 @@
           "decl": "void ai_communication_dispose_from_old_map(void);",
           "addr": "0x42ca0",
           "name": "ai_communication_dispose_from_old_map",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x42cb0",

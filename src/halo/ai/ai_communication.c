@@ -266,27 +266,11 @@ void ai_communication_initialize_for_new_map(void)
 #endif
 
 
-/* ai_communication_dispose_from_old_map (0x42ca0) — XBE naked draft (batch 102). */
-#if defined(__clang__)
-static void (*const b42ca0_c119550)(data_t *data) = data_make_invalid;
-
-__attribute__((naked, noinline))
+/* ai_communication_dispose_from_old_map (0x42ca0) — readable C lift. */
 void ai_communication_dispose_from_old_map(void)
 {
-  __asm__ volatile(
-      "movl 0x6324ec, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119550]\n\t"
-      "popl %%ecx\n\t"
-      "ret\n\t"
-      :
-      : [c119550] "m"(b42ca0_c119550)
-      : "memory");
+  FUN_00119550(*(void **)0x6324ec);
 }
-#else
-#error "ai_communication_dispose_from_old_map: clang naked draft required"
-#endif
-
 
 /* ai_conversation_advance (0x43520) — XBE naked draft (batch 91). */
 #if defined(__clang__)
