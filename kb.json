@@ -3660,7 +3660,7 @@
         },
         {
           "addr": "0x14ba0",
-          "decl": "void FUN_00014ba0(int actor_handle, int *param_2);",
+          "decl": "void FUN_00014ba0(int actor_handle, int *out_vec4);",
           "ported": false
         },
         {
@@ -4025,7 +4025,7 @@
         },
         {
           "addr": "0x1a600",
-          "decl": "void FUN_0001a600(int actor_handle, int *param_2);",
+          "decl": "void FUN_0001a600(int actor_handle, int *out_vec4);",
           "ported": false
         },
         {
@@ -4060,7 +4060,7 @@
         },
         {
           "addr": "0x24ca0",
-          "decl": "char FUN_00024ca0(int actor_handle, short param_2);",
+          "decl": "char FUN_00024ca0(int actor_handle, short value);",
           "ported": false
         },
         {
@@ -13222,13 +13222,13 @@
         },
         {
           "addr": "0xd4e30",
-          "decl": "void hud_set_state_message_icon(short param_1, short param_2, int param_3);",
+          "decl": "void hud_set_state_message_icon(short player_index, short slot_index, int icon);",
           "name": "hud_set_state_message_icon",
           "ported": false
         },
         {
           "addr": "0xd4e90",
-          "decl": "void hud_set_state_message_text(short param_1, short param_2, short param_3, unsigned char param_4);",
+          "decl": "void hud_set_state_message_text(short player_index, short slot_index, short text, unsigned char flag);",
           "name": "hud_set_state_message_text",
           "ported": false
         },
@@ -14117,7 +14117,7 @@
           "addr": "0xf68b0",
           "decl": "short FUN_000f68b0(int item_handle);",
           "name": "FUN_000f68b0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xf6910",
@@ -15476,7 +15476,7 @@
         },
         {
           "addr": "0x11c1b0",
-          "decl": "int FUN_0011c1b0(int cache);",
+          "decl": "int FUN_0011c1b0(void *cache);",
           "name": "FUN_0011c1b0",
           "ported": false
         },
@@ -39972,7 +39972,7 @@
         },
         {
           "addr": "0x807d0",
-          "decl": "void key_message_xor_keystream(int msg, int len, int keystream, int key_len);",
+          "decl": "void key_message_xor_keystream(unsigned char *msg, int len, unsigned char *keystream, int key_len);",
           "name": "key_message_xor_keystream",
           "ported": false
         },
