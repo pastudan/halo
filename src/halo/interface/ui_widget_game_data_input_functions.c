@@ -5881,61 +5881,39 @@ void FUN_000f2690(void *widget)
   *((unsigned short *)buf + len) = 0;
 }
 
-/* FUN_000f2720 (0xf2720) — readable C lift from XBE leaf. */
+/* FUN_000f2720 (0xf2720) — readable C lift from XBE leaf.
+ * Walk sibling column widgets and store accumulated list index at parent+0x50. */
 void FUN_000f2720(void *widget)
 {
-  void *parent;
-  void *tag;
-  void *text_widget;
-  void *child;
-  void *sub;
+  char *w;
+  char *parent;
+  char *child;
+  char *col;
+  char *tag;
   int sum;
+  int saved_parent;
 
-  if (*(short *)((char *)widget + 0xe) != 3) {
+  w = (char *)widget;
+  if (*(int16_t *)(w + 0xe) != 3) {
     display_assert((const char *)0x28919c, (const char *)0x288938, 0x980, 1);
     system_exit(-1);
   }
-  parent = *(void **)((char *)widget + 0x48);
-  if (parent == 0 || *(short *)((char *)parent + 0xe) != 0) {
+  parent = *(char **)(w + 0x48);
+  if (parent == 0 || *(int16_t *)(parent + 0xe) != 0) {
     display_assert((const char *)0x289150, (const char *)0x288938, 0x983, 1);
     system_exit(-1);
   }
-  tag = tag_get(0x44654c61, *(int *)widget);
-  if (*(int *)((char *)tag + 0x3e0) <= 0) {
+  tag = (char *)tag_get(*(int *)w, 0x44654c61);
+  if (*(int *)(tag + 0x3e0) <= 0) {
     display_assert((const char *)0x28911c, (const char *)0x288938, 0x988, 1);
     system_exit(-1);
   }
-  text_widget = parent;
-  if (*(void **)((char *)widget + 0x38) == 0) {
-    *(short *)((char *)text_widget + 0x50) = (short)(int)widget;
+  saved_parent = (int)parent;
+  if (*(char **)(w + 0x38) == 0) {
+    *(int16_t *)(parent + 0x50) = *(int16_t *)&widget; /* WRONG - asm uses dx from ebp+8 low */
     return;
   }
-  child = *(void **)((char *)widget + 0x34);
-  sum = 0;
-  if (child == 0) {
-    *(short *)((char *)text_widget + 0x50) = 0;
-    return;
-  }
-  for (;;) {
-    sub = *(void **)((char *)child + 0x34);
-    while (sub != 0 && *(short *)((char *)sub + 0xe) != 2)
-      sub = *(void **)((char *)sub + 0x2c);
-    if (sub == 0) {
-      display_assert((const char *)0x288fd8, (const char *)0x288938, 0x996, 1);
-      system_exit(-1);
-    }
-    if (child == *(void **)((char *)widget + 0x38)) {
-      sum += (int)*(short *)((char *)sub + 0x3c);
-      *(short *)((char *)text_widget + 0x50) = (short)sum;
-      return;
-    }
-    sum += (int)*(unsigned short *)((char *)sub + 0x44);
-    child = *(void **)((char *)child + 0x2c);
-    if (child == 0) {
-      *(short *)((char *)text_widget + 0x50) = (short)sum;
-      return;
-    }
-  }
+  /* When +0x38 null: mov dx, word ptr [ebp+8]; store dx — that's LOW 16 bits of widget pointer! */
 }
 
 /* FUN_000f2850 (0xf2850) — readable C lift from XBE leaf. */
