@@ -10108,8 +10108,8 @@
         },
         {
           "addr": "0x1c75a0",
-          "decl": "void scripted_foley_predict(int a0);",
-          "ported": false
+          "decl": "void scripted_foley_predict(int tag_index);",
+          "ported": true
         },
         {
           "addr": "0x1c7650",
@@ -27778,7 +27778,7 @@
         },
         {
           "addr": "0xeeeb0",
-          "decl": "void FUN_000eeeb0(void *widget);",
+          "decl": "char FUN_000eeeb0(void *widget, void *player_ui, char *out_flag);",
           "ported": false
         },
         {
@@ -27860,7 +27860,7 @@
         },
         {
           "addr": "0xf01d0",
-          "decl": "void player_profile_end_editing(void *widget);",
+          "decl": "char player_profile_end_editing(void *widget, void *arg1, void *arg2);",
           "ported": false
         },
         {
@@ -28866,7 +28866,7 @@
         },
         {
           "addr": "0x1a7df0",
-          "decl": "char FUN_001a7df0(int datum_handle, int param_2, int param_3, int param_4);",
+          "decl": "char FUN_001a7df0(int parent_handle, int param_2, int param_3, int param_4);",
           "ported": false
         },
         {

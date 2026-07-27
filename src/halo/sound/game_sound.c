@@ -1319,89 +1319,45 @@ void scripted_sound_stop(int a0)
   *(int *)((char *)snd + 0x90) = -1;
 }
 
-/* scripted_foley_predict (0x1c75a0) — XBE naked draft (batch 281). */
-#if defined(__clang__)
-static void *(*const b1c75a0_tag)(int, int) = tag_get;
-static void *(*const b1c75a0_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b1c75a0_c1be550)(void *permutation, int a2, int a3, int a4) = sound_cache_request_sound;
-
-__attribute__((naked, noinline))
-void scripted_foley_predict(int a0 __attribute__((unused)))
+/* scripted_foley_predict (0x1c75a0) — readable C lift. */
+void scripted_foley_predict(int tag_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_foley_predict_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6c736e64\n\t"
-      "call *%[tag]\n\t"
-      "leal 0x3c(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lscripted_foley_predict_3\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lscripted_foley_predict_1:\n\t"
-      "pushl $0xa0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4c(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lscripted_foley_predict_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x98(%%eax), %%ecx\n\t"
-      "addl $0x98, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $1, %%ecx\n\t"
-      "jne .Lscripted_foley_predict_2\n\t"
-      "pushl $0x48\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x3c(%%eax), %%ecx\n\t"
-      "addl $0x3c, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lscripted_foley_predict_2\n\t"
-      "pushl $0x7c\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1be550]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".Lscripted_foley_predict_2:\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lscripted_foley_predict_1\n\t"
-      ".Lscripted_foley_predict_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".Lscripted_foley_predict_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b1c75a0_tag), [elem] "m"(b1c75a0_elem), [c1be550] "m"(b1c75a0_c1be550)
-      : "memory");
+  char *lsnd;
+  void *block;
+  int count;
+  int i;
+  void *elem;
+  int snd_index;
+  char *snd;
+  void *perm_block;
+  void *perm;
+
+  if (tag_index == -1) {
+    return;
+  }
+  lsnd = (char *)tag_get(0x6c736e64, tag_index);
+  block = lsnd + 0x3c;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    elem = tag_block_get_element(block, i, 0xa0);
+    snd_index = *(int *)((char *)elem + 0x4c);
+    if (snd_index == -1) {
+      continue;
+    }
+    snd = (char *)tag_get(0x736e6421, snd_index);
+    perm_block = snd + 0x98;
+    if (*(int *)perm_block != 1) {
+      continue;
+    }
+    perm = tag_block_get_element(perm_block, 0, 0x48);
+    if (*(int *)((char *)perm + 0x3c) == 0) {
+      continue;
+    }
+    sound_cache_request_sound(
+        tag_block_get_element((char *)perm + 0x3c, 0, 0x7c), 0, 1, 0);
+  }
 }
-#else
-#error "scripted_foley_predict: clang naked draft required"
-#endif
+
 
 
 /* scripted_looping_sound_set_scale (0x1c7650) — readable C lift. */
