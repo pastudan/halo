@@ -38549,7 +38549,8 @@
         {
           "addr": "0x123ed0",
           "decl": "void FUN_00123ed0(int model_ref, float distance, void *node_matrices, void *arg4, void *node_transforms, void *node_matrices2, int lighting, void *position, int arg9, void *effect_record, int object_handle, int arg12, int render_flag);",
-          "ported": false
+          "ported": true,
+          "name": "FUN_00123ed0"
         }
       ],
       "name": "model_animations.obj",
