@@ -7913,7 +7913,7 @@
         {
           "addr": "0x1995c0",
           "decl": "void file_printf(file_ref_t *info, const char *format, ...);",
-          "ported": false,
+          "ported": true,
           "name": "file_printf"
         },
         {

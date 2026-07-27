@@ -1314,24 +1314,16 @@ void file_printf(file_ref_t *info, const char *format, ...)
   char buffer[0x400];
   char *arglist;
   int len;
-  bool (*write3)(file_ref_t *, int, void *) =
-      (bool (*)(file_ref_t *, int, void *))file_write;
-  void (*set_eof)(file_ref_t *, int) =
-      (void (*)(file_ref_t *, int))file_set_eof;
 
   if (format == 0) {
     return;
   }
-  arglist = (char *)(&format + 1);
+  arglist = (char *)&format + sizeof(format);
   vsprintf(buffer, format, arglist);
   len = csstrlen(buffer);
-  write3(info, len, buffer);
-  set_eof(info, file_get_position(info));
+  file_write(info, len, buffer);
+  file_set_eof(info, file_get_position(info));
 }
-
-
-
-
 /* file_reference_copy (0x1996d0) — readable C lift. */
 void *file_reference_copy(void *dst, void *src)
 {
