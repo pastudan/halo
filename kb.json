@@ -35283,7 +35283,7 @@
         {
           "addr": "0x22dc0",
           "decl": "void FUN_00022dc0(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00022dc0"
         },
         {
@@ -37087,7 +37087,7 @@
         {
           "addr": "0x57d00",
           "decl": "void FUN_00057d00(int unit_handle, int encounter_index, int16_t profile_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00057d00"
         },
         {
