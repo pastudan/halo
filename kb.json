@@ -13936,7 +13936,7 @@
           "addr": "0xdfdc0",
           "decl": "void interface_draw_splitscreen_dividers(void);",
           "name": "interface_draw_splitscreen_dividers",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xdff00",
