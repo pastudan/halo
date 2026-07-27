@@ -23862,7 +23862,7 @@
         },
         {
           "addr": "0x1c3080",
-          "decl": "void saved_game_file_retrieve_last_used_multiplayer_map(void);",
+          "decl": "bool saved_game_file_retrieve_last_used_multiplayer_map(char *out_name);",
           "ported": false
         },
         {
@@ -27627,12 +27627,12 @@
         {
           "addr": "0xea010",
           "decl": "char FUN_000ea010(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xea100",
           "decl": "char FUN_000ea100(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xea1f0",
@@ -27849,8 +27849,8 @@
         },
         {
           "addr": "0xef970",
-          "decl": "void FUN_000ef970(void *widget);",
-          "ported": false
+          "decl": "char FUN_000ef970(void *widget);",
+          "ported": true
         },
         {
           "addr": "0xefa80",
@@ -27932,8 +27932,8 @@
         },
         {
           "addr": "0xf0640",
-          "decl": "void FUN_000f0640(void *widget);",
-          "ported": false
+          "decl": "char FUN_000f0640(void *widget);",
+          "ported": true
         },
         {
           "addr": "0xf0740",

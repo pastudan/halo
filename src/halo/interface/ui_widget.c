@@ -3074,172 +3074,72 @@ char playlist_profile_change_koth_rules(void *widget)
   return 1;
 }
 
-/* FUN_000ea010 (0xea010) — XBE naked draft (batch 135). */
-#if defined(__clang__)
-static void (*const bea010_c12a150)(char accept) = (void *)network_game_set_accept_remote_connections;
-static void * (*const bea010_c12a1d0)(void) = (void *)network_game_server_get;
-static void (*const bea010_cae750)(void) = (void *)game_engine_playlist_initialize;
-static bool (*const bea010_c12a890)(void) = (void *)FUN_0012a890;
-static void (*const bea010_ca8a70)(void) = (void *)game_engine_playlist_begin;
-static void (*const bea010_cfff70)(short param) = (void *)set_game_connection;
-static void * (*const bea010_c12a240)(void) = (void *)network_game_client_get;
-static bool (*const bea010_c12a250)(void) = (void *)FUN_0012a250;
-static void (*const bea010_c12a1e0)(void) = (void *)dispose_global_network_game_client;
-static void (*const bea010_c12a2a0)(void) = (void *)dispose_global_network_game_server;
-static void (*const bea010_ce0960)(void) = (void *)player_ui_clear_multiplayer_variant;
-static void (*const bea010_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* FUN_000ea010 (0xea010) — readable C lift. */
 char FUN_000ea010(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl $0\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c12a150]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c12a1d0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000ea010_2\n\t"
-      "call *%[cae750]\n\t"
-      "call *%[c12a890]\n\t"
-      "movb %%al, %%bl\n\t"
-      "cmpb $1, %%bl\n\t"
-      "jne .LFUN_000ea010_1\n\t"
-      "call *%[ca8a70]\n\t"
-      "pushl $2\n\t"
-      "call *%[cfff70]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000ea010_1:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_000ea010_4\n\t"
-      ".LFUN_000ea010_2:\n\t"
-      "call *%[c12a240]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000ea010_3\n\t"
-      "call *%[c12a250]\n\t"
-      "movb %%al, %%bl\n\t"
-      ".LFUN_000ea010_3:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_000ea010_5\n\t"
-      ".LFUN_000ea010_4:\n\t"
-      "call *%[c12a1e0]\n\t"
-      "call *%[c12a2a0]\n\t"
-      "call *%[ce0960]\n\t"
-      "pushl $0x285d48\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000ea010_5:\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c12a150] "m"(bea010_c12a150), [c12a1d0] "m"(bea010_c12a1d0), [cae750] "m"(bea010_cae750), [c12a890] "m"(bea010_c12a890), [ca8a70] "m"(bea010_ca8a70), [cfff70] "m"(bea010_cfff70), [c12a240] "m"(bea010_c12a240), [c12a250] "m"(bea010_c12a250), [c12a1e0] "m"(bea010_c12a1e0), [c12a2a0] "m"(bea010_c12a2a0), [ce0960] "m"(bea010_ce0960), [c8f390] "m"(bea010_c8f390)
-      : "memory");
+  char ok;
+
+  network_game_set_accept_remote_connections(0);
+  ok = 1;
+  if (network_game_server_get() == 0) {
+    game_engine_playlist_initialize();
+    ok = FUN_0012a890() ? 1 : 0;
+    if (ok == 1) {
+      game_engine_playlist_begin();
+      set_game_connection(2);
+    }
+  }
+  if (ok != 0) {
+    if (network_game_client_get() == 0) {
+      ok = FUN_0012a250() ? 1 : 0;
+    }
+  }
+  if (ok == 0) {
+    dispose_global_network_game_client();
+    dispose_global_network_game_server();
+    player_ui_clear_multiplayer_variant();
+    error(2, (const char *)0x285d48);
+  }
+  return ok;
 }
-#else
-#error "FUN_000ea010: clang naked draft required"
-#endif
 
-
-/* FUN_000ea100 (0xea100) — XBE naked draft (batch 137). */
-#if defined(__clang__)
-static void *(*const bea100_tag)(int, int) = (void *)tag_get;
-static void (*const bea100_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bea100_exitfn)(int) = (void *)system_exit;
-static void (*const bea100_c1c3080)(void) = (void *)saved_game_file_retrieve_last_used_multiplayer_map;
-static int (*const bea100_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
-
-__attribute__((naked, noinline))
+/* FUN_000ea100 (0xea100) — readable C lift. */
 char FUN_000ea100(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .LFUN_000ea100_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4cc\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285db8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ea100_1:\n\t"
-      "cmpl $3, 0x3e0(%%edi)\n\t"
-      "je .LFUN_000ea100_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4cd\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285d78\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ea100_2:\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "movl $0xd, %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x31e4c8, 0x40(%%esi)\n\t"
-      "movw %%di, 0x44(%%esi)\n\t"
-      "call *%[c1c3080]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ea100_5\n\t"
-      "movw $0, 0x3c(%%esi)\n\t"
-      "jmp .LFUN_000ea100_3\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000ea100_3:\n\t"
-      "movswl 0x3c(%%esi), %%edx\n\t"
-      "movl 0x31e4c8(,%%edx,4), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000ea100_4\n\t"
-      "incw 0x3c(%%esi)\n\t"
-      "cmpw %%di, 0x3c(%%esi)\n\t"
-      "jl .LFUN_000ea100_3\n\t"
-      ".LFUN_000ea100_4:\n\t"
-      "cmpw %%di, 0x3c(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "jne .LFUN_000ea100_6\n\t"
-      "popl %%edi\n\t"
-      "movw $0, 0x3c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ea100_5:\n\t"
-      "movb $1, %%al\n\t"
-      ".LFUN_000ea100_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(bea100_tag), [assert] "m"(bea100_assert), [exitfn] "m"(bea100_exitfn), [c1c3080] "m"(bea100_c1c3080), [c1dd801] "m"(bea100_c1dd801)
-      : "memory");
-}
-#else
-#error "FUN_000ea100: clang naked draft required"
-#endif
+  void *tag;
+  char map_name[256];
+  short i;
 
+  tag = tag_get(0x44654c61, *(int *)widget);
+  if (*(short *)tag != 2) {
+    display_assert((const char *)0x285db8, (const char *)0x2859a4, 0x4cc, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)tag + 0x3e0) != 3) {
+    display_assert((const char *)0x285d78, (const char *)0x2859a4, 0x4cd, 1);
+    system_exit(-1);
+  }
+  *(void **)((char *)widget + 0x40) = (void *)0x31e4c8;
+  *(short *)((char *)widget + 0x44) = 0xd;
+  if (!saved_game_file_retrieve_last_used_multiplayer_map(map_name)) {
+    return 1;
+  }
+  *(short *)((char *)widget + 0x3c) = 0;
+  for (;;) {
+    i = *(short *)((char *)widget + 0x3c);
+    if (crt_stricmp(map_name, *(const char **)(0x31e4c8 + i * 4)) == 0) {
+      break;
+    }
+    *(short *)((char *)widget + 0x3c) = (short)(i + 1);
+    if (*(short *)((char *)widget + 0x3c) >= 0xd) {
+      break;
+    }
+  }
+  if (*(short *)((char *)widget + 0x3c) == 0xd) {
+    *(short *)((char *)widget + 0x3c) = 0;
+  }
+  return 1;
+}
 
 /* FUN_000eceb0 (0xeceb0) — XBE naked draft (batch 108). */
 #if defined(__clang__)

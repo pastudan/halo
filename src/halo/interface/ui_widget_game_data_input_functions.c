@@ -2862,114 +2862,44 @@ char FUN_000ef900(void *unused, void *player_slot)
   return 1;
 }
 
-/* FUN_000ef970 (0xef970) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void *(*const bef970_tag)(int, int) = (void *)tag_get;
-static void (*const bef970_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bef970_exitfn)(int) = (void *)system_exit;
-static void (*const bef970_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
-
-__attribute__((naked, noinline))
-void FUN_000ef970(void *widget)
+/* FUN_000ef970 (0xef970) — readable C lift. */
+char FUN_000ef970(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, (%%eax)\n\t"
-      "jne .LFUN_000ef970_1\n\t"
-      "cmpl $3, 0x3e0(%%eax)\n\t"
-      "jge .LFUN_000ef970_2\n\t"
-      ".LFUN_000ef970_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x100f\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286500\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ef970_2:\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, (%%edi)\n\t"
-      "je .LFUN_000ef970_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1012\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286070\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ef970_3:\n\t"
-      "cmpl $3, 0x3e0(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "je .LFUN_000ef970_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1013\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x286034\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ef970_4:\n\t"
-      "movl 0x34(%%esi), %%esi\n\t"
-      "movw 0x3c(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_000ef970_5\n\t"
-      "movzwl 0x44(%%esi), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .LFUN_000ef970_6\n\t"
-      ".LFUN_000ef970_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x101c\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285fe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ef970_6:\n\t"
-      "movswl 0x3c(%%esi), %%ecx\n\t"
-      "movl 0x40(%%esi), %%edx\n\t"
-      "movl (%%edx,%%ecx,4), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, 0x31e494\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_000ef970_7\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ef970_7:\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(bef970_tag), [assert] "m"(bef970_assert), [exitfn] "m"(bef970_exitfn), [ce5ab0] "m"(bef970_ce5ab0)
-      : "memory");
-}
-#else
-#error "FUN_000ef970: clang naked draft required"
-#endif
+  void *tag;
+  void *parent;
+  void *parent_tag;
+  short idx;
+  int value;
 
+  tag = tag_get(0x44654c61, *(int *)widget);
+  if (*(short *)tag != 0 || *(int *)((char *)tag + 0x3e0) < 3) {
+    display_assert((const char *)0x286500, (const char *)0x2859a4, 0x100f, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x34);
+  parent_tag = tag_get(0x44654c61, *(int *)parent);
+  if (*(short *)parent_tag != 2) {
+    display_assert((const char *)0x286070, (const char *)0x2859a4, 0x1012, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)parent_tag + 0x3e0) != 3) {
+    display_assert((const char *)0x286034, (const char *)0x2859a4, 0x1013, 1);
+    system_exit(-1);
+  }
+  parent = *(void **)((char *)widget + 0x34);
+  idx = *(short *)((char *)parent + 0x3c);
+  if (idx < 0 || (int)idx >= (int)*(unsigned short *)((char *)parent + 0x44)) {
+    display_assert((const char *)0x285fe0, (const char *)0x2859a4, 0x101c, 1);
+    system_exit(-1);
+  }
+  value = *(int *)(*(int *)((char *)parent + 0x40) + idx * 4);
+  *(int *)0x31e494 = value;
+  if (value == -1) {
+    ui_play_audio_feedback_sound(4);
+    return 0;
+  }
+  return 1;
+}
 
 /* FUN_000efa80 (0xefa80) — XBE naked draft (batch 114). */
 #if defined(__clang__)
@@ -3900,100 +3830,35 @@ char FUN_000f0620(void *widget)
   return 1;
 }
 
-/* FUN_000f0640 (0xf0640) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void (*const bf0640_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bf0640_exitfn)(int) = (void *)system_exit;
-static const char * (*const bf0640_c100040)(void) = (void *)main_get_map_name;
-static int (*const bf0640_c1dd801)(const char *a, const char *b) = (void *)crt_stricmp;
-static void * (*const bf0640_ce3cd0)(void *widget, int index) = (void *)widget_instance_get_nth_child;
-
-__attribute__((naked, noinline))
-void FUN_000f0640(void *widget)
+/* FUN_000f0640 (0xf0640) — readable C lift. */
+char FUN_000f0640(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $3, 0xe(%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_000f0640_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12fc\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x2888c4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0640_1:\n\t"
-      "cmpb $1, 0x46ce3b\n\t"
-      "jne .LFUN_000f0640_3\n\t"
-      "call *%[c100040]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x46cd38\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f0640_3\n\t"
-      "movswl 0x46ce38, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce3cd0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_000f0640_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1301\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x28889c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0640_2:\n\t"
-      "movw 0x46ce38, %%cx\n\t"
-      "movl %%edi, 0x38(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movw %%cx, 0x3c(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000f0640_3:\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce3cd0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_000f0640_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1307\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x28889c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f0640_4:\n\t"
-      "movl %%edi, 0x38(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movw $1, 0x3c(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bf0640_assert), [exitfn] "m"(bf0640_exitfn), [c100040] "m"(bf0640_c100040), [c1dd801] "m"(bf0640_c1dd801), [ce3cd0] "m"(bf0640_ce3cd0)
-      : "memory");
-}
-#else
-#error "FUN_000f0640: clang naked draft required"
-#endif
+  void *child;
 
+  if (*(short *)((char *)widget + 0xe) != 3) {
+    display_assert((const char *)0x2888c4, (const char *)0x2859a4, 0x12fc, 1);
+    system_exit(-1);
+  }
+  if (*(unsigned char *)0x46ce3b == 1 &&
+      crt_stricmp((const char *)0x46cd38, main_get_map_name()) == 0) {
+    child = widget_instance_get_nth_child(widget, *(short *)0x46ce38);
+    if (child == 0) {
+      display_assert((const char *)0x28889c, (const char *)0x2859a4, 0x1301, 1);
+      system_exit(-1);
+    }
+    *(void **)((char *)widget + 0x38) = child;
+    *(short *)((char *)widget + 0x3c) = *(short *)0x46ce38;
+    return 1;
+  }
+  child = widget_instance_get_nth_child(widget, 1);
+  if (child == 0) {
+    display_assert((const char *)0x28889c, (const char *)0x2859a4, 0x1307, 1);
+    system_exit(-1);
+  }
+  *(void **)((char *)widget + 0x38) = child;
+  *(short *)((char *)widget + 0x3c) = 1;
+  return 1;
+}
 
 /* FUN_000f0740 (0xf0740) — readable C lift. */
 char FUN_000f0740(void *widget)
