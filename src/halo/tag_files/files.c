@@ -1194,75 +1194,22 @@ bool file_read_only(file_ref_t *info)
 }
 
 
-/* file_set_eof (0x19aad0) — XBE naked draft (batch 266). */
-#if defined(__clang__)
-static file_ref_t * (*const b19aad0_c199620)(file_ref_t *info) = file_reference_verify;
-static bool (*const b19aad0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static bool __stdcall (*const b19aad0_c1d158c)(int handle) = SetEndOfFile;
-static int (*const b19aad0_c1d2240)(void) = xapi_GetLastError;
-static void (*const b19aad0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void __stdcall (*const b19aad0_c1d2268)(unsigned int error) = SetLastError;
-
-__attribute__((naked, noinline))
-void file_set_eof(void)
+/* file_set_eof (0x19aad0) — readable C lift from XBE leaf. */
+bool file_set_eof(file_ref_t *info, int offset)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c199620]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19aa00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lfile_set_eof_1\n\t"
-      "movl 0x108(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d158c]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lfile_set_eof_1\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lfile_set_eof_1:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c199620]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1d2240]\n\t"
-      "pushl %%eax\n\t"
-      "addl $8, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2b4000\n\t"
-      "pushl $0x2b3ea4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d2268]\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c199620] "m"(b19aad0_c199620), [c19aa00] "m"(b19aad0_c19aa00), [c1d158c] "m"(b19aad0_c1d158c), [c1d2240] "m"(b19aad0_c1d2240), [c8f390] "m"(b19aad0_c8f390), [c1d2268] "m"(b19aad0_c1d2268)
-      : "memory");
+  file_ref_t *ref;
+  int err;
+
+  ref = file_reference_verify(info);
+  if (file_set_position(info, offset) && SetEndOfFile(*(int *)((char *)ref + 0x108)))
+    return 1;
+  ref = file_reference_verify(info);
+  err = xapi_GetLastError();
+  error(2, "%s('%s') error 0x%08x", "file_set_eof", (char *)ref + 8, err);
+  SetLastError(0);
+  return 0;
 }
-#else
-#error "file_set_eof: clang naked draft required"
-#endif
+
 
 
 /* file_write (0x19ac00) — XBE naked draft (batch 265). */

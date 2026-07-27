@@ -3426,7 +3426,7 @@
         {
           "addr": "0x3c3e0",
           "decl": "void actor_unit_control_stop_animation_impulse(int actor_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x3c410",
@@ -6869,7 +6869,7 @@
         {
           "addr": "0x17cba0",
           "decl": "void FUN_0017cba0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cbb0",
@@ -6889,7 +6889,7 @@
         {
           "addr": "0x17cbe0",
           "decl": "void FUN_0017cbe0(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cbf0",
@@ -6899,7 +6899,7 @@
         {
           "addr": "0x17cc00",
           "decl": "void FUN_0017cc00(void);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x17cc10",
@@ -8024,8 +8024,8 @@
         },
         {
           "addr": "0x19aad0",
-          "decl": "void file_set_eof(void);",
-          "ported": false,
+          "decl": "bool file_set_eof(file_ref_t *info, int offset);",
+          "ported": true,
           "name": "file_set_eof"
         },
         {
@@ -34320,8 +34320,8 @@
         },
         {
           "addr": "0x2b400",
-          "decl": "void actor_move_transform_avoidance_vector(int matrix, float *in_vec, float *out_vec);",
-          "ported": false,
+          "decl": "void actor_move_transform_avoidance_vector(char *obj, float *local, float *out);",
+          "ported": true,
           "name": "actor_move_transform_avoidance_vector"
         },
         {
@@ -34351,13 +34351,13 @@
         {
           "addr": "0x2d850",
           "decl": "char actor_move_to_move_position(int actor_handle, int16_t param_2);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_to_move_position"
         },
         {
           "addr": "0x2d900",
           "decl": "char actor_move_to_firing_position(int actor_handle, int16_t param_2, void *param_3);",
-          "ported": false,
+          "ported": true,
           "name": "actor_move_to_firing_position"
         },
         {
@@ -34604,7 +34604,7 @@
         {
           "addr": "0x32c10",
           "decl": "void actor_perception_abandoned_search(int actor_handle, int prop_handle);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x32cb0",
@@ -36159,7 +36159,7 @@
         {
           "addr": "0x5adc0",
           "decl": "void encounter_squad_timer_expire(int encounter_handle, int16_t squad_index);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x5ae70",
@@ -38167,8 +38167,8 @@
         },
         {
           "addr": "0x123d80",
-          "decl": "void FUN_00123d80(void);",
-          "ported": false
+          "decl": "int16_t FUN_00123d80(int tag_index, char *name);",
+          "ported": true
         },
         {
           "addr": "0x123e20",
@@ -38177,8 +38177,8 @@
         },
         {
           "addr": "0x123e50",
-          "decl": "void FUN_00123e50(void);",
-          "ported": false
+          "decl": "int16_t FUN_00123e50(int tag_index, char *name);",
+          "ported": true
         },
         {
           "addr": "0x123ed0",

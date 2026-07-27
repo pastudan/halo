@@ -4295,98 +4295,39 @@ void FUN_00123c70(void *mode_tag __attribute__((unused)), void *out_matrices __a
 #endif
 
 
-/* FUN_00123d80 (0x123d80) — XBE naked draft (batch 253). */
-#if defined(__clang__)
-static void *(*const b123d80_tag)(int, int) = tag_get;
-static void *(*const b123d80_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b123d80_c1dd801)(const char *a, const char *b) = crt_stricmp;
-
-__attribute__((naked, noinline))
-void FUN_00123d80(void)
+/* FUN_00123d80 (0x123d80) — readable C lift from XBE leaf. */
+int16_t FUN_00123d80(int tag_index, char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_00123d80_1\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_00123d80_1\n\t"
-      "cmpb $0, (%%ecx)\n\t"
-      "je .LFUN_00123d80_1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6d6f6465\n\t"
-      "call *%[tag]\n\t"
-      "movw 0xac(%%eax), %%di\n\t"
-      "leal 0xac(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "decw %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "jge .LFUN_00123d80_3\n\t"
-      ".LFUN_00123d80_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00123d80_2:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00123d80_3:\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "subl %%edx, %%eax\n\t"
-      "movl %%eax, %%esi\n\t"
-      "sarl $1, %%esi\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1dd801]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00123d80_6\n\t"
-      "jge .LFUN_00123d80_4\n\t"
-      "leal -0x1(%%esi), %%edi\n\t"
-      "jmp .LFUN_00123d80_5\n\t"
-      ".LFUN_00123d80_4:\n\t"
-      "leal 0x1(%%esi), %%ebx\n\t"
-      ".LFUN_00123d80_5:\n\t"
-      "cmpw %%di, %%bx\n\t"
-      "jle .LFUN_00123d80_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00123d80_6:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b123d80_tag), [elem] "m"(b123d80_elem), [c1dd801] "m"(b123d80_c1dd801)
-      : "memory");
+  char *tag;
+  short *block;
+  short lo;
+  short hi;
+  short mid;
+  char *elem;
+  int cmp;
+
+  if (tag_index == -1 || !name || name[0] == 0)
+    return (int16_t)-1;
+  tag = (char *)tag_get(0x6d6f6465, tag_index);
+  block = (short *)(tag + 0xac);
+  hi = (short)(block[0] - 1);
+  lo = 0;
+  if (hi < 0)
+    return (int16_t)-1;
+  while (lo <= hi) {
+    mid = (short)((lo + hi) / 2);
+    elem = (char *)tag_block_get_element(block, (int)mid, 0x40);
+    cmp = crt_stricmp(elem, name);
+    if (cmp == 0)
+      return mid;
+    if (cmp < 0)
+      hi = (short)(mid - 1);
+    else
+      lo = (short)(mid + 1);
+  }
+  return (int16_t)-1;
 }
-#else
-#error "FUN_00123d80: clang naked draft required"
-#endif
+
 
 
 /* animation_get_root_matrix (0x123e20) — readable C lift. */
@@ -4395,73 +4336,30 @@ void *animation_get_root_matrix(void *a0, short a1)
   return (char *)tag_block_get_element((char *)a0 + 0xb8, a1, 0x9c) + 0x68;
 }
 
-/* FUN_00123e50 (0x123e50) — XBE naked draft (batch 278). */
-#if defined(__clang__)
-static void *(*const b123e50_tag)(int, int) = tag_get;
-static void *(*const b123e50_elem)(void *, int, int) = tag_block_get_element;
-static int (*const b123e50_c8dcb0)(const char *s1, const char *s2) = csstrcmp;
-
-__attribute__((naked, noinline))
-void FUN_00123e50(void)
+/* FUN_00123e50 (0x123e50) — readable C lift from XBE leaf. */
+int16_t FUN_00123e50(int tag_index, char *name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .LFUN_00123e50_2\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6d6f6465\n\t"
-      "call *%[tag]\n\t"
-      "leal 0xb8(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00123e50_2\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "nop\n\t"
-      ".LFUN_00123e50_1:\n\t"
-      "pushl $0x9c\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dcb0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00123e50_3\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00123e50_1\n\t"
-      ".LFUN_00123e50_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00123e50_3:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b123e50_tag), [elem] "m"(b123e50_elem), [c8dcb0] "m"(b123e50_c8dcb0)
-      : "memory");
+  char *tag;
+  void *block;
+  int count;
+  int i;
+  char *elem;
+
+  if (tag_index == -1)
+    return (int16_t)-1;
+  tag = (char *)tag_get(0x6d6f6465, tag_index);
+  block = tag + 0xb8;
+  count = *(int *)block;
+  if (count <= 0)
+    return (int16_t)-1;
+  for (i = 0; i < count; i++) {
+    elem = (char *)tag_block_get_element(block, i, 0x9c);
+    if (csstrcmp(elem, name) == 0)
+      return (int16_t)i;
+  }
+  return (int16_t)-1;
 }
-#else
-#error "FUN_00123e50: clang naked draft required"
-#endif
+
 
 
 /* FUN_00123ed0 (0x123ed0) — XBE naked draft (batch 241). */

@@ -1542,74 +1542,30 @@ char FUN_0002b310(float *direction __attribute__((unused)), short count __attrib
 #endif
 
 
-/* actor_move_transform_avoidance_vector (0x2b400) — XBE naked draft (batch 91). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void actor_move_transform_avoidance_vector(int matrix __attribute__((unused)), float *in_vec __attribute__((unused)), float *out_vec __attribute__((unused)))
+/* actor_move_transform_avoidance_vector (0x2b400) — readable C lift from XBE leaf. */
+void actor_move_transform_avoidance_vector(char *obj, float *local, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x31fc38, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%esi, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%esi\n\t"
-      "movl %%esi, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "flds (%%edx)\n\t"
-      "popl %%esi\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x18(%%ecx)\n\t"
-      "fadds (%%eax)\n\t"
-      "fstps (%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x1c(%%ecx)\n\t"
-      "fadds 0x4(%%eax)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "fmuls 0x20(%%ecx)\n\t"
-      "fadds 0x8(%%eax)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x24(%%ecx)\n\t"
-      "fadds (%%eax)\n\t"
-      "fstps (%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x28(%%ecx)\n\t"
-      "fadds 0x4(%%eax)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "fmuls 0x2c(%%ecx)\n\t"
-      "fadds 0x8(%%eax)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds 0x8(%%edx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x30(%%ecx)\n\t"
-      "fadds (%%eax)\n\t"
-      "fstps (%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x34(%%ecx)\n\t"
-      "fadds 0x4(%%eax)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "fmuls 0x38(%%ecx)\n\t"
-      "fadds 0x8(%%eax)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float *origin;
+  float s;
+
+  origin = *(float **)0x31fc38;
+  out[0] = origin[0];
+  out[1] = origin[1];
+  out[2] = origin[2];
+  s = local[0];
+  out[0] += s * *(float *)(obj + 0x18);
+  out[1] += s * *(float *)(obj + 0x1c);
+  out[2] += s * *(float *)(obj + 0x20);
+  s = local[1];
+  out[0] += s * *(float *)(obj + 0x24);
+  out[1] += s * *(float *)(obj + 0x28);
+  out[2] += s * *(float *)(obj + 0x2c);
+  s = local[2];
+  out[0] += s * *(float *)(obj + 0x30);
+  out[1] += s * *(float *)(obj + 0x34);
+  out[2] += s * *(float *)(obj + 0x38);
 }
-#else
-#error "actor_move_transform_avoidance_vector: clang naked draft required"
-#endif
+
 
 
 /* actor_move_get_avoidance_vector (0x2b490) — XBE naked draft (batch 85). */
@@ -4726,174 +4682,66 @@ char actor_move_to_point(int actor_handle __attribute__((unused)), float *destin
 #endif
 
 
-/* actor_move_to_move_position (0x2d850) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static void *(*const b2d850_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b2d850_c3ca40)(int actor_handle, char flag) = actor_set_dormant;
-static char (*const b2d850_c2cdb0)(int actor_handle, char store_distance, void *override_path) = actor_path_refresh;
-
-__attribute__((naked, noinline))
-char actor_move_to_move_position(int actor_handle __attribute__((unused)), int16_t param_2 __attribute__((unused)))
+/* actor_move_to_move_position (0x2d850) — readable C lift from XBE leaf. */
+char actor_move_to_move_position(int actor_handle, int16_t pos_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl $0\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movw %%di, 0x3b8(%%esi)\n\t"
-      "call *%[c3ca40]\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "leal 0x46c(%%esi), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $4, (%%edx)\n\t"
-      "jne .Lactor_move_to_move_position_1\n\t"
-      "cmpw %%cx, 0x470(%%esi)\n\t"
-      "jne .Lactor_move_to_move_position_1\n\t"
-      "movb 0x4c(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_move_to_move_position_2\n\t"
-      "movb 0x4a4(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_move_to_move_position_2\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c2cdb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_move_to_move_position_1:\n\t"
-      "leal 0x400(%%esi), %%eax\n\t"
-      "movw %%cx, 0x404(%%esi)\n\t"
-      "movl %%edi, 0x414(%%esi)\n\t"
-      "pushl $0\n\t"
-      "movb $0, 0x402(%%esi)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl %%edx, %%edi\n\t"
-      "pushl $1\n\t"
-      "movw $4, (%%eax)\n\t"
-      "movl $6, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "rep movsl\n\t"
-      "call *%[c2cdb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_move_to_move_position_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2d850_dget), [c3ca40] "m"(b2d850_c3ca40), [c2cdb0] "m"(b2d850_c2cdb0)
-      : "memory");
+  char *actor;
+  int16_t *dst;
+  int i;
+  int *src;
+  int *out;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  *(int16_t *)(actor + 0x3b8) = (int16_t)-1;
+  actor_set_dormant(actor_handle, 0);
+  dst = (int16_t *)(actor + 0x46c);
+  if (dst[0] == 4 && *(int16_t *)(actor + 0x470) == pos_index) {
+    if (actor[0x4c] == 0 || actor[0x4a4] != 0)
+      return 1;
+    return actor_path_refresh(actor_handle, 0, 0);
+  }
+  *(int16_t *)(actor + 0x404) = pos_index;
+  *(int *)(actor + 0x414) = -1;
+  actor[0x402] = 0;
+  *(int16_t *)(actor + 0x400) = 4;
+  src = (int *)(actor + 0x400);
+  out = (int *)(actor + 0x46c);
+  for (i = 0; i < 6; i++)
+    out[i] = src[i];
+  return actor_path_refresh(actor_handle, 1, 0);
 }
-#else
-#error "actor_move_to_move_position: clang naked draft required"
-#endif
 
 
-/* actor_move_to_firing_position (0x2d900) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static void *(*const b2d900_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b2d900_c3ca40)(int actor_handle, char flag) = actor_set_dormant;
-static char (*const b2d900_c2cdb0)(int actor_handle, char store_distance, void *override_path) = actor_path_refresh;
 
-__attribute__((naked, noinline))
-char actor_move_to_firing_position(int actor_handle __attribute__((unused)), int16_t param_2 __attribute__((unused)), void *param_3 __attribute__((unused)))
+/* actor_move_to_firing_position (0x2d900) — readable C lift from XBE leaf. */
+char actor_move_to_firing_position(int actor_handle, int16_t pos_index, void *override_path)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c3ca40]\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "leal 0x46c(%%esi), %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $3, (%%edi)\n\t"
-      "jne .Lactor_move_to_firing_position_1\n\t"
-      "cmpw %%cx, 0x470(%%esi)\n\t"
-      "jne .Lactor_move_to_firing_position_1\n\t"
-      "movb 0x4c(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_move_to_firing_position_2\n\t"
-      "movb 0x4a4(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_move_to_firing_position_2\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c2cdb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_move_to_firing_position_1:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "leal 0x400(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "movw %%cx, 0x404(%%esi)\n\t"
-      "movb $0, 0x402(%%esi)\n\t"
-      "movl $0xffffffff, 0x414(%%esi)\n\t"
-      "movb $0, 0x3bb(%%esi)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl $1\n\t"
-      "movw $3, (%%eax)\n\t"
-      "movl $6, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "rep movsl\n\t"
-      "call *%[c2cdb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_move_to_firing_position_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b2d900_dget), [c3ca40] "m"(b2d900_c3ca40), [c2cdb0] "m"(b2d900_c2cdb0)
-      : "memory");
+  char *actor;
+  int16_t *dst;
+  int i;
+  int *src;
+  int *out;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  actor_set_dormant(actor_handle, 0);
+  dst = (int16_t *)(actor + 0x46c);
+  if (dst[0] == 3 && *(int16_t *)(actor + 0x470) == pos_index) {
+    if (actor[0x4c] == 0 || actor[0x4a4] != 0)
+      return 1;
+    return actor_path_refresh(actor_handle, 0, override_path);
+  }
+  *(int16_t *)(actor + 0x404) = pos_index;
+  actor[0x402] = 0;
+  *(int *)(actor + 0x414) = -1;
+  actor[0x3bb] = 0;
+  *(int16_t *)(actor + 0x400) = 3;
+  src = (int *)(actor + 0x400);
+  out = (int *)(actor + 0x46c);
+  for (i = 0; i < 6; i++)
+    out[i] = src[i];
+  return actor_path_refresh(actor_handle, 1, override_path);
 }
-#else
-#error "actor_move_to_firing_position: clang naked draft required"
-#endif
+
 
 
 /* actor_move_to_prop (0x2d9b0) — XBE naked draft (batch 87). */
