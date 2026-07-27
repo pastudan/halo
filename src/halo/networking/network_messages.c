@@ -434,69 +434,35 @@ int FUN_0011a430(int *state __attribute__((unused)), short count __attribute__((
 #endif
 
 
-/* FUN_0011a560 (0x11a560) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void (*const b11a560_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11a560_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-unsigned char FUN_0011a560(int *state __attribute__((unused)))
+/* FUN_0011a560 (0x11a560) — readable C lift from XBE leaf.
+ * Read next byte from a bounded buffer cursor. */
+unsigned char FUN_0011a560(int *state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0011a560_1\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "je .LFUN_0011a560_1\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0011a560_1\n\t"
-      "cmpl 0x8(%%esi), %%eax\n\t"
-      "jle .LFUN_0011a560_2\n\t"
-      ".LFUN_0011a560_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x28eef8\n\t"
-      "pushl $0x28f058\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0011a560_2:\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "leal 0x1(%%ecx), %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jg .LFUN_0011a560_3\n\t"
-      "movb 0xc(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0011a560_3\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "je .LFUN_0011a560_4\n\t"
-      "movzbl (%%eax), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011a560_3:\n\t"
-      "movb $1, 0xc(%%esi)\n\t"
-      ".LFUN_0011a560_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b11a560_assert), [exitfn] "m"(b11a560_exitfn)
-      : "memory");
+  extern char DAT_0028f058[];
+  extern char DAT_0028eef8[];
+  int offset;
+  int limit;
+  unsigned char *base;
+  int next;
+
+  if (state == 0 || state[0] == 0 || state[1] < 0 || state[1] > state[2]) {
+    display_assert(DAT_0028f058, DAT_0028eef8, 0x100, true);
+    system_exit(-1);
+  }
+  offset = state[1];
+  limit = state[2];
+  next = offset + 1;
+  if (next > limit || *((unsigned char *)state + 0xc) != 0) {
+    *((unsigned char *)state + 0xc) = 1;
+    return 0;
+  }
+  base = (unsigned char *)state[0];
+  state[1] = next;
+  if (base + offset == 0)
+    return 0;
+  return base[offset];
 }
-#else
-#error "FUN_0011a560: clang naked draft required"
-#endif
+
 
 
 /* FUN_0011a5d0 (0x11a5d0) — XBE naked draft (batch 90). */

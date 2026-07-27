@@ -3474,143 +3474,48 @@ void FUN_0013c030(int param_1, int param_2, int param_3)
 }
 
 
-/* FUN_0013c100 (0x13c100) — XBE naked draft (batch 65). */
-#if defined(__clang__)
-static char * (*const b13c100_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b13c100_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b13c100_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void * FUN_0013c100(int16_t object_type __attribute__((unused)))
+/* FUN_0013c100 (0x13c100) — readable C lift from XBE leaf.
+ * Lookup object-type definition pointer. */
+void *FUN_0013c100(int16_t object_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0013c100_1\n\t"
-      "cmpw $0xc, %%si\n\t"
-      "jl .LFUN_0013c100_2\n\t"
-      ".LFUN_0013c100_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x277\n\t"
-      "pushl $0x29b6b8\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x29b68c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013c100_2:\n\t"
-      "movswl %%si, %%esi\n\t"
-      "movl 0x324608(,%%esi,4), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0013c100_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x278\n\t"
-      "pushl $0x29b6b8\n\t"
-      "pushl $0x29b664\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013c100_3:\n\t"
-      "movl 0x324608(,%%esi,4), %%ecx\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0013c100_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x279\n\t"
-      "pushl $0x29b6b8\n\t"
-      "pushl $0x29b634\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013c100_4:\n\t"
-      "movl 0x324608(,%%esi,4), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8d9d0] "m"(b13c100_c8d9d0), [assert] "m"(b13c100_assert), [exitfn] "m"(b13c100_exitfn)
-      : "memory");
-}
-#else
-#error "FUN_0013c100: clang naked draft required"
-#endif
-/* FUN_0013c1b0 (0x13c1b0) — XBE naked draft (batch 66). */
-#if defined(__clang__)
-static char * (*const b13c1b0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b13c1b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b13c1b0_exitfn)(int) = system_exit;
+  void *def;
 
-__attribute__((naked, noinline))
-short FUN_0013c1b0(short param_1 __attribute__((unused)))
-{
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0013c1b0_1\n\t"
-      "cmpw $0xc, %%si\n\t"
-      "jl .LFUN_0013c1b0_2\n\t"
-      ".LFUN_0013c1b0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x282\n\t"
-      "pushl $0x29b6b8\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x29b68c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0013c1b0_2:\n\t"
-      "movswl %%si, %%esi\n\t"
-      "movl 0x324608(,%%esi,4), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0013c1b0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x283\n\t"
-      "pushl $0x29b6b8\n\t"
-      "pushl $0x29b664\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x324608(,%%esi,4), %%ecx\n\t"
-      "movw 0x8(%%ecx), %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0013c1b0_3:\n\t"
-      "movl 0x324608(,%%esi,4), %%edx\n\t"
-      "movw 0x8(%%edx), %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8d9d0] "m"(b13c1b0_c8d9d0), [assert] "m"(b13c1b0_assert), [exitfn] "m"(b13c1b0_exitfn)
-      : "memory");
+  if (object_type < 0 || object_type >= 0xc) {
+    csprintf((char *)0x5ab100, (const char *)0x29b68c, (int)object_type, 0xc);
+    display_assert((char *)0x5ab100, (const char *)0x29b6b8, 0x277, true);
+    system_exit(-1);
+  }
+  def = ((void **)0x324608)[object_type];
+  if (def == 0) {
+    display_assert((const char *)0x29b664, (const char *)0x29b6b8, 0x278, true);
+    system_exit(-1);
+  }
+  if (*(void **)((char *)def + 4) == 0) {
+    display_assert((const char *)0x29b634, (const char *)0x29b6b8, 0x279, true);
+    system_exit(-1);
+  }
+  return ((void **)0x324608)[object_type];
 }
-#else
-#error "FUN_0013c1b0: clang naked draft required"
-#endif
+
+/* FUN_0013c1b0 (0x13c1b0) — readable C lift from XBE leaf.
+ * Return a short field from the object-type definition. */
+short FUN_0013c1b0(short object_type)
+{
+  void *def;
+
+  if (object_type < 0 || object_type >= 0xc) {
+    csprintf((char *)0x5ab100, (const char *)0x29b68c, (int)object_type, 0xc);
+    display_assert((char *)0x5ab100, (const char *)0x29b6b8, 0x282, true);
+    system_exit(-1);
+  }
+  def = ((void **)0x324608)[object_type];
+  if (def == 0) {
+    display_assert((const char *)0x29b664, (const char *)0x29b6b8, 0x283, true);
+    system_exit(-1);
+  }
+  return *(short *)((char *)def + 8);
+}
+
 /*
  * FUN_0013c490 (0x13c490 / objects.obj) — run an object type's "can delete?"
  * predicate chain.
@@ -5559,7 +5464,7 @@ void FUN_0013dc10(short camera_point_index __attribute__((unused)))
  *            (object_get_and_verify_type, mask -1).
  * Confirmed: TEST [obj+0x4] bit 0x800 (connected-to-map) -> else return -1.
  * Confirmed: cluster_index at object+0x4c; -1 -> return -1.
- * Confirmed: assert cluster_index in [0, scenario_get()->[+0x134]) at 0x8e7,
+ * Confirmed: assert cluster_index in [0, global_scenario_get()->[+0x134]) at 0x8e7,
  *            followed by system_exit(-1).
  */
 short FUN_0013dcc0(void)
@@ -5599,9 +5504,9 @@ short FUN_0013dcc0(void)
       *(short *)(obj + 0x4c) != -1) {
     /* Bounds-check the cluster index: must be >= 0 and < clusters.count.
      * The original branches to the assert directly when cluster_index < 0
-     * (scenario_get() is only evaluated for the upper-bound comparison). */
+     * (global_scenario_get() is only evaluated for the upper-bound comparison). */
     if (*(short *)(obj + 0x4c) < 0 ||
-        (scenario = scenario_get(),
+        (scenario = global_scenario_get(),
          (int)*(short *)(obj + 0x4c) >= *(int *)((char *)scenario + 0x134))) {
       display_assert(
         "parent_object->object.location.cluster_index>=0 && "
@@ -6351,7 +6256,7 @@ int FUN_0013f080(int param_1 __attribute__((unused)), char (*param_2)(int __attr
 /* find_objects_from_point_vector (0x13f120) — XBE naked draft (batch 60). */
 #if defined(__clang__)
 static int (*const b13f120_c18e720)(int point) = FUN_0018e720;
-static void * (*const b13f120_c18e3c0)(void) = scenario_get;
+static void * (*const b13f120_c18e3c0)(void) = global_scenario_get;
 static void *(*const b13f120_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b13f120_c13eb70)(void) = object_reset_markers;
 static uint32_t * (*const b13f120_c193550)(void *bsp, int16_t cluster_index) = structure_bsp_get_cluster_sound_data;
@@ -13981,7 +13886,7 @@ void objects_update(void)
    * Confirmed: MOVSX EAX,word [EAX+0x134]; MOVSX ESI,AX; ADD ESI,0x1f;
    *            SAR ESI,5; SHL ESI,2.
    * [EBP-8] holds the raw cluster_count_raw as int for later PUSH. */
-  scen = scenario_get();
+  scen = global_scenario_get();
   cluster_count_raw = *(int16_t *)((uint8_t *)scen + 0x134);
   pvs_size = ((cluster_count_raw + 0x1f) >> 5) << 2;
 
@@ -15845,7 +15750,7 @@ void FUN_00139e50(unsigned int param_1 __attribute__((unused)), float *param_2 _
 /* FUN_0013a740 (0x13a740) — XBE naked draft (batch 58). */
 #if defined(__clang__)
 static char (*const b13a740_c198cb0)(float *point, float *direction, float *out_point, int16_t *out_collection_index, int16_t *out_material_index, int32_t *out_surface_index, float *out_u, float *out_v) = structure_test_vector;
-static void * (*const b13a740_c18e3c0)(void) = scenario_get;
+static void * (*const b13a740_c18e3c0)(void) = global_scenario_get;
 static void *(*const b13a740_elem)(void *, int, int) = tag_block_get_element;
 static void * (*const b13a740_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
 static void (*const b13a740_assert)(const char *, const char *, int, bool) = display_assert;
@@ -16135,7 +16040,7 @@ void FUN_0013a740(int param_1 __attribute__((unused)), int param_2 __attribute__
  */
 /* FUN_0013ab20 (0x13ab20) — XBE naked draft (batch 57). */
 #if defined(__clang__)
-static void * (*const b13ab20_c18e3c0)(void) = scenario_get;
+static void * (*const b13ab20_c18e3c0)(void) = global_scenario_get;
 static char (*const b13ab20_c198cb0)(float *point, float *direction, float *out_point, int16_t *out_collection_index, int16_t *out_material_index, int32_t *out_surface_index, float *out_u, float *out_v) = structure_test_vector;
 static void *(*const b13ab20_elem)(void *, int, int) = tag_block_get_element;
 static void *(*const b13ab20_tag)(int, int) = tag_get;
@@ -18379,7 +18284,7 @@ static void *(*const b1417c0_dget)(void *, int) = (void *(*)(void *, int))datum_
 static void (*const b1417c0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
 static void *(*const b1417c0_gbsp)(void) = global_collision_bsp_get;
 static int (*const b1417c0_c1493b0)(int bsp, short flags, int breakable_surfaces, int origin, float radius, int *results) = collision_bsp_test_sphere;
-static void * (*const b1417c0_c18e3c0)(void) = scenario_get;
+static void * (*const b1417c0_c18e3c0)(void) = global_scenario_get;
 static void *(*const b1417c0_elem)(void *, int, int) = tag_block_get_element;
 static void (*const b1417c0_c140ce0)(int object_handle, void *location) = object_connect_to_map;
 

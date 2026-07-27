@@ -16453,14 +16453,16 @@
         {
           "addr": "0x13c100",
           "decl": "void *FUN_0013c100(int16_t object_type);",
-          "ported": false,
-          "source_path": "objects/objects.c"
+          "ported": true,
+          "source_path": "objects/objects.c",
+          "name": "FUN_0013c100"
         },
         {
           "addr": "0x13c1b0",
           "decl": "short FUN_0013c1b0(short param_1);",
-          "ported": false,
-          "source_path": "objects/objects.c"
+          "ported": true,
+          "source_path": "objects/objects.c",
+          "name": "FUN_0013c1b0"
         },
         {
           "addr": "0x13c250",
