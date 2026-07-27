@@ -11215,70 +11215,23 @@ void *ui_widget_get_last_child(void *widget)
   return widget;
 }
 
-/* ui_widget_pending_load_push_internal (0xe46f0) — XBE naked draft (batch 153). */
-#if defined(__clang__)
-static void * (*const be46f0_c11fa40)(void *pool, int size, const char *file, unsigned int line) = (void *)stack_memory_pool_allocate;
-static void (*const be46f0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be46f0_exitfn)(int) = (void *)system_exit;
-
-__attribute__((naked, noinline))
+/* ui_widget_pending_load_push_internal (0xe46f0) — readable C lift. */
 void ui_widget_pending_load_push_internal(int *head, void *record)
 {
-  __asm__ volatile(
-      "movl 0x31e04c, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x9e4\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11fa40]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "je .Lui_widget_pending_load_push_internal_1\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lui_widget_pending_load_push_internal_2\n\t"
-      ".Lui_widget_pending_load_push_internal_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9e6\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283560\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lui_widget_pending_load_push_internal_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lui_widget_pending_load_push_internal_3\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "movl %%esi, (%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".Lui_widget_pending_load_push_internal_3:\n\t"
-      "pushl $0\n\t"
-      "pushl $0x9f0\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x28352c\n\t"
-      "call *%[assert]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c11fa40] "m"(be46f0_c11fa40), [assert] "m"(be46f0_assert), [exitfn] "m"(be46f0_exitfn)
-      : "memory");
+  int *node;
+  node = (int *)stack_memory_pool_allocate(*(void **)0x31e04c, 0x10, (const char *)0x283280, 0x9e4);
+  if (head == 0 || record == 0) {
+    display_assert((const char *)0x283560, (const char *)0x283280, 0x9e6, 1);
+    system_exit(-1);
+  }
+  if (node == 0)
+    return;
+  node[0] = ((int *)record)[0];
+  node[1] = ((int *)record)[1];
+  node[2] = ((int *)record)[2];
+  node[3] = *head;
+  *head = (int)node;
 }
-#else
-#error "ui_widget_pending_load_push_internal: clang naked draft required"
-#endif
-
 
 /* ui_widget_pending_load_pop (0xe4770) — readable C lift from XBE leaf. */
 void ui_widget_pending_load_pop(int *head, void *record)
