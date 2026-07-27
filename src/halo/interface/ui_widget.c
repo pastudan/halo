@@ -3086,84 +3086,30 @@ char FUN_000ecd50(void *widget)
 #endif
 
 
-/* playlist_profile_change_koth_rules (0xece10) — XBE naked draft (batch 147). */
-#if defined(__clang__)
-static void *(*const bece10_ce0ec0)(void) = (void *)player_ui_get_edit_playlist_profile;
-static void (*const bece10_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bece10_exitfn)(int) = (void *)system_exit;
-static void * (*const bece10_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
-static wchar_t * (*const bece10_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = (void *)ustrncpy;
-static void (*const bece10_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-
-__attribute__((naked, noinline))
+/* playlist_profile_change_koth_rules (0xece10) — readable C lift. */
 char playlist_profile_change_koth_rules(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ce0ec0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl $1, %%ebx\n\t"
-      "cmpw %%bx, 0xe(%%esi)\n\t"
-      "movl %%eax, %%edi\n\t"
-      "je .Lplaylist_profile_change_koth_rules_1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0xad2\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x287af0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplaylist_profile_change_koth_rules_1:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lplaylist_profile_change_koth_rules_3\n\t"
-      "movl 0x3c(%%esi), %%eax\n\t"
-      "pushl $0xad6\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce3d20]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x3c(%%esi)\n\t"
-      "je .Lplaylist_profile_change_koth_rules_2\n\t"
-      "pushl $0x7f\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19dc90]\n\t"
-      "movl 0x3c(%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movw $0, 0xfe(%%ecx)\n\t"
-      ".Lplaylist_profile_change_koth_rules_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplaylist_profile_change_koth_rules_3:\n\t"
-      "pushl $0x286550\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ce0ec0] "m"(bece10_ce0ec0), [assert] "m"(bece10_assert), [exitfn] "m"(bece10_exitfn), [ce3d20] "m"(bece10_ce3d20), [c19dc90] "m"(bece10_c19dc90), [c8f390] "m"(bece10_c8f390)
-      : "memory");
-}
-#else
-#error "playlist_profile_change_koth_rules: clang naked draft required"
-#endif
+  void *profile;
+  void *buf;
 
+  if (*(short *)((char *)widget + 0xe) != 1) {
+    display_assert((const char *)0x287af0, (const char *)0x2859a4, 0xad2, 1);
+    system_exit(-1);
+  }
+  profile = player_ui_get_edit_playlist_profile();
+  if (profile == 0) {
+    error(2, (const char *)0x286550);
+    return 0;
+  }
+  buf = ui_widget_realloc(*(int *)((char *)widget + 0x3c), 0x100,
+                          (const char *)0x2859a4, 0xad6);
+  *(void **)((char *)widget + 0x3c) = buf;
+  if (buf != 0) {
+    ustrncpy((wchar_t *)buf, (wchar_t *)profile, 0x7f);
+    *(unsigned short *)((char *)buf + 0xfe) = 0;
+  }
+  return 1;
+}
 
 /* FUN_000ea010 (0xea010) — XBE naked draft (batch 135). */
 #if defined(__clang__)

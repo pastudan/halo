@@ -27734,7 +27734,7 @@
         {
           "addr": "0xece10",
           "decl": "char playlist_profile_change_koth_rules(void *widget);",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0xeceb0",
