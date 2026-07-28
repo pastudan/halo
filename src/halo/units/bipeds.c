@@ -2419,7 +2419,7 @@ int biped_find_pathfinding_surface_index(int unit_handle, vector3_t *pos)
     if (unit_obj[0x10c] != -1) {
       collision_surface_find_closest_point2d(
         (int)bsp, unit_obj[0x10c], 2, 1, (float *)(unit_obj + 0x10e), proj2d);
-      collision_surface_project_point2d((int)bsp, unit_obj[0x10c], 2, 1, proj2d,
+      collision_surface_project_point2d((void *)(uintptr_t)bsp, unit_obj[0x10c], 2, 1, proj2d,
                                         position);
       unit_obj[0x10d] = unit_obj[0x10c];
     } else if ((unit_obj[0x112] != -1) &&
@@ -2427,7 +2427,7 @@ int biped_find_pathfinding_surface_index(int unit_handle, vector3_t *pos)
                   (int)bsp, unit_obj[0x112], 2, 1, (float *)(unit_obj + 0x10e)),
                 projected != 0)) {
       unit_obj[0x10d] = unit_obj[0x112];
-      collision_surface_project_point2d((int)bsp, unit_obj[0x112], 2, 1,
+      collision_surface_project_point2d((void *)(uintptr_t)bsp, unit_obj[0x112], 2, 1,
                                         (float *)(unit_obj + 0x10e), position);
       unit_obj[0x10d] = unit_obj[0x112];
     }

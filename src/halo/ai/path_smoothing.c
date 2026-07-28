@@ -267,9 +267,9 @@ bool FUN_000638f0(int def, float *point, int surf_a, int surf_b)
 
   block_elem = tag_block_get_element((void *)(def + 0xb0), 0, 0x60);
   if ((surf_a != -1) && (surf_b != -1)) {
-    collision_surface_project_point2d((int)block_elem, surf_a, 2, 1, point,
+    collision_surface_project_point2d((void *)(uintptr_t)block_elem, surf_a, 2, 1, point,
                                       out1);
-    collision_surface_project_point2d((int)block_elem, surf_b, 2, 1, point,
+    collision_surface_project_point2d((void *)(uintptr_t)block_elem, surf_b, 2, 1, point,
                                       out2);
     if (fabs(out1[2] - out2[2]) < *(double *)0x25f0c8)
       return 0;
