@@ -45867,14 +45867,26 @@
         {
           "addr": "0x67b80",
           "decl": "int FUN_00067b80(unsigned int count@<eax>, unsigned short tag@<cx>, void *typeinfo, unsigned short type, void *out, float *values);",
-          "ported": false,
-          "name": "FUN_00067b80"
+          "ported": true,
+          "name": "FUN_00067b80",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x67f70",
-          "decl": "int FUN_00067f70(void *out, void *tif, unsigned short tag);",
-          "ported": false,
-          "name": "FUN_00067f70"
+          "decl": "int FUN_00067f70(void *out@<esi>, void *tif, unsigned short tag);",
+          "ported": true,
+          "name": "FUN_00067f70",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         }
       ],
       "data": []

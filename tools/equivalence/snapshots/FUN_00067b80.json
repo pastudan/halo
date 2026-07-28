@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00067b80: count==0 skip float convert/ftol",
+  "arg_overrides": {
+    "count": 0
+  }
+}

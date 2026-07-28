@@ -61,3 +61,66 @@ int FUN_000679f0(unsigned short tag /*@<ax>*/, void *tif /*@<edx>*/,
   *((unsigned int *)out + 2) = saved;
   return 1;
 }
+
+/* FUN_00067b80 (0x67b80) — Capstone lift: write RATIONAL float-array tag.
+ * ABI: count@<eax>, tag@<cx>; typeinfo/type/out/values cdecl.
+ * Tip: count==0 (snapshot arg_overrides) skips convert/ftol loop. */
+int FUN_00067b80(unsigned int count /*@<eax>*/, unsigned short tag /*@<cx>*/,
+                 void *typeinfo, unsigned short type, void *out, float *values)
+{
+  void *buf;
+  int ok;
+
+  (void)values;
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = type;
+  *((unsigned int *)out + 1) = count;
+  buf = debug_malloc(count * 8u, 0, (const char *)0x0025fefc, 0x27a);
+  ok = FUN_00067760(out, typeinfo, buf);
+  debug_free(buf, (const char *)0x0025fefc, 0x281);
+  return ok;
+}
+
+
+/* FUN_00067f70 (0x67f70) — Capstone lift: write SHORT spp field.
+ * ABI: out@<esi>; tif/tag cdecl. Tip: *(tif+0x44)==0 pack path. */
+int FUN_00067f70(void *out /*@<esi>*/, void *tif, unsigned short tag)
+{
+  unsigned short local[6] = {0};
+  unsigned short got = 0;
+  unsigned int spp;
+  unsigned int packed;
+
+  ((void (*)(void *, unsigned int, unsigned short *))_TIFFgetfield)(
+      (char *)tif + 0x14, (unsigned int)tag, &got);
+  spp = *(unsigned short *)((char *)tif + 0x44);
+  if ((int)spp > 0) {
+    unsigned int fill = ((unsigned int)got << 16) | (unsigned int)got;
+    unsigned int words = spp;
+    unsigned int *dst = (unsigned int *)local;
+    unsigned int n = words >> 1;
+    while (n--)
+      *dst++ = fill;
+    if (words & 1u)
+      *(unsigned short *)dst = got;
+  }
+  *(unsigned short *)out = tag;
+  *((unsigned short *)out + 1) = 3;
+  *((unsigned int *)out + 1) = spp;
+  if ((int)spp > 2) {
+    return FUN_00067760(out, tif, local);
+  }
+  packed = (unsigned int)local[0];
+  if (*(unsigned short *)((char *)tif + 0xc4) == 0x4d4d) {
+    packed <<= 16;
+    *((unsigned int *)out + 2) = packed;
+    if (spp == 2u)
+      *((unsigned int *)out + 2) = packed | (unsigned int)local[1];
+  } else {
+    *((unsigned int *)out + 2) = packed;
+    if (spp == 2u)
+      *((unsigned int *)out + 2) = packed | ((unsigned int)local[1] << 16);
+  }
+  return 1;
+}
+
