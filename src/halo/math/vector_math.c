@@ -1514,154 +1514,70 @@ char FUN_00021e50(int actor_handle __attribute__((unused)), short param_2 __attr
 #endif
 
 
-/* FUN_00028250 (0x28250) — XBE naked draft (batch 262). */
-#if defined(__clang__)
-static void *(*const b28250_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b28250_tag)(int, int) = tag_get;
-static char * (*const b28250_c210f0)(int actor_handle) = FUN_000210f0;
-static void (*const b28250_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b28250_exitfn)(int) = system_exit;
-static char * (*const b28250_c49ac0)(int actor_handle, int object_handle, char with_actor, char *buf, int buf_size) = ai_debug_describe_actor;
-static void (*const b28250_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int *(*const b28250_gseed)(void) = get_global_random_seed_address;
-static float (*const b28250_rrange)(int *, float, float) = random_real_range;
-
-__attribute__((naked, noinline))
-int FUN_00028250(float *look_vectors __attribute__((unused)), char is_secondary __attribute__((unused)), int actor_handle __attribute__((unused)), int look_type __attribute__((unused)))
+/* FUN_00028250 (0x28250) — readable C lift (restored pre-naked) — hand-lift from XBE/oracle (look-type sample).
+ * look_vectors: 3×(yaw,pitch) pairs; look_type selects pair 0/1/2.
+ * actor_handle @<esi>, look_type @<edi>.
+ * Returns max(1, round(scaled_sample)) ticks. */
+int FUN_00028250(float *look_vectors, char is_secondary, int actor_handle,
+                 int look_type)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x58(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x61637472\n\t"
-      "call *%[tag]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c210f0]\n\t"
-      "movswl %%di, %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "subl $0, %%eax\n\t"
-      "je .LFUN_00028250_3\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_00028250_2\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_00028250_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3da\n\t"
-      "pushl $0x255284\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_00028250_5\n\t"
-      ".LFUN_00028250_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "movl 0x14(%%eax), %%eax\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00028250_5\n\t"
-      ".LFUN_00028250_2:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "jmp .LFUN_00028250_4\n\t"
-      ".LFUN_00028250_3:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      ".LFUN_00028250_4:\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      ".LFUN_00028250_5:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00028250_6\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jp .LFUN_00028250_6\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "subl $0x10, %%esp\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "movl $0x25530c, -0x14(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl $0x255304, -0x10(%%ebp)\n\t"
-      "fstpl (%%esp)\n\t"
-      "movl $0x2552fc, -0xc(%%ebp)\n\t"
-      "movl -0x14(%%ebp,%%edi,4), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x5ab100\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c49ac0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2552b0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "flds 0x253398\n\t"
-      "addl $0x20, %%esp\n\t"
-      "jmp .LFUN_00028250_7\n\t"
-      ".LFUN_00028250_6:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[gseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00028250_7:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_00028250_8\n\t"
-      "flds 0x410(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00028250_8\n\t"
-      "fmuls 0x410(%%ebx)\n\t"
-      ".LFUN_00028250_8:\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "je .LFUN_00028250_9\n\t"
-      "fmuls 0x2533ec\n\t"
-      ".LFUN_00028250_9:\n\t"
-      "fmuls 0x253394\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fistps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpl $1, %%eax\n\t"
-      "jg .LFUN_00028250_10\n\t"
-      "movl $1, %%eax\n\t"
-      ".LFUN_00028250_10:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b28250_dget), [tag] "m"(b28250_tag), [c210f0] "m"(b28250_c210f0), [assert] "m"(b28250_assert), [exitfn] "m"(b28250_exitfn), [c49ac0] "m"(b28250_c49ac0), [c8f390] "m"(b28250_c8f390), [gseed] "m"(b28250_gseed), [rrange] "m"(b28250_rrange)
-      : "memory");
-}
-#else
-#error "FUN_00028250: clang naked draft required"
-#endif
+  char *actor;
+  char *aux;
+  float yaw;
+  float pitch;
+  float sample;
+  int ticks;
+  int lt;
 
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  tag_get('actr', *(int *)(actor + 0x58));
+  aux = FUN_000210f0(actor_handle);
+
+  lt = (int)(short)look_type;
+  if (lt == 0) {
+    yaw = look_vectors[0];
+    pitch = look_vectors[1];
+  } else if (lt == 1) {
+    yaw = look_vectors[2];
+    pitch = look_vectors[3];
+  } else if (lt == 2) {
+    yaw = look_vectors[4];
+    pitch = look_vectors[5];
+  } else {
+    display_assert((char *)0, (char *)0x255284, 0x3da, 1);
+    system_exit(-1);
+    yaw = 0.0f;
+    pitch = 0.0f;
+  }
+
+  /* fcomp 0; test ah,0x41; jp => greater-than. Random if either > 0. */
+  if (yaw > *(float *)0x2533c0 || pitch > *(float *)0x2533c0) {
+    sample = random_real_range(get_global_random_seed_address(), yaw, pitch);
+  } else {
+    char *desc;
+    desc = ai_debug_describe_actor(actor_handle, -1, 1, (char *)0x5ab100, 0x100);
+    error(2, (const char *)0x2552b0, desc);
+    sample = *(float *)0x253398; /* 0.5f */
+  }
+
+  if (aux != NULL && *(float *)(aux + 0x410) > *(float *)0x2533c0) {
+    sample = sample * *(float *)(aux + 0x410);
+  }
+  if (is_secondary) {
+    sample = sample * *(float *)0x2533ec; /* 1.5f */
+  }
+  sample = sample * *(float *)0x253394; /* 30.0f */
+  /* Oracle uses fistpl (x87 RC=round-nearest); keep inline so Unicorn
+   * does not stub a helper call. */
+  {
+    volatile float tmp = sample;
+    __asm__ __volatile__("flds %1; fistpl %0" : "=m"(ticks) : "m"(tmp) : "st");
+  }
+  if (ticks <= 1) {
+    ticks = 1;
+  }
+  return ticks;
+}
 
 /* FUN_000283b0 (0x283b0) — XBE naked draft (batch 259). */
 #if defined(__clang__)

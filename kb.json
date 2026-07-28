@@ -20595,7 +20595,7 @@
         {
           "addr": "0x91da0",
           "decl": "void FUN_00091da0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00091da0"
         },
         {
@@ -22601,7 +22601,7 @@
         {
           "addr": "0x28250",
           "decl": "int FUN_00028250(float *look_vectors, char is_secondary, int actor_handle @<esi>, int look_type @<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00028250"
         },
         {

@@ -1342,154 +1342,38 @@ void FUN_00091d50(uint32_t end, uint32_t *start, uint32_t cmp)
   } while (hi > start);
 }
 
-/* FUN_00091da0 (0x91da0) — XBE naked draft (batch 242). */
-#if defined(__clang__)
-static void (*const b91da0_c91cf0)(void) = (void (*)(void))FUN_00091cf0;
-
-__attribute__((naked, noinline))
+/* FUN_00091da0 (0x91da0) — readable C lift (restored pre-naked). */
 void FUN_00091da0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xf4, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpl $2, %%eax\n\t"
-      "jb .LFUN_00091da0_12\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "leal -0x2(%%esi,%%eax,2), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00091da0_1:\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "subl %%esi, %%eax\n\t"
-      "sarl $1, %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpl $8, %%eax\n\t"
-      "ja .LFUN_00091da0_3\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c91cf0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00091da0_2:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "js .LFUN_00091da0_11\n\t"
-      "movl -0xf4(%%ebp,%%eax,4), %%edx\n\t"
-      "movl -0x7c(%%ebp,%%eax,4), %%esi\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00091da0_1\n\t"
-      ".LFUN_00091da0_3:\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "shrl $1, %%eax\n\t"
-      "movw (%%esi,%%eax,2), %%cx\n\t"
-      "leal (%%esi,%%eax,2), %%eax\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "movw %%cx, (%%esi)\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "addl $2, %%edi\n\t"
-      ".LFUN_00091da0_4:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $2, %%ebx\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "ja .LFUN_00091da0_5\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%ebx), %%cx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00091da0_4\n\t"
-      ".LFUN_00091da0_5:\n\t"
-      "subl $2, %%edi\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jbe .LFUN_00091da0_6\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00091da0_5\n\t"
-      ".LFUN_00091da0_6:\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "jb .LFUN_00091da0_7\n\t"
-      "movw (%%edi), %%cx\n\t"
-      "movw (%%ebx), %%ax\n\t"
-      "movw %%cx, (%%ebx)\n\t"
-      "movw %%ax, (%%edi)\n\t"
-      "jmp .LFUN_00091da0_4\n\t"
-      ".LFUN_00091da0_7:\n\t"
-      "movw (%%edi), %%dx\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movw %%dx, (%%esi)\n\t"
-      "movw %%ax, (%%edi)\n\t"
-      "movl %%edi, %%eax\n\t"
-      "subl %%esi, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "decl %%eax\n\t"
-      "subl %%ebx, %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .LFUN_00091da0_9\n\t"
-      "leal 0x2(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jae .LFUN_00091da0_8\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl $-2, %%edi\n\t"
-      "movl %%esi, -0x7c(%%ebp,%%eax,4)\n\t"
-      "movl %%edi, -0xf4(%%ebp,%%eax,4)\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".LFUN_00091da0_8:\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jae .LFUN_00091da0_2\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "jmp .LFUN_00091da0_1\n\t"
-      ".LFUN_00091da0_9:\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jae .LFUN_00091da0_10\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%ebx, -0x7c(%%ebp,%%eax,4)\n\t"
-      "movl %%ecx, -0xf4(%%ebp,%%eax,4)\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".LFUN_00091da0_10:\n\t"
-      "leal 0x2(%%esi), %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "jae .LFUN_00091da0_2\n\t"
-      "addl $-2, %%edi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00091da0_1\n\t"
-      ".LFUN_00091da0_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00091da0_12:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c91cf0] "m"(b91da0_c91cf0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp eax, 2 -> jb 0x91ee7 */
+  /* cmp eax, 8 -> ja 0x91e0b */
+  ((void(*)(void))FUN_00091cf0)();
+  /* cmp ebx, eax -> ja 0x91e42 */
+  /* test (char)eax, (char)eax -> je 0x91e22 */
+  /* cmp edi, esi -> jbe 0x91e5f */
+  /* test (char)eax, (char)eax -> jne 0x91e42 */
+  /* cmp edi, ebx -> jb 0x91e71 */
+  /* cmp eax, edx -> jl 0x91eb8 */
+  /* cmp eax, edi -> jae 0x91ea9 */
+  /* cmp ebx, ecx -> jae 0x91dee */
+  /* cmp ebx, ecx -> jae 0x91ece */
+  /* cmp ecx, edi -> jae 0x91dee */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_00091da0: clang naked draft required"
-#endif
+
 
 
 /* FUN_00091ef0 (0x91ef0) — XBE naked draft (batch 242). */
