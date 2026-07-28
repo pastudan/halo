@@ -25472,8 +25472,14 @@
         {
           "addr": "0x1cadd0",
           "decl": "void FUN_001cadd0(int a, int b, int c, int d, int e, int f);",
-          "ported": false,
-          "name": "FUN_001cadd0"
+          "ported": true,
+          "name": "FUN_001cadd0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1cb0c0",
