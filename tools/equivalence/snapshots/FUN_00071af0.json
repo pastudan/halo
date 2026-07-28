@@ -1,0 +1,7 @@
+{
+  "description": "FUN_00071af0: DecodeBlockRGB + one DXT5 alpha",
+  "arg_overrides": {
+    "index": 0,
+    "shift_count": 0
+  }
+}

@@ -38885,14 +38885,14 @@
         },
         {
           "addr": "0x71890",
-          "decl": "void FUN_00071890(void);",
-          "ported": false,
+          "decl": "void FUN_00071890(unsigned char *block, unsigned char *out);",
+          "ported": true,
           "name": "FUN_00071890"
         },
         {
           "addr": "0x71af0",
-          "decl": "void FUN_00071af0(void);",
-          "ported": false,
+          "decl": "void FUN_00071af0(unsigned char *block, unsigned char *out, unsigned int shift_count, short index);",
+          "ported": true,
           "name": "FUN_00071af0"
         },
         {
@@ -38950,8 +38950,8 @@
         },
         {
           "addr": "0x73770",
-          "decl": "void FUN_00073770(void);",
-          "ported": false,
+          "decl": "void FUN_00073770(void *a, void *b, float *rect, void *d);",
+          "ported": true,
           "name": "FUN_00073770"
         },
         {
