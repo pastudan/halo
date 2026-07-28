@@ -31609,7 +31609,7 @@
         {
           "addr": "0x183390",
           "decl": "int FUN_00183390(int bitmap);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00183390"
         },
         {
@@ -40357,7 +40357,7 @@
         {
           "addr": "0x166400",
           "decl": "void FUN_00166400(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00166400"
         },
         {
