@@ -31485,7 +31485,7 @@
         {
           "addr": "0x181900",
           "decl": "void FUN_00181900(short param_1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00181900"
         },
         {
@@ -40529,7 +40529,7 @@
         {
           "addr": "0x169a50",
           "decl": "void FUN_00169a50(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00169a50"
         },
         {

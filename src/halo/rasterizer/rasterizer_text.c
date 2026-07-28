@@ -633,155 +633,100 @@ void FUN_00181410(void)
 {
 }
 
-/* FUN_00181900 (0x181900) — XBE naked draft (batch 369). */
-#if defined(__clang__)
-static void * (*const b181900_c18e3c0)(void) = (void *)global_scenario_get;
-static void *(*const b181900_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b181900_perp)(float *, float *) = perpendicular3d;
-static float (*const b181900_norm)(float *) = normalize3d;
-static unsigned int (*const b181900_c180b10)(float *param_1) = (void *)FUN_00180b10;
-static void *(*const b181900_tag)(int, int) = tag_get;
-static void (*const b181900_c181670)(int *params) = (void *)FUN_00181670;
+/* FUN_00181900 (0x181900) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-void FUN_00181900(short param_1 __attribute__((unused)))
+void FUN_00181900(short param_1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x54, %%esp\n\t"
-      "movb 0x3256d7, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00181900_5\n\t"
-      "movw 0x46e008, %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jg .LFUN_00181900_5\n\t"
-      "jne .LFUN_00181900_1\n\t"
-      "cmpw $1, 0x31fa98\n\t"
-      "jg .LFUN_00181900_5\n\t"
-      ".LFUN_00181900_1:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x68\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x134(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw %%bx, 0x42(%%eax)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jbe .LFUN_00181900_4\n\t"
-      "leal 0x128(%%esi), %%edx\n\t"
-      "addl $0x11c, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "jmp .LFUN_00181900_3\n\t"
-      ".LFUN_00181900_2:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00181900_3:\n\t"
-      "movzwl 0x40(%%eax), %%edi\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl $0x10\n\t"
-      "addl %%ebx, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movzbl 0xf(%%esi), %%ecx\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "movsbl 0xd(%%esi), %%ecx\n\t"
-      "movsbl 0xe(%%esi), %%edx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movsbl 0xc(%%esi), %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "fildl -0x10(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "fmuls 0x2820c0\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "fildl -0x10(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "fmuls 0x2820c0\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "fildl -0x10(%%ebp)\n\t"
-      "fmuls 0x2820c0\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "call *%[perp]\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[norm]\n\t"
-      "fstp %%st(0)\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[norm]\n\t"
-      "fstp %%st(0)\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c180b10]\n\t"
-      "leal -0x2c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x44(%%ebp)\n\t"
-      "call *%[c180b10]\n\t"
-      "movl %%eax, -0x40(%%ebp)\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6c656e73\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, -0x54(%%ebp)\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl %%edx, -0x50(%%ebp)\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl %%eax, -0x4c(%%ebp)\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "movl %%ecx, -0x48(%%ebp)\n\t"
-      "movl %%eax, -0x3c(%%ebp)\n\t"
-      "movw %%ax, -0x38(%%ebp)\n\t"
-      "movb 0x50654a, %%al\n\t"
-      "movl %%edi, %%edx\n\t"
-      "leal -0x54(%%ebp), %%ecx\n\t"
-      "sarl $0x10, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movb $0, -0x31(%%ebp)\n\t"
-      "movw %%dx, -0x36(%%ebp)\n\t"
-      "movw %%di, -0x34(%%ebp)\n\t"
-      "movb %%al, -0x32(%%ebp)\n\t"
-      "call *%[c181670]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "addl $0x3c, %%esp\n\t"
-      "incl %%ebx\n\t"
-      "movzwl 0x42(%%edx), %%eax\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jl .LFUN_00181900_2\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_00181900_4:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00181900_5:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b181900_c18e3c0), [elem] "m"(b181900_elem), [perp] "m"(b181900_perp), [norm] "m"(b181900_norm), [c180b10] "m"(b181900_c180b10), [tag] "m"(b181900_tag), [c181670] "m"(b181900_c181670)
-      : "memory");
+  int scenario; /* scenario base ptr */
+  int light_block; /* scenario->scenery_lights[param_1] element ptr */
+  int lf_block_base; /* scenario->lens_flare_block ptr */
+  int lf_mark_base; /* scenario->lens_flare_marker_block ptr */
+  int entry; /* current light_marker_block entry ptr */
+  int lf_instance; /* lens_flare_instance element ptr */
+  int loop_end; /* count of light_marker entries */
+  int i; /* loop counter */
+  /* params struct for FUN_00181670: 0x28-byte contiguous buffer.
+   * Layout (confirmed from disassembly at 0x181a2c..0x181a67):
+   *   +0x00: tag_get('lens', def->tag_index) result
+   *   +0x04: entry->xyz[0] (float, from puVar2[0..2])
+   *   +0x08: entry->xyz[1]
+   *   +0x0c: entry->xyz[2]
+   *   +0x10: FUN_00180b10(&dir_vec) = compressed normal of direction
+   *   +0x14: FUN_00180b10(&perp_vec) = compressed normal of perpendicular
+   *   +0x18: 0xffffffff (color/alpha = -1)
+   *   +0x1c: 0xffff word (light_index = -1 -> scenery path)
+   *   +0x1e: entry_index >> 16 (hi word of scenery marker index)
+   *   +0x20: entry_index & 0xffff (lo word)
+   *   +0x22: DAT_0050654a (compressed window index byte)
+   *   +0x23: 0
+   */
+  int params[10]; /* 0x28 = 40 bytes = 10 ints; accessed as byte/short/int */
+  float dir[3]; /* direction vector (from entry bytes 0xc/0xd/0xe * scale) */
+  float perp[3]; /* perpendicular vector (from perpendicular3d of dir) */
+  int entry_idx; /* combined scenery marker index (hi<<16 | lo) */
+
+  if (*(char *)0x3256d7 == 0) {
+    return;
+  }
+  if (*(short *)0x46e008 > 1) {
+    return;
+  }
+  if (*(short *)0x46e008 == 1 && *(short *)0x31fa98 > 1) {
+    return;
+  }
+
+  scenario = (int)scenario_get();
+  /* tag_block_get_element(scenario+0x134, param_1, 0x68) */
+  light_block =
+    (int)tag_block_get_element((void *)(scenario + 0x134), (int)param_1, 0x68);
+  loop_end = (int)*(short *)(light_block + 0x42);
+  if (loop_end <= 0) {
+    return;
+  }
+
+  lf_mark_base = scenario + 0x128;
+  lf_block_base = scenario + 0x11c;
+
+  i = 0;
+  do {
+    /* light_marker_block entry */
+    entry_idx = (int)*(unsigned short *)(light_block + 0x40) + i;
+    entry = (int)tag_block_get_element((void *)lf_mark_base, entry_idx, 0x10);
+
+    /* lens_flare_instance element */
+    lf_instance = (int)tag_block_get_element(
+      (void *)lf_block_base, (int)*(unsigned char *)(entry + 0xf), 0x10);
+
+    /* Extract signed bytes from entry for direction vector */
+    dir[0] = (float)(int)*(signed char *)(entry + 0xc) * *(float *)0x2820c0;
+    dir[1] = (float)(int)*(signed char *)(entry + 0xd) * *(float *)0x2820c0;
+    dir[2] = (float)(int)*(signed char *)(entry + 0xe) * *(float *)0x2820c0;
+
+    /* Compute perpendicular and normalize both */
+    perpendicular3d(dir, perp);
+    normalize3d(dir);
+    normalize3d(perp);
+
+    /* Build params buffer (byte-level stores into int array). */
+    *(int *)((char *)params + 0x00) =
+      (int)tag_get(0x6c656e73, *(int *)(lf_instance + 0xc));
+    *(int *)((char *)params + 0x04) = *(int *)(entry + 0x00);
+    *(int *)((char *)params + 0x08) = *(int *)(entry + 0x04);
+    *(int *)((char *)params + 0x0c) = *(int *)(entry + 0x08);
+    *(unsigned int *)((char *)params + 0x10) = (unsigned int)FUN_00180b10(dir);
+    *(unsigned int *)((char *)params + 0x14) = (unsigned int)FUN_00180b10(perp);
+    *(int *)((char *)params + 0x18) = -1;
+    *(short *)((char *)params + 0x1c) = -1;
+    *(short *)((char *)params + 0x1e) = (short)(entry_idx >> 16);
+    *(short *)((char *)params + 0x20) = (short)entry_idx;
+    *(unsigned char *)((char *)params + 0x22) = *(unsigned char *)0x50654a;
+    *(unsigned char *)((char *)params + 0x23) = 0;
+
+    FUN_00181670(params);
+
+    i++;
+  } while (i < loop_end);
 }
-#else
-#error "FUN_00181900: clang naked draft required"
-#endif
 
 
 /* FUN_00181a90 (0x181a90) — readable C lift (restored pre-naked). */
