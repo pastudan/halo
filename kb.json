@@ -26469,7 +26469,7 @@
         {
           "addr": "0x105c80",
           "decl": "short shell_update(short vertex_count, float *vertices @<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "shell_update"
         },
         {
@@ -26747,7 +26747,7 @@
           "addr": "0x195650",
           "decl": "void FUN_00195650(void *out@<eax>, int *indices@<ecx>, int16_t count@<edx>);",
           "name": "FUN_00195650",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x1956d0",

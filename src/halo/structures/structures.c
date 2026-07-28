@@ -1776,86 +1776,39 @@ void FUN_00105980(float *matrix, short *out_vertex_count,
   *out_index_run_count = (short)local_1c;
 }
 
-/* shell_update (0x105c80) — XBE naked draft (batch 89). */
-#if defined(__clang__)
-static float * (*const b105c80_c99400)(float *out_line, float *point_a, float *point_b) = plane2d_from_points;
-
-__attribute__((naked, noinline))
-short shell_update(short vertex_count __attribute__((unused)), float *vertices __attribute__((unused)))
+/* shell_update (0x105c80) — readable C lift (restored pre-naked). */
+short shell_update(short vertex_count, float *vertices /* @<ebx> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lshell_update_1:\n\t"
-      "cmpw 0x8(%%ebp), %%di\n\t"
-      "jge .Lshell_update_5\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lshell_update_3\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lshell_update_2\n\t"
-      "cmpl $1, %%eax\n\t"
-      "jne .Lshell_update_4\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "movswl %%di, %%eax\n\t"
-      "fmuls 0x4(%%ebx,%%eax,8)\n\t"
-      "leal (%%ebx,%%eax,8), %%eax\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls (%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lshell_update_4\n\t"
-      "movl $2, %%esi\n\t"
-      "jmp .Lshell_update_4\n\t"
-      ".Lshell_update_2:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal (%%ebx,%%edx,8), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99400]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lshell_update_4\n\t"
-      "movl $1, %%esi\n\t"
-      "jmp .Lshell_update_4\n\t"
-      ".Lshell_update_3:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movl (%%ebx,%%edx,8), %%eax\n\t"
-      "movl 0x4(%%ebx,%%edx,8), %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lshell_update_4:\n\t"
-      "incl %%edi\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl .Lshell_update_1\n\t"
-      ".Lshell_update_5:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c99400] "m"(b105c80_c99400)
-      : "memory");
+  float line[3]; /* [EBP-0x14]=nx, [EBP-0x10]=ny, [EBP-0xc]=d */
+  float p0[2];   /* [EBP-0x8], [EBP-0x4] */
+  short state;
+  short i;
+  float eval;
+
+  state = -1;
+  for (i = 0; i < vertex_count; i++) {
+    int s = (int)state;
+    if (s == -1) {
+      p0[0] = vertices[i * 2];
+      p0[1] = vertices[i * 2 + 1];
+      state = 0;
+    } else if (s == 0) {
+      if (plane2d_from_points(line, &vertices[i * 2], p0) != (float *)0) {
+        state = 1;
+      }
+    } else if (s == 1) {
+      eval = line[0] * vertices[i * 2] + line[1] * vertices[i * 2 + 1] - line[2];
+      if (fabs(eval) >= *(double *)0x002533d0) {
+        state = 2;
+      }
+    }
+    if (state >= 2) {
+      break;
+    }
+  }
+  return state;
 }
-#else
-#error "shell_update: clang naked draft required"
-#endif
+
 
 
 /* convex_hull2d_reduce (0x105d20) — XBE naked draft (batch 80). */
@@ -2475,7 +2428,7 @@ static void (*const b1913c0_exitfn)(int) = system_exit;
 static void (*const b1913c0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
 
 __attribute__((naked, noinline))
-void reference_list_remove(void *data __attribute__((unused)), int *head __attribute__((unused)), int value __attribute__((unused)))
+void reference_list_remove(data_t *data __attribute__((unused)), int *head __attribute__((unused)), int value __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -3829,73 +3782,33 @@ void FUN_00195550(short surface_count __attribute__((unused)), int *out_indices 
 #endif
 
 
-/* FUN_00195650 (0x195650) — XBE naked draft (batch 92). */
-#if defined(__clang__)
-static void * (*const b195650_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
-static void (*const b195650_c91ef0)(int *keys, int count, int (*cmp)(int, int)) =
-    (void (*)(int *, int, int (*)(int, int)))FUN_00091ef0;
-static void *(*const b195650_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
-void FUN_00195650(void *out __attribute__((unused)), int *indices __attribute__((unused)), int16_t count __attribute__((unused)))
+/* FUN_00195650 (0x195650) — readable C lift (restored pre-naked). */
+void FUN_00195650(void *out, int *indices, short count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movw %%dx, %%bx\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "pushl $0x195530\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c91ef0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jle .LFUN_00195650_2\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "addl $0xf8, %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movzwl %%bx, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00195650_1:\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl $6\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "movw %%cx, (%%esi)\n\t"
-      "movw 0x2(%%eax), %%dx\n\t"
-      "movw %%dx, 0x2(%%esi)\n\t"
-      "movw 0x4(%%eax), %%ax\n\t"
-      "movw %%ax, 0x4(%%esi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $4, %%edi\n\t"
-      "addl $6, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_00195650_1\n\t"
-      ".LFUN_00195650_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b195650_c18e3c0), [c91ef0] "m"(b195650_c91ef0), [elem] "m"(b195650_elem)
-      : "memory");
+  int scenario;
+  int *block;
+  uint16_t *elem;
+  uint16_t *dst;
+  int remaining;
+
+  scenario = (int)scenario_get();
+  FUN_00091ef0(indices, count, (int (*)(int, int))FUN_00195530);
+  if (0 < count) {
+    block = (int *)(scenario + 0xf8);
+    dst = (uint16_t *)out;
+    remaining = (unsigned short)count;
+    do {
+      elem = (uint16_t *)tag_block_get_element(block, *indices, 6);
+      dst[0] = elem[0];
+      dst[1] = elem[1];
+      dst[2] = elem[2];
+      indices = indices + 1;
+      dst = dst + 3;
+      remaining = remaining - 1;
+    } while (remaining != 0);
+  }
 }
-#else
-#error "FUN_00195650: clang naked draft required"
-#endif
+
 
 
 /* FUN_001956d0 (0x1956d0) — XBE naked draft (batch 88). */
