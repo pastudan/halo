@@ -38276,14 +38276,14 @@
         },
         {
           "addr": "0x6b780",
-          "decl": "void FUN_0006b780(void);",
-          "ported": false,
+          "decl": "void *FUN_0006b780(void);",
+          "ported": true,
           "name": "FUN_0006b780"
         },
         {
           "addr": "0x6b8e0",
-          "decl": "void FUN_0006b8e0(void);",
-          "ported": false,
+          "decl": "void *FUN_0006b8e0(void);",
+          "ported": true,
           "name": "FUN_0006b8e0"
         },
         {
