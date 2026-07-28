@@ -34565,9 +34565,15 @@
         },
         {
           "addr": "0x1d06a0",
-          "decl": "void FUN_001d06a0(void);",
-          "ported": false,
-          "name": "FUN_001d06a0"
+          "decl": "void __stdcall FUN_001d06a0(void *system_time, void *file_time_out, void *file_time_in, void *unused);",
+          "ported": true,
+          "name": "FUN_001d06a0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d08aa",

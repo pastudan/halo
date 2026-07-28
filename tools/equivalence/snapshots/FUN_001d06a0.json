@@ -1,0 +1,17 @@
+{
+  "description": "FUN_001d06a0: system_time[0]==0 \u2192 early return after FileTime\u2192SystemTime",
+  "regions": {
+    "0x30000000": "0000000000000000000000000000000000000000000000000000000000000000",
+    "0x30000100": "0000000000000000",
+    "0x30000200": "0100000000000000"
+  },
+  "arg_overrides": {
+    "system_time": 805306368,
+    "file_time_out": 805306624,
+    "file_time_in": 805306880
+  },
+  "stub_returns": {
+    "FUN_001d0589": 1,
+    "SystemTimeToFileTime": 0
+  }
+}
