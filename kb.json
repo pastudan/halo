@@ -37974,7 +37974,7 @@
         },
         {
           "addr": "0x68970",
-          "decl": "int FUN_00068970(void *tif);",
+          "decl": "void FUN_00068970(void);",
           "ported": false,
           "name": "FUN_00068970"
         },

@@ -1542,7 +1542,7 @@ void FUN_0006cfa0(void)
 static void (*const b6d140_c6cfa0)(void) = (void (*)(void))FUN_0006cfa0;
 
 __attribute__((naked, noinline))
-void FUN_0006d140(unsigned char *tif __attribute__((unused)), void *a1 __attribute__((unused)), void *a2 __attribute__((unused)), void *a3 __attribute__((unused)))
+void FUN_0006d140(void)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
