@@ -117,404 +117,223 @@ bool convex_hull2d_test_vector(int16_t num_verts, float *polygon2d,
   return 1;
 }
 
-/* convex_polygon2d_clip_to_plane (0x106510) — XBE naked draft (batch 259). */
-#if defined(__clang__)
-static void (*const b106510_chkstk)(void) = FUN_001d90e0;
-static void (*const b106510_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b106510_exitfn)(int) = system_exit;
-static void * (*const b106510_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-int16_t convex_polygon2d_clip_to_plane(int16_t count __attribute__((unused)), float *points __attribute__((unused)), float *line __attribute__((unused)), int16_t max_count __attribute__((unused)), float *out_points __attribute__((unused)), uint32_t *out_bitmask __attribute__((unused)), uint8_t *changed __attribute__((unused)), float epsilon __attribute__((unused)))
+/* convex_polygon2d_clip_to_plane (0x106510) — readable C lift (restored pre-naked).
+ * Capstone on delinked 00106510.obj: x87 FABS (not CRT fabsf), distance mul
+ * order is y*line1 + x*line0, intersection denom is dx*line0 + dy*line1.
+ * fabsf→_xbox_fabsf is stubbed to FLDZ under unicorn and collapses every
+ * near-duplicate when epsilon>0 (EAX/mask/out_points soft miss). */
+int16_t convex_polygon2d_clip_to_plane(int16_t count, float *points, float *line, int16_t max_count, float *out_points, uint32_t *out_bitmask, uint8_t *changed, float epsilon)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl $0x1014, %%eax\n\t"
-      "call *%[chkstk]\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpw $3, %%bx\n\t"
-      "movb $0, -0x2(%%ebp)\n\t"
-      "movb $0, -0x3(%%ebp)\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "jge .Lconvex_polygon2d_clip_to_plane_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x546\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c010\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_1:\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_2\n\t"
-      "movb $0, (%%eax)\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_2:\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "cmpl %%esi, 0xc(%%ebp)\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_4\n\t"
-      "cmpw $0x200, %%bx\n\t"
-      "jle .Lconvex_polygon2d_clip_to_plane_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x54d\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28bff8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_3:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $3, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x1014(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "leal -0x1014(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_4:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "shll $3, %%edx\n\t"
-      "leal -0x8(%%edx,%%ecx,1), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "flds (%%eax)\n\t"
-      "fmuls (%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_5\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_5:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "jle .Lconvex_polygon2d_clip_to_plane_23\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_6:\n\t"
-      "movswl -0x10(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal (%%edx,%%eax,8), %%edx\n\t"
-      "movb $1, 0x1b(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fmuls (%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_7\n\t"
-      "movb $0, 0x1b(%%ebp)\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_7:\n\t"
-      "fcoms 0x24(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_8\n\t"
-      "fstp %%st(0)\n\t"
-      "movb $1, -0x2(%%ebp)\n\t"
-      "jmp .Lconvex_polygon2d_clip_to_plane_9\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_8:\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fchs\n\t"
-      "fxch %%st(1)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_polygon2d_clip_to_plane_9\n\t"
-      "movb $1, -0x3(%%ebp)\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_9:\n\t"
-      "movb 0x1b(%%ebp), %%al\n\t"
-      "cmpb -0x1(%%ebp), %%al\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_16\n\t"
-      "cmpw 0x14(%%ebp), %%di\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_25\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_10\n\t"
-      "movb $1, (%%eax)\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_10:\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "fsubs (%%edx)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%edx)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fmuls (%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls (%%ecx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fchs\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_polygon2d_clip_to_plane_11\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lconvex_polygon2d_clip_to_plane_12\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_11:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_12\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_12:\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "fadds (%%edx)\n\t"
-      "fstps (%%esi,%%ecx,8)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "orl %%eax, %%ebx\n\t"
-      "incl %%edi\n\t"
-      "cmpw $1, %%di\n\t"
-      "fadds 0x4(%%edx)\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "fstps 0x4(%%esi,%%ecx,8)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_15\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "flds -0x8(%%esi,%%ecx,8)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_13\n\t"
-      "flds -0x4(%%esi,%%ecx,8)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_14\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_13:\n\t"
-      "flds -0x10(%%esi,%%ecx,8)\n\t"
-      "fsubrs -0x8(%%esi,%%ecx,8)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_15\n\t"
-      "flds -0x4(%%esi,%%ecx,8)\n\t"
-      "fsubs -0xc(%%esi,%%ecx,8)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_15\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_14:\n\t"
-      "decl %%edi\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_15:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_16:\n\t"
-      "movb 0x1b(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_22\n\t"
-      "cmpw 0x14(%%ebp), %%di\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_25\n\t"
-      "movl (%%edx), %%ecx\n\t"
-      "movswl %%di, %%ebx\n\t"
-      "movl %%ecx, (%%esi,%%ebx,8)\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "movl %%eax, 0x4(%%esi,%%ebx,8)\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_17\n\t"
-      "movswl -0x10(%%ebp), %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "andl (%%ecx), %%eax\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_17\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "jmp .Lconvex_polygon2d_clip_to_plane_18\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_17:\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "notl %%eax\n\t"
-      "andl %%eax, %%ecx\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_18:\n\t"
-      "incl %%edi\n\t"
-      "cmpw $1, %%di\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_21\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "flds -0x8(%%esi,%%ecx,8)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_19\n\t"
-      "flds -0x4(%%esi,%%ecx,8)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_20\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_19:\n\t"
-      "flds -0x10(%%esi,%%ecx,8)\n\t"
-      "fsubrs -0x8(%%esi,%%ecx,8)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_21\n\t"
-      "flds -0x4(%%esi,%%ecx,8)\n\t"
-      "fsubs -0xc(%%esi,%%ecx,8)\n\t"
-      "fabs\n\t"
-      "flds 0x24(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_21\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_20:\n\t"
-      "decl %%edi\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_21:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_22:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "incl %%eax\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "movb 0x1b(%%ebp), %%dl\n\t"
-      "movb %%dl, -0x1(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "jl .Lconvex_polygon2d_clip_to_plane_6\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_26\n\t"
-      "cmpw $3, %%di\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "jge .Lconvex_polygon2d_clip_to_plane_24\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_23:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_24:\n\t"
-      "movb -0x2(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_32\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "jmp .Lconvex_polygon2d_clip_to_plane_30\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_25:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_26:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lconvex_polygon2d_clip_to_plane_27\n\t"
-      "cmpw 0x14(%%ebp), %%bx\n\t"
-      "jle .Lconvex_polygon2d_clip_to_plane_28\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_27:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5a8\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28bfd4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_28:\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_29:\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_30:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lconvex_polygon2d_clip_to_plane_31\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_31:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_32:\n\t"
-      "movb -0x3(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lconvex_polygon2d_clip_to_plane_30\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lconvex_polygon2d_clip_to_plane_33\n\t"
-      "cmpw 0x14(%%ebp), %%bx\n\t"
-      "jle .Lconvex_polygon2d_clip_to_plane_34\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_33:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5a1\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28bfd4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lconvex_polygon2d_clip_to_plane_34:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "jmp .Lconvex_polygon2d_clip_to_plane_29\n\t"
-      :
-      : [chkstk] "m"(b106510_chkstk), [assert] "m"(b106510_assert), [exitfn] "m"(b106510_exitfn), [c8e0b0] "m"(b106510_c8e0b0)
-      : "memory");
+  /* _chkstk(0x1014): clip_buffer is a 512-float-pair local, not static. */
+  float clip_buffer[0x200 * 2];
+  int16_t out_count;
+  uint32_t mask;
+  bool any_above;
+  bool any_below;
+  bool previous_inside;
+  bool current_inside;
+  int16_t i;
+  int byte_size;
+  float *previous_point;
+  float *current_point;
+  long double distance;
+  long double t;
+  long double clamped_t;
+  long double dx;
+  long double dy;
+  long double zero_f;
+  long double one_f;
+  long double eps_ld;
+  int out_idx;
+
+  out_count = 0;
+  mask = 0;
+  any_above = false;
+  any_below = false;
+  zero_f = (long double)(*(float *)0x2533c0);
+  one_f = (long double)(*(float *)0x2533c8);
+
+  if (count < 3) {
+    display_assert("count>=NUMBER_OF_VERTICES_PER_TRIANGLE",
+                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x546, true);
+    system_exit(-1);
+  }
+
+  if (changed != NULL) {
+    *changed = 0;
+  }
+
+  if (points == out_points) {
+    if (count > 0x200) {
+      display_assert("count<=CLIP_BUFFER_SIZE",
+                     "c:\\halo\\SOURCE\\math\\geometry.c", 0x54d, true);
+      system_exit(-1);
+    }
+    csmemcpy(clip_buffer, points, (int)count << 3);
+    points = clip_buffer;
+  }
+
+  byte_size = (int)count * 8;
+
+  previous_point = points + (int)count * 2 - 2;
+  /* Oracle: fld y; fmul line1; fld x; fmul line0; faddp; fsub line2. */
+  previous_inside =
+    zero_f <=
+    ((long double)previous_point[1] * (long double)line[1] +
+     (long double)previous_point[0] * (long double)line[0]) -
+    (long double)line[2];
+
+  if (count < 1) {
+    goto zero_result;
+  }
+
+  eps_ld = (long double)epsilon;
+
+  for (i = 0; i < count; ++i) {
+    current_point = points + (int)i * 2;
+    distance =
+      ((long double)current_point[1] * (long double)line[1] +
+       (long double)line[0] * (long double)current_point[0]) -
+      (long double)line[2];
+    current_inside = zero_f <= distance;
+
+    if ((float)distance > epsilon) {
+      any_above = true;
+    } else if ((float)distance < -epsilon) {
+      any_below = true;
+    }
+
+    if (current_inside != previous_inside) {
+      if (out_count == max_count) {
+        goto overflow;
+      }
+
+      if (changed != NULL) {
+        *changed = 1;
+      }
+
+      dx = (long double)previous_point[0] - (long double)current_point[0];
+      dy = (long double)previous_point[1] - (long double)current_point[1];
+      /* denom = dx*line0 + dy*line1 (oracle fld-st order); keep 80-bit. */
+      t =
+        -(((long double)current_point[1] * (long double)line[1] +
+           (long double)line[0] * (long double)current_point[0]) -
+          (long double)line[2]) /
+        (dx * (long double)line[0] + dy * (long double)line[1]);
+
+      clamped_t = zero_f;
+      if (zero_f <= t) {
+        clamped_t = t;
+        if (one_f < t) {
+          clamped_t = one_f;
+        }
+      }
+
+      out_points[(int)out_count * 2] =
+        (float)(clamped_t * dx + (long double)current_point[0]);
+      mask |= (uint32_t)1 << ((uint8_t)out_count & 0x1f);
+      out_count += 1;
+      out_points[((int)out_count - 1) * 2 + 1] =
+        (float)(clamped_t * dy + (long double)current_point[1]);
+
+      if (out_count != 1) {
+        out_idx = (int)out_count;
+        /* x87 FABS via fabsl — not fabsf/_xbox_fabsf (FLDZ stub). */
+        if ((__builtin_fabsl((long double)out_points[out_idx * 2 - 2] -
+                             (long double)out_points[0]) < eps_ld &&
+             __builtin_fabsl((long double)out_points[out_idx * 2 - 1] -
+                             (long double)out_points[1]) < eps_ld) ||
+            (__builtin_fabsl((long double)out_points[out_idx * 2 - 2] -
+                             (long double)out_points[out_idx * 2 - 4]) <
+               eps_ld &&
+             __builtin_fabsl((long double)out_points[out_idx * 2 - 1] -
+                             (long double)out_points[out_idx * 2 - 3]) <
+               eps_ld)) {
+          out_count -= 1;
+        }
+      }
+    }
+
+    if (current_inside) {
+      if (out_count == max_count) {
+        goto overflow;
+      }
+
+      out_points[(int)out_count * 2] = current_point[0];
+      out_points[(int)out_count * 2 + 1] = current_point[1];
+
+      if (out_bitmask == NULL ||
+          ((uint32_t)1 << ((uint8_t)i & 0x1f) & *out_bitmask) == 0) {
+        mask &= ~((uint32_t)1 << ((uint8_t)out_count & 0x1f));
+      } else {
+        mask |= (uint32_t)1 << ((uint8_t)out_count & 0x1f);
+      }
+      out_count += 1;
+
+      if (out_count != 1) {
+        out_idx = (int)out_count;
+        if ((__builtin_fabsl((long double)out_points[out_idx * 2 - 2] -
+                             (long double)out_points[0]) < eps_ld &&
+             __builtin_fabsl((long double)out_points[out_idx * 2 - 1] -
+                             (long double)out_points[1]) < eps_ld) ||
+            (__builtin_fabsl((long double)out_points[out_idx * 2 - 2] -
+                             (long double)out_points[out_idx * 2 - 4]) <
+               eps_ld &&
+             __builtin_fabsl((long double)out_points[out_idx * 2 - 1] -
+                             (long double)out_points[out_idx * 2 - 3]) <
+               eps_ld)) {
+          out_count -= 1;
+        }
+      }
+    }
+
+    previous_point = current_point;
+    previous_inside = current_inside;
+  }
+
+  if (out_count == -1) {
+    goto overflow;
+  }
+
+  if (out_count < 3) {
+  zero_result:
+    out_count = 0;
+  }
+
+  if (any_above) {
+    if (!any_below) {
+      if (count < 0 || count > max_count) {
+        display_assert("count>=0 && count<=maximum_count",
+                       "c:\\halo\\SOURCE\\math\\geometry.c", 0x5a1, true);
+        system_exit(-1);
+      }
+      csmemcpy(out_points, points, byte_size);
+      out_count = count;
+    }
+  } else {
+    out_count = 0;
+  }
+
+  goto done;
+
+overflow:
+  out_count = -1;
+  if (count < 0 || count > max_count) {
+    display_assert("count>=0 && count<=maximum_count",
+                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x5a8, true);
+    system_exit(-1);
+  }
+  csmemcpy(out_points, points, byte_size);
+
+done:
+  if (out_bitmask != NULL) {
+    *out_bitmask = mask;
+  }
+
+  return out_count;
 }
-#else
-#error "convex_polygon2d_clip_to_plane: clang naked draft required"
-#endif
+
+
 
 
 /* convex_polygon2d_verify (0x106900) — readable C lift from XBE leaf.

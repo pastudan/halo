@@ -21553,7 +21553,7 @@
         {
           "addr": "0x17bca0",
           "decl": "char FUN_0017bca0(void *shader, void *state);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017bca0"
         },
         {
@@ -40772,7 +40772,7 @@
         {
           "addr": "0x106510",
           "decl": "int16_t convex_polygon2d_clip_to_plane(int16_t count, float *points, float *line, int16_t max_count, float *out_points, uint32_t *out_bitmask, uint8_t *changed, float epsilon);",
-          "ported": false,
+          "ported": true,
           "name": "convex_polygon2d_clip_to_plane"
         },
         {
