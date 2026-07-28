@@ -24270,7 +24270,7 @@
         {
           "addr": "0x1c22e0",
           "decl": "char playlist_profile_create_default_profiles_on_disk(int profile_index);",
-          "ported": false,
+          "ported": true,
           "name": "playlist_profile_create_default_profiles_on_disk"
         },
         {
