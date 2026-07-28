@@ -1269,82 +1269,31 @@ void FUN_0006f220(unsigned char *p, int count)
   }
 }
 
-/* FUN_0006f260 (0x6f260) — XBE naked draft (batch 317). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f260(void)
+/* FUN_0006f260 (0x6f260) — readable C lift: swab bytes via DAT_002ecbe0[].
+ * DAT_* must stay as extern relocs so Unicorn remaps like the oracle. */
+void FUN_0006f260(unsigned char *buf, int n)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $8, %%esi\n\t"
-      "jle .LFUN_0006f260_2\n\t"
-      "leal -0x9(%%esi), %%ecx\n\t"
-      "shrl $3, %%ecx\n\t"
-      "incl %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "negl %%eax\n\t"
-      "leal (%%esi,%%eax,8), %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".LFUN_0006f260_1:\n\t"
-      "movzbl (%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "movzbl 0x1(%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, 0x1(%%eax)\n\t"
-      "movzbl 0x2(%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, 0x2(%%eax)\n\t"
-      "movzbl 0x3(%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, 0x3(%%eax)\n\t"
-      "movzbl 0x4(%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, 0x4(%%eax)\n\t"
-      "movzbl 0x5(%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, 0x5(%%eax)\n\t"
-      "movzbl 0x6(%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, 0x6(%%eax)\n\t"
-      "movzbl 0x7(%%eax), %%edx\n\t"
-      "movb 0x2ecbe0(%%edx), %%dl\n\t"
-      "movb %%dl, 0x7(%%eax)\n\t"
-      "addl $8, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "jne .LFUN_0006f260_1\n\t"
-      "jmp .LFUN_0006f260_3\n\t"
-      ".LFUN_0006f260_2:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".LFUN_0006f260_3:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .LFUN_0006f260_5\n\t"
-      "jmp .LFUN_0006f260_4\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".LFUN_0006f260_4:\n\t"
-      "movzbl (%%eax), %%ecx\n\t"
-      "movb 0x2ecbe0(%%ecx), %%dl\n\t"
-      "movb %%dl, (%%eax)\n\t"
-      "incl %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .LFUN_0006f260_4\n\t"
-      ".LFUN_0006f260_5:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  extern unsigned char DAT_002ecbe0[];
+  int i;
+
+  if (n > 8) {
+    int blocks = (n - 9) / 8 + 1;
+    n -= blocks * 8;
+    while (blocks-- > 0) {
+      buf[0] = DAT_002ecbe0[buf[0]];
+      buf[1] = DAT_002ecbe0[buf[1]];
+      buf[2] = DAT_002ecbe0[buf[2]];
+      buf[3] = DAT_002ecbe0[buf[3]];
+      buf[4] = DAT_002ecbe0[buf[4]];
+      buf[5] = DAT_002ecbe0[buf[5]];
+      buf[6] = DAT_002ecbe0[buf[6]];
+      buf[7] = DAT_002ecbe0[buf[7]];
+      buf += 8;
+    }
+  }
+  for (i = 0; i < n; i++)
+    buf[i] = DAT_002ecbe0[buf[i]];
 }
-#else
-#error "FUN_0006f260: clang naked draft required"
-#endif
 
 
 /* FUN_0006f320 (0x6f320) — XBE naked draft (batch 305). */
