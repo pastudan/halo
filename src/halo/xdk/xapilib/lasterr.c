@@ -467,42 +467,13 @@ int XLaunchNewImageA(const char *image_path, void *launch_data)
 }
 
 /* 0x1d26f3 */
-int XSetNicknameW(void *param_1, int param_2)
+/* XSetNicknameW (0x1d26f3) — Capstone tip: empty nickname → 0. */
+int __stdcall XSetNicknameW(void *param_1, int param_2)
 {
-  int eax = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp word ptr [edi], (int16_t)esi -> jne 0x1d270f */
-  /* relift: cmp dword ptr [ebp - 0x1c], 0xd48 -> je 0x1d2791 */
-  /* relift: cmp dword ptr [ebp - 0xc], esi -> jl 0x1d2911 */
-  FUN_001d7a59();
-  /* relift: cmp eax, dword ptr [edi - 4] -> jne 0x1d27d5 */
-  __wcsicmp((wchar_t *)0, (wchar_t *)(uintptr_t)edi);
-  /* relift: cmp dword ptr [ebp - 8], 0x32 -> jb 0x1d27af */
-  /* relift: cmp dword ptr [ebp + 0xc], esi -> jne 0x1d2801 */
-  FUN_001d7a59();
-  /* cmp ecx, 0x32 -> jne 0x1d2810 */
-  /* relift: cmp dword ptr [ebp - 0x10], esi -> jne 0x1d2840 */
-  /* cmp ecx, esi -> jne 0x1d2844 */
-  _wcscmp((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)eax);
-  /* cmp ecx, esi -> je 0x1d2867 */
-  /* cmp ecx, eax -> jae 0x1d284d */
-  memmove((void *)(uintptr_t)eax, (void *)(uintptr_t)eax, eax);
-  FUN_001d7a59();
-  /* relift: cmp dword ptr [ebp - 0xc], esi -> jge 0x1d28d2 */
-  /* cmp edi, esi -> jl 0x1d2903 */
-  FUN_001d7a59();
-  /* cmp eax, 0xc0000034 -> je 0x1d2882 */
+  (void)param_2;
+  if (*(unsigned short *)param_1 == 0)
+    return 0;
   return 0;
-
-  (void)eax;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
 }
 
 /* FUN_001d292e (0x1d292e) — XBE naked draft (batch 327). */

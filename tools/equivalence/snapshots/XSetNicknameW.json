@@ -1,0 +1,9 @@
+{
+  "description": "XSetNicknameW: empty wide string \u2192 0",
+  "regions": {
+    "0x30000000": "0000"
+  },
+  "arg_overrides": {
+    "param_1": 805306368
+  }
+}
