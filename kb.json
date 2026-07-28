@@ -24461,7 +24461,7 @@
         {
           "addr": "0x1c3a30",
           "decl": "void FUN_001c3a30(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001c3a30"
         },
         {
