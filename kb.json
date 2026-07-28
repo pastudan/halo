@@ -33525,7 +33525,7 @@
         {
           "addr": "0x7a4a0",
           "decl": "void bitmap_2d_uncompress_from_mipmap(void *source_bitmap, void *destination_bitmap, short source_mipmap_index);",
-          "ported": false,
+          "ported": true,
           "name": "bitmap_2d_uncompress_from_mipmap"
         },
         {

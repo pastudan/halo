@@ -3311,275 +3311,71 @@ void FUN_0007a1e0(void *source_bitmap __attribute__((unused)), void *destination
 #endif
 
 
-/* bitmap_2d_uncompress_from_mipmap (0x7a4a0) — XBE naked draft (batch 245). */
-#if defined(__clang__)
-static bool (*const b7a4a0_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b7a4a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7a4a0_exitfn)(int) = system_exit;
-static void * (*const b7a4a0_c7e0b0)(unsigned short width, unsigned short height, unsigned short mipmap_count, unsigned short format) = bitmap_2d_new;
-static void (*const b7a4a0_c7ea60)(void) = FUN_0007ea60;
-static void (*const b7a4a0_c79e70)(void *, void *, short) = FUN_00079e70;
-static void (*const b7a4a0_c7ece0)(void *, void *, int, int) = bitmap_cube_map_face_insert;
-static void (*const b7a4a0_c7c8f0)(void *) = bitmap_delete;
-static void (*const b7a4a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void bitmap_2d_uncompress_from_mipmap(void *source_bitmap __attribute__((unused)), void *destination_bitmap __attribute__((unused)), short source_mipmap_index __attribute__((unused)))
+/* bitmap_2d_uncompress_from_mipmap (0x7a4a0) — readable C lift (restored pre-naked). */
+void bitmap_2d_uncompress_from_mipmap(void *source_bitmap, void *destination_bitmap, short source_mipmap_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_2d_uncompress_from_mipmap_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7f9\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261b44\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_1:\n\t"
-      "cmpw $2, 0xa(%%edi)\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7fa\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264274\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_2:\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lbitmap_2d_uncompress_from_mipmap_3\n\t"
-      "cmpw 0x14(%%edi), %%bx\n\t"
-      "jle .Lbitmap_2d_uncompress_from_mipmap_4\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7fb\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261ac8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%edi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .Lbitmap_2d_uncompress_from_mipmap_5\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_2d_uncompress_from_mipmap_6\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_5:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_6:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movswl 0x4(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7fc\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264770\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_7:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%edi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .Lbitmap_2d_uncompress_from_mipmap_8\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_2d_uncompress_from_mipmap_9\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_8:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_9:\n\t"
-      "movswl 0x6(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7fd\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264720\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_10:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x8(%%edi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .Lbitmap_2d_uncompress_from_mipmap_11\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_2d_uncompress_from_mipmap_12\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_11:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_12:\n\t"
-      "movswl 0x8(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_13\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7fe\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2646d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_13:\n\t"
-      "testb $2, 0xe(%%edi)\n\t"
-      "jne .Lbitmap_2d_uncompress_from_mipmap_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7ff\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264694\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_14:\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_2d_uncompress_from_mipmap_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0x801\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x261c58\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_15:\n\t"
-      "cmpw $2, 0xa(%%esi)\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_16\n\t"
-      "pushl $1\n\t"
-      "pushl $0x802\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x264664\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_16:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0xc(%%edi), %%dx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x4(%%esi), %%cx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c7e0b0]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0xc(%%esi), %%dx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x4(%%esi), %%cx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c7e0b0]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_18\n\t"
-      "movl 0x2c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_18\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_18\n\t"
-      "movl 0x2c(%%ebx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lbitmap_2d_uncompress_from_mipmap_18\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_17:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7ea60]\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c79e70]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7ece0]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "incl %%esi\n\t"
-      "cmpw $6, %%si\n\t"
-      "jl .Lbitmap_2d_uncompress_from_mipmap_17\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7c8f0]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7c8f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lbitmap_2d_uncompress_from_mipmap_18:\n\t"
-      "pushl $0x264194\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7c8f0]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7c8f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b7a4a0_c7d470), [assert] "m"(b7a4a0_assert), [exitfn] "m"(b7a4a0_exitfn), [c7e0b0] "m"(b7a4a0_c7e0b0), [c7ea60] "m"(b7a4a0_c7ea60), [c79e70] "m"(b7a4a0_c79e70), [c7ece0] "m"(b7a4a0_c7ece0), [c7c8f0] "m"(b7a4a0_c7c8f0), [c8f390] "m"(b7a4a0_c8f390)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  bitmap_verify((void *)(uintptr_t)edi, 0);
+  /* test (char)eax, (char)eax -> jne 0x7a4d8 */
+  display_assert((char *)0x00261b44, (char *)0x002641f0, 2041, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [edi + 0xa], 2 -> je 0x7a4ff */
+  display_assert((char *)0x00264274, (char *)0x002641f0, 2042, 0);
+  system_exit(0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x7a50d */
+  /* relift: cmp (int16_t)ebx, word ptr [edi + 0x14] -> jle 0x7a52d */
+  display_assert((char *)0x00261ac8, (char *)0x002641f0, 2043, 0);
+  system_exit(0);
+  /* cmp (int16_t)edx, 1 -> jge 0x7a548 */
+  /* cmp eax, ecx -> je 0x7a57a */
+  display_assert((char *)0x00264770, (char *)0x002641f0, 2044, 0);
+  system_exit(0);
+  /* cmp (int16_t)edx, 1 -> jge 0x7a595 */
+  /* cmp eax, ecx -> je 0x7a5c4 */
+  display_assert((char *)0x00264720, (char *)0x002641f0, 2045, 0);
+  system_exit(0);
+  /* cmp (int16_t)edx, 1 -> jge 0x7a5df */
+  /* cmp eax, ecx -> je 0x7a60e */
+  display_assert((char *)0x002646d0, (char *)0x002641f0, 2046, 0);
+  system_exit(0);
+  /* relift: test byte ptr [edi + 0xe], 2 -> jne 0x7a634 */
+  display_assert((char *)0x00264694, (char *)0x002641f0, 2047, 0);
+  system_exit(0);
+  bitmap_verify((void *)(uintptr_t)esi, 0);
+  /* test (char)eax, (char)eax -> jne 0x7a663 */
+  display_assert((char *)0x00261c58, (char *)0x002641f0, 2049, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 0xa], 2 -> je 0x7a68a */
+  display_assert((char *)0x00264664, (char *)0x002641f0, 2050, 0);
+  system_exit(0);
+  bitmap_2d_new(0, 0, 0, 0);
+  bitmap_2d_new(0, 0, 0, 0);
+  /* test eax, eax -> je 0x7a724 */
+  /* test ebx, ebx -> je 0x7a724 */
+  /* test eax, eax -> je 0x7a724 */
+  ((void(*)(void))FUN_0007ea60)();
+  ((void(*)(void))FUN_00079e70)();
+  ((void(*)(void))bitmap_cube_map_face_insert)();
+  /* cmp (int16_t)esi, 6 -> jl 0x7a6e1 */
+  bitmap_delete((void *)(uintptr_t)edi);
+  bitmap_delete((void *)(uintptr_t)ebx);
+  error(0, (char *)0x00264194);
+  bitmap_delete((void *)(uintptr_t)edi);
+  bitmap_delete((void *)(uintptr_t)ebx);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "bitmap_2d_uncompress_from_mipmap: clang naked draft required"
-#endif
 
 
 /* rgb_color_to_hsv_color (0x7a780) — readable C lift (restored pre-naked). */
