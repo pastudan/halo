@@ -28514,7 +28514,7 @@
         {
           "addr": "0xeef30",
           "decl": "void FUN_000eef30(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000eef30"
         },
         {
@@ -28526,7 +28526,7 @@
         {
           "addr": "0xef3f0",
           "decl": "void FUN_000ef3f0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ef3f0"
         },
         {
