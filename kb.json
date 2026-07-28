@@ -26368,7 +26368,7 @@
         {
           "addr": "0x625a0",
           "decl": "void FUN_000625a0(void *obstacles, short disc_index, float *point, float base_value, float *out_b, float *out_a, float *out_scalar);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000625a0"
         },
         {

@@ -637,100 +637,40 @@ char FUN_000624b0(void *obstacles, short skip_index, float *pt0, float *vec_a,
 
 
 
-/* FUN_000625a0 (0x625a0) — XBE naked draft (batch 87). */
-#if defined(__clang__)
-static void (*const b625a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b625a0_exitfn)(int) = system_exit;
-static void (*const b625a0_c61fa0)(float *vec, float *out_a, float *out_b, float denom, float num, float *out_scalar) = FUN_00061fa0;
-
-__attribute__((naked, noinline))
-void FUN_000625a0(void *obstacles __attribute__((unused)), short disc_index __attribute__((unused)), float *point __attribute__((unused)), float base_value __attribute__((unused)), float *out_b __attribute__((unused)), float *out_a __attribute__((unused)), float *out_scalar __attribute__((unused)))
+/* FUN_000625a0 (0x625a0) — readable C lift (restored pre-naked). */
+void FUN_000625a0(void *obstacles, short disc_index, float *point,
+                  float base_value, float *out_b, float *out_a,
+                  float *out_scalar)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0xc(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "jl .LFUN_000625a0_1\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_000625a0_1\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_000625a0_2\n\t"
-      ".LFUN_000625a0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18c\n\t"
-      "pushl $0x25e990\n\t"
-      "pushl $0x25e930\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000625a0_2:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal 0x8(%%edi,%%eax,8), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "fsubs (%%eax)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0xc(%%ecx)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fsts 0xc(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000625a0_3\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs 0xc(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "jmp .LFUN_000625a0_4\n\t"
-      ".LFUN_000625a0_3:\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      ".LFUN_000625a0_4:\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "fadds 0x10(%%ecx)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "pushl %%edx\n\t"
-      "fadds 0x25ee6c\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c61fa0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b625a0_assert), [exitfn] "m"(b625a0_exitfn), [c61fa0] "m"(b625a0_c61fa0)
-      : "memory");
+  float dir[2];
+  float dist;
+  float num;
+  float *disc;
+  short disc_count;
+
+  disc_count = *(short *)((char *)obstacles + 2);
+  if (disc_index < 0 || disc_index >= disc_count || disc_count > 0x80) {
+    display_assert(
+        "disc_index>=0 && disc_index<obstacles->disc_count && "
+        "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
+        "c:\\halo\\source\\ai\\path.h", 0x18c, true);
+    system_exit(-1);
+  }
+  disc = (float *)((char *)obstacles + (int)disc_index * 0x18 + 8);
+  dir[0] = disc[2] - point[0];
+  dir[1] = disc[3] - point[1];
+  dist = sqrtf(dir[1] * dir[1] + dir[0] * dir[0]);
+  if (fabs(dist) < *(double *)0x002533d0) {
+    dist = 0.0f;
+  } else {
+    float inv = *(float *)0x002533c8 / dist;
+    dir[0] = dir[0] * inv;
+    dir[1] = dir[1] * inv;
+  }
+  num = base_value + disc[4] + *(float *)0x0025ee6c;
+  FUN_00061fa0(dir, out_a, out_b, dist, num, out_scalar);
 }
-#else
-#error "FUN_000625a0: clang naked draft required"
-#endif
+
 
 
 /* FUN_000628b0 (0x628b0) — XBE naked draft (batch 88). */
