@@ -36004,7 +36004,7 @@
         {
           "addr": "0x43a20",
           "decl": "char FUN_00043a20(int conversation_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00043a20"
         },
         {
