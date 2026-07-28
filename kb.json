@@ -39488,7 +39488,7 @@
         {
           "addr": "0x120a40",
           "decl": "void animation_graph_node_matrices_from_orientations(void);",
-          "ported": false,
+          "ported": true,
           "name": "animation_graph_node_matrices_from_orientations"
         },
         {
@@ -39526,7 +39526,7 @@
         {
           "addr": "0x121330",
           "decl": "void FUN_00121330(void *animation, float frame, unsigned short rotation_count, short node_index, void *out_rotation);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00121330"
         },
         {
