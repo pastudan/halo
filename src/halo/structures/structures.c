@@ -4840,194 +4840,80 @@ int FUN_00197130(float *bounds __attribute__((unused)), void *param_2 __attribut
 #endif
 
 
-/* FUN_00197310 (0x197310) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void * (*const b197310_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
-static void (*const b197310_xfrmpt)(float *, float *, float *) = matrix_transform_point;
-static int16_t (*const b197310_c106960)(int16_t count, float *verts, float *plane, int16_t max_count, float *out_verts, uint32_t *out_bitmask, float epsilon, void *changed) = convex_polygon3d_clip_to_plane;
-static void (*const b197310_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b197310_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-short FUN_00197310(void *verts __attribute__((unused)), void *plane __attribute__((unused)), void *ref __attribute__((unused)), void *arg1 __attribute__((unused)), int16_t count __attribute__((unused)), int sign __attribute__((unused)), short *out __attribute__((unused)))
+/* FUN_00197310 (0x197310) — readable C lift (restored pre-naked). */
+short FUN_00197310(void *verts, void *plane, void *ref, void *arg1,
+                   int16_t count, int sign, short *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc08, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movl %%edx, %%esi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movw $0, (%%eax)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movb 0x24(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%esi)\n\t"
-      "fmuls (%%edi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0xc(%%edi)\n\t"
-      "fimull -0x4(%%ebp)\n\t"
-      "je .LFUN_00197310_1\n\t"
-      "negl %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      ".LFUN_00197310_1:\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2674e8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00197310_2\n\t"
-      "popl %%edi\n\t"
-      "fstp %%st(0)\n\t"
-      "popl %%esi\n\t"
-      "movl $2, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00197310_2:\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00197310_11\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00197310_4\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "addl $0x10, %%edx\n\t"
-      "leal -0xc08(%%ebp), %%edi\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "subl %%ebx, %%edi\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "movzwl %%ax, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00197310_3:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "leal (%%edi,%%esi,1), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[xfrmpt]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $0xc, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_00197310_3\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      ".LFUN_00197310_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x38d1b717\n\t"
-      "pushl $0\n\t"
-      "leal -0xc08(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x100\n\t"
-      "pushl $0x2b35c4\n\t"
-      "leal -0xc08(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c106960]\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "addl $0x20, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "jne .LFUN_00197310_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x485\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b37b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00197310_5:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpw $1, 0x10(%%ebp)\n\t"
-      "jne .LFUN_00197310_6\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "movw %%dx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00197310_7\n\t"
-      ".LFUN_00197310_6:\n\t"
-      "movw (%%esi), %%di\n\t"
-      "decw %%di\n\t"
-      "movl $0xffffffff, -0x4(%%ebp)\n\t"
-      ".LFUN_00197310_7:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpw -0x4(%%ebp), %%di\n\t"
-      "je .LFUN_00197310_10\n\t"
-      "jmp .LFUN_00197310_8\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".LFUN_00197310_8:\n\t"
-      "flds 0x255e94\n\t"
-      "movswl %%di, %%esi\n\t"
-      "leal (%%esi,%%esi,2), %%esi\n\t"
-      "shll $2, %%esi\n\t"
-      "fdivs -0xc00(%%ebp,%%esi,1)\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00197310_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x497\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b37a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00197310_9:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "fmuls -0xc08(%%ebp,%%esi,1)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "leal (%%ecx,%%eax,8), %%eax\n\t"
-      "addl %%edx, %%edi\n\t"
-      "incl %%ebx\n\t"
-      "cmpw -0x4(%%ebp), %%di\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0xc04(%%ebp,%%esi,1)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "jne .LFUN_00197310_8\n\t"
-      ".LFUN_00197310_10:\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw $3, (%%edx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "setl %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00197310_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b197310_c18e3c0), [xfrmpt] "m"(b197310_xfrmpt), [c106960] "m"(b197310_c106960), [assert] "m"(b197310_assert), [exitfn] "m"(b197310_exitfn)
-      : "memory");
+  float *v = (float *)verts;
+  float *p = (float *)plane;
+  float *r = (float *)ref;
+  float buf[256][3];
+  float side;
+  float ooz;
+  int orig_sign;
+  int j;
+  short idx;
+  short end;
+  short oidx;
+
+  scenario_get();
+  *out = 0;
+  orig_sign = (short)sign;
+  side = (r[2] * p[2] + r[1] * p[1] + r[0] * p[0] - p[3]) * (float)orig_sign;
+  if (*((char *)ref + 0x24) != '\0') {
+    sign = -sign;
+  }
+  if (fabs(side) < *(double *)0x002674e8) {
+    return 2;
+  }
+  if (side <= *(float *)0x002533c0) {
+    return 1;
+  }
+
+  if (count > 0) {
+    float *mtx = (float *)((char *)arg1 + 0x10);
+    for (j = 0; j < count; j++) {
+      matrix_transform_point(mtx, v + j * 3, &buf[j][0]);
+    }
+  }
+
+  *out = convex_polygon3d_clip_to_plane(count, &buf[0][0], (float *)0x002b35c4,
+                                        0x100, &buf[0][0], (uint32_t *)0,
+                                        0.0001f, (void *)0x1);
+  if (*out == -1) {
+    display_assert("result->vertex_count!=NONE",
+                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x485,
+                   true);
+    system_exit(-1);
+  }
+
+  if (sign == 1) {
+    idx = 0;
+    end = *out;
+  } else {
+    idx = (short)(*out - 1);
+    end = -1;
+  }
+  oidx = 0;
+  if (idx != end) {
+    do {
+      int e = (int)idx;
+      ooz = *(float *)0x00255e94 / buf[e][2];
+      if (ooz <= *(float *)0x002533c0) {
+        display_assert("ooz>0.f",
+                       "c:\\halo\\SOURCE\\structures\\structure_visibility.c",
+                       0x497, true);
+        system_exit(-1);
+      }
+      *(float *)(out + oidx * 4 + 2) = ooz * buf[e][0];
+      *(float *)(out + oidx * 4 + 4) = ooz * buf[e][1];
+      idx = (short)(idx + sign);
+      oidx = (short)(oidx + 1);
+    } while (idx != end);
+  }
+
+  return (short)(*out < 3);
 }
-#else
-#error "FUN_00197310: clang naked draft required"
-#endif
 
 
 /* 0x1974f0 - resolve a structure-connection plane and dispatch the edge solve.

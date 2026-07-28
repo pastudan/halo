@@ -26234,7 +26234,7 @@
         {
           "addr": "0x192f80",
           "decl": "void leaf_map_build_leaf_face_for_leaf_on_node(void);",
-          "ported": false,
+          "ported": true,
           "name": "leaf_map_build_leaf_face_for_leaf_on_node"
         },
         {
@@ -26876,7 +26876,7 @@
         {
           "addr": "0x197310",
           "decl": "short FUN_00197310(void *verts@<eax>, void *plane@<ecx>, void *ref@<edx>, void *arg1, int16_t count, int sign, short *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00197310"
         },
         {
