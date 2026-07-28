@@ -18450,7 +18450,7 @@
         {
           "addr": "0xa3b80",
           "decl": "void FUN_000a3b80(int player_index, void *damage_params, void *position, float damage_amount, float scale);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a3b80"
         },
         {
@@ -30799,7 +30799,7 @@
         {
           "addr": "0xa4e20",
           "decl": "void weather_particle_system_render(int16_t weather_index);",
-          "ported": false,
+          "ported": true,
           "name": "weather_particle_system_render"
         }
       ],

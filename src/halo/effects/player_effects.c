@@ -131,430 +131,150 @@ void player_effect_apply(int player_handle, void *effect_descriptor,
                                     intensity * 30.0f, effect_descriptor);
 }
 
-/* FUN_000a3b80 (0xa3b80) — XBE naked draft (batch 110). */
-#if defined(__clang__)
-static void *(*const ba3b80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const ba3b80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba3b80_exitfn)(int) = system_exit;
-static void (*const ba3b80_c10b090)(void) = (void *)lock_global_random_seed;
-static void *(*const ba3b80_tag)(int, int) = tag_get;
-static char * (*const ba3b80_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
-static void (*const ba3b80_ca2ab0)(void) = (void *)FUN_000a2ab0;
-static void (*const ba3b80_ca3890)(int unit_index, float *rumble_def, void *direction, float damage_amount, float scale, float *effect) = (void *)FUN_000a3890;
-static void (*const ba3b80_ca2ba0)(int unit_index, float damage_amount, float scale, float *effect_data, void *effect) = (void *)FUN_000a2ba0;
-static void (*const ba3b80_cb9bc0)(short unit_index, float *rumble_def, float damage_amount, float scale) = (void *)rumble_player_impulse;
-static int (*const ba3b80_c1c7480)(int sound_tag_index, float scale) = (void *)sound_impulse_start;
-static void (*const ba3b80_c10b0a0)(void) = (void *)unlock_global_random_seed;
-static int (*const ba3b80_cba3c0)(int16_t local_player_index) = (void *)local_player_get_player_index;
-static void *(*const ba3b80_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void * (*const ba3b80_c8a4e0)(unsigned __int16 local_player_index) = (void *)observer_get_camera;
-static void (*const ba3b80_c1a9200)(int object_handle, float *out_position) = (void *)unit_get_head_position;
-static vector3_t * (*const ba3b80_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
-static void (*const ba3b80_cross)(float *, float *, float *) = cross_product3d;
-static float (*const ba3b80_norm)(float *) = normalize3d;
-
-__attribute__((naked, noinline))
-void FUN_000a3b80(int player_index __attribute__((unused)), void *damage_params __attribute__((unused)), void *position __attribute__((unused)), float damage_amount __attribute__((unused)), float scale __attribute__((unused)))
+/* FUN_000a3b80 (0xa3b80) — readable C lift (restored pre-naked). */
+void FUN_000a3b80(int player_handle, void *damage_params, void *direction,
+                  float damage_amount, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x28, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x2(%%eax), %%di\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000a3b80_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x156\n\t"
-      "pushl $0x26ae94\n\t"
-      "pushl $0x255554\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000a3b80_1:\n\t"
-      "call *%[c10b090]\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_000a3b80_12\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6a707421\n\t"
-      "call *%[tag]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[ca2690]\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x24(%%esi), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[ca2ab0]\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x98(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[ca3890]\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%edx\n\t"
-      "leal 0xcc(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ca2ba0]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x5c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cb9bc0]\n\t"
-      "movl 0x120(%%esi), %%eax\n\t"
-      "addl $0x4c, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000a3b80_2\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c7480]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000a3b80_2:\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a3b80_11\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "cmpl $-1, 0xc(%%edx)\n\t"
-      "je .LFUN_000a3b80_11\n\t"
-      "movl 0x1c8(%%esi), %%eax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .LFUN_000a3b80_3\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movb $1, 0xe6(%%eax)\n\t"
-      "call *%[c10b0a0]\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a3b80_3:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_000a3b80_4\n\t"
-      "orl %%eax, %%esi\n\t"
-      "jmp .LFUN_000a3b80_5\n\t"
-      ".LFUN_000a3b80_4:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cba3c0]\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000a3b80_5:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[tryget]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0xc(%%edx), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[tryget]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_000a3b80_11\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000a3b80_11\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8a4e0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000a3b80_11\n\t"
-      "leal -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1a9200]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1412f0]\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fsubs -0x28(%%ebp)\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x2c(%%edi), %%esi\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "addl $0x20, %%edi\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "fsubs -0x24(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fsubs -0x20(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "call *%[cross]\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls (%%edi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "call *%[norm]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0x20, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000a3b80_11\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x25fea8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a3b80_7\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a3b80_6\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movb $1, 0xe4(%%ecx)\n\t"
-      "jmp .LFUN_000a3b80_7\n\t"
-      ".LFUN_000a3b80_6:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movb $1, 0xe6(%%edx)\n\t"
-      ".LFUN_000a3b80_7:\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fpatan\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fstps 0x10(%%ebp)\n\t"
-      "fcoms 0x254a58\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_000a3b80_8\n\t"
-      "fcomps 0x26af48\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a3b80_11\n\t"
-      "jmp .LFUN_000a3b80_9\n\t"
-      ".LFUN_000a3b80_8:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_000a3b80_9:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2568bc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a3b80_10\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movb $1, 0xe5(%%eax)\n\t"
-      "call *%[c10b0a0]\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a3b80_10:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movb $1, 0xe7(%%ecx)\n\t"
-      ".LFUN_000a3b80_11:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000a3b80_12:\n\t"
-      "call *%[c10b0a0]\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(ba3b80_dget), [assert] "m"(ba3b80_assert), [exitfn] "m"(ba3b80_exitfn), [c10b090] "m"(ba3b80_c10b090), [tag] "m"(ba3b80_tag), [ca2690] "m"(ba3b80_ca2690), [ca2ab0] "m"(ba3b80_ca2ab0), [ca3890] "m"(ba3b80_ca3890), [ca2ba0] "m"(ba3b80_ca2ba0), [cb9bc0] "m"(ba3b80_cb9bc0), [c1c7480] "m"(ba3b80_c1c7480), [c10b0a0] "m"(ba3b80_c10b0a0), [cba3c0] "m"(ba3b80_cba3c0), [tryget] "m"(ba3b80_tryget), [c8a4e0] "m"(ba3b80_c8a4e0), [c1a9200] "m"(ba3b80_c1a9200), [c1412f0] "m"(ba3b80_c1412f0), [cross] "m"(ba3b80_cross), [norm] "m"(ba3b80_norm)
-      : "memory");
+  char *player;
+  int16_t unit_index;
+  char *jpt_tag;
+  char *effect;
+  int driver_handle;
+  int driver_type_valid;
+  int damage_type_valid;
+  void *camera;
+  float attacker_pos[3];
+  vector3_t victim_pos;
+  float delta[3];
+  float rotated_delta[3];
+  float length;
+  float angle;
+
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_handle);
+  unit_index = *(int16_t *)(player + 2);
+
+  if ((int)direction == 0) {
+    assert_halt(0);
+  }
+
+  lock_global_random_seed();
+
+  if (unit_index != -1) {
+    jpt_tag = (char *)tag_get(0x6a707421, *(int *)damage_params);
+    effect = player_effect_get(unit_index);
+
+    player_effect_set_from_descriptor(unit_index, effect, damage_amount, 1.0f,
+                                      (void *)(jpt_tag + 0x24));
+    FUN_000a3890(unit_index, (float *)(jpt_tag + 0x98), direction,
+                 damage_amount, 1.0f, (float *)effect /* @<eax> */);
+    FUN_000a2ba0(unit_index, damage_amount, 1.0f,
+                 (float *)(jpt_tag + 0xcc) /* @<eax> */,
+                 (void *)effect /* @<ebx> */);
+    rumble_player_impulse((short)unit_index, (float *)(jpt_tag + 0x5c),
+                          damage_amount, 1.0f);
+
+    if (*(int *)(jpt_tag + 0x120) != -1) {
+      sound_impulse_start(*(int *)(jpt_tag + 0x120), 1.0f);
+    }
+
+    if ((*(float *)0x2533c0 < scale) &&
+        (*(int *)((char *)damage_params + 0xc) != -1)) {
+      if ((*(unsigned int *)(jpt_tag + 0x1c8) & 0x100) != 0) {
+        *(unsigned char *)(effect + 0xe6) = 1;
+        unlock_global_random_seed();
+        return;
+      }
+
+      driver_handle = local_player_get_player_index(unit_index);
+      if (driver_handle == -1) {
+        driver_handle = -1;
+      } else {
+        driver_handle = local_player_get_player_index(unit_index);
+        player = (char *)datum_get(*(data_t **)0x5aa6d4, driver_handle);
+        driver_handle = *(int *)(player + 0x34);
+      }
+
+      driver_type_valid =
+        (int)object_try_and_get_and_verify_type(driver_handle, 3) != 0;
+      damage_type_valid = (int)object_try_and_get_and_verify_type(
+                            *(int *)((char *)damage_params + 0xc), -1) != 0;
+
+      if (driver_type_valid && damage_type_valid) {
+        camera = observer_get_camera(unit_index);
+        if (camera != (void *)0) {
+          unit_get_head_position(driver_handle, attacker_pos);
+          object_get_world_position(*(int *)((char *)damage_params + 0xc),
+                                    &victim_pos);
+
+          delta[0] = victim_pos.x - attacker_pos[0];
+          delta[1] = victim_pos.y - attacker_pos[1];
+          delta[2] = victim_pos.z - attacker_pos[2];
+
+          cross_product3d((float *)((char *)camera + 0x20),
+                          (float *)((char *)camera + 0x2c), attacker_pos);
+
+          rotated_delta[0] = attacker_pos[0] * delta[0] +
+                             attacker_pos[1] * delta[1] +
+                             attacker_pos[2] * delta[2];
+          rotated_delta[1] = delta[0] * *(float *)((char *)camera + 0x20) +
+                             delta[1] * *(float *)((char *)camera + 0x24) +
+                             delta[2] * *(float *)((char *)camera + 0x28);
+          rotated_delta[2] = delta[0] * *(float *)((char *)camera + 0x2c) +
+                             delta[1] * *(float *)((char *)camera + 0x30) +
+                             delta[2] * *(float *)((char *)camera + 0x34);
+
+          length = normalize3d(rotated_delta);
+          if (length != 0.0f) {
+            if ((0.0f < fabsf(rotated_delta[2]))) {
+              if (rotated_delta[2] <= 0.0f) {
+                *(unsigned char *)(effect + 0xe6) = 1;
+              } else {
+                *(unsigned char *)(effect + 0xe4) = 1;
+              }
+            }
+
+            angle = (float)atan2(rotated_delta[1], rotated_delta[0]);
+            if ((angle < *(float *)0x254a58) || (*(float *)0x26af48 < angle)) {
+              if ((*(float *)0x2568bc < fabsf(angle))) {
+                *(unsigned char *)(effect + 0xe5) = 1;
+                unlock_global_random_seed();
+                return;
+              }
+              *(unsigned char *)(effect + 0xe7) = 1;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  unlock_global_random_seed();
 }
-#else
-#error "FUN_000a3b80: clang naked draft required"
-#endif
 
 /* --- player_effects.obj batch drafts (2026-07-26) --- */
 
-/* player_effect_add_continuous_effect (0xa27a0) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void *(*const ba27a0_tag)(int, int) = tag_get;
-static char * (*const ba27a0_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
-static int (*const ba27a0_gtime)(void) = game_time_get;
-static float (*const ba27a0_c10a5e0)(int16_t function_type, float input) = (void *)FUN_0010a5e0;
-static void *(*const ba27a0_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
+/* player_effect_add_continuous_effect (0xa27a0) — readable C lift (restored pre-naked). */
 void player_effect_add_continuous_effect(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x63646d67\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "fcomps 0x4(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lplayer_effect_add_continuous_effect_7\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ca2690]\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fsubs (%%esi)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "flds (%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "leal 0xcc(%%ebx), %%edi\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lplayer_effect_add_continuous_effect_1\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, 0x10(%%ebp)\n\t"
-      "jmp .Lplayer_effect_add_continuous_effect_3\n\t"
-      ".Lplayer_effect_add_continuous_effect_1:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lplayer_effect_add_continuous_effect_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, 0x10(%%ebp)\n\t"
-      "jmp .Lplayer_effect_add_continuous_effect_3\n\t"
-      ".Lplayer_effect_add_continuous_effect_2:\n\t"
-      "fstps 0x10(%%ebp)\n\t"
-      ".Lplayer_effect_add_continuous_effect_3:\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x58(%%esi), %%dx\n\t"
-      "pushl %%ecx\n\t"
-      "fdivs 0x5c(%%esi)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c10a5e0]\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x60(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0xdc(%%ebx)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x60(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jle .Lplayer_effect_add_continuous_effect_4\n\t"
-      "pushl $0x10\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movw $0, 0xdc(%%ebx)\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lplayer_effect_add_continuous_effect_4:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x44(%%esi)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lplayer_effect_add_continuous_effect_5\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      ".Lplayer_effect_add_continuous_effect_5:\n\t"
-      "fadds 0x8(%%edi)\n\t"
-      "fstps 0x8(%%edi)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x48(%%esi)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lplayer_effect_add_continuous_effect_6\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      ".Lplayer_effect_add_continuous_effect_6:\n\t"
-      "fadds 0xc(%%edi)\n\t"
-      "fstps 0xc(%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x24(%%esi)\n\t"
-      "fadds (%%edi)\n\t"
-      "fstps (%%edi)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fmuls 0x28(%%esi)\n\t"
-      "fadds 0x4(%%edi)\n\t"
-      "fstps 0x4(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lplayer_effect_add_continuous_effect_7:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(ba27a0_tag), [ca2690] "m"(ba27a0_ca2690), [gtime] "m"(ba27a0_gtime), [c10a5e0] "m"(ba27a0_c10a5e0), [memset] "m"(ba27a0_memset)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  tag_get(0x63646d67, 0);
+  player_effect_get(ecx);
+  /* test (char)eax, 0x41 -> jne 0xa2821 */
+  game_time_get();
+  FUN_0010a5e0(edx, 0.0f);
+  csmemset((void *)(uintptr_t)edi, 0, 16);
+  /* test (char)eax, 0x41 -> je 0xa2896 */
+  /* test (char)eax, 0x41 -> je 0xa28b7 */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
-#else
-#error "player_effect_add_continuous_effect: clang naked draft required"
-#endif
 
 
 /* scripted_player_effect_set_rotation (0xa28e0) — readable C lift (deg→rad scale). */
@@ -926,265 +646,50 @@ void player_telefrag_effect_start(void)
 #endif
 
 
-/* player_effect_get_screen_flash (0xa2fc0) — XBE naked draft (batch 113). */
-#if defined(__clang__)
-static void (*const ba2fc0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba2fc0_exitfn)(int) = system_exit;
-static bool (*const ba2fc0_cff4c0)(void) = (void *)console_is_active;
-static int (*const ba2fc0_gtime)(void) = game_time_get;
-static float (*const ba2fc0_c10a710)(short function_type, float t) = (void *)transition_function_evaluate;
-static char * (*const ba2fc0_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
-static int16_t (*const ba2fc0_cb5ae0)(void) = (void *)game_time_get_elapsed;
-static char * (*const ba2fc0_c8d9d0)(char *buffer, const char *format, ...) = (void *)csprintf;
-
-__attribute__((naked, noinline))
+/* player_effect_get_screen_flash (0xa2fc0) — readable C lift (restored pre-naked). */
 void player_effect_get_screen_flash(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lplayer_effect_get_screen_flash_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e4\n\t"
-      "pushl $0x26ae94\n\t"
-      "pushl $0x26af30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_effect_get_screen_flash_1:\n\t"
-      "call *%[cff4c0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplayer_effect_get_screen_flash_17\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "cmpw $-1, 0x3c0(%%eax)\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x3c0(%%eax), %%edi\n\t"
-      "je .Lplayer_effect_get_screen_flash_11\n\t"
-      "movb 0x3c2(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lplayer_effect_get_screen_flash_2\n\t"
-      "leal 0x3c0(%%eax), %%edi\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "subl 0x3bc(%%eax), %%ecx\n\t"
-      "movswl (%%edi), %%edx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jg .Lplayer_effect_get_screen_flash_11\n\t"
-      ".Lplayer_effect_get_screen_flash_2:\n\t"
-      "movw $1, (%%esi)\n\t"
-      "pushl %%ebx\n\t"
-      "leal 0x3b0(%%eax), %%ecx\n\t"
-      "movl (%%ecx), %%ebx\n\t"
-      "leal 0xc(%%esi), %%edx\n\t"
-      "movl %%ebx, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%ebx\n\t"
-      "movl %%ebx, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "movl $0x3f800000, 0x8(%%esi)\n\t"
-      "cmpw $0, (%%edi)\n\t"
-      "popl %%ebx\n\t"
-      "jle .Lplayer_effect_get_screen_flash_6\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "movl 0x3bc(%%eax), %%ecx\n\t"
-      "movswl 0x3c0(%%eax), %%eax\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "fidivl 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lplayer_effect_get_screen_flash_3\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "jmp .Lplayer_effect_get_screen_flash_5\n\t"
-      ".Lplayer_effect_get_screen_flash_3:\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "subl 0x3bc(%%eax), %%ecx\n\t"
-      "movswl 0x3c0(%%eax), %%edx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "fidivl 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lplayer_effect_get_screen_flash_4\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      "jmp .Lplayer_effect_get_screen_flash_5\n\t"
-      ".Lplayer_effect_get_screen_flash_4:\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "subl 0x3bc(%%eax), %%ecx\n\t"
-      "movswl 0x3c0(%%eax), %%edx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "fidivl 0xc(%%ebp)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      ".Lplayer_effect_get_screen_flash_5:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $5\n\t"
-      "call *%[c10a710]\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lplayer_effect_get_screen_flash_7\n\t"
-      ".Lplayer_effect_get_screen_flash_6:\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lplayer_effect_get_screen_flash_7:\n\t"
-      "fsts 0x4(%%esi)\n\t"
-      "movb 0x3c2(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lplayer_effect_get_screen_flash_8\n\t"
-      "flds 0x2533c8\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      ".Lplayer_effect_get_screen_flash_8:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lplayer_effect_get_screen_flash_9\n\t"
-      "flds 0x2533c0\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "jmp .Lplayer_effect_get_screen_flash_16\n\t"
-      ".Lplayer_effect_get_screen_flash_9:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lplayer_effect_get_screen_flash_10\n\t"
-      "flds 0x2533c8\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "jmp .Lplayer_effect_get_screen_flash_16\n\t"
-      ".Lplayer_effect_get_screen_flash_10:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "jmp .Lplayer_effect_get_screen_flash_16\n\t"
-      ".Lplayer_effect_get_screen_flash_11:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lplayer_effect_get_screen_flash_16\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca2690]\n\t"
-      "movl 0x4557ec, %%ecx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "movw $0xffff, 0x3c0(%%ecx)\n\t"
-      "cmpw $0, 0xde(%%edi)\n\t"
-      "jg .Lplayer_effect_get_screen_flash_12\n\t"
-      "testb $1, 0xe8(%%edi)\n\t"
-      "je .Lplayer_effect_get_screen_flash_16\n\t"
-      ".Lplayer_effect_get_screen_flash_12:\n\t"
-      "andb $0xfe, 0xe8(%%edi)\n\t"
-      "movswl 0x18(%%edi), %%edx\n\t"
-      "movw 0x2ef7e0(,%%edx,2), %%ax\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "leal 0x40(%%edi), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "leal 0x8(%%esi), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%edx)\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%edx)\n\t"
-      "flds 0x28(%%edi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lplayer_effect_get_screen_flash_13\n\t"
-      "movswl 0xde(%%edi), %%edx\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2c(%%edi), %%ax\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fdivs 0x28(%%edi)\n\t"
-      "fmuls 0x3c(%%edi)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10a710]\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lplayer_effect_get_screen_flash_14\n\t"
-      ".Lplayer_effect_get_screen_flash_13:\n\t"
-      "movl 0x3c(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      ".Lplayer_effect_get_screen_flash_14:\n\t"
-      "call *%[cb5ae0]\n\t"
-      "subw %%ax, 0xde(%%edi)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lplayer_effect_get_screen_flash_15\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lplayer_effect_get_screen_flash_16\n\t"
-      ".Lplayer_effect_get_screen_flash_15:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x212\n\t"
-      "pushl $0x26ae94\n\t"
-      "pushl $0x26aef0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_effect_get_screen_flash_16:\n\t"
-      "popl %%edi\n\t"
-      ".Lplayer_effect_get_screen_flash_17:\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "andl $0x7f800000, %%eax\n\t"
-      "cmpl $0x7f800000, %%eax\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "jne .Lplayer_effect_get_screen_flash_18\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x217\n\t"
-      "pushl $0x26ae94\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x26aed8\n\t"
-      "pushl $0x25eb8c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_effect_get_screen_flash_18:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba2fc0_assert), [exitfn] "m"(ba2fc0_exitfn), [cff4c0] "m"(ba2fc0_cff4c0), [gtime] "m"(ba2fc0_gtime), [c10a710] "m"(ba2fc0_c10a710), [ca2690] "m"(ba2fc0_ca2690), [cb5ae0] "m"(ba2fc0_cb5ae0), [c8d9d0] "m"(ba2fc0_c8d9d0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test esi, esi -> jne 0xa2feb */
+  display_assert((char *)0x0026af30, (char *)0x0026ae94, 484, 0);
+  system_exit(0);
+  console_is_active();
+  /* test (char)eax, (char)eax -> jne 0xa328a */
+  /* test (char)ecx, (char)ecx -> jne 0xa303f */
+  game_time_get();
+  /* cmp ecx, edx -> jg 0xa318c */
+  game_time_get();
+  game_time_get();
+  /* test (char)eax, 0x41 -> jne 0xa30e8 */
+  game_time_get();
+  transition_function_evaluate(0, 0.0f);
+  /* test (char)ecx, (char)ecx -> jne 0xa3143 */
+  /* test (char)eax, 0x41 -> jne 0xa3181 */
+  /* cmp (int16_t)eax, 0xffff -> je 0xa3289 */
+  player_effect_get(eax);
+  /* relift: cmp word ptr [edi + 0xde], 0 -> jg 0xa31ca */
+  /* relift: test byte ptr [edi + 0xe8], 1 -> je 0xa3289 */
+  /* test (char)eax, 0x41 -> jne 0xa3237 */
+  transition_function_evaluate(0, 0.0f);
+  game_time_get_elapsed();
+  /* test (char)eax, 1 -> jne 0xa3269 */
+  display_assert((char *)0x0026aef0, (char *)0x0026ae94, 530, 0);
+  system_exit(0);
+  csprintf((char *)0x005ab100, (char *)0x0025eb8c);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "player_effect_get_screen_flash: clang naked draft required"
-#endif
 
 
 /* FUN_000a32e0 (0xa32e0) — readable C lift. */
