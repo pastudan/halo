@@ -12755,7 +12755,7 @@
         {
           "addr": "0xca430",
           "decl": "void FUN_000ca430(int16_t game_flag, int16_t scenario_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ca430"
         },
         {
