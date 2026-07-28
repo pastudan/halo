@@ -6620,220 +6620,41 @@ void FUN_0017b5c0(void)
 }
 
 
-/* FUN_0017b7d0 (0x17b7d0) — XBE naked draft (batch 308). */
-#if defined(__clang__)
-static void (*const b17b7d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17b7d0_exitfn)(int) = system_exit;
-static void (*const b17b7d0_c17a8a0)(void) = (void *)FUN_0017a8a0;
-static void __stdcall (*const b17b7d0_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
-static void __stdcall (*const b17b7d0_c1ed400)(unsigned int reg, unsigned int color) = (void *)D3DDevice_SetVertexDataColor;
-static void __stdcall (*const b17b7d0_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
-static void __stdcall (*const b17b7d0_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
-static void (*const b17b7d0_c1ed490)(void) = (void *)D3DDevice_End;
-
-__attribute__((naked, noinline))
-void FUN_0017b7d0(float *position __attribute__((unused)), float radius __attribute__((unused)), float *scale2d __attribute__((unused)), float angle __attribute__((unused)), uint32_t color __attribute__((unused)))
+/* FUN_0017b7d0 (0x17b7d0) — readable C lift (restored pre-naked). */
+void FUN_0017b7d0(float *position, float radius, float *scale2d, float angle, uint32_t color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0017b7d0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a9\n\t"
-      "pushl $0x2ae7f0\n\t"
-      "pushl $0x25bb20\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017b7d0_1:\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017b7d0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1aa\n\t"
-      "pushl $0x2ae7f0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017b7d0_2:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017b7d0_8\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x20(%%ebp), %%ebx\n\t"
-      "call *%[c17a8a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "je .LFUN_0017b7d0_8\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_0017b7d0_4\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fmuls 0x253d4c\n\t"
-      "fld %%st(0)\n\t"
-      "fcos\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "fsin\n\t"
-      "fsts 0xc(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x2533c8\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_0017b7d0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1b5\n\t"
-      "pushl $0x2ae7f0\n\t"
-      "pushl $0x2ae850\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017b7d0_3:\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jmp .LFUN_0017b7d0_5\n\t"
-      ".LFUN_0017b7d0_4:\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      ".LFUN_0017b7d0_5:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017b7d0_6\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_0017b7d0_7\n\t"
-      ".LFUN_0017b7d0_6:\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      "movl $0x3f800000, 0x8(%%ebp)\n\t"
-      ".LFUN_0017b7d0_7:\n\t"
-      "pushl $7\n\t"
-      "call *%[c1ed450]\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $9\n\t"
-      "call *%[c1ed400]\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "movl -0x18(%%ebp), %%esi\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%esi\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fsubs -0x10(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed2c0]\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%esi\n\t"
-      "subl $8, %%esp\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fsubs 0xc(%%ebp)\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds -0x20(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed2c0]\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fadds -0x1c(%%ebp)\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%esi\n\t"
-      "subl $8, %%esp\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fadds -0x20(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed2c0]\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds -0x1c(%%ebp)\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%esi\n\t"
-      "subl $8, %%esp\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed2c0]\n\t"
-      "call *%[c1ed490]\n\t"
-      ".LFUN_0017b7d0_8:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17b7d0_assert), [exitfn] "m"(b17b7d0_exitfn), [c17a8a0] "m"(b17b7d0_c17a8a0), [c1ed450] "m"(b17b7d0_c1ed450), [c1ed400] "m"(b17b7d0_c1ed400), [c1ed320] "m"(b17b7d0_c1ed320), [c1ed2c0] "m"(b17b7d0_c1ed2c0), [c1ed490] "m"(b17b7d0_c1ed490)
-      : "memory");
+  int eax = 0;
+  int esi = 0;
+
+  /* test esi, esi -> jne 0x17b7fe */
+  display_assert((char *)0x0025bb20, (char *)0x002ae7f0, 425, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x17b827 */
+  display_assert((char *)0x0029dc40, (char *)0x002ae7f0, 426, 0);
+  system_exit(0);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x17ba06 */
+  FUN_0017a8a0();
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fcomp qword ptr [0x2533d0] */
+  display_assert((char *)0x002ae850, (char *)0x002ae7f0, 437, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x17b902 */
+  D3DDevice_Begin(0);
+  D3DDevice_SetVertexDataColor(0, eax);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  D3DDevice_SetVertexData4f(0, 0.0f, 0.0f, 0.0f, 0.0f);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  D3DDevice_SetVertexData4f(0, 0.0f, 0.0f, 0.0f, 0.0f);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  D3DDevice_SetVertexData4f(0, 0.0f, 0.0f, 0.0f, 0.0f);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  D3DDevice_SetVertexData4f(0, 0.0f, 0.0f, 0.0f, 0.0f);
+  D3DDevice_End();
+
+  (void)eax;
+  (void)esi;
 }
-#else
-#error "FUN_0017b7d0: clang naked draft required"
-#endif
 
 
 /* 0x17ba10 */

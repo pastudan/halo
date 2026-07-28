@@ -21541,7 +21541,7 @@
         {
           "addr": "0x17b7d0",
           "decl": "void FUN_0017b7d0(float *position, float radius, float *scale2d, float angle, uint32_t color);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017b7d0"
         },
         {
