@@ -1,0 +1,7 @@
+{
+  "description": "FUN_0006ba70: photo!=2 \u2192 error return NULL",
+  "regions": {
+    "0x3340f4": "0000",
+    "0x3340fc": "0800"
+  }
+}

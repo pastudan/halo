@@ -1,0 +1,9 @@
+{
+  "description": "FUN_0006a5d0: spp=8; malloc fail \u2192 0",
+  "regions": {
+    "0x3340fc": "0800"
+  },
+  "stub_returns": {
+    "debug_malloc": 0
+  }
+}
