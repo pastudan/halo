@@ -4610,7 +4610,7 @@
         {
           "addr": "0x41250",
           "decl": "char ai_consider_major_upgrade(int encounter_handle, int16_t squad_index, float spawn_cost);",
-          "ported": false,
+          "ported": true,
           "name": "ai_consider_major_upgrade"
         },
         {
