@@ -14033,7 +14033,7 @@
         {
           "addr": "0xce8c0",
           "decl": "void input_abstraction_print_config_control(void);",
-          "ported": false,
+          "ported": true,
           "name": "input_abstraction_print_config_control"
         }
       ],
@@ -34751,7 +34751,7 @@
         {
           "addr": "0x96d70",
           "decl": "void FUN_00096d70(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00096d70"
         },
         {

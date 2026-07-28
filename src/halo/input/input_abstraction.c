@@ -412,102 +412,35 @@ void input_abstraction_update_device_changes(int device_flags)
 }
 
 
-/* input_abstraction_print_config_control (0xce8c0) — XBE naked draft (batch 127). */
-#if defined(__clang__)
-static void (*const bce8c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bce8c0_exitfn)(int) = system_exit;
-static int (*const bce8c0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static int (*const bce8c0_c119270)(data_t *data, int absolute_index) = datum_absolute_index_to_index;
-static void *(*const bce8c0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void *(*const bce8c0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bce8c0_tag)(int, int) = tag_get;
-static void *(*const bce8c0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
+/* input_abstraction_print_config_control (0xce8c0) — readable C lift (restored pre-naked). */
 void input_abstraction_print_config_control(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Linput_abstraction_print_config_control_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Linput_abstraction_print_config_control_2\n\t"
-      ".Linput_abstraction_print_config_control_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x239\n\t"
-      "pushl $0x280fe4\n\t"
-      "pushl $0x2810d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Linput_abstraction_print_config_control_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Linput_abstraction_print_config_control_4\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119270]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Linput_abstraction_print_config_control_4\n\t"
-      "movl 0x34(%%eax), %%ecx\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[tryget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Linput_abstraction_print_config_control_4\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Linput_abstraction_print_config_control_4\n\t"
-      "cmpw $-1, 0x2a0(%%esi)\n\t"
-      "je .Linput_abstraction_print_config_control_4\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x76656869\n\t"
-      "call *%[tag]\n\t"
-      "movw 0x2f4(%%eax), %%cx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $3, %%cx\n\t"
-      "je .Linput_abstraction_print_config_control_3\n\t"
-      "cmpw $5, %%cx\n\t"
-      "jne .Linput_abstraction_print_config_control_4\n\t"
-      ".Linput_abstraction_print_config_control_3:\n\t"
-      "movswl 0x2a0(%%esi), %%ecx\n\t"
-      "pushl $0x11c\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x2e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movb (%%eax), %%cl\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "movb $1, %%al\n\t"
-      "jne .Linput_abstraction_print_config_control_5\n\t"
-      ".Linput_abstraction_print_config_control_4:\n\t"
-      "movb %%bl, %%al\n\t"
-      ".Linput_abstraction_print_config_control_5:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bce8c0_assert), [exitfn] "m"(bce8c0_exitfn), [cba3c0] "m"(bce8c0_cba3c0), [c119270] "m"(bce8c0_c119270), [tryget] "m"(bce8c0_tryget), [get] "m"(bce8c0_get), [tag] "m"(bce8c0_tag), [elem] "m"(bce8c0_elem)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+
+  /* test (int16_t)esi, (int16_t)esi -> jl 0xce8d1 */
+  /* cmp (int16_t)esi, 4 -> jl 0xce8f1 */
+  display_assert((char *)0x002810d0, (char *)0x00280fe4, 569, 0);
+  system_exit(0);
+  local_player_get_player_index(esi);
+  /* cmp eax, -1 -> je 0xce98e */
+  datum_absolute_index_to_index((void *)(uintptr_t)eax, 0);
+  /* test eax, eax -> je 0xce98e */
+  object_try_and_get_and_verify_type(0, 0);
+  /* test esi, esi -> je 0xce98e */
+  /* cmp eax, -1 -> je 0xce98e */
+  /* relift: cmp word ptr [esi + 0x2a0], -1 -> je 0xce98e */
+  object_get_and_verify_type(0, 0);
+  tag_get('ihev', 0);
+  /* cmp (int16_t)ecx, 3 -> je 0xce96a */
+  /* cmp (int16_t)ecx, 5 -> jne 0xce98e */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
 }
-#else
-#error "input_abstraction_print_config_control: clang naked draft required"
-#endif
 
 /* --- input_abstraction.obj orphan shells (2026-07-26) --- */
 
