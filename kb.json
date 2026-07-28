@@ -28382,7 +28382,7 @@
         {
           "addr": "0xeb4f0",
           "decl": "char FUN_000eb4f0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000eb4f0"
         },
         {
@@ -28400,7 +28400,7 @@
         {
           "addr": "0xebff0",
           "decl": "char FUN_000ebff0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ebff0"
         },
         {
@@ -28412,13 +28412,13 @@
         {
           "addr": "0xec840",
           "decl": "char FUN_000ec840(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ec840"
         },
         {
           "addr": "0xecb60",
           "decl": "char FUN_000ecb60(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ecb60"
         },
         {
@@ -39954,7 +39954,7 @@
         {
           "addr": "0x14c220",
           "decl": "char collision_prism_test_vector(void *prism, float *origin, float *direction, float *out_t, float *out_plane);",
-          "ported": false,
+          "ported": true,
           "name": "collision_prism_test_vector"
         },
         {

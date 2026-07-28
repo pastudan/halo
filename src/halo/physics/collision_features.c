@@ -1223,285 +1223,103 @@ char collision_cylinder_test_vector(void *cylinder __attribute__((unused)), floa
 #endif
 
 
-/* collision_prism_test_vector (0x14c220) — XBE naked draft (batch 2200). */
-#if defined(__clang__)
-static void (*const b14c220_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
-
-__attribute__((naked, noinline))
-char collision_prism_test_vector(void *prism __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), float *out_t __attribute__((unused)), float *out_plane __attribute__((unused)))
+char collision_prism_test_vector(void *prism, float *origin, float *direction, float *out_t, float *out_plane)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x28, %%esp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "flds 0x14(%%esi)\n\t"
-      "movl $0x3f800000, -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%ecx)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsubs 0x18(%%esi)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x14(%%esi)\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%edx)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lcollision_prism_test_vector_8\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs 0x10(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fchs\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fsubs 0x1c(%%esi)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fchs\n\t"
-      "flds 0x2533c0\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_prism_test_vector_2\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_prism_test_vector_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".Lcollision_prism_test_vector_1:\n\t"
-      "flds 0x2533c8\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_prism_test_vector_5\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jmp .Lcollision_prism_test_vector_6\n\t"
-      ".Lcollision_prism_test_vector_2:\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_prism_test_vector_3\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jmp .Lcollision_prism_test_vector_4\n\t"
-      ".Lcollision_prism_test_vector_3:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lcollision_prism_test_vector_4:\n\t"
-      "flds 0x2533c8\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_prism_test_vector_6\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jmp .Lcollision_prism_test_vector_6\n\t"
-      ".Lcollision_prism_test_vector_5:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lcollision_prism_test_vector_6:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_prism_test_vector_9\n\t"
-      ".Lcollision_prism_test_vector_7:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_prism_test_vector_8:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lcollision_prism_test_vector_7\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x1c(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "je .Lcollision_prism_test_vector_7\n\t"
-      ".Lcollision_prism_test_vector_9:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "fchs\n\t"
-      "movw 0x20(%%esi), %%ax\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "fadds (%%ecx)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x10(%%esi)\n\t"
-      "fadds 0x4(%%ecx)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "fmuls 0x14(%%esi)\n\t"
-      "fadds 0x8(%%ecx)\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fchs\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "fadds (%%edx)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x10(%%esi)\n\t"
-      "fadds 0x4(%%edx)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "fmuls 0x14(%%esi)\n\t"
-      "fadds 0x8(%%edx)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x22(%%esi), %%dl\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c61df0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x22(%%esi), %%al\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x20(%%esi), %%cx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c61df0]\n\t"
-      "movl 0x24(%%esi), %%edi\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jle .Lcollision_prism_test_vector_16\n\t"
-      "movl $1, %%edx\n\t"
-      "leal 0x28(%%esi), %%ecx\n\t"
-      ".Lcollision_prism_test_vector_10:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%edi, %%edx\n\t"
-      "setge %%al\n\t"
-      "decl %%eax\n\t"
-      "andl %%edx, %%eax\n\t"
-      "flds 0x28(%%esi,%%eax,8)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "flds 0x2c(%%esi,%%eax,8)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fsubs (%%ecx)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fld %%st(2)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmul %%st(5), %%st(0)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      "fxch %%st(1)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      ".byte 0xde, 0xea\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lcollision_prism_test_vector_14\n\t"
-      "fdivs 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_prism_test_vector_11\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_prism_test_vector_12\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jmp .Lcollision_prism_test_vector_13\n\t"
-      ".Lcollision_prism_test_vector_11:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_prism_test_vector_12\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jmp .Lcollision_prism_test_vector_13\n\t"
-      ".Lcollision_prism_test_vector_12:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lcollision_prism_test_vector_13:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lcollision_prism_test_vector_7\n\t"
-      "jmp .Lcollision_prism_test_vector_15\n\t"
-      ".Lcollision_prism_test_vector_14:\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lcollision_prism_test_vector_7\n\t"
-      ".Lcollision_prism_test_vector_15:\n\t"
-      "addl $8, %%ecx\n\t"
-      "incl %%edx\n\t"
-      "leal -0x1(%%edx), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jl .Lcollision_prism_test_vector_10\n\t"
-      ".Lcollision_prism_test_vector_16:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "fstps (%%ecx)\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl 0x10(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl 0x14(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%edx)\n\t"
-      "flds 0x18(%%esi)\n\t"
-      "fadds 0x1c(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c61df0] "m"(b14c220_c61df0)
-      : "memory");
+  char *p = (char *)prism;
+  float *plane_n = (float *)(p + 0xc);
+  float plane_d = *(float *)(p + 0x18);
+  float height = *(float *)(p + 0x1c);
+  float t_enter = 0.0f;
+  float t_exit = 1.0f;
+  float denom;
+  float dist0;
+  float origin_2d[2];
+  float dir_2d[2];
+  float p0[3];
+  float p1[3];
+  int edge_count;
+  int i;
+
+  dist0 = plane_n[0] * origin[0] + plane_n[1] * origin[1] +
+          plane_n[2] * origin[2] - plane_d;
+  denom = plane_n[0] * direction[0] + plane_n[1] * direction[1] +
+          plane_n[2] * direction[2];
+
+  if (denom != *(float *)0x2533c0) {
+    float inv = *(float *)0x2533c8 / denom;
+    float a = -dist0 * inv;
+    float b = -(dist0 - height) * inv;
+    /* XBE orders near/far by denom sign (assumes height layout), not min/max. */
+    if (denom > *(float *)0x2533c0) {
+      if (a > *(float *)0x2533c0)
+        t_enter = a;
+      if (b < *(float *)0x2533c8)
+        t_exit = b;
+    } else {
+      if (b > *(float *)0x2533c0)
+        t_enter = b;
+      if (a < *(float *)0x2533c8)
+        t_exit = a;
+    }
+    if (!(t_enter <= t_exit))
+      return 0;
+  } else {
+    /* XBE: reject if dist0 < 0 or !(dist0 < height)  (test ah,5 jnp / test ah,1 je) */
+    if (!(dist0 >= *(float *)0x2533c0) || !(dist0 < height))
+      return 0;
+  }
+
+  /* Project ray endpoints onto prism plane then to 2D for edge clipping. */
+  {
+    float nd = -dist0;
+    p0[0] = nd * plane_n[0] + origin[0];
+    p0[1] = nd * plane_n[1] + origin[1];
+    p0[2] = nd * plane_n[2] + origin[2];
+    nd = -denom;
+    p1[0] = nd * plane_n[0] + direction[0];
+    p1[1] = nd * plane_n[1] + direction[1];
+    p1[2] = nd * plane_n[2] + direction[2];
+  }
+  FUN_00061df0(p0, *(uint16_t *)(p + 0x20), *(uint8_t *)(p + 0x22), origin_2d);
+  FUN_00061df0(p1, *(uint16_t *)(p + 0x20), *(uint8_t *)(p + 0x22), dir_2d);
+
+  edge_count = *(int *)(p + 0x24);
+  for (i = 0; i < edge_count; i++) {
+    int j = ((i + 1 >= edge_count) - 1) & (i + 1);
+    float *edge = (float *)(p + 0x28 + i * 8);
+    float *edge_n = (float *)(p + 0x28 + j * 8);
+    float ex = edge_n[0] - edge[0];
+    float ey = edge_n[1] - edge[1];
+    float rx = origin_2d[0] - edge[0];
+    float ry = origin_2d[1] - edge[1];
+    float cross_r = ex * dir_2d[1] - ey * dir_2d[0];
+    float cross_o = ex * ry - ey * rx;
+    float u;
+
+    if (cross_r == *(float *)0x2533c0) {
+      if (cross_o < *(float *)0x2533c0)
+        return 0;
+      continue;
+    }
+    u = cross_o / cross_r;
+    if (cross_r < *(float *)0x2533c0) {
+      if (t_enter < u)
+        t_enter = u;
+    } else {
+      if (t_exit > u)
+        t_exit = u;
+    }
+    if (!(t_enter <= t_exit))
+      return 0;
+  }
+
+  *out_t = t_enter;
+  out_plane[0] = plane_n[0];
+  out_plane[1] = plane_n[1];
+  out_plane[2] = plane_n[2];
+  out_plane[3] = plane_d + height;
+  return 1;
 }
-#else
-#error "collision_prism_test_vector: clang naked draft required"
-#endif
 
 
 /* FUN_0014c4b0 (0x14c4b0) — XBE naked draft (batch 220). */
