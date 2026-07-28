@@ -38145,8 +38145,8 @@
         },
         {
           "addr": "0x6a190",
-          "decl": "void FUN_0006a190(void);",
-          "ported": false,
+          "decl": "int FUN_0006a190(void *tif);",
+          "ported": true,
           "name": "FUN_0006a190"
         },
         {

@@ -2448,44 +2448,26 @@ void FUN_0006a070(void)
 #endif
 
 
-/* FUN_0006a190 (0x6a190) — XBE naked draft (batch 346). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006a190(void)
+/* FUN_0006a190 (0x6a190) — Capstone lift: install LZW codec vtable on TIFF. */
+int FUN_0006a190(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0x6a070, %%ecx\n\t"
-      "movl %%ecx, 0xfc(%%eax)\n\t"
-      "movl %%ecx, 0x104(%%eax)\n\t"
-      "movl %%ecx, 0x10c(%%eax)\n\t"
-      "movl $0x69f30, %%ecx\n\t"
-      "movl %%ecx, 0x100(%%eax)\n\t"
-      "movl %%ecx, 0x108(%%eax)\n\t"
-      "movl %%ecx, 0x110(%%eax)\n\t"
-      "movb 0x9(%%eax), %%cl\n\t"
-      "orb $1, %%cl\n\t"
-      "orb $0x20, 0xa(%%eax)\n\t"
-      "movl $0x68d80, 0xf0(%%eax)\n\t"
-      "movl $0x69420, 0xf4(%%eax)\n\t"
-      "movl $0x69520, 0xf8(%%eax)\n\t"
-      "movl $0x69590, 0x114(%%eax)\n\t"
-      "movl $0x695c0, 0x11c(%%eax)\n\t"
-      "movb %%cl, 0x9(%%eax)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *t = (unsigned char *)tif;
+
+  *(void **)(t + 0xfc) = (void *)FUN_0006a070;
+  *(void **)(t + 0x104) = (void *)FUN_0006a070;
+  *(void **)(t + 0x10c) = (void *)FUN_0006a070;
+  *(void **)(t + 0x100) = (void *)FUN_00069f30;
+  *(void **)(t + 0x108) = (void *)FUN_00069f30;
+  *(void **)(t + 0x110) = (void *)FUN_00069f30;
+  t[9] = (unsigned char)(t[9] | 1);
+  t[0xa] = (unsigned char)(t[0xa] | 0x20);
+  *(void **)(t + 0xf0) = (void *)FUN_00068d80;
+  *(void **)(t + 0xf4) = (void *)FUN_00069420;
+  *(void **)(t + 0xf8) = (void *)FUN_00069520;
+  *(void **)(t + 0x114) = (void *)FUN_00069590;
+  *(void **)(t + 0x11c) = (void *)FUN_000695c0;
+  return 1;
 }
-#else
-#error "FUN_0006a190: clang naked draft required"
-#endif
 
 
 /* FUN_0006a210 (0x6a210) — readable C lift. */
