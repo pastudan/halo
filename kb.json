@@ -37792,14 +37792,14 @@
       "functions": [
         {
           "addr": "0x659f0",
-          "decl": "void TIFFSetField(int file, int field, int value);",
-          "ported": false,
+          "decl": "int TIFFSetField(void *tif, unsigned int tag, int value);",
+          "ported": true,
           "name": "TIFFSetField"
         },
         {
           "addr": "0x65a70",
-          "decl": "void TIFFVSetField(void);",
-          "ported": false,
+          "decl": "int TIFFVSetField(void *tif, unsigned int tag, void *ap);",
+          "ported": true,
           "name": "TIFFVSetField"
         },
         {
@@ -37810,20 +37810,20 @@
         },
         {
           "addr": "0x65e90",
-          "decl": "void TIFFGetField(void);",
-          "ported": false,
+          "decl": "int TIFFGetField(void *tif, unsigned int tag, int *out);",
+          "ported": true,
           "name": "TIFFGetField"
         },
         {
           "addr": "0x65f00",
-          "decl": "void TIFFVGetField(void);",
-          "ported": false,
+          "decl": "int TIFFVGetField(void *tif, unsigned int tag, void *ap);",
+          "ported": true,
           "name": "TIFFVGetField"
         },
         {
           "addr": "0x65f70",
           "decl": "void _TIFFgetfield(void *tif, unsigned int tag, unsigned short *a, unsigned short *b);",
-          "ported": false,
+          "ported": true,
           "name": "_TIFFgetfield"
         },
         {

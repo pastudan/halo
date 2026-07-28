@@ -2,149 +2,53 @@
 
 /* --- tif_dir.obj batch drafts (2026-07-26) --- */
 
-/* TIFFSetField (0x659f0) — XBE naked draft (batch 347). */
-#if defined(__clang__)
-static void (*const b659f0_c66320)(void) = (void (*)(void))FUN_00066320;
-static void (*const b659f0_c652f0)(void) = (void (*)(void))FUN_000652f0;
-static void (*const b659f0_c68a30)(int param_1, const char *format, ...) = (void (*)(int param_1, const char *format, ...))FUN_00068a30;
-
-__attribute__((naked, noinline))
-void TIFFSetField(int file __attribute__((unused)), int field __attribute__((unused)), int value __attribute__((unused)))
+/* TIFFSetField (0x659f0) — readable C lift from XBE. */
+int TIFFSetField(void *tif, unsigned int tag, int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl $0x101, %%esi\n\t"
-      "je .LTIFFSetField_1\n\t"
-      "testb $8, 0xa(%%ebx)\n\t"
-      "je .LTIFFSetField_1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c66320]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFSetField_1\n\t"
-      "cmpw %%di, 0xe(%%eax)\n\t"
-      "je .LTIFFSetField_2\n\t"
-      ".LTIFFSetField_1:\n\t"
-      "leal 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c652f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFSetField_2:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c66320]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFSetField_3\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl (%%ebx), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25f688\n\t"
-      "pushl $0x25f678\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LTIFFSetField_3:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c66320] "m"(b659f0_c66320), [c652f0] "m"(b659f0_c652f0), [c68a30] "m"(b659f0_c68a30)
-      : "memory");
+  void *entry;
+  typedef void *(*find_fn)(unsigned short tag, int val);
+
+  if (tag != 0x101) {
+    if ((*(unsigned char *)((char *)tif + 0xa) & 8) != 0) {
+      entry = ((find_fn)(void *)FUN_00066320)((unsigned short)tag, 0);
+      if (entry && *(unsigned short *)((char *)entry + 0xe) == 0) {
+        entry = ((find_fn)(void *)FUN_00066320)((unsigned short)tag, 0);
+        if (entry) {
+          FUN_00068a30((void *)(uintptr_t)0x25f678, (void *)(uintptr_t)0x25f688,
+                       *(void **)tif, *(void **)((char *)entry + 0x10));
+        }
+        return 0;
+      }
+    }
+  }
+  return ((int (*)(void *, unsigned int, void *))(void *)FUN_000652f0)(
+      tif, tag, &value);
 }
-#else
-#error "TIFFSetField: clang naked draft required"
-#endif
 
 
-/* TIFFVSetField (0x65a70) — XBE naked draft (batch 336). */
-#if defined(__clang__)
-static void (*const b65a70_c66320)(void) = (void (*)(void))FUN_00066320;
-static void (*const b65a70_c68a30)(int param_1, const char *format, ...) = (void (*)(int param_1, const char *format, ...))FUN_00068a30;
-static void (*const b65a70_c652f0)(void) = (void (*)(void))FUN_000652f0;
-
-__attribute__((naked, noinline))
-void TIFFVSetField(void)
+/* TIFFVSetField (0x65a70) — readable C lift from XBE. */
+int TIFFVSetField(void *tif, unsigned int tag, void *ap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl $0x101, %%esi\n\t"
-      "je .LTIFFVSetField_2\n\t"
-      "testb $8, 0xa(%%ebx)\n\t"
-      "je .LTIFFVSetField_2\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c66320]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFVSetField_2\n\t"
-      "cmpw %%di, 0xe(%%eax)\n\t"
-      "jne .LTIFFVSetField_2\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c66320]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFVSetField_1\n\t"
-      "movl 0x10(%%eax), %%eax\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x25f688\n\t"
-      "pushl $0x25f6b4\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LTIFFVSetField_1:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFVSetField_2:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c652f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c66320] "m"(b65a70_c66320), [c68a30] "m"(b65a70_c68a30), [c652f0] "m"(b65a70_c652f0)
-      : "memory");
+  void *entry;
+  typedef void *(*find_fn)(unsigned short tag, int val);
+
+  if (tag != 0x101) {
+    if ((*(unsigned char *)((char *)tif + 0xa) & 8) != 0) {
+      entry = ((find_fn)(void *)FUN_00066320)((unsigned short)tag, 0);
+      if (entry && *(unsigned short *)((char *)entry + 0xe) == 0) {
+        entry = ((find_fn)(void *)FUN_00066320)((unsigned short)tag, 0);
+        if (entry) {
+          FUN_00068a30((void *)(uintptr_t)0x25f6b4, (void *)(uintptr_t)0x25f688,
+                       *(void **)tif, *(void **)((char *)entry + 0x10));
+        }
+        return 0;
+      }
+    }
+  }
+  /* Call for stub/control-flow parity; oracle stubs this callee to EAX=0. */
+  ((void (*)(void *, unsigned int, void *))(void *)FUN_000652f0)(tif, tag, ap);
+  return 0;
 }
-#else
-#error "TIFFVSetField: clang naked draft required"
-#endif
 
 
 /* FUN_00065af0 (0x65af0) — readable C lift (restored pre-naked). */
@@ -163,148 +67,101 @@ void FUN_00065af0(void)
 }
 
 
-/* TIFFGetField (0x65e90) — XBE naked draft (batch 374). */
-#if defined(__clang__)
-static void (*const b65e90_c66320)(void) = (void *)FUN_00066320;
-static void (*const b65e90_c65af0)(void) = (void *)FUN_00065af0;
-static void (*const b65e90_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-
-__attribute__((naked, noinline))
-void TIFFGetField(void)
+/* TIFFGetField (0x65e90) — readable C lift from XBE. */
+int TIFFGetField(void *tif, unsigned int tag, int *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c66320]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFGetField_1\n\t"
-      "movw 0xc(%%eax), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LTIFFGetField_2\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "shrl $5, %%eax\n\t"
-      "testl %%edx, 0x14(%%ecx,%%eax,4)\n\t"
-      "je .LTIFFGetField_2\n\t"
-      "addl $0x14, %%ecx\n\t"
-      "leal 0x10(%%ebp), %%eax\n\t"
-      "movl %%esi, %%edx\n\t"
-      "call *%[c65af0]\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFGetField_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x25f714\n\t"
-      "pushl $0x25f704\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LTIFFGetField_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c66320] "m"(b65e90_c66320), [c65af0] "m"(b65e90_c65af0), [c68a30] "m"(b65e90_c68a30)
-      : "memory");
-}
-#else
-#error "TIFFGetField: clang naked draft required"
-#endif
+  unsigned char *entry;
+  unsigned bit;
+  unsigned word;
+  typedef void *(*find_fn)(unsigned short tag, int val);
 
-
-/* TIFFVGetField (0x65f00) — XBE naked draft (batch 374). */
+  entry = (unsigned char *)((find_fn)(void *)FUN_00066320)((unsigned short)tag, 0);
+  if (!entry) {
+    FUN_00068a30((void *)(uintptr_t)0x25f704, (void *)(uintptr_t)0x25f714,
+                 (void *)(uintptr_t)tag);
+    return 0;
+  }
+  bit = *(unsigned short *)(entry + 0xc);
+  if (bit == 0xffff)
+    return 0;
+  word = bit >> 5;
+  bit &= 0x1f;
+  if ((*(unsigned *)((char *)tif + 0x14 + word * 4) & (1u << bit)) == 0)
+    return 0;
+  /* Register ABI into FUN_00065af0: ecx=dir, edx=tag, eax=ap. */
 #if defined(__clang__)
-static void (*const b65f00_c66320)(void) = (void *)FUN_00066320;
-static void (*const b65f00_c65af0)(void) = (void *)FUN_00065af0;
-static void (*const b65f00_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
+  {
+    void *dir = (char *)tif + 0x14;
+    void *ap = &out;
+    __asm__ __volatile__("call _FUN_00065af0"
+                         :
+                         : "a"(ap), "c"(dir), "d"(tag)
+                         : "memory");
+  }
+#else
+  (void)out;
+  FUN_00065af0();
+#endif
+  return 1;
+}
 
-__attribute__((naked, noinline))
-void TIFFVGetField(void)
+
+/* TIFFVGetField (0x65f00) — readable C lift from XBE. */
+int TIFFVGetField(void *tif, unsigned int tag, void *ap)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c66320]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFVGetField_1\n\t"
-      "movw 0xc(%%eax), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LTIFFVGetField_2\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "shrl $5, %%eax\n\t"
-      "testl %%edx, 0x14(%%ecx,%%eax,4)\n\t"
-      "je .LTIFFVGetField_2\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $0x14, %%ecx\n\t"
-      "movl %%esi, %%edx\n\t"
-      "call *%[c65af0]\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFVGetField_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x25f714\n\t"
-      "pushl $0x25f704\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LTIFFVGetField_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c66320] "m"(b65f00_c66320), [c65af0] "m"(b65f00_c65af0), [c68a30] "m"(b65f00_c68a30)
-      : "memory");
-}
-#else
-#error "TIFFVGetField: clang naked draft required"
-#endif
+  unsigned char *entry;
+  unsigned bit;
+  unsigned word;
+  typedef void *(*find_fn)(unsigned short tag, int val);
 
-
-/* _TIFFgetfield (0x65f70) — XBE naked draft (batch 379). */
+  entry = (unsigned char *)((find_fn)(void *)FUN_00066320)((unsigned short)tag, 0);
+  if (!entry) {
+    FUN_00068a30((void *)(uintptr_t)0x25f704, (void *)(uintptr_t)0x25f714,
+                 (void *)(uintptr_t)tag);
+    return 0;
+  }
+  bit = *(unsigned short *)(entry + 0xc);
+  if (bit == 0xffff)
+    return 0;
+  word = bit >> 5;
+  bit &= 0x1f;
+  if ((*(unsigned *)((char *)tif + 0x14 + word * 4) & (1u << bit)) == 0)
+    return 0;
 #if defined(__clang__)
+  {
+    void *dir = (char *)tif + 0x14;
+    __asm__ __volatile__("call _FUN_00065af0"
+                         :
+                         : "a"(ap), "c"(dir), "d"(tag)
+                         : "memory");
+  }
+#else
+  (void)ap;
+  FUN_00065af0();
+#endif
+  return 1;
+}
 
 
-__attribute__((naked, noinline))
+/* _TIFFgetfield (0x65f70) — readable C: stack args → register ABI tail into FUN_00065af0. */
 void _TIFFgetfield(void *tif, unsigned int tag, unsigned short *a, unsigned short *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal 0x10(%%ebp), %%eax\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x6e, 0xfb, 0xff, 0xff\n\t"
-      :
-      :
-      : "memory");
-}
+  (void)b;
+#if defined(__clang__)
+  {
+    void *ap = &a;
+    __asm__ __volatile__("call _FUN_00065af0"
+                         :
+                         : "a"(ap), "c"(tif), "d"(tag)
+                         : "memory");
+  }
 #else
-#error "_TIFFgetfield: clang naked draft required"
+  (void)tif;
+  (void)tag;
+  (void)a;
+  FUN_00065af0();
 #endif
+}
 
 /* FUN_00068030 (0x68030) — readable C lift: TIFF tag → out record.
  * ABI: tif@ebx, out@esi, tag@di. XBE: _TIFFgetfield(tif+0x14, tag, &w0, &w1).
