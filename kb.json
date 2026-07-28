@@ -510,7 +510,7 @@
         {
           "addr": "0x149ce0",
           "decl": "void FUN_00149ce0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00149ce0"
         },
         {
@@ -27443,8 +27443,8 @@
         },
         {
           "addr": "0x81300",
-          "decl": "void FUN_00081300(void);",
-          "ported": false,
+          "decl": "void FUN_00081300(unsigned int *a, unsigned int *b, unsigned int *c, unsigned int *d);",
+          "ported": true,
           "name": "FUN_00081300"
         },
         {

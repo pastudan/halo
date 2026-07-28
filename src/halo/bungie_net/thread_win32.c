@@ -217,309 +217,121 @@ void release_mutex(int *mutex_reference)
 }
 /* --- thread_win32.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00081170 (0x81170) — XBE naked draft (batch 343). */
-#if defined(__clang__)
-static void (*const b81170_c80eb0)(void) = FUN_00080eb0;
-static void (*const b81170_c81410)(void) = FUN_00081410;
-static void (*const b81170_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81170_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00081170(void)
+/* FUN_00081170 (0x81170) — readable C lift: fill two (count,idx,val) triples. */
+void FUN_00081170(unsigned int *a, unsigned int *b, unsigned int *c)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "subl %%esi, %%ebx\n\t"
-      "subl %%esi, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl $2, -0x4(%%ebp)\n\t"
-      ".LFUN_00081170_1:\n\t"
-      "pushl $0xffff\n\t"
-      "call *%[c80eb0]\n\t"
-      "pushl $0xffff\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c80eb0]\n\t"
-      "imull %%edi, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $0xffffff, %%eax\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "jb .LFUN_00081170_1\n\t"
-      "addl $-2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xff\n\t"
-      "call *%[c81410]\n\t"
-      "movl %%eax, (%%ebx,%%esi,1)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "decl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xff\n\t"
-      "call *%[c81410]\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "movl %%eax, (%%edi,%%esi,1)\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "movl (%%ebx,%%esi,1), %%eax\n\t"
-      "subl $2, %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jb .LFUN_00081170_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa2\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265e08\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081170_2:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl (%%edi,%%esi,1), %%eax\n\t"
-      "decl %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jb .LFUN_00081170_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa3\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265de4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081170_3:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $4, %%esi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00081170_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c80eb0] "m"(b81170_c80eb0), [c81410] "m"(b81170_c81410), [assert] "m"(b81170_assert), [exitfn] "m"(b81170_exitfn)
-      : "memory");
+  int i;
+
+  for (i = 0; i < 2; i++) {
+    unsigned int n;
+    do {
+      n = FUN_00080eb0(0xffff) * FUN_00080eb0(0xffff) + 2;
+      a[i] = n;
+    } while (n < 0xffffffu);
+    b[i] = FUN_00081410(0xff, n - 2);
+    c[i] = FUN_00081410(0xff, a[i] - 1);
+    if (b[i] >= a[i] - 2) {
+      display_assert((const char *)0x265e08, (const char *)0x265da0, 0xa2, 1);
+      system_exit(-1);
+    }
+    if (c[i] >= a[i] - 1) {
+      display_assert((const char *)0x265de4, (const char *)0x265da0, 0xa3, 1);
+      system_exit(-1);
+    }
+  }
 }
-#else
-#error "FUN_00081170: clang naked draft required"
-#endif
 
 
-/* FUN_00081250 (0x81250) — XBE naked draft (batch 336). */
-#if defined(__clang__)
-static void (*const b81250_c81090)(void) = FUN_00081090;
-static void (*const b81250_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_00081250(void)
+/* FUN_00081250 (0x81250) — readable C lift: checked permute into d[], then log.
+ * Inlines FUN_00081090 checks; calls FUN_00080fc0 via register ABI. */
+void FUN_00081250(unsigned int *a, unsigned int *b, unsigned int *c, unsigned int *d)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "subl %%eax, %%ecx\n\t"
-      "subl %%eax, %%edx\n\t"
-      "subl %%eax, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "movl %%esi, -0x14(%%ebp)\n\t"
-      "movl $2, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_00081250_2\n\t"
-      ".LFUN_00081250_1:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00081250_2:\n\t"
-      "movl (%%ecx,%%eax,1), %%edi\n\t"
-      "movl (%%eax), %%ebx\n\t"
-      "movl (%%edx,%%eax,1), %%esi\n\t"
-      "call *%[c81090]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl %%eax, (%%edx,%%ecx,1)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jne .LFUN_00081250_1\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x265e2c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x28, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c81090] "m"(b81250_c81090), [c8f390] "m"(b81250_c8f390)
-      : "memory");
+  static unsigned int (*const p80fc0)(void) =
+      (unsigned int (*)(void))(void *)FUN_00080fc0;
+  int i;
+
+  for (i = 0; i < 2; i++) {
+    unsigned int count = a[i];
+    unsigned int idx = b[i];
+    unsigned int val = c[i];
+    unsigned int result;
+
+    if (count <= 2) {
+      display_assert((const char *)0x265de0, (const char *)0x265da0, 0x70, 1);
+      system_exit(-1);
+    }
+    if (idx >= count - 1) {
+      display_assert((const char *)0x265dd8, (const char *)0x265da0, 0x71, 1);
+      system_exit(-1);
+    }
+    if (val >= count) {
+      display_assert((const char *)0x265dd4, (const char *)0x265da0, 0x72, 1);
+      system_exit(-1);
+    }
+    __asm__ __volatile__(
+        "movl %1, %%eax\n\t"
+        "movl %2, %%ecx\n\t"
+        "movl %3, %%edx\n\t"
+        "call *%4\n\t"
+        "movl %%eax, %0"
+        : "=r"(result)
+        : "r"(idx), "r"(val), "r"(count), "m"(p80fc0)
+        : "eax", "ecx", "edx", "memory", "cc");
+    d[i] = result;
+  }
+  error(2, (const char *)0x265e2c, a[0], a[1], b[0], b[1], c[0], c[1], d[0],
+        d[1]);
 }
-#else
-#error "FUN_00081250: clang naked draft required"
-#endif
 
 
-/* FUN_00081300 (0x81300) — XBE naked draft (batch 320). */
-#if defined(__clang__)
-static void (*const b81300_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b81300_exitfn)(int) = system_exit;
-static void (*const b81300_c80fc0)(void) = FUN_00080fc0;
-static void (*const b81300_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_00081300(void)
+/* FUN_00081300 (0x81300) — readable C lift: permute + bswap into d[], then log. */
+void FUN_00081300(unsigned int *a, unsigned int *b, unsigned int *c, unsigned int *d)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "subl %%esi, %%eax\n\t"
-      "subl %%esi, %%ecx\n\t"
-      "subl %%esi, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "movl $2, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00081300_2\n\t"
-      ".LFUN_00081300_1:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      ".LFUN_00081300_2:\n\t"
-      "movl (%%eax,%%esi,1), %%ebx\n\t"
-      "movl (%%esi), %%edi\n\t"
-      "cmpl $2, %%edi\n\t"
-      "movl (%%ecx,%%esi,1), %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "ja .LFUN_00081300_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x85\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265de0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081300_3:\n\t"
-      "leal -0x1(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jb .LFUN_00081300_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x86\n\t"
-      "pushl $0x265da0\n\t"
-      "pushl $0x265dd8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00081300_4:\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c80fc0]\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "shrl $0x10, %%ecx\n\t"
-      "andl $0xff0000, %%edx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0xff00, %%eax\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "shrl $8, %%edx\n\t"
-      "shll $8, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "movl %%edx, (%%eax,%%esi,1)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $4, %%esi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00081300_1\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x265e68\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x28, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b81300_assert), [exitfn] "m"(b81300_exitfn), [c80fc0] "m"(b81300_c80fc0), [c8f390] "m"(b81300_c8f390)
-      : "memory");
+  static unsigned int (*const p80fc0)(void) =
+      (unsigned int (*)(void))(void *)FUN_00080fc0;
+  int i;
+
+  for (i = 0; i < 2; i++) {
+    unsigned int count = b[i];
+    unsigned int idx = c[i];
+    unsigned int val = a[i];
+    unsigned int result;
+    unsigned int t0, t1, t2;
+
+    if (count <= 2) {
+      display_assert((const char *)0x265de0, (const char *)0x265da0, 0x85, 1);
+      system_exit(-1);
+    }
+    if (idx >= count - 1) {
+      display_assert((const char *)0x265dd8, (const char *)0x265da0, 0x86, 1);
+      system_exit(-1);
+    }
+    __asm__ __volatile__(
+        "movl %1, %%eax\n\t"
+        "movl %2, %%ecx\n\t"
+        "movl %3, %%edx\n\t"
+        "call *%4\n\t"
+        "movl %%eax, %0"
+        : "=r"(result)
+        : "r"(idx), "r"(val), "r"(count), "m"(p80fc0)
+        : "eax", "ecx", "edx", "memory", "cc");
+    t0 = result;
+    t1 = result;
+    t2 = result;
+    t1 >>= 16;
+    t0 &= 0xff0000;
+    t0 |= t1;
+    t1 = result;
+    t2 &= 0xff00;
+    t1 <<= 16;
+    t1 |= t2;
+    t0 >>= 8;
+    t1 <<= 8;
+    d[i] = t0 | t1;
+  }
+  error(2, (const char *)0x265e68, a[0], a[1], b[0], b[1], c[0], c[1], d[0],
+        d[1]);
 }
-#else
-#error "FUN_00081300: clang naked draft required"
-#endif
 
 
 /* FUN_00081410 (0x81410) — readable C lift: seeded rand in [lo, lo+hi*r/32767]. */
