@@ -40213,7 +40213,7 @@
         {
           "addr": "0x162920",
           "decl": "void FUN_00162920(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00162920"
         },
         {
@@ -40237,7 +40237,7 @@
         {
           "addr": "0x163910",
           "decl": "void FUN_00163910(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00163910"
         },
         {
@@ -40438,7 +40438,7 @@
         {
           "addr": "0x1686c0",
           "decl": "void FUN_001686c0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001686c0"
         },
         {
