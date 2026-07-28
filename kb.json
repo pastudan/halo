@@ -31568,19 +31568,19 @@
         {
           "addr": "0x1829f0",
           "decl": "void rasterizer_xbox_bitmap_swizzle2d_long(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_xbox_bitmap_swizzle2d_long"
         },
         {
           "addr": "0x182ac0",
           "decl": "void rasterizer_xbox_bitmap_swizzle3d_byte(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_xbox_bitmap_swizzle3d_byte"
         },
         {
           "addr": "0x182bd0",
           "decl": "void rasterizer_xbox_bitmap_swizzle3d_word(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_xbox_bitmap_swizzle3d_word"
         },
         {
