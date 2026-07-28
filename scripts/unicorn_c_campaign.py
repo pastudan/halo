@@ -8,8 +8,10 @@ import os
 import re
 import subprocess
 import sys
+import threading
 import time
 from collections import Counter
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from pathlib import Path
 from typing import Dict, List, Optional, Set, Tuple
 
@@ -153,10 +155,15 @@ def load_ledger_done() -> Set[str]:
     return done
 
 
+_LEDGER_LOCK = threading.Lock()
+
+
 def append_ledger(row: dict) -> None:
     LEDGER.parent.mkdir(parents=True, exist_ok=True)
-    with LEDGER.open("a", encoding="utf-8") as f:
-        f.write(json.dumps(row) + "\n")
+    line = json.dumps(row) + "\n"
+    with _LEDGER_LOCK:
+        with LEDGER.open("a", encoding="utf-8") as f:
+            f.write(line)
 
 
 SKIP_SRC_PREFIXES = (
@@ -324,6 +331,66 @@ def git_push() -> None:
         raise SystemExit("push failed: %s" % r.returncode)
 
 
+def prove_one(
+    r: dict,
+    *,
+    screen_seeds: int,
+    confirm_seeds: int,
+    timeout: float,
+    flip_screen_only: bool,
+) -> dict:
+    """Run screen (+ optional confirm) Unicorn; no kb mutation."""
+    ah = hex(r["addr_int"])
+    name = r["name"]
+    res50 = run_unicorn(name, r["addr_int"], screen_seeds, timeout=timeout)
+    if res50.get("missing_candidate"):
+        return {
+            "addr": ah,
+            "name": name,
+            "kind": "missing_candidate",
+            "res50": res50,
+            "res100": None,
+            "phase": "missing_candidate",
+        }
+    if not clear_pass(res50, screen_seeds):
+        kind = "fail" if (res50.get("failed") or 0) > 0 else "error"
+        return {
+            "addr": ah,
+            "name": name,
+            "kind": kind,
+            "res50": res50,
+            "res100": None,
+            "phase": "screen%d" % screen_seeds,
+        }
+    if flip_screen_only:
+        return {
+            "addr": ah,
+            "name": name,
+            "kind": "pass",
+            "res50": res50,
+            "res100": res50,
+            "phase": "screen%d" % screen_seeds,
+        }
+    res100 = run_unicorn(name, r["addr_int"], confirm_seeds, timeout=timeout)
+    if clear_pass(res100, confirm_seeds):
+        return {
+            "addr": ah,
+            "name": name,
+            "kind": "pass",
+            "res50": res50,
+            "res100": res100,
+            "phase": "confirm%d" % confirm_seeds,
+        }
+    return {
+        "addr": ah,
+        "name": name,
+        "kind": "confirm_fail",
+        "res50": res50,
+        "res100": res100,
+        "phase": "confirm%d" % confirm_seeds,
+    }
+
+
 def main() -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--limit", type=int, default=0, help="Max new tests (0=all)")
@@ -331,6 +398,20 @@ def main() -> int:
     ap.add_argument("--no-push", action="store_true")
     ap.add_argument("--screen-seeds", type=int, default=50)
     ap.add_argument("--confirm-seeds", type=int, default=100)
+    ap.add_argument(
+        "--jobs",
+        "-j",
+        type=int,
+        default=1,
+        help="Parallel unicorn_diff workers (default 1). Each job is one subprocess; "
+        "set HALO_EQUIV_MEM_LIMIT_GB≈2 when using -j 8–10 on a 24GB Mac.",
+    )
+    ap.add_argument(
+        "--shard",
+        type=str,
+        default="",
+        help="Address shard I/N (0-based), e.g. 3/10 — only test addr %% N == I",
+    )
     ap.add_argument(
         "--flip-screen-only",
         action="store_true",
@@ -347,6 +428,11 @@ def main() -> int:
         help="Skip xdk/d3d/libcmt/etc.; keep gameplay-ish source paths only",
     )
     ap.add_argument(
+        "--skip-xdk",
+        action="store_true",
+        help="Drop SKIP_SRC_PREFIXES (xdk/libcmt/bink/…) even without --gameplay-only",
+    )
+    ap.add_argument(
         "--timeout",
         type=float,
         default=25.0,
@@ -354,24 +440,41 @@ def main() -> int:
     )
     args = ap.parse_args()
 
+    shard_i = shard_n = None
+    if args.shard:
+        try:
+            a, b = args.shard.split("/", 1)
+            shard_i, shard_n = int(a), int(b)
+            if shard_n < 1 or shard_i < 0 or shard_i >= shard_n:
+                raise ValueError
+        except ValueError:
+            raise SystemExit(f"bad --shard {args.shard!r}; want I/N with 0<=I<N")
+
     kb = json.loads(KB_PATH.read_text(encoding="utf-8"))
     readable = inventory_readable(kb)
-    if args.gameplay_only:
+    if args.gameplay_only or args.skip_xdk:
         filtered = []
         for r in readable:
             src = (r.get("source") or "").replace("\\", "/").lower()
             if any(p in src for p in SKIP_SRC_PREFIXES):
                 continue
-            if not any(h in src for h in GAMEPLAY_HINTS):
+            if args.gameplay_only and not any(h in src for h in GAMEPLAY_HINTS):
                 continue
             filtered.append(r)
-        print(f"gameplay filter: {len(readable)} -> {len(filtered)}")
+        label = "gameplay" if args.gameplay_only else "skip-xdk"
+        print(f"{label} filter: {len(readable)} -> {len(filtered)}")
         readable = filtered
+    if shard_n is not None:
+        before = len(readable)
+        readable = [r for r in readable if r["addr_int"] % shard_n == shard_i]
+        print(f"shard {shard_i}/{shard_n}: {before} -> {len(readable)}")
     inv_rows = [{k: v for k, v in r.items() if k != "fn"} for r in readable]
     INV.parent.mkdir(parents=True, exist_ok=True)
     INV.write_text(json.dumps(inv_rows, indent=2) + "\n")
     true0, false0 = count_ported(kb)
-    print(f"kb true={true0} false={false0} readable_c_queue={len(readable)}")
+    print(
+        f"kb true={true0} false={false0} readable_c_queue={len(readable)} jobs={args.jobs}"
+    )
 
     done = load_ledger_done()
     print(f"ledger done={len(done)}")
@@ -439,6 +542,7 @@ def main() -> int:
     total_flips_session = 0
     tested = 0
 
+    queue: List[dict] = []
     for r in readable:
         ah = hex(r["addr_int"])
         if ah in done:
@@ -462,16 +566,27 @@ def main() -> int:
             )
             done.add(ah)
             continue
+        queue.append(r)
+        if args.limit and len(queue) >= args.limit:
+            break
 
-        res50 = run_unicorn(r["name"], r["addr_int"], args.screen_seeds, timeout=args.timeout)
-        if res50.get("missing_candidate"):
+    print(f"dispatch queue={len(queue)} workers={max(1, args.jobs)}")
+
+    def apply_result(r: dict, out: dict) -> None:
+        nonlocal tested, total_flips_session
+        ah = out["addr"]
+        res50 = out["res50"]
+        res100 = out.get("res100")
+        kind = out["kind"]
+        phase = out["phase"]
+        if kind == "missing_candidate":
             stats["missing_candidate"] += 1
             append_ledger(
                 {
                     "addr": ah,
-                    "name": r["name"],
+                    "name": out["name"],
                     "ok": False,
-                    "phase": "missing_candidate",
+                    "phase": phase,
                     **{
                         k: res50[k]
                         for k in ("rc", "passed", "failed", "errors", "dt", "tail")
@@ -480,25 +595,17 @@ def main() -> int:
             )
             done.add(ah)
             tested += 1
-            print(f"SKIP-CAND {ah} {r['name']}")
-            if args.limit and tested >= args.limit:
-                break
-            continue
-
-        screen_ok = clear_pass(res50, args.screen_seeds)
-        if not screen_ok:
-            if (res50.get("failed") or 0) > 0:
-                stats["fail"] += 1
-                tag = "FAIL"
-            else:
-                stats["error"] += 1
-                tag = "ERR"
+            print(f"SKIP-CAND {ah} {out['name']}")
+            return
+        if kind in ("fail", "error"):
+            stats[kind] += 1
+            tag = "FAIL" if kind == "fail" else "ERR"
             append_ledger(
                 {
                     "addr": ah,
-                    "name": r["name"],
+                    "name": out["name"],
                     "ok": False,
-                    "phase": "screen%d" % args.screen_seeds,
+                    "phase": phase,
                     **{
                         k: res50[k]
                         for k in ("rc", "passed", "failed", "errors", "dt", "tail")
@@ -508,86 +615,17 @@ def main() -> int:
             done.add(ah)
             tested += 1
             print(
-                f"{tag} {ah} {r['name']} "
+                f"{tag} {ah} {out['name']} "
                 f"{res50.get('passed')}/{res50.get('failed')}/{res50.get('errors')} "
                 f"{res50['dt']}s"
             )
-            if args.limit and tested >= args.limit:
-                break
-            continue
-
-        if args.flip_screen_only:
-            confirm_ok = True
-            res100 = res50
-            phase = "screen%d" % args.screen_seeds
-        else:
-            res100 = run_unicorn(
-                r["name"], r["addr_int"], args.confirm_seeds, timeout=args.timeout
-            )
-            confirm_ok = clear_pass(res100, args.confirm_seeds)
-            phase = "confirm%d" % args.confirm_seeds
-
-        if confirm_ok:
-            sp = ROOT / r["source"]
-            lines = sp.read_text(encoding="utf-8", errors="replace").splitlines()
-            if is_naked_near_def(lines, r["name"], r["addr"]):
-                stats["naked_blocked"] += 1
-                append_ledger(
-                    {
-                        "addr": ah,
-                        "name": r["name"],
-                        "ok": False,
-                        "phase": "naked_blocked",
-                        **{
-                            k: res100[k]
-                            for k in ("rc", "passed", "failed", "errors", "dt", "tail")
-                        },
-                    }
-                )
-                done.add(ah)
-                tested += 1
-                print(f"NAKED-BLOCK {ah} {r['name']}")
-                if args.limit and tested >= args.limit:
-                    break
-                continue
-            stats["pass"] += 1
-            r["fn"]["ported"] = True
-            pending_flips.append(ah)
-            total_flips_session += 1
-            append_ledger(
-                {
-                    "addr": ah,
-                    "name": r["name"],
-                    "ok": True,
-                    "phase": phase,
-                    "screen": {
-                        k: res50[k] for k in ("passed", "failed", "errors", "dt")
-                    },
-                    **{
-                        k: res100[k]
-                        for k in ("rc", "passed", "failed", "errors", "dt", "tail")
-                    },
-                }
-            )
-            done.add(ah)
-            tested += 1
-            print(
-                f"PASS {ah} {r['name']} "
-                f"{res100.get('passed')}/{res100.get('failed')}/{res100.get('errors')} "
-                f"confirm={res100['dt']}s"
-            )
-            if len(pending_flips) >= args.commit_every:
-                KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
-                sha = git_commit_flips(len(pending_flips))
-                if sha and not args.no_push:
-                    git_push()
-                pending_flips.clear()
-        else:
+            return
+        if kind == "confirm_fail":
             stats["confirm_fail"] += 1
             append_ledger(
                 {
                     "addr": ah,
-                    "name": r["name"],
+                    "name": out["name"],
                     "ok": False,
                     "phase": phase,
                     "screen": {
@@ -602,12 +640,114 @@ def main() -> int:
             done.add(ah)
             tested += 1
             print(
-                f"CONFIRM-FAIL {ah} {r['name']} "
+                f"CONFIRM-FAIL {ah} {out['name']} "
                 f"{res100.get('passed')}/{res100.get('failed')}/{res100.get('errors')}"
             )
+            return
+        # pass
+        sp = ROOT / r["source"]
+        lines = sp.read_text(encoding="utf-8", errors="replace").splitlines()
+        if is_naked_near_def(lines, r["name"], r["addr"]):
+            stats["naked_blocked"] += 1
+            append_ledger(
+                {
+                    "addr": ah,
+                    "name": out["name"],
+                    "ok": False,
+                    "phase": "naked_blocked",
+                    **{
+                        k: res100[k]
+                        for k in ("rc", "passed", "failed", "errors", "dt", "tail")
+                    },
+                }
+            )
+            done.add(ah)
+            tested += 1
+            print(f"NAKED-BLOCK {ah} {out['name']}")
+            return
+        stats["pass"] += 1
+        r["fn"]["ported"] = True
+        pending_flips.append(ah)
+        total_flips_session += 1
+        append_ledger(
+            {
+                "addr": ah,
+                "name": out["name"],
+                "ok": True,
+                "phase": phase,
+                "screen": {k: res50[k] for k in ("passed", "failed", "errors", "dt")},
+                **{
+                    k: res100[k]
+                    for k in ("rc", "passed", "failed", "errors", "dt", "tail")
+                },
+            }
+        )
+        done.add(ah)
+        tested += 1
+        print(
+            f"PASS {ah} {out['name']} "
+            f"{res100.get('passed')}/{res100.get('failed')}/{res100.get('errors')} "
+            f"confirm={res100['dt']}s"
+        )
+        if len(pending_flips) >= args.commit_every:
+            KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
+            sha = git_commit_flips(len(pending_flips))
+            if sha and not args.no_push:
+                git_push()
+            pending_flips.clear()
 
-        if args.limit and tested >= args.limit:
-            break
+    workers = max(1, args.jobs)
+    if workers == 1:
+        for r in queue:
+            apply_result(
+                r,
+                prove_one(
+                    r,
+                    screen_seeds=args.screen_seeds,
+                    confirm_seeds=args.confirm_seeds,
+                    timeout=args.timeout,
+                    flip_screen_only=args.flip_screen_only,
+                ),
+            )
+    else:
+        with ThreadPoolExecutor(max_workers=workers) as ex:
+            futs = {
+                ex.submit(
+                    prove_one,
+                    r,
+                    screen_seeds=args.screen_seeds,
+                    confirm_seeds=args.confirm_seeds,
+                    timeout=args.timeout,
+                    flip_screen_only=args.flip_screen_only,
+                ): r
+                for r in queue
+            }
+            for fut in as_completed(futs):
+                r = futs[fut]
+                try:
+                    out = fut.result()
+                except Exception as exc:  # noqa: BLE001 — keep campaign alive
+                    stats["error"] += 1
+                    ah = hex(r["addr_int"])
+                    append_ledger(
+                        {
+                            "addr": ah,
+                            "name": r["name"],
+                            "ok": False,
+                            "phase": "worker_exc",
+                            "rc": 1,
+                            "passed": 0,
+                            "failed": 0,
+                            "errors": 1,
+                            "dt": 0,
+                            "tail": str(exc),
+                        }
+                    )
+                    done.add(ah)
+                    tested += 1
+                    print(f"ERR {ah} {r['name']} {exc}")
+                    continue
+                apply_result(r, out)
 
     if pending_flips:
         KB_PATH.write_text(json.dumps(kb, indent=2) + "\n", encoding="utf-8")
