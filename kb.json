@@ -28686,7 +28686,7 @@
         {
           "addr": "0xf1710",
           "decl": "void FUN_000f1710(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f1710"
         },
         {
