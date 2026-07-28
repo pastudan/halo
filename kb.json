@@ -4529,8 +4529,8 @@
         },
         {
           "addr": "0x3fc90",
-          "decl": "char ai_release_inactive_encounters(char *result_description, char *more_to_release, void *list, int16_t working_memory_size);",
-          "ported": false,
+          "decl": "char ai_release_inactive_encounters(char *result_description, char *more_to_release,\n                                    void *list, int16_t working_memory_size);",
+          "ported": true,
           "name": "ai_release_inactive_encounters"
         },
         {

@@ -2157,139 +2157,57 @@ void ai_find_inactive_encounters(void *out_list, int buf_size)
   if (count > 0)
     qsort(list + 4, (unsigned)count, 0xc, (int (*)(const void *, const void *))FUN_0003fb00);
 }
-/* ai_release_inactive_encounters (0x3fc90) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-static void (*const b3fc90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b3fc90_exitfn)(int) = system_exit;
-static void *(*const b3fc90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static const char * (*const b3fc90_c1ba1f0)(int tag_index) = tag_get_name;
-static const char * (*const b3fc90_c19b0d0)(const char *tag_name) = tag_name_strip_path;
-static int (*const b3fc90_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b3fc90_c3d950)(int actor_handle, char flag) = actor_erase;
-static scenario_t * (*const b3fc90_c18e380)(void) = global_scenario_get;
-static void *(*const b3fc90_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b3fc90_c3f970)(int param_1, int param_2, int param_3, int param_4) = ai_erase;
-
-__attribute__((naked, noinline))
-char ai_release_inactive_encounters(char *result_description __attribute__((unused)), char *more_to_release __attribute__((unused)), void *list __attribute__((unused)), int16_t working_memory_size __attribute__((unused)))
+/* ai_release_inactive_encounters (0x3fc90) — Capstone lift from 0003fc90.obj. */
+char ai_release_inactive_encounters(char *result_description, char *more_to_release,
+                                    void *list, int16_t working_memory_size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "je .Lai_release_inactive_encounters_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_release_inactive_encounters_2\n\t"
-      ".Lai_release_inactive_encounters_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x270\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x257620\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_release_inactive_encounters_2:\n\t"
-      "cmpw $0xc04, 0x14(%%ebp)\n\t"
-      "jae .Lai_release_inactive_encounters_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x271\n\t"
-      "pushl $0x2575c0\n\t"
-      "pushl $0x257648\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_release_inactive_encounters_3:\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw (%%edi), %%ax\n\t"
-      "jge .Lai_release_inactive_encounters_6\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "leal 0x4(%%edi,%%eax,4), %%esi\n\t"
-      "cmpb $0, (%%esi)\n\t"
-      "je .Lai_release_inactive_encounters_4\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x6325a4, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5c(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19b0d0]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2576a8\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c3d950]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "jmp .Lai_release_inactive_encounters_5\n\t"
-      ".Lai_release_inactive_encounters_4:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x5ab270, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x2a(%%eax), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x257690\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c3f970]\n\t"
-      "addl $0x34, %%esp\n\t"
-      ".Lai_release_inactive_encounters_5:\n\t"
-      "incw 0x2(%%edi)\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      ".Lai_release_inactive_encounters_6:\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw (%%edi), %%ax\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "setl %%cl\n\t"
-      "popl %%edi\n\t"
-      "movb %%bl, %%al\n\t"
-      "movb %%cl, (%%edx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b3fc90_assert), [exitfn] "m"(b3fc90_exitfn), [dget] "m"(b3fc90_dget), [c1ba1f0] "m"(b3fc90_c1ba1f0), [c19b0d0] "m"(b3fc90_c19b0d0), [c1d90f0] "m"(b3fc90_c1d90f0), [c3d950] "m"(b3fc90_c3d950), [c18e380] "m"(b3fc90_c18e380), [elem] "m"(b3fc90_elem), [c3f970] "m"(b3fc90_c3f970)
-      : "memory");
+  char *edi;
+  char *esi;
+  char released;
+  void *actor;
+  const char *name;
+  void *elem;
+  short squad_count;
+
+  released = 0;
+  if (result_description == 0 || more_to_release == 0) {
+    display_assert((const char *)0x257620, (const char *)0x2575c0, 0x270, 1);
+    system_exit(-1);
+  }
+  if ((uint16_t)working_memory_size < 0xc04) {
+    display_assert((const char *)0x257648, (const char *)0x2575c0, 0x271, 1);
+    system_exit(-1);
+  }
+
+  edi = (char *)list;
+  if (*(int16_t *)(edi + 2) >= *(int16_t *)edi)
+    goto done;
+
+  {
+    int idx = (int)*(int16_t *)(edi + 2);
+    esi = edi + idx * 12 + 4;
+    if (esi[0] != 0) {
+      actor = datum_get(*(void **)0x6325a4, *(int *)(esi + 4));
+      name = tag_name_strip_path(tag_get_name(*(int *)((char *)actor + 0x5c)));
+      crt_sprintf(result_description, (const char *)0x2576a8, name);
+      actor_erase(*(int *)(esi + 4), 1);
+    } else {
+      elem = tag_block_get_element((char *)global_scenario_get() + 0x42c,
+                                  *(int *)(esi + 4) & 0xffff, 0xb0);
+      actor = datum_get(*(void **)0x5ab270, *(int *)(esi + 4));
+      squad_count = *(short *)((char *)actor + 0x2a);
+      crt_sprintf(result_description, (const char *)0x257690, elem, (int)squad_count);
+      ai_erase(*(int *)(esi + 4), -1, -1, 1);
+    }
+    *(int16_t *)(edi + 2) = (int16_t)(*(int16_t *)(edi + 2) + 1);
+    released = 1;
+  }
+
+done:
+  *more_to_release =
+      (char)(*(int16_t *)(edi + 2) < *(int16_t *)edi);
+  return released;
 }
-#else
-#error "ai_release_inactive_encounters: clang naked draft required"
-#endif
-
-
 /* ai_handle_allegiance_broken_notification (0x40150) — readable C lift (restored pre-naked). */
 void ai_handle_allegiance_broken_notification(int16_t team_a, int16_t team_b,
                                               char print_message)
