@@ -5658,7 +5658,7 @@
         {
           "addr": "0x93140",
           "decl": "void cinematic_render(void);",
-          "ported": false,
+          "ported": true,
           "name": "cinematic_render"
         },
         {
@@ -23612,7 +23612,7 @@
         {
           "addr": "0x950b0",
           "decl": "void render_debug_recording(void);",
-          "ported": false,
+          "ported": true,
           "name": "render_debug_recording"
         },
         {
