@@ -79,7 +79,8 @@ bool FUN_00127ea0(void *client, void *message, int message_size,
     type_byte = (int)((unsigned char *)message)[(short)message_size - 1];
     switch (type_byte) {
     case 2:
-      result = FUN_00127260(client, message, message_size, source_address);
+      result = ((bool (*)(void *, void *, int, void *))FUN_00127260)(
+          client, message, message_size, source_address);
       if (result == 0) {
         network_game_log(
           "network_game_client_handle_message_server_game_advertise() failed");

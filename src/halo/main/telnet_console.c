@@ -951,7 +951,7 @@ static void *(*const b131790_tag)(int, int) = tag_get;
 static void (*const b131790_c1313f0)(void) = FUN_001313f0;
 
 __attribute__((naked, noinline))
-void FUN_00131790(void)
+void FUN_00131790(float dt __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -1125,7 +1125,7 @@ void FUN_00131a20(void)
   /* cmp (int16_t)ecx, 5 -> je 0x131ab5 */
   /* cmp (int16_t)ecx, 4 -> je 0x131ad5 */
   /* cmp (int16_t)ecx, 2 -> je 0x131ad5 */
-  telnet_console_print();
+  ((void *(*)(void))telnet_console_print)();
   /* cmp (int16_t)esi, (int16_t)edi -> jne 0x131afe */
   /* cmp edi, ecx -> jl 0x131a70 */
 
@@ -1149,7 +1149,7 @@ static void *(*const b131b60_elem)(void *, int, int) = tag_block_get_element;
 static short (*const b131b60_markers)(int, void *, void *, int) = object_get_markers_by_string_id;
 static void (*const b131b60_c18f180)(void *location_out, void *point) = scenario_location_from_point;
 static void (*const b131b60_ftol)(void) = FUN_001d9068;
-static void (*const b131b60_c131840)(void) = FUN_00131840;
+static void * (*const b131b60_c131840)(void *, short *, short, short) = FUN_00131840;
 
 __attribute__((naked, noinline))
 void FUN_00131b60(void)
@@ -1476,7 +1476,7 @@ void FUN_00131ed0(void)
 static void *(*const b131fc0_get)(int, int) = object_get_and_verify_type;
 static void (*const b131fc0_c131b60)(void) = FUN_00131b60;
 static bool (*const b131fc0_c18f3e0)(void *location, void *position, int16_t *out_sky_index) = FUN_0018f3e0;
-static void (*const b131fc0_c131840)(void) = FUN_00131840;
+static void * (*const b131fc0_c131840)(void *, short *, short, short) = FUN_00131840;
 static void *(*const b131fc0_tag)(int, int) = tag_get;
 static unsigned int *(*const b131fc0_lseed)(void) = random_math_get_local_seed_address;
 static void (*const b131fc0_c10b380)(unsigned int *seed, float *out) = random_seed_get_direction3d;
@@ -1902,9 +1902,9 @@ static void *(*const b132460_tag)(int, int) = tag_get;
 static int (*const b132460_rspr)(int) = rasterizer_widget_draw_sprite3d;
 static void * (*const b132460_c17c980)(int handle) = rasterizer_widget_begin;
 static void *(*const b132460_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b132460_c131840)(void) = FUN_00131840;
+static void * (*const b132460_c131840)(void *, short *, short, short) = FUN_00131840;
 static void (*const b132460_c180d10)(short type, int count, int compressed_out, int compressed_size, void *uncompressed, int uncompressed_size) = FUN_00180d10;
-static void (*const b132460_c1318f0)(void) = telnet_console_print;
+static void * (*const b132460_c1318f0)(void *, short *, short, short) = telnet_console_print;
 static void (*const b132460_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b132460_exitfn)(int) = system_exit;
 static void (*const b132460_c17c990)(int handle) = rasterizer_widget_set_texture;

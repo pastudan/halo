@@ -392,7 +392,7 @@ int FUN_001becc0(void *a, void *b)
 /* texture_cache_flush (0x1bed30) — readable C lift. */
 void texture_cache_flush(void)
 {
-  D3DDevice_KickPushBuffer();
+  D3DDevice_KickPushBuffer(0);
   D3DDevice_IsBusy();
   lruv_cache_dispose_all(*(void **)0x4ea980);
 }
@@ -482,7 +482,7 @@ void FUN_001bed90(int cache_handle)
 
 /* FUN_001bef80 (0x1bef80) — readable C lift.
  * out_a@eax, out_c@ecx, uv@edx (twin of FUN_001be6b0). */
-void FUN_001bef80(float *out_a, float *out_c, float *uv)
+void FUN_001bef80_lift(float *out_a, float *out_c, float *uv)
 {
   float *origin;
   float su, sv;
@@ -553,7 +553,7 @@ void texture_cache_close(void)
     display_assert(DAT_002b9704, DAT_002b96d8, 0x85, true);
     system_exit(-1);
   }
-  D3DDevice_KickPushBuffer();
+  D3DDevice_KickPushBuffer(0);
   D3DDevice_IsBusy();
   lruv_cache_dispose_all(*(void **)0x4ea980);
   data_make_invalid(*(data_t **)0x4ea978);
@@ -562,7 +562,7 @@ void texture_cache_close(void)
 /* texture_cache_debug_render (0x1bf260) — XBE naked draft (batch 244). */
 #if defined(__clang__)
 static void (*const b1bf260_c11da60)(void *cache, unsigned char *usage) = lruv_cache_get_page_usage;
-static void (*const b1bf260_c1bef80)(void) = (void *)FUN_001bef80;
+static void (*const b1bf260_c1bef80)(void) = (void *)FUN_001bef80_lift;
 static void (*const b1bf260_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
 static void (*const b1bf260_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
 static void * (*const b1bf260_c119810)(data_iter_t *iterator) = data_iterator_next;

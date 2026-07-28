@@ -1,6 +1,9 @@
 /* Cache file precaching system for Xbox. Manages background copying of
  * map files from DVD to the hard drive cache partition. */
 
+/* Freestanding TU compile: SleepEx lives in xdk_stubs_rt.c. */
+unsigned int __stdcall SleepEx(unsigned int milliseconds, int alertable);
+
 /* Set the precache thread priority — forwards param to thread handler. */
 void cache_files_precache_set_priority(bool high)
 {
@@ -733,9 +736,9 @@ void FUN_001bdb10(void)
 /* cache_files_precache_map_begin (0x1bd910) — XBE naked draft (batch 277). */
 #if defined(__clang__)
 static const char * (*const b1bd910_c19b0d0)(const char *tag_name) = tag_name_strip_path;
-static void (*const b1bd910_c1bd1b0)(void) = FUN_001bd1b0;
+static short (*const b1bd910_c1bd1b0)(const char *) = FUN_001bd1b0;
 static bool (*const b1bd910_c1bcb80)(const char *map_name, void *header_buf) = FUN_001bcb80;
-static void (*const b1bd910_c1ba250)(void) = FUN_001ba250;
+static void * (*const b1bd910_c1ba250)(unsigned char) = FUN_001ba250;
 static void * (*const b1bd910_c1bea30)(unsigned int size) = xbox_texture_cache_steal_memory;
 static int16_t (*const b1bd910_c1bd210)(int16_t map_type, int header_size) = FUN_001bd210;
 static void * (*const b1bd910_c1bc720)(short map_file_index) = FUN_001bc720;
@@ -920,11 +923,11 @@ void cache_files_precache(void)
 #if defined(__clang__)
 static void *(*const b1bb7d0_memset)(void *, int, unsigned int) = csmemset;
 static void (*const b1bb7d0_c1bb2d0)(void) = FUN_001bb2d0;
-static void (*const b1bb7d0_c1ba930)(void) = FUN_001ba930;
+static void (*const b1bb7d0_c1ba930)(void *) = FUN_001ba930;
 static void (*const b1bb7d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1bb7d0_exitfn)(int) = system_exit;
 static void (*const b1bb7d0_c1bb190)(void) = FUN_001bb190;
-static void (*const b1bb7d0_c1ba8b0)(void) = FUN_001ba8b0;
+static void (*const b1bb7d0_c1ba8b0)(char *) = FUN_001ba8b0;
 static bool (*const b1bb7d0_c1b9ce0)(void *header, const char *path, int report_errors) = cache_file_header_verify;
 
 __attribute__((naked, noinline))
@@ -1017,7 +1020,7 @@ void FUN_001bb8a0(void *obj)
       display_assert((const char *)0x2b8580, (const char *)0x2b839c, 0x619, 1);
       system_exit(-1);
     }
-    FUN_001bb430(obj, ptr, slot);
+    ((void (*)(void *, unsigned char *, int))FUN_001bb430)(obj, ptr, slot);
     *word |= bit;
     slot++;
     idx++;
@@ -2166,7 +2169,7 @@ void FUN_001bd3a0(void)
 
 /* cache_file_open (0x1bd4d0) — XBE naked draft (batch 242). */
 #if defined(__clang__)
-static void (*const b1bd4d0_c1bd1b0)(void) = FUN_001bd1b0;
+static short (*const b1bd4d0_c1bd1b0)(const char *) = FUN_001bd1b0;
 static void (*const b1bd4d0_assert)(const char *, const char *, int, bool) = display_assert;
 static void (*const b1bd4d0_exitfn)(int) = system_exit;
 static void *(*const b1bd4d0_memset)(void *, int, unsigned int) = csmemset;
