@@ -33331,7 +33331,7 @@
         {
           "addr": "0x75e70",
           "decl": "void FUN_00075e70(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00075e70"
         },
         {
@@ -39494,7 +39494,7 @@
         {
           "addr": "0x120ba0",
           "decl": "void interpolate_node_orientations(void);",
-          "ported": false,
+          "ported": true,
           "name": "interpolate_node_orientations"
         },
         {

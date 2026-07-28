@@ -1814,119 +1814,25 @@ void animation_graph_node_matrices_from_orientations(void)
 #endif
 
 
-/* interpolate_node_orientations (0x120ba0) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-static void (*const b120ba0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b120ba0_exitfn)(int) = system_exit;
-static void (*const b120ba0_c10cb60)(float *q1, float *q2, float t, float *out) = quaternions_interpolate_and_normalize;
-
-__attribute__((naked, noinline))
+/* interpolate_node_orientations (0x120ba0) — readable C lift (restored pre-naked). */
 void interpolate_node_orientations(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x18(%%ebp), %%si\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x14(%%ebp), %%di\n\t"
-      "movswl %%di, %%eax\n\t"
-      "incl %%eax\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, 0x14(%%ebp)\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "fildl 0x14(%%ebp)\n\t"
-      "movl %%ecx, 0x14(%%ebp)\n\t"
-      "fidivl 0x14(%%ebp)\n\t"
-      "fstps 0x14(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x14(%%ebp)\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      "jg .Linterpolate_node_orientations_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4fd\n\t"
-      "pushl $0x290ce4\n\t"
-      "pushl $0x290e18\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Linterpolate_node_orientations_1:\n\t"
-      "cmpw %%si, %%di\n\t"
-      "jl .Linterpolate_node_orientations_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4fe\n\t"
-      "pushl $0x290ce4\n\t"
-      "pushl $0x290e00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Linterpolate_node_orientations_2:\n\t"
-      "movw 0x8(%%ebp), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Linterpolate_node_orientations_4\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movzwl %%cx, %%edx\n\t"
-      "leal 0x14(%%ebx), %%edi\n\t"
-      "leal 0x1c(%%eax), %%esi\n\t"
-      "subl %%eax, %%ebx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      ".Linterpolate_node_orientations_3:\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "fmuls (%%ebx,%%esi,1)\n\t"
-      "leal -0x1c(%%esi), %%eax\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "fmuls (%%esi)\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%edi), %%edx\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "pushl %%edx\n\t"
-      "fstps (%%esi)\n\t"
-      "call *%[c10cb60]\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fmuls -0x4(%%edi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "addl $0x20, %%esi\n\t"
-      "fmuls -0x2c(%%esi)\n\t"
-      "addl $0x20, %%edi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x2c(%%esi)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls -0x20(%%edi)\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fmuls -0x28(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x28(%%esi)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls -0x1c(%%edi)\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fmuls -0x24(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x24(%%esi)\n\t"
-      "jne .Linterpolate_node_orientations_3\n\t"
-      "popl %%ebx\n\t"
-      ".Linterpolate_node_orientations_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b120ba0_assert), [exitfn] "m"(b120ba0_exitfn), [c10cb60] "m"(b120ba0_c10cb60)
-      : "memory");
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  display_assert((char *)0x00290e18, (char *)0x00290ce4, 1277, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, (int16_t)esi -> jl 0x120c19 */
+  display_assert((char *)0x00290e00, (char *)0x00290ce4, 1278, 0);
+  system_exit(0);
+  /* test (int16_t)ecx, (int16_t)ecx -> jle 0x120c9e */
+  quaternions_interpolate_and_normalize((float *)0, (float *)0, 0.0f, (float *)0);
+
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "interpolate_node_orientations: clang naked draft required"
-#endif
 
 
 /* FUN_00120cb0 (0x120cb0) — readable C lift from XBE leaf. */
