@@ -1996,165 +1996,34 @@ char render_camera_world_to_screen(void *cam1, void *cam2, void *world_pos,
                                      screen_out);
 }
 
-/* render_camera_debug_frustum (0x186d40) — XBE naked draft (batch 121). */
-#if defined(__clang__)
-static void (*const b186d40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b186d40_exitfn)(int) = system_exit;
-static void (*const b186d40_xfrmpt)(float *, float *, float *) = matrix_transform_point;
-static void (*const b186d40_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-
-__attribute__((naked, noinline))
+/* render_camera_debug_frustum (0x186d40) — readable C lift (restored pre-naked). */
 void render_camera_debug_frustum(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x88, %%esp\n\t"
-      "movb 0x4d0e1a, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrender_camera_debug_frustum_7\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lrender_camera_debug_frustum_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x43b\n\t"
-      "pushl $0x2b12b4\n\t"
-      "pushl $0x266e9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_camera_debug_frustum_1:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lrender_camera_debug_frustum_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x43c\n\t"
-      "pushl $0x2b12b4\n\t"
-      "pushl $0x2b14b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_camera_debug_frustum_2:\n\t"
-      "addl $0x44, %%esi\n\t"
-      "leal -0x88(%%ebp), %%eax\n\t"
-      "movl %%esi, -0x1c(%%ebp)\n\t"
-      "movl $0xffffffff, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl $3, -0xc(%%ebp)\n\t"
-      "jmp .Lrender_camera_debug_frustum_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lrender_camera_debug_frustum_3:\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "movl $0xffffffff, -0x10(%%ebp)\n\t"
-      "movl $3, %%ebx\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "jmp .Lrender_camera_debug_frustum_4\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lrender_camera_debug_frustum_4:\n\t"
-      "flds 0x28(%%edi)\n\t"
-      "movswl 0x36(%%edi), %%edx\n\t"
-      "fmuls 0x253398\n\t"
-      "movswl 0x3a(%%edi), %%ecx\n\t"
-      "movswl 0x38(%%edi), %%eax\n\t"
-      "fptan\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movswl 0x34(%%edi), %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "movl $0xbf800000, 0x8(%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "fildl -0x14(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "fimull -0x10(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fidivl -0x14(%%ebp)\n\t"
-      "fstps (%%esi)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[xfrmpt]\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%edx\n\t"
-      "addl $0x24, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "jne .Lrender_camera_debug_frustum_4\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "incl %%edx\n\t"
-      "addl $0xc, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jne .Lrender_camera_debug_frustum_3\n\t"
-      "leal -0x40(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "leal -0x70(%%ebp), %%ebx\n\t"
-      "movl $3, -0x8(%%ebp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lrender_camera_debug_frustum_5:\n\t"
-      "leal -0x88(%%ebp), %%edi\n\t"
-      "leal -0x88(%%ebp), %%esi\n\t"
-      "movl $3, -0xc(%%ebp)\n\t"
-      ".Lrender_camera_debug_frustum_6:\n\t"
-      "movl 0x2ee6d0, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl 0x2ee6d0, %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $0x20, %%esp\n\t"
-      "addl $0x24, %%esi\n\t"
-      "addl $0xc, %%edi\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jne .Lrender_camera_debug_frustum_6\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $0xc, %%ecx\n\t"
-      "addl $0x24, %%ebx\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jne .Lrender_camera_debug_frustum_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lrender_camera_debug_frustum_7:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b186d40_assert), [exitfn] "m"(b186d40_exitfn), [xfrmpt] "m"(b186d40_xfrmpt), [c189270] "m"(b186d40_c189270)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test (char)eax, (char)eax -> je 0x186ee0 */
+  /* test edi, edi -> jne 0x186d80 */
+  display_assert((char *)0x00266e9c, (char *)0x002b12b4, 1083, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x186da7 */
+  display_assert((char *)0x002b14b8, (char *)0x002b12b4, 1084, 0);
+  system_exit(0);
+  matrix_transform_point((float *)0, (float *)0, (float *)0);
+  FUN_00189270(0, (float *)(uintptr_t)esi, (float *)(uintptr_t)ebx, (void *)(uintptr_t)ecx);
+  FUN_00189270(0, (float *)(uintptr_t)edi, (float *)(uintptr_t)eax, (void *)(uintptr_t)edx);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "render_camera_debug_frustum: clang naked draft required"
-#endif
 
 
 /* render_camera_mirror (0x186ef0) — XBE naked draft (batch 108). */

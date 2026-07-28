@@ -72,7 +72,8 @@ def extract_func(old: str, name: str, addr: int) -> str | None:
         if not m:
             continue
         body = m.group(0)
-        if "naked" in body[:500]:
+        head = body[:500]
+        if "__attribute__((naked))" in head or "XBE naked" in head:
             continue
         if body.count("__asm__") > 2 or "XBE naked" in body:
             continue

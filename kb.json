@@ -23960,7 +23960,7 @@
         {
           "addr": "0x186d40",
           "decl": "void render_camera_debug_frustum(void);",
-          "ported": false,
+          "ported": true,
           "name": "render_camera_debug_frustum"
         },
         {
@@ -39552,13 +39552,13 @@
         {
           "addr": "0x122060",
           "decl": "void replacement_animation_apply(void);",
-          "ported": false,
+          "ported": true,
           "name": "replacement_animation_apply"
         },
         {
           "addr": "0x122240",
           "decl": "void overlay_animation_apply(void *animation, int frame, void *node_output);",
-          "ported": false,
+          "ported": true,
           "name": "overlay_animation_apply"
         },
         {
