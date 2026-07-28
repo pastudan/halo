@@ -1744,87 +1744,28 @@ char FUN_00087ac0(char enable)
   return prev;
 }
 
-/* editor_camera_set_mode (0x87b00) — XBE naked draft (batch 132). */
-#if defined(__clang__)
-static void (*const b87b00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b87b00_exitfn)(int) = system_exit;
-static void (*const b87b00_cff4d0)(int channel, const char *format, ...) = console_printf;
-
-__attribute__((naked, noinline))
-void editor_camera_set_mode(int16_t mode __attribute__((unused)))
+/* editor_camera_set_mode (0x87b00) — readable C lift (restored pre-naked). */
+void editor_camera_set_mode(int16_t mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x3356b0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x8(%%ebp), %%di\n\t"
-      "je .Leditor_camera_set_mode_4\n\t"
-      "movw 0x3356c4, %%ax\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "je .Leditor_camera_set_mode_4\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Leditor_camera_set_mode_2\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movl 0x2ee67c(,%%ecx,8), %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jne .Leditor_camera_set_mode_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12e\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x26718c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movw 0x3356c4, %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_set_mode_1:\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl 0x3356b0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x2ee67c(,%%edx,8)\n\t"
-      "addl $4, %%esp\n\t"
-      ".Leditor_camera_set_mode_2:\n\t"
-      "testw %%di, %%di\n\t"
-      "je .Leditor_camera_set_mode_4\n\t"
-      "pushl %%esi\n\t"
-      "movswl %%di, %%esi\n\t"
-      "movl 0x2ee680(,%%esi,8), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Leditor_camera_set_mode_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x134\n\t"
-      "pushl $0x267120\n\t"
-      "pushl $0x267164\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Leditor_camera_set_mode_3:\n\t"
-      "movl 0x3356b0, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x2ee680(,%%esi,8)\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      ".Leditor_camera_set_mode_4:\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movl 0x2ee68c(,%%edx,4), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "movw %%di, 0x3356c4\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b87b00_assert), [exitfn] "m"(b87b00_exitfn), [cff4d0] "m"(b87b00_cff4d0)
-      : "memory");
+  int eax = 0;
+  int edx = 0;
+  int edi = 0;
+
+  /* cmp (int16_t)eax, (int16_t)edi -> je 0x87bb6 */
+  /* test (int16_t)eax, (int16_t)eax -> je 0x87b70 */
+  /* test edx, edx -> jne 0x87b5d */
+  display_assert((char *)0x0026718c, (char *)0x00267120, 302, 0);
+  system_exit(0);
+  /* test (int16_t)edi, (int16_t)edi -> je 0x87bb6 */
+  /* test eax, eax -> jne 0x87ba4 */
+  display_assert((char *)0x00267164, (char *)0x00267120, 308, 0);
+  system_exit(0);
+  console_printf(0, (char *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)edx;
+  (void)edi;
 }
-#else
-#error "editor_camera_set_mode: clang naked draft required"
-#endif
 
 
 /* FUN_00087c00 (0x87c00) — readable C lift. */

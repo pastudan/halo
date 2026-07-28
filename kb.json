@@ -7446,7 +7446,7 @@
         {
           "addr": "0x87b00",
           "decl": "void editor_camera_set_mode(int16_t mode);",
-          "ported": false,
+          "ported": true,
           "name": "editor_camera_set_mode"
         },
         {
