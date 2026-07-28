@@ -40231,7 +40231,7 @@
         {
           "addr": "0x163590",
           "decl": "void FUN_00163590(int object_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00163590"
         },
         {
