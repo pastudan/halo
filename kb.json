@@ -24642,7 +24642,7 @@
         {
           "addr": "0x190380",
           "decl": "void FUN_00190380(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00190380"
         },
         {
