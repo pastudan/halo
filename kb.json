@@ -5005,7 +5005,7 @@
         {
           "addr": "0x7e7e0",
           "decl": "void bitmap_cube_map_face_extract(void *bitmap_2d, void *bitmap_3d, int mipmap, int slice);",
-          "ported": false,
+          "ported": true,
           "name": "bitmap_cube_map_face_extract"
         },
         {
@@ -33604,7 +33604,7 @@
         {
           "addr": "0x7b510",
           "decl": "void FUN_0007b510(float bump_height, void *bitmap /* @<esi> */);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0007b510"
         },
         {
