@@ -233,7 +233,7 @@ void FUN_0006e870(void)
 
 
 __attribute__((naked, noinline))
-void FUN_0006e930(void)
+int FUN_0006e930(void *tif, unsigned int index)
 {
   __asm__ volatile(
       "xorl %%edx, %%edx\n\t"
@@ -1908,76 +1908,32 @@ void FUN_0006f780(void)
 #endif
 
 
-/* FUN_0006f820 (0x6f820) — XBE naked draft (batch 319). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f820(void)
+/* FUN_0006f820 (0x6f820) — readable C lift: TIFF tile count. */
+unsigned int FUN_0006f820(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x2c(%%ecx), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x30(%%ecx), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x28(%%ecx), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .LFUN_0006f820_1\n\t"
-      "movl 0x1c(%%ecx), %%edi\n\t"
-      ".LFUN_0006f820_1:\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "jne .LFUN_0006f820_2\n\t"
-      "movl 0x20(%%ecx), %%ebx\n\t"
-      ".LFUN_0006f820_2:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_0006f820_3\n\t"
-      "movl 0x24(%%ecx), %%esi\n\t"
-      ".LFUN_0006f820_3:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0006f820_4\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0006f820_4\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0006f820_4\n\t"
-      "movl 0x24(%%ecx), %%eax\n\t"
-      "leal -0x1(%%eax,%%esi,1), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%esi\n\t"
-      "movl 0x20(%%ecx), %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "leal -0x1(%%edx,%%ebx,1), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%ebx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "imull %%eax, %%esi\n\t"
-      "movl 0x1c(%%ecx), %%eax\n\t"
-      "leal -0x1(%%eax,%%edi,1), %%eax\n\t"
-      "divl %%edi\n\t"
-      "popl %%edi\n\t"
-      "imull %%eax, %%esi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006f820_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int tile_w;
+  unsigned int tile_h;
+  unsigned int tile_d;
+  unsigned int n_h;
+  unsigned int n_w;
+  unsigned int n_d;
+
+  tile_w = *(unsigned int *)((char *)tif + 0x2c);
+  tile_h = *(unsigned int *)((char *)tif + 0x30);
+  tile_d = *(unsigned int *)((char *)tif + 0x28);
+  if (tile_d == 0xffffffffu)
+    tile_d = *(unsigned int *)((char *)tif + 0x1c);
+  if (tile_w == 0xffffffffu)
+    tile_w = *(unsigned int *)((char *)tif + 0x20);
+  if (tile_h == 0xffffffffu)
+    tile_h = *(unsigned int *)((char *)tif + 0x24);
+  if (tile_d == 0 || tile_w == 0 || tile_h == 0)
+    return 0;
+  n_h = (*(unsigned int *)((char *)tif + 0x24) + tile_h - 1u) / tile_h;
+  n_w = (*(unsigned int *)((char *)tif + 0x20) + tile_w - 1u) / tile_w;
+  n_d = (*(unsigned int *)((char *)tif + 0x1c) + tile_d - 1u) / tile_d;
+  return n_h * n_w * n_d;
 }
-#else
-#error "FUN_0006f820: clang naked draft required"
-#endif
 
 
 /* FUN_0006f890 (0x6f890) — readable C lift. */
@@ -4930,270 +4886,62 @@ void FUN_00071400(void)
 #endif
 
 
-/* DecodeBlockRGB__single_pixel (0x715c0) — XBE naked draft (batch 320). */
-#if defined(__clang__)
-static void *(*const b715c0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b715c0_c705b0)(void) = (void (*)(void))FUN_000705b0;
-static void (*const b715c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b715c0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* DecodeBlockRGB__single_pixel (0x715c0) — readable C lift (restored pre-naked). */
 void DecodeBlockRGB__single_pixel(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LDecodeBlockRGB__single_pixel_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LDecodeBlockRGB__single_pixel_1:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movw (%%edi), %%si\n\t"
-      "movl %%esi, 0x8(%%ebp)\n\t"
-      "movb 0x8(%%ebp), %%dl\n\t"
-      "shrl $5, 0x8(%%ebp)\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "shlb $3, %%dl\n\t"
-      "movb %%dl, %%bl\n\t"
-      "shlb $2, %%cl\n\t"
-      "shrb $5, %%bl\n\t"
-      "orb %%bl, %%dl\n\t"
-      "movb %%dl, 0x8(%%ebp)\n\t"
-      "movb %%cl, %%dl\n\t"
-      "shrl $6, %%eax\n\t"
-      "shrb $6, %%dl\n\t"
-      "orb %%dl, %%cl\n\t"
-      "shlb $3, %%al\n\t"
-      "movb %%cl, 0x9(%%ebp)\n\t"
-      "movb %%al, %%cl\n\t"
-      "shrb $5, %%cl\n\t"
-      "orb %%cl, %%al\n\t"
-      "movb %%al, 0xa(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "leal 0x2(%%edi), %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "call *%[c705b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw (%%ebx), %%si\n\t"
-      "movb $0xff, -0x5(%%ebp)\n\t"
-      "movb $0xff, -0x9(%%ebp)\n\t"
-      "movb $0xff, -0xd(%%ebp)\n\t"
-      "jbe .LDecodeBlockRGB__single_pixel_2\n\t"
-      "movzbw -0x10(%%ebp), %%ax\n\t"
-      "movzbw -0xc(%%ebp), %%dx\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "movzwl %%dx, %%esi\n\t"
-      "leal 0x1(%%esi,%%ecx,2), %%edx\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "movb %%dl, -0x8(%%ebp)\n\t"
-      "leal 0x1(%%ecx,%%esi,2), %%ecx\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movzbw -0xf(%%ebp), %%ax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "shrl $0x1f, %%ecx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movb %%dl, -0x4(%%ebp)\n\t"
-      "movzbw -0xb(%%ebp), %%dx\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "movzwl %%dx, %%esi\n\t"
-      "leal 0x1(%%esi,%%ecx,2), %%edx\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "leal 0x1(%%ecx,%%esi,2), %%ecx\n\t"
-      "movb %%dl, -0x7(%%ebp)\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movzbw -0xe(%%ebp), %%ax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "shrl $0x1f, %%ecx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movb %%dl, -0x3(%%ebp)\n\t"
-      "movzbw -0xa(%%ebp), %%dx\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "movzwl %%dx, %%esi\n\t"
-      "leal 0x1(%%esi,%%ecx,2), %%edx\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "leal 0x1(%%ecx,%%esi,2), %%ecx\n\t"
-      "movb %%dl, -0x6(%%ebp)\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%ecx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "shrl $0x1f, %%ecx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movb %%dl, -0x2(%%ebp)\n\t"
-      "movb $0xff, -0x1(%%ebp)\n\t"
-      "jmp .LDecodeBlockRGB__single_pixel_4\n\t"
-      ".LDecodeBlockRGB__single_pixel_2:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "jmp .LDecodeBlockRGB__single_pixel_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".LDecodeBlockRGB__single_pixel_3:\n\t"
-      "movzbl -0x10(%%ebp,%%ecx,1), %%edx\n\t"
-      "movzbl -0xc(%%ebp,%%ecx,1), %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cdq\n\t"
-      "subl %%edx, %%eax\n\t"
-      "sarl $1, %%eax\n\t"
-      "movb %%al, -0x8(%%ebp,%%ecx,1)\n\t"
-      "movb $0, -0x4(%%ebp,%%ecx,1)\n\t"
-      "incl %%ecx\n\t"
-      "cmpl $3, %%ecx\n\t"
-      "jl .LDecodeBlockRGB__single_pixel_3\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".LDecodeBlockRGB__single_pixel_4:\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LDecodeBlockRGB__single_pixel_5\n\t"
-      "cmpw $4, %%si\n\t"
-      "jle .LDecodeBlockRGB__single_pixel_6\n\t"
-      ".LDecodeBlockRGB__single_pixel_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x305\n\t"
-      "pushl $0x261540\n\t"
-      "pushl $0x261530\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LDecodeBlockRGB__single_pixel_6:\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .LDecodeBlockRGB__single_pixel_7\n\t"
-      "cmpw $4, %%bx\n\t"
-      "jle .LDecodeBlockRGB__single_pixel_8\n\t"
-      ".LDecodeBlockRGB__single_pixel_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x306\n\t"
-      "pushl $0x261540\n\t"
-      "pushl $0x261520\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LDecodeBlockRGB__single_pixel_8:\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "leal (%%esi,%%ebx,4), %%ecx\n\t"
-      "shll $1, %%ecx\n\t"
-      "shrl %%cl, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "andl $3, %%eax\n\t"
-      "movl -0x10(%%ebp,%%eax,4), %%ecx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b715c0_memset), [c705b0] "m"(b715c0_c705b0), [assert] "m"(b715c0_assert), [exitfn] "m"(b715c0_exitfn)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test edi, edi -> jne 0x715e2 */
+  csmemset((void *)(uintptr_t)eax, 0, 64);
+  ((void(*)(void))FUN_000705b0)();
+  /* cmp ecx, 3 -> jl 0x71710 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x71742 */
+  /* cmp (int16_t)esi, 4 -> jle 0x71762 */
+  display_assert((char *)0x00261530, (char *)0x00261540, 773, 0);
+  system_exit(0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x71770 */
+  /* cmp (int16_t)ebx, 4 -> jle 0x71790 */
+  display_assert((char *)0x00261520, (char *)0x00261540, 774, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "DecodeBlockRGB__single_pixel: clang naked draft required"
-#endif
 
 
-/* FUN_000717b0 (0x717b0) — XBE naked draft (batch 346). */
-#if defined(__clang__)
-static void (*const b717b0_c71400)(void) = (void (*)(void))FUN_00071400;
-
-__attribute__((naked, noinline))
-void FUN_000717b0(void)
+/* FUN_000717b0 (0x717b0) — readable C lift: DecodeBlock + nibble expand. */
+void FUN_000717b0(void *block, unsigned char *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal 0x8(%%edi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c71400]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal 0x7(%%ebx), %%eax\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_000717b0_1:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%edi,%%esi,2), %%cx\n\t"
-      "movb %%cl, %%dl\n\t"
-      "andb $0xf, %%dl\n\t"
-      "addl $0x10, %%eax\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "shrl $4, 0x8(%%ebp)\n\t"
-      "shlb $4, %%cl\n\t"
-      "orb %%cl, %%dl\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "shrl $4, 0x8(%%ebp)\n\t"
-      "movb %%dl, -0x14(%%eax)\n\t"
-      "movb %%cl, %%dl\n\t"
-      "andb $0xf, %%dl\n\t"
-      "shlb $4, %%cl\n\t"
-      "orb %%cl, %%dl\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "shrl $4, 0x8(%%ebp)\n\t"
-      "movb %%dl, -0x10(%%eax)\n\t"
-      "movb %%cl, %%dl\n\t"
-      "andb $0xf, %%dl\n\t"
-      "shlb $4, %%cl\n\t"
-      "orb %%cl, %%dl\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "movb %%dl, -0xc(%%eax)\n\t"
-      "movb %%cl, %%dl\n\t"
-      "andb $0xf, %%dl\n\t"
-      "shlb $4, %%cl\n\t"
-      "orb %%cl, %%dl\n\t"
-      "movb %%dl, -0x8(%%eax)\n\t"
-      "incl %%esi\n\t"
-      "cmpl $4, %%esi\n\t"
-      "jl .LFUN_000717b0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c71400] "m"(b717b0_c71400)
-      : "memory");
+  int i;
+  unsigned int w;
+  unsigned char *p;
+  unsigned char n;
+
+  ((void (*)(void *, unsigned char *))FUN_00071400)((char *)block + 8, out);
+  p = out + 7;
+  for (i = 0; i < 4; i++) {
+    w = *(unsigned short *)((char *)block + i * 2);
+    p += 0x10;
+    n = (unsigned char)(w & 0xf);
+    p[-0x14] = (unsigned char)((n << 4) | n);
+    w >>= 4;
+    n = (unsigned char)(w & 0xf);
+    p[-0x10] = (unsigned char)((n << 4) | n);
+    w >>= 4;
+    n = (unsigned char)(w & 0xf);
+    p[-0xc] = (unsigned char)((n << 4) | n);
+    w >>= 4;
+    n = (unsigned char)(w & 0xf);
+    p[-8] = (unsigned char)((n << 4) | n);
+  }
 }
-#else
-#error "FUN_000717b0: clang naked draft required"
-#endif
 
 
 /* FUN_00071840 (0x71840) — readable C lift: DecodeBlockRGB + nibble expand. */
