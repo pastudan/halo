@@ -1,0 +1,12 @@
+{
+  "description": "FUN_001d0df0: RtlInit + NtCreate IAT; create returns -1",
+  "regions": {
+    "0x60000000": "31c0c20800",
+    "0x60000010": "b8ffffffffc21800",
+    "0x002530e4": "00000060",
+    "0x00253160": "10000060"
+  },
+  "stub_returns": {
+    "XapiSetLastNTError": 0
+  }
+}

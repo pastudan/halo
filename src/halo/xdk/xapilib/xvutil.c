@@ -362,60 +362,28 @@ void __stdcall FUN_001d0a06(void *out)
 }
 
 
-/* FUN_001d0a5c (0x1d0a5c) — XBE naked draft (batch 314). */
-#if defined(__clang__)
-static void (*const b1d0a5c_c1d0a06)(void) = FUN_001d0a06;
-
-__attribute__((naked, noinline))
-void FUN_001d0a5c(void)
+/* FUN_001d0a5c (0x1d0a5c) — Capstone tip: UTC now − TZ bias → local SYSTEMTIME. */
+void __stdcall FUN_001d0a5c(void *system_time)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x28, %%esp\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x25313c\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d0a06]\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "subl -0x10(%%ebp), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "sbbl -0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "call *0x253138\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw -0x28(%%ebp), %%cx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movw -0x26(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x2(%%eax)\n\t"
-      "movw -0x1a(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x4(%%eax)\n\t"
-      "movw -0x24(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x6(%%eax)\n\t"
-      "movw -0x22(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x8(%%eax)\n\t"
-      "movw -0x20(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xa(%%eax)\n\t"
-      "movw -0x1e(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xc(%%eax)\n\t"
-      "movw -0x1c(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xe(%%eax)\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      : [c1d0a06] "m"(b1d0a5c_c1d0a06)
-      : "memory");
+  unsigned int utc[2];
+  unsigned int bias[2];
+  unsigned int local[2];
+  unsigned short fields[8];
+  unsigned short *out = (unsigned short *)system_time;
+  ((void (__stdcall *)(void *))*(void **)0x25313c)(utc);
+  FUN_001d0a06(bias);
+  local[0] = utc[0] - bias[0];
+  local[1] = utc[1] - bias[1] - (utc[0] < bias[0]);
+  ((void (__stdcall *)(void *, void *))*(void **)0x253138)(local, fields);
+  out[0] = fields[0];
+  out[1] = fields[1];
+  out[2] = fields[7];
+  out[3] = fields[2];
+  out[4] = fields[3];
+  out[5] = fields[4];
+  out[6] = fields[5];
+  out[7] = fields[6];
 }
-#else
-#error "FUN_001d0a5c: clang naked draft required"
-#endif
 
 
 /* FUN_001d0adb (0x1d0adb) — readable C lift: out = *in - now. */
@@ -591,86 +559,26 @@ void __stdcall xbox_query_global_memory_status(void *status)
 }
 
 
-/* FUN_001d0df0 (0x1d0df0) — XBE naked draft (batch 360). */
-#if defined(__clang__)
-static void __stdcall (*const b1d0df0_c1d2296)(int status) = (void *)XapiSetLastNTError;
-
-__attribute__((naked, noinline))
-bool FUN_001d0df0(const char *path __attribute__((unused)), unsigned int attributes __attribute__((unused)))
+/* FUN_001d0df0 (0x1d0df0) — Capstone tip: create IAT status < 0 → false. */
+bool __stdcall FUN_001d0df0(const char *path, unsigned int attributes)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x44, %%esp\n\t"
-      "pushl 0x8(%%ebp)\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x2530e4\n\t"
-      "pushl $0x4020\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "pushl $7\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x100100\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl $0xfffffffd, -0x1c(%%ebp)\n\t"
-      "movl $0x40, -0x14(%%ebp)\n\t"
-      "call *0x253160\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .LFUN_001d0df0_1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d2296]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_001d0df0_4\n\t"
-      ".LFUN_001d0df0_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0xa\n\t"
-      "popl %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "leal -0x44(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "andl $0x3127, %%eax\n\t"
-      "orl $0x80, %%eax\n\t"
-      "pushl $4\n\t"
-      "movl %%eax, -0x24(%%ebp)\n\t"
-      "pushl $0x28\n\t"
-      "leal -0x44(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl 0x8(%%ebp)\n\t"
-      "call *0x25315c\n\t"
-      "pushl 0x8(%%ebp)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *0x253090\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .LFUN_001d0df0_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "jmp .LFUN_001d0df0_3\n\t"
-      ".LFUN_001d0df0_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d2296]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001d0df0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_001d0df0_4:\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      : [c1d2296] "m"(b1d0df0_c1d2296)
-      : "memory");
+  unsigned int name[2];
+  unsigned int io[4];
+  int status;
+  (void)attributes;
+  ((void (__stdcall *)(void *, const char *))*(void **)0x2530e4)(name, path);
+  io[0] = 0xfffffffd;
+  io[1] = (unsigned int)(unsigned long)name;
+  io[2] = 0x40;
+  status = ((int (__stdcall *)(void *, unsigned, void *, void *, unsigned, unsigned))
+                *(void **)0x253160)(
+      (void *)&path, 0x100100, &io[0], &io[2], 7, 0x4020);
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_001d0df0: clang naked draft required"
-#endif
 
 /* WaitForSingleObject (0x1d0336) — readable C lift. */
 int __stdcall WaitForSingleObject(int handle, int timeout_ms)

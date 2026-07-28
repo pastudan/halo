@@ -34595,9 +34595,15 @@
         },
         {
           "addr": "0x1d0a5c",
-          "decl": "void FUN_001d0a5c(void);",
-          "ported": false,
-          "name": "FUN_001d0a5c"
+          "decl": "void __stdcall FUN_001d0a5c(void *system_time);",
+          "ported": true,
+          "name": "FUN_001d0a5c",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0adb",
@@ -34708,9 +34714,15 @@
         },
         {
           "addr": "0x1d0df0",
-          "decl": "bool FUN_001d0df0(const char *path, unsigned int attributes);",
-          "ported": false,
-          "name": "FUN_001d0df0"
+          "decl": "bool __stdcall FUN_001d0df0(const char *path, unsigned int attributes);",
+          "ported": true,
+          "name": "FUN_001d0df0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0336",
