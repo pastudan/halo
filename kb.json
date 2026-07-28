@@ -26523,7 +26523,7 @@
         {
           "addr": "0x191440",
           "decl": "void reference_list_copy(void *result, void *source);",
-          "ported": false,
+          "ported": true,
           "name": "reference_list_copy",
           "source_path": "src/halo/structures/structures.c"
         },
@@ -36082,7 +36082,7 @@
         {
           "addr": "0x45830",
           "decl": "int FUN_00045830(int type /* @<eax> */, int actor /* @<edi> */, int target /* @<esi> */, int p0, int p1, int p2, int p3, int p4, int p5, int p6);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00045830"
         },
         {
