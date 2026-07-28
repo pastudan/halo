@@ -4999,7 +4999,7 @@
         {
           "addr": "0x7e560",
           "decl": "void bitmap_3d_slice_insert(void *bitmap_3d, int mipmap, int slice, void *bitmap_2d);",
-          "ported": false,
+          "ported": true,
           "name": "bitmap_3d_slice_insert"
         },
         {

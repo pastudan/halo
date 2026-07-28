@@ -1952,239 +1952,70 @@ void *bitmap_cube_map_new(unsigned short width, unsigned short mipmap_count, uns
   return bitmap;
 }
 
-/* bitmap_3d_slice_insert (0x7e560) — XBE naked draft (batch 247). */
-#if defined(__clang__)
-static bool (*const b7e560_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b7e560_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7e560_exitfn)(int) = system_exit;
-static int (*const b7e560_c7e040)(void *bitmap_data) = bitmap_get_pixel_data_size;
-static void * (*const b7e560_c7cb60)(void *bitmap, short x, short y, short face_index, short mipmap_index) = bitmap_3d_address;
-static void * (*const b7e560_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
-static void * (*const b7e560_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-void bitmap_3d_slice_insert(void *bitmap_3d __attribute__((unused)), int mipmap __attribute__((unused)), int slice __attribute__((unused)), void *bitmap_2d __attribute__((unused)))
+/* bitmap_3d_slice_insert (0x7e560) — readable C lift (restored pre-naked). */
+void bitmap_3d_slice_insert(void *bitmap_3d, int mipmap, int slice, void *bitmap_2d)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_3d_slice_insert_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e3\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x261b44\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_1:\n\t"
-      "cmpw $1, 0xa(%%edi)\n\t"
-      "je .Lbitmap_3d_slice_insert_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e4\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x26424c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_2:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lbitmap_3d_slice_insert_3\n\t"
-      "cmpw 0x14(%%edi), %%bx\n\t"
-      "jle .Lbitmap_3d_slice_insert_4\n\t"
-      ".Lbitmap_3d_slice_insert_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e5\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x261ac8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_4:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lbitmap_3d_slice_insert_5\n\t"
-      "cmpw 0x8(%%edi), %%ax\n\t"
-      "jl .Lbitmap_3d_slice_insert_6\n\t"
-      ".Lbitmap_3d_slice_insert_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e6\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x265338\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_6:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%edi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .Lbitmap_3d_slice_insert_7\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_3d_slice_insert_8\n\t"
-      ".Lbitmap_3d_slice_insert_7:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_3d_slice_insert_8:\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "movswl 0x4(%%ebx), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .Lbitmap_3d_slice_insert_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e7\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x2652f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_9:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%edi), %%ax\n\t"
-      "movw %%dx, %%cx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "sarw %%cl, %%si\n\t"
-      "cmpw $1, %%si\n\t"
-      "jge .Lbitmap_3d_slice_insert_10\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lbitmap_3d_slice_insert_11\n\t"
-      ".Lbitmap_3d_slice_insert_10:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%dl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".Lbitmap_3d_slice_insert_11:\n\t"
-      "movswl 0x6(%%ebx), %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .Lbitmap_3d_slice_insert_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e8\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x2652a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_12:\n\t"
-      "testb $8, 0xe(%%edi)\n\t"
-      "je .Lbitmap_3d_slice_insert_13\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2e9\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x265264\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_13:\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lbitmap_3d_slice_insert_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2eb\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x265240\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_14:\n\t"
-      "cmpw $0, 0x14(%%ebx)\n\t"
-      "je .Lbitmap_3d_slice_insert_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2ec\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x265220\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_15:\n\t"
-      "cmpw $0, 0xa(%%ebx)\n\t"
-      "je .Lbitmap_3d_slice_insert_16\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2ed\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x2651fc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_16:\n\t"
-      "movw 0xc(%%ebx), %%ax\n\t"
-      "cmpw 0xc(%%edi), %%ax\n\t"
-      "je .Lbitmap_3d_slice_insert_17\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2ee\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x2651d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_17:\n\t"
-      "testb $8, 0xe(%%ebx)\n\t"
-      "je .Lbitmap_3d_slice_insert_18\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2ef\n\t"
-      "pushl $0x264a74\n\t"
-      "pushl $0x265198\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lbitmap_3d_slice_insert_18:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c7e040]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c7cb60]\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c7d000]\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c7d470] "m"(b7e560_c7d470), [assert] "m"(b7e560_assert), [exitfn] "m"(b7e560_exitfn), [c7e040] "m"(b7e560_c7e040), [c7cb60] "m"(b7e560_c7cb60), [c7d000] "m"(b7e560_c7d000), [c8e0b0] "m"(b7e560_c8e0b0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  bitmap_verify((void *)(uintptr_t)edi, 0);
+  /* test (char)eax, (char)eax -> jne 0x7e598 */
+  display_assert((char *)0x00261b44, (char *)0x00264a74, 739, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [edi + 0xa], 1 -> je 0x7e5bf */
+  display_assert((char *)0x0026424c, (char *)0x00264a74, 740, 0);
+  system_exit(0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jl 0x7e5cd */
+  /* relift: cmp (int16_t)ebx, word ptr [edi + 0x14] -> jle 0x7e5ed */
+  display_assert((char *)0x00261ac8, (char *)0x00264a74, 741, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x7e5fb */
+  /* relift: cmp (int16_t)eax, word ptr [edi + 8] -> jl 0x7e61b */
+  display_assert((char *)0x00265338, (char *)0x00264a74, 742, 0);
+  system_exit(0);
+  /* cmp (int16_t)edx, 1 -> jge 0x7e636 */
+  /* cmp eax, ecx -> je 0x7e668 */
+  display_assert((char *)0x002652f0, (char *)0x00264a74, 743, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, 1 -> jge 0x7e686 */
+  /* cmp eax, edx -> je 0x7e6b5 */
+  display_assert((char *)0x002652a0, (char *)0x00264a74, 744, 0);
+  system_exit(0);
+  /* relift: test byte ptr [edi + 0xe], 8 -> je 0x7e6db */
+  display_assert((char *)0x00265264, (char *)0x00264a74, 745, 0);
+  system_exit(0);
+  bitmap_verify((void *)(uintptr_t)ebx, 0);
+  /* test (char)eax, (char)eax -> jne 0x7e70a */
+  display_assert((char *)0x00265240, (char *)0x00264a74, 747, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebx + 0x14], 0 -> je 0x7e731 */
+  display_assert((char *)0x00265220, (char *)0x00264a74, 748, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebx + 0xa], 0 -> je 0x7e758 */
+  display_assert((char *)0x002651fc, (char *)0x00264a74, 749, 0);
+  system_exit(0);
+  /* relift: cmp (int16_t)eax, word ptr [edi + 0xc] -> je 0x7e782 */
+  display_assert((char *)0x002651d0, (char *)0x00264a74, 750, 0);
+  system_exit(0);
+  /* relift: test byte ptr [ebx + 0xe], 8 -> je 0x7e7a8 */
+  display_assert((char *)0x00265198, (char *)0x00264a74, 751, 0);
+  system_exit(0);
+  bitmap_get_pixel_data_size((void *)(uintptr_t)ebx);
+  bitmap_3d_address((void *)(uintptr_t)edi, 0, 0, 0, 0);
+  bitmap_mipmap_address((void *)(uintptr_t)ebx, 0);
+  csmemcpy((void *)(uintptr_t)eax, (void *)(uintptr_t)edi, esi);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "bitmap_3d_slice_insert: clang naked draft required"
-#endif
 
 
 /* bitmap_cube_map_face_extract (0x7e7e0) — readable C lift (restored pre-naked). */
