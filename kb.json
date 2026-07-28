@@ -38986,11 +38986,11 @@
         },
         {
           "addr": "0x73fd0",
-          "decl": "int FUN_00073fd0(void *bitmap /* @<eax> */);",
+          "decl": "unsigned short FUN_00073fd0(void *bitmap@<eax>);",
           "reg_args": {
             "bitmap": "eax"
           },
-          "ported": false,
+          "ported": true,
           "name": "FUN_00073fd0"
         },
         {

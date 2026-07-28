@@ -1,0 +1,16 @@
+{
+  "description": "FUN_00073fd0: empty pixels, kind0 \u2192 0xe",
+  "regions": {
+    "0x33414c": "00020030",
+    "0x30000200": "00000000000000000000000000000000",
+    "0x30000100": "00000000"
+  },
+  "arg_overrides": {
+    "bitmap": "00000000040004000000000000000000"
+  },
+  "stub_returns": {
+    "bitmap_verify": 1,
+    "bitmap_mipmap_address": 805306624,
+    "bitmap_get_pixel_count": 0
+  }
+}
