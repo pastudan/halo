@@ -804,75 +804,37 @@ void FUN_000669f0(void)
 }
 
 
-/* FUN_00066cc0 (0x66cc0) — XBE naked draft (batch 339). */
-#if defined(__clang__)
-static void (*const b66cc0_c668a0)(void) = (void (*)(void))FUN_000668a0;
-static void (*const b66cc0_c66380)(void) = TIFFDefaultDirectory;
-static void (*const b66cc0_c68a30)(int param_1, const char *format, ...) = (void (*)(int param_1, const char *format, ...))FUN_00068a30;
-
-__attribute__((naked, noinline))
-void FUN_00066cc0(void)
+/* FUN_00066cc0 (0x66cc0) — Capstone lift: verify TIFF dir short array is uniform.
+ * ABI: out stack; tif@<ebx>; entry@<edi>. */
+int FUN_00066cc0(unsigned int *out, void *tif /*@<ebx>*/, void *entry /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movzwl 0x44(%%ebx), %%esi\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jne .LFUN_00066cc0_4\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "call *%[c668a0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00066cc0_4\n\t"
-      "movw -0x8(%%ebp), %%cx\n\t"
-      "movl $1, %%eax\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "jle .LFUN_00066cc0_2\n\t"
-      "nop\n\t"
-      ".LFUN_00066cc0_1:\n\t"
-      "cmpw %%cx, -0x8(%%ebp,%%eax,2)\n\t"
-      "jne .LFUN_00066cc0_3\n\t"
-      "incl %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "jl .LFUN_00066cc0_1\n\t"
-      ".LFUN_00066cc0_2:\n\t"
-      "movzwl %%cx, %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00066cc0_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c66380]\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl (%%ebx), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x25fbdc\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_00066cc0_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c668a0] "m"(b66cc0_c668a0), [c66380] "m"(b66cc0_c66380), [c68a30] "m"(b66cc0_c68a30)
-      : "memory");
+  unsigned int count = *(unsigned int *)((char *)entry + 4);
+  int n = (int)*(unsigned short *)((char *)tif + 0x44);
+  unsigned short buf[4];
+  unsigned short first;
+  int i;
+  int got;
+  void *info;
+
+  if (n != (int)count)
+    return 0;
+
+  got = FUN_000668a0(entry, tif, buf);
+  if (!got)
+    return 0;
+
+  first = buf[0];
+  for (i = 1; i < n; i++) {
+    if (buf[i] != first) {
+      info = TIFFDefaultDirectory(*(unsigned short *)entry);
+      FUN_00068a30(*(void **)tif, (void *)0x0025fbdc,
+                   *(void **)((char *)info + 0x10));
+      return 0;
+    }
+  }
+  *out = (unsigned int)first;
+  return 1;
 }
-#else
-#error "FUN_00066cc0: clang naked draft required"
-#endif
 
 
 /* FUN_00066d40 (0x66d40) — readable C lift (restored pre-naked). */

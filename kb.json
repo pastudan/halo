@@ -37925,8 +37925,8 @@
         },
         {
           "addr": "0x66cc0",
-          "decl": "void FUN_00066cc0(void);",
-          "ported": false,
+          "decl": "int FUN_00066cc0(unsigned int *out, void *tif@<ebx>, void *entry@<edi>);",
+          "ported": true,
           "name": "FUN_00066cc0"
         },
         {
