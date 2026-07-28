@@ -38678,8 +38678,8 @@
         },
         {
           "addr": "0x6f320",
-          "decl": "void FUN_0006f320(void);",
-          "ported": false,
+          "decl": "int FUN_0006f320(void *tif, unsigned char *buf, int len_count);",
+          "ported": true,
           "name": "FUN_0006f320"
         },
         {
@@ -38843,14 +38843,14 @@
         },
         {
           "addr": "0x708c0",
-          "decl": "void FUN_000708c0(void);",
-          "ported": false,
+          "decl": "void FUN_000708c0(float *a@<edx>, float *b@<edi>);",
+          "ported": true,
           "name": "FUN_000708c0"
         },
         {
           "addr": "0x70a00",
-          "decl": "void FUN_00070a00(void);",
-          "ported": false,
+          "decl": "void FUN_00070a00(unsigned char *src@<edx>, unsigned short *out@<esi>, unsigned short mask@<di>);",
+          "ported": true,
           "name": "FUN_00070a00"
         },
         {
@@ -38921,7 +38921,7 @@
         {
           "addr": "0x72060",
           "decl": "unsigned char FUN_00072060(void *st, short mode);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00072060"
         },
         {

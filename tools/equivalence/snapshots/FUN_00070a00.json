@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00070a00: RGB565 pack + mask flags",
+  "arg_overrides": {
+    "mask": 0
+  }
+}
