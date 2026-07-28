@@ -335,15 +335,15 @@ void FUN_001d63d5(void)
 
 /* FUN_001d6ca8 (0x1d6ca8) — XBE naked draft (batch 241). */
 #if defined(__clang__)
-static void (*const b1d6ca8_c1dd5c8)(void) = FUN_001dd5c8;
-static void (*const b1d6ca8_c1d4a34)(void) = FUN_001d4a34;
-static void (*const b1d6ca8_c1d5598)(void) = FUN_001d5598;
-static void (*const b1d6ca8_c1d4cd9)(void) = FUN_001d4cd9;
-static void (*const b1d6ca8_c1d6e65)(void) = FUN_001d6e65;
-static void (*const b1d6ca8_c1dd601)(void) = __SEH_epilog;
+static void (*const b1d6ca8_c1dd5c8)(void) = (void (*)(void))FUN_001dd5c8;
+static void (*const b1d6ca8_c1d4a34)(void) = (void (*)(void))FUN_001d4a34;
+static void (*const b1d6ca8_c1d5598)(void) = (void (*)(void))FUN_001d5598;
+static void (*const b1d6ca8_c1d4cd9)(void) = (void (*)(void))FUN_001d4cd9;
+static void (*const b1d6ca8_c1d6e65)(void) = (void (*)(void))FUN_001d6e65;
+static void (*const b1d6ca8_c1dd601)(void) = (void (*)(void))__SEH_epilog;
 
 __attribute__((naked, noinline))
-void FUN_001d6ca8(void)
+int __stdcall FUN_001d6ca8(void *heap, unsigned int flags, void *ptr)
 {
   __asm__ volatile(
       "pushl $0x50\n\t"
@@ -538,18 +538,18 @@ void FUN_001d6e65(void)
 
 /* FUN_001d703b (0x1d703b) — XBE naked draft (batch 241). */
 #if defined(__clang__)
-static void (*const b1d703b_c1dd5c8)(void) = FUN_001dd5c8;
-static void (*const b1d703b_c1d4cd9)(void) = FUN_001d4cd9;
-static void (*const b1d703b_c1d4ec6)(void) = FUN_001d4ec6;
-static void (*const b1d703b_c1d4dd3)(void) = FUN_001d4dd3;
-static void (*const b1d703b_c1d5c66)(void) = FUN_001d5c66;
+static void (*const b1d703b_c1dd5c8)(void) = (void (*)(void))FUN_001dd5c8;
+static void (*const b1d703b_c1d4cd9)(void) = (void (*)(void))FUN_001d4cd9;
+static void (*const b1d703b_c1d4ec6)(void) = (void (*)(void))FUN_001d4ec6;
+static void (*const b1d703b_c1d4dd3)(void) = (void (*)(void))FUN_001d4dd3;
+static void (*const b1d703b_c1d5c66)(void) = (void (*)(void))FUN_001d5c66;
 static void * (*const b1d703b_c1da290)(void *dest, const void *src, size_t size) = memmove;
-static void (*const b1d703b_c1d6ca8)(void) = FUN_001d6ca8;
-static void (*const b1d703b_c1d76fc)(void) = FUN_001d76fc;
-static void (*const b1d703b_c1dd601)(void) = __SEH_epilog;
+static void (*const b1d703b_c1d6ca8)(void) = (void (*)(void))FUN_001d6ca8;
+static void (*const b1d703b_c1d76fc)(void) = (void (*)(void))FUN_001d76fc;
+static void (*const b1d703b_c1dd601)(void) = (void (*)(void))__SEH_epilog;
 
 __attribute__((naked, noinline))
-void FUN_001d703b(void)
+void *__stdcall FUN_001d703b(void *heap, unsigned int flags, void *ptr, int size)
 {
   __asm__ volatile(
       "pushl $0x120\n\t"
@@ -1184,8 +1184,8 @@ void XAutoPowerDownResetTimer(void)
 
 /* FUN_001d7749 (0x1d7749) — XBE naked draft (batch 251). */
 #if defined(__clang__)
-static void (*const b1d7749_c1d4464)(void) = FUN_001d4464;
-static void (*const b1d7749_c1d771c)(void) = XAutoPowerDownResetTimer;
+static void (*const b1d7749_c1d4464)(void) = (void (*)(void))FUN_001d4464;
+static void (*const b1d7749_c1d771c)(void) = (void (*)(void))XAutoPowerDownResetTimer;
 
 __attribute__((naked, noinline))
 void FUN_001d7749(void)
@@ -1270,8 +1270,8 @@ int __stdcall FUN_001d77b3(const char *a, const char *b)
 }
 /* FUN_001d7a59 (0x1d7a59) — XBE naked draft (batch 248). */
 #if defined(__clang__)
-static void (*const b1d7a59_c1dd5c8)(void) = FUN_001dd5c8;
-static void (*const b1d7a59_c1dd601)(void) = __SEH_epilog;
+static void (*const b1d7a59_c1dd5c8)(void) = (void (*)(void))FUN_001dd5c8;
+static void (*const b1d7a59_c1dd601)(void) = (void (*)(void))__SEH_epilog;
 
 __attribute__((naked, noinline))
 void FUN_001d7a59(void)
@@ -1359,9 +1359,9 @@ int FUN_001d7b37(void *handle, void *buf)
 /* FUN_001d7d84 (0x1d7d84) — XBE naked draft (batch 251). */
 #if defined(__clang__)
 static char * __stdcall (*const b1d7d84_c1d789a)(char *dst, const char *src, int count) = FUN_001d789a;
-static void (*const b1d7d84_c1d8aef)(void) = FUN_001d8aef;
-static void (*const b1d7d84_c1d8b64)(void) = XGetSectionSize;
-static void (*const b1d7d84_c1d8b10)(void) = FUN_001d8b10;
+static void (*const b1d7d84_c1d8aef)(void) = (void (*)(void))FUN_001d8aef;
+static void (*const b1d7d84_c1d8b64)(void) = (void (*)(void))XGetSectionSize;
+static void (*const b1d7d84_c1d8b10)(void) = (void (*)(void))FUN_001d8b10;
 
 __attribute__((naked, noinline))
 void FUN_001d7d84(void)
@@ -1476,13 +1476,13 @@ void FUN_001d7d84(void)
 
 /* XapiMapLetterToDirectory (0x1d7e6b) — XBE naked draft (batch 250). */
 #if defined(__clang__)
-static void (*const b1d7e6b_c1d8a88)(void) = FUN_001d8a88;
+static void (*const b1d7e6b_c1d8a88)(void) = (void (*)(void))FUN_001d8a88;
 static char * __stdcall (*const b1d7e6b_c1d789a)(char *dst, const char *src, int count) = FUN_001d789a;
-static void (*const b1d7e6b_c1d8aef)(void) = FUN_001d8aef;
-static void (*const b1d7e6b_c1d8b64)(void) = XGetSectionSize;
-static void (*const b1d7e6b_c1d8b10)(void) = FUN_001d8b10;
-static void (*const b1d7e6b_c1dd6f5)(void) = FUN_001dd6f5;
-static void (*const b1d7e6b_c1d7d84)(void) = FUN_001d7d84;
+static void (*const b1d7e6b_c1d8aef)(void) = (void (*)(void))FUN_001d8aef;
+static void (*const b1d7e6b_c1d8b64)(void) = (void (*)(void))XGetSectionSize;
+static void (*const b1d7e6b_c1d8b10)(void) = (void (*)(void))FUN_001d8b10;
+static void (*const b1d7e6b_c1dd6f5)(void) = (void (*)(void))FUN_001dd6f5;
+static void (*const b1d7e6b_c1d7d84)(void) = (void (*)(void))FUN_001d7d84;
 
 __attribute__((naked, noinline))
 void XapiMapLetterToDirectory(void)
@@ -1787,7 +1787,7 @@ void XapiMapLetterToDirectory(void)
 /* FUN_001d819f (0x1d819f) — XBE naked draft (batch 269). */
 #if defined(__clang__)
 static int (*const b1d819f_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b1d819f_c1d7e6b)(void) = XapiMapLetterToDirectory;
+static void (*const b1d819f_c1d7e6b)(void) = (void (*)(void))XapiMapLetterToDirectory;
 
 __attribute__((naked, noinline))
 void FUN_001d819f(void)
@@ -1835,13 +1835,13 @@ void FUN_001d819f(void)
 /* XapiBootToDash (0x1d81f4) — XBE naked draft (batch 272). */
 #if defined(__clang__)
 static int __stdcall (*const b1d81f4_c1d25e0)(const char *image_path, void *launch_data) = XLaunchNewImageA;
-static void (*const b1d81f4_c1d7749)(void) = FUN_001d7749;
-static void (*const b1d81f4_c1d5842)(void) = FUN_001d5842;
+static void (*const b1d81f4_c1d7749)(void) = (void (*)(void))FUN_001d7749;
+static void (*const b1d81f4_c1d5842)(void) = (void (*)(void))FUN_001d5842;
 static int __stdcall (*const b1d81f4_c1d7d21)(void *object_name_field) = FUN_001d7d21;
-static void (*const b1d81f4_c1d819f)(void) = FUN_001d819f;
-static void (*const b1d81f4_c1d3c95)(void) = XMountUtilityDrive;
-static void (*const b1d81f4_c1d81f4)(void) = XapiBootToDash;
-static void (*const b1d81f4_c1d454b)(void) = FUN_001d454b;
+static void (*const b1d81f4_c1d819f)(void) = (void (*)(void))FUN_001d819f;
+static void (*const b1d81f4_c1d3c95)(void) = (void (*)(void))XMountUtilityDrive;
+static void (*const b1d81f4_c1d81f4)(void) = (void (*)(void))XapiBootToDash;
+static void (*const b1d81f4_c1d454b)(void) = (void (*)(void))FUN_001d454b;
 
 __attribute__((naked, noinline))
 void XapiBootToDash(void)

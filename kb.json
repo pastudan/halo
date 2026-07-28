@@ -34050,7 +34050,7 @@
         },
         {
           "addr": "0x1d3410",
-          "decl": "int CreateDirectoryA(const char *path, int access);",
+          "decl": "int __stdcall CreateDirectoryA(const char *path, int access);",
           "ported": false,
           "name": "CreateDirectoryA"
         },
@@ -42516,8 +42516,9 @@
         },
         {
           "addr": "0x1d77b3",
-          "decl": "void FUN_001d77b3(void);",
-          "ported": true
+          "decl": "int __stdcall FUN_001d77b3(const char *a, const char *b);",
+          "ported": true,
+          "name": "FUN_001d77b3"
         },
         {
           "addr": "0x1d7817",
