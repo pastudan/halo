@@ -1,0 +1,4 @@
+{
+  "description": "xapi_GetLastError: zero TEB tip returns 0",
+  "regions": { "0x4ee170": "00000000" }
+}

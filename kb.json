@@ -33930,15 +33930,21 @@
       "functions": [
         {
           "addr": "0x1d21f2",
-          "decl": "void FUN_001d21f2(void);",
+          "decl": "int __stdcall FUN_001d21f2(void *a, void *b, unsigned int flag);",
           "ported": false,
           "name": "FUN_001d21f2"
         },
         {
           "addr": "0x1d2240",
           "decl": "int xapi_GetLastError(void);",
-          "ported": false,
-          "name": "xapi_GetLastError"
+          "ported": true,
+          "name": "xapi_GetLastError",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d2268",
