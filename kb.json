@@ -26634,7 +26634,7 @@
         {
           "addr": "0x191bd0",
           "decl": "char FUN_00191bd0(int search_value@<ebx>, void **param_1, char *out);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00191bd0"
         },
         {
@@ -26707,7 +26707,7 @@
         {
           "addr": "0x194070",
           "decl": "void FUN_00194070(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00194070"
         },
         {
