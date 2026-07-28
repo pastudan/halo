@@ -38684,8 +38684,8 @@
         },
         {
           "addr": "0x6f620",
-          "decl": "void FUN_0006f620(void);",
-          "ported": false,
+          "decl": "int FUN_0006f620(void *tif, unsigned char *buf, int len_count);",
+          "ported": true,
           "name": "FUN_0006f620"
         },
         {

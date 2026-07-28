@@ -1553,59 +1553,27 @@ void FUN_0006f320(void)
 #endif
 
 
-/* FUN_0006f620 (0x6f620) — XBE naked draft (batch 362). */
-#if defined(__clang__)
-static void (*const b6f620_c6f320)(void) = (void *)FUN_0006f320;
-
-__attribute__((naked, noinline))
-void FUN_0006f620(void)
+/* FUN_0006f620 (0x6f620) — Capstone lift: write loop via FUN_0006f320 in tif_rawcc chunks. */
+int FUN_0006f620(void *tif, unsigned char *buf, int len_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jle .LFUN_0006f620_2\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".LFUN_0006f620_1:\n\t"
-      "movl 0x1c(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c6f320]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006f620_3\n\t"
-      "movl 0x124(%%edi), %%eax\n\t"
-      "subl %%eax, %%esi\n\t"
-      "addl %%eax, %%ebx\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jg .LFUN_0006f620_1\n\t"
-      ".LFUN_0006f620_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006f620_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f320] "m"(b6f620_c6f320)
-      : "memory");
+  int rem = len_count;
+  unsigned char *p = buf;
+  int chunk;
+  int ok;
+
+  if (rem <= 0)
+    return 1;
+  do {
+    ok = ((int (*)(void *, void *, int))(void *)FUN_0006f320)(
+        tif, p, *(int *)((char *)tif + 0x1c));
+    if (!ok)
+      return 0;
+    chunk = *(int *)((char *)tif + 0x124);
+    rem -= chunk;
+    p += chunk;
+  } while (rem > 0);
+  return 1;
 }
-#else
-#error "FUN_0006f620: clang naked draft required"
-#endif
 
 
 /* FUN_0006f670 (0x6f670) — readable C lift. */
