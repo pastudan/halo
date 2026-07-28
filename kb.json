@@ -38701,8 +38701,8 @@
         },
         {
           "addr": "0x6f780",
-          "decl": "void FUN_0006f780(void);",
-          "ported": false,
+          "decl": "int FUN_0006f780(void *tif, unsigned int w, unsigned int h, unsigned int d, unsigned int samples);",
+          "ported": true,
           "name": "FUN_0006f780"
         },
         {
