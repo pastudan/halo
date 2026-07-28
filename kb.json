@@ -23948,8 +23948,8 @@
         },
         {
           "addr": "0x186ac0",
-          "decl": "int render_frustum_sphere_visible(void *frustum, float *center, float radius);",
-          "ported": false,
+          "decl": "unsigned short render_frustum_sphere_visible(void *frustum, float *center, float radius);",
+          "ported": true,
           "name": "render_frustum_sphere_visible"
         },
         {

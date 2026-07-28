@@ -1580,168 +1580,53 @@ short render_frustum_cube_visible(void *param_1 __attribute__((unused)), int par
 #endif
 
 
-/* render_frustum_sphere_visible (0x186ac0) — XBE naked draft (batch 119). */
-#if defined(__clang__)
-static float (*const b186ac0_c99500)(float *plane, float *point) = plane3d_distance_to_point;
-
-__attribute__((naked, noinline))
-int render_frustum_sphere_visible(void *frustum __attribute__((unused)), float *center __attribute__((unused)), float radius __attribute__((unused)))
+/* render_frustum_sphere_visible (0x186ac0) — readable C lift.
+ * AABB reject, then 6 frustum-plane distance tests. Returns 0/1/2 in AX. */
+unsigned short render_frustum_sphere_visible(void *frustum, float *center,
+                                             float radius)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "flds (%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "fsubs 0x10(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "fcomps 0x12c(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fsubs 0x10(%%ebp)\n\t"
-      "fcomps 0x134(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fsubs 0x10(%%ebp)\n\t"
-      "fcomps 0x13c(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fadds (%%esi)\n\t"
-      "fcomps 0x128(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lrender_frustum_sphere_visible_1\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fadds 0x4(%%esi)\n\t"
-      "fcomps 0x130(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lrender_frustum_sphere_visible_1\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fadds 0x8(%%esi)\n\t"
-      "fcomps 0x138(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lrender_frustum_sphere_visible_1\n\t"
-      "leal 0x78(%%edi), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c99500]\n\t"
-      "fsts 0xc(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "leal 0x88(%%edi), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99500]\n\t"
-      "fsts 0x8(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "leal 0x98(%%edi), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c99500]\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "leal 0xa8(%%edi), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c99500]\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "leal 0xb8(%%edi), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99500]\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrender_frustum_sphere_visible_1\n\t"
-      "pushl %%esi\n\t"
-      "addl $0xc8, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c99500]\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrender_frustum_sphere_visible_2\n\t"
-      ".Lrender_frustum_sphere_visible_1:\n\t"
-      "popl %%edi\n\t"
-      "xorw %%ax, %%ax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrender_frustum_sphere_visible_2:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps 0x10(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrender_frustum_sphere_visible_3\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrender_frustum_sphere_visible_3\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrender_frustum_sphere_visible_3\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrender_frustum_sphere_visible_3\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "movw $2, %%ax\n\t"
-      "jnp .Lrender_frustum_sphere_visible_4\n\t"
-      ".Lrender_frustum_sphere_visible_3:\n\t"
-      "movw $1, %%ax\n\t"
-      ".Lrender_frustum_sphere_visible_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c99500] "m"(b186ac0_c99500)
-      : "memory");
+  float *f = (float *)frustum;
+  float d0, d1, d2, d3, d5;
+  float neg_r;
+
+  if (center[0] - radius > f[0x12c / 4])
+    return 0;
+  if (center[1] - radius > f[0x134 / 4])
+    return 0;
+  if (center[2] - radius > f[0x13c / 4])
+    return 0;
+  if (center[0] + radius < f[0x128 / 4])
+    return 0;
+  if (center[1] + radius < f[0x130 / 4])
+    return 0;
+  if (center[2] + radius < f[0x138 / 4])
+    return 0;
+
+  d0 = plane3d_distance_to_point(f + 0x78 / 4, center);
+  if (d0 > radius)
+    return 0;
+  d1 = plane3d_distance_to_point(f + 0x88 / 4, center);
+  if (d1 > radius)
+    return 0;
+  d2 = plane3d_distance_to_point(f + 0x98 / 4, center);
+  if (d2 > radius)
+    return 0;
+  d3 = plane3d_distance_to_point(f + 0xa8 / 4, center);
+  if (d3 > radius)
+    return 0;
+  if (plane3d_distance_to_point(f + 0xb8 / 4, center) > radius)
+    return 0;
+  d5 = plane3d_distance_to_point(f + 0xc8 / 4, center);
+  if (d5 > radius)
+    return 0;
+
+  /* test ah,5 / jp → not-strictly-less (incl. NaN unordered) → 1; all-less → 2. */
+  neg_r = -radius;
+  if (!(d0 < neg_r) || !(d1 < neg_r) || !(d2 < neg_r) || !(d3 < neg_r) ||
+      !(d5 < neg_r))
+    return 1;
+  return 2;
 }
-#else
-#error "render_frustum_sphere_visible: clang naked draft required"
-#endif
 
 
 /* render_camera_world_to_screen (0x186c70) — readable C lift. */
