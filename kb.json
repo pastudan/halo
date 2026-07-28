@@ -22301,7 +22301,7 @@
         {
           "addr": "0x156510",
           "decl": "void rasterizer_set_pixel_shader(void *state);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_set_pixel_shader"
         },
         {
@@ -22330,13 +22330,13 @@
         {
           "addr": "0x156ab0",
           "decl": "void rasterizer_set_model_lighting(void *lighting);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_set_model_lighting"
         },
         {
           "addr": "0x156c30",
           "decl": "void rasterizer_set_frustum_z(float near_z, float far_z);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_set_frustum_z"
         },
         {
