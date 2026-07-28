@@ -1,0 +1,7 @@
+{
+  "description": "FUN_001d0c91: IAT -> xor-ret success; return base",
+  "regions": {
+    "0x60000000": "31c0c21400",
+    "0x00253148": "00000060"
+  }
+}

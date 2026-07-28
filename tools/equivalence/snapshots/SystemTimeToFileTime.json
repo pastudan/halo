@@ -1,0 +1,7 @@
+{
+  "description": "SystemTimeToFileTime: IAT success (al=1)",
+  "regions": {
+    "0x60000000": "b001c20800",
+    "0x00253144": "00000060"
+  }
+}

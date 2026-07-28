@@ -1,0 +1,7 @@
+{
+  "description": "ResetEvent: IAT NtClearEvent -> xor-ret stdcall1",
+  "regions": {
+    "0x60000000": "31c0c20400",
+    "0x002530ec": "00000060"
+  }
+}

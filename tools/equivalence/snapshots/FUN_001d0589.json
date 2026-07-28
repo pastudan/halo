@@ -1,0 +1,7 @@
+{
+  "description": "FUN_001d0589: FileTimeToSystemTime IAT xor-ret",
+  "regions": {
+    "0x60000000": "31c0c20800",
+    "0x00253138": "00000060"
+  }
+}

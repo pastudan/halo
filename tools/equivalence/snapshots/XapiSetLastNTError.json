@@ -1,0 +1,7 @@
+{
+  "description": "XapiSetLastNTError: RtlNtStatusToDosError IAT -> xor-ret",
+  "regions": {
+    "0x60000000": "31c0c20400",
+    "0x002531d0": "00000060"
+  }
+}

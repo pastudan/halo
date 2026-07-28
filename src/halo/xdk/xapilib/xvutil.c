@@ -20,12 +20,24 @@ int FUN_001d04f1(void)
 
 
 
-/* 0x1d051d */
-void GetLocalTime(void *system_time)
+/* GetLocalTime (0x1d051d) — Capstone tip. */
+void __stdcall GetLocalTime(void *system_time)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  unsigned int ft[2];
+  unsigned short fields[8];
+  unsigned short *out = (unsigned short *)system_time;
+  ((void (__stdcall *)(void *))*(void **)0x25313c)(ft);
+  ((void (__stdcall *)(void *, void *))*(void **)0x253138)(ft, fields);
+  out[0] = fields[0];
+  out[1] = fields[1];
+  out[2] = fields[7];
+  out[3] = fields[2];
+  out[4] = fields[3];
+  out[5] = fields[4];
+  out[6] = fields[5];
+  out[7] = fields[6];
 }
+
 
 /* FUN_001d0581 (0x1d0581) — readable C lift (deref global). */
 int FUN_001d0581(void)
@@ -33,68 +45,52 @@ int FUN_001d0581(void)
   return **(int **)0x253140;
 }
 
-/* FUN_001d0589 (0x1d0589) — XBE naked draft (batch 321). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001d0589(void)
+/* FUN_001d0589 (0x1d0589) — Capstone tip: FileTime → SYSTEMTIME. */
+int __stdcall FUN_001d0589(const unsigned long long *file_time, void *system_time)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "call *0x253138\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movw -0x18(%%ebp), %%cx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movw -0x16(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x2(%%eax)\n\t"
-      "movw -0x14(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x6(%%eax)\n\t"
-      "movw -0xa(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x4(%%eax)\n\t"
-      "movw -0x12(%%ebp), %%cx\n\t"
-      "movw %%cx, 0x8(%%eax)\n\t"
-      "movw -0x10(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xa(%%eax)\n\t"
-      "movw -0xe(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xc(%%eax)\n\t"
-      "movw -0xc(%%ebp), %%cx\n\t"
-      "movw %%cx, 0xe(%%eax)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int local_ft[2];
+  unsigned short fields[8];
+  unsigned short *out = (unsigned short *)system_time;
+  local_ft[0] = (unsigned int)(*file_time & 0xffffffffu);
+  local_ft[1] = (unsigned int)(*file_time >> 32);
+  ((void (__stdcall *)(void *, void *))*(void **)0x253138)(local_ft, fields);
+  out[0] = fields[0];
+  out[1] = fields[1];
+  out[3] = fields[2];
+  out[2] = fields[7];
+  out[4] = fields[3];
+  out[5] = fields[4];
+  out[6] = fields[5];
+  out[7] = fields[6];
+  return 1;
 }
-#else
-#error "FUN_001d0589: clang naked draft required"
-#endif
 
 
 /* 0x1d05f4 */
-bool SystemTimeToFileTime(void *system_time, void *file_time)
+/* SystemTimeToFileTime (0x1d05f4) — Capstone tip. */
+bool __stdcall SystemTimeToFileTime(void *system_time, void *file_time)
 {
-  int eax = 0;
-
-  /* test (char)eax, (char)eax -> jne 0x1d0654 */
-  XapiSetLastNTError(0xc000000d);
-  return 0;
-
-  (void)eax;
+  unsigned short *in = (unsigned short *)system_time;
+  unsigned short fields[8];
+  unsigned int out64[2];
+  unsigned char ok;
+  fields[0] = in[0];
+  fields[1] = in[1];
+  fields[2] = in[3];
+  fields[3] = in[4];
+  fields[4] = in[5];
+  fields[5] = in[6];
+  fields[6] = in[7];
+  ok = (unsigned char)((int (__stdcall *)(void *, void *))*(void **)0x253144)(fields, out64);
+  if (!ok) {
+    XapiSetLastNTError((int)0xc000000d);
+    return 0;
+  }
+  ((unsigned int *)file_time)[0] = out64[0];
+  ((unsigned int *)file_time)[1] = out64[1];
+  return 1;
 }
+
 
 /* FUN_001d0669 (0x1d0669) — readable C: compare two unsigned 64-bit values. */
 int __stdcall FUN_001d0669(unsigned int *a, unsigned int *b)
@@ -721,49 +717,24 @@ void *__stdcall FUN_001d0c65(void *ptr, int size, int flags)
   return FUN_001d703b(DAT_00632a28, mode, ptr, size);
 }
 
-/* FUN_001d0c91 (0x1d0c91) — XBE naked draft (batch 376). */
-#if defined(__clang__)
-static void __stdcall (*const b1d0c91_c1d2296)(int status) = (void *)XapiSetLastNTError;
-
-__attribute__((naked, noinline))
-void FUN_001d0c91(void)
+/* FUN_001d0c91 (0x1d0c91) — Capstone tip: IAT NtAllocate-style; seed IAT xor-ret. */
+void *__stdcall FUN_001d0c91(void *base, unsigned int size, unsigned int alloc_type,
+                             unsigned int protect)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl 0x14(%%ebp)\n\t"
-      "leal 0xc(%%ebp), %%eax\n\t"
-      "pushl 0x10(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x253148\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_001d0c91_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "jmp .LFUN_001d0c91_2\n\t"
-      ".LFUN_001d0c91_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d2296]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001d0c91_2:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d2296] "m"(b1d0c91_c1d2296)
-      : "memory");
+  int (__stdcall *nt)(void **, unsigned, unsigned *, unsigned, unsigned) =
+      *(int (__stdcall **)(void **, unsigned, unsigned *, unsigned, unsigned))0x253148;
+  int status = nt(&base, 0, &size, alloc_type, protect);
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0;
+  }
+  return base;
 }
-#else
-#error "FUN_001d0c91: clang naked draft required"
-#endif
 
 
 /* FUN_001d0cbf (0x1d0cbf) — Capstone tip: protect&0x8000 && size!=0 → fail. */
-int __stdcall FUN_001d0cbf(void *base, unsigned int size, unsigned int protect,
-                           unsigned int unused)
+int __stdcall FUN_001d0cbf(void *base, unsigned int size, unsigned int protect)
 {
-  (void)unused;
   (void)base;
   if ((protect & 0x8000u) != 0 && size != 0) {
     XapiSetLastNTError((int)0xc000000d);
@@ -775,47 +746,39 @@ int __stdcall FUN_001d0cbf(void *base, unsigned int size, unsigned int protect,
 
 
 
-/* FUN_001d0cfb (0x1d0cfb) — XBE naked draft (batch 370). */
-#if defined(__clang__)
-static void __stdcall (*const b1d0cfb_c1d2296)(int status) = (void *)XapiSetLastNTError;
-
-__attribute__((naked, noinline))
-void FUN_001d0cfb(void)
+/* FUN_001d0cfb (0x1d0cfb) — Capstone tip: IAT 4-arg; seed IAT xor-ret. */
+int __stdcall FUN_001d0cfb(void *base, unsigned int size, unsigned int free_type,
+                           unsigned int unused)
 {
-  __asm__ volatile(
-      "pushl 0x10(%%esp)\n\t"
-      "leal 0xc(%%esp), %%eax\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x10(%%esp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x253150\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_001d0cfb_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "jmp .LFUN_001d0cfb_2\n\t"
-      ".LFUN_001d0cfb_1:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d2296]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001d0cfb_2:\n\t"
-      "ret\n\t"
-      :
-      : [c1d2296] "m"(b1d0cfb_c1d2296)
-      : "memory");
+  int (__stdcall *nt)(void **, unsigned *, unsigned, unsigned) =
+      *(int (__stdcall **)(void **, unsigned *, unsigned, unsigned))0x253150;
+  int status = nt(&base, &size, free_type, unused);
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "FUN_001d0cfb: clang naked draft required"
-#endif
 
 
 /* 0x1d0da1 */
-void xbox_query_global_memory_status(void *status)
+/* xbox_query_global_memory_status (0x1d0da1) — Capstone tip. */
+void __stdcall xbox_query_global_memory_status(void *status)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  unsigned int info[9];
+  unsigned int *out = (unsigned int *)status;
+  info[0] = 0x24;
+  ((void(__stdcall *)(void *))*(void **)0x253158)(info);
+  out[1] = 0;
+  out[4] = 0;
+  out[5] = 0;
+  out[2] = info[1] << 12;
+  out[3] = info[2] << 12;
+  out[6] = 0x7ffe0000u;
+  out[0] = 0x20;
+  out[7] = 0x7ffe0000u - info[4];
 }
+
 
 /* FUN_001d0df0 (0x1d0df0) — XBE naked draft (batch 360). */
 #if defined(__clang__)

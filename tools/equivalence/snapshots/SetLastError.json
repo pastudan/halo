@@ -1,0 +1,3 @@
+{
+  "description": "SetLastError: zero-TEB tip no-op (matches xapi_GetLastError style)"
+}

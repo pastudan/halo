@@ -33990,7 +33990,7 @@
       "functions": [
         {
           "addr": "0x1d21f2",
-          "decl": "void FUN_001d21f2(void);",
+          "decl": "int __stdcall FUN_001d21f2(void *a, void *b, int flag);",
           "ported": false,
           "name": "FUN_001d21f2"
         },
@@ -34009,14 +34009,26 @@
         {
           "addr": "0x1d2268",
           "decl": "void __stdcall SetLastError(unsigned int error);",
-          "ported": false,
-          "name": "SetLastError"
+          "ported": true,
+          "name": "SetLastError",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d2296",
           "decl": "void __stdcall XapiSetLastNTError(int status);",
-          "ported": false,
-          "name": "XapiSetLastNTError"
+          "ported": true,
+          "name": "XapiSetLastNTError",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d22ad",
@@ -34482,8 +34494,14 @@
         {
           "addr": "0x1d051d",
           "decl": "void __stdcall GetLocalTime(void *system_time);",
-          "ported": false,
-          "name": "GetLocalTime"
+          "ported": true,
+          "name": "GetLocalTime",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0581",
@@ -34493,15 +34511,27 @@
         },
         {
           "addr": "0x1d0589",
-          "decl": "void FUN_001d0589(void);",
-          "ported": false,
-          "name": "FUN_001d0589"
+          "decl": "int __stdcall FUN_001d0589(const unsigned long long *file_time, void *system_time);",
+          "ported": true,
+          "name": "FUN_001d0589",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d05f4",
           "decl": "bool __stdcall SystemTimeToFileTime(void *system_time, void *file_time);",
-          "ported": false,
-          "name": "SystemTimeToFileTime"
+          "ported": true,
+          "name": "SystemTimeToFileTime",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0669",
@@ -34594,13 +34624,19 @@
         },
         {
           "addr": "0x1d0c91",
-          "decl": "void FUN_001d0c91(void);",
-          "ported": false,
-          "name": "FUN_001d0c91"
+          "decl": "void * __stdcall FUN_001d0c91(void *base, unsigned int size, unsigned int alloc_type, unsigned int protect);",
+          "ported": true,
+          "name": "FUN_001d0c91",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0cbf",
-          "decl": "int __stdcall FUN_001d0cbf(void *base, unsigned int size, unsigned int protect, unsigned int unused);",
+          "decl": "int __stdcall FUN_001d0cbf(void *base, unsigned int size, unsigned int protect);",
           "ported": true,
           "name": "FUN_001d0cbf",
           "equivalence": {
@@ -34612,15 +34648,27 @@
         },
         {
           "addr": "0x1d0cfb",
-          "decl": "void FUN_001d0cfb(void);",
-          "ported": false,
-          "name": "FUN_001d0cfb"
+          "decl": "int __stdcall FUN_001d0cfb(void *base, unsigned int size, unsigned int free_type, unsigned int unused);",
+          "ported": true,
+          "name": "FUN_001d0cfb",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0da1",
           "decl": "void __stdcall xbox_query_global_memory_status(void *status);",
-          "ported": false,
-          "name": "xbox_query_global_memory_status"
+          "ported": true,
+          "name": "xbox_query_global_memory_status",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0df0",
@@ -34643,8 +34691,14 @@
         {
           "addr": "0x1cfeca",
           "decl": "int __stdcall ResetEvent(void *handle);",
-          "ported": false,
-          "name": "ResetEvent"
+          "ported": true,
+          "name": "ResetEvent",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0348",

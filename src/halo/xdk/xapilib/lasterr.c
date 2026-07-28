@@ -4,33 +4,12 @@ extern int __stdcall ReadFile(int handle, void *buffer, unsigned int size, unsig
 
 /* --- XAPILIB:lasterr.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001d21f2 (0x1d21f2) — XBE naked draft (batch 316). */
-#if defined(__clang__)
-static void (*const b1d21f2_c1d1f10)(void) = FUN_001d1f10;
-
-__attribute__((naked, noinline))
-void FUN_001d21f2(void)
+/* FUN_001d21f2 (0x1d21f2) — Capstone tip: thin wrapper → FUN_001d1f10. */
+int __stdcall FUN_001d21f2(void *a, void *b, int flag)
 {
-  __asm__ volatile(
-      "xorl %%eax, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl %%eax, 0xc(%%esp)\n\t"
-      "setne %%cl\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl 0x18(%%esp)\n\t"
-      "pushl 0x18(%%esp)\n\t"
-      "call *%[c1d1f10]\n\t"
-      "ret\n\t"
-      :
-      : [c1d1f10] "m"(b1d21f2_c1d1f10)
-      : "memory");
+  return ((int(__stdcall *)(void *, void *, int, int, int, int))FUN_001d1f10)(
+      a, b, 0, 0, 0, flag != 0);
 }
-#else
-#error "FUN_001d21f2: clang naked draft required"
-#endif
 
 
 /* xapi_GetLastError (0x1d2240) — Capstone tip: zero TEB TLS → 0.
@@ -49,14 +28,12 @@ void SetLastError(unsigned int error)
   (void)0;
 }
 
-/* 0x1d2296 */
-void XapiSetLastNTError(int status)
+/* XapiSetLastNTError (0x1d2296) — Capstone tip: RtlNtStatusToDosError → SetLastError. */
+void __stdcall XapiSetLastNTError(int status)
 {
-  int edx = 0;
-
-  SetLastError(edx);
-
-  (void)edx;
+  int (__stdcall *to_dos)(int) = *(int(__stdcall **)(int))0x2531d0;
+  int winerr = to_dos(status);
+  SetLastError((unsigned int)winerr);
 }
 
 /* FUN_001d22ad (0x1d22ad) — XBE naked draft (batch 319). */
