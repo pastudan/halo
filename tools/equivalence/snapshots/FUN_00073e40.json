@@ -1,0 +1,7 @@
+{
+  "description": "FUN_00073e40: empty rect x0>=x1 early bound finalize",
+  "arg_overrides": {
+    "rect": "0100000000000000",
+    "out": "00000000000000000000000000000000"
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "description": "TIFFWriteScanline: FUN_0006faf0 fail \u2192 -1",
+  "stub_returns": {
+    "fun_0006faf0": 0
+  }
+}

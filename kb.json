@@ -38779,8 +38779,8 @@
         },
         {
           "addr": "0x6fea0",
-          "decl": "int TIFFWriteScanline(int file, void *buffer, int row, int sample);",
-          "ported": false,
+          "decl": "int TIFFWriteScanline(void *tif, void *buf, unsigned int row, unsigned int sample);",
+          "ported": true,
           "name": "TIFFWriteScanline"
         },
         {
@@ -38980,8 +38980,8 @@
         },
         {
           "addr": "0x73e40",
-          "decl": "void FUN_00073e40(void);",
-          "ported": false,
+          "decl": "unsigned char FUN_00073e40(short *rect, short *out@<esi>);",
+          "ported": true,
           "name": "FUN_00073e40"
         },
         {

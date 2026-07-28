@@ -1068,224 +1068,103 @@ int TIFFFlushData1(void *tif)
 }
 
 
-/* TIFFWriteScanline (0x6fea0) — XBE naked draft (batch 324). */
-#if defined(__clang__)
-static void (*const b6fea0_c6faf0)(void) = (void (*)(void))FUN_0006faf0;
-static void (*const b6fea0_c6fbd0)(void) = (void (*)(void))FUN_0006fbd0;
-static void (*const b6fea0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
-static void (*const b6fea0_c6a210)(void) = (void (*)(void))FUN_0006a210;
-static void (*const b6fea0_c6fc60)(void) = (void (*)(void))FUN_0006fc60;
-
-__attribute__((naked, noinline))
-int TIFFWriteScanline(int file __attribute__((unused)), void *buffer __attribute__((unused)), int row __attribute__((unused)), int sample __attribute__((unused)))
+/* TIFFWriteScanline (0x6fea0) — Capstone lift: write one scanline. */
+int TIFFWriteScanline(void *tif, void *buf, unsigned int row, unsigned int sample)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x2ed00c, %%edi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[c6faf0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LTIFFWriteScanline_1\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteScanline_1:\n\t"
-      "movb 0xa(%%esi), %%al\n\t"
-      "pushl %%ebx\n\t"
-      "movl $4, %%ebx\n\t"
-      "testb %%al, %%bl\n\t"
-      "jne .LTIFFWriteScanline_2\n\t"
-      "pushl $0x2ed00c\n\t"
-      "call *%[c6fbd0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteScanline_3\n\t"
-      "orw %%bx, 0xa(%%esi)\n\t"
-      ".LTIFFWriteScanline_2:\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "cmpl 0x20(%%esi), %%edi\n\t"
-      "movl $2, %%eax\n\t"
-      "jb .LTIFFWriteScanline_5\n\t"
-      "cmpw %%ax, 0x5e(%%esi)\n\t"
-      "jne .LTIFFWriteScanline_4\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x261498\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LTIFFWriteScanline_3:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteScanline_4:\n\t"
-      "leal 0x1(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x20(%%esi)\n\t"
-      "movl $1, -0x4(%%ebp)\n\t"
-      ".LTIFFWriteScanline_5:\n\t"
-      "cmpw %%ax, 0x5e(%%esi)\n\t"
-      "jne .LTIFFWriteScanline_7\n\t"
-      "movzwl 0x44(%%esi), %%eax\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jb .LTIFFWriteScanline_6\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2611e0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteScanline_6:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "divl 0x48(%%esi)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0xb4(%%esi), %%eax\n\t"
-      "imull 0x14(%%ebp), %%eax\n\t"
-      "addl %%eax, %%ebx\n\t"
-      "jmp .LTIFFWriteScanline_8\n\t"
-      ".LTIFFWriteScanline_7:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl 0x48(%%esi)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      ".LTIFFWriteScanline_8:\n\t"
-      "cmpl 0xdc(%%esi), %%ebx\n\t"
-      "je .LTIFFWriteScanline_12\n\t"
-      "movl 0x138(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LTIFFWriteScanline_9\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6a210]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteScanline_3\n\t"
-      ".LTIFFWriteScanline_9:\n\t"
-      "movl %%ebx, 0xdc(%%esi)\n\t"
-      "cmpl 0xb4(%%esi), %%ebx\n\t"
-      "jb .LTIFFWriteScanline_10\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteScanline_10\n\t"
-      "movl 0x48(%%esi), %%ecx\n\t"
-      "movl 0x20(%%esi), %%edx\n\t"
-      "leal -0x1(%%ecx,%%edx,1), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%ecx\n\t"
-      "movl %%eax, 0xb4(%%esi)\n\t"
-      ".LTIFFWriteScanline_10:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "divl 0xb4(%%esi)\n\t"
-      "movl 0xf4(%%esi), %%eax\n\t"
-      "imull 0x48(%%esi), %%edx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%edx, 0xd4(%%esi)\n\t"
-      "je .LTIFFWriteScanline_11\n\t"
-      "pushl %%esi\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteScanline_3\n\t"
-      ".LTIFFWriteScanline_11:\n\t"
-      "orb $2, 0xb(%%esi)\n\t"
-      ".LTIFFWriteScanline_12:\n\t"
-      "cmpl 0xb8(%%esi), %%ebx\n\t"
-      "jb .LTIFFWriteScanline_13\n\t"
-      "pushl $0x2ed00c\n\t"
-      "movl $1, %%edi\n\t"
-      "call *%[c6fc60]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteScanline_3\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      ".LTIFFWriteScanline_13:\n\t"
-      "movl 0xd4(%%esi), %%eax\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "je .LTIFFWriteScanline_15\n\t"
-      "movl 0x118(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LTIFFWriteScanline_16\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jae .LTIFFWriteScanline_14\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "divl 0xb4(%%esi)\n\t"
-      "movl 0x12c(%%esi), %%eax\n\t"
-      "imull 0x48(%%esi), %%edx\n\t"
-      "movl %%edx, 0xd4(%%esi)\n\t"
-      "movl %%eax, 0x134(%%esi)\n\t"
-      ".LTIFFWriteScanline_14:\n\t"
-      "movl 0xd4(%%esi), %%ebx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "subl %%ebx, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteScanline_3\n\t"
-      "movl %%edi, 0xd4(%%esi)\n\t"
-      ".LTIFFWriteScanline_15:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x124(%%esi), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *0x100(%%esi)\n\t"
-      "movl 0xd4(%%esi), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "incl %%ecx\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, 0xd4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteScanline_16:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x2611a8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6faf0] "m"(b6fea0_c6faf0), [c6fbd0] "m"(b6fea0_c6fbd0), [c68a30] "m"(b6fea0_c68a30), [c6a210] "m"(b6fea0_c6a210), [c6fc60] "m"(b6fea0_c6fc60)
-      : "memory");
+  unsigned int grew = 0;
+  unsigned int strip;
+  int (*seekcb)(void *, unsigned int);
+  int (*post)(void *);
+  int (*enc)(void *, void *, void *, unsigned int);
+
+  if (((int (*)(void *, void *, int))(void *)FUN_0006faf0)(
+          tif, (void *)0x002ed00c, 0) == 0)
+    return -1;
+
+  if ((*(unsigned char *)((char *)tif + 0xa) & 4) == 0) {
+    if (FUN_0006fbd0((void *)0x002ed00c, tif) == 0)
+      return -1;
+    *(unsigned short *)((char *)tif + 0xa) |= 4;
+  }
+
+  if (row >= *(unsigned int *)((char *)tif + 0x20)) {
+    if (*(unsigned short *)((char *)tif + 0x5e) == 2) {
+      FUN_00068a30(*(void **)tif, (void *)0x00261498);
+      return -1;
+    }
+    *(unsigned int *)((char *)tif + 0x20) = row + 1;
+    grew = 1;
+  }
+
+  if (*(unsigned short *)((char *)tif + 0x5e) == 2) {
+    unsigned int spp = *(unsigned short *)((char *)tif + 0x44);
+    if (sample >= spp) {
+      FUN_00068a30(*(void **)tif, (void *)0x002611e0, sample, spp);
+      return -1;
+    }
+    strip = row / *(unsigned int *)((char *)tif + 0x48)
+          + sample * *(unsigned int *)((char *)tif + 0xb4);
+  } else {
+    strip = row / *(unsigned int *)((char *)tif + 0x48);
+  }
+
+  if (strip != *(unsigned int *)((char *)tif + 0xdc)) {
+    if (*(int *)((char *)tif + 0x138) > 0) {
+      if (FUN_0006a210(tif) == 0)
+        return -1;
+    }
+    *(unsigned int *)((char *)tif + 0xdc) = strip;
+    if (strip >= *(unsigned int *)((char *)tif + 0xb4) && grew) {
+      unsigned int rps = *(unsigned int *)((char *)tif + 0x48);
+      unsigned int h = *(unsigned int *)((char *)tif + 0x20);
+      *(unsigned int *)((char *)tif + 0xb4) = (rps + h - 1u) / rps;
+    }
+    {
+      unsigned int rem = strip % *(unsigned int *)((char *)tif + 0xb4);
+      *(unsigned int *)((char *)tif + 0xd4) =
+          rem * *(unsigned int *)((char *)tif + 0x48);
+      post = *(int (**)(void *))((char *)tif + 0xf4);
+      if (post != 0 && post(tif) == 0)
+        return -1;
+    }
+    *(unsigned char *)((char *)tif + 0xb) |= 2;
+  }
+
+  if (strip >= *(unsigned int *)((char *)tif + 0xb8)) {
+    if (FUN_0006fc60((void *)0x002ed00c, tif, 1) == 0)
+      return -1;
+  }
+
+  {
+    unsigned int cur = *(unsigned int *)((char *)tif + 0xd4);
+    if (row != cur) {
+      seekcb = *(int (**)(void *, unsigned int))((char *)tif + 0x118);
+      if (seekcb == 0) {
+        FUN_00068a30(*(void **)tif, (void *)0x002611a8);
+        return -1;
+      }
+      if (row < cur) {
+        unsigned int rem = strip % *(unsigned int *)((char *)tif + 0xb4);
+        *(unsigned int *)((char *)tif + 0xd4) =
+            rem * *(unsigned int *)((char *)tif + 0x48);
+        *(void **)((char *)tif + 0x134) = *(void **)((char *)tif + 0x12c);
+      }
+      cur = *(unsigned int *)((char *)tif + 0xd4);
+      if (seekcb(tif, row - cur) == 0)
+        return -1;
+      *(unsigned int *)((char *)tif + 0xd4) = row;
+    }
+  }
+
+  enc = *(int (**)(void *, void *, void *, unsigned int))((char *)tif + 0x100);
+  {
+    int r = enc(tif, buf, *(void **)((char *)tif + 0x124), sample);
+    *(unsigned int *)((char *)tif + 0xd4) =
+        *(unsigned int *)((char *)tif + 0xd4) + 1u;
+    return r;
+  }
 }
-#else
-#error "TIFFWriteScanline: clang naked draft required"
-#endif
+
 
 
 /* TIFFWriteEncodedStrip (0x700c0) — Capstone lift: encoded strip write. */
@@ -6541,155 +6420,78 @@ void FUN_00073b00(void)
 #endif
 
 
-/* FUN_00073e40 (0x73e40) — XBE naked draft (batch 322). */
-#if defined(__clang__)
-static void (*const b73e40_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b73e40_exitfn)(int) = system_exit;
-static void * (*const b73e40_c7c940)(void *bitmap, short x, short y, short mipmap_index) = bitmap_2d_address;
-
-__attribute__((naked, noinline))
-void FUN_00073e40(void)
+/* FUN_00073e40 (0x73e40) — Capstone lift: compute opaque bounds rect from bitmap.
+ * ABI: rect stack, out@<esi>. Returns 1 if any opaque pixel visited. */
+unsigned char FUN_00073e40(short *rect, short *out /*@<esi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jne .LFUN_00073e40_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3f7\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x26184c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00073e40_1:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00073e40_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3f8\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x261830\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00073e40_2:\n\t"
-      "movl $0xffff8000, %%eax\n\t"
-      "movw $0x7fff, (%%esi)\n\t"
-      "movw $0x7fff, 0x2(%%esi)\n\t"
-      "movw %%ax, 0x4(%%esi)\n\t"
-      "movw %%ax, 0x6(%%esi)\n\t"
-      "movw (%%edi), %%bx\n\t"
-      "cmpw 0x4(%%edi), %%bx\n\t"
-      "jge .LFUN_00073e40_16\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "jmp .LFUN_00073e40_4\n\t"
-      ".LFUN_00073e40_3:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".LFUN_00073e40_4:\n\t"
-      "movw 0x2(%%edi), %%di\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cmpw 0x6(%%ecx), %%di\n\t"
-      "jge .LFUN_00073e40_15\n\t"
-      ".LFUN_00073e40_5:\n\t"
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_00073e40_14\n\t"
-      "cmpw 0x4(%%eax), %%di\n\t"
-      "jge .LFUN_00073e40_14\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .LFUN_00073e40_14\n\t"
-      "cmpw 0x6(%%eax), %%bx\n\t"
-      "jge .LFUN_00073e40_14\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movb 0x334148, %%dl\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "testb %%dl, %%dl\n\t"
-      "je .LFUN_00073e40_6\n\t"
-      "cmpl 0x33413c, %%eax\n\t"
-      "je .LFUN_00073e40_13\n\t"
-      "cmpl 0x334140, %%eax\n\t"
-      "je .LFUN_00073e40_13\n\t"
-      "cmpl 0x334144, %%eax\n\t"
-      "je .LFUN_00073e40_13\n\t"
-      "movl 0x33414c, %%eax\n\t"
-      "cmpw $0, 0x4(%%eax)\n\t"
-      "jne .LFUN_00073e40_6\n\t"
-      "testl $0xff000000, %%ecx\n\t"
-      "je .LFUN_00073e40_13\n\t"
-      ".LFUN_00073e40_6:\n\t"
-      "movw 0x2(%%esi), %%ax\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jg .LFUN_00073e40_7\n\t"
-      "movswl %%di, %%eax\n\t"
-      ".LFUN_00073e40_7:\n\t"
-      "movw %%ax, 0x2(%%esi)\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "cmpw %%ax, %%bx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "jg .LFUN_00073e40_8\n\t"
-      "movswl %%bx, %%eax\n\t"
-      ".LFUN_00073e40_8:\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "cmpw %%ax, %%di\n\t"
-      "jle .LFUN_00073e40_9\n\t"
-      "movswl %%di, %%eax\n\t"
-      "jmp .LFUN_00073e40_10\n\t"
-      ".LFUN_00073e40_9:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      ".LFUN_00073e40_10:\n\t"
-      "movw %%ax, 0x6(%%esi)\n\t"
-      "movw 0x4(%%esi), %%ax\n\t"
-      "cmpw %%ax, %%bx\n\t"
-      "jle .LFUN_00073e40_11\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "jmp .LFUN_00073e40_12\n\t"
-      ".LFUN_00073e40_11:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      ".LFUN_00073e40_12:\n\t"
-      "movw %%ax, 0x4(%%esi)\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".LFUN_00073e40_13:\n\t"
-      "movl 0x334150, %%eax\n\t"
-      ".LFUN_00073e40_14:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x6(%%ecx), %%di\n\t"
-      "jl .LFUN_00073e40_5\n\t"
-      ".LFUN_00073e40_15:\n\t"
-      "incl %%ebx\n\t"
-      "cmpw 0x4(%%ecx), %%bx\n\t"
-      "jl .LFUN_00073e40_3\n\t"
-      ".LFUN_00073e40_16:\n\t"
-      "incw 0x6(%%esi)\n\t"
-      "incw 0x4(%%esi)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b73e40_assert), [exitfn] "m"(b73e40_exitfn), [c7c940] "m"(b73e40_c7c940)
-      : "memory");
+  void *bm;
+  short x;
+  short y;
+  unsigned int pix;
+  unsigned int raw;
+  unsigned char found;
+  short v;
+
+  found = 0;
+  if (rect == 0) {
+    display_assert((const char *)0x26184c, (const char *)0x2616f0, 0x3f7, 1);
+    system_exit(-1);
+  }
+  if (out == 0) {
+    display_assert((const char *)0x261830, (const char *)0x2616f0, 0x3f8, 1);
+    system_exit(-1);
+  }
+
+  out[0] = 0x7fff;
+  out[1] = 0x7fff;
+  out[2] = (short)0x8000;
+  out[3] = (short)0x8000;
+
+  x = rect[0];
+  if (x >= rect[2]) {
+    out[3] = (short)(out[3] + 1);
+    out[2] = (short)(out[2] + 1);
+    return found;
+  }
+
+  bm = *(void **)0x334150;
+  for (; x < rect[2]; x = (short)(x + 1)) {
+    y = rect[1];
+    for (; y < rect[3]; y = (short)(y + 1)) {
+      if (y < 0 || y >= *(short *)((char *)bm + 4) ||
+          x < 0 || x >= *(short *)((char *)bm + 6)) {
+        continue;
+      }
+      raw = *(unsigned int *)bitmap_2d_address(bm, y, x, 0);
+      pix = raw & 0xffffffu;
+      if (*(unsigned char *)0x334148 != 0) {
+        if (pix == *(unsigned int *)0x33413c ||
+            pix == *(unsigned int *)0x334140 ||
+            pix == *(unsigned int *)0x334144)
+          goto next_y;
+        if (*(short *)((char *)(*(void **)0x33414c) + 4) == 0 &&
+            (raw & 0xff000000u) == 0)
+          goto next_y;
+      }
+      v = out[1];
+      out[1] = (short)((y < v) ? y : v);
+      v = out[0];
+      out[0] = (short)((x < v) ? x : v);
+      v = out[3];
+      out[3] = (short)((y > v) ? y : v);
+      v = out[2];
+      out[2] = (short)((x > v) ? x : v);
+      found = 1;
+    next_y:
+      bm = *(void **)0x334150;
+    }
+  }
+
+  out[3] = (short)(out[3] + 1);
+  out[2] = (short)(out[2] + 1);
+  return found;
 }
-#else
-#error "FUN_00073e40: clang naked draft required"
-#endif
+
 
 
 /* FUN_00073fd0 (0x73fd0) — XBE naked draft (batch 318). */
