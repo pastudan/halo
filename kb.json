@@ -27267,7 +27267,7 @@
         {
           "addr": "0x131b60",
           "decl": "void FUN_00131b60(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00131b60"
         },
         {
@@ -27285,13 +27285,13 @@
         {
           "addr": "0x131fc0",
           "decl": "void FUN_00131fc0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00131fc0"
         },
         {
           "addr": "0x132460",
           "decl": "void flag_render_proper(void);",
-          "ported": false,
+          "ported": true,
           "name": "flag_render_proper"
         }
       ],
