@@ -467,155 +467,52 @@ int FUN_001470b0(int param_1, uint32_t param_2, uint32_t param_3,
 }
 /* --- bsp3d.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00146be0 (0x146be0) — XBE naked draft (batch 231). */
-#if defined(__clang__)
-static void * (*const b146be0_c18e3c0)(void) = scenario_get;
-static void *(*const b146be0_tag)(int, int) = tag_get;
-static void (*const b146be0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static char (*const b146be0_bsext)(short) = breakable_surface_extant;
-static void *(*const b146be0_elem)(void *, int, int) = tag_block_get_element;
-static float * (*const b146be0_c1457f0)(short surface_index) = breakable_surface_get;
-static char * (*const b146be0_c1459e0)(void) = breakable_surfaces_get_bsp_surface_data;
-static void (*const b146be0_c145ad0)(unsigned short surface_id, void *damage_params, int unknown) = FUN_00145ad0;
-
-__attribute__((naked, noinline))
-void FUN_00146be0(void *damage_params __attribute__((unused)))
+/* FUN_00146be0 (0x146be0) — readable C lift (restored pre-naked). */
+void FUN_00146be0(void *damage_params)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6a707421\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x46f08c, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb (%%edx), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00146be0_7\n\t"
-      "flds 0x1d4(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_00146be0_1\n\t"
-      "flds 0x1d8(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_00146be0_7\n\t"
-      ".LFUN_00146be0_1:\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533d8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00146be0_2\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x29c9b8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_00146be0_2:\n\t"
-      "movl 0x16c(%%esi), %%eax\n\t"
-      "addl $0x16c, %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "jle .LFUN_00146be0_6\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".LFUN_00146be0_3:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[bsext]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00146be0_5\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "flds 0xc(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "flds 0x28(%%eax)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fsubs (%%esi)\n\t"
-      "flds 0x2c(%%eax)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "flds 0x30(%%eax)\n\t"
-      "fsubs 0x8(%%esi)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(4)\n\t"
-      "fmul %%st(5), %%st(0)\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_00146be0_4\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1457f0]\n\t"
-      "movl $0, (%%eax)\n\t"
-      "call *%[c1459e0]\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "sarl $5, %%ecx\n\t"
-      "leal (%%eax,%%ecx,4), %%eax\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "movl (%%eax), %%edi\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "notl %%edx\n\t"
-      "andl %%edx, %%edi\n\t"
-      "movl %%edi, (%%eax)\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c145ad0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_00146be0_4:\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      ".LFUN_00146be0_5:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jl .LFUN_00146be0_3\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_00146be0_6:\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00146be0_7:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b146be0_c18e3c0), [tag] "m"(b146be0_tag), [c8f390] "m"(b146be0_c8f390), [bsext] "m"(b146be0_bsext), [elem] "m"(b146be0_elem), [c1457f0] "m"(b146be0_c1457f0), [c1459e0] "m"(b146be0_c1459e0), [c145ad0] "m"(b146be0_c145ad0)
-      : "memory");
+  char *scenario;
+  char *jpt;
+  char *block;
+  char *surf;
+  float *damage;
+  float radius;
+  float dx, dy, dz, limit;
+  int count;
+  int16_t i;
+  unsigned int *bits;
+  float *flags;
+
+  scenario = (char *)scenario_get();
+  damage = (float *)damage_params;
+  jpt = (char *)tag_get(0x6a707421, *(int *)damage_params); /* '!tpj' */
+  if (*(char *)0x46f08c == 0)
+    return;
+  if (*(float *)(jpt + 0x1d4) == *(float *)0x2533c0 &&
+      *(float *)(jpt + 0x1d8) == *(float *)0x2533c0)
+    return;
+
+  radius = *(float *)(jpt + 4);
+  if (radius > *(float *)0x2533d8)
+    error(2, (char *)0x0029c9b8, (double)radius);
+
+  block = scenario + 0x16c;
+  count = *(int *)block;
+  for (i = 0; i < count; i++) {
+    if (!breakable_surface_extant(i))
+      continue;
+    surf = (char *)tag_block_get_element(block, (int)i, 0x30);
+    limit = *(float *)(surf + 0xc) + radius;
+    dx = damage[0x28 / 4] - *(float *)(surf + 0);
+    dy = damage[0x2c / 4] - *(float *)(surf + 4);
+    dz = damage[0x30 / 4] - *(float *)(surf + 8);
+    if (limit * limit < dx * dx + dy * dy + dz * dz)
+      continue;
+
+    flags = breakable_surface_get(i);
+    *flags = 0.0f;
+    bits = (unsigned int *)breakable_surfaces_get_bsp_surface_data();
+    bits[(unsigned int)i >> 5] &= ~(1u << ((unsigned int)i & 0x1f));
+    FUN_00145ad0((unsigned short)i, damage_params, *(int *)(surf + 0x10));
+  }
 }
-#else
-#error "FUN_00146be0: clang naked draft required"
-#endif
 

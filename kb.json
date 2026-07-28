@@ -39836,7 +39836,7 @@
         {
           "addr": "0x146be0",
           "decl": "void FUN_00146be0(void *damage_params);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00146be0"
         },
         {
@@ -39853,13 +39853,13 @@
         },
         {
           "addr": "0x146e30",
-          "decl": "void bsp3d_clip_line_to_leaves(void);",
+          "decl": "int bsp3d_clip_line_to_leaves(void *nodes, int node_index, float *p0, float *p1, void (*callback)(float *, float *, unsigned int, void *), void *data);",
           "name": "bsp3d_clip_line_to_leaves",
           "ported": false
         },
         {
           "addr": "0x1470b0",
-          "decl": "int FUN_001470b0(int a0, int a1, int a2, int a3, int a4, int a5, int a6, int a7);",
+          "decl": "int FUN_001470b0(int param_1, uint32_t param_2, uint32_t param_3, float *param_4, int param_5, float param_6, void (*param_7)(float *, int, unsigned int, unsigned int, void *), void *param_8);",
           "ported": true
         }
       ],
