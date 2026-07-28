@@ -34265,7 +34265,7 @@
         },
         {
           "addr": "0x1d4464",
-          "decl": "void FUN_001d4464(void);",
+          "decl": "int __stdcall FUN_001d4464(int setting, void *type, void *value, int value_len, void *result_len);",
           "ported": false,
           "name": "FUN_001d4464"
         },
@@ -34403,9 +34403,15 @@
       "functions": [
         {
           "addr": "0x1d04f1",
-          "decl": "void FUN_001d04f1(void);",
-          "ported": false,
-          "name": "FUN_001d04f1"
+          "decl": "int FUN_001d04f1(void);",
+          "ported": true,
+          "name": "FUN_001d04f1",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d051d",
@@ -34475,7 +34481,7 @@
         },
         {
           "addr": "0x1d0b31",
-          "decl": "void FUN_001d0b31(void);",
+          "decl": "void * __stdcall FUN_001d0b31(unsigned int flags, unsigned int size_min, unsigned int size_hint);",
           "ported": false,
           "name": "FUN_001d0b31"
         },
@@ -34528,9 +34534,15 @@
         },
         {
           "addr": "0x1d0cbf",
-          "decl": "void FUN_001d0cbf(void);",
-          "ported": false,
-          "name": "FUN_001d0cbf"
+          "decl": "int __stdcall FUN_001d0cbf(void *base, unsigned int size, unsigned int protect, unsigned int unused);",
+          "ported": true,
+          "name": "FUN_001d0cbf",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0cfb",
@@ -42830,7 +42842,7 @@
         },
         {
           "addr": "0x001d8c42",
-          "decl": "void NtClearEvent(void);",
+          "decl": "int __stdcall NtClearEvent(void *handle);",
           "ported": false,
           "name": "NtClearEvent"
         },

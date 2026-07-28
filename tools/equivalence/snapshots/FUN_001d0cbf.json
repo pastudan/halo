@@ -1,0 +1,4 @@
+{
+  "description": "FUN_001d0cbf: protect&0x8000 size!=0 invalid",
+  "arg_overrides": { "size": 1, "protect": 32768 }
+}

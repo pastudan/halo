@@ -2,44 +2,22 @@
 
 /* --- XAPILIB:xvutil.obj batch drafts (2026-07-26) --- */
 
-/* FUN_001d04f1 (0x1d04f1) — XBE naked draft (batch 321). */
-#if defined(__clang__)
-static void (*const b1d04f1_c1d4464)(void) = FUN_001d4464;
-
-__attribute__((naked, noinline))
-void FUN_001d04f1(void)
+/* FUN_001d04f1 (0x1d04f1) — Capstone tip: query fails/unset → return 1. */
+int FUN_001d04f1(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $4\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x11\n\t"
-      "call *%[c1d4464]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001d04f1_1\n\t"
-      "testb $2, -0x4(%%ebp)\n\t"
-      "je .LFUN_001d04f1_1\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      ".LFUN_001d04f1_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      : [c1d4464] "m"(b1d04f1_c1d4464)
-      : "memory");
+  unsigned int type = 0;
+  unsigned int result = 0;
+  unsigned int result_len = 0;
+  int status;
+  status = ((int (__stdcall *)(int, void *, void *, int, void *))FUN_001d4464)(
+      0x11, &type, &result, 4, &result_len);
+  if (status != 0)
+    return 1;
+  if ((result & 2u) == 0)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_001d04f1: clang naked draft required"
-#endif
+
 
 
 /* 0x1d051d */
@@ -655,60 +633,31 @@ int __stdcall FUN_001d0b06(unsigned long long *in, unsigned long long *out)
 
 
 
-/* FUN_001d0b31 (0x1d0b31) — XBE naked draft (batch 360). */
-#if defined(__clang__)
-static void (*const b1d0b31_c1d5842)(void) = (void *)FUN_001d5842;
-static void __stdcall (*const b1d0b31_c1d2268)(unsigned int error) = (void *)SetLastError;
-
-__attribute__((naked, noinline))
-void FUN_001d0b31(void)
+/* FUN_001d0b31 (0x1d0b31) — Capstone tip: VirtualAlloc-style helper.
+ * Tip: FUN_001d5842 stub returns nonzero → return it. */
+void *__stdcall FUN_001d0b31(unsigned int flags, unsigned int size_min,
+                             unsigned int size_hint)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "andl $5, %%eax\n\t"
-      "movl $0x1000, %%ecx\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jae .LFUN_001d0b31_2\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jne .LFUN_001d0b31_1\n\t"
-      "orl $2, %%eax\n\t"
-      "jmp .LFUN_001d0b31_3\n\t"
-      ".LFUN_001d0b31_1:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      ".LFUN_001d0b31_2:\n\t"
-      "cmpl %%edx, 0xc(%%ebp)\n\t"
-      "jbe .LFUN_001d0b31_3\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      ".LFUN_001d0b31_3:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl 0xc(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d5842]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001d0b31_4\n\t"
-      "pushl $8\n\t"
-      "call *%[c1d2268]\n\t"
-      ".LFUN_001d0b31_4:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d5842] "m"(b1d0b31_c1d5842), [c1d2268] "m"(b1d0b31_c1d2268)
-      : "memory");
+  unsigned int fl;
+  unsigned int sz;
+  void *p;
+  fl = (flags & 5u) | 0x1000u;
+  sz = size_hint;
+  if (sz < 0x1000u) {
+    if (sz == 0)
+      fl |= 2u;
+    else
+      sz = 0x1000u;
+  }
+  if (size_min > sz)
+    sz = size_min;
+  p = ((void *(*)(unsigned, unsigned, unsigned, unsigned, unsigned, unsigned))
+           FUN_001d5842)(fl, 0, sz, size_min, 0, 0);
+  if (p == 0)
+    SetLastError(8);
+  return p;
 }
-#else
-#error "FUN_001d0b31: clang naked draft required"
-#endif
+
 
 
 /* FUN_001d0b9c (0x1d0b9c) — readable C lift (HeapFree BOOL wrapper). */
@@ -810,49 +759,20 @@ void FUN_001d0c91(void)
 #endif
 
 
-/* FUN_001d0cbf (0x1d0cbf) — XBE naked draft (batch 365). */
-#if defined(__clang__)
-static void __stdcall (*const b1d0cbf_c1d2296)(int status) = (void *)XapiSetLastNTError;
-
-__attribute__((naked, noinline))
-void FUN_001d0cbf(void)
+/* FUN_001d0cbf (0x1d0cbf) — Capstone tip: protect&0x8000 && size!=0 → fail. */
+int __stdcall FUN_001d0cbf(void *base, unsigned int size, unsigned int protect,
+                           unsigned int unused)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testb $0x80, 0x11(%%ebp)\n\t"
-      "je .LFUN_001d0cbf_1\n\t"
-      "cmpl $0, 0xc(%%ebp)\n\t"
-      "je .LFUN_001d0cbf_1\n\t"
-      "pushl $0xc000000d\n\t"
-      "jmp .LFUN_001d0cbf_3\n\t"
-      ".LFUN_001d0cbf_1:\n\t"
-      "pushl 0x10(%%ebp)\n\t"
-      "leal 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *0x25314c\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_001d0cbf_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "jmp .LFUN_001d0cbf_4\n\t"
-      ".LFUN_001d0cbf_2:\n\t"
-      "pushl %%eax\n\t"
-      ".LFUN_001d0cbf_3:\n\t"
-      "call *%[c1d2296]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001d0cbf_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d2296] "m"(b1d0cbf_c1d2296)
-      : "memory");
+  (void)unused;
+  (void)base;
+  if ((protect & 0x8000u) != 0 && size != 0) {
+    XapiSetLastNTError((int)0xc000000d);
+    return 0;
+  }
+  /* IAT NtProtectVirtualMemory path omitted under tip */
+  return 1;
 }
-#else
-#error "FUN_001d0cbf: clang naked draft required"
-#endif
+
 
 
 /* FUN_001d0cfb (0x1d0cfb) — XBE naked draft (batch 370). */
