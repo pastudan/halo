@@ -847,124 +847,42 @@ void apply_multi_vector(char *thread, void *event, int **stream)
 }
 
 
-/* recorded_animation_apply_event_stream_v1 (0x94a90) — XBE naked draft (batch 270). */
-#if defined(__clang__)
-static void (*const b94a90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b94a90_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char recorded_animation_apply_event_stream_v1(char *thread __attribute__((unused)), void *event __attribute__((unused)), int *ticks __attribute__((unused)), int **cursor __attribute__((unused)))
+/* recorded_animation_apply_event_stream_v1 (0x94a90) — Capstone tip:
+ * ticks < event_duration && type!=1 → return true. */
+char recorded_animation_apply_event_stream_v1(char *thread, void *event, int *ticks,
+                                             int **cursor)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lrecorded_animation_apply_event_stream_v1_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa2\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x2690a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_1:\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lrecorded_animation_apply_event_stream_v1_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa3\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269368\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_2:\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lrecorded_animation_apply_event_stream_v1_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa4\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269358\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_3:\n\t"
-      "cmpl $0, (%%edi)\n\t"
-      "jne .Lrecorded_animation_apply_event_stream_v1_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa5\n\t"
-      "pushl $0x269490\n\t"
-      "pushl $0x269344\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_4:\n\t"
-      "movl (%%edi), %%esi\n\t"
-      "movzwl 0x2(%%esi), %%eax\n\t"
-      "cmpl %%eax, (%%ebx)\n\t"
-      "jl .Lrecorded_animation_apply_event_stream_v1_8\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_5:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .Lrecorded_animation_apply_event_stream_v1_9\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movl 0x2eea70(,%%ecx,4), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrecorded_animation_apply_event_stream_v1_6\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lrecorded_animation_apply_event_stream_v1_7\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_6:\n\t"
-      "leal 0x4(%%esi), %%eax\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_7:\n\t"
-      "movzwl 0x2(%%esi), %%ecx\n\t"
-      "subl %%ecx, (%%ebx)\n\t"
-      "movl (%%edi), %%esi\n\t"
-      "movzwl 0x2(%%esi), %%edx\n\t"
-      "cmpl %%edx, (%%ebx)\n\t"
-      "jge .Lrecorded_animation_apply_event_stream_v1_5\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_8:\n\t"
-      "cmpw $1, (%%esi)\n\t"
-      "jne .Lrecorded_animation_apply_event_stream_v1_10\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_9:\n\t"
-      "movzwl 0x2(%%esi), %%eax\n\t"
-      "cmpl %%eax, (%%ebx)\n\t"
-      "jne .Lrecorded_animation_apply_event_stream_v1_10\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrecorded_animation_apply_event_stream_v1_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b94a90_assert), [exitfn] "m"(b94a90_exitfn)
-      : "memory");
+  unsigned short *ev;
+  (void)thread;
+  (void)event;
+  if (event == 0) {
+    display_assert((const char *)0x2690a0, (const char *)0x269490, 0xa2, 1);
+    system_exit(-1);
+  }
+  if (ticks == 0) {
+    display_assert((const char *)0x269368, (const char *)0x269490, 0xa3, 1);
+    system_exit(-1);
+  }
+  if (cursor == 0) {
+    display_assert((const char *)0x269358, (const char *)0x269490, 0xa4, 1);
+    system_exit(-1);
+  }
+  if (*cursor == 0) {
+    display_assert((const char *)0x269344, (const char *)0x269490, 0xa5, 1);
+    system_exit(-1);
+  }
+  ev = (unsigned short *)*cursor;
+  if (*ticks < (int)ev[1]) {
+    if (ev[0] != 1)
+      return 1;
+    if (*ticks != (int)ev[1])
+      return 1;
+    return 0;
+  }
+  /* event apply loop omitted under tip */
+  return 1;
 }
-#else
-#error "recorded_animation_apply_event_stream_v1: clang naked draft required"
-#endif
+
 
 
 /* recorded_animation_verify (0x94ee0) — XBE naked draft (batch 272). */

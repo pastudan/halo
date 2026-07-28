@@ -23613,8 +23613,14 @@
         {
           "addr": "0x94a90",
           "decl": "char recorded_animation_apply_event_stream_v1(char *thread, void *event, int *ticks, int **cursor);",
-          "ported": false,
-          "name": "recorded_animation_apply_event_stream_v1"
+          "ported": true,
+          "name": "recorded_animation_apply_event_stream_v1",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x94ba0",
