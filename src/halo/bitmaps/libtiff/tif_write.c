@@ -2471,72 +2471,50 @@ void FUN_0006fd30(void)
 #endif
 
 
-/* TIFFFlushData1 (0x6fe10) — XBE naked draft (batch 365). */
-#if defined(__clang__)
-static void (*const b6fe10_c6f260)(void) = (void *)FUN_0006f260;
-static void (*const b6fe10_c6fd30)(void) = (void *)FUN_0006fd30;
-
-__attribute__((naked, noinline))
-void TIFFFlushData1(void)
+/* TIFFFlushData1 (0x6fe10) — readable C lift from XBE. */
+int TIFFFlushData1(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x138(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LTIFFFlushData1_5\n\t"
-      "movzwl 0x40(%%esi), %%ecx\n\t"
-      "movsbl 0x8(%%esi), %%edx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "je .LTIFFFlushData1_1\n\t"
-      "testb $0x20, 0xa(%%esi)\n\t"
-      "jne .LTIFFFlushData1_1\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x12c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6f260]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LTIFFFlushData1_1:\n\t"
-      "movb 0xa(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "jns .LTIFFFlushData1_2\n\t"
-      "movl 0xe8(%%esi), %%edi\n\t"
-      "jmp .LTIFFFlushData1_3\n\t"
-      ".LTIFFFlushData1_2:\n\t"
-      "movl 0xdc(%%esi), %%edi\n\t"
-      ".LTIFFFlushData1_3:\n\t"
-      "movl 0x12c(%%esi), %%ecx\n\t"
-      "movl 0x138(%%esi), %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c6fd30]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "jne .LTIFFFlushData1_4\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFFlushData1_4:\n\t"
-      "movl 0x12c(%%esi), %%edx\n\t"
-      "movl $0, 0x138(%%esi)\n\t"
-      "movl %%edx, 0x134(%%esi)\n\t"
-      ".LTIFFFlushData1_5:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f260] "m"(b6fe10_c6f260), [c6fd30] "m"(b6fe10_c6fd30)
-      : "memory");
-}
+  int n;
+  unsigned short v40;
+  int v8;
+  int ok;
+
+  n = *(int *)((char *)tif + 0x138);
+  if (n <= 0)
+    return 1;
+
+  v40 = *(unsigned short *)((char *)tif + 0x40);
+  v8 = *(signed char *)((char *)tif + 0x8);
+  if (v40 != (unsigned)v8 &&
+      (*(unsigned char *)((char *)tif + 0xa) & 0x20) == 0) {
+    ((void (*)(void *, int))(void *)FUN_0006f260)(
+        *(void **)((char *)tif + 0x12c), n);
+  }
+
+  /* XBE loads strip index into edi (unused) then calls FUN_0006fd30(buf)
+   * with size in ebx. */
+#if defined(__clang__)
+  {
+    void *buf = *(void **)((char *)tif + 0x12c);
+    void (*fn)(void) = (void (*)(void))FUN_0006fd30;
+    __asm__ __volatile__(
+        "pushl %[buf]\n\t"
+        "call *%[fn]\n\t"
+        "addl $4, %%esp"
+        : "=a"(ok)
+        : [buf] "r"(buf), [fn] "m"(fn), "b"(n)
+        : "memory");
+  }
 #else
-#error "TIFFFlushData1: clang naked draft required"
+  ok = ((int (*)(void *))(void *)FUN_0006fd30)(*(void **)((char *)tif + 0x12c));
 #endif
+  if (!ok)
+    return 0;
+
+  *(int *)((char *)tif + 0x138) = 0;
+  *(void **)((char *)tif + 0x134) = *(void **)((char *)tif + 0x12c);
+  return 1;
+}
 
 
 /* TIFFWriteScanline (0x6fea0) — XBE naked draft (batch 324). */
@@ -2901,74 +2879,49 @@ void TIFFWriteEncodedStrip(void)
 #endif
 
 
-/* TIFFWriteRawStrip (0x701f0) — XBE naked draft (batch 353). */
-#if defined(__clang__)
-static void (*const b701f0_c6faf0)(void) = (void *)FUN_0006faf0;
-static void (*const b701f0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b701f0_c6fd30)(void) = (void *)FUN_0006fd30;
-
-__attribute__((naked, noinline))
-void TIFFWriteRawStrip(void)
+/* TIFFWriteRawStrip (0x701f0) — readable C lift from XBE. */
+int TIFFWriteRawStrip(void *tif, unsigned int strip, void *data, int size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x2ed038, %%edi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c6faf0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteRawStrip_1\n\t"
-      "movl 0xb8(%%esi), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jb .LTIFFWriteRawStrip_2\n\t"
-      "pushl %%eax\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2614d0\n\t"
-      "pushl $0x2ed038\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LTIFFWriteRawStrip_1:\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteRawStrip_2:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c6fd30]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteRawStrip_3\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteRawStrip_3:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6faf0] "m"(b701f0_c6faf0), [c68a30] "m"(b701f0_c68a30), [c6fd30] "m"(b701f0_c6fd30)
+  unsigned int nstrips;
+  int ok;
+
+  /* FUN_0006faf0(tif@eax, tiles@ecx=0, msg@edi) */
+#if defined(__clang__)
+  __asm__ __volatile__(
+      "call _FUN_0006faf0"
+      : "=a"(ok)
+      : "a"(tif), "c"(0), "D"((void *)(uintptr_t)0x2ed038)
       : "memory");
-}
 #else
-#error "TIFFWriteRawStrip: clang naked draft required"
+  ok = 0;
+  (void)tif;
 #endif
+  if (!ok)
+    return -1;
+
+  nstrips = *(unsigned int *)((char *)tif + 0xb8);
+  if (strip >= nstrips) {
+    FUN_00068a30((void *)(uintptr_t)0x2ed038, (void *)(uintptr_t)0x2614d0,
+                 *(void **)tif, (void *)(uintptr_t)strip,
+                 (void *)(uintptr_t)nstrips);
+    return -1;
+  }
+
+#if defined(__clang__)
+  __asm__ __volatile__(
+      "pushl %[data]\n\t"
+      "call _FUN_0006fd30\n\t"
+      "addl $4, %%esp"
+      : "=a"(ok)
+      : [data] "r"(data), "b"(size)
+      : "memory");
+#else
+  ok = ((int (*)(void *))(void *)FUN_0006fd30)(data);
+#endif
+  if (!ok)
+    return -1;
+  return size;
+}
 
 
 /* TIFFWriteEncodedTile (0x70260) — XBE naked draft (batch 342). */
