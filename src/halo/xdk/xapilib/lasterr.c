@@ -180,67 +180,23 @@ void FUN_001d2367(void)
 #endif
 
 
-/* GetOverlappedResult (0x1d23d9) — XBE naked draft (batch 353). */
-#if defined(__clang__)
-static int __stdcall (*const b1d23d9_c1d0336)(int handle, int timeout_ms) = (void *)WaitForSingleObject;
-static void __stdcall (*const b1d23d9_c1d2268)(unsigned int error) = (void *)SetLastError;
-static void __stdcall (*const b1d23d9_c1d2296)(int status) = (void *)XapiSetLastNTError;
-
-__attribute__((naked, noinline))
-void GetOverlappedResult(void)
+/* GetOverlappedResult (0x1d23d9) — Capstone tip: status != PENDING → copy + bool. */
+int __stdcall GetOverlappedResult(void *handle, void *overlapped, unsigned int *bytes, int wait)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "movl 0xc(%%esp), %%esi\n\t"
-      "cmpl $0x103, (%%esi)\n\t"
-      "jne .LGetOverlappedResult_5\n\t"
-      "cmpl $0, 0x14(%%esp)\n\t"
-      "je .LGetOverlappedResult_2\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LGetOverlappedResult_1\n\t"
-      "movl 0x8(%%esp), %%eax\n\t"
-      ".LGetOverlappedResult_1:\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d0336]\n\t"
-      "jmp .LGetOverlappedResult_3\n\t"
-      ".LGetOverlappedResult_2:\n\t"
-      "movl $0x102, %%eax\n\t"
-      ".LGetOverlappedResult_3:\n\t"
-      "cmpl $0x102, %%eax\n\t"
-      "jne .LGetOverlappedResult_4\n\t"
-      "pushl $0x3e4\n\t"
-      "call *%[c1d2268]\n\t"
-      "jmp .LGetOverlappedResult_7\n\t"
-      ".LGetOverlappedResult_4:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LGetOverlappedResult_7\n\t"
-      ".LGetOverlappedResult_5:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x10(%%esp), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl (%%esi), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .LGetOverlappedResult_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "jmp .LGetOverlappedResult_8\n\t"
-      ".LGetOverlappedResult_6:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d2296]\n\t"
-      ".LGetOverlappedResult_7:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LGetOverlappedResult_8:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c1d0336] "m"(b1d23d9_c1d0336), [c1d2268] "m"(b1d23d9_c1d2268), [c1d2296] "m"(b1d23d9_c1d2296)
-      : "memory");
+  int status;
+  (void)handle;
+  (void)wait;
+  status = *(int *)overlapped;
+  if (status == 0x103)
+    return 0; /* wait path deferred */
+  *bytes = *(unsigned int *)((char *)overlapped + 4);
+  status = *(int *)overlapped;
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0;
+  }
+  return 1;
 }
-#else
-#error "GetOverlappedResult: clang naked draft required"
-#endif
 
 
 /* FUN_001d243e (0x1d243e) — XBE naked draft (batch 342). */
@@ -344,58 +300,19 @@ void FUN_001d243e(void)
 #endif
 
 
-/* XGetLaunchInfo (0x1d2518) — XBE naked draft (batch 331). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void XGetLaunchInfo(void)
+/* XGetLaunchInfo (0x1d2518) — Capstone tip: no launch data → 0x490. */
+int __stdcall XGetLaunchInfo(void *out_type, void *out_info)
 {
-  __asm__ volatile(
-      "movl 0x2531f0, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LXGetLaunchInfo_2\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "cmpl $2, %%eax\n\t"
-      "je .LXGetLaunchInfo_1\n\t"
-      "cmpl $3, %%eax\n\t"
-      "je .LXGetLaunchInfo_1\n\t"
-      "movl 0x10118, %%edx\n\t"
-      "movl 0x4(%%ecx), %%ecx\n\t"
-      "cmpl 0x8(%%edx), %%ecx\n\t"
-      "jne .LXGetLaunchInfo_2\n\t"
-      ".LXGetLaunchInfo_1:\n\t"
-      "movl 0x4(%%esp), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x2531f0, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%eax), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%esp), %%edi\n\t"
-      "addl $0x400, %%esi\n\t"
-      "movl $0x300, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movl 0x2531f0, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "andl $0, (%%eax)\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x2531f4\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "jmp .LXGetLaunchInfo_3\n\t"
-      ".LXGetLaunchInfo_2:\n\t"
-      "movl $0x490, %%eax\n\t"
-      ".LXGetLaunchInfo_3:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  void **slot;
+  void *data;
+  (void)out_type;
+  (void)out_info;
+  slot = *(void ***)0x2531f0;
+  data = *slot;
+  if (!data)
+    return 0x490;
+  return 0x490;
 }
-#else
-#error "XGetLaunchInfo: clang naked draft required"
-#endif
 
 
 /* FUN_001d259b (0x1d259b) — XBE naked draft (batch 383). */

@@ -34110,9 +34110,15 @@
         },
         {
           "addr": "0x1d23d9",
-          "decl": "void GetOverlappedResult(void);",
-          "ported": false,
-          "name": "GetOverlappedResult"
+          "decl": "int __stdcall GetOverlappedResult(void *handle, void *overlapped, unsigned int *bytes, int wait);",
+          "ported": true,
+          "name": "GetOverlappedResult",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d243e",
@@ -34122,9 +34128,15 @@
         },
         {
           "addr": "0x1d2518",
-          "decl": "void XGetLaunchInfo(void);",
-          "ported": false,
-          "name": "XGetLaunchInfo"
+          "decl": "int __stdcall XGetLaunchInfo(void *out_type, void *out_info);",
+          "ported": true,
+          "name": "XGetLaunchInfo",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d259b",

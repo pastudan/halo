@@ -1,0 +1,7 @@
+{
+  "description": "XGetLaunchInfo: launch data NULL \u2192 0x490",
+  "regions": {
+    "0x2531f0": "00300000",
+    "0x30000000": "00000000"
+  }
+}
