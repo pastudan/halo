@@ -37413,8 +37413,8 @@
         {
           "addr": "0x5af70",
           "decl": "bool FUN_0005af70(int encounter_handle /* @<eax> */, void *rule /* @<edi> */);",
-          "name": "?",
-          "ported": false
+          "name": "FUN_0005af70",
+          "ported": true
         },
         {
           "addr": "0x5b200",

@@ -3746,290 +3746,106 @@ void FUN_0005ae70(int encounter_handle)
   } while (squad_index < *(int16_t *)(encounter + 0x6));
 }
 
-/* FUN_0005af70 (0x5af70) — XBE naked draft (batch 69). */
-#if defined(__clang__)
-static void *(*const b5af70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const b5af70_c54020)(char *encounter, short platoon_index) = FUN_00054020;
-static void (*const b5af70_cff4d0)(int channel, const char *format, ...) = console_printf;
-
-__attribute__((naked, noinline))
-bool FUN_0005af70(int encounter_handle /* */ __attribute__((unused)), void *rule /* */ __attribute__((unused)))
+/* FUN_0005af70 (0x5af70) — readable C lift from XBE.
+ * Evaluate an encounter strength/platoon rule. encounter @<eax>, rule @<edi>.
+ */
+bool FUN_0005af70(int encounter_handle /*@<eax>*/, void *rule /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x5ab270, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2(%%edi), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .LFUN_0005af70_1\n\t"
-      "cmpw 0xa(%%eax), %%cx\n\t"
-      "jge .LFUN_0005af70_1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c54020]\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "movw 0x4(%%eax), %%si\n\t"
-      "movw 0x6(%%eax), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_0005af70_2\n\t"
-      ".LFUN_0005af70_1:\n\t"
-      "movw 0x18(%%eax), %%si\n\t"
-      "movw 0x2a(%%eax), %%cx\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_0005af70_2:\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .LFUN_0005af70_13\n\t"
-      "movswl (%%edi), %%eax\n\t"
-      "cmpl $9, %%eax\n\t"
-      "ja .LFUN_0005af70_12\n\t"
-      "jmp *.LFUN_0005af70_jt0(,%%eax,4)\n\t"
-      ".LFUN_0005af70_3:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x25afcc\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0005af70_12\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_4:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x253398\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0005af70_12\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_5:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x25337c\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0005af70_12\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_6:\n\t"
-      "cmpw %%si, %%cx\n\t"
-      "setl %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_7:\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "shll $2, %%edx\n\t"
-      "movl $0x55555556, %%eax\n\t"
-      "imull %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "addl %%eax, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "setle %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_8:\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $1, %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "setle %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_9:\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $2, %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "setle %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_10:\n\t"
-      "cmpw $1, %%cx\n\t"
-      "setle %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_11:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "sete %%bl\n\t"
-      "jmp .LFUN_0005af70_13\n\t"
-      ".LFUN_0005af70_12:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".LFUN_0005af70_13:\n\t"
-      "movb 0x5aca4c, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0005af70_23\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_0005af70_23\n\t"
-      "movswl (%%edi), %%eax\n\t"
-      "decl %%eax\n\t"
-      "cmpl $8, %%eax\n\t"
-      "ja .LFUN_0005af70_23\n\t"
-      "jmp *.LFUN_0005af70_jt1(,%%eax,4)\n\t"
-      ".LFUN_0005af70_14:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x25d8a0\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_15:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x25d888\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_16:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x25d870\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_17:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25d858\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_18:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25d834\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_19:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25d810\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_20:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movswl %%cx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25d7ec\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_21:\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x25d7d8\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0005af70_22:\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25d7c4\n\t"
-      "pushl $0\n\t"
-      "call *%[cff4d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0005af70_23:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0005af70_jt0:\n\t"
-      ".long .LFUN_0005af70_12\n\t"
-      ".long .LFUN_0005af70_3\n\t"
-      ".long .LFUN_0005af70_4\n\t"
-      ".long .LFUN_0005af70_5\n\t"
-      ".long .LFUN_0005af70_6\n\t"
-      ".long .LFUN_0005af70_7\n\t"
-      ".long .LFUN_0005af70_8\n\t"
-      ".long .LFUN_0005af70_9\n\t"
-      ".long .LFUN_0005af70_10\n\t"
-      ".long .LFUN_0005af70_11\n\t"
-      ".text\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0005af70_jt1:\n\t"
-      ".long .LFUN_0005af70_14\n\t"
-      ".long .LFUN_0005af70_15\n\t"
-      ".long .LFUN_0005af70_16\n\t"
-      ".long .LFUN_0005af70_17\n\t"
-      ".long .LFUN_0005af70_18\n\t"
-      ".long .LFUN_0005af70_19\n\t"
-      ".long .LFUN_0005af70_20\n\t"
-      ".long .LFUN_0005af70_21\n\t"
-      ".long .LFUN_0005af70_22\n\t"
-      ".text\n\t"
-      :
-      : [dget] "m"(b5af70_dget), [c54020] "m"(b5af70_c54020), [cff4d0] "m"(b5af70_cff4d0)
-      : "memory");
+  char *enc;
+  char *rule_p;
+  char *platoon;
+  int16_t idx;
+  int16_t living;
+  int16_t strength;
+  float score;
+  char pass;
+  int16_t kind;
+
+  rule_p = (char *)rule;
+  enc = (char *)datum_get(*(data_t **)0x5ab270, encounter_handle);
+  pass = 0;
+  idx = *(int16_t *)(rule_p + 2);
+  if (idx >= 0 && idx < *(int16_t *)(enc + 0xa)) {
+    platoon = FUN_00054020(enc, idx);
+    score = *(float *)(platoon + 0xc);
+    living = *(int16_t *)(platoon + 4);
+    strength = *(int16_t *)(platoon + 6);
+  } else {
+    living = *(int16_t *)(enc + 0x18);
+    strength = *(int16_t *)(enc + 0x2a);
+    score = *(float *)(enc + 0x34);
+  }
+
+  if (living > 0) {
+    kind = *(int16_t *)rule_p;
+    if (kind == 1) {
+      if (score < *(float *)0x25afcc)
+        pass = 1;
+    } else if (kind == 2) {
+      if (score < *(float *)0x253398)
+        pass = 1;
+    } else if (kind == 3) {
+      if (score < *(float *)0x25337c)
+        pass = 1;
+    } else if (kind == 4) {
+      pass = (char)(strength < living);
+    } else if (kind == 5) {
+      /* (strength * 4) / 3 <= living  via 0x55555556 signed multiply */
+      {
+        int prod = (int)strength * 4;
+        int q = (int)(((long long)prod * (long long)(int)0x55555556) >> 32);
+        q += (q >> 31);
+        pass = (char)(q <= (int)living);
+      }
+    } else if (kind == 6) {
+      pass = (char)(((int)strength * 2) <= (int)living);
+    } else if (kind == 7) {
+      pass = (char)(((int)strength * 4) <= (int)living);
+    } else if (kind == 8) {
+      pass = (char)(strength <= 1);
+    } else if (kind == 9) {
+      pass = (char)(strength == 0);
+    } else {
+      pass = 0;
+    }
+  }
+
+  if (*(unsigned char *)0x5aca4c != 0 && pass != 0) {
+    kind = *(int16_t *)rule_p;
+    if (kind >= 1 && kind <= 9) {
+      switch (kind) {
+      case 1:
+        console_printf(0, (const char *)0x25d8a0, (double)score);
+        break;
+      case 2:
+        console_printf(0, (const char *)0x25d888, (double)score);
+        break;
+      case 3:
+        console_printf(0, (const char *)0x25d870, (double)score);
+        break;
+      case 4:
+        console_printf(0, (const char *)0x25d858, (int)strength, (int)living);
+        break;
+      case 5:
+        console_printf(0, (const char *)0x25d834, (int)strength, (int)living);
+        break;
+      case 6:
+        console_printf(0, (const char *)0x25d810, (int)strength, (int)living);
+        break;
+      case 7:
+        console_printf(0, (const char *)0x25d7ec, (int)strength, (int)living);
+        break;
+      case 8:
+        console_printf(0, (const char *)0x25d7d8, (int)strength);
+        break;
+      case 9:
+        console_printf(0, (const char *)0x25d7c4, (int)strength);
+        break;
+      }
+    }
+  }
+  return pass;
 }
-#else
-#error "FUN_0005af70: clang naked draft required"
-#endif
 
 
 /* 0x5b200 — encounters_initialize_for_new_map.
