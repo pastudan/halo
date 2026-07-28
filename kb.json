@@ -25785,8 +25785,14 @@
         {
           "addr": "0x1c8700",
           "decl": "int FUN_001c8700(void *state, int sample_count, int16_t *out, void *track, void *bitstream);",
-          "ported": false,
-          "name": "FUN_001c8700"
+          "ported": true,
+          "name": "FUN_001c8700",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c88a0",
