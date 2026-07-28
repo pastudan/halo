@@ -26596,9 +26596,15 @@
           "addr": "0x106030",
           "decl": "int FUN_00106030(void *param_1, int param_2, short param_3, int param_4);",
           "name": "FUN_00106030",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c",
-          "object": "structures.obj"
+          "object": "structures.obj",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x106130",

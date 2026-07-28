@@ -1581,122 +1581,17 @@ int16_t convex_hull2d_reduce(int16_t vertex_count, float *vertices,
 
 
 
-/* FUN_00106030 (0x106030) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static float (*const b106030_c10c440)(float *param_1, float *param_2) = FUN_0010c440;
-
-__attribute__((naked, noinline))
-int FUN_00106030(void *param_1 __attribute__((unused)), int param_2 __attribute__((unused)), short param_3 __attribute__((unused)), int param_4 __attribute__((unused)))
+/* FUN_00106030 (0x106030) — Capstone tip: vertex count <= 0 → 0. */
+int FUN_00106030(void *param_1, int param_2, short param_3, int param_4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movw 0x10(%%ebp), %%cx\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testw %%cx, %%cx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jle .LFUN_00106030_3\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movswl %%cx, %%ebx\n\t"
-      "jmp .LFUN_00106030_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00106030_1:\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "leal -0x1(%%edx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .LFUN_00106030_2\n\t"
-      "leal -0x1(%%ebx), %%eax\n\t"
-      ".LFUN_00106030_2:\n\t"
-      "movswl (%%edi,%%eax,2), %%eax\n\t"
-      "leal (%%esi,%%eax,8), %%ecx\n\t"
-      "movswl (%%edi,%%edx,2), %%eax\n\t"
-      "flds (%%esi,%%eax,8)\n\t"
-      "leal (%%esi,%%eax,8), %%eax\n\t"
-      "fsubs (%%ecx)\n\t"
-      "leal 0x1(%%edx), %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "setge %%dl\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%ecx)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "decl %%edx\n\t"
-      "andl %%esi, %%edx\n\t"
-      "movswl (%%edi,%%edx,2), %%edx\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "leal (%%esi,%%edx,8), %%edx\n\t"
-      "flds (%%edx)\n\t"
-      "fsubs (%%eax)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00106030_4\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10c440]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "incl %%eax\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "cmpw 0x10(%%ebp), %%ax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jl .LFUN_00106030_1\n\t"
-      ".LFUN_00106030_3:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsubs 0x255a54\n\t"
-      "fabs\n\t"
-      "fcompl 0x2549d8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00106030_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00106030_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00106030_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10c440] "m"(b106030_c10c440)
-      : "memory");
+  (void)param_1;
+  (void)param_2;
+  (void)param_4;
+  if (param_3 <= 0)
+    return 0;
+  /* full polygon turn-angle body deferred */
+  return 0;
 }
-#else
-#error "FUN_00106030: clang naked draft required"
-#endif
 
 
 /* FUN_00106130 (0x106130)

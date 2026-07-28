@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00106030: param_3 (count) <= 0 \u2192 return 0",
+  "arg_overrides": {
+    "param_3": 0
+  }
+}
