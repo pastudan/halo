@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00073960: advance past color-key runs",
+  "arg_overrides": {
+    "inout": "0000"
+  }
+}

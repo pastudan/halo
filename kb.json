@@ -38957,13 +38957,13 @@
         {
           "addr": "0x73830",
           "decl": "void FUN_00073830(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00073830"
         },
         {
           "addr": "0x73960",
-          "decl": "int FUN_00073960(int *param_1);",
-          "ported": false,
+          "decl": "short FUN_00073960(short *inout);",
+          "ported": true,
           "name": "FUN_00073960"
         },
         {

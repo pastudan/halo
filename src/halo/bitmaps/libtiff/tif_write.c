@@ -5862,245 +5862,133 @@ void FUN_00073770(void)
 #endif
 
 
-/* FUN_00073830 (0x73830) — XBE naked draft (batch 356). */
-#if defined(__clang__)
-static void * (*const b73830_c7c940)(void *bitmap, short x, short y, short mipmap_index) = (void *)bitmap_2d_address;
-
-__attribute__((naked, noinline))
+/* FUN_00073830 (0x73830) — Capstone lift: sample bitmap corners into color-key globals. */
 void FUN_00073830(void)
 {
-  __asm__ volatile(
-      "movl 0x334150, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, 0x334148\n\t"
-      "movb $0, 0x334149\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x334150, %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "andl $0xffffff, %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "movl %%ecx, 0x33413c\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x334150, %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, 0x334140\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x334140, %%ecx\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "addl $0x30, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "movl %%eax, 0x334144\n\t"
-      "jne .LFUN_00073830_1\n\t"
-      "cmpl $0xff, %%ecx\n\t"
-      "je .LFUN_00073830_1\n\t"
-      "movb $0, 0x334148\n\t"
-      ".LFUN_00073830_1:\n\t"
-      "cmpl %%ecx, 0x33413c\n\t"
-      "jne .LFUN_00073830_2\n\t"
-      "movl $0xffff, 0x334144\n\t"
-      "movb $1, 0x334149\n\t"
-      ".LFUN_00073830_2:\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl $3, %%edi\n\t"
-      "cmpw %%di, 0x4(%%eax)\n\t"
-      "jle .LFUN_00073830_5\n\t"
-      "pushl %%esi\n\t"
-      ".LFUN_00073830_3:\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7c940]\n\t"
-      "movl 0x334150, %%edx\n\t"
-      "movl (%%eax), %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "andl $0xffffff, %%esi\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x33413c, %%ecx\n\t"
-      "addl $0x20, %%esp\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "je .LFUN_00073830_4\n\t"
-      "cmpl 0x334140, %%eax\n\t"
-      "je .LFUN_00073830_4\n\t"
-      "movb $0, 0x334148\n\t"
-      ".LFUN_00073830_4:\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x4(%%eax), %%di\n\t"
-      "jl .LFUN_00073830_3\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00073830_5:\n\t"
-      "movb 0x334148, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "jne .LFUN_00073830_6\n\t"
-      "movl $0xff000000, %%eax\n\t"
-      "movl %%eax, 0x334144\n\t"
-      "movl %%eax, 0x334140\n\t"
-      "movl %%eax, 0x33413c\n\t"
-      ".LFUN_00073830_6:\n\t"
-      "ret\n\t"
-      :
-      : [c7c940] "m"(b73830_c7c940)
-      : "memory");
+  void *bm;
+  void *addr;
+  unsigned int c0;
+  unsigned int c1;
+  unsigned int c2;
+  short x;
+
+  bm = *(void **)0x334150;
+  *(unsigned char *)0x334148 = 1;
+  *(unsigned char *)0x334149 = 0;
+
+  addr = bitmap_2d_address(bm, 0, 0, 0);
+  c0 = *(unsigned int *)addr & 0xffffffu;
+  *(unsigned int *)0x33413c = c0;
+
+  addr = bitmap_2d_address(bm, 1, 0, 0);
+  c1 = *(unsigned int *)addr & 0xffffffu;
+  *(unsigned int *)0x334140 = c1;
+
+  addr = bitmap_2d_address(bm, 2, 0, 0);
+  c2 = *(unsigned int *)addr & 0xffffffu;
+  *(unsigned int *)0x334144 = c2;
+
+  if (c2 == c1 && c1 != 0xffu)
+    *(unsigned char *)0x334148 = 0;
+
+  if (c0 == c1) {
+    *(unsigned int *)0x334144 = 0xffffu;
+    *(unsigned char *)0x334149 = 1;
+  }
+
+  bm = *(void **)0x334150;
+  for (x = 3; x < *(short *)((char *)bm + 4); x = (short)(x + 1)) {
+    unsigned int px0;
+    unsigned int px1;
+    addr = bitmap_2d_address(bm, x, 0, 0);
+    px0 = *(unsigned int *)addr & 0xffffffu;
+    addr = bitmap_2d_address(bm, x, 1, 0);
+    px1 = *(unsigned int *)addr & 0xffffffu;
+    if (px0 != *(unsigned int *)0x33413c && px1 != *(unsigned int *)0x334140)
+      *(unsigned char *)0x334148 = 0;
+    bm = *(void **)0x334150;
+  }
+
+  if (*(unsigned char *)0x334148 == 0) {
+    unsigned int bad = 0xff000000u;
+    *(unsigned int *)0x334144 = bad;
+    *(unsigned int *)0x334140 = bad;
+    *(unsigned int *)0x33413c = bad;
+  }
 }
-#else
-#error "FUN_00073830: clang naked draft required"
-#endif
 
 
-/* FUN_00073960 (0x73960) — XBE naked draft (batch 318). */
-#if defined(__clang__)
-static void (*const b73960_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b73960_exitfn)(int) = system_exit;
-static void * (*const b73960_c7c940)(void *bitmap, short x, short y, short mipmap_index) = bitmap_2d_address;
 
-__attribute__((naked, noinline))
-int FUN_00073960(int *param_1 __attribute__((unused)))
+/* FUN_00073960 (0x73960) — Capstone lift: advance face/row past color-key runs.
+ * ABI: inout short* on stack. Returns current index. */
+short FUN_00073960(short *inout)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00073960_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1d9\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x2616e0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00073960_1:\n\t"
-      "movb 0x334149, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "je .LFUN_00073960_8\n\t"
-      "movw (%%edi), %%di\n\t"
-      "cmpw 0x6(%%eax), %%di\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jge .LFUN_00073960_7\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00073960_2:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw %%si, 0x4(%%eax)\n\t"
-      "jle .LFUN_00073960_5\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00073960_3:\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x33413c, %%ecx\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LFUN_00073960_4\n\t"
-      "movb $1, %%bl\n\t"
-      ".LFUN_00073960_4:\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpw 0x4(%%eax), %%si\n\t"
-      "jl .LFUN_00073960_3\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00073960_5\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .LFUN_00073960_6\n\t"
-      ".LFUN_00073960_5:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00073960_7\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal 0x1(%%edi), %%eax\n\t"
-      "movw %%ax, (%%ecx)\n\t"
-      "movl 0x334150, %%eax\n\t"
-      ".LFUN_00073960_6:\n\t"
-      "incl %%edi\n\t"
-      "cmpw 0x6(%%eax), %%di\n\t"
-      "jl .LFUN_00073960_2\n\t"
-      ".LFUN_00073960_7:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00073960_8:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movw (%%edi), %%si\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw 0x6(%%eax), %%si\n\t"
-      "jge .LFUN_00073960_13\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00073960_9:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x33413c, %%ecx\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jne .LFUN_00073960_10\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00073960_12\n\t"
-      ".LFUN_00073960_10:\n\t"
-      "cmpl 0x334140, %%eax\n\t"
-      "jne .LFUN_00073960_11\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_00073960_13\n\t"
-      ".LFUN_00073960_11:\n\t"
-      "leal 0x1(%%esi), %%edx\n\t"
-      "movw %%dx, (%%edi)\n\t"
-      ".LFUN_00073960_12:\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpw 0x6(%%eax), %%si\n\t"
-      "jl .LFUN_00073960_9\n\t"
-      ".LFUN_00073960_13:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b73960_assert), [exitfn] "m"(b73960_exitfn), [c7c940] "m"(b73960_c7c940)
-      : "memory");
+  void *bm;
+  short face;
+  short i;
+  unsigned char any_diff;
+  unsigned char saw_key;
+  unsigned int pix;
+
+  if (inout == 0) {
+    display_assert((const char *)0x2616e0, (const char *)0x2616f0, 0x1d9, 1);
+    system_exit(-1);
+  }
+
+  bm = *(void **)0x334150;
+  if (*(unsigned char *)0x334149 != 0) {
+    face = *inout;
+    any_diff = 0;
+    if (face >= *(short *)((char *)bm + 6))
+      return face;
+    while (face < *(short *)((char *)bm + 6)) {
+      saw_key = 0;
+      i = 0;
+      if (*(short *)((char *)bm + 4) > 0) {
+        while (i < *(short *)((char *)bm + 4)) {
+          pix = *(unsigned int *)bitmap_2d_address(bm, i, face, 0) & 0xffffffu;
+          if (pix != *(unsigned int *)0x33413c)
+            saw_key = 1;
+          bm = *(void **)0x334150;
+          i = (short)(i + 1);
+        }
+        if (saw_key) {
+          any_diff = 1;
+          face = (short)(face + 1);
+          continue;
+        }
+      }
+      if (any_diff)
+        break;
+      *inout = (short)(face + 1);
+      bm = *(void **)0x334150;
+      face = (short)(face + 1);
+    }
+    return face;
+  }
+
+  /* flag 0x334149 clear: scan along width for key/non-key transition */
+  face = *inout;
+  saw_key = 0;
+  if (face >= *(short *)((char *)bm + 6))
+    return face;
+  while (face < *(short *)((char *)bm + 6)) {
+    pix = *(unsigned int *)bitmap_2d_address(bm, 0, face, 0) & 0xffffffu;
+    if (pix == *(unsigned int *)0x33413c) {
+      saw_key = 1;
+    } else if (pix == *(unsigned int *)0x334140) {
+      if (saw_key)
+        break;
+      *inout = (short)(face + 1);
+    } else {
+      *inout = (short)(face + 1);
+    }
+    bm = *(void **)0x334150;
+    face = (short)(face + 1);
+  }
+  return face;
 }
-#else
-#error "FUN_00073960: clang naked draft required"
-#endif
+
 
 
 /* FUN_00073a80 (0x73a80) — Capstone lift: scan bitmap faces for color key.
