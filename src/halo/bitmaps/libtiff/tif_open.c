@@ -1953,37 +1953,30 @@ int FUN_0006d4d0(void *tif)
   return 1;
 }
 
-/* FUN_0006d500 (0x6d500) — XBE naked draft (batch 327). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006d500(void)
+/* FUN_0006d500 (0x6d500) — readable C lift.
+ * ABI: tif@eax, magic@edx, flag@ecx.
+ * DAT_* must stay as extern relocs so Unicorn remaps like the oracle. */
+void FUN_0006d500(void *tif, unsigned int magic, int flag)
 {
-  __asm__ volatile(
-      "cmpl $0x4d4d, %%edx\n\t"
-      "movb $1, 0x8(%%eax)\n\t"
-      "movl $0x2ec8f8, 0xd0(%%eax)\n\t"
-      "jne .LFUN_0006d500_1\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl $0x2ec92c, 0xcc(%%eax)\n\t"
-      "jne .LFUN_0006d500_2\n\t"
-      "orb $0x10, 0xa(%%eax)\n\t"
-      "ret\n\t"
-      ".LFUN_0006d500_1:\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl $0x334100, 0xcc(%%eax)\n\t"
-      "je .LFUN_0006d500_2\n\t"
-      "orb $0x10, 0xa(%%eax)\n\t"
-      ".LFUN_0006d500_2:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  extern unsigned char DAT_002ec8f8[];
+  extern unsigned char DAT_002ec92c[];
+  extern unsigned char DAT_00334100[];
+
+  *((unsigned char *)tif + 8) = 1;
+  *(void **)((char *)tif + 0xd0) = DAT_002ec8f8;
+  if (magic == 0x4d4d) {
+    *(void **)((char *)tif + 0xcc) = DAT_002ec92c;
+    if (flag == 0)
+      *((unsigned char *)tif + 0xa) =
+          (unsigned char)(*((unsigned char *)tif + 0xa) | 0x10);
+  } else {
+    *(void **)((char *)tif + 0xcc) = DAT_00334100;
+    if (flag != 0)
+      *((unsigned char *)tif + 0xa) =
+          (unsigned char)(*((unsigned char *)tif + 0xa) | 0x10);
+  }
 }
-#else
-#error "FUN_0006d500: clang naked draft required"
-#endif
+
 
 
 /* TIFFFdOpen (0x6d590) — XBE naked draft (batch 323). */

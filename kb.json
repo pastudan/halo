@@ -38438,8 +38438,8 @@
         },
         {
           "addr": "0x6d500",
-          "decl": "void FUN_0006d500(void);",
-          "ported": false,
+          "decl": "void FUN_0006d500(void *tif@<eax>, unsigned int magic@<edx>, int flag@<ecx>);",
+          "ported": true,
           "name": "FUN_0006d500"
         },
         {
