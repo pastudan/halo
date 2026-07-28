@@ -263,94 +263,86 @@ void FUN_0006c5e0(void)
 #endif
 
 
-/* FUN_0006c680 (0x6c680) — XBE naked draft (batch 326). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006c680(void)
+/* FUN_0006c680 (0x6c680) — Capstone lift: 8-bit horizontal accumulate (decode). */
+void FUN_0006c680(unsigned char *buf, int length_count, int stride_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jle .LFUN_0006c680_9\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "subl %%ecx, %%edi\n\t"
-      "pushl %%esi\n\t"
-      ".LFUN_0006c680_1:\n\t"
-      "cmpl $4, %%ecx\n\t"
-      "ja .LFUN_0006c680_2\n\t"
-      "jmp *.LFUN_0006c680_jt(,%%ecx,4)\n\t"
-      ".LFUN_0006c680_2:\n\t"
-      "leal -0x4(%%ecx), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .LFUN_0006c680_4\n\t"
-      ".LFUN_0006c680_3:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "addb %%dl, (%%eax,%%ecx,1)\n\t"
-      "incl %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .LFUN_0006c680_3\n\t"
-      ".LFUN_0006c680_4:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "addb %%dl, (%%eax,%%ecx,1)\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_0006c680_5:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "addb %%dl, (%%eax,%%ecx,1)\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_0006c680_6:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "addb %%dl, (%%eax,%%ecx,1)\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_0006c680_7:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "addb %%dl, (%%eax,%%ecx,1)\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_0006c680_8:\n\t"
-      "subl %%ecx, %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jg .LFUN_0006c680_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_0006c680_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0006c680_jt:\n\t"
-      ".long .LFUN_0006c680_8\n\t"
-      ".long .LFUN_0006c680_7\n\t"
-      ".long .LFUN_0006c680_6\n\t"
-      ".long .LFUN_0006c680_5\n\t"
-      ".long .LFUN_0006c680_4\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  int rem;
+  unsigned char *p;
+  int n;
+  unsigned char v;
+
+  if (length_count <= stride_count)
+    return;
+  rem = length_count - stride_count;
+  p = buf;
+  do {
+    if (stride_count > 4) {
+      n = stride_count - 4;
+      if (n > 0) {
+        do {
+          v = *p;
+          p[stride_count] = (unsigned char)(p[stride_count] + v);
+          p++;
+        } while (--n != 0);
+      }
+      v = *p;
+      p[stride_count] = (unsigned char)(p[stride_count] + v);
+      p++;
+      v = *p;
+      p[stride_count] = (unsigned char)(p[stride_count] + v);
+      p++;
+      v = *p;
+      p[stride_count] = (unsigned char)(p[stride_count] + v);
+      p++;
+      v = *p;
+      p[stride_count] = (unsigned char)(p[stride_count] + v);
+      p++;
+    } else {
+      /* jumptable stride 0..4 falls into trailing adds; stride 0 hits label 8 only */
+      switch (stride_count) {
+      case 4:
+        v = *p;
+        p[stride_count] = (unsigned char)(p[stride_count] + v);
+        p++;
+        /* fallthrough */
+      case 3:
+        v = *p;
+        p[stride_count] = (unsigned char)(p[stride_count] + v);
+        p++;
+        /* fallthrough */
+      case 2:
+        v = *p;
+        p[stride_count] = (unsigned char)(p[stride_count] + v);
+        p++;
+        /* fallthrough */
+      case 1:
+        v = *p;
+        p[stride_count] = (unsigned char)(p[stride_count] + v);
+        p++;
+        /* fallthrough */
+      case 0:
+        break;
+      }
+    }
+    rem -= stride_count;
+  } while (rem > 0);
 }
-#else
-#error "FUN_0006c680: clang naked draft required"
-#endif
 
 
 /* FUN_0006c6f0 (0x6c6f0) — Capstone lift: 16-bit horizontal accumulate (decode). */
-void FUN_0006c6f0(unsigned short *buf, int length, int count)
+void FUN_0006c6f0(unsigned short *buf, int length_count, int stride_count)
 {
-  int rem = (length / 2) - count;
+  int rem = (length_count / 2) - stride_count;
   int i;
 
   if (rem <= 0)
     return;
   while (rem > 0) {
-    for (i = 0; i < count; i++)
-      buf[count + i] = (unsigned short)(buf[count + i] + buf[i]);
-    buf += count;
-    rem -= count;
+    for (i = 0; i < stride_count; i++)
+      buf[stride_count + i] =
+          (unsigned short)(buf[stride_count + i] + buf[i]);
+    buf += stride_count;
+    rem -= stride_count;
   }
 }
 
@@ -468,7 +460,7 @@ void FUN_0006c780(void)
 
 
 __attribute__((naked, noinline))
-void FUN_0006c860(void)
+void FUN_0006c860(unsigned char *buf, int length, int stride)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"

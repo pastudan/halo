@@ -38313,14 +38313,14 @@
         },
         {
           "addr": "0x6c680",
-          "decl": "void FUN_0006c680(unsigned char *buf, int length, int stride);",
-          "ported": false,
+          "decl": "void FUN_0006c680(unsigned char *buf, int length_count, int stride_count);",
+          "ported": true,
           "name": "FUN_0006c680"
         },
         {
           "addr": "0x6c6f0",
-          "decl": "void FUN_0006c6f0(unsigned short *buf, int length, int count);",
-          "ported": false,
+          "decl": "void FUN_0006c6f0(unsigned short *buf, int length_count, int stride_count);",
+          "ported": true,
           "name": "FUN_0006c6f0"
         },
         {
