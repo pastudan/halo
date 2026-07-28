@@ -399,6 +399,17 @@ def patch_dir32_relocs(code: bytes, relocs: list, defined_symbols: set,
                 and not is_rdata_ref):
             continue
         if sym in defined_symbols and not is_rdata_ref:
+            # Address-taken intra-object siblings (e.g. candidate `&FUN_xxx`
+            # while the delinked oracle has extern DIR32 to the same FUN_xxx):
+            # reuse the oracle's preset globals slot so stored function
+            # pointers compare equal.  Without this, defined symbols are
+            # skipped and the candidate keeps a local .text VA / zero.
+            if canon in symbol_slots or sym in symbol_slots:
+                slot = symbol_slots.get(canon, symbol_slots.get(sym))
+                off = r.virtual_address
+                if off + 4 <= len(patched):
+                    struct.pack_into("<I", patched, off, slot)
+                continue
             # Switch jump-table / local LAB_* DIR32 → code VA.
             if (
                 local_symbol_values

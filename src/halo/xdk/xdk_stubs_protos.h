@@ -407,7 +407,7 @@ void IDirectSound_SetOrientation(void);
 void IDirectSound_SetPosition(void);
 void IDirectSound_SetRolloffFactor(void);
 void IDirectSound_SetVelocity(void);
-void IDirectSound_CommitDeferredSettings(void);
+int __stdcall IDirectSound_CommitDeferredSettings(void *dsound);
 void IDirectSound_GetTime(void);
 void IDirectSound_SetI3DL2Listener(void);
 void IDirectSoundBuffer_SetLFO(void);
