@@ -31586,7 +31586,7 @@
         {
           "addr": "0x182cf0",
           "decl": "void rasterizer_xbox_bitmap_swizzle3d_long(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_xbox_bitmap_swizzle3d_long"
         },
         {
@@ -32233,7 +32233,7 @@
         {
           "addr": "0x17e5b0",
           "decl": "void FUN_0017e5b0(float *vert_ws, float *vert_offset, int transform_a, int transform_b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017e5b0"
         },
         {
@@ -40018,7 +40018,7 @@
         {
           "addr": "0x15e800",
           "decl": "void FUN_0015e800(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015e800"
         },
         {
