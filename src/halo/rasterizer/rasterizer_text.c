@@ -784,165 +784,108 @@ void FUN_00181900(short param_1 __attribute__((unused)))
 #endif
 
 
-/* FUN_00181a90 (0x181a90) — XBE naked draft (batch 356). */
-#if defined(__clang__)
-static void (*const b181a90_c16f910)(int16_t profile) = (void *)FUN_0016f910;
-static void (*const b181a90_c17cfc0)(int param_1, int param_2) = (void *)FUN_0017cfc0;
-static int * (*const b181a90_c181020)(short index) = (void *)FUN_00181020;
-static float * (*const b181a90_c17ffc0)(float *param_1, unsigned int param_2) = (void *)FUN_0017ffc0;
-static void (*const b181a90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b181a90_exitfn)(int) = system_exit;
-static float *(*const b181a90_vsca)(float *, float *, float, float *) = vector3d_scale_add;
-static int (*const b181a90_c17d030)(float *position, int vis_index, int index) = (void *)FUN_0017d030;
-static void (*const b181a90_c17d020)(void) = (void *)FUN_0017d020;
-static void (*const b181a90_c16fa40)(int16_t profile) = (void *)FUN_0016fa40;
+/* FUN_00181a90 (0x181a90) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
 void FUN_00181a90(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x2c, %%esp\n\t"
-      "pushl $0x17\n\t"
-      "call *%[c16f910]\n\t"
-      "movb 0x3256d7, %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00181a90_11\n\t"
-      "movw 0x46e008, %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jg .LFUN_00181a90_11\n\t"
-      "jne .LFUN_00181a90_1\n\t"
-      "cmpw $1, 0x31fa98\n\t"
-      "jg .LFUN_00181a90_11\n\t"
-      ".LFUN_00181a90_1:\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpw %%bx, 0x5a5bc0\n\t"
-      "jne .LFUN_00181a90_10\n\t"
-      "cmpl %%ebx, 0x4d0480\n\t"
-      "jle .LFUN_00181a90_10\n\t"
-      "pushl $1\n\t"
-      "pushl $6\n\t"
-      "call *%[c17cfc0]\n\t"
-      "movl 0x4d0480, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jle .LFUN_00181a90_9\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      ".LFUN_00181a90_2:\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "call *%[c181020]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x10(%%edi), %%eax\n\t"
-      "movl (%%edi), %%esi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x2c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17ffc0]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%edx, -0x20(%%ebp)\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "movzbl 0x22(%%edi), %%eax\n\t"
-      "andl $0xffffff7f, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw 0x5a5bc2, %%ax\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "jne .LFUN_00181a90_8\n\t"
-      "movswl 0x14(%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "movl 0x10(%%esi), %%ecx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "je .LFUN_00181a90_5\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_00181a90_4\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_00181a90_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e2\n\t"
-      "pushl $0x2b01b4\n\t"
-      "pushl $0x2b05ec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_00181a90_7\n\t"
-      ".LFUN_00181a90_3:\n\t"
-      "leal 0x4(%%edi), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "jmp .LFUN_00181a90_7\n\t"
-      ".LFUN_00181a90_4:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "fmuls 0x254e68\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x4(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "jmp .LFUN_00181a90_6\n\t"
-      ".LFUN_00181a90_5:\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "fchs\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0x5a5bd4\n\t"
-      "leal 0x4(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      ".LFUN_00181a90_6:\n\t"
-      "call *%[vsca]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_00181a90_7:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, 0x24(%%edi)\n\t"
-      ".LFUN_00181a90_8:\n\t"
-      "movl 0x4d0480, %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jl .LFUN_00181a90_2\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00181a90_9:\n\t"
-      "call *%[c17d020]\n\t"
-      ".LFUN_00181a90_10:\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00181a90_11:\n\t"
-      "pushl $0x17\n\t"
-      "call *%[c16fa40]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c16f910] "m"(b181a90_c16f910), [c17cfc0] "m"(b181a90_c17cfc0), [c181020] "m"(b181a90_c181020), [c17ffc0] "m"(b181a90_c17ffc0), [assert] "m"(b181a90_assert), [exitfn] "m"(b181a90_exitfn), [vsca] "m"(b181a90_vsca), [c17d030] "m"(b181a90_c17d030), [c17d020] "m"(b181a90_c17d020), [c16fa40] "m"(b181a90_c16fa40)
-      : "memory");
+  int *entry; /* pointer to queued lens flare slot (from FUN_00181020) */
+  int definition; /* *entry = definition tag ptr */
+  float *dir_result; /* return of FUN_0017ffc0 (3-float direction vec) */
+  short occlusion_dir; /* *(short *)(definition + 0x14) */
+  int vis_param; /* *(int *)(definition + 0x10) as int (passes to thunk) */
+  int lf_count; /* DAT_004d0480 */
+  int i; /* loop index */
+  float perp[3]; /* perpendicular output (12 bytes, EBP-0x2c) */
+  float dir[3]; /* direction vec copied from FUN_0017ffc0 result */
+  float pos[3]; /* output position vec for occlusion test (EBP-0x14) */
+
+  FUN_0016f910(0x17);
+
+  if (*(char *)0x3256d7 == 0) {
+    FUN_0016fa40(0x17);
+    return;
+  }
+  if (*(short *)0x46e008 > 1) {
+    FUN_0016fa40(0x17);
+    return;
+  }
+  if (*(short *)0x46e008 == 1 && *(short *)0x31fa98 > 1) {
+    FUN_0016fa40(0x17);
+    return;
+  }
+
+  if (*(short *)0x5a5bc0 != 0) {
+    FUN_0016fa40(0x17);
+    return;
+  }
+
+  lf_count = *(int *)0x4d0480;
+  if (lf_count <= 0) {
+    FUN_0016fa40(0x17);
+    return;
+  }
+
+  FUN_0017cfc0(6, 1);
+
+  lf_count = *(int *)0x4d0480;
+  if (lf_count > 0) {
+    i = 0;
+    do {
+      /* FUN_00181020 takes index via SI register; build system provides
+       * a thunk that loads the arg into SI before the call. */
+      entry = FUN_00181020((short)i);
+      definition = *entry;
+
+      /* FUN_0017ffc0(&perp, entry[4]) fills perp[] and returns a
+       * pointer to a 3-float direction vec; copy it into dir[]. */
+      dir_result = FUN_0017ffc0(perp, (unsigned int)entry[4]);
+      dir[0] = dir_result[0];
+      dir[1] = dir_result[1];
+      dir[2] = dir_result[2];
+
+      /* MOVZX byte [entry+0x22]; AND 0xffffff7f (clear bit 7) → compare
+       * with window index */
+      if ((*(unsigned char *)((char *)entry + 0x22) & 0x7f) ==
+          *(unsigned short *)0x5a5bc2) {
+        occlusion_dir = *(short *)(definition + 0x14);
+        vis_param = *(int *)(definition + 0x10);
+
+        if (occlusion_dir == 0) {
+          /* Negate scale; use global forward direction (0x5a5bd4) */
+          vector3d_scale_add((float *)(entry + 1), (float *)0x5a5bd4,
+                             -*(float *)(definition + 0x10), pos);
+        } else if (occlusion_dir == 1) {
+          /* Scale along dir[] by definition field * constant */
+          vector3d_scale_add((float *)(entry + 1), dir,
+                             *(float *)(definition + 0x10) * *(float *)0x254e68,
+                             pos);
+        } else if (occlusion_dir == 2) {
+          /* Use object/light position directly */
+          pos[0] = *(float *)(entry + 1);
+          pos[1] = *(float *)(entry + 2);
+          pos[2] = *(float *)(entry + 3);
+        } else {
+          display_assert(
+            "### ERROR unsupported lens flare occlusion offset direction",
+            "c:\\halo\\SOURCE\\rasterizer\\rasterizer_lights.c", 0x1e2, 1);
+          system_exit(-1);
+        }
+
+        entry[9] = FUN_0017d030(pos, vis_param, i);
+      }
+
+      i++;
+    } while (i < *(int *)0x4d0480);
+  }
+
+  /* FUN_0017d020 (thunk → FUN_0017ad90) is called after the loop whenever
+   * the first lf_count check passed (i.e. when lf_count > 0), matching
+   * the original control-flow shape (0x181bfd falls through to 0x181c02
+   * regardless of the inner lf_count re-check). */
+  FUN_0017d020();
+
+  FUN_0016fa40(0x17);
 }
-#else
-#error "FUN_00181a90: clang naked draft required"
-#endif
 
 
 /* FUN_00181c20 (0x181c20) — readable C lift (restored pre-naked). */
