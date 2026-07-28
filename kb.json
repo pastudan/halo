@@ -38199,8 +38199,8 @@
         },
         {
           "addr": "0x6aa40",
-          "decl": "void FUN_0006aa40(void);",
-          "ported": false,
+          "decl": "void FUN_0006aa40(unsigned int *dst, unsigned char *src, void *unused, int count, int num_rows, int skip_src_words, int skip_dst);",
+          "ported": true,
           "name": "FUN_0006aa40"
         },
         {
@@ -38223,8 +38223,8 @@
         },
         {
           "addr": "0x6ae10",
-          "decl": "void FUN_0006ae10(void);",
-          "ported": false,
+          "decl": "void FUN_0006ae10(unsigned int *dst, unsigned char *src, void *unused, int count, int num_rows, int skip_src_words, int skip_dst);",
+          "ported": true,
           "name": "FUN_0006ae10"
         },
         {
