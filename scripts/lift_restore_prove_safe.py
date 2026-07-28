@@ -31,7 +31,8 @@ RESULTS_RE = re.compile(r"(\d+) passed, (\d+) failed, (\d+) errors")
 ZERO_ARG_CALL = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(\s*\)\s*;")
 FAIL_LEDGER = ROOT / "artifacts" / "grind" / "restore_fail_ledger.json"
 # Skip recently-failed restores so waves don't burn 90s×N on known near-misses.
-FAIL_SKIP_HOURS = 2
+FAIL_SKIP_HOURS = 0.25  # was 2; tip waves starved once easy restores exhausted
+
 
 
 def load_fail_ledger() -> dict:
