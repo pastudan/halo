@@ -8324,8 +8324,14 @@
         {
           "addr": "0x19ac00",
           "decl": "bool file_write(file_ref_t *info, int size, void *buffer);",
-          "ported": false,
-          "name": "file_write"
+          "ported": true,
+          "name": "file_write",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x19acb0",
@@ -15810,7 +15816,13 @@
           "addr": "0x11b650",
           "decl": "bool FUN_0011b650(int definition, short version, void *data, char *buffer, short *buffer_size_out, short maximum_buffer_size);",
           "name": "FUN_0011b650",
-          "ported": false
+          "ported": true,
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x11b750",

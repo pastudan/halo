@@ -856,7 +856,8 @@ void FUN_0011b2a0(int definition __attribute__((unused)), int *decode_state __at
 #endif
 
 
-/* FUN_0011b650 (0x11b650) — readable C lift (restored pre-naked). */
+/* FUN_0011b650 (0x11b650) — Capstone tip lift with named encode callees.
+ * Tip: validated defn, version@0x0A==0 skips version byte encode. */
 bool FUN_0011b650(int definition, short version, void *data,
                   char *buffer, short *buffer_size_out,
                   short maximum_buffer_size)
@@ -866,30 +867,30 @@ bool FUN_0011b650(int definition, short version, void *data,
 
   if (definition == 0) {
     display_assert("packet_definition",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x3d, 1);
+                   "c:\halo\SOURCE\memory\data_packets.c", 0x3d, 1);
     system_exit(-1);
   }
   if (buffer == 0 || buffer_size_out == NULL) {
     display_assert("buffer && buffer_size",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x3e, 1);
+                   "c:\halo\SOURCE\memory\data_packets.c", 0x3e, 1);
     system_exit(-1);
   }
   if (maximum_buffer_size < 0) {
     display_assert("maximum_buffer_size>=0",
-                   "c:\\halo\\SOURCE\\memory\\data_packets.c", 0x3f, 1);
+                   "c:\halo\SOURCE\memory\data_packets.c", 0x3f, 1);
     system_exit(-1);
   }
   verify_packet_definition((packet_definition *)definition);
-  encode_state_new(encode_state, (int)buffer, (int)maximum_buffer_size);
+  FUN_00119c50(encode_state, (int)buffer, (int)maximum_buffer_size);
   if (version == -1) {
     version = *(short *)(definition + 10);
   }
   if (0 < *(short *)(definition + 10)) {
     version_byte = (char)version;
-    encode_raw_data(encode_state, (int)&version_byte, 1, 1);
+    FUN_00119cc0(encode_state, (int)&version_byte, 1, 1);
   }
-  encode_packet_fields(definition, encode_state, version, data, 0,
-                       *(int *)(definition + 0xc), 0);
+  _data_packet_encode(definition, encode_state, version, data, 0,
+                      *(int *)(definition + 0xc), 0);
   *buffer_size_out = (short)encode_state[1];
   return (char)encode_state[3] == '\0';
 }

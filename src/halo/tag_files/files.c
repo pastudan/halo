@@ -1023,7 +1023,9 @@ bool file_set_eof(file_ref_t *info, int offset)
 
 
 
-/* file_write (0x19ac00) — readable C lift. */
+/* file_write (0x19ac00) — Capstone tip lift.
+ * Direct WriteFile/XGetLastError/XSetLastError CALLs for Unicorn stubs.
+ * Tip: WriteFile stub returns 0 → error path return false. */
 bool file_write(file_ref_t *info, int size, void *buffer)
 {
   file_ref_t *ref;
@@ -1033,12 +1035,12 @@ bool file_write(file_ref_t *info, int size, void *buffer)
     display_assert((const char *)0x267900, (const char *)0x2b3dec, 0x1c3, 1);
     system_exit(-1);
   }
-  if (XWriteFile(*(int *)((char *)ref + 0x108), buffer, (uint32_t)size, &written, 0)
+  if (FUN_001d14b6(*(void **)((char *)ref + 0x108), buffer, (uint32_t)size, &written, 0)
       && written == (uint32_t)size)
     return 1;
   ref = file_reference_verify(info);
-  error(2, "%s('%s') error 0x%08x", "file_write", (char *)ref + 8, XGetLastError());
-  XSetLastError(0);
+  error(2, "%s('%s') error 0x%08x", "file_write", (char *)ref + 8, xapi_GetLastError());
+  SetLastError(0);
   return 0;
 }
 

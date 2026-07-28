@@ -1,0 +1,17 @@
+{
+  "description": "FUN_0011b650: validated empty version_count defn",
+  "regions": {
+    "0x30000000": "0001003000000000000000008001003001000000",
+    "0x30000100": "7400",
+    "0x30000180": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "arg_overrides": {
+    "definition": 805306368,
+    "version": 0,
+    "maximum_buffer_size": 64
+  },
+  "stub_returns": {
+    "_data_packet_encode": 0,
+    "FUN_00119c50": 0
+  }
+}

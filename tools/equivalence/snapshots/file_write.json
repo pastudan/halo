@@ -1,0 +1,9 @@
+{
+  "description": "file_write: WriteFile returns 0 -> fail/false",
+  "stub_returns": {
+    "WriteFile": 0,
+    "FUN_001d14b6": 0,
+    "xapi_GetLastError": 0,
+    "SetLastError": 0
+  }
+}
