@@ -23412,8 +23412,8 @@
         },
         {
           "addr": "0x113230",
-          "decl": "void * FUN_00113230(char *path, int fd, char *mode@<eax>);",
-          "ported": false,
+          "decl": "void * FUN_00113230(char *path, int fd, char *mode);",
+          "ported": true,
           "name": "FUN_00113230"
         },
         {
@@ -30645,7 +30645,7 @@
         },
         {
           "addr": "0x1b69a0",
-          "decl": "void FUN_001b69a0(int vehicle_handle, void *wheel_buffer@<edi>, void *scratch_buffer);",
+          "decl": "void FUN_001b69a0(int vehicle_handle, void *wheel_buffer, void *scratch_buffer);",
           "ported": false,
           "name": "FUN_001b69a0"
         },
