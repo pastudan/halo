@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* --- data_packet_groups.obj batch drafts (2026-07-26) --- */
 
 /* data_packet_group_append_packet_header (0x11abb0) — readable C lift. */
@@ -73,189 +74,116 @@ bool encode_packet_group(group_definition *group, void *data, char *encoded_buf,
 }
 
 
-/* compute_packet_field_sizes (0x11add0) — XBE naked draft (batch 118). */
-#if defined(__clang__)
-static char * (*const b11add0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b11add0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b11add0_exitfn)(int) = system_exit;
-static void (*const b11add0_c11add0)(packet_definition *def, short *param_2, short *param_3, short *param_4) = compute_packet_field_sizes;
-
-__attribute__((naked, noinline))
-void compute_packet_field_sizes(packet_definition *def __attribute__((unused)), short *param_2 __attribute__((unused)), short *param_3 __attribute__((unused)), short *param_4 __attribute__((unused)))
+/* compute_packet_field_sizes (0x11add0) — readable C lift (restored pre-naked) — hand-lift from XBE/oracle.
+ * Walks field defs (10-byte records) until type==9 terminator.
+ * Writes per-field size at +0x8, optional total size / field count. */
+/* compute_packet_field_sizes (0x11add0) — readable C lift (restored pre-naked) — hand-lift from XBE/oracle.
+ * Walks field defs (10-byte records) until type==9 terminator.
+ * Writes per-field size at +0x8, optional total size / field count. */
+void compute_packet_field_sizes(packet_definition *def, short *out_size,
+                                short *fields, short *out_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "cmpw $9, (%%eax)\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "je .Lcompute_packet_field_sizes_16\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      ".Lcompute_packet_field_sizes_1:\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lcompute_packet_field_sizes_2\n\t"
-      "cmpw $0xa, %%ax\n\t"
-      "jl .Lcompute_packet_field_sizes_3\n\t"
-      ".Lcompute_packet_field_sizes_2:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8e\n\t"
-      "pushl $0x28f498\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x28f450\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcompute_packet_field_sizes_3:\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "jg .Lcompute_packet_field_sizes_4\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $0x90\n\t"
-      "pushl $0x28f498\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x28f41c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcompute_packet_field_sizes_4:\n\t"
-      "movw 0xa(%%ebx), %%ax\n\t"
-      "cmpw 0x4(%%esi), %%ax\n\t"
-      "jl .Lcompute_packet_field_sizes_15\n\t"
-      "movw 0x6(%%esi), %%cx\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "jle .Lcompute_packet_field_sizes_5\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jne .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_5:\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "cmpl $9, %%eax\n\t"
-      "ja .Lcompute_packet_field_sizes_14\n\t"
-      "jmp *.Lcompute_packet_field_sizes_jt(,%%eax,4)\n\t"
-      ".Lcompute_packet_field_sizes_6:\n\t"
-      "movw 0x2(%%esi), %%di\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_7:\n\t"
-      "movw 0x2(%%esi), %%di\n\t"
-      "shlw $1, %%di\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_8:\n\t"
-      "movw 0x2(%%esi), %%di\n\t"
-      "shlw $2, %%di\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_9:\n\t"
-      "movw 0x2(%%esi), %%di\n\t"
-      "shlw $3, %%di\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_10:\n\t"
-      "movw 0x2(%%esi), %%di\n\t"
-      "incw %%di\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_11:\n\t"
-      "movw 0x2(%%esi), %%di\n\t"
-      "addw $2, %%di\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_12:\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0xa(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c11add0]\n\t"
-      "movswl -0x8(%%ebp), %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw 0x2(%%esi), %%di\n\t"
-      "imulw -0x4(%%ebp), %%di\n\t"
-      "leal (%%eax,%%eax,4), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "leal (%%esi,%%edx,2), %%esi\n\t"
-      "addl $2, %%edi\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_13:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "jmp .Lcompute_packet_field_sizes_15\n\t"
-      ".Lcompute_packet_field_sizes_14:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc1\n\t"
-      "pushl $0x28f498\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcompute_packet_field_sizes_15:\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movw %%di, 0x8(%%esi)\n\t"
-      "addl %%edi, %%edx\n\t"
-      "addl $0xa, %%esi\n\t"
-      "cmpw $9, (%%esi)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "jne .Lcompute_packet_field_sizes_1\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Lcompute_packet_field_sizes_16:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lcompute_packet_field_sizes_17\n\t"
-      "subl %%eax, %%esi\n\t"
-      "movl $0x66666667, %%eax\n\t"
-      "imull %%esi\n\t"
-      "sarl $2, %%edx\n\t"
-      "movl %%edx, %%eax\n\t"
-      "shrl $0x1f, %%eax\n\t"
-      "leal 0x1(%%edx,%%eax,1), %%edx\n\t"
-      "movw %%dx, (%%ecx)\n\t"
-      ".Lcompute_packet_field_sizes_17:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "je .Lcompute_packet_field_sizes_18\n\t"
-      "movw -0xc(%%ebp), %%cx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      ".Lcompute_packet_field_sizes_18:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lcompute_packet_field_sizes_jt:\n\t"
-      ".long .Lcompute_packet_field_sizes_6\n\t"
-      ".long .Lcompute_packet_field_sizes_6\n\t"
-      ".long .Lcompute_packet_field_sizes_7\n\t"
-      ".long .Lcompute_packet_field_sizes_8\n\t"
-      ".long .Lcompute_packet_field_sizes_9\n\t"
-      ".long .Lcompute_packet_field_sizes_10\n\t"
-      ".long .Lcompute_packet_field_sizes_11\n\t"
-      ".long .Lcompute_packet_field_sizes_12\n\t"
-      ".long .Lcompute_packet_field_sizes_6\n\t"
-      ".long .Lcompute_packet_field_sizes_13\n\t"
-      ".text\n\t"
-      :
-      : [c8d9d0] "m"(b11add0_c8d9d0), [assert] "m"(b11add0_assert), [exitfn] "m"(b11add0_exitfn), [c11add0] "m"(b11add0_c11add0)
-      : "memory");
+  short *cursor;
+  int total;
+  unsigned size_reg;
+  short ftype;
+  short count;
+  short ver;
+  short vmin;
+  short vmax;
+  short nested_size;
+  short nested_count;
+  short field_size;
+
+  cursor = fields;
+  total = 0;
+  if (fields == NULL || *fields == 9) {
+    goto finish;
+  }
+
+  size_reg = (unsigned)(uintptr_t)fields; /* matches initial EDI */
+
+  while (1) {
+    ftype = cursor[0];
+    count = cursor[1];
+    vmin = cursor[2];
+    vmax = cursor[3];
+
+    if (ftype < 0 || ftype >= 10) {
+      display_assert(csprintf((char *)0x5ab100, (char *)0x28f450, def->name),
+                     (char *)0x28f498, 0x8e, 1);
+      system_exit(-1);
+    }
+    if (count <= 0) {
+      display_assert(csprintf((char *)0x5ab100, (char *)0x28f41c, def->name),
+                     (char *)0x28f498, 0x90, 1);
+      system_exit(-1);
+    }
+
+    ver = def->version;
+    if (ver < vmin || (ver > vmax && vmax != 0)) {
+      field_size = (short)size_reg;
+    } else {
+      switch ((int)ftype) {
+      case 0:
+      case 1:
+      case 8:
+        field_size = count;
+        break;
+      case 2:
+        field_size = (short)(count << 1);
+        break;
+      case 3:
+        field_size = (short)(count << 2);
+        break;
+      case 4:
+        field_size = (short)(count << 3);
+        break;
+      case 5:
+        field_size = (short)(count + 1);
+        break;
+      case 6:
+        field_size = (short)(count + 2);
+        break;
+      case 7:
+        nested_size = 0;
+        nested_count = 0;
+        compute_packet_field_sizes(def, &nested_size, cursor + 5, &nested_count);
+        field_size = (short)(count * nested_size + 2);
+        cursor = (short *)((char *)cursor + (int)nested_count * 10);
+        break;
+      case 9:
+        field_size = 0;
+        break;
+      default:
+        display_assert((char *)0, (char *)0x28f498, 0xc1, 1);
+        system_exit(-1);
+        field_size = 0;
+        break;
+      }
+      size_reg = (unsigned)(unsigned short)field_size;
+    }
+
+    cursor[4] = field_size;
+    total += (unsigned short)field_size;
+    cursor = (short *)((char *)cursor + 10);
+    if (*cursor == 9) {
+      break;
+    }
+  }
+
+finish:
+  if (out_count != NULL) {
+    /* (cursor - fields) / 10 + 1  via MSVC signed magic */
+    *out_count = (short)(((char *)cursor - (char *)fields) / 10 + 1);
+  }
+  if (out_size != NULL) {
+    *out_size = (short)total;
+  }
 }
-#else
-#error "compute_packet_field_sizes: clang naked draft required"
-#endif
+
+
+
 
 
 /* _data_packet_encode (0x11afa0) — XBE naked draft (batch 109). */

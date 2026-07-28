@@ -41753,7 +41753,7 @@
         {
           "addr": "0x11add0",
           "decl": "void compute_packet_field_sizes(packet_definition *def, short *param_2, short *param_3, short *param_4);",
-          "ported": false,
+          "ported": true,
           "name": "compute_packet_field_sizes"
         },
         {
