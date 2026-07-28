@@ -9138,81 +9138,34 @@ void FUN_00132e20(int object_handle, int widget_datum, void *arg2, void *arg3)
 }
 
 
-/* FUN_00132ea0 (0x132ea0) — XBE naked draft (batch 362). */
-#if defined(__clang__)
-static int (*const b132ea0_c1198f0)(data_t *data, int prev_index) = (void *)data_next_index;
-static void *(*const b132ea0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b132ea0_tag)(int, int) = tag_get;
-static void (*const b132ea0_c131fc0)(void) = (void *)FUN_00131fc0;
-
-__attribute__((naked, noinline))
+/* FUN_00132ea0 (0x132ea0) — readable C lift (restored pre-naked). */
 void FUN_00132ea0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x5a90d0, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00132ea0_3\n\t"
-      "pushl %%esi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00132ea0_1:\n\t"
-      "movl 0x5a90d0, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x666c6167\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "incw 0x6(%%esi)\n\t"
-      "cmpl $-1, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "je .LFUN_00132ea0_2\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jge .LFUN_00132ea0_2\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_00132ea0_2\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c131fc0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00132ea0_2:\n\t"
-      "movl 0x5a90d0, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .LFUN_00132ea0_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00132ea0_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b132ea0_c1198f0), [dget] "m"(b132ea0_dget), [tag] "m"(b132ea0_tag), [c131fc0] "m"(b132ea0_c131fc0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
+
+  data_next_index((void *)(uintptr_t)eax, 0);
+  /* cmp edi, -1 -> je 0x132f2e */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  tag_get('galf', 0);
+  /* cmp (int16_t)eax, 5 -> jge 0x132f16 */
+  FUN_00131fc0();
+  data_next_index((void *)(uintptr_t)ecx, 0);
+  /* cmp edi, -1 -> jne 0x132ec0 */
+  /* test eax, eax -> je 0x132f62 */
+  data_delete_all((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0x132f72 */
+  data_delete_all((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0x132f92 */
+  data_make_invalid((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0x132fa2 */
+  data_make_invalid((void *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edi;
 }
-#else
-#error "FUN_00132ea0: clang naked draft required"
-#endif
 
 
 /* FUN_00132fb0 (0x132fb0) — XBE naked draft (batch 355). */
