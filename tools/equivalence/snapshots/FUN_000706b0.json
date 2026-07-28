@@ -1,0 +1,6 @@
+{
+  "description": "FUN_000706b0: float RGB pair \u2192 RGB565 + rebuild",
+  "arg_overrides": {
+    "mode": 0
+  }
+}

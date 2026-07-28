@@ -1420,176 +1420,64 @@ void FUN_00070610(const float *m /*@<eax>*/, float *out /*@<ecx>*/)
 }
 
 
-/* FUN_000706b0 (0x706b0) — XBE naked draft (batch 310). */
-#if defined(__clang__)
-static void (*const b706b0_ftol)(void) = (void (*)(void))FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_000706b0(void)
+/* FUN_000706b0 (0x706b0) — Capstone lift: quantize float RGB pair to RGB565 + rebuild.
+ * ABI: a@<edi>, b@<esi>, out stack, mode stack. */
+void FUN_000706b0(float *a /*@<edi>*/, float *b /*@<esi>*/, unsigned short *out,
+                  int mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "flds (%%edi)\n\t"
-      "pushl %%ebx\n\t"
-      "fdivs 0x2ed08c\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fdivs 0x2ed090\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fdivs 0x2ed094\n\t"
-      "movb %%al, -0x3(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "shrb $3, %%al\n\t"
-      "movzbw %%al, %%cx\n\t"
-      "movb -0x3(%%ebp), %%al\n\t"
-      "shrb $2, %%al\n\t"
-      "movzbw %%al, %%dx\n\t"
-      "movb -0x4(%%ebp), %%al\n\t"
-      "shrb $3, %%al\n\t"
-      "movzbw %%al, %%ax\n\t"
-      "shll $6, %%ecx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "movw %%cx, (%%ebx)\n\t"
-      "flds (%%esi)\n\t"
-      "fdivs 0x2ed08c\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fdivs 0x2ed090\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fdivs 0x2ed094\n\t"
-      "movb %%al, -0x3(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "movb -0x3(%%ebp), %%cl\n\t"
-      "shrb $2, %%cl\n\t"
-      "shrb $3, %%al\n\t"
-      "movzbw %%cl, %%cx\n\t"
-      "movzbw %%al, %%ax\n\t"
-      "shll $6, %%eax\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "movb -0x4(%%ebp), %%cl\n\t"
-      "shrb $3, %%cl\n\t"
-      "movzbw %%cl, %%dx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%ebx), %%cx\n\t"
-      "shll $5, %%eax\n\t"
-      "orl %%edx, %%eax\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "negl %%ecx\n\t"
-      "cmpl $0x10, 0xc(%%ebp)\n\t"
-      "movw %%ax, 0x2(%%ebx)\n\t"
-      "sete %%dl\n\t"
-      "xorl %%edx, %%ecx\n\t"
-      "je .LFUN_000706b0_1\n\t"
-      "movw %%ax, (%%ebx)\n\t"
-      "movw -0x4(%%ebp), %%ax\n\t"
-      "movw %%ax, 0x2(%%ebx)\n\t"
-      ".LFUN_000706b0_1:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%ebx), %%cx\n\t"
-      "movb %%cl, %%dl\n\t"
-      "shlb $3, %%dl\n\t"
-      "movb %%dl, %%bl\n\t"
-      "shrb $5, %%bl\n\t"
-      "orb %%bl, %%dl\n\t"
-      "movzbl %%dl, %%edx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "shrl $5, 0xc(%%ebp)\n\t"
-      "movb 0xc(%%ebp), %%cl\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "shlb $2, %%cl\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "movb %%cl, %%bl\n\t"
-      "shrb $6, %%bl\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "orb %%bl, %%cl\n\t"
-      "movzbl %%cl, %%ecx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "fmuls 0x2ed08c\n\t"
-      "shrl $6, %%eax\n\t"
-      "shlb $3, %%al\n\t"
-      "movb %%al, %%bl\n\t"
-      "fmuls 0x261518\n\t"
-      "shrb $5, %%bl\n\t"
-      "orb %%bl, %%al\n\t"
-      "movzbl %%al, %%edx\n\t"
-      "fstps (%%edi)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "fmuls 0x2ed090\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps 0x4(%%edi)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "fmuls 0x2ed094\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps 0x8(%%edi)\n\t"
-      "movw 0x2(%%eax), %%cx\n\t"
-      "movb %%cl, %%dl\n\t"
-      "shlb $3, %%dl\n\t"
-      "movb %%dl, %%bl\n\t"
-      "shrb $5, %%bl\n\t"
-      "orb %%bl, %%dl\n\t"
-      "movzbl %%dl, %%edx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "shrl $5, 0x8(%%ebp)\n\t"
-      "movb 0x8(%%ebp), %%cl\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "shlb $2, %%cl\n\t"
-      "movb %%cl, %%bl\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "shrb $6, %%bl\n\t"
-      "orb %%bl, %%cl\n\t"
-      "movzbl %%cl, %%ecx\n\t"
-      "fmuls 0x2ed08c\n\t"
-      "shrl $6, %%eax\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "fmuls 0x261518\n\t"
-      "shlb $3, %%al\n\t"
-      "movb %%al, %%bl\n\t"
-      "shrb $5, %%bl\n\t"
-      "fstps (%%esi)\n\t"
-      "orb %%bl, %%al\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movzbl %%al, %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "fmuls 0x2ed090\n\t"
-      "fmuls 0x261518\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fmuls 0x2ed094\n\t"
-      "fmuls 0x261518\n\t"
-      "popl %%ebx\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(b706b0_ftol)
-      : "memory");
+  unsigned char ba, ga, ra;
+  unsigned char bb, gb, rb;
+  unsigned short pa;
+  unsigned short pb;
+  unsigned int c;
+  unsigned char ch;
+  int less;
+  int is16;
+
+  ba = (unsigned char)(int)(a[0] / *(float *)0x2ed08c * *(float *)0x2602c8);
+  ga = (unsigned char)(int)(a[1] / *(float *)0x2ed090 * *(float *)0x2602c8);
+  ra = (unsigned char)(int)(a[2] / *(float *)0x2ed094 * *(float *)0x2602c8);
+  pa = (unsigned short)(((((unsigned int)(ra >> 3) << 6) | (unsigned int)(ga >> 2)) << 5) |
+                       (unsigned int)(ba >> 3));
+
+  bb = (unsigned char)(int)(b[0] / *(float *)0x2ed08c * *(float *)0x2602c8);
+  gb = (unsigned char)(int)(b[1] / *(float *)0x2ed090 * *(float *)0x2602c8);
+  rb = (unsigned char)(int)(b[2] / *(float *)0x2ed094 * *(float *)0x2602c8);
+  pb = (unsigned short)(((((unsigned int)(rb >> 3) << 6) | (unsigned int)(gb >> 2)) << 5) |
+                       (unsigned int)(bb >> 3));
+
+  out[0] = pa;
+  out[1] = pb;
+  less = (pb < pa) ? 1 : 0;
+  is16 = (mode == 0x10) ? 1 : 0;
+  if ((less ^ is16) != 0) {
+    out[0] = pb;
+    out[1] = pa;
+  }
+
+  c = out[0];
+  ch = (unsigned char)((unsigned char)c << 3);
+  ch = (unsigned char)(ch | (unsigned char)(ch >> 5));
+  a[0] = (float)(int)(unsigned int)ch * *(float *)0x2ed08c * *(float *)0x261518;
+  ch = (unsigned char)((unsigned char)(c >> 5) << 2);
+  ch = (unsigned char)(ch | (unsigned char)(ch >> 6));
+  a[1] = (float)(int)(unsigned int)ch * *(float *)0x2ed090 * *(float *)0x261518;
+  ch = (unsigned char)((unsigned char)(c >> 11) << 3);
+  ch = (unsigned char)(ch | (unsigned char)(ch >> 5));
+  a[2] = (float)(int)(unsigned int)ch * *(float *)0x2ed094 * *(float *)0x261518;
+
+  c = out[1];
+  ch = (unsigned char)((unsigned char)c << 3);
+  ch = (unsigned char)(ch | (unsigned char)(ch >> 5));
+  b[0] = (float)(int)(unsigned int)ch * *(float *)0x2ed08c * *(float *)0x261518;
+  ch = (unsigned char)((unsigned char)(c >> 5) << 2);
+  ch = (unsigned char)(ch | (unsigned char)(ch >> 6));
+  b[1] = (float)(int)(unsigned int)ch * *(float *)0x2ed090 * *(float *)0x261518;
+  ch = (unsigned char)((unsigned char)(c >> 11) << 3);
+  ch = (unsigned char)(ch | (unsigned char)(ch >> 5));
+  b[2] = (float)(int)(unsigned int)ch * *(float *)0x2ed094 * *(float *)0x261518;
 }
-#else
-#error "FUN_000706b0: clang naked draft required"
-#endif
+
 
 
 /* FUN_000708c0 (0x708c0) — Capstone lift: clip RGB float pair into [0, scale].
