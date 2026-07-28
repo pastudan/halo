@@ -4524,7 +4524,7 @@
         {
           "addr": "0x3fb40",
           "decl": "void ai_find_inactive_encounters(void *out_list, int buf_size);",
-          "ported": false,
+          "ported": true,
           "name": "ai_find_inactive_encounters"
         },
         {
@@ -26380,7 +26380,7 @@
         {
           "addr": "0x628b0",
           "decl": "void FUN_000628b0(int16_t *partition, uint32_t arg2);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000628b0"
         },
         {

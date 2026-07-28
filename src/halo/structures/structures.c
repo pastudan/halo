@@ -568,97 +568,46 @@ void FUN_000625a0(void *obstacles, short disc_index, float *point,
 
 
 
-/* FUN_000628b0 (0x628b0) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void (*const b628b0_c62680)(int16_t *partition, uint32_t arg2, int16_t index, uint32_t *out_mask) = FUN_00062680;
-
-__attribute__((naked, noinline))
-void FUN_000628b0(int16_t *partition __attribute__((unused)), uint32_t arg2 __attribute__((unused)))
+/* FUN_000628b0 (0x628b0) — Capstone lift from 000628b0.obj. */
+void FUN_000628b0(int16_t *partition, uint32_t arg2)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw %%ax, 0x2(%%esi)\n\t"
-      "movw $0, (%%esi)\n\t"
-      "jle .LFUN_000628b0_2\n\t"
-      ".LFUN_000628b0_1:\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movw $0xffff, 0xa(%%esi,%%ecx,8)\n\t"
-      "cmpw 0x2(%%esi), %%ax\n\t"
-      "jl .LFUN_000628b0_1\n\t"
-      ".LFUN_000628b0_2:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpw %%bx, 0x2(%%esi)\n\t"
-      "movl %%ebx, 0x8(%%ebp)\n\t"
-      "jle .LFUN_000628b0_7\n\t"
-      "pushl %%edi\n\t"
-      "jmp .LFUN_000628b0_3\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_000628b0_3:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%edx\n\t"
-      "cmpw $-1, 0xa(%%esi,%%edx,8)\n\t"
-      "jne .LFUN_000628b0_6\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw (%%esi), %%di\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "leal 0x1(%%edi), %%eax\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "call *%[c62680]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw %%dx, 0x2(%%esi)\n\t"
-      "jle .LFUN_000628b0_6\n\t"
-      ".LFUN_000628b0_4:\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "sarl $5, %%ecx\n\t"
-      "testl %%ebx, -0x10(%%ebp,%%ecx,4)\n\t"
-      "je .LFUN_000628b0_5\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "movw %%di, 0xa(%%esi,%%eax,8)\n\t"
-      ".LFUN_000628b0_5:\n\t"
-      "incl %%edx\n\t"
-      "cmpw 0x2(%%esi), %%dx\n\t"
-      "jl .LFUN_000628b0_4\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      ".LFUN_000628b0_6:\n\t"
-      "incl %%ebx\n\t"
-      "cmpw 0x2(%%esi), %%bx\n\t"
-      "movl %%ebx, 0x8(%%ebp)\n\t"
-      "jl .LFUN_000628b0_3\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_000628b0_7:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c62680] "m"(b628b0_c62680)
-      : "memory");
+  int16_t *esi = partition;
+  int16_t i;
+  int16_t old_count;
+  uint32_t bits[4];
+  int16_t j;
+
+  *(int16_t *)esi = 0;
+  i = 0;
+  if ((int16_t)esi[1] > 0) {
+    do {
+      /* each disc record is 0x18 bytes at esi+0xa + i*0x18? lea ecx,[eax+eax*2]; word [esi+ecx*8+0xa] */
+      ((int16_t *)((char *)esi + (int)i * 0x18 + 0xa))[0] = (int16_t)0xffff;
+      i++;
+    } while (i < esi[1]);
+  }
+
+  i = 0;
+  if ((int16_t)esi[1] <= 0)
+    return;
+
+  do {
+    if (*(int16_t *)((char *)esi + (int)i * 0x18 + 0xa) == (int16_t)-1) {
+      old_count = esi[0];
+      esi[0] = (int16_t)(old_count + 1);
+      FUN_00062680(esi, arg2, i, bits);
+      j = 0;
+      if ((int16_t)esi[1] > 0) {
+        do {
+          if (bits[(unsigned)j >> 5] & (1u << (j & 31)))
+            *(int16_t *)((char *)esi + (int)j * 0x18 + 0xa) = old_count;
+          j++;
+        } while (j < esi[1]);
+      }
+    }
+    i++;
+  } while (i < esi[1]);
 }
-#else
-#error "FUN_000628b0: clang naked draft required"
-#endif
-
-
 /* FUN_00099070 (0x99070)
  *
  * Debug overlay for the decal render queue and per-cluster decal labels.
