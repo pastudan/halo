@@ -117,8 +117,17 @@ def find_intro_parent(name: str, addr: int, path: str) -> str | None:
             text=True,
         )
         commits = [c for c in r.stdout.splitlines() if c]
-        if commits:
-            return f"{commits[0]}^"
+        for c in commits:
+            parent = f"{c}^"
+            # Skip orphan/root commits where `{sha}^` is not a valid object.
+            chk = subprocess.run(
+                ["git", "rev-parse", "--verify", parent],
+                cwd=ROOT,
+                capture_output=True,
+                text=True,
+            )
+            if chk.returncode == 0:
+                return parent
     return None
 
 
