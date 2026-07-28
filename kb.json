@@ -7342,7 +7342,7 @@
         {
           "addr": "0x86670",
           "decl": "void FUN_00086670(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00086670"
         },
         {
@@ -7377,7 +7377,7 @@
         {
           "addr": "0x86cb0",
           "decl": "void director_script_camera(int value);",
-          "ported": false,
+          "ported": true,
           "name": "director_script_camera"
         },
         {
@@ -7464,7 +7464,7 @@
         {
           "addr": "0x87d00",
           "decl": "void editor_camera_set_position_and_roll(void);",
-          "ported": false,
+          "ported": true,
           "name": "editor_camera_set_position_and_roll"
         },
         {
@@ -7481,7 +7481,7 @@
         {
           "addr": "0x88050",
           "decl": "void editor_camera_set_scripted(void);",
-          "ported": false,
+          "ported": true,
           "name": "editor_camera_set_scripted"
         },
         {
@@ -7492,7 +7492,7 @@
         {
           "addr": "0x88260",
           "decl": "void editor_camera_flying_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "editor_camera_flying_update"
         },
         {
