@@ -34547,15 +34547,21 @@
         },
         {
           "addr": "0x1d08aa",
-          "decl": "void GetTimeZoneInformation(void);",
+          "decl": "unsigned int __stdcall GetTimeZoneInformation(void *tzinfo);",
           "ported": false,
           "name": "GetTimeZoneInformation"
         },
         {
           "addr": "0x1d0a06",
           "decl": "void __stdcall FUN_001d0a06(void *out);",
-          "ported": false,
-          "name": "FUN_001d0a06"
+          "ported": true,
+          "name": "FUN_001d0a06",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0a5c",

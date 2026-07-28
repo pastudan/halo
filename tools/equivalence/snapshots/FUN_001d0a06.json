@@ -1,0 +1,6 @@
+{
+  "description": "FUN_001d0a06: GetTimeZoneInformation returns 0 \u2192 Bias=0 \u2192 zero FILETIME",
+  "stub_returns": {
+    "GetTimeZoneInformation": 0
+  }
+}

@@ -331,7 +331,7 @@ static void (*const b1d08aa_c1d06a0)(void) = FUN_001d06a0;
 static void (*const b1d08aa_c1dd620)(void) = __allmul;
 
 __attribute__((naked, noinline))
-void GetTimeZoneInformation(void)
+unsigned int __stdcall GetTimeZoneInformation(void *tzinfo)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -494,61 +494,28 @@ void GetTimeZoneInformation(void)
 #endif
 
 
-/* FUN_001d0a06 (0x1d0a06) — XBE naked draft (batch 331). */
-#if defined(__clang__)
-static void (*const b1d0a06_c1d08aa)(void) = GetTimeZoneInformation;
-static void (*const b1d0a06_c1dd620)(void) = __allmul;
-
-__attribute__((naked, noinline))
+/* FUN_001d0a06 (0x1d0a06) — Capstone tip: TZ → FILETIME.
+ * Tip path: GetTimeZoneInformation returns 0 → Bias*60*10M. */
 void __stdcall FUN_001d0a06(void *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "leal -0x74(%%esp), %%ebp\n\t"
-      "subl $0xac, %%esp\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d08aa]\n\t"
-      "subl $0, %%eax\n\t"
-      "je .LFUN_001d0a06_4\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_001d0a06_3\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_001d0a06_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_001d0a06_5\n\t"
-      ".LFUN_001d0a06_1:\n\t"
-      "movl 0x70(%%ebp), %%ecx\n\t"
-      ".LFUN_001d0a06_2:\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "jmp .LFUN_001d0a06_5\n\t"
-      ".LFUN_001d0a06_3:\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "jmp .LFUN_001d0a06_2\n\t"
-      ".LFUN_001d0a06_4:\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      ".LFUN_001d0a06_5:\n\t"
-      "imull $0x3c, %%eax, %%eax\n\t"
-      "pushl $0\n\t"
-      "cdq\n\t"
-      "pushl $0x989680\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1dd620]\n\t"
-      "movl 0x7c(%%ebp), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "addl $0x74, %%ebp\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      : [c1d08aa] "m"(b1d0a06_c1d08aa), [c1dd620] "m"(b1d0a06_c1dd620)
-      : "memory");
+  unsigned char tz[0xac];
+  int status;
+  int bias_min;
+  long long ticks;
+  status = GetTimeZoneInformation(tz);
+  if (status == 0) {
+    bias_min = *(int *)tz;
+  } else if (status == 1) {
+    bias_min = *(int *)tz + *(int *)(tz + 0x1c);
+  } else if (status == 2) {
+    bias_min = *(int *)tz + *(int *)(tz + 0x70);
+  } else {
+    bias_min = 0;
+  }
+  ticks = (long long)bias_min * 60LL * 10000000LL;
+  ((unsigned int *)out)[0] = (unsigned int)ticks;
+  ((unsigned int *)out)[1] = (unsigned int)(ticks >> 32);
 }
-#else
-#error "FUN_001d0a06: clang naked draft required"
-#endif
 
 
 /* FUN_001d0a5c (0x1d0a5c) — XBE naked draft (batch 314). */
