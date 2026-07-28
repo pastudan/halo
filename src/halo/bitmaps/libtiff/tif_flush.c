@@ -1223,55 +1223,35 @@ void FUN_00069420(void)
 #endif
 
 
-/* FUN_00069520 (0x69520) — XBE naked draft (batch 324). */
-#if defined(__clang__)
-static void (*const b69520_c6fe10)(void) = (void (*)(void))TIFFFlushData1;
-
-__attribute__((naked, noinline))
-void FUN_00069520(void)
+/* FUN_00069520 (0x69520) — Capstone lift: emit one LZW code byte to stream. */
+int FUN_00069520(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x120(%%esi), %%edi\n\t"
-      "cmpw $8, 0x2(%%edi)\n\t"
-      "je .LFUN_00069520_2\n\t"
-      "movl 0x138(%%esi), %%eax\n\t"
-      "cmpl 0x130(%%esi), %%eax\n\t"
-      "jl .LFUN_00069520_1\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6fe10]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00069520_1:\n\t"
-      "movswl (%%edi), %%ecx\n\t"
-      "movl 0x14(%%edi), %%edx\n\t"
-      "movb (%%ecx,%%edx,1), %%cl\n\t"
-      "movl 0x134(%%esi), %%eax\n\t"
-      "movb %%cl, (%%eax)\n\t"
-      "movl 0x134(%%esi), %%ecx\n\t"
-      "movl 0x138(%%esi), %%eax\n\t"
-      "incl %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movl %%ecx, 0x134(%%esi)\n\t"
-      "movl %%eax, 0x138(%%esi)\n\t"
-      "movw $0, (%%edi)\n\t"
-      "movw $8, 0x2(%%edi)\n\t"
-      ".LFUN_00069520_2:\n\t"
-      "popl %%edi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6fe10] "m"(b69520_c6fe10)
-      : "memory");
+  unsigned char *state;
+  int rem;
+  int cap;
+  unsigned char *buf;
+  unsigned char *map;
+  short code;
+
+  state = *(unsigned char **)((char *)tif + 0x120);
+  if (*(short *)(state + 2) == 8)
+    return 1;
+
+  rem = *(int *)((char *)tif + 0x138);
+  cap = *(int *)((char *)tif + 0x130);
+  if (rem >= cap)
+    TIFFFlushData1(tif);
+
+  code = *(short *)state;
+  map = *(unsigned char **)(state + 0x14);
+  buf = *(unsigned char **)((char *)tif + 0x134);
+  *buf = map[(unsigned short)code];
+  *(int *)((char *)tif + 0x134) = *(int *)((char *)tif + 0x134) + 1;
+  *(int *)((char *)tif + 0x138) = *(int *)((char *)tif + 0x138) + 1;
+  *(short *)state = 0;
+  *(short *)(state + 2) = 8;
+  return 1;
 }
-#else
-#error "FUN_00069520: clang naked draft required"
-#endif
 
 
 /* FUN_00069590 (0x69590) — readable C lift. */

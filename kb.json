@@ -37975,7 +37975,7 @@
         {
           "addr": "0x68970",
           "decl": "int FUN_00068970(void *tif);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00068970"
         },
         {
@@ -38085,8 +38085,8 @@
         },
         {
           "addr": "0x69520",
-          "decl": "void FUN_00069520(void);",
-          "ported": false,
+          "decl": "int FUN_00069520(void *tif);",
+          "ported": true,
           "name": "FUN_00069520"
         },
         {
