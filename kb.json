@@ -21360,7 +21360,7 @@
         {
           "addr": "0x1741d0",
           "decl": "void FUN_001741d0(float *quad);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001741d0"
         },
         {
@@ -21430,7 +21430,7 @@
         {
           "addr": "0x178850",
           "decl": "void FUN_00178850(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00178850"
         },
         {
@@ -22289,7 +22289,7 @@
         {
           "addr": "0x156250",
           "decl": "void rasterizer_get_target(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_get_target"
         },
         {

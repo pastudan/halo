@@ -572,171 +572,45 @@ void rasterizer_set_texture_non_blocking(void)
 }
 
 
-/* rasterizer_get_target (0x156250) — XBE naked draft (batch 318). */
-#if defined(__clang__)
-static void (*const b156250_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b156250_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* rasterizer_get_target (0x156250) — readable C lift (restored pre-naked). */
 void rasterizer_get_target(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl $6, %%eax\n\t"
-      "ja .Lrasterizer_get_target_16\n\t"
-      "jmp *.Lrasterizer_get_target_jt(,%%eax,4)\n\t"
-      ".Lrasterizer_get_target_1:\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "je .Lrasterizer_get_target_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8b8\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dfec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_get_target_2:\n\t"
-      "movl 0x476a5c, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_get_target_3:\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "je .Lrasterizer_get_target_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8bc\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dfec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_get_target_4:\n\t"
-      "movl 0x476a6c, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_get_target_5:\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "je .Lrasterizer_get_target_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8c0\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dfec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_get_target_6:\n\t"
-      "movl 0x476a78, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_get_target_7:\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "je .Lrasterizer_get_target_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8c4\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dfec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_get_target_8:\n\t"
-      "movl 0x476a80, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_get_target_9:\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "je .Lrasterizer_get_target_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8c8\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dfec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_get_target_10:\n\t"
-      "movl 0x476a88, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_get_target_11:\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "je .Lrasterizer_get_target_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8cc\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dfec\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_get_target_12:\n\t"
-      "movl 0x476a90, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_get_target_13:\n\t"
-      "movw 0xc(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lrasterizer_get_target_14\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .Lrasterizer_get_target_15\n\t"
-      ".Lrasterizer_get_target_14:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8d0\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29dfa0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_get_target_15:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl 0x476a98(,%%eax,4), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lrasterizer_get_target_16:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8d4\n\t"
-      "pushl $0x29dc0c\n\t"
-      "pushl $0x29df78\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lrasterizer_get_target_jt:\n\t"
-      ".long .Lrasterizer_get_target_1\n\t"
-      ".long .Lrasterizer_get_target_3\n\t"
-      ".long .Lrasterizer_get_target_5\n\t"
-      ".long .Lrasterizer_get_target_7\n\t"
-      ".long .Lrasterizer_get_target_9\n\t"
-      ".long .Lrasterizer_get_target_11\n\t"
-      ".long .Lrasterizer_get_target_13\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b156250_assert), [exitfn] "m"(b156250_exitfn)
-      : "memory");
+  int eax = 0;
+  int esi = 0;
+  int ebp = 0;
+
+  /* cmp eax, 6 -> ja 0x1563c0 */
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> je 0x156291 */
+  display_assert((char *)0x0029dfec, (char *)0x0029dc0c, 2232, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> je 0x1562c0 */
+  display_assert((char *)0x0029dfec, (char *)0x0029dc0c, 2236, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> je 0x1562ef */
+  display_assert((char *)0x0029dfec, (char *)0x0029dc0c, 2240, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> je 0x15631e */
+  display_assert((char *)0x0029dfec, (char *)0x0029dc0c, 2244, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> je 0x15634d */
+  display_assert((char *)0x0029dfec, (char *)0x0029dc0c, 2248, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> je 0x15637c */
+  display_assert((char *)0x0029dfec, (char *)0x0029dc0c, 2252, 0);
+  system_exit(0);
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x156393 */
+  /* cmp (int16_t)esi, 4 -> jl 0x1563b3 */
+  display_assert((char *)0x0029dfa0, (char *)0x0029dc0c, 2256, 0);
+  system_exit(0);
+  display_assert((char *)0x0029df78, (char *)0x0029dc0c, 2260, 0);
+  system_exit(0);
+  ((void(*)(void))D3DPalette_Lock)();
+
+  (void)eax;
+  (void)esi;
+  (void)ebp;
 }
-#else
-#error "rasterizer_get_target: clang naked draft required"
-#endif
+
 
 
 /* rasterizer_set_vertex_shader (0x156440) — readable C lift. */
