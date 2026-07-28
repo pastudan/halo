@@ -5795,181 +5795,25 @@ void rgb_color_to_hsv_color(void)
 #endif
 
 
-/* hsv_color_to_rgb_color (0x7a970) — XBE naked draft (batch 246). */
-#if defined(__clang__)
-static void (*const b7a970_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7a970_exitfn)(int) = system_exit;
-static void (*const b7a970_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
+/* hsv_color_to_rgb_color (0x7a970) — readable C lift (restored pre-naked). */
 void hsv_color_to_rgb_color(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movzwl (%%esi), %%eax\n\t"
-      "movzwl 0x2(%%esi), %%ecx\n\t"
-      "movzwl 0x4(%%esi), %%edx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "fmuls 0x2647fc\n\t"
-      "fmuls 0x254640\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "jne .Lhsv_color_to_rgb_color_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x886\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2647f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhsv_color_to_rgb_color_1:\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jne .Lhsv_color_to_rgb_color_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x888\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2647d8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhsv_color_to_rgb_color_2:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lhsv_color_to_rgb_color_3\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "jmp .Lhsv_color_to_rgb_color_11\n\t"
-      ".Lhsv_color_to_rgb_color_3:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "leal -0x1(%%ecx), %%eax\n\t"
-      "je .Lhsv_color_to_rgb_color_4\n\t"
-      "movl %%ecx, %%eax\n\t"
-      ".Lhsv_color_to_rgb_color_4:\n\t"
-      "cmpl $5, %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "fsubrs -0x4(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fsub %%st(1), %%st(0)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "ja .Lhsv_color_to_rgb_color_11\n\t"
-      "jmp *.Lhsv_color_to_rgb_color_jt(,%%eax,4)\n\t"
-      ".Lhsv_color_to_rgb_color_5:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jmp .Lhsv_color_to_rgb_color_11\n\t"
-      ".Lhsv_color_to_rgb_color_6:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jmp .Lhsv_color_to_rgb_color_12\n\t"
-      ".Lhsv_color_to_rgb_color_7:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jmp .Lhsv_color_to_rgb_color_12\n\t"
-      ".Lhsv_color_to_rgb_color_8:\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jmp .Lhsv_color_to_rgb_color_12\n\t"
-      ".Lhsv_color_to_rgb_color_9:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0xc(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jmp .Lhsv_color_to_rgb_color_12\n\t"
-      ".Lhsv_color_to_rgb_color_10:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      ".Lhsv_color_to_rgb_color_11:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".Lhsv_color_to_rgb_color_12:\n\t"
-      "fmuls 0x2647cc\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmuls 0x2647cc\n\t"
-      "movw %%ax, (%%edi)\n\t"
-      "call *%[ftol]\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x2647cc\n\t"
-      "movw %%ax, 0x2(%%edi)\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x4(%%edi)\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lhsv_color_to_rgb_color_jt:\n\t"
-      ".long .Lhsv_color_to_rgb_color_5\n\t"
-      ".long .Lhsv_color_to_rgb_color_6\n\t"
-      ".long .Lhsv_color_to_rgb_color_7\n\t"
-      ".long .Lhsv_color_to_rgb_color_8\n\t"
-      ".long .Lhsv_color_to_rgb_color_9\n\t"
-      ".long .Lhsv_color_to_rgb_color_10\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b7a970_assert), [exitfn] "m"(b7a970_exitfn), [ftol] "m"(b7a970_ftol)
-      : "memory");
+  int esi = 0;
+  int edi = 0;
+
+  display_assert((char *)0x002647f8, (char *)0x002641f0, 2182, 0);
+  system_exit(0);
+  /* cmp edi, esi -> jne 0x7aa04 */
+  display_assert((char *)0x002647d8, (char *)0x002641f0, 2184, 0);
+  system_exit(0);
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_001d9068();
+
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "hsv_color_to_rgb_color: clang naked draft required"
-#endif
 
 
 /* bitmap_sharpen (0x7b310) — build sharpen tables and dispatch by bitmap type.

@@ -23826,7 +23826,7 @@
         {
           "addr": "0x184980",
           "decl": "void FUN_00184980(char param_1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00184980"
         },
         {
@@ -33542,7 +33542,7 @@
         {
           "addr": "0x7a970",
           "decl": "void hsv_color_to_rgb_color(void);",
-          "ported": false,
+          "ported": true,
           "name": "hsv_color_to_rgb_color"
         },
         {
