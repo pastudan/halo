@@ -345,94 +345,44 @@ bool FUN_00062020(int16_t *obstacle_set, uint32_t datum, uint16_t flags,
 #include "../../common.h"
 #include "../../x87_math.h"
 
-/* FUN_00062410 (0x62410) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void (*const b62410_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b62410_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-short FUN_00062410(void *obstacles __attribute__((unused)), short disc_index_skip __attribute__((unused)), float *position_xy __attribute__((unused)), float radius __attribute__((unused)))
+/* FUN_00062410 (0x62410) — readable C lift (restored pre-naked). */
+short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy,
+                   float radius)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .LFUN_00062410_5\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      ".LFUN_00062410_1:\n\t"
-      "cmpw 0xc(%%ebp), %%si\n\t"
-      "je .LFUN_00062410_4\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00062410_2\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00062410_2\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00062410_3\n\t"
-      ".LFUN_00062410_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18c\n\t"
-      "pushl $0x25e990\n\t"
-      "pushl $0x25e930\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00062410_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal 0x8(%%edi,%%eax,8), %%eax\n\t"
-      "flds 0x10(%%eax)\n\t"
-      "fadds 0x14(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs (%%ebx)\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "je .LFUN_00062410_6\n\t"
-      ".LFUN_00062410_4:\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "incl %%esi\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jl .LFUN_00062410_1\n\t"
-      ".LFUN_00062410_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orw $0xffff, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00062410_6:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b62410_assert), [exitfn] "m"(b62410_exitfn)
-      : "memory");
+  char *base;
+  short i;
+  short disc_count;
+  char *disc;
+  float sum_radius;
+  float dx;
+  float dy;
+
+  base = (char *)obstacles;
+  disc_count = *(short *)(base + 2);
+  i = 0;
+  if (disc_count > 0) {
+    do {
+      if (i != disc_index_skip) {
+        if (i < 0 || disc_count <= i || disc_count > 0x80) {
+          display_assert("disc_index>=0 && disc_index<obstacles->disc_count && "
+                         "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
+                         "c:\\halo\\source\\ai\\path.h", 0x18c, 1);
+          system_exit(-1);
+        }
+        disc = base + 8 + i * 0x18;
+        sum_radius = *(float *)(disc + 0x10) + radius;
+        dx = *(float *)(disc + 8) - position_xy[0];
+        dy = *(float *)(disc + 0xc) - position_xy[1];
+        if (!(sum_radius * sum_radius < dy * dy + dx * dx)) {
+          return i;
+        }
+      }
+      disc_count = *(short *)(base + 2);
+      i = i + 1;
+    } while (i < disc_count);
+  }
+  return -1;
 }
-#else
-#error "FUN_00062410: clang naked draft required"
-#endif
 
 
 /* FUN_00062680 (0x62680) — XBE naked draft (batch 82). */
@@ -3760,103 +3710,41 @@ void FUN_00195650(void *out, int *indices, short count)
 
 
 
-/* FUN_001956d0 (0x1956d0) — XBE naked draft (batch 88). */
-#if defined(__clang__)
-static void * (*const b1956d0_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
-static int (*const b1956d0_c17c970)(int mode) = rasterizer_widget_submit;
-static void * (*const b1956d0_c17c980)(int handle) = rasterizer_widget_begin;
-static void (*const b1956d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1956d0_exitfn)(int) = system_exit;
-static void (*const b1956d0_c195550)(short surface_count, int *out_indices, unsigned int *mask, int out_surfaces) = FUN_00195550;
-static void (*const b1956d0_c17c990)(int handle) = rasterizer_widget_set_texture;
-static void (*const b1956d0_c195650)(void *out, int *indices, int16_t count) = FUN_00195650;
-static void (*const b1956d0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-int FUN_001956d0(void *param_1 __attribute__((unused)), void *param_2 __attribute__((unused)), int16_t count __attribute__((unused)))
+/* FUN_001956d0 (0x1956d0) — readable C lift (restored pre-naked). */
+int FUN_001956d0(void *param_1, void *param_2, short param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e3c0]\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .LFUN_001956d0_5\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c17c970]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .LFUN_001956d0_3\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c17c980]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_001956d0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e6\n\t"
-      "pushl $0x2b347c\n\t"
-      "pushl $0x2a2c84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001956d0_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "je .LFUN_001956d0_2\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c195550]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c17c990]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001956d0_2:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "movl %%esi, %%edx\n\t"
-      "call *%[c195650]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c17c990]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001956d0_3:\n\t"
-      "cmpw $0, 0x32bd60\n\t"
-      "je .LFUN_001956d0_4\n\t"
-      "pushl $0x2b34e8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movw $0, 0x32bd60\n\t"
-      ".LFUN_001956d0_4:\n\t"
-      "movl %%ebx, %%eax\n\t"
-      ".LFUN_001956d0_5:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b1956d0_c18e3c0), [c17c970] "m"(b1956d0_c17c970), [c17c980] "m"(b1956d0_c17c980), [assert] "m"(b1956d0_assert), [exitfn] "m"(b1956d0_exitfn), [c195550] "m"(b1956d0_c195550), [c17c990] "m"(b1956d0_c17c990), [c195650] "m"(b1956d0_c195650), [c8f390] "m"(b1956d0_c8f390)
-      : "memory");
+  int handle;
+  void *triangles;
+
+  scenario_get();
+  if (0 < param_3) {
+    handle = rasterizer_widget_submit((int)param_3);
+    if (handle != -1) {
+      triangles = rasterizer_widget_begin(handle);
+      if (triangles == NULL) {
+        display_assert("triangles",
+                       "c:\\halo\\SOURCE\\structures\\structure_render.c", 0x1e6,
+                       true);
+        system_exit(-1);
+      }
+      if (param_2 == NULL) {
+        FUN_00195650(triangles, (int *)param_1, param_3);
+        rasterizer_widget_set_texture(handle);
+        return handle;
+      }
+      FUN_00195550(param_3, (int *)param_1, (unsigned int *)param_2,
+                   (int)triangles);
+      rasterizer_widget_set_texture(handle);
+      return handle;
+    }
+    if (*(short *)0x32bd60 != 0) {
+      error(2, "unable to allocate dynamic structure triangles.");
+      *(short *)0x32bd60 = 0;
+    }
+  }
+  return -1;
 }
-#else
-#error "FUN_001956d0: clang naked draft required"
-#endif
+
 
 
 /* FUN_001959f0 (0x1959f0)

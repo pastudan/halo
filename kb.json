@@ -26357,7 +26357,7 @@
           "addr": "0x62410",
           "decl": "short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy, float radius);",
           "name": "FUN_00062410",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x624b0",
@@ -26753,7 +26753,7 @@
           "addr": "0x1956d0",
           "decl": "int FUN_001956d0(void *param_1, void *param_2, int16_t count@<esi>);",
           "name": "FUN_001956d0",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x195790",
