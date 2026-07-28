@@ -36052,7 +36052,7 @@
         {
           "addr": "0x44660",
           "decl": "void ai_conversation_unit_died(int unit_handle, char force);",
-          "ported": false,
+          "ported": true,
           "name": "ai_conversation_unit_died"
         },
         {
