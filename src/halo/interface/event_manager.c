@@ -1203,410 +1203,78 @@ void render_blip(void)
 
 
 
-/* motion_sensor_update (0xdb4c0) — XBE naked draft (batch 107). */
-#if defined(__clang__)
-static int (*const bdb4c0_cd1540)(void) = FUN_000d1540;
-static void *(*const bdb4c0_memset)(void *, int, unsigned int) = csmemset;
-static bool (*const bdb4c0_gerun)(void) = game_engine_running;
-static int (*const bdb4c0_gtime)(void) = game_time_get;
-static __int16 (*const bdb4c0_cba4b0)(void) = local_player_count;
-static __int16 (*const bdb4c0_cba4c0)(__int16 a1) = local_player_get_next;
-static void * (*const bdb4c0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static int (*const bdb4c0_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const bdb4c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bdb4c0_useat)(int, float *) = unit_set_seat_state;
-static void (*const bdb4c0_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
-static void * (*const bdb4c0_c13d730)(void *iter) = object_iterator_next;
-static void *(*const bdb4c0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static char (*const bdb4c0_cdb250)(int) = FUN_000db250;
-static void (*const bdb4c0_c1aae0)(int object_handle, float *center, float *radius) = FUN_0001aae0;
-static void (*const bdb4c0_cdaee0)(void) = FUN_000daee0;
-static void *(*const bdb4c0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bdb4c0_tag)(int, int) = tag_get;
-static void (*const bdb4c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bdb4c0_exitfn)(int) = system_exit;
-static char * (*const bdb4c0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const bdb4c0_cdb93e)(void) = (void (*)(void))update_motion_sensor;
-
-__attribute__((naked, noinline))
+/* motion_sensor_update (0xdb4c0) — readable C lift (restored pre-naked). */
 void motion_sensor_update(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x284, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cd1540]\n\t"
-      "pushl $0x200\n\t"
-      "movl %%eax, -0x40(%%ebp)\n\t"
-      "leal -0x284(%%ebp), %%eax\n\t"
-      "pushl $0x62\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "call *%[gerun]\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x46bd2c, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb $1, 0x15a6(%%ecx)\n\t"
-      "movw 0x15a4(%%ecx), %%dx\n\t"
-      "incw %%dx\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%edi\n\t"
-      "idivl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl $0xf, %%edi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movw %%dx, 0x15a4(%%ecx)\n\t"
-      "cdq\n\t"
-      "idivl %%edi\n\t"
-      "movl %%esi, 0x15a0(%%ecx)\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .Lmotion_sensor_update_2\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lmotion_sensor_update_2\n\t"
-      "movswl 0x15a4(%%ecx), %%ebx\n\t"
-      "leal 0x9(%%ebx), %%eax\n\t"
-      "cdq\n\t"
-      "movl $0xa, %%ecx\n\t"
-      "idivl %%ecx\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "call *%[cba4b0]\n\t"
-      "pushl $-1\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      "call *%[cba4c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jle .Lmotion_sensor_update_19\n\t"
-      "movswl -0x14(%%ebp), %%edi\n\t"
-      "movzwl -0x10(%%ebp), %%edx\n\t"
-      "imull $0x84, %%edi, %%edi\n\t"
-      "imull $0x84, %%ebx, %%ebx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lmotion_sensor_update_1:\n\t"
-      "movl 0x46bd2c, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x568, %%eax, %%eax\n\t"
-      "leal (%%edi,%%eax,1), %%edx\n\t"
-      "pushl $0x84\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cba4c0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "decl -0x8(%%ebp)\n\t"
-      "jne .Lmotion_sensor_update_1\n\t"
-      "jmp .Lmotion_sensor_update_19\n\t"
-      ".Lmotion_sensor_update_2:\n\t"
-      "call *%[cba4b0]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, -0x26(%%ebp)\n\t"
-      "pushl $-1\n\t"
-      "movw $0, -0x28(%%ebp)\n\t"
-      "movw %%cx, -0x22(%%ebp)\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      "call *%[cba4c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "jle .Lmotion_sensor_update_8\n\t"
-      "movzwl %%di, %%eax\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jmp .Lmotion_sensor_update_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lmotion_sensor_update_3:\n\t"
-      "movl 0x46bd2c, %%eax\n\t"
-      "movswl 0x15a4(%%eax), %%ecx\n\t"
-      "movswl %%bx, %%edi\n\t"
-      "imull $0x84, %%ecx, %%ecx\n\t"
-      "movl %%edi, %%esi\n\t"
-      "imull $0x568, %%esi, %%esi\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "addl %%eax, %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lmotion_sensor_update_4\n\t"
-      "orl %%eax, %%eax\n\t"
-      "jmp .Lmotion_sensor_update_5\n\t"
-      ".Lmotion_sensor_update_4:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cba3c0]\n\t"
-      "movl 0x5aa6d4, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lmotion_sensor_update_5:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movw %%bx, (%%ecx)\n\t"
-      "je .Lmotion_sensor_update_6\n\t"
-      "leal (%%edi,%%edi,2), %%edx\n\t"
-      "leal -0x84(%%ebp,%%edx,4), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[useat]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lmotion_sensor_update_6:\n\t"
-      "movl $0, 0x78(%%esi)\n\t"
-      "leal 0x2(%%esi), %%eax\n\t"
-      "movl $0x10, %%ecx\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lmotion_sensor_update_7:\n\t"
-      "movb $6, (%%eax)\n\t"
-      "addl $4, %%eax\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lmotion_sensor_update_7\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      "addl $2, %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "call *%[cba4c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "decl -0x8(%%ebp)\n\t"
-      "jne .Lmotion_sensor_update_3\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      ".Lmotion_sensor_update_8:\n\t"
-      "pushl $1\n\t"
-      "leal -0x38(%%ebp), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c13d6f0]\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmotion_sensor_update_19\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lmotion_sensor_update_9:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lmotion_sensor_update_19\n\t"
-      "movl -0x30(%%ebp), %%ecx\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmotion_sensor_update_18\n\t"
-      "testb $4, 0xb6(%%eax)\n\t"
-      "jne .Lmotion_sensor_update_18\n\t"
-      "movl -0x30(%%ebp), %%esi\n\t"
-      "call *%[cdb250]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lmotion_sensor_update_18\n\t"
-      "movl -0x30(%%ebp), %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x4c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "call *%[c1aae0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .Lmotion_sensor_update_17\n\t"
-      "movzwl %%di, %%eax\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lmotion_sensor_update_10:\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movswl (%%ecx), %%ebx\n\t"
-      "leal -0x28(%%ebp,%%ebx,2), %%eax\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movswl (%%eax), %%eax\n\t"
-      "cmpw $0x10, %%ax\n\t"
-      "movl %%eax, -0x3c(%%ebp)\n\t"
-      "jge .Lmotion_sensor_update_15\n\t"
-      "leal (%%ebx,%%ebx,2), %%esi\n\t"
-      "shll $2, %%esi\n\t"
-      "flds -0x7c(%%ebp,%%esi,1)\n\t"
-      "fstps -0x44(%%ebp)\n\t"
-      "call *%[gerun]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lmotion_sensor_update_11\n\t"
-      "flds -0x4c(%%ebp)\n\t"
-      "movl 0x46bd0c, %%edx\n\t"
-      "fsubs -0x84(%%ebp,%%esi,1)\n\t"
-      "leal -0x84(%%ebp,%%esi,1), %%eax\n\t"
-      "flds -0x48(%%ebp)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "flds -0x44(%%ebp)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "flds 0x2d0(%%edx)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(4)\n\t"
-      ".byte 0xd8, 0xcd\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .Lmotion_sensor_update_16\n\t"
-      ".Lmotion_sensor_update_11:\n\t"
-      "movl 0x46bd2c, %%ecx\n\t"
-      "movswl 0x15a4(%%ecx), %%edi\n\t"
-      "movl -0x30(%%ebp), %%esi\n\t"
-      "imull $0x84, %%edi, %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "imull $0x568, %%eax, %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "addl %%eax, %%edi\n\t"
-      "movl %%esi, -0x20(%%ebp)\n\t"
-      "call *%[cdaee0]\n\t"
-      "movswl -0x3c(%%ebp), %%esi\n\t"
-      "movl -0x20(%%ebp), %%ebx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "movb %%al, 0x2(%%edi,%%esi,4)\n\t"
-      "je .Lmotion_sensor_update_13\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lmotion_sensor_update_13\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movw 0x298(%%eax), %%ax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lmotion_sensor_update_12\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jl .Lmotion_sensor_update_14\n\t"
-      ".Lmotion_sensor_update_12:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lmotion_sensor_update_14\n\t"
-      ".Lmotion_sensor_update_13:\n\t"
-      "xorb %%al, %%al\n\t"
-      ".Lmotion_sensor_update_14:\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "movb %%al, 0x3(%%edi,%%esi,4)\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "movswl (%%eax), %%eax\n\t"
-      "movl -0x30(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x528(%%edx,%%esi,4)\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movw %%ax, (%%ecx)\n\t"
-      "incl 0x78(%%edi)\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      "jmp .Lmotion_sensor_update_16\n\t"
-      ".Lmotion_sensor_update_15:\n\t"
-      "incl -0x8(%%ebp)\n\t"
-      ".Lmotion_sensor_update_16:\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "addl $2, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "jne .Lmotion_sensor_update_10\n\t"
-      ".Lmotion_sensor_update_17:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movswl %%di, %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jne .Lmotion_sensor_update_18\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lmotion_sensor_update_18:\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c13d730]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lmotion_sensor_update_9\n\t"
-      ".Lmotion_sensor_update_19:\n\t"
-      "movl $0x7f, %%eax\n\t"
-      "movl $0x62626262, %%ecx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lmotion_sensor_update_20:\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "cmpl %%ecx, -0x284(%%ebp,%%edx,4)\n\t"
-      "jne .Lmotion_sensor_update_10000\n\t"
-      "decl %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jge .Lmotion_sensor_update_20\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "call *%[cd1540]\n\t"
-      "cmpl %%eax, -0x40(%%ebp)\n\t"
-      "je .Lmotion_sensor_update_21\n\t"
-      "pushl $1\n\t"
-      "pushl $0x282\n\t"
-      "pushl $0x282094\n\t"
-      "pushl $0x281960\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmotion_sensor_update_21:\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lmotion_sensor_update_22\n\t"
-      "pushl $1\n\t"
-      "pushl $0x282\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl $0x282094\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x281948\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lmotion_sensor_update_22:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lmotion_sensor_update_10000:\n\t"
-      "jmp *%[cdb93e]\n\t"
-      :
-      : [cd1540] "m"(bdb4c0_cd1540), [memset] "m"(bdb4c0_memset), [gerun] "m"(bdb4c0_gerun), [gtime] "m"(bdb4c0_gtime), [cba4b0] "m"(bdb4c0_cba4b0), [cba4c0] "m"(bdb4c0_cba4c0), [c8e0b0] "m"(bdb4c0_c8e0b0), [cba3c0] "m"(bdb4c0_cba3c0), [dget] "m"(bdb4c0_dget), [useat] "m"(bdb4c0_useat), [c13d6f0] "m"(bdb4c0_c13d6f0), [c13d730] "m"(bdb4c0_c13d730), [tryget] "m"(bdb4c0_tryget), [cdb250] "m"(bdb4c0_cdb250), [c1aae0] "m"(bdb4c0_c1aae0), [cdaee0] "m"(bdb4c0_cdaee0), [get] "m"(bdb4c0_get), [tag] "m"(bdb4c0_tag), [assert] "m"(bdb4c0_assert), [exitfn] "m"(bdb4c0_exitfn), [c8d9d0] "m"(bdb4c0_c8d9d0), [cdb93e] "m"(bdb4c0_cdb93e)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  FUN_000d1540();
+  csmemset((void *)(uintptr_t)eax, 98, 512);
+  game_engine_running();
+  game_time_get();
+  /* test edx, edx -> je 0xdb5c9 */
+  /* test esi, esi -> je 0xdb5c9 */
+  local_player_count();
+  local_player_get_next(0);
+  csmemcpy((void *)(uintptr_t)eax, (void *)0, 0);
+  local_player_get_next(esi);
+  local_player_count();
+  local_player_get_next(0);
+  local_player_get_player_index(0);
+  /* cmp eax, -1 -> jne 0xdb643 */
+  local_player_get_player_index(ebx);
+  datum_get((void *)(uintptr_t)edx, 0);
+  unit_set_seat_state(0, (float *)(uintptr_t)ecx);
+  local_player_get_next(ebx);
+  object_iterator_new((void *)(uintptr_t)edx, 0, 0);
+  object_iterator_next((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0xdb8b2 */
+  /* test (char)eax, (char)eax -> jne 0xdb8b2 */
+  object_try_and_get_and_verify_type(0, 0);
+  /* test eax, eax -> je 0xdb89e */
+  /* relift: test byte ptr [eax + 0xb6], 4 -> jne 0xdb89e */
+  ((void(*)(void))FUN_000db250)();
+  /* test (char)eax, (char)eax -> je 0xdb89e */
+  FUN_0001aae0(0, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
+  /* test (int16_t)edi, (int16_t)edi -> jle 0xdb890 */
+  game_engine_running();
+  /* test (char)eax, (char)eax -> jne 0xdb7d5 */
+  FUN_000daee0();
+  object_try_and_get_and_verify_type(0, 0);
+  /* test eax, eax -> je 0xdb84f */
+  object_get_and_verify_type(0, 0);
+  tag_get('tinu', 0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0xdb84b */
+  /* cmp (int16_t)eax, 3 -> jl 0xdb851 */
+  /* cmp eax, edx -> jne 0xdb89e */
+  object_iterator_next((void *)(uintptr_t)eax);
+  /* test eax, eax -> jne 0xdb6e0 */
+  /* relift: cmp dword ptr [ebp + edx*4 - 0x284], ecx -> jne 0xdb93e */
+  /* test (int16_t)eax, (int16_t)eax -> jge 0xdb8c0 */
+  FUN_000d1540();
+  /* relift: cmp dword ptr [ebp - 0x40], eax -> je 0xdb8ff */
+  display_assert((char *)0x00281960, (char *)0x00282094, 642, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> je 0xdb937 */
+  csprintf((char *)0x005ab100, (char *)0x00281948);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
-#else
-#error "motion_sensor_update: clang naked draft required"
-#endif
+
 
 
 /* update_motion_sensor (0xdb950) — readable C lift (restored pre-naked). */

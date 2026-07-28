@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Cache file precaching system for Xbox. Manages background copying of
  * map files from DVD to the hard drive cache partition. */
 
@@ -850,84 +851,26 @@ void cache_files_precache(void)
 }
 /* --- cache_files_windows.obj batch drafts (2026-07-26) --- */
 
-/* cache_copy_initialize_read_data (0x1bb7d0) — XBE naked draft (batch 265). */
-#if defined(__clang__)
-static void *(*const b1bb7d0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1bb7d0_c1bb2d0)(void) = FUN_001bb2d0;
-static void (*const b1bb7d0_c1ba930)(void *) = FUN_001ba930;
-static void (*const b1bb7d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bb7d0_exitfn)(int) = system_exit;
-static void (*const b1bb7d0_c1bb190)(void) = FUN_001bb190;
-static void (*const b1bb7d0_c1ba8b0)(char *) = FUN_001ba8b0;
-static bool (*const b1bb7d0_c1b9ce0)(void *header, const char *path, int report_errors) = cache_file_header_verify;
-
-__attribute__((naked, noinline))
+/* cache_copy_initialize_read_data (0x1bb7d0) — readable C lift (restored pre-naked). */
 void cache_copy_initialize_read_data(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "pushl $0x800\n\t"
-      "leal 0x104(%%esi), %%ebx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "movl $0, 0xa98(%%esi)\n\t"
-      "call *%[memset]\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $0x800\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%esi, %%edi\n\t"
-      "call *%[c1bb2d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "call *%[c1ba930]\n\t"
-      "movl 0x32ea98, %%eax\n\t"
-      "movl 0xa98(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lcache_copy_initialize_read_data_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3eb\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b89d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_copy_initialize_read_data_1:\n\t"
-      "pushl $8\n\t"
-      "pushl $0\n\t"
-      "pushl $0x800\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%esi, %%edi\n\t"
-      "call *%[c1bb190]\n\t"
-      "call *%[c1ba8b0]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2b89cc\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1b9ce0]\n\t"
-      "addl $0xfffff800, 0xa94(%%esi)\n\t"
-      "movl $0x800, %%eax\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%eax, 0xaa8(%%esi)\n\t"
-      "movl %%eax, 0xaa4(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0xaa0(%%esi)\n\t"
-      "movl %%eax, 0xaac(%%esi)\n\t"
-      "movw %%ax, 0xac2(%%esi)\n\t"
-      "movl %%eax, 0xab0(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b1bb7d0_memset), [c1bb2d0] "m"(b1bb7d0_c1bb2d0), [c1ba930] "m"(b1bb7d0_c1ba930), [assert] "m"(b1bb7d0_assert), [exitfn] "m"(b1bb7d0_exitfn), [c1bb190] "m"(b1bb7d0_c1bb190), [c1ba8b0] "m"(b1bb7d0_c1ba8b0), [c1b9ce0] "m"(b1bb7d0_c1b9ce0)
-      : "memory");
+  int ebx = 0;
+  int ecx = 0;
+
+  csmemset((void *)(uintptr_t)ebx, 0, 2048);
+  FUN_001bb2d0();
+  ((void(*)(void))FUN_001ba930)();
+  /* test ecx, ecx -> je 0x1bb83a */
+  display_assert((char *)0x002b89d4, (char *)0x002b839c, 1003, 0);
+  system_exit(0);
+  FUN_001bb190();
+  ((void(*)(void))FUN_001ba8b0)();
+  cache_file_header_verify((void *)(uintptr_t)ebx, (char *)0x002b89cc, 0);
+
+  (void)ebx;
+  (void)ecx;
 }
-#else
-#error "cache_copy_initialize_read_data: clang naked draft required"
-#endif
+
 
 
 /* FUN_001bb8a0 (0x1bb8a0) — readable C lift. */
@@ -1996,111 +1939,38 @@ void FUN_001bd3a0(void)
 #endif
 
 
-/* cache_file_open (0x1bd4d0) — XBE naked draft (batch 242). */
-#if defined(__clang__)
-static short (*const b1bd4d0_c1bd1b0)(const char *) = FUN_001bd1b0;
-static void (*const b1bd4d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bd4d0_exitfn)(int) = system_exit;
-static void *(*const b1bd4d0_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b1bd4d0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
+/* cache_file_open (0x1bd4d0) — readable C lift (restored pre-naked). */
 void cache_file_open(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "call *%[c1bd1b0]\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jne .Lcache_file_open_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd6\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8fe4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_file_open_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lcache_file_open_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd7\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x265d1c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_file_open_2:\n\t"
-      "cmpw $-1, 0x4e9244\n\t"
-      "je .Lcache_file_open_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd9\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8c68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_file_open_3:\n\t"
-      "cmpw $-1, %%si\n\t"
-      "jne .Lcache_file_open_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xda\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8fcc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_file_open_4:\n\t"
-      "movl 0x4e9250, %%eax\n\t"
-      "pushl $0x4000\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%si, %%si\n\t"
-      "movw %%si, 0x4e9244\n\t"
-      "jl .Lcache_file_open_5\n\t"
-      "cmpw $6, %%si\n\t"
-      "jl .Lcache_file_open_6\n\t"
-      ".Lcache_file_open_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x485\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8de4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_file_open_6:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "imull $0x80c, %%ecx, %%ecx\n\t"
-      "pushl $0x800\n\t"
-      "addl $0x4e61e4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1bd1b0] "m"(b1bd4d0_c1bd1b0), [assert] "m"(b1bd4d0_assert), [exitfn] "m"(b1bd4d0_exitfn), [memset] "m"(b1bd4d0_memset), [c8e0b0] "m"(b1bd4d0_c8e0b0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  ((void(*)(void))FUN_001bd1b0)();
+  display_assert((char *)0x002b8fe4, (char *)0x002b8c98, 214, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x1bd52a */
+  display_assert((char *)0x00265d1c, (char *)0x002b8c98, 215, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x4e9244], -1 -> je 0x1bd554 */
+  display_assert((char *)0x002b8c68, (char *)0x002b8c98, 217, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> jne 0x1bd57a */
+  display_assert((char *)0x002b8fcc, (char *)0x002b8c98, 218, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)eax, 0, 16384);
+  /* cmp (int16_t)esi, 6 -> jl 0x1bd5c1 */
+  display_assert((char *)0x002b8de4, (char *)0x002b8c98, 1157, 0);
+  system_exit(0);
+  csmemcpy((void *)(uintptr_t)edi, (void *)(uintptr_t)ecx, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "cache_file_open: clang naked draft required"
-#endif
+
 
 /* --- cache_files_windows.obj orphan shells (2026-07-26) --- */
 

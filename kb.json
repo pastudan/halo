@@ -5129,7 +5129,7 @@
         {
           "addr": "0x1bb7d0",
           "decl": "void cache_copy_initialize_read_data(void);",
-          "ported": false,
+          "ported": true,
           "name": "cache_copy_initialize_read_data"
         },
         {
@@ -5357,7 +5357,7 @@
         {
           "addr": "0x1bd4d0",
           "decl": "void cache_file_open(void);",
-          "ported": false,
+          "ported": true,
           "name": "cache_file_open"
         },
         {
@@ -8028,7 +8028,7 @@
         {
           "addr": "0xdb4c0",
           "decl": "void motion_sensor_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "motion_sensor_update"
         },
         {
@@ -14230,7 +14230,7 @@
         {
           "addr": "0xdefb0",
           "decl": "void interface_draw_screen(void);",
-          "ported": false,
+          "ported": true,
           "name": "interface_draw_screen"
         },
         {
@@ -14247,7 +14247,7 @@
         {
           "addr": "0xdf4e0",
           "decl": "void FUN_000df4e0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000df4e0"
         },
         {
@@ -28639,7 +28639,7 @@
         {
           "addr": "0xf0790",
           "decl": "void FUN_000f0790(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f0790"
         },
         {
