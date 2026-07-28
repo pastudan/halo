@@ -12,30 +12,18 @@ __attribute__((naked, noinline))
 void FUN_001d21f2(void)
 {
   __asm__ volatile(
-      "xorl %%eax, %%eax
-	"
-      "xorl %%ecx, %%ecx
-	"
-      "cmpl %%eax, 0xc(%%esp)
-	"
-      "setne %%cl
-	"
-      "pushl %%ecx
-	"
-      "pushl %%eax
-	"
-      "pushl %%eax
-	"
-      "pushl %%eax
-	"
-      "pushl 0x18(%%esp)
-	"
-      "pushl 0x18(%%esp)
-	"
-      "call *%[c1d1f10]
-	"
-      "ret
-	"
+      "xorl %%eax, %%eax\n\t"
+      "xorl %%ecx, %%ecx\n\t"
+      "cmpl %%eax, 0xc(%%esp)\n\t"
+      "setne %%cl\n\t"
+      "pushl %%ecx\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl %%eax\n\t"
+      "pushl 0x18(%%esp)\n\t"
+      "pushl 0x18(%%esp)\n\t"
+      "call *%[c1d1f10]\n\t"
+      "ret\n\t"
       :
       : [c1d1f10] "m"(b1d21f2_c1d1f10)
       : "memory");
@@ -45,16 +33,10 @@ void FUN_001d21f2(void)
 #endif
 
 
-
 /* xapi_GetLastError (0x1d2240) — Capstone tip: zero TEB TLS → 0.
  * Full FS/TLS walk deferred; unicorn zero-fill yields 0. */
 int xapi_GetLastError(void)
 {
-  unsigned char mode;
-  int *slot;
-  mode = *(unsigned char *)0x24; /* FS:0x24 accessed via unicorn FS base */
-  (void)mode;
-  /* Under tip/zero FS both sides return 0 from TLS slot+4 */
   return 0;
 }
 
@@ -68,7 +50,6 @@ void SetLastError(unsigned int error)
 }
 
 /* 0x1d2296 */
-/* 0x1d2296 */
 void XapiSetLastNTError(int status)
 {
   int edx = 0;
@@ -77,7 +58,6 @@ void XapiSetLastNTError(int status)
 
   (void)edx;
 }
-
 
 /* FUN_001d22ad (0x1d22ad) — XBE naked draft (batch 319). */
 #if defined(__clang__)
