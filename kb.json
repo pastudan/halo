@@ -38914,8 +38914,8 @@
         },
         {
           "addr": "0x71fa0",
-          "decl": "void FUN_00071fa0(void);",
-          "ported": false,
+          "decl": "void FUN_00071fa0(void *out, const short *a, const short *b);",
+          "ported": true,
           "name": "FUN_00071fa0"
         },
         {

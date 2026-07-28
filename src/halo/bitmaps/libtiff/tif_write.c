@@ -5756,99 +5756,56 @@ void FUN_00071d30(void)
 #endif
 
 
-/* FUN_00071fa0 (0x71fa0) — XBE naked draft (batch 312). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00071fa0(void)
+/* FUN_00071fa0 (0x71fa0) — readable C lift: delta/extent from two int16 points. */
+void FUN_00071fa0(void *out, const short *a, const short *b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "subw (%%edx), %%si\n\t"
-      "pushl %%edi\n\t"
-      "movw %%si, 0x8(%%eax)\n\t"
-      "movw 0x2(%%ecx), %%cx\n\t"
-      "subw 0x2(%%edx), %%cx\n\t"
-      "movw %%cx, 0xa(%%eax)\n\t"
-      "movw %%si, %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "jge .LFUN_00071fa0_1\n\t"
-      "negl %%edx\n\t"
-      ".LFUN_00071fa0_1:\n\t"
-      "movw 0xa(%%eax), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "leal (%%edx,%%edx,1), %%ebx\n\t"
-      "movw %%bx, (%%eax)\n\t"
-      "movswl %%di, %%edx\n\t"
-      "jge .LFUN_00071fa0_2\n\t"
-      "negl %%edx\n\t"
-      ".LFUN_00071fa0_2:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "leal (%%edx,%%edx,1), %%esi\n\t"
-      "movw %%si, 0x2(%%eax)\n\t"
-      "je .LFUN_00071fa0_3\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "setge %%dl\n\t"
-      "leal -0x1(%%edx,%%edx,1), %%edx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "jmp .LFUN_00071fa0_4\n\t"
-      ".LFUN_00071fa0_3:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".LFUN_00071fa0_4:\n\t"
-      "movw %%cx, 0x4(%%eax)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testw %%di, %%di\n\t"
-      "je .LFUN_00071fa0_5\n\t"
-      "setge %%cl\n\t"
-      "leal -0x1(%%ecx,%%ecx,1), %%ecx\n\t"
-      ".LFUN_00071fa0_5:\n\t"
-      "cmpw %%si, %%bx\n\t"
-      "movw %%cx, 0x6(%%eax)\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl %%edx, 0xe(%%eax)\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, 0x12(%%eax)\n\t"
-      "jle .LFUN_00071fa0_6\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "popl %%edi\n\t"
-      "sarl $1, %%edx\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "movw %%cx, 0xc(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00071fa0_6:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "popl %%edi\n\t"
-      "sarl $1, %%edx\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "movw %%cx, 0xc(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  short dx;
+  short dy;
+  short abs2x;
+  short abs2y;
+  short sx;
+  short sy;
+  int t;
+
+  dx = (short)(b[0] - a[0]);
+  dy = (short)(b[1] - a[1]);
+  *(short *)((char *)out + 8) = dx;
+  *(short *)((char *)out + 0xa) = dy;
+
+  t = (int)dx;
+  if (t < 0)
+    t = -t;
+  abs2x = (short)(t + t);
+  *(short *)out = abs2x;
+
+  t = (int)dy;
+  if (t < 0)
+    t = -t;
+  abs2y = (short)(t + t);
+  *(short *)((char *)out + 2) = abs2y;
+
+  if (dx == 0)
+    sx = 0;
+  else
+    sx = (short)(((dx >= 0) ? 1 : 0) * 2 - 1);
+  *(short *)((char *)out + 4) = sx;
+
+  if (dy == 0)
+    sy = 0;
+  else
+    sy = (short)(((dy >= 0) ? 1 : 0) * 2 - 1);
+  *(short *)((char *)out + 6) = sy;
+
+  *(int *)((char *)out + 0xe) = *(const int *)a;
+  *(int *)((char *)out + 0x12) = *(const int *)b;
+
+  if (abs2x > abs2y)
+    *(short *)((char *)out + 0xc) =
+        (short)((int)abs2y - ((int)abs2x >> 1));
+  else
+    *(short *)((char *)out + 0xc) =
+        (short)((int)abs2x - ((int)abs2y >> 1));
 }
-#else
-#error "FUN_00071fa0: clang naked draft required"
-#endif
 
 
 /* FUN_00072060 (0x72060) — XBE naked draft (batch 303). */
