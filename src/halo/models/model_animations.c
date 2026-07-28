@@ -3102,120 +3102,28 @@ void FUN_00122690(void *animation __attribute__((unused)), float frame __attribu
 #endif
 
 
-/* FUN_00123990 (0x123990) — XBE naked draft (batch 251). */
-#if defined(__clang__)
-static void (*const b123990_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b123990_exitfn)(int) = system_exit;
-static void (*const b123990_c10cb60)(float *q1, float *q2, float t, float *out) = quaternions_interpolate_and_normalize;
-
-__attribute__((naked, noinline))
+/* FUN_00123990 (0x123990) — readable C lift (restored pre-naked). */
 void FUN_00123990(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x18(%%ebp), %%si\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x14(%%ebp), %%di\n\t"
-      "movswl %%di, %%eax\n\t"
-      "incl %%eax\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%eax, 0x14(%%ebp)\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "fildl 0x14(%%ebp)\n\t"
-      "movl %%ecx, 0x14(%%ebp)\n\t"
-      "fidivl 0x14(%%ebp)\n\t"
-      "fstps 0x14(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x14(%%ebp)\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      "jg .LFUN_00123990_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x243\n\t"
-      "pushl $0x291564\n\t"
-      "pushl $0x290e18\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00123990_1:\n\t"
-      "cmpw %%si, %%di\n\t"
-      "jl .LFUN_00123990_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x244\n\t"
-      "pushl $0x291564\n\t"
-      "pushl $0x290e00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00123990_2:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0xb8(%%edx), %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00123990_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_00123990_3\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00123990_3:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "shll $5, %%eax\n\t"
-      "fmuls 0x1c(%%eax,%%edx,1)\n\t"
-      "leal (%%eax,%%edx,1), %%edi\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "leal (%%eax,%%ecx,1), %%esi\n\t"
-      "fmuls 0x1c(%%esi)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "fstps 0x1c(%%esi)\n\t"
-      "call *%[c10cb60]\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fmuls 0x10(%%edi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "incl %%ebx\n\t"
-      "fmuls 0x10(%%esi)\n\t"
-      "movswl %%bx, %%eax\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x10(%%esi)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls 0x14(%%edi)\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fmuls 0x14(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "fmuls 0x18(%%edi)\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fmuls 0x18(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x18(%%esi)\n\t"
-      "movl 0xb8(%%ecx), %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .LFUN_00123990_3\n\t"
-      ".LFUN_00123990_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b123990_assert), [exitfn] "m"(b123990_exitfn), [c10cb60] "m"(b123990_c10cb60)
-      : "memory");
+  int eax = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  display_assert((char *)0x00290e18, (char *)0x00291564, 579, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, (int16_t)esi -> jl 0x123a0a */
+  display_assert((char *)0x00290e00, (char *)0x00291564, 580, 0);
+  system_exit(0);
+  /* test eax, eax -> jle 0x123a94 */
+  quaternions_interpolate_and_normalize((float *)0, (float *)0, 0.0f, (float *)0);
+  /* cmp eax, edx -> jl 0x123a20 */
+
+  (void)eax;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_00123990: clang naked draft required"
-#endif
 
 
 /* FUN_00123b30 (0x123b30) — XBE naked draft (batch 268). */

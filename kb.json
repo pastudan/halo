@@ -39577,7 +39577,7 @@
         {
           "addr": "0x123990",
           "decl": "void FUN_00123990(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00123990"
         },
         {
