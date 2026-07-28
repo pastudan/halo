@@ -24041,7 +24041,7 @@
         {
           "addr": "0x188ec0",
           "decl": "void FUN_00188ec0(short type, ...);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00188ec0"
         },
         {
@@ -35248,7 +35248,7 @@
         {
           "addr": "0xfe6c0",
           "decl": "void FUN_000fe6c0(short trigger_index@<eax>, int weapon@<ecx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000fe6c0"
         }
       ],
@@ -45860,7 +45860,7 @@
         {
           "addr": "0x679f0",
           "decl": "int FUN_000679f0(unsigned short tag@<ax>, void *tif@<edx>, void *out@<ecx>, int count, void **items);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000679f0"
         },
         {

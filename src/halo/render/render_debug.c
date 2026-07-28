@@ -340,271 +340,174 @@ void FUN_00188d00(float *buffer1, float *buffer2, float *center,
 /* Cache overflow one-shot warning flag (0x4d822a). */
 #define cache_overflow_warned (*(char *)0x4d822a)
 
-/* FUN_00188ec0 (0x188ec0) — XBE naked draft (batch 112). */
-#if defined(__clang__)
-static int (*const b188ec0_gtime)(void) = game_time_get;
-static char * (*const b188ec0_c188b20)(const char *str) = FUN_00188b20;
-static void (*const b188ec0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_00188ec0(short type __attribute__((unused)), ...)
+/* FUN_00188ec0 (0x188ec0) — readable C lift (restored pre-naked). */
+void FUN_00188ec0(short type, ...)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[gtime]\n\t"
-      "cmpw %%ax, 0x4d8220\n\t"
-      "je .LFUN_00188ec0_1\n\t"
-      "call *%[gtime]\n\t"
-      "movw %%ax, 0x4d8220\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x4d8228\n\t"
-      "movb %%al, 0x4d0e20\n\t"
-      "jmp .LFUN_00188ec0_2\n\t"
-      ".LFUN_00188ec0_1:\n\t"
-      "movw 0x4d8224, %%ax\n\t"
-      "cmpw $0x200, %%ax\n\t"
-      "jge .LFUN_00188ec0_15\n\t"
-      ".LFUN_00188ec0_2:\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "imull $0x38, %%ebx, %%ebx\n\t"
-      "addl $0x4d1220, %%ebx\n\t"
-      "incw %%ax\n\t"
-      "movw %%ax, 0x4d8224\n\t"
-      "movswl %%si, %%eax\n\t"
-      "cmpl $9, %%eax\n\t"
-      "movw %%si, (%%ebx)\n\t"
-      "ja .LFUN_00188ec0_16\n\t"
-      "jmp *.LFUN_00188ec0_jt(,%%eax,4)\n\t"
-      ".LFUN_00188ec0_3:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "fldl 0x1c(%%ebp)\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "leal 0x4(%%ebx), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "movl %%ecx, 0xc(%%eax)\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "movb %%al, 0x16(%%ebx)\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "movw %%dx, 0x14(%%ebx)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x18(%%ebx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "fstps 0x20(%%ebx)\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "fldl 0x28(%%ebp)\n\t"
-      "movl %%edx, 0x1c(%%ebx)\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "leal 0x24(%%ebx), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "fstps 0x34(%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0xc(%%eax)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00188ec0_4:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fldl 0x10(%%ebp)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "leal 0x4(%%ebx), %%edx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "fstps 0x10(%%ebx)\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "addl $0x14, %%ebx\n\t"
-      "movl %%edx, (%%ebx)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, 0x4(%%ebx)\n\t"
-      "movl 0x8(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x8(%%ebx)\n\t"
-      "movl 0xc(%%ecx), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0xc(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00188ec0_5:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "leal 0x4(%%ebx), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "leal 0x10(%%ebx), %%eax\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "addl $0x1c, %%ebx\n\t"
-      "jmp .LFUN_00188ec0_13\n\t"
-      ".LFUN_00188ec0_6:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fldl 0x14(%%ebp)\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "leal 0x4(%%ebx), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "leal 0x10(%%ebx), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "fstps 0x1c(%%ebx)\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "addl $0x20, %%ebx\n\t"
-      "jmp .LFUN_00188ec0_14\n\t"
-      ".LFUN_00188ec0_7:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "fldl 0x14(%%ebp)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "leal 0x4(%%ebx), %%edx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "leal 0x10(%%ebx), %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "fstps 0x1c(%%ebx)\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "addl $0x20, %%ebx\n\t"
-      ".LFUN_00188ec0_8:\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, (%%ebx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ebx)\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebx)\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0xc(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00188ec0_9:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "leal 0x4(%%ebx), %%edi\n\t"
-      "movl $6, %%ecx\n\t"
-      "rep movsl\n\t"
-      "addl $0x1c, %%ebx\n\t"
-      "jmp .LFUN_00188ec0_8\n\t"
-      ".LFUN_00188ec0_10:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "call *%[c188b20]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00188ec0_11\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x4(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00188ec0_11:\n\t"
-      "decw 0x4d8224\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00188ec0_12:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "call *%[c188b20]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00188ec0_11\n\t"
-      "movl %%eax, 0x4(%%ebx)\n\t"
-      "leal 0x8(%%ebx), %%eax\n\t"
-      "addl $0x14, %%ebx\n\t"
-      ".LFUN_00188ec0_13:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      ".LFUN_00188ec0_14:\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "movl %%eax, (%%ebx)\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%ebx)\n\t"
-      "movl 0x8(%%edx), %%eax\n\t"
-      "movl %%eax, 0x8(%%ebx)\n\t"
-      "movl 0xc(%%edx), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0xc(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00188ec0_15:\n\t"
-      "movb 0x4d822a, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00188ec0_16\n\t"
-      "pushl $0x2b17f0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, 0x4d822a\n\t"
-      ".LFUN_00188ec0_16:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_00188ec0_jt:\n\t"
-      ".long .LFUN_00188ec0_3\n\t"
-      ".long .LFUN_00188ec0_4\n\t"
-      ".long .LFUN_00188ec0_5\n\t"
-      ".long .LFUN_00188ec0_4\n\t"
-      ".long .LFUN_00188ec0_6\n\t"
-      ".long .LFUN_00188ec0_7\n\t"
-      ".long .LFUN_00188ec0_9\n\t"
-      ".long .LFUN_00188ec0_9\n\t"
-      ".long .LFUN_00188ec0_10\n\t"
-      ".long .LFUN_00188ec0_12\n\t"
-      ".text\n\t"
-      :
-      : [gtime] "m"(b188ec0_gtime), [c188b20] "m"(b188ec0_c188b20), [c8f390] "m"(b188ec0_c8f390)
-      : "memory");
+  int *args;
+  char *rec;
+  float *p1;
+  float *p2;
+  float *q;
+  float *dst3;
+  float *dst6;
+  float *src6;
+  float *dst;
+  float *src;
+  float tmp;
+  char *interned;
+  short frame;
+  int i;
+
+  frame = (short)game_time_get();
+  if (debug_primitive_frame != frame) {
+    debug_primitive_frame = (short)game_time_get();
+    debug_primitive_count = 0;
+    debug_string_pool_count = 0;
+    debug_string_pool[0] = 0;
+  } else if (debug_primitive_count >= 0x200) {
+    if (cache_overflow_warned == 0) {
+      error(2, "render debug cache overflow.");
+      cache_overflow_warned = 1;
+    }
+    return;
+  }
+
+  rec = (char *)&debug_primitives[debug_primitive_count];
+  debug_primitive_count = debug_primitive_count + 1;
+  *(short *)rec = type;
+
+  args = (int *)((char *)&type + 4);
+  switch (type) {
+  case 0:
+    p1 = (float *)args[0];
+    q = (float *)(rec + 0x04);
+    q[0] = p1[0];
+    q[1] = p1[1];
+    q[2] = p1[2];
+    q[3] = p1[3];
+    *(short *)(rec + 0x14) = *(short *)&args[1];
+    *(char *)(rec + 0x16) = *(char *)&args[2];
+    p2 = (float *)args[3];
+    *(float *)(rec + 0x18) = p2[0];
+    *(float *)(rec + 0x1c) = p2[1];
+    *(float *)(rec + 0x20) = (float)*(double *)&args[4];
+    p1 = (float *)args[6];
+    q = (float *)(rec + 0x24);
+    q[0] = p1[0];
+    q[1] = p1[1];
+    q[2] = p1[2];
+    q[3] = p1[3];
+    *(float *)(rec + 0x34) = (float)*(double *)&args[7];
+    goto done;
+  case 1:
+  case 3:
+    p1 = (float *)args[0];
+    q = (float *)(rec + 0x04);
+    q[0] = p1[0];
+    q[1] = p1[1];
+    q[2] = p1[2];
+    *(float *)(rec + 0x10) = (float)*(double *)&args[1];
+    p2 = (float *)args[3];
+    q = (float *)(rec + 0x14);
+    q[0] = p2[0];
+    q[1] = p2[1];
+    q[2] = p2[2];
+    q[3] = p2[3];
+    goto done;
+  case 2:
+    p1 = (float *)args[0];
+    q = (float *)(rec + 0x04);
+    q[0] = p1[0];
+    q[1] = p1[1];
+    q[2] = p1[2];
+    dst3 = (float *)(rec + 0x10);
+    dst6 = (float *)(rec + 0x1c);
+    goto tail_c5;
+  case 4:
+    p1 = (float *)args[0];
+    q = (float *)(rec + 0x04);
+    q[0] = p1[0];
+    q[1] = p1[1];
+    q[2] = p1[2];
+    p2 = (float *)args[1];
+    dst3 = (float *)(rec + 0x10);
+    dst3[0] = p2[0];
+    dst3[1] = p2[1];
+    tmp = p2[2];
+    *(float *)(rec + 0x1c) = (float)*(double *)&args[2];
+    dst6 = (float *)(rec + 0x20);
+    src6 = (float *)args[4];
+    goto tail_d8;
+  case 5:
+    p1 = (float *)args[0];
+    q = (float *)(rec + 0x04);
+    q[0] = p1[0];
+    q[1] = p1[1];
+    q[2] = p1[2];
+    p2 = (float *)args[1];
+    q = (float *)(rec + 0x10);
+    q[0] = p2[0];
+    q[1] = p2[1];
+    *(float *)(rec + 0x1c) = (float)*(double *)&args[2];
+    q[2] = p2[2];
+    dst = (float *)(rec + 0x20);
+    src = (float *)args[4];
+    goto tail_v4;
+  case 6:
+  case 7:
+    p1 = (float *)args[0];
+    dst = (float *)(rec + 0x04);
+    for (i = 6; i != 0; i--) {
+      *dst = *p1;
+      p1++;
+      dst++;
+    }
+    dst = (float *)(rec + 0x1c);
+    src = (float *)args[1];
+    goto tail_v4;
+  case 8:
+    interned = FUN_00188b20((char *)args[0]);
+    if (interned != 0) {
+      *(char **)(rec + 0x04) = interned;
+    } else {
+      debug_primitive_count = debug_primitive_count - 1;
+    }
+    goto done;
+  case 9:
+    interned = FUN_00188b20((char *)args[0]);
+    if (interned == 0) {
+      debug_primitive_count = debug_primitive_count - 1;
+      goto done;
+    }
+    *(char **)(rec + 0x04) = interned;
+    dst3 = (float *)(rec + 0x08);
+    dst6 = (float *)(rec + 0x14);
+    goto tail_c5;
+  default:
+    goto done;
+  }
+
+tail_c5:
+  src = (float *)args[1];
+  dst3[0] = src[0];
+  dst3[1] = src[1];
+  tmp = src[2];
+  src6 = (float *)args[2];
+tail_d8:
+  dst3[2] = tmp;
+  dst6[0] = src6[0];
+  dst6[1] = src6[1];
+  dst6[2] = src6[2];
+  dst6[3] = src6[3];
+  goto done;
+tail_v4:
+  dst[0] = src[0];
+  dst[1] = src[1];
+  dst[2] = src[2];
+  dst[3] = src[3];
+done:
+  return;
 }
-#else
-#error "FUN_00188ec0: clang naked draft required"
-#endif
 
 
 /* Draw or cache a debug point marker (0x189150). type 1. With flag set, render
