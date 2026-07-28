@@ -26095,7 +26095,7 @@
         {
           "addr": "0x1ba2f0",
           "decl": "void FUN_001ba2f0(int buffer, int size, int dest_file, int dest_file_size, const char *source_file_name);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001ba2f0"
         },
         {
@@ -26171,7 +26171,7 @@
         {
           "addr": "0x1badc0",
           "decl": "void cache_copy_get_status(void);",
-          "ported": false,
+          "ported": true,
           "name": "cache_copy_get_status"
         },
         {
@@ -26182,7 +26182,7 @@
         {
           "addr": "0x1bafa0",
           "decl": "void FUN_001bafa0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001bafa0"
         },
         {
