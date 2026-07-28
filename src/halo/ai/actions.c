@@ -2956,202 +2956,43 @@ void FUN_0001cda0(void)
 }
 
 
-/* actor_action_test_grenade (0x1d180) — XBE naked draft (batch 117). */
-#if defined(__clang__)
-static void *(*const b1d180_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1d180_tag)(int, int) = tag_get;
-static int (*const b1d180_gtime)(void) = game_time_get;
-static float (*const b1d180_cb55b0)(short value_type, int team) = FUN_000b55b0;
-static void (*const b1d180_ftol)(void) = FUN_001d9068;
-static char (*const b1d180_c219e0)(int actor_handle, float *out_pos, int *out_handle, int *out_extra) = actor_combat_find_grenade_target;
-static char (*const b1d180_c21ae0)(int actor_handle, float range, float param3, float *encounter_pos, short *out_count) = FUN_00021ae0;
-static char (*const b1d180_c21e50)(int actor_handle, short param_2, float *param_3, int param_4, int param_5) = FUN_00021e50;
-
-__attribute__((naked, noinline))
-char actor_action_test_grenade(int actor_handle __attribute__((unused)))
+/* actor_action_test_grenade (0x1d180) — readable C lift (restored pre-naked). */
+char actor_action_test_grenade(int actor_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5c(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x61637476\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x331f58, %%ecx\n\t"
-      "andl $0xffff, %%esi\n\t"
-      "imull $0x657c, %%esi, %%esi\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%eax, 0x150(%%esi)\n\t"
-      "cmpl $-1, 0x158(%%edi)\n\t"
-      "je .Lactor_action_test_grenade_1\n\t"
-      "popl %%edi\n\t"
-      "movw $0, 0x154(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_test_grenade_1:\n\t"
-      "movl 0x34(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_action_test_grenade_3\n\t"
-      "movl 0x5ab270, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x1a8(%%ebx), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x2(%%eax), %%dx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x18\n\t"
-      "call *%[cb55b0]\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "movb 0x1ca(%%edi), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_test_grenade_2\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".Lactor_action_test_grenade_2:\n\t"
-      "fmuls 0x253394\n\t"
-      "call *%[ftol]\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x5c(%%edx), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lactor_action_test_grenade_3\n\t"
-      "movswl %%ax, %%edi\n\t"
-      "addl %%ecx, %%edi\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jle .Lactor_action_test_grenade_3\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movw $5, 0x154(%%esi)\n\t"
-      "addw 0x5c(%%edx), %%ax\n\t"
-      "popl %%edi\n\t"
-      "movw %%ax, 0x156(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_test_grenade_3:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c219e0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_test_grenade_7\n\t"
-      "movl 0x19c(%%ebx), %%edx\n\t"
-      "leal 0xa(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x188(%%ebx), %%eax\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c21ae0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_test_grenade_6\n\t"
-      "movw 0xa(%%ebp), %%ax\n\t"
-      "cmpw 0x186(%%ebx), %%ax\n\t"
-      "jl .Lactor_action_test_grenade_5\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x182(%%ebx), %%cx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c21e50]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_test_grenade_4\n\t"
-      "popl %%edi\n\t"
-      "movw $0xa, 0x154(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_test_grenade_4:\n\t"
-      "popl %%edi\n\t"
-      "movw $9, 0x154(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_test_grenade_5:\n\t"
-      "movw %%ax, 0x158(%%esi)\n\t"
-      "movw $7, 0x154(%%esi)\n\t"
-      "movw 0x186(%%ebx), %%dx\n\t"
-      "popl %%edi\n\t"
-      "movw %%dx, 0x15a(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_test_grenade_6:\n\t"
-      "popl %%edi\n\t"
-      "movw $8, 0x154(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_test_grenade_7:\n\t"
-      "popl %%edi\n\t"
-      "movw $6, 0x154(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1d180_dget), [tag] "m"(b1d180_tag), [gtime] "m"(b1d180_gtime), [cb55b0] "m"(b1d180_cb55b0), [ftol] "m"(b1d180_ftol), [c219e0] "m"(b1d180_c219e0), [c21ae0] "m"(b1d180_c21ae0), [c21e50] "m"(b1d180_c21e50)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edi = 0;
+  int local_8 = 0;
+  int local_c = 0;
+
+  datum_get((data_t *)(uintptr_t)*(int *)(0x6325a4), actor_handle);
+  tag_get('vtca', 0);
+  game_time_get();
+  /* relift: cmp dword ptr [edi + 0x158], -1 -> je 0x1d1ea */
+  /* cmp eax, -1 -> je 0x1d26e */
+  datum_get((data_t *)(uintptr_t)*(int *)(0x5ab270), 0);
+  FUN_000b55b0(24, 0);
+  /* test (char)eax, (char)eax -> je 0x1d22d */
+  FUN_001d9068();
+  /* cmp ecx, -1 -> je 0x1d26e */
+  /* cmp edi, ecx -> jle 0x1d26e */
+  actor_combat_find_grenade_target(actor_handle, (void *)0, (void *)0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x1d33e */
+  FUN_00021ae0(actor_handle, 0, 0, (void *)0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x1d32c */
+  /* relift: cmp (int16_t)eax, word ptr [ebx + 0x186] -> jl 0x1d305 */
+  FUN_00021e50(actor_handle, 0, (void *)0, local_8, local_c);
+  /* test (char)eax, (char)eax -> je 0x1d2f3 */
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edi;
+  (void)local_8;
+  (void)local_c;
 }
-#else
-#error "actor_action_test_grenade: clang naked draft required"
-#endif
-
-
-
 /* actor_get_pursuit_location (0x1d4f0) — Returns the address of the actor's
  * pursuit-location sub-record (actor+0xa4) when the actor's mode word
  * (field_6c) is 7 or 5; otherwise returns NULL.

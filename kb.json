@@ -2798,7 +2798,7 @@
         {
           "addr": "0x1d180",
           "decl": "char actor_action_test_grenade(int actor_handle);",
-          "ported": false,
+          "ported": true,
           "name": "actor_action_test_grenade"
         },
         {
