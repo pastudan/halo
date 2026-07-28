@@ -39948,7 +39948,7 @@
         {
           "addr": "0x14bf30",
           "decl": "char collision_cylinder_test_vector(void *cylinder, float *origin, float *direction, float *out_t, float *out_plane);",
-          "ported": false,
+          "ported": true,
           "name": "collision_cylinder_test_vector"
         },
         {
@@ -39960,7 +39960,7 @@
         {
           "addr": "0x14c4b0",
           "decl": "char FUN_0014c4b0(void *features, float *position, float *velocity, void *out_result);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0014c4b0"
         }
       ],

@@ -895,332 +895,103 @@ char collision_sphere_test_vector(void *sphere, float *origin, float *direction,
 }
 
 
-/* collision_cylinder_test_vector (0x14bf30) — XBE naked draft (batch 223). */
-#if defined(__clang__)
-static float *(*const b14bf30_vsca)(float *, float *, float, float *) = vector3d_scale_add;
-static float (*const b14bf30_norm)(float *) = normalize3d;
-static float (*const b14bf30_c13070)(float *a, float *b) = FUN_00013070;
-
-__attribute__((naked, noinline))
-char collision_cylinder_test_vector(void *cylinder __attribute__((unused)), float *origin __attribute__((unused)), float *direction __attribute__((unused)), float *out_t __attribute__((unused)), float *out_plane __attribute__((unused)))
+/* collision_cylinder_test_vector (0x14bf30) — readable C; b-sign matched to XBE. */
+char collision_cylinder_test_vector(void *cylinder, float *origin, float *direction, float *out_t, float *out_plane)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x28, %%esp\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "flds 0x20(%%edx)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "flds 0x1c(%%edx)\n\t"
-      "pushl %%esi\n\t"
-      "flds 0x18(%%edx)\n\t"
-      "leal 0x18(%%edx), %%esi\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%esi)\n\t"
-      "fmuls (%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%ecx)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "flds (%%ecx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps 0x10(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lcollision_cylinder_test_vector_1\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_cylinder_test_vector_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "pushl %%edi\n\t"
-      "fsubs 0xc(%%edx)\n\t"
-      "leal 0xc(%%edx), %%edi\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x8(%%edi)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x4(%%ecx)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls 0x8(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls (%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds 0x24(%%edx)\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fmuls 0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstp %%st(1)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_cylinder_test_vector_4\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lcollision_cylinder_test_vector_2:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lcollision_cylinder_test_vector_3:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_cylinder_test_vector_4:\n\t"
-      "fsqrt\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs 0x10(%%ebp)\n\t"
-      "fld %%st(2)\n\t"
-      "fsub %%st(2), %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps 0x10(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      ".byte 0xde, 0xc2\n\t"
-      "fxch %%st(1)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lcollision_cylinder_test_vector_2\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lcollision_cylinder_test_vector_2\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_cylinder_test_vector_5\n\t"
-      "movl $0, 0x10(%%ebp)\n\t"
-      ".Lcollision_cylinder_test_vector_5:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_cylinder_test_vector_6\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lcollision_cylinder_test_vector_6:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lcollision_cylinder_test_vector_11\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs -0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fchs\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_cylinder_test_vector_8\n\t"
-      "fcomps -0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_cylinder_test_vector_7\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      ".Lcollision_cylinder_test_vector_7:\n\t"
-      "fcoms -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_cylinder_test_vector_10\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "jmp .Lcollision_cylinder_test_vector_10\n\t"
-      ".Lcollision_cylinder_test_vector_8:\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lcollision_cylinder_test_vector_9\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      ".Lcollision_cylinder_test_vector_9:\n\t"
-      "fcoms -0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_cylinder_test_vector_10\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      ".Lcollision_cylinder_test_vector_10:\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lcollision_cylinder_test_vector_12\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcollision_cylinder_test_vector_11:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lcollision_cylinder_test_vector_3\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lcollision_cylinder_test_vector_3\n\t"
-      ".Lcollision_cylinder_test_vector_12:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds 0x10(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "fstps (%%eax)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[vsca]\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fdivs -0xc(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[vsca]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[norm]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0x14, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lcollision_cylinder_test_vector_13\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $0x3f800000, (%%ebx)\n\t"
-      "movl %%eax, 0x4(%%ebx)\n\t"
-      "movl %%eax, 0x8(%%ebx)\n\t"
-      ".Lcollision_cylinder_test_vector_13:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c13070]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "fadds 0x24(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "fstps 0xc(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [vsca] "m"(b14bf30_vsca), [norm] "m"(b14bf30_norm), [c13070] "m"(b14bf30_c13070)
-      : "memory");
+  char *cyl = (char *)cylinder;
+  float *base = (float *)(cyl + 0xc);
+  float *axis = (float *)(cyl + 0x18);
+  float radius = *(float *)(cyl + 0x24);
+  float axis_len_sq, axis_dot_dir, a, b_asm, c, disc;
+  float delta[3], delta_dot_axis, delta_dot_dir;
+  float inv_a, t0, t1;
+  float hit[3];
+  float one = *(float *)0x2533c8;
+  float zero = *(float *)0x2533c0;
+
+  axis_len_sq = axis[0] * axis[0] + axis[1] * axis[1] + axis[2] * axis[2];
+  axis_dot_dir =
+      axis[0] * direction[0] + axis[1] * direction[1] + axis[2] * direction[2];
+  a = (direction[0] * direction[0] + direction[1] * direction[1] +
+       direction[2] * direction[2]) *
+          axis_len_sq -
+      axis_dot_dir * axis_dot_dir;
+  if (a == zero)
+    return 0;
+
+  delta[0] = origin[0] - base[0];
+  delta[1] = origin[1] - base[1];
+  delta[2] = origin[2] - base[2];
+  delta_dot_axis =
+      delta[0] * axis[0] + delta[1] * axis[1] + delta[2] * axis[2];
+  delta_dot_dir =
+      delta[0] * direction[0] + delta[1] * direction[1] + delta[2] * direction[2];
+
+  /* XBE: b = (delta·A)(A·D) - (delta·D)|A|^2  (not the negated Capstone form). */
+  b_asm = axis_dot_dir * delta_dot_axis - delta_dot_dir * axis_len_sq;
+  c = (delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2]) *
+          axis_len_sq -
+      delta_dot_axis * delta_dot_axis - radius * radius * axis_len_sq;
+  disc = b_asm * b_asm - a * c;
+  if (disc < zero)
+    return 0;
+
+  inv_a = one / a;
+  {
+    float root;
+    __asm__ volatile ("fsqrt" : "=t"(root) : "0"(disc));
+    disc = root;
+  }
+  t0 = (b_asm - disc) * inv_a;
+  t1 = (b_asm + disc) * inv_a;
+
+  if (!(t0 <= one))
+    return 0;
+  if (t1 < zero)
+    return 0;
+  if (t0 < zero)
+    t0 = zero;
+  if (!(t1 <= one))
+    t1 = one;
+
+  if (axis_dot_dir != zero) {
+    float inv_ad = one / axis_dot_dir;
+    float h0 = -delta_dot_axis * inv_ad;
+    float h1 = (axis_len_sq - delta_dot_axis) * inv_ad;
+    if (axis_dot_dir > zero) {
+      if (t0 < h0)
+        t0 = h0;
+      if (t1 > h1)
+        t1 = h1;
+    } else {
+      if (t0 < h1)
+        t0 = h1;
+      if (t1 > h0)
+        t1 = h0;
+    }
+    if (!(t0 <= t1))
+      return 0;
+  } else {
+    if (!(delta_dot_axis >= zero) || !(delta_dot_axis <= axis_len_sq))
+      return 0;
+  }
+
+  *out_t = t0;
+  vector3d_scale_add(delta, direction, t0, hit);
+  {
+    float proj = -(hit[0] * axis[0] + hit[1] * axis[1] + hit[2] * axis[2]) /
+                 axis_len_sq;
+    vector3d_scale_add(hit, axis, proj, out_plane);
+  }
+  if (normalize3d(out_plane) == zero) {
+    out_plane[0] = one;
+    out_plane[1] = zero;
+    out_plane[2] = zero;
+  }
+  out_plane[3] = FUN_00013070(base, out_plane) + radius;
+  return 1;
 }
-#else
-#error "collision_cylinder_test_vector: clang naked draft required"
-#endif
+
 
 
 char collision_prism_test_vector(void *prism, float *origin, float *direction, float *out_t, float *out_plane)
@@ -1322,236 +1093,94 @@ char collision_prism_test_vector(void *prism, float *origin, float *direction, f
 }
 
 
-/* FUN_0014c4b0 (0x14c4b0) — XBE naked draft (batch 220). */
-#if defined(__clang__)
-static char (*const b14c4b0_c14bdb0)(void *sphere, float *origin, float *direction, float *out_t, float *out_plane) = collision_sphere_test_vector;
-static char (*const b14c4b0_c14bf30)(void *cylinder, float *origin, float *direction, float *out_t, float *out_plane) = collision_cylinder_test_vector;
-static char (*const b14c4b0_c14c220)(void *prism, float *origin, float *direction, float *out_t, float *out_plane) = collision_prism_test_vector;
-
-__attribute__((naked, noinline))
-char FUN_0014c4b0(void *features __attribute__((unused)), float *position __attribute__((unused)), float *velocity __attribute__((unused)), void *out_result __attribute__((unused)))
+/* FUN_0014c4b0 (0x14c4b0) — readable C: walk sphere/cylinder/prism features. */
+char FUN_0014c4b0(void *features, float *position, float *velocity, void *out_result)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x38, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl $0x7f7fffff, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      ".LFUN_0014c4b0_1:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "leal (%%edx,%%ecx,2), %%ecx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpw %%si, (%%ecx)\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "jle .LFUN_0014c4b0_7\n\t"
-      "jmp .LFUN_0014c4b0_2\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0014c4b0_2:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_0014c4b0_3\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x1c, %%eax, %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x8(%%eax,%%edx,1), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c14bdb0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0014c4b0_5\n\t"
-      "jmp .LFUN_0014c4b0_6\n\t"
-      ".LFUN_0014c4b0_3:\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .LFUN_0014c4b0_4\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "leal 0x1c08(%%edx,%%eax,8), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c14bf30]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_0014c4b0_5\n\t"
-      "jmp .LFUN_0014c4b0_6\n\t"
-      ".LFUN_0014c4b0_4:\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .LFUN_0014c4b0_6\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x68, %%eax, %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x4408(%%eax,%%edx,1), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c14c220]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0014c4b0_6\n\t"
-      ".LFUN_0014c4b0_5:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0014c4b0_6\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "faddp %%st(1)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls (%%edi)\n\t"
-      "faddp %%st(1)\n\t"
-      "fcomps 0x26a810\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0014c4b0_6\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl -0x28(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "movl -0x24(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x38(%%ebp)\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "movl %%esi, -0x10(%%ebp)\n\t"
-      "movl %%edx, -0x34(%%ebp)\n\t"
-      "movl %%eax, -0x30(%%ebp)\n\t"
-      "movl %%ecx, -0x2c(%%ebp)\n\t"
-      ".LFUN_0014c4b0_6:\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpw (%%edx), %%si\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "jl .LFUN_0014c4b0_2\n\t"
-      ".LFUN_0014c4b0_7:\n\t"
-      "incl %%eax\n\t"
-      "cmpw $3, %%ax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jl .LFUN_0014c4b0_1\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "je .LFUN_0014c4b0_12\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "leal 0x10(%%eax), %%esi\n\t"
-      "fstps (%%eax)\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "subl $0, %%ecx\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls (%%edi)\n\t"
-      "fadds (%%ebx)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x4(%%edi)\n\t"
-      "fadds 0x4(%%ebx)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x8(%%edi)\n\t"
-      "movl -0x38(%%ebp), %%edi\n\t"
-      "fadds 0x8(%%ebx)\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "movl -0x34(%%ebp), %%edi\n\t"
-      "movl %%edi, 0x4(%%esi)\n\t"
-      "movl -0x30(%%ebp), %%edi\n\t"
-      "movl %%edi, 0x8(%%esi)\n\t"
-      "movl -0x2c(%%ebp), %%edi\n\t"
-      "movl %%edi, 0xc(%%esi)\n\t"
-      "je .LFUN_0014c4b0_9\n\t"
-      "decl %%ecx\n\t"
-      "je .LFUN_0014c4b0_8\n\t"
-      "decl %%ecx\n\t"
-      "jne .LFUN_0014c4b0_11\n\t"
-      "movswl -0x10(%%ebp), %%ecx\n\t"
-      "imull $0x68, %%ecx, %%ecx\n\t"
-      "leal 0x4408(%%ecx,%%edx,1), %%ecx\n\t"
-      "jmp .LFUN_0014c4b0_10\n\t"
-      ".LFUN_0014c4b0_8:\n\t"
-      "movswl -0x10(%%ebp), %%ecx\n\t"
-      "leal (%%ecx,%%ecx,4), %%ecx\n\t"
-      "leal 0x1c08(%%edx,%%ecx,8), %%ecx\n\t"
-      "jmp .LFUN_0014c4b0_10\n\t"
-      ".LFUN_0014c4b0_9:\n\t"
-      "movswl -0x10(%%ebp), %%ecx\n\t"
-      "imull $0x1c, %%ecx, %%ecx\n\t"
-      "leal 0x8(%%ecx,%%edx,1), %%ecx\n\t"
-      ".LFUN_0014c4b0_10:\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, 0x20(%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x24(%%eax)\n\t"
-      "movb 0x8(%%ecx), %%dl\n\t"
-      "movb %%dl, 0x28(%%eax)\n\t"
-      "movb 0x9(%%ecx), %%dl\n\t"
-      "movb %%dl, 0x29(%%eax)\n\t"
-      "movw 0xa(%%ecx), %%cx\n\t"
-      "movw %%cx, 0x2a(%%eax)\n\t"
-      ".LFUN_0014c4b0_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0014c4b0_12:\n\t"
-      "movl $0x3f800000, (%%eax)\n\t"
-      "flds (%%ebx)\n\t"
-      "fadds (%%edi)\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fadds 0x4(%%edi)\n\t"
-      "fstps 0x8(%%eax)\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "fadds 0x8(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "fstps 0xc(%%eax)\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c14bdb0] "m"(b14c4b0_c14bdb0), [c14bf30] "m"(b14c4b0_c14bf30), [c14c220] "m"(b14c4b0_c14c220)
-      : "memory");
+  char *feat = (char *)features;
+  float *out = (float *)out_result;
+  float best_t;
+  float plane[4];
+  float t;
+  float best_plane[4];
+  short best_type;
+  short best_index;
+  short type;
+  short i;
+  short count;
+  char hit;
+  float dot;
+  char *elem;
+
+  {
+    unsigned inf_bits = 0x7f7fffff;
+    best_t = *(float *)&inf_bits;
+  }
+  best_type = -1;
+  best_index = -1;
+
+  for (type = 0; type < 3; type++) {
+    count = *(short *)(feat + type * 2);
+    for (i = 0; i < count; i++) {
+      hit = 0;
+      if (type == 0) {
+        elem = feat + 8 + (int)i * 0x1c;
+        hit = collision_sphere_test_vector(elem, position, velocity, &t, plane);
+      } else if (type == 1) {
+        elem = feat + 0x1c08 + (int)i * 0x28;
+        hit = collision_cylinder_test_vector(elem, position, velocity, &t, plane);
+      } else if (type == 2) {
+        elem = feat + 0x4408 + (int)i * 0x68;
+        hit = collision_prism_test_vector(elem, position, velocity, &t, plane);
+      }
+      if (!hit)
+        continue;
+      /* Keep hit only when t < best_t and plane·velocity < threshold. */
+      if (!(best_t > t))
+        continue;
+      dot = plane[0] * velocity[0] + plane[1] * velocity[1] +
+            plane[2] * velocity[2];
+      if (!(dot < *(float *)0x26a810))
+        continue;
+      best_t = t;
+      best_type = type;
+      best_index = i;
+      best_plane[0] = plane[0];
+      best_plane[1] = plane[1];
+      best_plane[2] = plane[2];
+      best_plane[3] = plane[3];
+    }
+  }
+
+  if (best_type == -1) {
+    *(unsigned *)out = 0x3f800000; /* 1.0f */
+    out[1] = position[0] + velocity[0];
+    out[2] = position[1] + velocity[1];
+    out[3] = position[2] + velocity[2];
+    return 0;
+  }
+
+  out[0] = best_t;
+  out[1] = position[0] + best_t * velocity[0];
+  out[2] = position[1] + best_t * velocity[1];
+  out[3] = position[2] + best_t * velocity[2];
+  out[4] = best_plane[0];
+  out[5] = best_plane[1];
+  out[6] = best_plane[2];
+  out[7] = best_plane[3];
+
+  if (best_type == 0)
+    elem = feat + 8 + (int)best_index * 0x1c;
+  else if (best_type == 1)
+    elem = feat + 0x1c08 + (int)best_index * 0x28;
+  else
+    elem = feat + 0x4408 + (int)best_index * 0x68;
+
+  *(int *)((char *)out + 0x20) = *(int *)elem;
+  *(int *)((char *)out + 0x24) = *(int *)(elem + 4);
+  *((char *)out + 0x28) = elem[8];
+  *((char *)out + 0x29) = elem[9];
+  *(short *)((char *)out + 0x2a) = *(short *)(elem + 0xa);
+  return 1;
 }
-#else
-#error "FUN_0014c4b0: clang naked draft required"
-#endif
+
 
