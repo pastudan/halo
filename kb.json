@@ -10592,7 +10592,7 @@
         {
           "addr": "0x1c0450",
           "decl": "void game_state_read_from_file(void);",
-          "ported": false,
+          "ported": true,
           "name": "game_state_read_from_file"
         },
         {
@@ -31799,7 +31799,7 @@
         {
           "addr": "0x19b910",
           "decl": "void bitmap_draw_character(void);",
-          "ported": false,
+          "ported": true,
           "name": "bitmap_draw_character"
         },
         {
