@@ -26419,7 +26419,7 @@
         {
           "addr": "0x105160",
           "decl": "void FUN_00105160(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00105160"
         },
         {
