@@ -6971,7 +6971,7 @@
         {
           "addr": "0x99d60",
           "decl": "void decals_disconnect_from_structure_bsp(void);",
-          "ported": false,
+          "ported": true,
           "name": "decals_disconnect_from_structure_bsp"
         },
         {
@@ -6987,7 +6987,7 @@
         {
           "addr": "0x9a160",
           "decl": "void decal_delete(int decal_index);",
-          "ported": false,
+          "ported": true,
           "name": "decal_delete"
         },
         {
