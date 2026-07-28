@@ -2873,7 +2873,7 @@
         {
           "addr": "0x1d7c0",
           "decl": "char actor_action_set_default_state(int actor_handle, short state);",
-          "ported": false,
+          "ported": true,
           "name": "actor_action_set_default_state"
         },
         {
@@ -15544,7 +15544,7 @@
         },
         {
           "addr": "0x125ce0",
-          "decl": "char FUN_00125ce0(void *slot_array /* @<edi> */, void *advertised_game);",
+          "decl": "char FUN_00125ce0(void *slot_array /* */, void *advertised_game);",
           "ported": false,
           "name": "FUN_00125ce0"
         },
@@ -23848,7 +23848,7 @@
         {
           "addr": "0x184ea0",
           "name": "render_scene",
-          "decl": "void render_scene(int16_t player_index@<ebx>, void *render_cam, void *render_frustum, void *rasterizer_cam, void *rasterizer_frustum, int16_t pass_type, char reflected);",
+          "decl": "void render_scene(int16_t player_index, void *render_cam, void *render_frustum, void *rasterizer_cam, void *rasterizer_frustum, int16_t pass_type, char reflected);",
           "ported": false
         }
       ],
@@ -29367,13 +29367,13 @@
         {
           "addr": "0x1a2160",
           "decl": "void FUN_001a2160(int unit_handle@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a2160"
         },
         {
           "addr": "0x1a2290",
           "decl": "char FUN_001a2290(int unit_handle@<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a2290"
         },
         {
@@ -29384,7 +29384,7 @@
         {
           "addr": "0x1a25e0",
           "decl": "void FUN_001a25e0(int unit_handle@<ecx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a25e0"
         },
         {
@@ -31734,7 +31734,7 @@
         },
         {
           "addr": "0x130b70",
-          "decl": "char FUN_00130b70(void *client@<esi>, const char *data, int count);",
+          "decl": "char FUN_00130b70(void *client, const char *data, int count);",
           "ported": false,
           "name": "FUN_00130b70"
         },
@@ -45871,7 +45871,7 @@
         },
         {
           "addr": "0x67f70",
-          "decl": "int FUN_00067f70(void *out@<esi>, void *tif, unsigned short tag);",
+          "decl": "int FUN_00067f70(void *out, void *tif, unsigned short tag);",
           "ported": false,
           "name": "FUN_00067f70"
         }

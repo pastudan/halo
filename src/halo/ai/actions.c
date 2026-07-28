@@ -1262,305 +1262,130 @@ float point_to_line_distance3d(float *p1, float *p2, float *p3)
   return sqrtf(FUN_0010cd40(p1, p2, p3));
 }
 
-/* actor_action_set_default_state (0x1d7c0) — XBE naked draft (batch 109). */
-#if defined(__clang__)
-static void *(*const b1d7c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const b1d7c0_gtime)(void) = game_time_get;
-static void (*const b1d7c0_c1d030)(int actor_handle, int new_action_type, int param_3) = actor_action_change;
-static int (*const b1d7c0_c15880)(int actor_handle, char *state_data) = FUN_00015880;
-static char (*const b1d7c0_c12000)(int actor_handle, int param_2, int param_3, int state_data) = FUN_00012000;
-static int (*const b1d7c0_c15900)(int actor_handle, short param_2, char *state_data) = FUN_00015900;
-static int16_t (*const b1d7c0_c1d6d0)(int actor_handle) = actor_action_try_to_panic;
-static char (*const b1d7c0_c1ef90)(int actor_handle) = actor_action_handle_lost_contact;
-static char (*const b1d7c0_c15040)(int actor_handle, short param_2, int param_3, char param_4, char param_5, char param_6, short *param_7) = FUN_00015040;
-
-__attribute__((naked, noinline))
-char actor_action_set_default_state(int actor_handle __attribute__((unused)), short state __attribute__((unused)))
+char actor_action_set_default_state(int actor_handle, short state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x84, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "jne .Lactor_action_set_default_state_1\n\t"
-      "movl 0x64(%%esi), %%edx\n\t"
-      "cmpl $-1, %%edx\n\t"
-      "je .Lactor_action_set_default_state_1\n\t"
-      "addl $0x2d, %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jge .Lactor_action_set_default_state_11\n\t"
-      ".Lactor_action_set_default_state_1:\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "movl %%eax, 0x64(%%esi)\n\t"
-      "je .Lactor_action_set_default_state_2\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "jmp .Lactor_action_set_default_state_4\n\t"
-      ".Lactor_action_set_default_state_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x60(%%esi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lactor_action_set_default_state_3\n\t"
-      "movw $0xffff, 0x60(%%esi)\n\t"
-      "jmp .Lactor_action_set_default_state_4\n\t"
-      ".Lactor_action_set_default_state_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x62(%%esi), %%ax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "sete %%cl\n\t"
-      "decl %%ecx\n\t"
-      "andl %%ecx, %%eax\n\t"
-      ".Lactor_action_set_default_state_4:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl $0xb, %%eax\n\t"
-      "ja .Lactor_action_set_default_state_9\n\t"
-      "jmp *.Lactor_action_set_default_state_jt(,%%eax,4)\n\t"
-      ".Lactor_action_set_default_state_5:\n\t"
-      "movl $1, %%eax\n\t"
-      "cmpw %%ax, 0x6a(%%esi)\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movw %%ax, 0x6a(%%esi)\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_set_default_state_6:\n\t"
-      "cmpw $6, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_set_default_state_7\n\t"
-      "cmpw $1, 0xc0(%%esi)\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      ".Lactor_action_set_default_state_7:\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c15880]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $6\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_set_default_state_8:\n\t"
-      "cmpw $6, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_set_default_state_12\n\t"
-      "cmpw $3, 0xc0(%%esi)\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "movb $1, 0xaa(%%esi)\n\t"
-      ".Lactor_action_set_default_state_9:\n\t"
-      "cmpw $0, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_set_default_state_11\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12000]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_set_default_state_11\n\t"
-      "leal -0x84(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      ".Lactor_action_set_default_state_10:\n\t"
-      "pushl $2\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lactor_action_set_default_state_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_set_default_state_12:\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c15900]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $6\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_set_default_state_13:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d6d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $3, %%ax\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "movl $2, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movw $3, 0x6a(%%esi)\n\t"
-      "movw %%ax, 0x72(%%esi)\n\t"
-      "movw %%ax, 0x6e(%%esi)\n\t"
-      "call *%[c1ef90]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c15880]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $6\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_set_default_state_14:\n\t"
-      "cmpw $4, 0x6c(%%esi)\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $-1\n\t"
-      "pushl $0xd\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c15040]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_set_default_state_15\n\t"
-      "leal -0x84(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_set_default_state_15:\n\t"
-      "cmpw $6, 0x6c(%%esi)\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c15880]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $6\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d030]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_action_set_default_state_16:\n\t"
-      "cmpw $2, 0x6c(%%esi)\n\t"
-      "jne .Lactor_action_set_default_state_17\n\t"
-      "movw 0x9c(%%esi), %%cx\n\t"
-      "cmpw 0x2542e8(,%%eax,2), %%cx\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      ".Lactor_action_set_default_state_17:\n\t"
-      "movswl 0x2542e8(,%%eax,2), %%eax\n\t"
-      "leal -0x84(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c12000]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lactor_action_set_default_state_9\n\t"
-      "leal -0x84(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "jmp .Lactor_action_set_default_state_10\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lactor_action_set_default_state_jt:\n\t"
-      ".long .Lactor_action_set_default_state_16\n\t"
-      ".long .Lactor_action_set_default_state_5\n\t"
-      ".long .Lactor_action_set_default_state_16\n\t"
-      ".long .Lactor_action_set_default_state_16\n\t"
-      ".long .Lactor_action_set_default_state_16\n\t"
-      ".long .Lactor_action_set_default_state_16\n\t"
-      ".long .Lactor_action_set_default_state_16\n\t"
-      ".long .Lactor_action_set_default_state_16\n\t"
-      ".long .Lactor_action_set_default_state_6\n\t"
-      ".long .Lactor_action_set_default_state_8\n\t"
-      ".long .Lactor_action_set_default_state_13\n\t"
-      ".long .Lactor_action_set_default_state_14\n\t"
-      ".text\n\t"
-      :
-      : [dget] "m"(b1d7c0_dget), [gtime] "m"(b1d7c0_gtime), [c1d030] "m"(b1d7c0_c1d030), [c15880] "m"(b1d7c0_c15880), [c12000] "m"(b1d7c0_c12000), [c15900] "m"(b1d7c0_c15900), [c1d6d0] "m"(b1d7c0_c1d6d0), [c1ef90] "m"(b1d7c0_c1ef90), [c15040] "m"(b1d7c0_c15040)
-      : "memory");
+  char *actor;
+  int game_time;
+  int switch_val;
+  short local_88[66];
+  char result;
+
+  actor = (char *)datum_get(actor_data, actor_handle);
+  game_time = game_time_get();
+  result = 0;
+
+  /* Throttle: if state == -1 and we have a valid timestamp, skip if within cooldown */
+  if (state == (short)-1 && *(int *)(actor + 0x64) != -1 &&
+      *(int *)(actor + 0x64) + 0x2d >= game_time) {
+    return 0;
+  }
+
+  *(int *)(actor + 0x64) = game_time;
+
+  if (state != (short)-1) {
+    /* state already specified, skip fallback resolution */
+  } else {
+    /* Resolve fallback state from actor fields */
+    if (*(unsigned short *)(actor + 0x60) != 0xffff) {
+      state = *(short *)(actor + 0x60);
+      *(short *)(actor + 0x60) = (short)0xffff;
+    } else {
+      if (*(unsigned short *)(actor + 0x62) == 0xffff)
+        state = 0;
+      else
+        state = *(short *)(actor + 0x62);
+    }
+  }
+
+  switch_val = (int)state;
+
+  switch (switch_val) {
+  case 0:
+  case 2:
+  case 3:
+  case 4:
+  case 5:
+  case 6:
+  case 7:
+    if (*(short *)(actor + 0x6c) == 2 &&
+        *(short *)(actor + 0x9c) ==
+            *(short *)(0x2542e8 + switch_val * 2))
+      break;
+    if (FUN_00012000(actor_handle,
+                     (int)*(short *)(0x2542e8 + switch_val * 2), -1,
+                     (int)local_88))
+      goto action_change_2;
+    break;
+  case 1:
+    if (*(short *)(actor + 0x6a) != 1) {
+      *(short *)(actor + 0x6a) = 1;
+      actor_action_change(actor_handle, 1, 0);
+      result = 1;
+      return result;
+    }
+    break;
+  case 8:
+    if ((*(short *)(actor + 0x6c) != 6 ||
+         *(short *)(actor + 0xc0) != 1) &&
+        FUN_00015880(actor_handle, (char *)local_88)) {
+      actor_action_change(actor_handle, 6, (int)local_88);
+      result = 1;
+      return result;
+    }
+    break;
+  case 9:
+    if (*(short *)(actor + 0x6c) == 6) {
+      if (*(short *)(actor + 0xc0) != 3)
+        *(char *)(actor + 0xaa) = 1;
+    } else {
+      if (FUN_00015900(actor_handle, 0, (char *)local_88)) {
+        actor_action_change(actor_handle, 6, (int)local_88);
+        result = 1;
+        return result;
+      }
+    }
+    break;
+  case 10:
+    if (actor_action_try_to_panic(actor_handle) != 3) {
+      *(short *)(actor + 0x6a) = 3;
+      *(short *)(actor + 0x72) = 2;
+      *(short *)(actor + 0x6e) = 2;
+      if (!actor_action_handle_lost_contact(actor_handle) &&
+          FUN_00015880(actor_handle, (char *)local_88)) {
+        actor_action_change(actor_handle, 6, (int)local_88);
+        result = 1;
+        return result;
+      }
+    }
+    break;
+  case 11:
+    if (*(short *)(actor + 0x6c) != 4) {
+      if (FUN_00015040(actor_handle, 0xd, -1, 1, 0, 0,
+                       (short *)local_88)) {
+        actor_action_change(actor_handle, 4, (int)local_88);
+        result = 1;
+        return result;
+      }
+      if (*(short *)(actor + 0x6c) != 6 &&
+          FUN_00015880(actor_handle, (char *)local_88)) {
+        actor_action_change(actor_handle, 6, (int)local_88);
+        result = 1;
+        return result;
+      }
+    }
+    break;
+  }
+
+  /* Final idle fallback: if actor is in action 0, try alert action */
+  if (*(short *)(actor + 0x6c) == 0 &&
+      FUN_00012000(actor_handle, 0, -1, (int)local_88)) {
+action_change_2:
+    actor_action_change(actor_handle, 2, (int)local_88);
+    result = 1;
+  }
+
+  return result;
 }
-#else
-#error "actor_action_set_default_state: clang naked draft required"
-#endif
 
 
 /* actor_action_handle_initial_action (0x1dab0)
