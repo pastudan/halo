@@ -28010,7 +28010,7 @@
         {
           "addr": "0xe4da0",
           "decl": "int16_t remap_sticks_for_local_player(int16_t icon_type, int local_player_index);",
-          "ported": false,
+          "ported": true,
           "name": "remap_sticks_for_local_player"
         },
         {
