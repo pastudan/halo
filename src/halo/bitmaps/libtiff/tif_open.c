@@ -338,83 +338,21 @@ void FUN_0006c680(void)
 #endif
 
 
-/* FUN_0006c6f0 (0x6c6f0) — XBE naked draft (batch 324). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006c6f0(void)
+/* FUN_0006c6f0 (0x6c6f0) — Capstone lift: 16-bit horizontal accumulate (decode). */
+void FUN_0006c6f0(unsigned short *buf, int length, int count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "cdq\n\t"
-      "subl %%edx, %%eax\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "sarl $1, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jle .LFUN_0006c6f0_9\n\t"
-      "pushl %%esi\n\t"
-      "subl %%edx, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0006c6f0_1:\n\t"
-      "cmpl $4, %%edx\n\t"
-      "ja .LFUN_0006c6f0_2\n\t"
-      "jmp *.LFUN_0006c6f0_jt(,%%edx,4)\n\t"
-      ".LFUN_0006c6f0_2:\n\t"
-      "leal -0x4(%%edx), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .LFUN_0006c6f0_4\n\t"
-      ".LFUN_0006c6f0_3:\n\t"
-      "movw (%%ecx), %%di\n\t"
-      "addw %%di, (%%ecx,%%edx,2)\n\t"
-      "addl $2, %%ecx\n\t"
-      "decl %%esi\n\t"
-      "jne .LFUN_0006c6f0_3\n\t"
-      ".LFUN_0006c6f0_4:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "addw %%si, (%%ecx,%%edx,2)\n\t"
-      "addl $2, %%ecx\n\t"
-      ".LFUN_0006c6f0_5:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "addw %%si, (%%ecx,%%edx,2)\n\t"
-      "addl $2, %%ecx\n\t"
-      ".LFUN_0006c6f0_6:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "addw %%si, (%%ecx,%%edx,2)\n\t"
-      "addl $2, %%ecx\n\t"
-      ".LFUN_0006c6f0_7:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "addw %%si, (%%ecx,%%edx,2)\n\t"
-      "addl $2, %%ecx\n\t"
-      ".LFUN_0006c6f0_8:\n\t"
-      "subl %%edx, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_0006c6f0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_0006c6f0_9:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0006c6f0_jt:\n\t"
-      ".long .LFUN_0006c6f0_8\n\t"
-      ".long .LFUN_0006c6f0_7\n\t"
-      ".long .LFUN_0006c6f0_6\n\t"
-      ".long .LFUN_0006c6f0_5\n\t"
-      ".long .LFUN_0006c6f0_4\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  int rem = (length / 2) - count;
+  int i;
+
+  if (rem <= 0)
+    return;
+  while (rem > 0) {
+    for (i = 0; i < count; i++)
+      buf[count + i] = (unsigned short)(buf[count + i] + buf[i]);
+    buf += count;
+    rem -= count;
+  }
 }
-#else
-#error "FUN_0006c6f0: clang naked draft required"
-#endif
 
 
 /* FUN_0006c780 (0x6c780) — XBE naked draft (batch 307). */
