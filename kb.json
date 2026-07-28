@@ -38061,8 +38061,8 @@
         },
         {
           "addr": "0x69200",
-          "decl": "void FUN_00069200(void);",
-          "ported": false,
+          "decl": "void FUN_00069200(unsigned int value, unsigned int nbits@<eax>, void *tif@<edi>);",
+          "ported": true,
           "name": "FUN_00069200"
         },
         {
@@ -38152,7 +38152,7 @@
         {
           "addr": "0x6a210",
           "decl": "int FUN_0006a210(void *tif);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0006a210"
         },
         {
