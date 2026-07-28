@@ -107,9 +107,11 @@ SKIP_SUB = (
 
 
 def find_intro_parent(name: str, addr: int, path: str) -> str | None:
+    # Cap history walk — full `git log -S` across deep tip history was
+    # stalling tip waves for 10–20+ minutes before any RESTORED line.
     for needle in (f"/* {name} (0x", f"{name} (0x{addr:x})"):
         r = subprocess.run(
-            ["git", "log", "-S", needle, "--format=%H", "--", path],
+            ["git", "log", "-S", needle, "--format=%H", "-n", "8", "--", path],
             cwd=ROOT,
             capture_output=True,
             text=True,
