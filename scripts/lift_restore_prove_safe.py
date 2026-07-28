@@ -213,6 +213,22 @@ def main() -> int:
                 continue
             cands.append((name, addr, src, path))
 
+    # Prefer-filter BEFORE expensive git log -S parent search. Previously we
+    # walked parents for every naked false (~1k+) then sorted — tip waves
+    # stalled for 10–20+ minutes with no RESTORED output.
+    if prefer:
+        pref_cands = []
+        for name, addr, src, path in cands:
+            if any(src.startswith(p + "/") or src.startswith(p) for p in prefer):
+                pref_cands.append((name, addr, src, path))
+        print(
+            f"cands={len(cands)} prefer_filtered={len(pref_cands)} prefer={prefer}",
+            flush=True,
+        )
+        cands = pref_cands
+    else:
+        print(f"cands={len(cands)}", flush=True)
+
     # Build restorable with extractable parent bodies
     restorable = []
     for name, addr, src, path in cands:
