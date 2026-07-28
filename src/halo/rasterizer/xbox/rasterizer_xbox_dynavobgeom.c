@@ -1182,344 +1182,165 @@ void FUN_0015eb90(int idx)
     system_exit(-1);
   }
 }
-/* FUN_0015ec50 (0x15ec50) — XBE naked draft (batch 310). */
-#if defined(__clang__)
-static void (*const b15ec50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b15ec50_exitfn)(int) = system_exit;
-static void (*const b15ec50_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const b15ec50_c180050)(short param_1) = FUN_00180050;
-static void (*const b15ec50_c1ef100)(void) = (void *)D3DVertexBuffer_Lock;
-
-__attribute__((naked, noinline))
-int FUN_0015ec50(int dynamic_vertex_buffer_index __attribute__((unused)))
+/* FUN_0015ec50 (0x15ec50) — readable C lift (restored pre-naked). */
+int FUN_0015ec50(int dynamic_vertex_buffer_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015ec50_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x207\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_1:\n\t"
-      "cmpw $0, 0x325652\n\t"
-      "jne .LFUN_0015ec50_2\n\t"
-      "pushl $0x2a15d8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_0015ec50_2:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_0015ec50_13\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jge .LFUN_0015ec50_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x217\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a02d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_3:\n\t"
-      "cmpl 0x47abd8, %%esi\n\t"
-      "jl .LFUN_0015ec50_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x218\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a0298\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_4:\n\t"
-      "movl 0x47dbe8, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015ec50_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x21b\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a0194\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_5:\n\t"
-      "shll $4, %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "addl $0x476bd8, %%esi\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c180050]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $0, (%%esi)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jge .LFUN_0015ec50_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x220\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a15b4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_6:\n\t"
-      "cmpw $0xc, (%%esi)\n\t"
-      "jl .LFUN_0015ec50_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x221\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a1574\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_7:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_0015ec50_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x222\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a154c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_8:\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "leal (%%eax,%%eax,4), %%ebx\n\t"
-      "leal 0x476ae8(,%%ebx,4), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_0015ec50_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f8\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x26276c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_9:\n\t"
-      "cmpl $0x476b60, %%ebx\n\t"
-      "jne .LFUN_0015ec50_10\n\t"
-      "movl 0x325668, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "je .LFUN_0015ec50_10\n\t"
-      "movl 0x47dbf0, %%ecx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "jmp .LFUN_0015ec50_11\n\t"
-      ".LFUN_0015ec50_10:\n\t"
-      "movl 0xc(%%ebx), %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      ".LFUN_0015ec50_11:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015ec50_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x227\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a04d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ec50_12:\n\t"
-      "movb 0x10(%%ebx), %%dl\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%dl, %%dl\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "setne %%al\n\t"
-      "leal 0xc(%%esi), %%edi\n\t"
-      "decl %%eax\n\t"
-      "andl $0x80, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "imull %%eax, %%ecx\n\t"
-      "imull %%eax, %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ef100]\n\t"
-      "movb $0, 0x10(%%ebx)\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0015ec50_13:\n\t"
-      "pushl $0x2a1510\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b15ec50_assert), [exitfn] "m"(b15ec50_exitfn), [c8f390] "m"(b15ec50_c8f390), [c180050] "m"(b15ec50_c180050), [c1ef100] "m"(b15ec50_c1ef100)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+
+  /* test eax, eax -> jne 0x15ec81 */
+  display_assert((char *)0x0029dc40, (char *)0x002a0110, 519, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x325652], 0 -> jne 0x15ec9a */
+  error(0, (char *)0x002a15d8);
+  /* cmp esi, -1 -> je 0x15ee64 */
+  /* test esi, esi -> jge 0x15ecca */
+  display_assert((char *)0x002a02d4, (char *)0x002a0110, 535, 0);
+  system_exit(0);
+  /* relift: cmp esi, dword ptr [0x47abd8] -> jl 0x15ecf2 */
+  display_assert((char *)0x002a0298, (char *)0x002a0110, 536, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x15ed1b */
+  display_assert((char *)0x002a0194, (char *)0x002a0110, 539, 0);
+  system_exit(0);
+  FUN_00180050(0);
+  display_assert((char *)0x002a15b4, (char *)0x002a0110, 544, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi], 0xc -> jl 0x15ed81 */
+  display_assert((char *)0x002a1574, (char *)0x002a0110, 545, 0);
+  system_exit(0);
+  /* test eax, eax -> jg 0x15eda8 */
+  display_assert((char *)0x002a154c, (char *)0x002a0110, 546, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x15edda */
+  display_assert((char *)0x0026276c, (char *)0x002a0110, 504, 0);
+  system_exit(0);
+  /* cmp ebx, 0x476b60 -> jne 0x15edfb */
+  /* test eax, eax -> jne 0x15ee28 */
+  display_assert((char *)0x002a04d0, (char *)0x002a0110, 551, 0);
+  system_exit(0);
+  ((void(*)(void))D3DVertexBuffer_Lock)();
+  error(0, (char *)0x002a1510);
+  return 0;
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
 }
-#else
-#error "FUN_0015ec50: clang naked draft required"
-#endif
 
 
-/* FUN_0015ee80 (0x15ee80) — XBE naked draft (batch 321). */
-#if defined(__clang__)
-static void (*const b15ee80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b15ee80_exitfn)(int) = system_exit;
-static void (*const b15ee80_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
-__attribute__((naked, noinline))
+/* FUN_0015ee80 (0x15ee80) — readable C lift (restored pre-naked). */
 void FUN_0015ee80(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015ee80_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x246\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ee80_1:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .LFUN_0015ee80_10\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jge .LFUN_0015ee80_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x24c\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a02d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ee80_2:\n\t"
-      "cmpl 0x47abd8, %%esi\n\t"
-      "jl .LFUN_0015ee80_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x24d\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a0298\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ee80_3:\n\t"
-      "movl 0x47dbe8, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0015ee80_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x24f\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a0194\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ee80_4:\n\t"
-      "shll $4, %%esi\n\t"
-      "addl $0x476bd8, %%esi\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0015ee80_5\n\t"
-      "cmpw $0xc, %%ax\n\t"
-      "jl .LFUN_0015ee80_6\n\t"
-      ".LFUN_0015ee80_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x253\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a1668\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ee80_6:\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%esi\n\t"
-      "leal 0x476ae8(,%%esi,4), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0015ee80_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f8\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x26276c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0015ee80_7:\n\t"
-      "cmpl $0x476b60, %%esi\n\t"
-      "jne .LFUN_0015ee80_8\n\t"
-      "movl 0x325668, %%eax\n\t"
-      "andl $1, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "orl %%ecx, %%eax\n\t"
-      "je .LFUN_0015ee80_8\n\t"
-      "movl 0x47dbf0, %%esi\n\t"
-      "jmp .LFUN_0015ee80_9\n\t"
-      ".LFUN_0015ee80_8:\n\t"
-      "movl 0xc(%%esi), %%esi\n\t"
-      ".LFUN_0015ee80_9:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_0015ee80_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x258\n\t"
-      "pushl $0x2a0110\n\t"
-      "pushl $0x2a04d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0015ee80_10:\n\t"
-      "pushl $0x2a1628\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_0015ee80_11:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b15ee80_assert), [exitfn] "m"(b15ee80_exitfn), [c8f390] "m"(b15ee80_c8f390)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test eax, eax -> jne 0x15eeac */
+  display_assert((char *)0x0029dc40, (char *)0x002a0110, 582, 0);
+  system_exit(0);
+  /* cmp esi, -1 -> je 0x15efde */
+  /* test esi, esi -> jge 0x15eedd */
+  display_assert((char *)0x002a02d4, (char *)0x002a0110, 588, 0);
+  system_exit(0);
+  /* relift: cmp esi, dword ptr [0x47abd8] -> jl 0x15ef05 */
+  display_assert((char *)0x002a0298, (char *)0x002a0110, 589, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x15ef2e */
+  display_assert((char *)0x002a0194, (char *)0x002a0110, 591, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x15ef45 */
+  /* cmp (int16_t)eax, 0xc -> jl 0x15ef65 */
+  display_assert((char *)0x002a1668, (char *)0x002a0110, 595, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x15ef96 */
+  display_assert((char *)0x0026276c, (char *)0x002a0110, 504, 0);
+  system_exit(0);
+  /* cmp esi, 0x476b60 -> jne 0x15efb4 */
+  /* test esi, esi -> jne 0x15efed */
+  display_assert((char *)0x002a04d0, (char *)0x002a0110, 600, 0);
+  system_exit(0);
+  error(0, (char *)0x002a1628);
+  /* cmp esi, 0x52 -> jge 0x15f00b */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* cmp esi, 0x74 -> jge 0x15f019 */
+  ((void(*)(void))D3DDevice_SetRenderState_PSTextureModes)();
+  /* cmp esi, 0x75 -> jne 0x15f02e */
+  ((void(*)(void))D3DDevice_SetRenderState_VertexBlend)();
+  /* cmp esi, 0x76 -> jne 0x15f03a */
+  ((void(*)(void))D3DDevice_SetRenderState_FogColor)();
+  /* cmp esi, 0x77 -> jne 0x15f046 */
+  D3DDevice_SetRenderState_FillMode(edi);
+  /* cmp esi, 0x78 -> jne 0x15f052 */
+  ((void(*)(void))D3DDevice_SetRenderState_BackFillMode)();
+  /* cmp esi, 0x79 -> jne 0x15f05e */
+  ((void(*)(void))D3DDevice_SetRenderState_TwoSidedLighting)();
+  /* cmp esi, 0x7a -> jne 0x15f06a */
+  ((void(*)(void))D3DDevice_SetRenderState_NormalizeNormals)();
+  /* cmp esi, 0x7b -> jne 0x15f076 */
+  D3DDevice_SetRenderState_ZEnable(edi);
+  /* cmp esi, 0x7c -> jne 0x15f082 */
+  D3DDevice_SetRenderState_StencilEnable(edi);
+  /* cmp esi, 0x7d -> jne 0x15f08e */
+  D3DDevice_SetRenderState_StencilFail(edi);
+  /* cmp esi, 0x7f -> jne 0x15f09a */
+  D3DDevice_SetRenderState_CullMode(edi);
+  /* cmp esi, 0x7e -> jne 0x15f0a6 */
+  ((void(*)(void))D3DDevice_SetRenderState_FrontFace)();
+  /* cmp esi, 0x80 -> jne 0x15f0b5 */
+  ((void(*)(void))D3DDevice_SetRenderState_TextureFactor)();
+  /* cmp esi, 0x81 -> jne 0x15f0c4 */
+  D3DDevice_SetRenderState_ZBias(edi);
+  /* cmp esi, 0x82 -> jne 0x15f0d3 */
+  ((void(*)(void))D3DDevice_SetRenderState_LogicOp)();
+  /* cmp esi, 0x83 -> jne 0x15f0e2 */
+  ((void(*)(void))D3DDevice_SetRenderState_EdgeAntiAlias)();
+  /* cmp esi, 0x84 -> jne 0x15f0f1 */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleAntiAlias)();
+  /* cmp esi, 0x85 -> jne 0x15f100 */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleMask)();
+  /* cmp esi, 0x86 -> jne 0x15f10f */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleType)();
+  /* cmp esi, 0x87 -> jne 0x15f11e */
+  ((void(*)(void))D3DDevice_SetRenderState_ShadowFunc)();
+  /* cmp esi, 0x88 -> jne 0x15f12d */
+  ((void(*)(void))D3DDevice_SetRenderState_LineWidth)();
+  /* cmp esi, 0x89 -> jne 0x15f13c */
+  ((void(*)(void))D3DDevice_SetRenderState_Dxt1NoiseEnable)();
+  /* cmp esi, 0x8a -> jne 0x15f14b */
+  ((void(*)(void))D3DDevice_SetRenderState_YuvEnable)();
+  /* cmp esi, 0x8b -> jne 0x15f15a */
+  ((void(*)(void))D3DDevice_SetRenderState_OcclusionCullEnable)();
+  /* cmp esi, 0x8c -> jne 0x15f169 */
+  ((void(*)(void))D3DDevice_SetRenderState_StencilCullEnable)();
+  /* cmp esi, 0x8d -> jne 0x15f178 */
+  ((void(*)(void))D3DDevice_SetRenderState_RopZCmpAlwaysRead)();
+  /* cmp esi, 0x8e -> jne 0x15f187 */
+  ((void(*)(void))D3DDevice_SetRenderState_RopZRead)();
+  /* cmp esi, 0x8f -> jne 0x15f195 */
+  ((void(*)(void))D3DDevice_SetRenderState_DoNotCullUncompressed)();
+  /* cmp edx, 0x16 -> jge 0x15f1ac */
+  D3DDevice_SetTextureStageState(eax, 0, 0);
+  /* cmp edx, 0x1c -> jne 0x15f1b9 */
+  ((void(*)(void))D3DDevice_SetTextureState_TexCoordIndex)();
+  /* cmp edx, 0x1d -> jne 0x15f1c6 */
+  D3DDevice_SetTextureState_BorderColor(ecx, eax);
+  /* cmp edx, 0x1e -> jne 0x15f1d3 */
+  ((void(*)(void))D3DDevice_SetTextureState_ColorKeyColor)();
+  /* cmp edx, 0x1b -> jg 0x15f1e0 */
+  ((void(*)(void))D3DDevice_SetTextureState_BumpEnv)();
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_0015ee80: clang naked draft required"
-#endif
+
 
 
 /* FUN_0015f1f0 (0x15f1f0) — readable C lift. */
@@ -2902,198 +2723,54 @@ void FUN_001621c0(int object_handle)
 #endif
 
 
-/* FUN_00162560 (0x162560) — XBE naked draft (batch 314). */
-#if defined(__clang__)
-static void (*const b162560_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b162560_exitfn)(int) = system_exit;
-static void * (*const b162560_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-static int (*const b162560_c190710)(void *shader) = shader_get_vertex_shader_permutation;
-static void (*const b162560_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void (*const b162560_c155e80)(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index) = rasterizer_set_texture;
-static void __stdcall (*const b162560_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
-static void (*const b162560_c190a90)(void) = (void *)shader_environment_texture_animation_evaluate;
-static void __stdcall (*const b162560_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
-static unsigned int (*const b162560_cd1dd0)(float *color) = FUN_000d1dd0;
-static void (*const b162560_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void (*const b162560_c15dc10)(void) = (void *)FUN_0015dc10;
-static void (*const b162560_c17edd0)(void) = (void *)rasterizer_frame_statistics_count_static_vertices;
-
-__attribute__((naked, noinline))
+/* FUN_00162560 (0x162560) — readable C lift (restored pre-naked). */
 void FUN_00162560(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30, %%esp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00162560_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x333\n\t"
-      "pushl $0x2a18c0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00162560_1:\n\t"
-      "cmpw $0, 0x3256bc\n\t"
-      "jne .LFUN_00162560_6\n\t"
-      "movb 0x3256cb, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00162560_6\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00162560_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x33a\n\t"
-      "pushl $0x2a18c0\n\t"
-      "pushl $0x2a18b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00162560_2:\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movl 0x1c(%%ebp), %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jne .LFUN_00162560_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x33f\n\t"
-      "pushl $0x2a18c0\n\t"
-      "pushl $0x2a19cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00162560_3:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c190710]\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%ebx), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x31\n\t"
-      "call *%[c178b40]\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb $2, %%al\n\t"
-      "movl $0xffffffff, %%eax\n\t"
-      "jne .LFUN_00162560_4\n\t"
-      "movl 0x134(%%esi), %%eax\n\t"
-      ".LFUN_00162560_4:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c155e80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl $1\n\t"
-      "movl $0xa, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xb, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xf, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl 0x138(%%esi), %%edx\n\t"
-      "movl 0x13c(%%esi), %%eax\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x30(%%ebp)\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "movl 0x5a5e18, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x3f800000, -0x28(%%ebp)\n\t"
-      "movl $0x3f800000, -0x24(%%ebp)\n\t"
-      "movl $0x3f800000, -0x20(%%ebp)\n\t"
-      "movl $0, -0x1c(%%ebp)\n\t"
-      "movl $0, -0x18(%%ebp)\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "movl $0x3f800000, -0xc(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "call *%[c190a90]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl $3\n\t"
-      "leal -0x30(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-0x54\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "addl $0x10c, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cd1dd0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%esi, %%edx\n\t"
-      "movl $0x41e20, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "movl %%esi, 0x1fb744\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c15dc10]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $2, 0x3256ba\n\t"
-      "jne .LFUN_00162560_5\n\t"
-      "movl 0x5a5448, %%eax\n\t"
-      "movl 0x5a5444, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "incl %%eax\n\t"
-      "addl %%esi, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, 0x5a5448\n\t"
-      "movl %%edx, 0x5a5444\n\t"
-      "call *%[c17edd0]\n\t"
-      "movl 0x5a5440, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl %%ecx, 0x5a5440\n\t"
-      ".LFUN_00162560_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00162560_6:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b162560_assert), [exitfn] "m"(b162560_exitfn), [c1906b0] "m"(b162560_c1906b0), [c190710] "m"(b162560_c190710), [c178b40] "m"(b162560_c178b40), [c155e80] "m"(b162560_c155e80), [c1e9410] "m"(b162560_c1e9410), [c190a90] "m"(b162560_c190a90), [c1eb8d0] "m"(b162560_c1eb8d0), [cd1dd0] "m"(b162560_cd1dd0), [c1e9350] "m"(b162560_c1e9350), [c15dc10] "m"(b162560_c15dc10), [c17edd0] "m"(b162560_c17edd0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test eax, eax -> jne 0x16258f */
+  display_assert((char *)0x0029dc40, (char *)0x002a18c0, 819, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x3256bc], 0 -> jne 0x16277d */
+  /* relift: relift: mov (char)eax, byte ptr [0x3256cb] */
+  /* test (char)eax, (char)eax -> je 0x16277d */
+  /* test edi, edi -> jne 0x1625d4 */
+  display_assert((char *)0x002a18b8, (char *)0x002a18c0, 826, 0);
+  system_exit(0);
+  FUN_001906b0((void *)(uintptr_t)edi, 0);
+  display_assert((char *)0x002a19cc, (char *)0x002a18c0, 831, 0);
+  system_exit(0);
+  shader_get_vertex_shader_permutation((void *)(uintptr_t)edi);
+  FUN_00178b40(49, 0, 0);
+  rasterizer_set_texture(0, 0, 0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  shader_environment_texture_animation_evaluate();
+  D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, 0);
+  FUN_000d1dd0((float *)(uintptr_t)esi);
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb744] = esi */
+  ((void(*)(void))FUN_0015dc10)();
+  /* relift: cmp word ptr [0x3256ba], 2 -> jne 0x16277a */
+  /* mem[0x005a5448] = eax */
+  /* mem[0x005a5444] = edx */
+  rasterizer_frame_statistics_count_static_vertices();
+  /* mem[0x005a5440] = ecx */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_00162560: clang naked draft required"
-#endif
+
 
 
 /* FUN_00162790 (0x162790) — readable C lift. */

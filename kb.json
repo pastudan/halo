@@ -40040,13 +40040,13 @@
         {
           "addr": "0x15ec50",
           "decl": "int FUN_0015ec50(int dynamic_vertex_buffer_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015ec50"
         },
         {
           "addr": "0x15ee80",
           "decl": "void FUN_0015ee80(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015ee80"
         },
         {
@@ -40202,7 +40202,7 @@
         {
           "addr": "0x162560",
           "decl": "void FUN_00162560(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00162560"
         },
         {
