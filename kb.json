@@ -32266,7 +32266,7 @@
         {
           "addr": "0x17ebb0",
           "decl": "void FUN_0017ebb0(void *param);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017ebb0"
         },
         {
@@ -40178,7 +40178,7 @@
         },
         {
           "addr": "0x160dc0",
-          "decl": "void FUN_00160dc0(void);",
+          "decl": "void FUN_00160dc0(void *bitmap);",
           "ported": true
         },
         {
@@ -40385,7 +40385,7 @@
         {
           "addr": "0x167ff0",
           "decl": "void FUN_00167ff0(int a1, const char *call_text);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00167ff0"
         },
         {
@@ -40426,7 +40426,7 @@
         },
         {
           "addr": "0x168370",
-          "decl": "char FUN_00168370(void *bitmap);",
+          "decl": "unsigned char FUN_00168370(void *bitmap);",
           "ported": true
         },
         {
@@ -40486,7 +40486,7 @@
         },
         {
           "addr": "0x168cd0",
-          "decl": "void FUN_00168cd0(int a0, float a1, float a2, float a3);",
+          "decl": "unsigned char FUN_00168cd0(void *obj, short type, int count, void *src, int nbytes);",
           "ported": true
         },
         {
