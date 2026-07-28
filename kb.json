@@ -38855,8 +38855,8 @@
         },
         {
           "addr": "0x70b70",
-          "decl": "void FUN_00070b70(void);",
-          "ported": false,
+          "decl": "void FUN_00070b70(void *pixels, void *out, unsigned char threshold);",
+          "ported": true,
           "name": "FUN_00070b70"
         },
         {
@@ -38932,8 +38932,8 @@
         },
         {
           "addr": "0x72490",
-          "decl": "void FUN_00072490(void);",
-          "ported": false,
+          "decl": "void FUN_00072490(void *bitmap, void *a1, void *a2, void *dest, void *a4);",
+          "ported": true,
           "name": "FUN_00072490"
         },
         {

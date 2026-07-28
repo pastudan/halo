@@ -1,0 +1,11 @@
+{
+  "description": "FUN_00072490: null bitmap/dest \u2192 assert/exit",
+  "arg_overrides": {
+    "bitmap": "00000000",
+    "dest": "00000000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}
