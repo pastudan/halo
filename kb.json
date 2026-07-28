@@ -42426,8 +42426,8 @@
         },
         {
           "addr": "0x60c80",
-          "decl": "int16_t path_add_step(void *path, float *delta, int16_t zone_index, char surface_flag, float step_cost, int16_t parent_step);",
-          "ported": false,
+          "decl": "int16_t path_add_step(void *path @<edi>, float *target, int surface_hint, int16_t zone_index, char surface_flag, float step_cost, int16_t parent_step);",
+          "ported": true,
           "name": "path_add_step"
         },
         {

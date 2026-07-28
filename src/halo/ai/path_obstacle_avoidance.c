@@ -41,223 +41,123 @@ int valid_real_point2d(float *point)
 }
 /* --- path_obstacle_avoidance.obj batch drafts (2026-07-26) --- */
 
-/* path_add_step (0x60c80) — XBE naked draft (batch 221). */
-#if defined(__clang__)
-static void (*const b60c80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b60c80_exitfn)(int) = system_exit;
-static void * (*const b60c80_c600f0)(void *path, int16_t step_index) = FUN_000600f0;
-static float (*const b60c80_mag)(float *) = magnitude3d;
-static void *(*const b60c80_memset)(void *, int, unsigned int) = csmemset;
-static char (*const b60c80_c60910)(void *path, int16_t step_index) = FUN_00060910;
-
-__attribute__((naked, noinline))
-int16_t path_add_step(void *path __attribute__((unused)), float *delta __attribute__((unused)), int16_t zone_index __attribute__((unused)), char surface_flag __attribute__((unused)), float step_cost __attribute__((unused)), int16_t parent_step __attribute__((unused)))
+/* path_add_step (0x60c80) — readable C lift from 00060c80.obj / XBE.
+ *
+ * Oracle ABI: path in EDI; stack args target @8, surface_hint @0xc,
+ * zone_index @0x10, surface_flag @0x14, step_cost @0x18, parent_step @0x1c.
+ * Lifted form is normal cdecl with path as the first argument (Unicorn places
+ * @<edi> into EDI for the oracle and passes it as a stack arg for the lift).
+ * Returns the new step index (old step_count) in AX, or -1 on failure.
+ */
+int16_t path_add_step(void *path, float *target, int surface_hint,
+                      int16_t zone_index, char surface_flag, float step_cost,
+                      int16_t parent_step)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "cmpw $0x80, 0x2c(%%edi)\n\t"
-      "jge .Lpath_add_step_12\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds 0x10(%%edi)\n\t"
-      "fsubs (%%eax)\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x1c(%%ebp), %%ebx\n\t"
-      "cmpw $-1, %%bx\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "flds 0x14(%%edi)\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "je .Lpath_add_step_8\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lpath_add_step_1:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lpath_add_step_2\n\t"
-      "movw 0x2c(%%edi), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .Lpath_add_step_2\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .Lpath_add_step_3\n\t"
-      ".Lpath_add_step_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x28\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0x25e9b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_add_step_3:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "leal 0x30(%%edi,%%eax,8), %%esi\n\t"
-      "movw 0x10(%%ebp), %%ax\n\t"
-      "cmpw %%ax, 0x18(%%esi)\n\t"
-      "jne .Lpath_add_step_4\n\t"
-      "movb 0x14(%%ebp), %%cl\n\t"
-      "cmpb %%cl, 0x1a(%%esi)\n\t"
-      "jne .Lpath_add_step_11\n\t"
-      "movw 0x24(%%esi), %%si\n\t"
-      "cmpw $-1, %%si\n\t"
-      "jne .Lpath_add_step_1\n\t"
-      "jmp .Lpath_add_step_8\n\t"
-      ".Lpath_add_step_4:\n\t"
-      "movw 0x1c(%%edi), %%cx\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "jne .Lpath_add_step_8\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "je .Lpath_add_step_8\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%al, %%al\n\t"
-      "sete %%dl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "movw 0x1c(%%esi,%%edx,2), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lpath_add_step_6\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c600f0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c600f0]\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x10(%%ebx)\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "fmuls 0xc(%%ebx)\n\t"
-      "faddp %%st(1)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lpath_add_step_5\n\t"
-      "flds 0x10(%%ecx)\n\t"
-      "fmuls 0xc(%%ebx)\n\t"
-      "flds 0x10(%%ebx)\n\t"
-      "fmuls 0xc(%%ecx)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0xc(%%ebx)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmuls 0x10(%%ebx)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fmulp %%st(1)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lpath_add_step_11\n\t"
-      ".Lpath_add_step_5:\n\t"
-      "movl 0x1c(%%ebp), %%ebx\n\t"
-      ".Lpath_add_step_6:\n\t"
-      "movzbl 0x14(%%ebp), %%ecx\n\t"
-      "movw 0x1c(%%esi,%%ecx,2), %%ax\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "leal 0x1c(%%esi,%%ecx,2), %%esi\n\t"
-      "je .Lpath_add_step_7\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lpath_add_step_8\n\t"
-      ".Lpath_add_step_7:\n\t"
-      "movw 0x2c(%%edi), %%dx\n\t"
-      "movw %%dx, (%%esi)\n\t"
-      ".Lpath_add_step_8:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movw 0x2c(%%edi), %%bx\n\t"
-      "leal 0x1(%%ebx), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movw %%ax, 0x2c(%%edi)\n\t"
-      "call *%[c600f0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      "leal 0xc(%%esi), %%eax\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "call *%[mag]\n\t"
-      "fsts 0x14(%%esi)\n\t"
-      "movw 0x10(%%ebp), %%ax\n\t"
-      "fadds 0x18(%%ebp)\n\t"
-      "movb 0x14(%%ebp), %%cl\n\t"
-      "movw 0x1c(%%ebp), %%dx\n\t"
-      "pushl $4\n\t"
-      "fstps 0x20(%%esi)\n\t"
-      "movw %%ax, 0x18(%%esi)\n\t"
-      "leal 0x1c(%%esi), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "movb %%cl, 0x1a(%%esi)\n\t"
-      "movw %%dx, 0x24(%%esi)\n\t"
-      "call *%[memset]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lpath_add_step_9\n\t"
-      "flds 0x14(%%esi)\n\t"
-      "fcomps 0x24(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lpath_add_step_9\n\t"
-      "movl 0x14(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x24(%%edi)\n\t"
-      "movw %%bx, 0x20(%%edi)\n\t"
-      ".Lpath_add_step_9:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c60910]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lpath_add_step_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a4\n\t"
-      "pushl $0x25ea14\n\t"
-      "pushl $0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_add_step_10:\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpath_add_step_11:\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      ".Lpath_add_step_12:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [assert] "m"(b60c80_assert), [exitfn] "m"(b60c80_exitfn), [c600f0] "m"(b60c80_c600f0), [mag] "m"(b60c80_mag), [memset] "m"(b60c80_memset), [c60910] "m"(b60c80_c60910)
-      : "memory");
+  char *rec;
+  float delta_x;
+  float delta_y;
+  char update_best;
+  int16_t walk;
+  int16_t count;
+  char *step;
+  int16_t other_idx;
+  char *other_step;
+  char *parent;
+  float dot;
+  float cross_a;
+  float cross_b;
+  int16_t link;
+  int16_t *link_slot;
+  char *new_step;
+  float mag;
+  int16_t new_index;
+
+  rec = (char *)path;
+  if (*(int16_t *)(rec + 0x2c) >= 0x80)
+    return (int16_t)-1;
+
+  delta_x = *(float *)(rec + 0x10) - target[0];
+  delta_y = *(float *)(rec + 0x14) - target[1];
+  update_best = 0;
+
+  if (parent_step != (int16_t)-1) {
+    walk = parent_step;
+    for (;;) {
+      count = *(int16_t *)(rec + 0x2c);
+      if (walk < 0 || walk >= count || count > 0x80) {
+        display_assert((const char *)0x25e9b0, (const char *)0x25ea14, 0x28, 1);
+        system_exit(-1);
+      }
+
+      step = rec + 0x30 + (int)walk * 40;
+      if (*(int16_t *)(step + 0x18) == zone_index) {
+        if (*(char *)(step + 0x1a) != surface_flag)
+          return (int16_t)-1;
+        walk = *(int16_t *)(step + 0x24);
+        if (walk == (int16_t)-1)
+          break;
+        continue;
+      }
+
+      if (*(int16_t *)(rec + 0x1c) != zone_index ||
+          *(int16_t *)(rec + 0x1c) == (int16_t)-1)
+        break;
+
+      update_best = 1;
+      other_idx = *(int16_t *)(step + 0x1c + ((surface_flag == 0) ? 2 : 0));
+      if (other_idx != (int16_t)0xffff) {
+        other_step = (char *)FUN_000600f0(path, other_idx);
+        parent = (char *)FUN_000600f0(path, parent_step);
+        dot = delta_y * *(float *)(other_step + 0x10) +
+              delta_x * *(float *)(other_step + 0xc);
+        if (dot > *(float *)0x2533c0) {
+          cross_a = *(float *)(parent + 0x10) * *(float *)(other_step + 0xc) -
+                    *(float *)(other_step + 0x10) * *(float *)(parent + 0xc);
+          cross_b = delta_y * *(float *)(other_step + 0xc) -
+                    delta_x * *(float *)(other_step + 0x10);
+          if (cross_a * cross_b < *(float *)0x2533c0)
+            return (int16_t)-1;
+        }
+      }
+
+      link_slot = (int16_t *)(step + 0x1c + (unsigned char)surface_flag * 2);
+      link = *link_slot;
+      if (link == parent_step || link == (int16_t)0xffff)
+        *link_slot = *(int16_t *)(rec + 0x2c);
+      break;
+    }
+  }
+
+  new_index = *(int16_t *)(rec + 0x2c);
+  *(int16_t *)(rec + 0x2c) = (int16_t)(new_index + 1);
+  new_step = (char *)FUN_000600f0(path, new_index);
+  *(float *)new_step = target[0];
+  *(float *)(new_step + 4) = target[1];
+  *(int *)(new_step + 8) = surface_hint;
+  *(float *)(new_step + 0xc) = delta_x;
+  *(float *)(new_step + 0x10) = delta_y;
+  mag = magnitude3d((float *)(new_step + 0xc));
+  *(float *)(new_step + 0x14) = mag;
+  *(float *)(new_step + 0x20) = mag + step_cost;
+  *(int16_t *)(new_step + 0x18) = zone_index;
+  *(char *)(new_step + 0x1a) = surface_flag;
+  *(int16_t *)(new_step + 0x24) = parent_step;
+  csmemset(new_step + 0x1c, -1, 4);
+
+  if (update_best) {
+    if (*(float *)(new_step + 0x14) < *(float *)(rec + 0x24)) {
+      *(uint32_t *)(rec + 0x24) = *(uint32_t *)(new_step + 0x14);
+      *(int16_t *)(rec + 0x20) = new_index;
+    }
+  }
+
+  if (!FUN_00060910(path, new_index)) {
+    display_assert((const char *)0, (const char *)0x25ea14, 0x1a4, 1);
+    system_exit(-1);
+    return (int16_t)-1;
+  }
+  return new_index;
 }
-#else
-#error "path_add_step: clang naked draft required"
-#endif
 
 
 /* FUN_00060ea0 (0x60ea0) — readable C lift (restored pre-naked). */
@@ -296,7 +196,8 @@ void FUN_00060ea0(void *avoidance_record, float *end_point, void *param_2, void 
     link_index = FUN_000600c0(obstacles, disc_index);
   *(int16_t *)((char *)avoidance_record + 0x1c) = link_index;
 
-  path_add_step(avoidance_record, end_point, link_index, 0, 0.0f, -1);
+  path_add_step(avoidance_record, start_point, param_7, (int16_t)-1, 0, 0.0f,
+                (int16_t)-1);
 }
 
 
@@ -531,7 +432,8 @@ void path_add_steps(void *path, int16_t seed_disc_index, int16_t step_index)
         step_cost =
             *(float *)(step + 0x20) - *(float *)(step + 0x14) + t;
         parent_step = -1;
-        path_add_step(path, target, zone_link, 0, step_cost, parent_step);
+        path_add_step(path, target, *(int *)((char *)ray_test_out + 4),
+                      zone_link, (char)direction_pass, step_cost, step_index);
       }
 
       direction[0] = cone_a[0];
@@ -592,7 +494,7 @@ int FUN_000615b0(void *avoidance_record /*@<eax>*/)
   target[0] = scale * *(float *)(step + 0xc) + *(float *)step;
   target[1] = scale * *(float *)(step + 0x10) + *(float *)(step + 4);
   step_cost = *(float *)(step + 0x20) - *(float *)(step + 0x14) + scale;
-  new_step = path_add_step(rec, target, (int16_t)*(int *)(out + 4), 0,
+  new_step = path_add_step(rec, target, *(int *)(out + 4), (int16_t)-1, 0,
                            step_cost, step_index);
   *(int16_t *)(rec + 0x1e) = new_step;
 

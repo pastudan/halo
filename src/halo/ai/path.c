@@ -899,158 +899,66 @@ char FUN_0005e700(int surface_index, void *block_base)
 
 
 
-/* path_state_approach_point (0x5e9b0) — XBE naked draft (batch 225). */
-#if defined(__clang__)
-static short (*const b5e9b0_c5e7e0)(char *param_1, unsigned int param_2) = path_node_from_hash_table;
-static char * (*const b5e9b0_c5e760)(char *param_1, short param_2) = path_get_node;
-static char (*const b5e9b0_c639e0)(int scenario, unsigned char bsp_idx, float *origin, int start_surface, float *target, int end_surface, char *result_buf) = FUN_000639e0;
-static void (*const b5e9b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b5e9b0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-char path_state_approach_point(void *path_state __attribute__((unused)), float *fp_results __attribute__((unused)), int fp_count __attribute__((unused)), char *out_byte __attribute__((unused)), char *out_dest __attribute__((unused)))
+/* 0x5e9b0 — test whether a path can approach a firing-position point. */
+char path_state_approach_point(void *path_state, float *fp_results, int fp_count,
+                               char *out_byte, char *out_dest)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c5e7e0]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%cl, %%cl\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lpath_state_approach_point_6\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c5e760]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lpath_state_approach_point_2\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lpath_state_approach_point_1:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c5e760]\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x64(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x4(%%esi), %%cl\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c639e0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lpath_state_approach_point_2\n\t"
-      "movswl 0x2(%%edi), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c5e760]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lpath_state_approach_point_1\n\t"
-      ".Lpath_state_approach_point_2:\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .Lpath_state_approach_point_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12d\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e2e4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_state_approach_point_3:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lpath_state_approach_point_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12e\n\t"
-      "pushl $0x25e0ac\n\t"
-      "pushl $0x25e2cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lpath_state_approach_point_4:\n\t"
-      "cmpw $-1, 0x2(%%edi)\n\t"
-      "jne .Lpath_state_approach_point_5\n\t"
-      "movb $1, (%%eax)\n\t"
-      "addl $0x14, %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl %%eax, (%%ebx)\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%ebx)\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x8(%%ebx)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpath_state_approach_point_5:\n\t"
-      "movb $0, (%%eax)\n\t"
-      "addl $0xc, %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl %%eax, (%%ebx)\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%ebx)\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x8(%%ebx)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lpath_state_approach_point_6:\n\t"
-      "popl %%esi\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c5e7e0] "m"(b5e9b0_c5e7e0), [c5e760] "m"(b5e9b0_c5e760), [c639e0] "m"(b5e9b0_c639e0), [assert] "m"(b5e9b0_assert), [exitfn] "m"(b5e9b0_exitfn)
-      : "memory");
-}
-#else
-#error "path_state_approach_point: clang naked draft required"
-#endif
+  char *path;
+  short node_index;
+  char *node;
+  short parent_index;
+  char march_result[0x1c];
 
+  path = (char *)path_state;
+  node_index = path_node_from_hash_table(path, (unsigned int)fp_count);
+  if (node_index == -1)
+    return 0;
+
+  node = path_get_node(path, node_index);
+  if (*(int16_t *)(node + 2) == -1)
+    goto write_result;
+
+  for (;;) {
+    char *parent;
+
+    parent_index = *(int16_t *)(node + 2);
+    parent = path_get_node(path, parent_index);
+    if (FUN_000639e0((int)*(void **)(path + 0x64),
+                     *(unsigned char *)(path + 4), fp_results, fp_count,
+                     (float *)(parent + 0xc), *(int *)(parent + 8),
+                     march_result))
+      goto write_result;
+
+    node = parent;
+    if (*(int16_t *)(node + 2) == -1)
+      break;
+  }
+
+write_result:
+  if (out_dest == NULL) {
+    display_assert("destination", "c:\\halo\\SOURCE\\ai\\path.c", 0x12d, 1);
+    system_exit(-1);
+    return 0;
+  }
+  if (out_byte == NULL) {
+    display_assert("approach_point", "c:\\halo\\SOURCE\\ai\\path.c", 0x12e, 1);
+    system_exit(-1);
+    return 0;
+  }
+
+  if (*(int16_t *)(node + 2) == -1) {
+    *out_byte = 1;
+    *(int *)out_dest = *(int *)(path + 0x14);
+    *(int *)((char *)out_dest + 4) = *(int *)(path + 0x18);
+    *(int *)((char *)out_dest + 8) = *(int *)(path + 0x1c);
+  } else {
+    *out_byte = 0;
+    *(int *)out_dest = *(int *)(node + 0xc);
+    *(int *)((char *)out_dest + 4) = *(int *)(node + 0x10);
+    *(int *)((char *)out_dest + 8) = *(int *)(node + 0x14);
+  }
+  return 1;
+}
 
 /* 0x5ef80 — allocate the initial path-search node and heap-insert it. */
 char FUN_0005ef80(unsigned int *path_buf)
