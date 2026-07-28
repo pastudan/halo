@@ -20423,7 +20423,7 @@
         {
           "addr": "0x902f0",
           "decl": "void profile_dump(void);",
-          "ported": false,
+          "ported": true,
           "name": "profile_dump"
         },
         {
@@ -20466,7 +20466,7 @@
         {
           "addr": "0x90d10",
           "decl": "void profile_frame_get_value(void);",
-          "ported": false,
+          "ported": true,
           "name": "profile_frame_get_value"
         },
         {
