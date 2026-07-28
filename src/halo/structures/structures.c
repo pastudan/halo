@@ -385,211 +385,105 @@ short FUN_00062410(void *obstacles, short disc_index_skip, float *position_xy,
 }
 
 
-/* FUN_00062680 (0x62680) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void (*const b62680_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b62680_exitfn)(int) = system_exit;
-static void *(*const b62680_memset)(void *, int, unsigned int) = csmemset;
-
-__attribute__((naked, noinline))
-void FUN_00062680(int16_t *partition __attribute__((unused)), uint32_t arg2 __attribute__((unused)), int16_t index __attribute__((unused)), uint32_t *out_mask __attribute__((unused)))
+/* FUN_00062680 (0x62680) — readable C lift (restored pre-naked). */
+void FUN_00062680(int16_t *partition, uint32_t arg2, int16_t index,
+                  uint32_t *out_mask)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x108, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_00062680_1\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00062680_2\n\t"
-      ".LFUN_00062680_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x183\n\t"
-      "pushl $0x25ee38\n\t"
-      "pushl $0x25edf0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00062680_2:\n\t"
-      "movswl 0x2(%%edi), %%eax\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "addl $0x1f, %%eax\n\t"
-      "sarl $5, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[memset]\n\t"
-      "movw 0x10(%%ebp), %%si\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .LFUN_00062680_14\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_00062680_3\n\t"
-      "cmpw 0x2(%%edi), %%si\n\t"
-      "jl .LFUN_00062680_4\n\t"
-      ".LFUN_00062680_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18c\n\t"
-      "pushl $0x25ee38\n\t"
-      "pushl $0x25ee70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00062680_4:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "sarl $5, %%edx\n\t"
-      "leal (%%ebx,%%edx,4), %%eax\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movw %%si, -0x108(%%ebp)\n\t"
-      "movl $1, %%ebx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00062680_5:\n\t"
-      "decl %%ebx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "movw -0x108(%%ebp,%%eax,2), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "jl .LFUN_00062680_6\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jge .LFUN_00062680_6\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00062680_7\n\t"
-      ".LFUN_00062680_6:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18c\n\t"
-      "pushl $0x25e990\n\t"
-      "pushl $0x25e930\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00062680_7:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%ecx\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "leal 0x8(%%edi,%%ecx,8), %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "jle .LFUN_00062680_13\n\t"
-      ".LFUN_00062680_8:\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "movswl %%dx, %%esi\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl $1, %%edi\n\t"
-      "shll %%cl, %%edi\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "sarl $5, %%ecx\n\t"
-      "leal (%%ebx,%%ecx,4), %%ebx\n\t"
-      "testl %%edi, (%%ebx)\n\t"
-      "jne .LFUN_00062680_12\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jl .LFUN_00062680_9\n\t"
-      "cmpw %%ax, %%dx\n\t"
-      "jge .LFUN_00062680_9\n\t"
-      "cmpw $0x80, %%ax\n\t"
-      "jle .LFUN_00062680_10\n\t"
-      ".LFUN_00062680_9:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18c\n\t"
-      "pushl $0x25e990\n\t"
-      "pushl $0x25e930\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00062680_10:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "leal (%%esi,%%esi,2), %%eax\n\t"
-      "fadds 0x18(%%ecx,%%eax,8)\n\t"
-      "leal 0x8(%%ecx,%%eax,8), %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fadds 0x10(%%ecx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fsubs 0x8(%%ecx)\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fsubs 0xc(%%ecx)\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_00062680_12\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "orl %%edi, %%ecx\n\t"
-      "cmpw $0x80, %%si\n\t"
-      "movl %%ecx, (%%ebx)\n\t"
-      "jl .LFUN_00062680_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a5\n\t"
-      "pushl $0x25ee38\n\t"
-      "pushl $0x25ebb0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00062680_11:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "incl %%esi\n\t"
-      "movw %%dx, -0x108(%%ebp,%%eax,2)\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      ".LFUN_00062680_12:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movw 0x2(%%ecx), %%ax\n\t"
-      "incl %%edx\n\t"
-      "cmpw %%ax, %%dx\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "jl .LFUN_00062680_8\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "movl %%ecx, %%edi\n\t"
-      ".LFUN_00062680_13:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jg .LFUN_00062680_5\n\t"
-      ".LFUN_00062680_14:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b62680_assert), [exitfn] "m"(b62680_exitfn), [memset] "m"(b62680_memset)
-      : "memory");
+  uint32_t *mask_word;
+  int cand_base;
+  float inflated_sum;
+  float dx;
+  float dy;
+  int top_prev;
+  int16_t disc_idx;
+  int i;
+  int16_t disc_count;
+  uint32_t bit;
+  int16_t stack[128];
+  int cur_base;
+  int top;
+  int base;
+
+  base = (int)partition;
+
+  if ((*(int16_t *)(base + 2) < 0) || (0x80 < *(int16_t *)(base + 2))) {
+    display_assert(
+      "obstacles->disc_count>=0 && obstacles->disc_count<=MAXIMUM_DISC_COUNT",
+      "c:\\halo\\SOURCE\\ai\\path_obstacles.c", 0x183, 1);
+    system_exit(-1);
+  }
+  csmemset(out_mask, 0, ((*(int16_t *)(base + 2) + 0x1f) >> 5) * 4);
+  if (index != -1) {
+    if ((index < 0) || (*(int16_t *)(base + 2) <= index)) {
+      display_assert(
+        "seed_disc_index>=0 && seed_disc_index<obstacles->disc_count",
+        "c:\\halo\\SOURCE\\ai\\path_obstacles.c", 0x18c, 1);
+      system_exit(-1);
+    }
+    /* stage index through top (dead until the loop reassigns it) — matches
+     * the original's register flow (permuter-found, byte-verified) */
+    top = index;
+    mask_word = &out_mask[(int)top >> 5];
+    stack[0] = top;
+    *mask_word = *mask_word | 1 << ((uint8_t)top & 0x1f);
+    i = 1;
+    do {
+      i = i + -1;
+      disc_idx = stack[(int16_t)i];
+      top = i;
+      if (((disc_idx < 0) || (*(int16_t *)(base + 2) <= disc_idx)) ||
+          (0x80 < *(int16_t *)(base + 2))) {
+        display_assert("disc_index>=0 && disc_index<obstacles->disc_count && "
+                       "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
+                       "c:\\halo\\source\\ai\\path.h", 0x18c, 1);
+        system_exit(-1);
+      }
+      disc_count = *(int16_t *)(base + 2);
+      cur_base = base + 8 + disc_idx * 0x18;
+      disc_idx = 0;
+      if (0 < disc_count) {
+        do {
+          i = (int)disc_idx;
+          bit = 1 << ((uint8_t)disc_idx & 0x1f);
+          mask_word = &out_mask[i >> 5];
+          if ((*mask_word & bit) == 0) {
+            if (((disc_idx < 0) || (disc_count <= disc_idx)) ||
+                (0x80 < disc_count)) {
+              display_assert(
+                "disc_index>=0 && disc_index<obstacles->disc_count && "
+                "obstacles->disc_count<=MAXIMUM_DISC_COUNT",
+                "c:\\halo\\source\\ai\\path.h", 0x18c, 1);
+              system_exit(-1);
+            }
+            top_prev = top;
+            cand_base = base + 8 + i * 0x18;
+            inflated_sum =
+              (*(float *)&arg2 + *(float *)(base + 0x18 + i * 0x18)) +
+              (*(float *)&arg2 + *(float *)(cur_base + 0x10));
+            dx = *(float *)(cand_base + 8) - *(float *)(cur_base + 8);
+            dy = *(float *)(cand_base + 0xc) - *(float *)(cur_base + 0xc);
+            if (dx * dx + dy * dy <= inflated_sum * inflated_sum) {
+              disc_count = (int16_t)top;
+              *mask_word = *mask_word | bit;
+              if (0x7f < disc_count) {
+                display_assert("stack_top<MAXIMUM_DISC_COUNT",
+                               "c:\\halo\\SOURCE\\ai\\path_obstacles.c", 0x1a5,
+                               1);
+                system_exit(-1);
+              }
+              stack[disc_count] = disc_idx;
+              top = top_prev + 1;
+            }
+          }
+          disc_count = *(int16_t *)(base + 2);
+          disc_idx = disc_idx + 1;
+          i = top;
+        } while (disc_idx < disc_count);
+      }
+    } while (0 < (int16_t)i);
+  }
+  return;
 }
-#else
-#error "FUN_00062680: clang naked draft required"
-#endif
 
 
 /* FUN_000624b0 (0x624b0) — readable C lift (restored pre-naked). */
