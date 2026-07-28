@@ -857,29 +857,25 @@ char saved_game_file_retrieve_last_used_multiplayer_map(char *out_name)
   return ok;
 }
 
-/* saved_game_file_generate_checksum (0x1c3160) — readable C lift. */
+/* saved_game_file_generate_checksum (0x1c3160) — Capstone/readable tip lift.
+ * Direct CALLs so Unicorn stubs can hook XCalculateSignature* (no fptrs).
+ * Tip: stub_returns begin=-1 → error+return. */
 void saved_game_file_generate_checksum(void *buffer, unsigned short size, void *out_sig)
 {
   int handle;
-  int __attribute__((stdcall)) (*sig_begin)(int) =
-      (int __attribute__((stdcall)) (*)(int))(void *)XCalculateSignatureBegin;
-  int __attribute__((stdcall)) (*sig_update)(int, void *, unsigned int) =
-      (int __attribute__((stdcall)) (*)(int, void *, unsigned int))(void *)FUN_001d42a9;
-  int __attribute__((stdcall)) (*sig_end)(int, void *) =
-      (int __attribute__((stdcall)) (*)(int, void *))(void *)FUN_001d42c3;
 
   if (buffer == 0) {
     display_assert((const char *)0x267900, (const char *)0x2ba8e8, 0x4eb, 1);
     system_exit(-1);
   }
-  handle = sig_begin(0);
+  handle = XCalculateSignatureBegin(0);
   if (handle == -1) {
     error(2, (const char *)0x2baa20);
     return;
   }
-  if (sig_update(handle, buffer, (unsigned int)size) != 0)
+  if (FUN_001d42a9(handle, buffer, (unsigned int)size) != 0)
     error(2, (const char *)0x2baa64);
-  if (sig_end(handle, out_sig) != 0)
+  if (FUN_001d42c3(handle, out_sig) != 0)
     error(2, (const char *)0x2baa44);
 }
 

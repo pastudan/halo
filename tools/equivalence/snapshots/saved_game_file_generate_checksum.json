@@ -1,0 +1,7 @@
+{
+  "description": "saved_game_file_generate_checksum: XCalculateSignatureBegin -> -1",
+  "stub_returns": {
+    "XCalculateSignatureBegin": -1,
+    "FUN_001d426b": -1
+  }
+}

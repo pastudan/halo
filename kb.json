@@ -15028,8 +15028,14 @@
         {
           "addr": "0x103600",
           "decl": "int FUN_00103600(int *array @<esi>, float *vec @<ebx>);",
-          "ported": false,
-          "name": "FUN_00103600"
+          "ported": true,
+          "name": "FUN_00103600",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1036c0",
@@ -20630,8 +20636,14 @@
         {
           "addr": "0x921c0",
           "decl": "int FUN_000921c0(const char *name, int *table);",
-          "ported": false,
-          "name": "FUN_000921c0"
+          "ported": true,
+          "name": "FUN_000921c0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x922a0",
@@ -24392,8 +24404,14 @@
         {
           "addr": "0x1c3160",
           "decl": "void saved_game_file_generate_checksum(void *buffer, unsigned short size, void *out_sig);",
-          "ported": false,
-          "name": "saved_game_file_generate_checksum"
+          "ported": true,
+          "name": "saved_game_file_generate_checksum",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c31f0",

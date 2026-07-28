@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00103600: array count<0 -> return 0",
+  "arg_overrides": {
+    "array": "00000000ffffffff0000000000000000000000000000000000000000000000000000000000000000"
+  }
+}
