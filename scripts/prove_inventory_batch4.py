@@ -26,9 +26,12 @@ RESULTS_RE = re.compile(r"(\d+) passed, (\d+) failed, (\d+) errors")
 
 
 def ensure_oracle(addr: int) -> bool:
+    """Always regenerate per-function COFF from the XBE.
+
+    Stale/partial oracles in delinked/functions/ have caused false
+    ORACLE-CRASH Unicorn failures (e.g. 0x1f770: 14 vs 19 relocs).
+    """
     oracle = ROOT / "delinked" / "functions" / f"{addr:08x}.obj"
-    if oracle.exists() and oracle.stat().st_size > 0:
-        return True
     oracle.parent.mkdir(parents=True, exist_ok=True)
     r = subprocess.run(
         [
@@ -43,7 +46,7 @@ def ensure_oracle(addr: int) -> bool:
         capture_output=True,
         text=True,
     )
-    return r.returncode == 0 and oracle.exists()
+    return r.returncode == 0 and oracle.exists() and oracle.stat().st_size > 0
 
 
 def flip_kb(kb: dict, addr: int) -> bool:
