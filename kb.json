@@ -14526,7 +14526,7 @@
         {
           "addr": "0xf7110",
           "decl": "void FUN_000f7110(float *opt_position, int item_handle@<ebx>, float *hit_normal@<esi>, float *out_position@<eax>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f7110"
         },
         {
@@ -35091,7 +35091,7 @@
         {
           "addr": "0xfbf00",
           "decl": "void weapon_export_function_values(int weapon_handle);",
-          "ported": false,
+          "ported": true,
           "name": "weapon_export_function_values"
         },
         {
