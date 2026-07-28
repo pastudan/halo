@@ -28120,7 +28120,7 @@
         },
         {
           "addr": "0xe6450",
-          "decl": "void FUN_000e6450(void *draw_state, void *widget /* @<esi> */, int param_3, int param_4);",
+          "decl": "void FUN_000e6450(void *draw_state, void *widget, int param_3, int param_4);",
           "ported": false,
           "name": "FUN_000e6450"
         },
