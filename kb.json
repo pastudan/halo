@@ -35828,7 +35828,7 @@
         {
           "addr": "0x34970",
           "decl": "char actor_perception_create_orphan_from_friend(int actor_handle, int unit_handle, int encounter_team, int friend_prop);",
-          "ported": false,
+          "ported": true,
           "name": "actor_perception_create_orphan_from_friend"
         },
         {

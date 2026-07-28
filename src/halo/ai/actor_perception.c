@@ -3491,325 +3491,157 @@ void actor_perception_refresh_test_object(int actor_handle __attribute__((unused
 #endif
 
 
-/* actor_perception_create_orphan_from_friend (0x34970) — XBE naked draft (batch 227). */
-#if defined(__clang__)
-static int (*const b34970_c64b40)(int actor_handle, int unit_handle, char create_if_needed, char refresh_flag) = FUN_00064b40;
-static void *(*const b34970_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b34970_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b34970_exitfn)(int) = system_exit;
-static void (*const b34970_c64a60)(int actor_handle, int parent_prop, int unused) = prop_orphan_update_information;
-static void (*const b34970_c31df0)(int actor_handle, int prop_handle, float *out_pos, char refresh_flag, char swarm_refresh) = prop_position_refresh;
-static void (*const b34970_c33440)(int actor_handle, int prop_handle, float *out_pos) = prop_status_refresh;
-static int (*const b34970_c64970)(int actor_handle, int parent_prop, int source_prop) = prop_orphan_from_friend;
-static int (*const b34970_c648a0)(int actor_handle, int parent_prop) = prop_orphan_transition;
-static bool (*const b34970_c2fc20)(int actor_handle, int clump_item_handle) = actor_get_perception_knowledge;
-static float (*const b34970_c2fd10)(int actor_handle, int clump_item_handle) = actor_compute_prop_target_weight;
-
-__attribute__((naked, noinline))
-char actor_perception_create_orphan_from_friend(int actor_handle __attribute__((unused)), int unit_handle __attribute__((unused)), int encounter_team __attribute__((unused)), int friend_prop __attribute__((unused)))
+/* 0x34970 — create an orphan prop acknowledgement from a friend's prop. */
+char actor_perception_create_orphan_from_friend(int actor_handle, int unit_handle,
+                                                int encounter_team,
+                                                int friend_prop)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x44, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, %%bl\n\t"
-      "pushl %%ecx\n\t"
-      "movb %%bl, -0x1(%%ebp)\n\t"
-      "call *%[c64b40]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_24\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jl .Lactor_perception_create_orphan_from_friend_1\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jg .Lactor_perception_create_orphan_from_friend_1\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jmp .Lactor_perception_create_orphan_from_friend_20\n\t"
-      ".Lactor_perception_create_orphan_from_friend_1:\n\t"
-      "movl 0xc(%%esi), %%ebx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_12\n\t"
-      "movl 0x5ab23c, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movb $0, -0xc(%%ebp)\n\t"
-      "jl .Lactor_perception_create_orphan_from_friend_2\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jle .Lactor_perception_create_orphan_from_friend_3\n\t"
-      ".Lactor_perception_create_orphan_from_friend_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeb4\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256450\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_3:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movw 0x24(%%ecx), %%ax\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lactor_perception_create_orphan_from_friend_4\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jle .Lactor_perception_create_orphan_from_friend_5\n\t"
-      ".Lactor_perception_create_orphan_from_friend_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeb5\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256430\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_5:\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "cmpl 0x8(%%ebp), %%edx\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeb6\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256400\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_6:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%eax, 0x4(%%ecx)\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeb7\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x2563cc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_7:\n\t"
-      "cmpl %%ebx, 0xc(%%esi)\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeb8\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256394\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_8:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "cmpl %%edi, 0xc(%%edx)\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0xeb9\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x25635c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_9:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_10\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64a60]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x18(%%ecx), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%edx, 0x18(%%esi)\n\t"
-      "jmp .Lactor_perception_create_orphan_from_friend_11\n\t"
-      ".Lactor_perception_create_orphan_from_friend_10:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movw $4, 0x24(%%eax)\n\t"
-      "movw $0, 0x3c(%%eax)\n\t"
-      "movb $1, -0xc(%%ebp)\n\t"
-      ".Lactor_perception_create_orphan_from_friend_11:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x44(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c31df0]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0x44(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c33440]\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x28, %%esp\n\t"
-      "jmp .Lactor_perception_create_orphan_from_friend_19\n\t"
-      ".Lactor_perception_create_orphan_from_friend_12:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lactor_perception_create_orphan_from_friend_13\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jle .Lactor_perception_create_orphan_from_friend_14\n\t"
-      ".Lactor_perception_create_orphan_from_friend_13:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xedf\n\t"
-      "pushl $0x255fb0\n\t"
-      "pushl $0x256450\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_14:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_15\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c64970]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_17\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "movl %%edx, 0x18(%%eax)\n\t"
-      "movl 0x1c(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x1c(%%eax)\n\t"
-      "movb 0x14(%%esi), %%dl\n\t"
-      "addl $8, %%esp\n\t"
-      "movb %%dl, 0x14(%%eax)\n\t"
-      "jmp .Lactor_perception_create_orphan_from_friend_16\n\t"
-      ".Lactor_perception_create_orphan_from_friend_15:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0x44(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c31df0]\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c648a0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      ".Lactor_perception_create_orphan_from_friend_16:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .Lactor_perception_create_orphan_from_friend_18\n\t"
-      ".Lactor_perception_create_orphan_from_friend_17:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_perception_create_orphan_from_friend_18:\n\t"
-      "movl 0x5ab23c, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_19:\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lactor_perception_create_orphan_from_friend_20:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_23\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_21\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lactor_perception_create_orphan_from_friend_22\n\t"
-      "movl 0x5ab23c, %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, 0x32(%%eax)\n\t"
-      "jl .Lactor_perception_create_orphan_from_friend_22\n\t"
-      ".Lactor_perception_create_orphan_from_friend_21:\n\t"
-      "movb $1, 0xb8(%%esi)\n\t"
-      "movw $0, 0xb0(%%esi)\n\t"
-      "movl %%ebx, 0xb4(%%esi)\n\t"
-      ".Lactor_perception_create_orphan_from_friend_22:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c2fc20]\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movb %%al, 0xa4(%%esi)\n\t"
-      "call *%[c2fd10]\n\t"
-      "fstps 0x50(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lactor_perception_create_orphan_from_friend_23:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lactor_perception_create_orphan_from_friend_24:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [c64b40] "m"(b34970_c64b40), [dget] "m"(b34970_dget), [assert] "m"(b34970_assert), [exitfn] "m"(b34970_exitfn), [c64a60] "m"(b34970_c64a60), [c31df0] "m"(b34970_c31df0), [c33440] "m"(b34970_c33440), [c64970] "m"(b34970_c64970), [c648a0] "m"(b34970_c648a0), [c2fc20] "m"(b34970_c2fc20), [c2fd10] "m"(b34970_c2fd10)
-      : "memory");
+  char *prop;
+  char *parent;
+  char *orphan;
+  char local_44[0x44];
+  char refresh_parent;
+  char success;
+  int prop_handle;
+  int final_prop;
+  int parent_prop;
+  int orphan_prop;
+  int16_t status;
+
+  success = 1;
+  prop_handle = FUN_00064b40(actor_handle, unit_handle, 1, 0);
+  if (prop_handle == -1)
+    return success;
+
+  final_prop = prop_handle;
+
+  prop = (char *)datum_get(prop_data, prop_handle);
+  status = *(int16_t *)(prop + 0x24);
+  if (status >= 2 && status <= 3) {
+    success = 0;
+    goto finish;
+  }
+
+  parent_prop = *(int *)(prop + 0xc);
+  if (parent_prop == -1) {
+    status = *(int16_t *)(prop + 0x24);
+    if (status < 0) {
+      display_assert("prop->type >= 0",
+                     "c:\halo\SOURCE\ai\actor_perception.c", 0xedf, 1);
+      system_exit(-1);
+      return 0;
+    }
+    if (status > 1) {
+      display_assert("prop->type <= 1",
+                     "c:\halo\SOURCE\ai\actor_perception.c", 0xedf, 1);
+      system_exit(-1);
+      return 0;
+    }
+
+    if (friend_prop != -1) {
+      orphan_prop =
+          prop_orphan_from_friend(actor_handle, prop_handle, friend_prop);
+      if (orphan_prop == -1)
+        return 0;
+      orphan = (char *)datum_get(prop_data, orphan_prop);
+      *(int *)(orphan + 0x18) = *(int *)(prop + 0x18);
+      *(int *)(orphan + 0x1c) = *(int *)(prop + 0x1c);
+      *(char *)(orphan + 0x14) = *(char *)(prop + 0x14);
+    } else {
+      prop_position_refresh(actor_handle, prop_handle, (float *)local_44, 0, 0);
+      orphan_prop = prop_orphan_transition(actor_handle, prop_handle);
+      if (orphan_prop == -1)
+        return 0;
+    }
+    prop = (char *)datum_get(prop_data, orphan_prop);
+    final_prop = orphan_prop;
+    goto finish;
+  }
+
+  parent = (char *)datum_get(prop_data, parent_prop);
+  if (status < 0 || status > 1) {
+    display_assert("prop->type <= 1",
+                   "c:\halo\SOURCE\ai\actor_perception.c", 0xeb4, 1);
+    system_exit(-1);
+    return 0;
+  }
+
+  status = *(int16_t *)(parent + 0x24);
+  /* XBE asserts unless parent type is 4 or 5 (message text is the fail condition). */
+  if (status < 4 || status > 5) {
+    display_assert("parent->type < 4 || parent->type > 5",
+                   "c:\halo\SOURCE\ai\actor_perception.c", 0xeb5, 1);
+    system_exit(-1);
+    return 0;
+  }
+  if (*(int *)(prop + 4) != actor_handle) {
+    display_assert("prop->actor_index == actor_index",
+                   "c:\halo\SOURCE\ai\actor_perception.c", 0xeb6, 1);
+    system_exit(-1);
+    return 0;
+  }
+  if (*(int *)(parent + 4) != actor_handle) {
+    display_assert("parent->actor_index == actor_index",
+                   "c:\halo\SOURCE\ai\actor_perception.c", 0xeb7, 1);
+    system_exit(-1);
+    return 0;
+  }
+  if (*(int *)(prop + 0xc) != parent_prop) {
+    display_assert("prop->parent_prop_index == parent_prop_index",
+                   "c:\halo\SOURCE\ai\actor_perception.c", 0xeb8, 1);
+    system_exit(-1);
+    return 0;
+  }
+  if (*(int *)(parent + 0xc) != prop_handle) {
+    display_assert("parent->parent_prop_index == prop_index",
+                   "c:\halo\SOURCE\ai\actor_perception.c", 0xeb9, 1);
+    system_exit(-1);
+    return 0;
+  }
+
+  refresh_parent = 0;
+  if (friend_prop != -1) {
+    prop_orphan_update_information(actor_handle, parent_prop, friend_prop);
+    *(int *)(prop + 0x18) = *(int *)(parent + 0x18);
+  } else {
+    *(int16_t *)(parent + 0x24) = 4;
+    *(int16_t *)(parent + 0x3c) = 0;
+    refresh_parent = 1;
+  }
+
+  /* cdecl push order: refresh_parent then 1 (see XBE). */
+  prop_position_refresh(actor_handle, parent_prop, (float *)local_44,
+                        refresh_parent, 1);
+  prop_status_refresh(actor_handle, parent_prop, (float *)local_44);
+  prop = (char *)datum_get(prop_data, parent_prop);
+  final_prop = parent_prop;
+
+finish:
+  if (prop != 0) {
+    /* XBE: if encounter_team == -1, still write fields; else only when
+     * friend_prop != -1 and enc+0x32 >= 2. No friend==-1 else-write. */
+    if (encounter_team == -1) {
+      *(char *)(prop + 0xb8) = 1;
+      *(int16_t *)(prop + 0xb0) = 0;
+      *(int *)(prop + 0xb4) = encounter_team;
+    } else if (friend_prop != -1) {
+      char *enc =
+          (char *)datum_get(*(void **)0x5ab270, friend_prop);
+      if (*(int16_t *)(enc + 0x32) >= 2) {
+        *(char *)(prop + 0xb8) = 1;
+        *(int16_t *)(prop + 0xb0) = 0;
+        *(int *)(prop + 0xb4) = encounter_team;
+      }
+    }
+    *(char *)(prop + 0xa4) =
+        (char)actor_get_perception_knowledge(actor_handle, final_prop);
+    *(float *)(prop + 0x50) =
+        actor_compute_prop_target_weight(actor_handle, final_prop);
+  }
+  return success;
 }
-#else
-#error "actor_perception_create_orphan_from_friend: clang naked draft required"
-#endif
+
+
 
 
 /* actor_perception_refresh (0x34c80) — readable C lift (restored pre-naked). */
