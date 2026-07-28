@@ -1,0 +1,11 @@
+{
+  "description": "FUN_0006d8e0: invalid mode returns NULL",
+  "arg_overrides": {
+    "mode": "78000000"
+  },
+  "stub_returns": {
+    "fun_00068a30": 0,
+    "__open": 3,
+    "tifffdopen": 536870912
+  }
+}

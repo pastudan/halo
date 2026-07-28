@@ -1867,86 +1867,30 @@ unsigned int TIFFCurrentTile(void *tif)
   return *(unsigned int *)((char *)tif + 0xe8);
 }
 
-/* FUN_0006d8e0 (0x6d8e0) — XBE naked draft (batch 363). */
-#if defined(__clang__)
-static void (*const b6d8e0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b6d8e0_c1e4eb2)(void) = (void *)__open;
-static void (*const b6d8e0_c6d590)(void) = (void *)TIFFFdOpen;
-
-__attribute__((naked, noinline))
-int FUN_0006d8e0(const char *path __attribute__((unused)), const char *mode __attribute__((unused)))
+/* FUN_0006d8e0 (0x6d8e0) — Capstone lift: TIFFOpen via mode string + FdOpen. */
+void *FUN_0006d8e0(const char *path, const char *mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movb (%%edi), %%cl\n\t"
-      "cmpb $0x61, %%cl\n\t"
-      "je .LFUN_0006d8e0_3\n\t"
-      "cmpb $0x72, %%cl\n\t"
-      "je .LFUN_0006d8e0_1\n\t"
-      "cmpb $0x77, %%cl\n\t"
-      "je .LFUN_0006d8e0_3\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2605d0\n\t"
-      "pushl $0x2ec960\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006d8e0_1:\n\t"
-      "movb 0x1(%%edi), %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpb $0x2b, %%cl\n\t"
-      "jne .LFUN_0006d8e0_2\n\t"
-      "movl $2, %%eax\n\t"
-      ".LFUN_0006d8e0_2:\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0x1b6\n\t"
-      "orl $0x8000, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1e4eb2]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .LFUN_0006d8e0_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x2606dc\n\t"
-      "pushl $0x2ec960\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006d8e0_3:\n\t"
-      "cmpb $0x77, %%cl\n\t"
-      "movl $0x102, %%eax\n\t"
-      "jne .LFUN_0006d8e0_2\n\t"
-      "movl $0x302, %%eax\n\t"
-      "jmp .LFUN_0006d8e0_2\n\t"
-      ".LFUN_0006d8e0_4:\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6d590]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68a30] "m"(b6d8e0_c68a30), [c1e4eb2] "m"(b6d8e0_c1e4eb2), [c6d590] "m"(b6d8e0_c6d590)
-      : "memory");
+  unsigned char c = (unsigned char)mode[0];
+  int flags;
+  int fd;
+
+  if (c == 'a' || c == 'w') {
+    flags = (c == 'w') ? 0x302 : 0x102;
+  } else if (c == 'r') {
+    flags = (mode[1] == '+') ? 2 : 0;
+  } else {
+    FUN_00068a30((void *)(uintptr_t)0x2ec960, (void *)(uintptr_t)0x2605d0, mode);
+    return 0;
+  }
+
+  flags |= 0x8000;
+  fd = ((int (*)(const char *, int, int))(void *)__open)(path, flags, 0x1b6);
+  if (fd < 0) {
+    FUN_00068a30((void *)(uintptr_t)0x2ec960, (void *)(uintptr_t)0x2606dc, path);
+    return 0;
+  }
+  return ((void *(*)(int, const char *, const char *))(void *)TIFFFdOpen)(fd, path, mode);
 }
-#else
-#error "FUN_0006d8e0: clang naked draft required"
-#endif
 
 
 /* FUN_0006d980 (0x6d980) — readable C lift. */

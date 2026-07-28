@@ -1,0 +1,16 @@
+{
+  "description": "photometric check: seed DAT_003340f0 across modes",
+  "regions": {
+    "0x3340f0": "0100"
+  },
+  "arg_overrides": {
+    "v": [
+      0,
+      8
+    ]
+  },
+  "stub_returns": {
+    "fun_00064ec0": 1,
+    "fun_0006f9d0": 0
+  }
+}

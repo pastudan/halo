@@ -38067,8 +38067,8 @@
         },
         {
           "addr": "0x69310",
-          "decl": "void FUN_00069310(void);",
-          "ported": false,
+          "decl": "void FUN_00069310(int code@<eax>, void *tif@<ecx>, const unsigned short *table@<ebx>);",
+          "ported": true,
           "name": "FUN_00069310"
         },
         {
@@ -38079,8 +38079,8 @@
         },
         {
           "addr": "0x69420",
-          "decl": "void FUN_00069420(void);",
-          "ported": false,
+          "decl": "int FUN_00069420(void *tif);",
+          "ported": true,
           "name": "FUN_00069420"
         },
         {
@@ -38139,8 +38139,8 @@
         },
         {
           "addr": "0x6a070",
-          "decl": "void FUN_0006a070(void);",
-          "ported": false,
+          "decl": "int FUN_0006a070(void *tif, unsigned char *buf, int len);",
+          "ported": true,
           "name": "FUN_0006a070"
         },
         {
@@ -38169,8 +38169,8 @@
         },
         {
           "addr": "0x6a310",
-          "decl": "void FUN_0006a310(void);",
-          "ported": false,
+          "decl": "int FUN_0006a310(void *tif, int v);",
+          "ported": true,
           "name": "FUN_0006a310"
         },
         {
@@ -38495,8 +38495,8 @@
         },
         {
           "addr": "0x6d8e0",
-          "decl": "int FUN_0006d8e0(const char *path, const char *mode);",
-          "ported": false,
+          "decl": "void *FUN_0006d8e0(const char *path, const char *mode);",
+          "ported": true,
           "name": "FUN_0006d8e0"
         },
         {

@@ -1,0 +1,8 @@
+{
+  "description": "LZW put: len<=0 early return after memset",
+  "regions": {},
+  "arg_overrides": {
+    "len": 0
+  },
+  "stub_returns": {}
+}
