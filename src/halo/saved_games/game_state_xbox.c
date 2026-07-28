@@ -1426,120 +1426,95 @@ int FUN_001c19c0(void)
   return (int)(short)random_range(random_math_get_local_seed_address(), 0, 0x11);
 }
 
-/* FUN_001c19e0 (0x1c19e0) — XBE naked draft (batch 242). */
-#if defined(__clang__)
-static void (*const b1c19e0_c1c1290)(void) = (void *)game_state_read_from_persistent_storage;
-static int (*const b1c19e0_c1d9179)(char *str, size_t size, const char *format, ...) = snprintf;
-static file_ref_t * (*const b1c19e0_c1999f0)(file_ref_t *info, const char *directory, bool a4) = file_reference_create_from_path;
-static void (*const b1c19e0_c1c3160)(void) = (void *)saved_game_file_generate_checksum;
-static bool (*const b1c19e0_c19a490)(file_ref_t *info) = FUN_0019a490;
-static bool (*const b1c19e0_c19a7a0)(file_ref_t *info, int flags) = file_open;
-static bool (*const b1c19e0_c19aa00)(file_ref_t *info, int offset) = file_set_position;
-static void (*const b1c19e0_c19ac00)(void) = (void *)file_write;
-static bool (*const b1c19e0_c19a930)(file_ref_t *info) = file_close;
-static void (*const b1c19e0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_001c19e0 (0x1c19e0) — readable C lift (restored pre-naked). */
 void FUN_001c19e0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x40c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_001c19e0_1:\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x40c(%%ebp), %%esi\n\t"
-      "call *%[c1c1290]\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x2ba2d8\n\t"
-      "leal -0x20c(%%ebp), %%eax\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d9179]\n\t"
-      "pushl $0\n\t"
-      "leal -0x20c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x10c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1999f0]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c19e0_3\n\t"
-      "leal -0x3dc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x40c(%%ebp), %%ecx\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c3160]\n\t"
-      "leal -0x10c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19a490]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c19e0_3\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c19e0_3\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19aa00]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c19e0_3\n\t"
-      "leal -0x40c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x10c(%%ebp), %%eax\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19ac00]\n\t"
-      "leal -0x10c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movb %%al, %%bl\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c19e0_2\n\t"
-      "leal -0x20c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x2ba2a4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c19e0_2:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .LFUN_001c19e0_4\n\t"
-      ".LFUN_001c19e0_3:\n\t"
-      "leal -0x20c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2ba260\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c19e0_4:\n\t"
-      "incl %%edi\n\t"
-      "cmpl $2, %%edi\n\t"
-      "jl .LFUN_001c19e0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c1290] "m"(b1c19e0_c1c1290), [c1d9179] "m"(b1c19e0_c1d9179), [c1999f0] "m"(b1c19e0_c1999f0), [c1c3160] "m"(b1c19e0_c1c3160), [c19a490] "m"(b1c19e0_c19a490), [c19a7a0] "m"(b1c19e0_c19a7a0), [c19aa00] "m"(b1c19e0_c19aa00), [c19ac00] "m"(b1c19e0_c19ac00), [c19a930] "m"(b1c19e0_c19a930), [c8f390] "m"(b1c19e0_c8f390)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  ((void(*)(void))game_state_read_from_persistent_storage)();
+  snprintf((char *)(uintptr_t)eax, 255, (char *)0x002ba2d8);
+  file_reference_create_from_path((void *)(uintptr_t)edx, (char *)(uintptr_t)ecx, 0);
+  /* test eax, eax -> je 0x1c1acc */
+  ((void(*)(void))saved_game_file_generate_checksum)();
+  FUN_0019a490((void *)(uintptr_t)edx);
+  /* test (char)eax, (char)eax -> je 0x1c1acc */
+  file_open((void *)(uintptr_t)eax, 0);
+  /* test (char)eax, (char)eax -> je 0x1c1acc */
+  file_set_position((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x1c1acc */
+  ((void(*)(void))file_write)();
+  file_close((void *)(uintptr_t)ecx);
+  /* test (char)eax, (char)eax -> jne 0x1c1ac8 */
+  error(0, (char *)0x002ba2a4);
+  /* test (char)ebx, (char)ebx -> jne 0x1c1ae2 */
+  error(0, (char *)0x002ba260);
+  /* cmp edi, 2 -> jl 0x1c19f0 */
+  /* test esi, esi -> jne 0x1c1b27 */
+  display_assert((char *)0x002829b0, (char *)0x002b9f70, 704, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x1c1b6b */
+  error(0, (char *)0x002ba0f8);
+  thread_is_done((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x1c1b40 */
+  thread_close((void *)(uintptr_t)ecx);
+  /* mem[0x004eaa2c] = 0 */
+  /* mem[0x004ea9f8] = edx */
+  csmemcpy((void *)0x004ea9fc, (void *)(uintptr_t)esi, 48);
+  thread_new(0, (void *)0x001c15c0, 0x004ea9f8, (void *)0x004eaa2c);
+  csmemset((void *)0x004ea9c8, 0, 108);
+  /* test esi, esi -> jne 0x1c1beb */
+  display_assert((char *)0x002829b0, (char *)0x002b9f70, 256, 0);
+  system_exit(0);
+  /* cmp eax, -1 -> je 0x1c1bfc */
+  ((void(*)(void))FUN_001c1b00)();
+  main_get_current_solo_level();
+  /* cmp (int16_t)ebx, 4 -> jl 0x1c1c3d */
+  display_assert((char *)0x00282750, (char *)0x002b9f70, 378, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> je 0x1c1cb2 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1c1c4e */
+  /* cmp (int16_t)esi, 0xa -> jl 0x1c1c6e */
+  display_assert((char *)0x002ba30c, (char *)0x002b9f70, 381, 0);
+  system_exit(0);
+  ((void(*)(void))player_ui_get_active_player_profile_index)();
+  /* cmp edi, -1 -> je 0x1c1cb1 */
+  ((void(*)(void))player_ui_get_active_player_profile)();
+  /* relift: cmp word ptr [ebp - 0xa], (int16_t)esi -> je 0x1c1ca3 */
+  ((void(*)(void))player_profile_get_from_path)();
+  ((void(*)(void))player_ui_set_active_player_profile)();
+  /* cmp (int16_t)ebx, 4 -> jl 0x1c1cf7 */
+  display_assert((char *)0x00282750, (char *)0x002b9f70, 407, 0);
+  system_exit(0);
+  main_get_current_solo_level();
+  game_difficulty_level_get();
+  /* cmp (int16_t)esi, 0xa -> jge 0x1c1d1c */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x1c1d1c */
+  /* cmp (int16_t)eax, 4 -> jl 0x1c1d3c */
+  display_assert((char *)0x002ba3b0, (char *)0x002b9f70, 413, 0);
+  system_exit(0);
+  ((void(*)(void))player_ui_get_active_player_profile_index)();
+  /* cmp edi, -1 -> je 0x1c1d8a */
+  ((void(*)(void))player_ui_get_active_player_profile)();
+  ((void(*)(void))FUN_001c1b00)();
+  ((void(*)(void))player_ui_set_active_player_profile)();
+  error(0, (char *)0x002ba348);
+  csmemset((void *)0x004eaa38, 0, 116);
+  /* test eax, eax -> je 0x1c1e0b */
+  error(0, (char *)0x002ba430);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
-#else
-#error "FUN_001c19e0: clang naked draft required"
-#endif
+
 

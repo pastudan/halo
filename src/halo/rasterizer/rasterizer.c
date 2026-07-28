@@ -3773,400 +3773,271 @@ void FUN_00172de0(void *decal __attribute__((unused)), int param_2 __attribute__
 #endif
 
 
-/* FUN_00173090 (0x173090) — XBE naked draft (batch 301). */
-#if defined(__clang__)
-static void (*const b173090_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b173090_exitfn)(int) = system_exit;
-static void (*const b173090_c172730)(void) = (void *)FUN_00172730;
-static void (*const b173090_c1584f0)(int stage, int target, int max_mipmap) = FUN_001584f0;
-static void __stdcall (*const b173090_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
-static void (*const b173090_c155cf0)(int stage, int bitmap_tag_index, int frame_index) = rasterizer_set_texture_direct;
-static void __stdcall (*const b173090_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
-static void (*const b173090_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void __stdcall (*const b173090_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
-static void __stdcall (*const b173090_c1e98e0)(uint32_t value) = (void *)D3DDevice_SetRenderState_ZBias;
-static void *(*const b173090_memset)(void *, int, unsigned int) = csmemset;
-static unsigned int (*const b173090_cd1dd0)(float *color) = FUN_000d1dd0;
-static void (*const b173090_c156510)(void *state) = rasterizer_set_pixel_shader;
-static int (*const b173090_c190710)(void *shader) = shader_get_vertex_shader_permutation;
-static void (*const b173090_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void __stdcall (*const b173090_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
-static void (*const b173090_c158140)(int target, int mipmap_index, uint32_t color, int do_clear, int zbuffer) = FUN_00158140;
-static void (*const b173090_c158ae0)(int mode) = FUN_00158ae0;
-static void (*const b173090_c15dc10)(void) = (void *)FUN_0015dc10;
-static void (*const b173090_c17edd0)(void) = (void *)rasterizer_frame_statistics_count_static_vertices;
-
-__attribute__((naked, noinline))
+/* FUN_00173090 (0x173090) — readable C lift (restored pre-naked). */
 void FUN_00173090(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x58, %%esp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "jne .LFUN_00173090_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x194\n\t"
-      "pushl $0x2a44b0\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00173090_1:\n\t"
-      "cmpw %%bx, 0x5a5bc0\n\t"
-      "jne .LFUN_00173090_7\n\t"
-      "cmpb %%bl, 0x3256ca\n\t"
-      "je .LFUN_00173090_7\n\t"
-      "cmpb %%bl, 0x47e4b4\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_00173090_5\n\t"
-      "cmpb %%bl, 0x3256f6\n\t"
-      "je .LFUN_00173090_2\n\t"
-      "call *%[c172730]\n\t"
-      ".LFUN_00173090_2:\n\t"
-      "movb 0x3256f6, %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpb %%bl, %%cl\n\t"
-      "setne %%al\n\t"
-      "pushl %%ebx\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1584f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $4\n\t"
-      "movl $0xa, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $4\n\t"
-      "movl $0xb, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xf, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl 0x476204, %%ecx\n\t"
-      "movl 0x4c(%%ecx), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl $1, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c155cf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $3\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xf, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl 0x476204, %%eax\n\t"
-      "movl 0x1c(%%eax), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $2\n\t"
-      "call *%[c155cf0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $3\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xc, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xf, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $0x901\n\t"
-      "call *%[c1e96d0]\n\t"
-      "movl $0x1010101, %%edx\n\t"
-      "movl $0x40358, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl $0x40304, %%ecx\n\t"
-      "movl $0x1010101, 0x1fb7a4\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40344, %%ecx\n\t"
-      "movl %%edi, 0x1fb784\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl $0x301, %%edx\n\t"
-      "movl $0x40348, %%ecx\n\t"
-      "movl %%ebx, 0x1fb790\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl $0x8006, %%edx\n\t"
-      "movl $0x40350, %%ecx\n\t"
-      "movl $0x301, 0x1fb794\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl $0x40300, %%ecx\n\t"
-      "movl $0x8006, 0x1fb7c0\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40340, %%ecx\n\t"
-      "movl %%edi, 0x1fb788\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, 0x1fb78c\n\t"
-      "call *%[c1ea290]\n\t"
-      "movl $0x202, %%edx\n\t"
-      "movl $0x40354, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x4035c, %%ecx\n\t"
-      "movl $0x202, 0x1fb77c\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%ebx, 0x1fb798\n\t"
-      "call *%[c1e98e0]\n\t"
-      "pushl $0xf0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x47e46c\n\t"
-      "movl $0x21, 0x5a5b98\n\t"
-      "movl $4, 0x5a5b94\n\t"
-      "call *%[cd1dd0]\n\t"
-      "movl %%eax, 0x5a5ae8\n\t"
-      "movb 0x3256f7, %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpb %%bl, %%al\n\t"
-      "movl $0xffffff, 0x5a5b08\n\t"
-      "movl $0x14200000, 0x5a5b48\n\t"
-      "movl $0xc0, 0x5a5b74\n\t"
-      "movl $0x290c0821, 0x5a5b4c\n\t"
-      "movl $0xcd, 0x5a5b78\n\t"
-      "movl $0x2c200c2d, 0x5a5b50\n\t"
-      "movl $0xc00, 0x5a5b7c\n\t"
-      "movl $0x2c020000, 0x5a5b54\n\t"
-      "movl $0x20d0, 0x5a5b80\n\t"
-      "movl $0x2c, 0x5a5ae0\n\t"
-      "movl $0xd00, 0x5a5ae4\n\t"
-      "je .LFUN_00173090_3\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40300, %%ecx\n\t"
-      "movl $0xc, 0x5a5ae0\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl %%ebx, 0x1fb788\n\t"
-      ".LFUN_00173090_3:\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[c156510]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c190710]\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x1d\n\t"
-      "call *%[c178b40]\n\t"
-      "flds 0x2533c8\n\t"
-      "fdivs 0x47e478\n\t"
-      "addl $0x14, %%esp\n\t"
-      "flds 0x47e478\n\t"
-      "fmuls 0x2533d8\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "flds 0x47e478\n\t"
-      "fmuls 0x253398\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x47e480\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x58(%%ebp)\n\t"
-      "flds 0x47e484\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x54(%%ebp)\n\t"
-      "flds 0x47e488\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x50(%%ebp)\n\t"
-      "flds 0x47e4a4\n\t"
-      "fmuls 0x47e480\n\t"
-      "flds 0x47e4ac\n\t"
-      "fmuls 0x47e488\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x47e4a8\n\t"
-      "fmuls 0x47e484\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x4c(%%ebp)\n\t"
-      "flds 0x47e48c\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x255964\n\t"
-      "fstps -0x48(%%ebp)\n\t"
-      "flds 0x47e490\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x255964\n\t"
-      "fstps -0x44(%%ebp)\n\t"
-      "flds 0x47e494\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fmuls 0x255964\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      "flds 0x47e4a4\n\t"
-      "fmuls 0x47e48c\n\t"
-      "flds 0x47e4ac\n\t"
-      "fmuls 0x47e494\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x47e4a8\n\t"
-      "fmuls 0x47e490\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "flds 0x47e498\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "flds 0x47e49c\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      "flds 0x47e4a0\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "movl 0x47e498, %%ecx\n\t"
-      "flds 0x47e4a4\n\t"
-      "movl 0x47e49c, %%edx\n\t"
-      "fmuls 0x47e498\n\t"
-      "movl 0x47e4a0, %%eax\n\t"
-      "flds 0x47e4ac\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "fmuls 0x47e4a0\n\t"
-      "pushl $5\n\t"
-      "leal -0x58(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "pushl $-0x51\n\t"
-      "flds 0x47e4a8\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "fmuls 0x47e49c\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fchs\n\t"
-      "fstps -0x2c(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x47e498\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds 0x47e49c\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "flds 0x47e4a0\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fchs\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "cmpb %%bl, 0x3251fc\n\t"
-      "jne .LFUN_00173090_4\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x5a5bc0, %%dx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c158140]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movb $1, 0x3251fc\n\t"
-      ".LFUN_00173090_4:\n\t"
-      "movb $1, 0x47e4b4\n\t"
-      ".LFUN_00173090_5:\n\t"
-      "pushl $2\n\t"
-      "call *%[c158ae0]\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c15dc10]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $2, 0x3256ba\n\t"
-      "jne .LFUN_00173090_6\n\t"
-      "movl 0x5a543c, %%eax\n\t"
-      "movl 0x5a5438, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "incl %%eax\n\t"
-      "addl %%esi, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, 0x5a543c\n\t"
-      "movl %%edx, 0x5a5438\n\t"
-      "call *%[c17edd0]\n\t"
-      "movl 0x5a5434, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl %%ecx, 0x5a5434\n\t"
-      ".LFUN_00173090_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00173090_7:\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b173090_assert), [exitfn] "m"(b173090_exitfn), [c172730] "m"(b173090_c172730), [c1584f0] "m"(b173090_c1584f0), [c1e9410] "m"(b173090_c1e9410), [c155cf0] "m"(b173090_c155cf0), [c1e96d0] "m"(b173090_c1e96d0), [c1e9350] "m"(b173090_c1e9350), [c1ea290] "m"(b173090_c1ea290), [c1e98e0] "m"(b173090_c1e98e0), [memset] "m"(b173090_memset), [cd1dd0] "m"(b173090_cd1dd0), [c156510] "m"(b173090_c156510), [c190710] "m"(b173090_c190710), [c178b40] "m"(b173090_c178b40), [c1eb8d0] "m"(b173090_c1eb8d0), [c158140] "m"(b173090_c158140), [c158ae0] "m"(b173090_c158ae0), [c15dc10] "m"(b173090_c15dc10), [c17edd0] "m"(b173090_c17edd0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp eax, ebx -> jne 0x1730c2 */
+  display_assert((char *)0x0029dc40, (char *)0x002a44b0, 404, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x5a5bc0], (int16_t)ebx -> jne 0x17363d */
+  /* relift: cmp byte ptr [0x3256ca], (char)ebx -> je 0x17363d */
+  /* relift: cmp byte ptr [0x3256f6], (char)ebx -> je 0x1730f9 */
+  FUN_00172730();
+  /* relift: relift: mov (char)ecx, byte ptr [0x3256f6] */
+  FUN_001584f0(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  rasterizer_set_texture_direct(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  rasterizer_set_texture_direct(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetRenderState_CullMode(2305);
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb7a4] = 0x1010101 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb784] = edi */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb790] = ebx */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb794] = 0x301 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb7c0] = 0x8006 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb788] = edi */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb78c] = ebx */
+  D3DDevice_SetRenderState_ZEnable(edi);
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb77c] = 0x202 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb798] = ebx */
+  D3DDevice_SetRenderState_ZBias(ebx);
+  csmemset((void *)0x005a5ac0, 0, 240);
+  /* mem[0x005a5b98] = 0x21 */
+  /* mem[0x005a5b94] = 4 */
+  FUN_000d1dd0((void *)0x0047e46c);
+  /* mem[0x005a5ae8] = eax */
+  /* relift: relift: mov (char)eax, byte ptr [0x3256f7] */
+  /* mem[0x005a5b08] = 0xffffff */
+  /* mem[0x005a5b48] = 0x14200000 */
+  /* mem[0x005a5b74] = 0xc0 */
+  /* mem[0x005a5b4c] = 0x290c0821 */
+  /* mem[0x005a5b78] = 0xcd */
+  /* mem[0x005a5b50] = 0x2c200c2d */
+  /* mem[0x005a5b7c] = 0xc00 */
+  /* mem[0x005a5b54] = 0x2c020000 */
+  /* mem[0x005a5b80] = 0x20d0 */
+  /* mem[0x005a5ae0] = 0x2c */
+  /* mem[0x005a5ae4] = 0xd00 */
+  /* mem[0x005a5ae0] = 0xc */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb788] = ebx */
+  rasterizer_set_pixel_shader((void *)0x005a5ac0);
+  shader_get_vertex_shader_permutation((void *)(uintptr_t)edx);
+  FUN_00178b40(29, 0, 0);
+  /* relift: relift: fld dword ptr [0x2533c8] */
+  /* relift: relift: fld dword ptr [0x47e478] */
+  /* relift: relift: fld dword ptr [0x47e478] */
+  /* relift: relift: fld dword ptr [0x47e480] */
+  /* relift: relift: fld dword ptr [0x47e484] */
+  /* relift: relift: fld dword ptr [0x47e488] */
+  /* relift: relift: fld dword ptr [0x47e4a4] */
+  /* relift: relift: fld dword ptr [0x47e4ac] */
+  /* relift: relift: fld dword ptr [0x47e4a8] */
+  /* relift: relift: fld dword ptr [0x47e48c] */
+  /* relift: relift: fld dword ptr [0x47e490] */
+  /* relift: relift: fld dword ptr [0x47e494] */
+  /* relift: relift: fld dword ptr [0x47e4a4] */
+  /* relift: relift: fld dword ptr [0x47e4ac] */
+  /* relift: relift: fld dword ptr [0x47e4a8] */
+  /* relift: relift: fld dword ptr [0x47e498] */
+  /* relift: relift: fld dword ptr [0x47e49c] */
+  /* relift: relift: fld dword ptr [0x47e4a0] */
+  /* relift: relift: fld dword ptr [0x47e4a4] */
+  /* relift: relift: fld dword ptr [0x47e4ac] */
+  /* relift: relift: fld dword ptr [0x47e4a8] */
+  /* relift: relift: fld dword ptr [0x47e498] */
+  /* relift: relift: fld dword ptr [0x47e49c] */
+  /* relift: relift: fld dword ptr [0x47e4a0] */
+  D3DDevice_SetVertexShaderConstant(0, (void *)0, 0);
+  /* relift: cmp byte ptr [0x3251fc], (char)ebx -> jne 0x1735dc */
+  /* relift: relift: mov (int16_t)edx, word ptr [0x5a5bc0] */
+  FUN_00158140(0, 0, ebx, 0, 0);
+  /* relift: relift: mov byte ptr [0x3251fc], 1 */
+  /* relift: relift: mov byte ptr [0x47e4b4], 1 */
+  FUN_00158ae0(0);
+  ((void(*)(void))FUN_0015dc10)();
+  /* relift: cmp word ptr [0x3256ba], 2 -> jne 0x17363b */
+  /* mem[0x005a543c] = eax */
+  /* mem[0x005a5438] = edx */
+  rasterizer_frame_statistics_count_static_vertices();
+  /* mem[0x005a5434] = ecx */
+  /* cmp esi, 0x52 -> jge 0x17366b */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* cmp esi, 0x74 -> jge 0x173679 */
+  ((void(*)(void))D3DDevice_SetRenderState_PSTextureModes)();
+  /* cmp esi, 0x75 -> jne 0x17368e */
+  ((void(*)(void))D3DDevice_SetRenderState_VertexBlend)();
+  /* cmp esi, 0x76 -> jne 0x17369a */
+  ((void(*)(void))D3DDevice_SetRenderState_FogColor)();
+  /* cmp esi, 0x77 -> jne 0x1736a6 */
+  D3DDevice_SetRenderState_FillMode(edi);
+  /* cmp esi, 0x78 -> jne 0x1736b2 */
+  ((void(*)(void))D3DDevice_SetRenderState_BackFillMode)();
+  /* cmp esi, 0x79 -> jne 0x1736be */
+  ((void(*)(void))D3DDevice_SetRenderState_TwoSidedLighting)();
+  /* cmp esi, 0x7a -> jne 0x1736ca */
+  ((void(*)(void))D3DDevice_SetRenderState_NormalizeNormals)();
+  /* cmp esi, 0x7b -> jne 0x1736d6 */
+  D3DDevice_SetRenderState_ZEnable(edi);
+  /* cmp esi, 0x7c -> jne 0x1736e2 */
+  D3DDevice_SetRenderState_StencilEnable(edi);
+  /* cmp esi, 0x7d -> jne 0x1736ee */
+  D3DDevice_SetRenderState_StencilFail(edi);
+  /* cmp esi, 0x7f -> jne 0x1736fa */
+  D3DDevice_SetRenderState_CullMode(edi);
+  /* cmp esi, 0x7e -> jne 0x173706 */
+  ((void(*)(void))D3DDevice_SetRenderState_FrontFace)();
+  /* cmp esi, 0x80 -> jne 0x173715 */
+  ((void(*)(void))D3DDevice_SetRenderState_TextureFactor)();
+  /* cmp esi, 0x81 -> jne 0x173724 */
+  D3DDevice_SetRenderState_ZBias(edi);
+  /* cmp esi, 0x82 -> jne 0x173733 */
+  ((void(*)(void))D3DDevice_SetRenderState_LogicOp)();
+  /* cmp esi, 0x83 -> jne 0x173742 */
+  ((void(*)(void))D3DDevice_SetRenderState_EdgeAntiAlias)();
+  /* cmp esi, 0x84 -> jne 0x173751 */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleAntiAlias)();
+  /* cmp esi, 0x85 -> jne 0x173760 */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleMask)();
+  /* cmp esi, 0x86 -> jne 0x17376f */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleType)();
+  /* cmp esi, 0x87 -> jne 0x17377e */
+  ((void(*)(void))D3DDevice_SetRenderState_ShadowFunc)();
+  /* cmp esi, 0x88 -> jne 0x17378d */
+  ((void(*)(void))D3DDevice_SetRenderState_LineWidth)();
+  /* cmp esi, 0x89 -> jne 0x17379c */
+  ((void(*)(void))D3DDevice_SetRenderState_Dxt1NoiseEnable)();
+  /* cmp esi, 0x8a -> jne 0x1737ab */
+  ((void(*)(void))D3DDevice_SetRenderState_YuvEnable)();
+  /* cmp esi, 0x8b -> jne 0x1737ba */
+  ((void(*)(void))D3DDevice_SetRenderState_OcclusionCullEnable)();
+  /* cmp esi, 0x8c -> jne 0x1737c9 */
+  ((void(*)(void))D3DDevice_SetRenderState_StencilCullEnable)();
+  /* cmp esi, 0x8d -> jne 0x1737d8 */
+  ((void(*)(void))D3DDevice_SetRenderState_RopZCmpAlwaysRead)();
+  /* cmp esi, 0x8e -> jne 0x1737e7 */
+  ((void(*)(void))D3DDevice_SetRenderState_RopZRead)();
+  /* cmp esi, 0x8f -> jne 0x1737f5 */
+  ((void(*)(void))D3DDevice_SetRenderState_DoNotCullUncompressed)();
+  /* cmp edx, 0x16 -> jge 0x17380c */
+  D3DDevice_SetTextureStageState(eax, 0, 0);
+  /* cmp edx, 0x1c -> jne 0x173819 */
+  ((void(*)(void))D3DDevice_SetTextureState_TexCoordIndex)();
+  /* cmp edx, 0x1d -> jne 0x173826 */
+  D3DDevice_SetTextureState_BorderColor(ecx, eax);
+  /* cmp edx, 0x1e -> jne 0x173833 */
+  ((void(*)(void))D3DDevice_SetTextureState_ColorKeyColor)();
+  /* cmp edx, 0x1b -> jg 0x173840 */
+  ((void(*)(void))D3DDevice_SetTextureState_BumpEnv)();
+  /* cmp esi, 0x52 -> jge 0x17386f */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* cmp esi, 0x74 -> jge 0x173882 */
+  D3DDevice_SetRenderState_Deferred(0, 0);
+  ((void(*)(void))D3DDevice_SetRenderState_PSTextureModes)();
+  /* cmp esi, 0x75 -> jne 0x17389f */
+  ((void(*)(void))D3DDevice_SetRenderState_VertexBlend)();
+  /* cmp esi, 0x76 -> jne 0x1738af */
+  ((void(*)(void))D3DDevice_SetRenderState_FogColor)();
+  /* cmp esi, 0x77 -> jne 0x1738bf */
+  D3DDevice_SetRenderState_FillMode(edi);
+  /* cmp esi, 0x78 -> jne 0x1738cf */
+  ((void(*)(void))D3DDevice_SetRenderState_BackFillMode)();
+  /* cmp esi, 0x79 -> jne 0x1738df */
+  ((void(*)(void))D3DDevice_SetRenderState_TwoSidedLighting)();
+  /* cmp esi, 0x7a -> jne 0x1738ef */
+  ((void(*)(void))D3DDevice_SetRenderState_NormalizeNormals)();
+  /* cmp esi, 0x7b -> jne 0x1738ff */
+  D3DDevice_SetRenderState_ZEnable(edi);
+  /* cmp esi, 0x7c -> jne 0x17390f */
+  D3DDevice_SetRenderState_StencilEnable(edi);
+  /* cmp esi, 0x7d -> jne 0x17391f */
+  D3DDevice_SetRenderState_StencilFail(edi);
+  /* cmp esi, 0x7f -> jne 0x17392f */
+  D3DDevice_SetRenderState_CullMode(edi);
+  /* cmp esi, 0x7e -> jne 0x17393f */
+  ((void(*)(void))D3DDevice_SetRenderState_FrontFace)();
+  /* cmp esi, 0x80 -> jne 0x173952 */
+  ((void(*)(void))D3DDevice_SetRenderState_TextureFactor)();
+  /* cmp esi, 0x81 -> jne 0x173965 */
+  D3DDevice_SetRenderState_ZBias(edi);
+  /* cmp esi, 0x82 -> jne 0x173978 */
+  ((void(*)(void))D3DDevice_SetRenderState_LogicOp)();
+  /* cmp esi, 0x83 -> jne 0x17398b */
+  ((void(*)(void))D3DDevice_SetRenderState_EdgeAntiAlias)();
+  /* cmp esi, 0x84 -> jne 0x17399e */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleAntiAlias)();
+  /* cmp esi, 0x85 -> jne 0x1739b1 */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleMask)();
+  /* cmp esi, 0x86 -> jne 0x1739c4 */
+  ((void(*)(void))D3DDevice_SetRenderState_MultiSampleType)();
+  /* cmp esi, 0x87 -> jne 0x1739d7 */
+  ((void(*)(void))D3DDevice_SetRenderState_ShadowFunc)();
+  /* cmp esi, 0x88 -> jne 0x1739ea */
+  ((void(*)(void))D3DDevice_SetRenderState_LineWidth)();
+  /* cmp esi, 0x89 -> jne 0x1739fd */
+  ((void(*)(void))D3DDevice_SetRenderState_Dxt1NoiseEnable)();
+  /* cmp esi, 0x8a -> jne 0x173a10 */
+  ((void(*)(void))D3DDevice_SetRenderState_YuvEnable)();
+  /* cmp esi, 0x8b -> jne 0x173a23 */
+  ((void(*)(void))D3DDevice_SetRenderState_OcclusionCullEnable)();
+  /* cmp esi, 0x8c -> jne 0x173a36 */
+  ((void(*)(void))D3DDevice_SetRenderState_StencilCullEnable)();
+  /* cmp esi, 0x8d -> jne 0x173a49 */
+  ((void(*)(void))D3DDevice_SetRenderState_RopZCmpAlwaysRead)();
+  /* cmp esi, 0x8e -> jne 0x173a5c */
+  ((void(*)(void))D3DDevice_SetRenderState_RopZRead)();
+  /* cmp esi, 0x8f -> jne 0x173a6a */
+  ((void(*)(void))D3DDevice_SetRenderState_DoNotCullUncompressed)();
+  /* cmp edx, 0x16 -> jge 0x173a80 */
+  D3DDevice_SetTextureStageState(eax, 0, 0);
+  /* cmp edx, 0x1c -> jne 0x173a91 */
+  ((void(*)(void))D3DDevice_SetTextureState_TexCoordIndex)();
+  /* cmp edx, 0x1d -> jne 0x173aa2 */
+  D3DDevice_SetTextureState_BorderColor(ecx, eax);
+  /* cmp edx, 0x1e -> jne 0x173ab3 */
+  ((void(*)(void))D3DDevice_SetTextureState_ColorKeyColor)();
+  /* cmp edx, 0x1b -> jg 0x173ac0 */
+  ((void(*)(void))D3DDevice_SetTextureState_BumpEnv)();
+  D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, eax);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_00173090: clang naked draft required"
-#endif
+
 
 
 /* FUN_00173ae0 (0x173ae0) — readable C lift. */
