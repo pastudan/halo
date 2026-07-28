@@ -38926,8 +38926,8 @@
         },
         {
           "addr": "0x721a0",
-          "decl": "void FUN_000721a0(void);",
-          "ported": false,
+          "decl": "void FUN_000721a0(void *bitmap, unsigned int color, short *rect, short *clip);",
+          "ported": true,
           "name": "FUN_000721a0"
         },
         {
