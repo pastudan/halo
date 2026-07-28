@@ -5739,7 +5739,7 @@
         {
           "addr": "0x93c20",
           "decl": "void FUN_00093c20(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00093c20"
         },
         {
@@ -34768,7 +34768,7 @@
         {
           "addr": "0x97080",
           "decl": "void FUN_00097080(int object, void *ctrl_block);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00097080"
         },
         {

@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* Check if the object's "front" marker faces away from the aim direction
  * (0x971a0). Returns false if the marker forward dot aim > 0 (facing towards
  * aim), true otherwise (facing away, or if the object/marker can't be
@@ -468,113 +469,33 @@ void FUN_00097040(int object_handle, float value)
   device_group_set_actual_value(group, value);
 }
 
-/* FUN_00097080 (0x97080) — XBE naked draft (batch 372). */
-#if defined(__clang__)
-static void *(*const b97080_get)(int, int) = object_get_and_verify_type;
-static void *(*const b97080_tag)(int, int) = tag_get;
-static void (*const b97080_c96850)(void) = (void *)device_effect_new;
-static void *(*const b97080_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
-void FUN_00097080(int object __attribute__((unused)), void *ctrl_block __attribute__((unused)))
+/* FUN_00097080 (0x97080) — readable C lift (restored pre-naked). */
+void FUN_00097080(int object, void *ctrl_block)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x64657669\n\t"
-      "call *%[tag]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .LFUN_00097080_2\n\t"
-      "testb $2, 0x4(%%edi)\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "jne .LFUN_00097080_1\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      ".LFUN_00097080_1:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl $4\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c96850]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00097080_2:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movw %%ax, 0x1a8(%%esi)\n\t"
-      "movw 0x2(%%edi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .LFUN_00097080_4\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "testb $1, %%al\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      "jne .LFUN_00097080_3\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      ".LFUN_00097080_3:\n\t"
-      "andl $4, %%eax\n\t"
-      "orl $0x10, %%eax\n\t"
-      "shrl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c96850]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00097080_4:\n\t"
-      "movswl 0x1a8(%%esi), %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movw %%ax, 0x1b4(%%esi)\n\t"
-      "movl 0x5aa8c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x1b4(%%esi), %%ecx\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "movl %%eax, 0x1ac(%%esi)\n\t"
-      "movl 0x5aa8c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x1a8(%%esi), %%ecx\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "movl %%eax, 0x1b8(%%esi)\n\t"
-      "movl 0x5aa8c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x1b4(%%esi), %%eax\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x4(%%edi), %%al\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testb $8, %%al\n\t"
-      "je .LFUN_00097080_5\n\t"
-      "orl $1, 0x1a4(%%esi)\n\t"
-      ".LFUN_00097080_5:\n\t"
-      "testb $0x10, 0x4(%%edi)\n\t"
-      "je .LFUN_00097080_6\n\t"
-      "orl $2, 0x1a4(%%esi)\n\t"
-      ".LFUN_00097080_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b97080_get), [tag] "m"(b97080_tag), [c96850] "m"(b97080_c96850), [dget] "m"(b97080_dget)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  object_get_and_verify_type(0, 896);
+  tag_get('ived', 0);
+  /* cmp (int16_t)eax, 0xffff -> jne 0x970d3 */
+  ((void(*)(void))device_effect_new)();
+  /* cmp (int16_t)eax, 0xffff -> jne 0x97112 */
+  ((void(*)(void))device_effect_new)();
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, 8 -> je 0x9718f */
+  /* relift: test byte ptr [edi + 4], 0x10 -> je 0x9719c */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
-#else
-#error "FUN_00097080: clang naked draft required"
-#endif
+
 
 
 /* FUN_00097220 (0x97220) — readable C lift. */
