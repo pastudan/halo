@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00073a80: face<0 early return",
+  "arg_overrides": {
+    "face": -1
+  }
+}

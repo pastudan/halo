@@ -1522,146 +1522,48 @@ int TIFFWriteScanline(int file __attribute__((unused)), void *buffer __attribute
 #endif
 
 
-/* TIFFWriteEncodedStrip (0x700c0) — XBE naked draft (batch 348). */
-#if defined(__clang__)
-static void (*const b700c0_c6faf0)(void) = (void (*)(void))FUN_0006faf0;
-static void (*const b700c0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
-static void (*const b700c0_c6fbd0)(void) = (void (*)(void))FUN_0006fbd0;
-static void (*const b700c0_c6f260)(void) = (void (*)(void))FUN_0006f260;
-static void (*const b700c0_c6fd30)(void) = (void (*)(void))FUN_0006fd30;
-
-__attribute__((naked, noinline))
-void TIFFWriteEncodedStrip(void)
+/* TIFFWriteEncodedStrip (0x700c0) — Capstone lift: encoded strip write. */
+int TIFFWriteEncodedStrip(void *tif, unsigned int strip_count, void *data,
+                          int size_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x2ed020, %%edi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c6faf0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedStrip_1\n\t"
-      "movl 0xb8(%%esi), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jb .LTIFFWriteEncodedStrip_2\n\t"
-      "pushl %%eax\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2614d0\n\t"
-      "pushl $0x2ed020\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LTIFFWriteEncodedStrip_1:\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteEncodedStrip_2:\n\t"
-      "movb 0xa(%%esi), %%al\n\t"
-      "pushl %%ebx\n\t"
-      "movl $4, %%ebx\n\t"
-      "testb %%al, %%bl\n\t"
-      "jne .LTIFFWriteEncodedStrip_5\n\t"
-      "pushl $0x2ed020\n\t"
-      "call *%[c6fbd0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LTIFFWriteEncodedStrip_4\n\t"
-      ".LTIFFWriteEncodedStrip_3:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteEncodedStrip_4:\n\t"
-      "orw %%bx, 0xa(%%esi)\n\t"
-      ".LTIFFWriteEncodedStrip_5:\n\t"
-      "movl 0xf4(%%esi), %%eax\n\t"
-      "andb $0xfd, 0xb(%%esi)\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%edi, 0xdc(%%esi)\n\t"
-      "je .LTIFFWriteEncodedStrip_6\n\t"
-      "pushl %%esi\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedStrip_3\n\t"
-      ".LTIFFWriteEncodedStrip_6:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "divl 0xb4(%%esi)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *0x108(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LTIFFWriteEncodedStrip_7\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteEncodedStrip_7:\n\t"
-      "movl 0xf8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedStrip_8\n\t"
-      "pushl %%esi\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedStrip_3\n\t"
-      ".LTIFFWriteEncodedStrip_8:\n\t"
-      "movzwl 0x40(%%esi), %%eax\n\t"
-      "movsbl 0x8(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LTIFFWriteEncodedStrip_9\n\t"
-      "testb $0x20, 0xa(%%esi)\n\t"
-      "jne .LTIFFWriteEncodedStrip_9\n\t"
-      "movl 0x138(%%esi), %%edx\n\t"
-      "movl 0x12c(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6f260]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LTIFFWriteEncodedStrip_9:\n\t"
-      "movl 0x138(%%esi), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LTIFFWriteEncodedStrip_10\n\t"
-      "movl 0x12c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c6fd30]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedStrip_3\n\t"
-      ".LTIFFWriteEncodedStrip_10:\n\t"
-      "movl 0x12c(%%esi), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movl $0, 0x138(%%esi)\n\t"
-      "movl %%edx, 0x134(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6faf0] "m"(b700c0_c6faf0), [c68a30] "m"(b700c0_c68a30), [c6fbd0] "m"(b700c0_c6fbd0), [c6f260] "m"(b700c0_c6f260), [c6fd30] "m"(b700c0_c6fd30)
-      : "memory");
+  unsigned int nstrips;
+  unsigned int sample;
+  int (*pre)(void *);
+  int (*post)(void *);
+  int ok;
+
+  if (((int (*)(void *, void *, int))(void *)FUN_0006faf0)(
+          tif, (void *)0x002ed020, 0) == 0)
+    return -1;
+  nstrips = *(unsigned int *)((char *)tif + 0xb8);
+  if (strip_count >= nstrips) {
+    FUN_00068a30((void *)0x002ed020, (void *)0x002614d0, *(void **)tif,
+                 strip_count, nstrips);
+    return -1;
+  }
+  if ((*(unsigned char *)((char *)tif + 0xa) & 4) == 0) {
+    if (FUN_0006fbd0((void *)0x002ed020, tif) == 0)
+      return -1;
+    *(unsigned short *)((char *)tif + 0xa) =
+        (unsigned short)(*(unsigned short *)((char *)tif + 0xa) | 4);
+  }
+  pre = *(int (**)(void *))((char *)tif + 0xf4);
+  *(unsigned char *)((char *)tif + 0xb) =
+      (unsigned char)(*(unsigned char *)((char *)tif + 0xb) & 0xfd);
+  *(unsigned int *)((char *)tif + 0xdc) = strip_count;
+  if (pre != 0 && pre(tif) == 0)
+    return -1;
+  sample = strip_count / *(unsigned int *)((char *)tif + 0xb4);
+  ok = ((int (*)(void *, void *, int, unsigned int))(
+            *(void **)((char *)tif + 0x108)))(tif, data, size_count, sample);
+  if (ok == 0)
+    return ok;
+  post = *(int (**)(void *))((char *)tif + 0xf8);
+  if (post != 0 && post(tif) == 0)
+    return -1;
+  return ok;
 }
-#else
-#error "TIFFWriteEncodedStrip: clang naked draft required"
-#endif
+
 
 
 /* TIFFWriteRawStrip (0x701f0) — readable C lift from XBE. */
@@ -1709,173 +1611,48 @@ int TIFFWriteRawStrip(void *tif, unsigned int strip, void *data, int size)
 }
 
 
-/* TIFFWriteEncodedTile (0x70260) — XBE naked draft (batch 342). */
-#if defined(__clang__)
-static void (*const b70260_c6faf0)(void) = (void (*)(void))FUN_0006faf0;
-static void (*const b70260_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
-static void (*const b70260_c6fbd0)(void) = (void (*)(void))FUN_0006fbd0;
-static void (*const b70260_c6f260)(void) = (void (*)(void))FUN_0006f260;
-static void (*const b70260_c6fd30)(void) = (void (*)(void))FUN_0006fd30;
-
-__attribute__((naked, noinline))
-void TIFFWriteEncodedTile(void)
+/* TIFFWriteEncodedTile (0x70260) — Capstone lift: encoded tile write. */
+int TIFFWriteEncodedTile(void *tif, unsigned int tile_count, void *data,
+                         int size_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x2ed04c, %%edi\n\t"
-      "movl $1, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c6faf0]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedTile_1\n\t"
-      "movl 0xb8(%%esi), %%eax\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jb .LTIFFWriteEncodedTile_2\n\t"
-      "pushl %%eax\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2614f4\n\t"
-      "pushl $0x2ed04c\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LTIFFWriteEncodedTile_1:\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteEncodedTile_2:\n\t"
-      "movb 0xa(%%esi), %%al\n\t"
-      "pushl %%ebx\n\t"
-      "movl $4, %%ebx\n\t"
-      "testb %%al, %%bl\n\t"
-      "jne .LTIFFWriteEncodedTile_5\n\t"
-      "pushl $0x2ed04c\n\t"
-      "call *%[c6fbd0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LTIFFWriteEncodedTile_4\n\t"
-      ".LTIFFWriteEncodedTile_3:\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteEncodedTile_4:\n\t"
-      "orw %%bx, 0xa(%%esi)\n\t"
-      ".LTIFFWriteEncodedTile_5:\n\t"
-      "movl %%edi, 0xe8(%%esi)\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "movl 0x20(%%esi), %%edx\n\t"
-      "leal -0x1(%%edx,%%ecx,1), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "divl %%ebx\n\t"
-      "imull %%ecx, %%edx\n\t"
-      "movl %%edx, 0xd4(%%esi)\n\t"
-      "movl 0x28(%%esi), %%ecx\n\t"
-      "movl 0x1c(%%esi), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "leal -0x1(%%eax,%%ecx,1), %%eax\n\t"
-      "divl %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "andb $0xfd, 0xb(%%esi)\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "divl %%ebx\n\t"
-      "movl 0xf4(%%esi), %%eax\n\t"
-      "imull %%ecx, %%edx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%edx, 0xe4(%%esi)\n\t"
-      "je .LTIFFWriteEncodedTile_6\n\t"
-      "pushl %%esi\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedTile_3\n\t"
-      ".LTIFFWriteEncodedTile_6:\n\t"
-      "movl 0xec(%%esi), %%eax\n\t"
-      "cmpl %%eax, 0x14(%%ebp)\n\t"
-      "jbe .LTIFFWriteEncodedTile_7\n\t"
-      "movl %%eax, 0x14(%%ebp)\n\t"
-      ".LTIFFWriteEncodedTile_7:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "divl 0xb4(%%esi)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *0x110(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LTIFFWriteEncodedTile_8\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LTIFFWriteEncodedTile_8:\n\t"
-      "movl 0xf8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedTile_9\n\t"
-      "pushl %%esi\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedTile_3\n\t"
-      ".LTIFFWriteEncodedTile_9:\n\t"
-      "movzwl 0x40(%%esi), %%eax\n\t"
-      "movsbl 0x8(%%esi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "je .LTIFFWriteEncodedTile_10\n\t"
-      "testb $0x20, 0xa(%%esi)\n\t"
-      "jne .LTIFFWriteEncodedTile_10\n\t"
-      "movl 0x138(%%esi), %%edx\n\t"
-      "movl 0x12c(%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6f260]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LTIFFWriteEncodedTile_10:\n\t"
-      "movl 0x138(%%esi), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LTIFFWriteEncodedTile_11\n\t"
-      "movl 0x12c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c6fd30]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LTIFFWriteEncodedTile_3\n\t"
-      ".LTIFFWriteEncodedTile_11:\n\t"
-      "movl 0x12c(%%esi), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "movl $0, 0x138(%%esi)\n\t"
-      "movl %%edx, 0x134(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6faf0] "m"(b70260_c6faf0), [c68a30] "m"(b70260_c68a30), [c6fbd0] "m"(b70260_c6fbd0), [c6f260] "m"(b70260_c6f260), [c6fd30] "m"(b70260_c6fd30)
-      : "memory");
+  unsigned int ntiles;
+  unsigned int sample;
+  int (*pre)(void *);
+  int (*post)(void *);
+  int ok;
+
+  if (((int (*)(void *, void *, int))(void *)FUN_0006faf0)(
+          tif, (void *)0x002ed04c, 1) == 0)
+    return -1;
+  ntiles = *(unsigned int *)((char *)tif + 0xb8);
+  if (tile_count >= ntiles) {
+    FUN_00068a30((void *)0x002ed04c, (void *)0x002614f4, *(void **)tif,
+                 tile_count, ntiles);
+    return -1;
+  }
+  if ((*(unsigned char *)((char *)tif + 0xa) & 4) == 0) {
+    if (FUN_0006fbd0((void *)0x002ed04c, tif) == 0)
+      return -1;
+    *(unsigned short *)((char *)tif + 0xa) =
+        (unsigned short)(*(unsigned short *)((char *)tif + 0xa) | 4);
+  }
+  *(unsigned int *)((char *)tif + 0xe8) = tile_count;
+  pre = *(int (**)(void *))((char *)tif + 0xf4);
+  *(unsigned char *)((char *)tif + 0xb) =
+      (unsigned char)(*(unsigned char *)((char *)tif + 0xb) & 0xfd);
+  if (pre != 0 && pre(tif) == 0)
+    return -1;
+  sample = tile_count / *(unsigned int *)((char *)tif + 0xb4);
+  ok = ((int (*)(void *, void *, int, unsigned int))(
+            *(void **)((char *)tif + 0x108)))(tif, data, size_count, sample);
+  if (ok == 0)
+    return ok;
+  post = *(int (**)(void *))((char *)tif + 0xf8);
+  if (post != 0 && post(tif) == 0)
+    return -1;
+  return ok;
 }
-#else
-#error "TIFFWriteEncodedTile: clang naked draft required"
-#endif
+
 
 
 /* FUN_000703f0 (0x703f0) — readable C lift from XBE (raw tile write). */
@@ -6912,66 +6689,36 @@ int FUN_00073960(int *param_1 __attribute__((unused)))
 #endif
 
 
-/* FUN_00073a80 (0x73a80) — XBE naked draft (batch 379). */
-#if defined(__clang__)
-static void * (*const b73a80_c7c940)(void *bitmap, short x, short y, short mipmap_index) = (void *)bitmap_2d_address;
-static int (*const b73a80_c1d98ad)(void *stream, const char *format, ...) = (void *)crt_fprintf;
-static int (*const b73a80_c1d9bd2)(void *stream) = (void *)crt_fflush;
-
-__attribute__((naked, noinline))
-void FUN_00073a80(void)
+/* FUN_00073a80 (0x73a80) — Capstone lift: scan bitmap faces for color key.
+ * ABI: face@<di>. */
+void FUN_00073a80(short face /*@<di>*/)
 {
-  __asm__ volatile(
-      "testw %%di, %%di\n\t"
-      "jl .LFUN_00073a80_4\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "cmpw 0x6(%%eax), %%di\n\t"
-      "jge .LFUN_00073a80_4\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpw %%si, 0x4(%%eax)\n\t"
-      "jle .LFUN_00073a80_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00073a80_1:\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7c940]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "movl 0x334140, %%ecx\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jne .LFUN_00073a80_2\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpw 0x4(%%eax), %%si\n\t"
-      "jl .LFUN_00073a80_1\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_00073a80_2:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movswl %%si, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x261718\n\t"
-      "pushl $0x331050\n\t"
-      "call *%[c1d98ad]\n\t"
-      "pushl $0x331050\n\t"
-      "call *%[c1d9bd2]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00073a80_3:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00073a80_4:\n\t"
-      "ret\n\t"
-      :
-      : [c7c940] "m"(b73a80_c7c940), [c1d98ad] "m"(b73a80_c1d98ad), [c1d9bd2] "m"(b73a80_c1d9bd2)
-      : "memory");
+  void *bm;
+  short i;
+  unsigned int pix;
+  void *addr;
+
+  if (face < 0)
+    return;
+  bm = *(void **)0x334150;
+  if (face >= *(short *)((char *)bm + 6))
+    return;
+  i = 0;
+  if (*(short *)((char *)bm + 4) <= 0)
+    return;
+  while (i < *(short *)((char *)bm + 4)) {
+    addr = bitmap_2d_address(bm, i, face, 0);
+    pix = *(unsigned int *)addr & 0xffffffu;
+    if (pix != *(unsigned int *)0x334140) {
+      crt_fprintf((void *)0x331050, (const char *)0x261718, (int)i, (int)face);
+      crt_fflush((void *)0x331050);
+      return;
+    }
+    i = (short)(i + 1);
+    bm = *(void **)0x334150;
+  }
 }
-#else
-#error "FUN_00073a80: clang naked draft required"
-#endif
+
 
 
 /* FUN_00073b00 (0x73b00) — XBE naked draft (batch 307). */

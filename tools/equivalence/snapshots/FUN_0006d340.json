@@ -1,0 +1,6 @@
+{
+  "description": "FUN_0006d340: cc<=0 early success return 1",
+  "arg_overrides": {
+    "cc": 0
+  }
+}

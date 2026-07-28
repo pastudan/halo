@@ -138,181 +138,69 @@ void FUN_00068a50(void *tif, int enable)
   }
 }
 
-/* FUN_00068a70 (0x68a70) — XBE naked draft (batch 302). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068a70(void)
+/* FUN_00068a70 (0x68a70) — Capstone lift: scan Fax bitstream for EOL.
+ * ABI: initial bitcount@<eax>, tif@<edi>. Finds 12+ bits ending in a single 1. */
+void FUN_00068a70(int bits /*@<eax>*/, void *tif /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x120(%%edi), %%ebx\n\t"
-      "movswl 0x2(%%ebx), %%ecx\n\t"
-      "movswl (%%ebx), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00068a70_1\n\t"
-      "movl $8, %%ecx\n\t"
-      ".LFUN_00068a70_1:\n\t"
-      "cmpl $7, %%ecx\n\t"
-      "ja .LFUN_00068a70_2\n\t"
-      "jmp *.LFUN_00068a70_jt(,%%ecx,4)\n\t"
-      ".LFUN_00068a70_2:\n\t"
-      "movl 0x138(%%edi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00068a70_29\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x138(%%edi)\n\t"
-      "movl 0x134(%%edi), %%ecx\n\t"
-      "movzbl (%%ecx), %%edx\n\t"
-      "movl 0x14(%%ebx), %%ebx\n\t"
-      "movzbl (%%ebx,%%edx,1), %%edx\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "incl %%ecx\n\t"
-      "movl %%ecx, 0x134(%%edi)\n\t"
-      ".LFUN_00068a70_3:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb %%dl, %%dl\n\t"
-      "jns .LFUN_00068a70_4\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_4:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00068a70_21\n\t"
-      ".LFUN_00068a70_5:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb $0x40, %%dl\n\t"
-      "je .LFUN_00068a70_6\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_6:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00068a70_22\n\t"
-      ".LFUN_00068a70_7:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb $0x20, %%dl\n\t"
-      "je .LFUN_00068a70_8\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_8:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00068a70_23\n\t"
-      ".LFUN_00068a70_9:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb $0x10, %%dl\n\t"
-      "je .LFUN_00068a70_10\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_10:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00068a70_24\n\t"
-      ".LFUN_00068a70_11:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb $8, %%dl\n\t"
-      "je .LFUN_00068a70_12\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_12:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00068a70_25\n\t"
-      ".LFUN_00068a70_13:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb $4, %%dl\n\t"
-      "je .LFUN_00068a70_14\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_14:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00068a70_26\n\t"
-      ".LFUN_00068a70_15:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb $2, %%dl\n\t"
-      "je .LFUN_00068a70_16\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_16:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_00068a70_27\n\t"
-      ".LFUN_00068a70_17:\n\t"
-      "shll $1, %%eax\n\t"
-      "testb $1, %%dl\n\t"
-      "je .LFUN_00068a70_18\n\t"
-      "orl $1, %%eax\n\t"
-      ".LFUN_00068a70_18:\n\t"
-      "incl %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_00068a70_2\n\t"
-      "movl $8, %%ecx\n\t"
-      ".LFUN_00068a70_19:\n\t"
-      "cmpl $0xc, %%esi\n\t"
-      "jl .LFUN_00068a70_20\n\t"
-      "cmpl $1, %%eax\n\t"
-      "je .LFUN_00068a70_28\n\t"
-      ".LFUN_00068a70_20:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .LFUN_00068a70_1\n\t"
-      ".LFUN_00068a70_21:\n\t"
-      "movl $1, %%ecx\n\t"
-      "jmp .LFUN_00068a70_19\n\t"
-      ".LFUN_00068a70_22:\n\t"
-      "movl $2, %%ecx\n\t"
-      "jmp .LFUN_00068a70_19\n\t"
-      ".LFUN_00068a70_23:\n\t"
-      "movl $3, %%ecx\n\t"
-      "jmp .LFUN_00068a70_19\n\t"
-      ".LFUN_00068a70_24:\n\t"
-      "movl $4, %%ecx\n\t"
-      "jmp .LFUN_00068a70_19\n\t"
-      ".LFUN_00068a70_25:\n\t"
-      "movl $5, %%ecx\n\t"
-      "jmp .LFUN_00068a70_19\n\t"
-      ".LFUN_00068a70_26:\n\t"
-      "movl $6, %%ecx\n\t"
-      "jmp .LFUN_00068a70_19\n\t"
-      ".LFUN_00068a70_27:\n\t"
-      "movl $7, %%ecx\n\t"
-      "jmp .LFUN_00068a70_19\n\t"
-      ".LFUN_00068a70_28:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl $7, %%ecx\n\t"
-      "setg %%al\n\t"
-      "movw %%dx, (%%ebx)\n\t"
-      "decl %%eax\n\t"
-      "andl %%ecx, %%eax\n\t"
-      "movw %%ax, 0x2(%%ebx)\n\t"
-      ".LFUN_00068a70_29:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_00068a70_jt:\n\t"
-      ".long .LFUN_00068a70_3\n\t"
-      ".long .LFUN_00068a70_5\n\t"
-      ".long .LFUN_00068a70_7\n\t"
-      ".long .LFUN_00068a70_9\n\t"
-      ".long .LFUN_00068a70_11\n\t"
-      ".long .LFUN_00068a70_13\n\t"
-      ".long .LFUN_00068a70_15\n\t"
-      ".long .LFUN_00068a70_17\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *t = (unsigned char *)tif;
+  unsigned char *state = *(unsigned char **)(t + 0x120);
+  int bitpos = (int)*(short *)(state + 2);
+  unsigned short cur = *(unsigned short *)state;
+  int nbits = bits;
+  int code = 0;
+  unsigned char b;
+  unsigned char *table;
+  unsigned char *rp;
+  int avail;
+  int start;
+  int i;
+  static const unsigned char masks[8] = {
+      0x80, 0x40, 0x20, 0x10, 0x08, 0x04, 0x02, 0x01};
+
+  if (bitpos == 0)
+    bitpos = 8;
+
+  for (;;) {
+    if ((unsigned)bitpos > 7u) {
+      avail = *(int *)(t + 0x138);
+      if (avail <= 0)
+        return;
+      *(int *)(t + 0x138) = avail - 1;
+      rp = *(unsigned char **)(t + 0x134);
+      table = *(unsigned char **)(state + 0x14);
+      b = table[*rp];
+      *(unsigned char **)(t + 0x134) = rp + 1;
+      cur = b;
+      start = 0;
+    } else {
+      b = (unsigned char)cur;
+      start = bitpos;
+    }
+
+    for (i = start; i < 8; i++) {
+      code = (code << 1) | ((b & masks[i]) ? 1 : 0);
+      nbits++;
+      if (code > 0) {
+        bitpos = i + 1; /* 1..8 — asm ecx after finding a 1-bit */
+        if (nbits >= 12 && code == 1) {
+          /* EOL: persist current translated byte + remaining bitpos */
+          *(unsigned short *)state = cur;
+          if (bitpos > 7)
+            *(unsigned short *)(state + 2) = 0;
+          else
+            *(unsigned short *)(state + 2) = (unsigned short)bitpos;
+          return;
+        }
+        /* not EOL — reset accumulator; keep scanning from next bit */
+        nbits = 0;
+        code = 0;
+      }
+    }
+    /* consumed whole byte with no pending mid-byte restart needed */
+    bitpos = 8;
+  }
 }
-#else
-#error "FUN_00068a70: clang naked draft required"
-#endif
+
 
 
 /* FUN_00068bd0 (0x68bd0) — readable C lift. */

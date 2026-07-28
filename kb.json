@@ -38002,8 +38002,8 @@
         },
         {
           "addr": "0x68a70",
-          "decl": "void FUN_00068a70(void);",
-          "ported": false,
+          "decl": "void FUN_00068a70(int bits@<eax>, void *tif@<edi>);",
+          "ported": true,
           "name": "FUN_00068a70"
         },
         {
@@ -38397,8 +38397,8 @@
         },
         {
           "addr": "0x6cfa0",
-          "decl": "void FUN_0006cfa0(void);",
-          "ported": false,
+          "decl": "int FUN_0006cfa0(void *tif, unsigned char *buf, int cc, int arg3);",
+          "ported": true,
           "name": "FUN_0006cfa0"
         },
         {
@@ -38427,8 +38427,8 @@
         },
         {
           "addr": "0x6d340",
-          "decl": "void FUN_0006d340(void);",
-          "ported": false,
+          "decl": "int FUN_0006d340(void *tif, unsigned char *buf, int cc, int arg3);",
+          "ported": true,
           "name": "FUN_0006d340"
         },
         {
@@ -38785,8 +38785,8 @@
         },
         {
           "addr": "0x700c0",
-          "decl": "void TIFFWriteEncodedStrip(void);",
-          "ported": false,
+          "decl": "int TIFFWriteEncodedStrip(void *tif, unsigned int strip_count, void *data, int size_count);",
+          "ported": true,
           "name": "TIFFWriteEncodedStrip"
         },
         {
@@ -38797,8 +38797,8 @@
         },
         {
           "addr": "0x70260",
-          "decl": "void TIFFWriteEncodedTile(void);",
-          "ported": false,
+          "decl": "int TIFFWriteEncodedTile(void *tif, unsigned int tile_count, void *data, int size_count);",
+          "ported": true,
           "name": "TIFFWriteEncodedTile"
         },
         {
@@ -38968,8 +38968,8 @@
         },
         {
           "addr": "0x73a80",
-          "decl": "void FUN_00073a80(void);",
-          "ported": false,
+          "decl": "void FUN_00073a80(short face@<di>);",
+          "ported": true,
           "name": "FUN_00073a80"
         },
         {
