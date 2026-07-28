@@ -992,67 +992,31 @@ void FUN_0006ccf0(void)
 #endif
 
 
-/* FUN_0006cd40 (0x6cd40) — XBE naked draft (batch 374). */
-#if defined(__clang__)
-static void (*const b6cd40_c6cb00)(void) = (void *)FUN_0006cb00;
-
-__attribute__((naked, noinline))
-void FUN_0006cd40(void)
+/* FUN_0006cd40 (0x6cd40) — Capstone lift: LZW decode then post-decode walk. */
+int FUN_0006cd40(void *tif, unsigned char *buf, int cc, int arg3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x120(%%eax), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6cb00]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0006cd40_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006cd40_1:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jle .LFUN_0006cd40_3\n\t"
-      "movzwl 0xa(%%esi), %%eax\n\t"
-      ".LFUN_0006cd40_2:\n\t"
-      "movzwl 0x8(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *0xc(%%esi)\n\t"
-      "movzwl 0xa(%%esi), %%eax\n\t"
-      "subl %%eax, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl %%eax, %%ebx\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jg .LFUN_0006cd40_2\n\t"
-      ".LFUN_0006cd40_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6cb00] "m"(b6cd40_c6cb00)
-      : "memory");
+  unsigned char *sp;
+  int r;
+  unsigned short step;
+  void (*post)(unsigned char *, unsigned int, unsigned int);
+
+  sp = *(unsigned char **)((char *)tif + 0x120);
+  r = ((int (*)(void *, unsigned char *, int, int))FUN_0006cb00)(tif, buf, cc,
+                                                                arg3);
+  if (r == 0)
+    return r;
+  if (cc > 0) {
+    step = *(unsigned short *)(sp + 0xa);
+    do {
+      post = *(void (**)(unsigned char *, unsigned int, unsigned int))(sp + 0xc);
+      post(buf, (unsigned int)step, (unsigned int)*(unsigned short *)(sp + 8));
+      step = *(unsigned short *)(sp + 0xa);
+      cc -= (int)step;
+      buf += step;
+    } while (cc > 0);
+  }
+  return 1;
 }
-#else
-#error "FUN_0006cd40: clang naked draft required"
-#endif
 
 
 /* FUN_0006cda0 (0x6cda0) — readable C lift. */

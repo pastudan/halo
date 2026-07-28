@@ -1,0 +1,10 @@
+{
+  "description": "LZW post-decode wrapper: stub cb00 success; cc=0 skips post walk",
+  "regions": {},
+  "arg_overrides": {
+    "cc": 0
+  },
+  "stub_returns": {
+    "fun_0006cb00": 1
+  }
+}

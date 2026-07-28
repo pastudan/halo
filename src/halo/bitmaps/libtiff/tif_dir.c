@@ -775,105 +775,61 @@ int FUN_00066900(void *out, void *obj)
   return ((int (*)(void *))FUN_00066550)(out);
 }
 
-/* FUN_00066920 (0x66920) — XBE naked draft (batch 368). */
-#if defined(__clang__)
-static void * (*const b66920_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
-static void (*const b66920_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b66920_c66550)(void) = (void *)FUN_00066550;
-static void (*const b66920_c666a0)(void) = (void *)FUN_000666a0;
-static void (*const b66920_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
-
-__attribute__((naked, noinline))
-void FUN_00066920(void)
+/* FUN_00066920 (0x66920) — Capstone lift: alloc+fetch TIFF dir values.
+ * ABI: tif, entry, out_ptrs on stack. */
+int FUN_00066920(void *tif, void *entry, void *out_ptrs)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movzwl 0x2(%%esi), %%eax\n\t"
-      "movl 0x2ca024(,%%eax,4), %%eax\n\t"
-      "imull 0x4(%%esi), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x60\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl $0x25faec\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_00066920_1\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "pushl $0x25fbc0\n\t"
-      "pushl $0x25fae0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00066920_1:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c66550]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00066920_3\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jbe .LFUN_00066920_3\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      ".LFUN_00066920_2:\n\t"
-      "movl 0x4(%%edi,%%ebx,8), %%ecx\n\t"
-      "movl (%%edi,%%ebx,8), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c666a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_00066920_3\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "incl %%ebx\n\t"
-      "addl $4, %%esi\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jb .LFUN_00066920_2\n\t"
-      ".LFUN_00066920_3:\n\t"
-      "pushl $0x345\n\t"
-      "pushl $0x25faec\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8ef70]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ee60] "m"(b66920_c8ee60), [c68a30] "m"(b66920_c68a30), [c66550] "m"(b66920_c66550), [c666a0] "m"(b66920_c666a0), [c8ef70] "m"(b66920_c8ef70)
-      : "memory");
-}
+  unsigned int type;
+  unsigned int count;
+  unsigned int nbytes;
+  void *buf;
+  int status;
+  unsigned int i;
+  unsigned int *type_sizes = (unsigned int *)0x002ca024;
+  unsigned int *pairs;
+  unsigned int *outs;
+
+  type = *(unsigned short *)((char *)entry + 2);
+  count = *(unsigned int *)((char *)entry + 4);
+  nbytes = type_sizes[type] * count;
+  status = 0;
+  buf = debug_malloc(nbytes, 0, (const char *)0x0025faec, 0x60);
+  if (buf == 0) {
+    FUN_00068a30(*(void **)tif, (void *)0x0025fae0, (void *)0x0025fbc0);
+    return 0;
+  }
+
+  /* FUN_00066550(buf) with entry@esi, tif@ebx */
+  {
+    int got;
+#if defined(__clang__)
+    __asm__ __volatile__(
+        "pushl %[buf]\n\t"
+        "call _FUN_00066550\n\t"
+        "addl $4, %%esp"
+        : "=a"(got)
+        : [buf] "r"(buf), "S"(entry), "b"(tif)
+        : "memory", "ecx", "edx");
 #else
-#error "FUN_00066920: clang naked draft required"
+    got = FUN_00066550(buf, entry, tif);
 #endif
+    if (got != 0) {
+      pairs = (unsigned int *)buf;
+      outs = (unsigned int *)out_ptrs;
+      for (i = 0; i < count; i++) {
+        status = FUN_000666a0(tif, (int)pairs[i * 2], (int)pairs[i * 2 + 1],
+                              (unsigned short *)entry, (float *)outs);
+        if (status == 0)
+          break;
+        outs += 1;
+      }
+    }
+  }
+
+  debug_free(buf, (const char *)0x0025faec, 0x345);
+  return status;
+}
+
 
 
 /* FUN_000669f0 (0x669f0) — readable C lift (restored pre-naked). */
@@ -899,7 +855,7 @@ void FUN_000669f0(void)
   /* test eax, eax -> jne 0x66b49 */
   ((void(*)(void))FUN_000663f0)();
   /* test edi, edi -> je 0x66ae1 */
-  FUN_00066920();
+  ((int (*)(void *, void *, void *))FUN_00066920)(0, 0, 0);
   /* test eax, eax -> jne 0x66b49 */
   ((void(*)(void))FUN_000663f0)();
   /* test edi, edi -> je 0x66b0e */

@@ -37913,8 +37913,8 @@
         },
         {
           "addr": "0x66920",
-          "decl": "void FUN_00066920(void);",
-          "ported": false,
+          "decl": "int FUN_00066920(void *tif, void *entry, void *out_ptrs);",
+          "ported": true,
           "name": "FUN_00066920"
         },
         {
@@ -38373,8 +38373,8 @@
         },
         {
           "addr": "0x6cd40",
-          "decl": "void FUN_0006cd40(void);",
-          "ported": false,
+          "decl": "int FUN_0006cd40(void *tif, unsigned char *buf, int cc, int arg3);",
+          "ported": true,
           "name": "FUN_0006cd40"
         },
         {
