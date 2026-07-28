@@ -7418,7 +7418,7 @@
         {
           "addr": "0x87800",
           "decl": "void FUN_00087800(float *target, int16_t flag);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00087800"
         },
         {

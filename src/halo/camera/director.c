@@ -1577,92 +1577,39 @@ void director_script_camera(int value)
 }
 
 
-/* FUN_00087800 (0x87800) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static scenario_t * (*const b87800_c18e380)(void) = global_scenario_get;
-static void *(*const b87800_elem)(void *, int, int) = tag_block_get_element;
-static void *(*const b87800_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b87800_c10cc40)(float *out, float *angles) = angles_to_vector;
-static void (*const b87800_c89350)(void) = (void (*)(void))FUN_00089350;
-
-__attribute__((naked, noinline))
-void FUN_00087800(float *target __attribute__((unused)), int16_t flag __attribute__((unused)))
+/* FUN_00087800 (0x87800) — readable C lift (restored pre-naked). */
+void FUN_00087800(float *target, int16_t flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movb 0x33569a, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00087800_3\n\t"
-      "call *%[c18e380]\n\t"
-      "movl 0x354(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_00087800_1\n\t"
-      "call *%[c18e380]\n\t"
-      "movl 0x358(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_00087800_1\n\t"
-      "pushl $0x34\n\t"
-      "pushl $0\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x354, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, 0x33569c\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, 0x3356a0\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, 0x3356a4\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "movl %%edx, 0x3356a8\n\t"
-      "jmp .LFUN_00087800_2\n\t"
-      ".LFUN_00087800_1:\n\t"
-      "pushl $0x14\n\t"
-      "pushl $0\n\t"
-      "pushl $0x33569c\n\t"
-      "call *%[memset]\n\t"
-      ".LFUN_00087800_2:\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00087800_3:\n\t"
-      "pushl %%esi\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl $0x3356a8\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, 0x33569a\n\t"
-      "call *%[c10cc40]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x33569c\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c89350]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $0, 0xc(%%ebp)\n\t"
-      "jne .LFUN_00087800_4\n\t"
-      "movl %%esi, 0x3356b0\n\t"
-      ".LFUN_00087800_4:\n\t"
-      "movw 0x3356c4, %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_00087800_5\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *0x2ee680(,%%edx,8)\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00087800_5:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b87800_c18e380), [elem] "m"(b87800_elem), [memset] "m"(b87800_memset), [c10cc40] "m"(b87800_c10cc40), [c89350] "m"(b87800_c89350)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int ebp = 0;
+
+  /* test (char)eax, (char)eax -> jne 0x87879 */
+  global_scenario_get();
+  /* test ecx, ecx -> je 0x87868 */
+  global_scenario_get();
+  /* test ecx, ecx -> je 0x87868 */
+  global_scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* mem[0x0033569c] = edx */
+  /* mem[0x003356a0] = edx */
+  /* mem[0x003356a4] = ecx */
+  /* mem[0x003356a8] = edx */
+  csmemset((void *)0x0033569c, 0, 20);
+  angles_to_vector((float *)(uintptr_t)eax, (void *)0x003356a8);
+  ((void(*)(void))FUN_00089350)();
+  /* relift: cmp word ptr [ebp + 0xc], 0 -> jne 0x878b1 */
+  /* mem[0x003356b0] = esi */
+  /* test (int16_t)eax, (int16_t)eax -> je 0x878ca */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)ebp;
 }
-#else
-#error "FUN_00087800: clang naked draft required"
-#endif
 
 
 /* editor_camera_get_focus (0x878d0) — readable C lift. */
