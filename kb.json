@@ -12236,7 +12236,7 @@
         {
           "addr": "0xc5310",
           "decl": "int FUN_000c5310(int parent_handle, int sibling_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000c5310"
         },
         {
@@ -12739,7 +12739,7 @@
         {
           "addr": "0xca160",
           "decl": "void FUN_000ca160(int16_t scenario_index, char teleport_flag, char facing_flag, int object_handle@<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ca160"
         },
         {

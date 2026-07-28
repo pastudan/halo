@@ -4068,250 +4068,93 @@ void FUN_000c4f90(void)
   __attribute__((musttail)) return hs_runtime_initialize_for_new_map();
 }
 
-/* FUN_000c5310 (0xc5310) — XBE naked draft (batch 112). */
-#if defined(__clang__)
-static int (*const bc5310_c119610)(data_t *data) = data_new_at_index;
-static void *(*const bc5310_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const bc5310_cc5310)(int parent_handle, int sibling_handle) = FUN_000c5310;
-
-__attribute__((naked, noinline))
-int FUN_000c5310(int parent_handle __attribute__((unused)), int sibling_handle __attribute__((unused)))
+/* FUN_000c5310 (0xc5310) — readable C lift (restored pre-naked). */
+int FUN_000c5310(int parent_handle, int sibling_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x18, %%esp\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "movl %%esi, -0x18(%%ebp)\n\t"
-      "je .LFUN_000c5310_6\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%ecx, 0xc(%%ebx)\n\t"
-      "movw $0, 0x6(%%ebx)\n\t"
-      "movl $0xffffffff, 0x8(%%ebx)\n\t"
-      "jne .LFUN_000c5310_1\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movw $1, 0x6(%%ebx)\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x4(%%eax), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%ax, 0x2(%%ebx)\n\t"
-      "movw %%ax, 0x4(%%ebx)\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl $0, 0x10(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c5310_1:\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x6(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%cl\n\t"
-      "pushl %%edi\n\t"
-      "jne .LFUN_000c5310_5\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%esi\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%edx, %%edx\n\t"
-      "sete %%cl\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .LFUN_000c5310_3\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%esi, -0x10(%%ebp)\n\t"
-      "call *%[c119610]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_000c5310_2\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000c5310_2\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cc5310]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "addl $0x28, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "je .LFUN_000c5310_4\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x10(%%ebx)\n\t"
-      "movl $2, %%eax\n\t"
-      "movw %%ax, 0x2(%%ebx)\n\t"
-      "movw %%ax, 0x2(%%edi)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movw $1, 0x6(%%edi)\n\t"
-      "movl %%eax, 0x8(%%edi)\n\t"
-      "movl $0xffffffff, 0xc(%%edi)\n\t"
-      "movw $2, 0x4(%%edi)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edx, 0x10(%%edi)\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      "movl %%edi, 0x10(%%ecx)\n\t"
-      "movw %%dx, 0x6(%%ecx)\n\t"
-      "movl 0xc(%%ebx), %%edi\n\t"
-      "movl %%edi, 0xc(%%ecx)\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, 0x10(%%esi)\n\t"
-      "movw %%dx, 0x2(%%esi)\n\t"
-      "movw $1, 0x6(%%esi)\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, 0x8(%%esi)\n\t"
-      "movl $0xffffffff, 0xc(%%esi)\n\t"
-      "movw $2, 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x8(%%eax)\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c5310_2:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl $0x27bca4, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x46b700\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c5310_3:\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x27bc7c, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edx, 0x46b700\n\t"
-      ".LFUN_000c5310_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c5310_5:\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x27bc44, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000c5310_6:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x27bca4, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c119610] "m"(bc5310_c119610), [dget] "m"(bc5310_dget), [cc5310] "m"(bc5310_cc5310)
-      : "memory");
+  int new_handle;
+  char *node;
+  char *parent;
+  char *sibling;
+  int child_a;
+  int child_b;
+  char *node_a;
+  char *node_b;
+  char *sib_node;
+  char *parent2;
+  int tmp;
+  int list_head;
+  char *list_node;
+  char *list_elem;
+
+  new_handle = data_new_at_index(*(data_t **)0x5aa6c8);
+  if (new_handle == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27bca4;
+    *(int *)0x46b700 =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, parent_handle) + 0xc);
+    return new_handle;
+  }
+  node = (char *)datum_get(*(data_t **)0x5aa6c8, new_handle);
+  parent = (char *)datum_get(*(data_t **)0x5aa6c8, parent_handle);
+  *(int *)(node + 0xc) = *(int *)(parent + 0xc);
+  *(int16_t *)(node + 6) = 0;
+  *(int *)(node + 8) = -1;
+  if (sibling_handle == -1) {
+    *(int16_t *)(node + 6) = 1;
+    parent = (char *)datum_get(*(data_t **)0x5aa6c8, parent_handle);
+    *(int16_t *)(node + 2) = *(int16_t *)(parent + 4);
+    *(int16_t *)(node + 4) = *(int16_t *)(parent + 4);
+    *(int *)(node + 0x10) = 0;
+    return new_handle;
+  }
+  sibling = (char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle);
+  if ((*(uint8_t *)(sibling + 6) & 1) != 0) {
+    *(const char **)0x46b6fc = (const char *)0x27bc44;
+    *(int *)0x46b700 =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle) + 0xc);
+    return -1;
+  }
+  list_head = *(int *)(sibling + 0x10);
+  list_node = (char *)datum_get(*(data_t **)0x5aa6c8, list_head);
+  list_elem = list_node; /* kept for later writeback */
+  (void)list_elem;
+  /* Original sete/cmp -1 is unreachable; proceed with allocation. */
+  child_a = data_new_at_index(*(data_t **)0x5aa6c8);
+  child_b = data_new_at_index(*(data_t **)0x5aa6c8);
+  if (child_a == -1 || child_b == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27bca4;
+    *(int *)0x46b700 =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, parent_handle) + 0xc);
+    return -1;
+  }
+  node_a = (char *)datum_get(*(data_t **)0x5aa6c8, child_a);
+  node_b = (char *)datum_get(*(data_t **)0x5aa6c8, child_b);
+  sib_node = (char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle);
+  parent2 = (char *)datum_get(*(data_t **)0x5aa6c8, sibling_handle);
+  tmp = FUN_000c5310(parent_handle, *(int *)(parent2 + 8));
+  *(int *)(node_a + 8) = tmp;
+  if (tmp == -1)
+    return -1;
+  *(int *)(node + 0x10) = sibling_handle;
+  *(int16_t *)(node + 2) = 2;
+  *(int16_t *)(sib_node + 2) = 2;
+  *(int16_t *)(sib_node + 6) = 1;
+  *(int *)(sib_node + 8) = list_head;
+  *(int *)(sib_node + 0xc) = -1;
+  *(int16_t *)(sib_node + 4) = 2;
+  *(int *)(sib_node + 0x10) = 0;
+  *(int *)(node_a + 0x10) = child_b;
+  *(int16_t *)(node_a + 6) = 0;
+  *(int *)(node_a + 0xc) = *(int *)(node + 0xc);
+  *(int *)(node_b + 0x10) = 0;
+  *(int16_t *)(node_b + 2) = 0;
+  *(int16_t *)(node_b + 6) = 1;
+  *(int *)(node_b + 8) =
+    *(int *)((char *)datum_get(*(data_t **)0x5aa6c8, list_head) + 8);
+  *(int *)(node_b + 0xc) = -1;
+  *(int16_t *)(node_b + 4) = 2;
+  *(int *)(list_node + 8) = child_a;
+  return new_handle;
 }
-#else
-#error "FUN_000c5310: clang naked draft required"
-#endif
 
 
 /* FUN_000c55d0 (0xc55d0) — readable C lift from XBE leaf.
