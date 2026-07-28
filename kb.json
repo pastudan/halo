@@ -38561,8 +38561,8 @@
         },
         {
           "addr": "0x6e930",
-          "decl": "void FUN_0006e930(void);",
-          "ported": false,
+          "decl": "int FUN_0006e930(void *tif@<ecx>, unsigned int strip@<esi>);",
+          "ported": true,
           "name": "FUN_0006e930"
         },
         {

@@ -188,44 +188,26 @@ int FUN_0006e870(void *tif, void *existing, unsigned size)
 }
 
 
-/* FUN_0006e930 (0x6e930) — XBE naked draft (batch 321). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006e930(void)
+/* FUN_0006e930 (0x6e930) — Capstone lift: select strip buffer setup.
+ * ABI: tif@<ecx>, strip@<esi>. */
+int FUN_0006e930(void *tif /*@<ecx>*/, unsigned int strip /*@<esi>*/)
 {
-  __asm__ volatile(
-      "xorl %%edx, %%edx\n\t"
-      "movl %%esi, 0xdc(%%ecx)\n\t"
-      "movl %%esi, %%eax\n\t"
-      "divl 0xb4(%%ecx)\n\t"
-      "movl 0x12c(%%ecx), %%eax\n\t"
-      "imull 0x48(%%ecx), %%edx\n\t"
-      "movl %%eax, 0x134(%%ecx)\n\t"
-      "movl %%edx, 0xd4(%%ecx)\n\t"
-      "movl 0xc0(%%ecx), %%edx\n\t"
-      "movl (%%edx,%%esi,4), %%eax\n\t"
-      "movl %%eax, 0x138(%%ecx)\n\t"
-      "movl 0xf0(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006e930_1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0006e930_1\n\t"
-      "ret\n\t"
-      ".LFUN_0006e930_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int rem;
+  unsigned int *offs;
+  int (*cb)(void *);
+
+  *(unsigned int *)((char *)tif + 0xdc) = strip;
+  rem = strip % *(unsigned int *)((char *)tif + 0xb4);
+  *(void **)((char *)tif + 0x134) = *(void **)((char *)tif + 0x12c);
+  *(unsigned int *)((char *)tif + 0xd4) =
+      rem * *(unsigned int *)((char *)tif + 0x48);
+  offs = *(unsigned int **)((char *)tif + 0xc0);
+  *(unsigned int *)((char *)tif + 0x138) = offs[strip];
+  cb = *(int (**)(void *))((char *)tif + 0xf0);
+  if (cb != 0 && cb(tif) == 0)
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_0006e930: clang naked draft required"
-#endif
 
 
 /* FUN_0006e980 (0x6e980) — XBE naked draft (batch 335). */
@@ -2992,6 +2974,7 @@ void FUN_00070460(void)
 #else
 #error "FUN_00070460: clang naked draft required"
 #endif
+
 
 
 /* FUN_000704c0 (0x704c0) — readable C lift. */
