@@ -3242,16 +3242,16 @@ void FUN_000f04c0(void *widget)
   FUN_000f5650();
   /* test (char)eax, (char)eax -> je 0xf0608 */
   /* relift: cmp word ptr [0x46ccd0], (int16_t)ebx -> je 0xf05f2 */
-  player_ui_set_single_player_local_player_controller();
+  ((void (*)(void))player_ui_set_single_player_local_player_controller)();
   FUN_001c1720();
   /* cmp esi, -1 -> jne 0xf056a */
-  saved_game_file_get_useable_untitled_profile_name();
+  ((void (*)(void))saved_game_file_get_useable_untitled_profile_name)();
   ustrncpy((wchar_t *)0x0046ccd0, (wchar_t *)(uintptr_t)eax, 11);
   FUN_001c1720();
   /* cmp esi, -1 -> je 0xf05eb */
-  player_profile_new();
+  ((char (*)(void))player_profile_new)();
   /* test (char)eax, (char)eax -> je 0xf05b0 */
-  player_ui_set_active_player_profile();
+  ((void (*)(void))player_ui_set_active_player_profile)();
   main_set_map_name((char *)(uintptr_t)ecx);
   main_defer_map_map_change();
   error(0, (char *)0x0028886c);
