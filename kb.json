@@ -33930,7 +33930,7 @@
       "functions": [
         {
           "addr": "0x1d21f2",
-          "decl": "int __stdcall FUN_001d21f2(void *a, void *b, unsigned int flag);",
+          "decl": "void FUN_001d21f2(void);",
           "ported": false,
           "name": "FUN_001d21f2"
         },
