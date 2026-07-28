@@ -328,295 +328,157 @@ struct virtual_keyboard_event {
                     button id (low byte) + pressed flag (byte +1) */
 };
 
-/* virtual_keyboard_process_input (0xf63f0) — XBE naked draft (batch 61). */
-#if defined(__clang__)
-static unsigned int (*const bf63f0_c8e370)(void) = system_milliseconds;
-static bool (*const bf63f0_cdc250)(void *event_data, int16_t player_index) = event_manager_get_next_event;
-static void (*const bf63f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bf63f0_exitfn)(int) = system_exit;
-static void *(*const bf63f0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const bf63f0_ce5ab0)(int16_t sound_selector) = ui_play_audio_feedback_sound;
-static void (*const bf63f0_cf5f30)(void) = FUN_000f5f30;
-static char (*const bf63f0_cf5660)(void) = FUN_000f5660;
-static char (*const bf63f0_cf56b0)(void) = FUN_000f56b0;
-static char (*const bf63f0_cf5700)(void) = FUN_000f5700;
-static char (*const bf63f0_cf5750)(void) = FUN_000f5750;
-static char (*const bf63f0_cf5fb0)(void) = FUN_000f5fb0;
-static char (*const bf63f0_cf57a0)(void) = FUN_000f57a0;
+/* virtual_keyboard_process_input (0xf63f0) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
+
 void virtual_keyboard_process_input(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e370]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[cdc250]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lvirtual_keyboard_process_input_34\n\t"
-      "jmp .Lvirtual_keyboard_process_input_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lvirtual_keyboard_process_input_1:\n\t"
-      "movswl -0x8(%%ebp), %%eax\n\t"
-      "decl %%eax\n\t"
-      "je .Lvirtual_keyboard_process_input_20\n\t"
-      "movl $2, %%edx\n\t"
-      "subl %%edx, %%eax\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movzbl %%al, %%ecx\n\t"
-      "cmpl $0xd, %%ecx\n\t"
-      "ja .Lvirtual_keyboard_process_input_25\n\t"
-      "jmp *.Lvirtual_keyboard_process_input_jt0(,%%ecx,4)\n\t"
-      ".Lvirtual_keyboard_process_input_2:\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      "movl $4, %%esi\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_3:\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      "movl $5, %%esi\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_4:\n\t"
-      "cmpw %%dx, 0x46cefe\n\t"
-      "jne .Lvirtual_keyboard_process_input_5\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "subl 0x46cf58, %%ecx\n\t"
-      "cmpl $0xfa, %%ecx\n\t"
-      "jae .Lvirtual_keyboard_process_input_5\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_5:\n\t"
-      "movl %%edx, %%esi\n\t"
-      "movl %%edi, 0x46cf58\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_6:\n\t"
-      "cmpw $0, 0x46cefe\n\t"
-      "jne .Lvirtual_keyboard_process_input_7\n\t"
-      "movl 0x46cf58, %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "cmpl $0xfa, %%edx\n\t"
-      "jae .Lvirtual_keyboard_process_input_7\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_7:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%edi, 0x46cf58\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_8:\n\t"
-      "cmpw $3, 0x46cefe\n\t"
-      "jne .Lvirtual_keyboard_process_input_9\n\t"
-      "movl 0x46cf58, %%edx\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "cmpl $0xfa, %%ecx\n\t"
-      "jae .Lvirtual_keyboard_process_input_9\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_9:\n\t"
-      "movl $3, %%esi\n\t"
-      "movl %%edi, 0x46cf58\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_10:\n\t"
-      "cmpw $1, 0x46cefe\n\t"
-      "jne .Lvirtual_keyboard_process_input_11\n\t"
-      "movl 0x46cf58, %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "cmpl $0xfa, %%edx\n\t"
-      "jae .Lvirtual_keyboard_process_input_11\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_11:\n\t"
-      "movl %%edi, 0x46cf58\n\t"
-      "jmp .Lvirtual_keyboard_process_input_24\n\t"
-      ".Lvirtual_keyboard_process_input_12:\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%ax, 0x46cef8\n\t"
-      "movw %%ax, 0x46cefa\n\t"
-      "movl $4, %%esi\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_13:\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      "movb 0x46cf07, %%al\n\t"
-      "cmpb %%ah, %%al\n\t"
-      "jne .Lvirtual_keyboard_process_input_15\n\t"
-      "cmpw $0, 0x46cefc\n\t"
-      "ja .Lvirtual_keyboard_process_input_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x27a\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28aa58\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lvirtual_keyboard_process_input_14:\n\t"
-      "movzwl 0x46cefc, %%eax\n\t"
-      "movl 0x46cf08, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x46cf08, %%edx\n\t"
-      "pushl $1\n\t"
-      "movl %%edx, 0x46cf0c\n\t"
-      "movb $0, 0x46cf07\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_15:\n\t"
-      "call *%[cf5f30]\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_16:\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      "movl 0x46cf0c, %%eax\n\t"
-      "cmpl 0x46cf08, %%eax\n\t"
-      "movb $0, 0x46cf07\n\t"
-      "jbe .Lvirtual_keyboard_process_input_18\n\t"
-      "subl %%edx, %%eax\n\t"
-      ".Lvirtual_keyboard_process_input_17:\n\t"
-      "movl %%eax, 0x46cf0c\n\t"
-      ".Lvirtual_keyboard_process_input_18:\n\t"
-      "pushl $1\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_19:\n\t"
-      "cmpb $1, %%ah\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      "movl 0x46cf0c, %%ecx\n\t"
-      "movb $0, 0x46cf07\n\t"
-      "cmpw $0, (%%ecx)\n\t"
-      "je .Lvirtual_keyboard_process_input_18\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "addl %%edx, %%eax\n\t"
-      "jmp .Lvirtual_keyboard_process_input_17\n\t"
-      ".Lvirtual_keyboard_process_input_20:\n\t"
-      "movw -0x2(%%ebp), %%ax\n\t"
-      "cmpw $0x7fff, %%ax\n\t"
-      "jne .Lvirtual_keyboard_process_input_21\n\t"
-      "movl $2, %%esi\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_21:\n\t"
-      "cmpw $0x8000, %%ax\n\t"
-      "jne .Lvirtual_keyboard_process_input_22\n\t"
-      "movl $3, %%esi\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_22:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpw $0x8000, %%ax\n\t"
-      "jne .Lvirtual_keyboard_process_input_23\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "jmp .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_23:\n\t"
-      "cmpw $0x7fff, %%ax\n\t"
-      "jne .Lvirtual_keyboard_process_input_25\n\t"
-      ".Lvirtual_keyboard_process_input_24:\n\t"
-      "movl $1, %%esi\n\t"
-      ".Lvirtual_keyboard_process_input_25:\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cdc250]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lvirtual_keyboard_process_input_1\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lvirtual_keyboard_process_input_34\n\t"
-      "movswl 0x46cef8, %%eax\n\t"
-      "movswl 0x46cefa, %%ecx\n\t"
-      "imull $0xb, %%eax, %%eax\n\t"
-      "cmpl $5, %%esi\n\t"
-      "movsbw 0x28a790(%%eax,%%ecx,1), %%dx\n\t"
-      "movw %%dx, 0x46cf00\n\t"
-      "ja .Lvirtual_keyboard_process_input_33\n\t"
-      "jmp *.Lvirtual_keyboard_process_input_jt1(,%%esi,4)\n\t"
-      ".Lvirtual_keyboard_process_input_26:\n\t"
-      "call *%[cf5660]\n\t"
-      "jmp .Lvirtual_keyboard_process_input_32\n\t"
-      ".Lvirtual_keyboard_process_input_27:\n\t"
-      "call *%[cf56b0]\n\t"
-      "jmp .Lvirtual_keyboard_process_input_32\n\t"
-      ".Lvirtual_keyboard_process_input_28:\n\t"
-      "call *%[cf5700]\n\t"
-      "jmp .Lvirtual_keyboard_process_input_32\n\t"
-      ".Lvirtual_keyboard_process_input_29:\n\t"
-      "call *%[cf5750]\n\t"
-      "jmp .Lvirtual_keyboard_process_input_32\n\t"
-      ".Lvirtual_keyboard_process_input_30:\n\t"
-      "call *%[cf5fb0]\n\t"
-      "jmp .Lvirtual_keyboard_process_input_32\n\t"
-      ".Lvirtual_keyboard_process_input_31:\n\t"
-      "call *%[cf57a0]\n\t"
-      ".Lvirtual_keyboard_process_input_32:\n\t"
-      "movb %%al, %%bl\n\t"
-      ".Lvirtual_keyboard_process_input_33:\n\t"
-      "cmpb $1, %%bl\n\t"
-      "jne .Lvirtual_keyboard_process_input_34\n\t"
-      "movl %%edi, 0x46cf10\n\t"
-      "movw %%si, 0x46cefe\n\t"
-      ".Lvirtual_keyboard_process_input_34:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lvirtual_keyboard_process_input_jt0:\n\t"
-      ".long .Lvirtual_keyboard_process_input_2\n\t"
-      ".long .Lvirtual_keyboard_process_input_3\n\t"
-      ".long .Lvirtual_keyboard_process_input_13\n\t"
-      ".long .Lvirtual_keyboard_process_input_25\n\t"
-      ".long .Lvirtual_keyboard_process_input_25\n\t"
-      ".long .Lvirtual_keyboard_process_input_25\n\t"
-      ".long .Lvirtual_keyboard_process_input_16\n\t"
-      ".long .Lvirtual_keyboard_process_input_19\n\t"
-      ".long .Lvirtual_keyboard_process_input_4\n\t"
-      ".long .Lvirtual_keyboard_process_input_8\n\t"
-      ".long .Lvirtual_keyboard_process_input_6\n\t"
-      ".long .Lvirtual_keyboard_process_input_10\n\t"
-      ".long .Lvirtual_keyboard_process_input_12\n\t"
-      ".long .Lvirtual_keyboard_process_input_3\n\t"
-      ".text\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lvirtual_keyboard_process_input_jt1:\n\t"
-      ".long .Lvirtual_keyboard_process_input_26\n\t"
-      ".long .Lvirtual_keyboard_process_input_27\n\t"
-      ".long .Lvirtual_keyboard_process_input_28\n\t"
-      ".long .Lvirtual_keyboard_process_input_29\n\t"
-      ".long .Lvirtual_keyboard_process_input_30\n\t"
-      ".long .Lvirtual_keyboard_process_input_31\n\t"
-      ".text\n\t"
-      :
-      : [c8e370] "m"(bf63f0_c8e370), [cdc250] "m"(bf63f0_cdc250), [assert] "m"(bf63f0_assert), [exitfn] "m"(bf63f0_exitfn), [memset] "m"(bf63f0_memset), [ce5ab0] "m"(bf63f0_ce5ab0), [cf5f30] "m"(bf63f0_cf5f30), [cf5660] "m"(bf63f0_cf5660), [cf56b0] "m"(bf63f0_cf56b0), [cf5700] "m"(bf63f0_cf5700), [cf5750] "m"(bf63f0_cf5750), [cf5fb0] "m"(bf63f0_cf5fb0), [cf57a0] "m"(bf63f0_cf57a0)
-      : "memory");
+  struct virtual_keyboard_event event;
+  int now_ms;
+  int action; /* selected move/action code, -1 = none */
+  int timer_tmp; /* value stored back into repeat_timer via the shared tail */
+  char moved; /* nonzero once a handler accepted the move */
+  char pressed; /* button pressed-flag byte */
+
+  now_ms = system_milliseconds();
+  action = -1;
+  moved = 0;
+
+  if (!event_manager_get_next_event(&event, -1))
+    return;
+
+  do {
+    if (event.type == 1) {
+      /* analog stick: cardinal only at full deflection */
+      if ((short)(event.data >> 16) == 0x7fff) {
+        action = 2;
+      } else if ((short)(event.data >> 16) == -0x8000) {
+        action = 3;
+      } else if ((short)event.data == -0x8000) {
+        action = 0;
+      } else {
+        timer_tmp = *(int *)0x46cf58;
+        if ((short)event.data == 0x7fff)
+          goto set_dir_right;
+      }
+    } else if (event.type == 3) {
+      /* button: high byte = pressed flag, low byte = button id */
+      pressed = (char)(event.data >> 8);
+      switch (event.data & 0xff) {
+      case 0: /* A: select current character */
+        if (pressed == 1)
+          action = 4;
+        break;
+      case 1: /* B / start: back */
+      case 0xd:
+        if (pressed == 1)
+          action = 5;
+        break;
+      case 2: /* X: accept / clear */
+        if (pressed == 1) {
+          if (*(unsigned char *)0x46cf07 == 1) {
+            if (*(short *)0x46cefc == 0)
+              display_assert("virtual_keyboard_globals.buffer_size>0",
+                             "c:\\halo\\SOURCE\\interface\\virtual_keyboard.c",
+                             0x27a, true);
+            csmemset(*(char **)0x46cf08, 0, (unsigned int)*(short *)0x46cefc);
+            *(char **)0x46cf0c = *(char **)0x46cf08;
+            *(unsigned char *)0x46cf07 = 0;
+            ui_play_audio_feedback_sound(1);
+            moved = 1;
+          } else {
+            FUN_000f5f30();
+            moved = 1;
+          }
+        }
+        break;
+      case 6: /* cursor left */
+        if (pressed == 1) {
+          if (*(char **)0x46cf08 < *(char **)0x46cf0c)
+            *(char **)0x46cf0c -= 1;
+        cursor_moved:
+          *(unsigned char *)0x46cf07 = 0;
+          ui_play_audio_feedback_sound(1);
+          moved = 1;
+        }
+        break;
+      case 7: /* cursor right */
+        if (pressed == 1) {
+          if (**(char **)0x46cf0c != 0)
+            *(char **)0x46cf0c += 1;
+          goto cursor_moved;
+        }
+        break;
+      case 8: /* dpad up (auto-repeat gated) */
+        if (*(short *)0x46cefe != 2 ||
+            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
+          action = 2;
+          *(int *)0x46cf58 = now_ms;
+        }
+        break;
+      case 9: /* dpad down */
+        if (*(short *)0x46cefe != 3 ||
+            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
+          action = 3;
+          *(int *)0x46cf58 = now_ms;
+        }
+        break;
+      case 10: /* dpad left */
+        if (*(short *)0x46cefe != 0 ||
+            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
+          action = 0;
+          *(int *)0x46cf58 = now_ms;
+        }
+        break;
+      case 0xb: /* dpad right */
+        timer_tmp = now_ms;
+        if (*(short *)0x46cefe != 1 ||
+            0xf9 < (unsigned int)(now_ms - *(int *)0x46cf58) || pressed == 1) {
+        set_dir_right:
+          *(int *)0x46cf58 = timer_tmp;
+          action = 1;
+        }
+        break;
+      case 0xc: /* home / reset to origin */
+        if (pressed == 1) {
+          *(short *)0x46cef8 = 0;
+          *(short *)0x46cefa = 0;
+          action = 4;
+        }
+        break;
+      }
+    }
+  } while (event_manager_get_next_event(&event, -1));
+
+  if (action != -1) {
+    *(short *)0x46cf00 = (short)(char)((
+      char *)0x28a790)[(int)*(short *)0x46cefa + *(short *)0x46cef8 * 0xb];
+    switch (action) {
+    case 0:
+      moved = FUN_000f5660();
+      break;
+    case 1:
+      moved = FUN_000f56b0();
+      break;
+    case 2:
+      moved = FUN_000f5700();
+      break;
+    case 3:
+      moved = FUN_000f5750();
+      break;
+    case 4:
+      moved = FUN_000f5fb0();
+      break;
+    case 5:
+      moved = FUN_000f57a0();
+      break;
+    }
+    if (moved == 1) {
+      *(short *)0x46cefe = (short)action;
+      *(int *)0x46cf10 = now_ms;
+    }
+  }
 }
-#else
-#error "virtual_keyboard_process_input: clang naked draft required"
-#endif
 
 
 /* items_dispose_from_old_map (0xf6740) — readable C lift from XBE leaf. */
@@ -2676,557 +2538,168 @@ unsigned short FUN_000f5800(int16_t slot_index)
   return glyph;
 }
 
-/* FUN_000f5900 (0xf5900) — draw the item/profile name UI (font, bitmap, editable string). */
-#if defined(__clang__)
-static void (*const f5900_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const f5900_exitfn)(int) = system_exit;
-static void *(*const f5900_tag)(int, int) = tag_get;
-static void *(*const f5900_bmap)(int, short, short) = FUN_00077040;
-static void (*const f5900_drawbmp)(int, short *, short *, short *, int, int, int) = draw_bitmap_in_rect;
-static void (*const f5900_dsfont)(int, int, int, int, const void *) = draw_string_set_font;
-static int (*const f5900_u9d420)(int, int) = FUN_0019d420;
-static void (*const f5900_rdraw)(void *, short *, const void *, int, unsigned short *) = rasterizer_draw_string;
-static void (*const f5900_u9cdb0)(short *, void *, short *, short *) = FUN_0019cdb0;
-static unsigned int (*const f5900_msys)(void) = system_milliseconds;
-static void *(*const f5900_u9cff0)(void *, unsigned short) = FUN_0019cff0;
-static unsigned short (*const f5900_f5800)(short) = (void *)FUN_000f5800;
-
-__attribute__((naked, noinline))
+/* FUN_000f5900 (0xf5900) — readable C lift (restored pre-naked). */
 void FUN_000f5900(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x74, %%esp\n\t"
-      "movl $0x3f800000, -0x34(%%ebp)\n\t"
-      "movl -0x34(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, -0x44(%%ebp)\n\t"
-      "movl $0x3f666666, -0x28(%%ebp)\n\t"
-      "movl -0x28(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x3f666666, -0x30(%%ebp)\n\t"
-      "movl -0x30(%%ebp), %%ecx\n\t"
-      "movl $0x3f666666, -0x2c(%%ebp)\n\t"
-      "movl -0x2c(%%ebp), %%edx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%ecx, -0x40(%%ebp)\n\t"
-      "movl %%edx, -0x3c(%%ebp)\n\t"
-      "je .LFUN_000f5900_1\n\t"
-      "cmpl %%edi, 0xc(%%eax)\n\t"
-      "jne .LFUN_000f5900_2\n\t"
-      ".LFUN_000f5900_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x40b\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28a9d8\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5900_2:\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x666f6e74\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jne .LFUN_000f5900_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x40d\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28a9c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5900_3:\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "movl 0x1c(%%eax), %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "movl $0x280, %%ebx\n\t"
-      "je .LFUN_000f5900_5\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "movw %%si, -0x1c(%%ebp)\n\t"
-      "movw %%si, -0x1a(%%ebp)\n\t"
-      "movw $0x1e0, -0x18(%%ebp)\n\t"
-      "movw %%bx, -0x16(%%ebp)\n\t"
-      "call *%[bmap]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jne .LFUN_000f5900_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x415\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x263768\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5900_4:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[drawbmp]\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      ".LFUN_000f5900_5:\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "leal -0x44(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dsfont]\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "movl 0x2c(%%eax), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "je .LFUN_000f5900_6\n\t"
-      "movl 0x2c(%%eax), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x46cf04, %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[u9d420]\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movw $0x4e, -0x1c(%%ebp)\n\t"
-      "movw $0x72, -0x1a(%%ebp)\n\t"
-      "movw $0x6e, -0x18(%%ebp)\n\t"
-      "movw %%bx, -0x16(%%ebp)\n\t"
-      "call *%[rdraw]\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".LFUN_000f5900_6:\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $2\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dsfont]\n\t"
-      "movb 0x46cf07, %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpb $1, %%al\n\t"
-      "movw $0x76, -0x1c(%%ebp)\n\t"
-      "movw $0xdc, -0x1a(%%ebp)\n\t"
-      "movw $0x8f, -0x18(%%ebp)\n\t"
-      "movw $0x1a4, -0x16(%%ebp)\n\t"
-      "jne .LFUN_000f5900_7\n\t"
-      "movl 0x46cf14, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[bmap]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "je .LFUN_000f5900_7\n\t"
-      "movl 0x46cf08, %%ecx\n\t"
-      "leal -0x24(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[u9cdb0]\n\t"
-      "addw $-2, -0x12(%%ebp)\n\t"
-      "addw $2, -0xe(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x7f7f7f7f\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[drawbmp]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      ".LFUN_000f5900_7:\n\t"
-      "movl 0x46cf08, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[rdraw]\n\t"
-      "movb 0x46cf07, %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000f5900_12\n\t"
-      "cmpl $-1, 0x46cf14\n\t"
-      "je .LFUN_000f5900_12\n\t"
-      "call *%[msys]\n\t"
-      "movl %%eax, %%edx\n\t"
-      "movl $0x10624dd3, %%eax\n\t"
-      "mull %%edx\n\t"
-      "shrl $6, %%edx\n\t"
-      "testb $1, %%dl\n\t"
-      "je .LFUN_000f5900_12\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x46cf08, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%ecx), %%ax\n\t"
-      "addw 0x4(%%ecx), %%ax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl 0x46cf14, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[bmap]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "je .LFUN_000f5900_12\n\t"
-      "cmpl %%esi, %%ebx\n\t"
-      "je .LFUN_000f5900_10\n\t"
-      ".LFUN_000f5900_8:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%ebx), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[u9cff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f5900_11\n\t"
-      "cmpl 0x46cf0c, %%ebx\n\t"
-      "jae .LFUN_000f5900_9\n\t"
-      "movw 0x2(%%eax), %%cx\n\t"
-      "addw %%cx, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      ".LFUN_000f5900_9:\n\t"
-      "addw 0x2(%%eax), %%si\n\t"
-      "addl $2, %%ebx\n\t"
-      "jne .LFUN_000f5900_8\n\t"
-      "jmp .LFUN_000f5900_11\n\t"
-      ".LFUN_000f5900_10:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movw -0xc(%%ebp), %%si\n\t"
-      ".LFUN_000f5900_11:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "sarw $1, %%si\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0x24(%%ebp), %%ecx\n\t"
-      "subl %%esi, %%edi\n\t"
-      "addl $0x140, %%edi\n\t"
-      "movw %%di, -0x22(%%ebp)\n\t"
-      "movl -0x22(%%ebp), %%edx\n\t"
-      "incl %%edx\n\t"
-      "movw %%dx, -0x1e(%%ebp)\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x78, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "movw $0x78, -0x24(%%ebp)\n\t"
-      "movw %%ax, -0x20(%%ebp)\n\t"
-      "call *%[drawbmp]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_000f5900_12:\n\t"
-      "movl 0x46cef4, %%ecx\n\t"
-      "movl 0xc(%%ecx), %%edx\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl $2\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dsfont]\n\t"
-      "movl 0x46cef4, %%eax\n\t"
-      "movl 0x34(%%eax), %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw %%si, -0x74(%%ebp)\n\t"
-      "movl $0xb, %%ecx\n\t"
-      "leal -0x72(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%ebx, -0x18(%%ebp)\n\t"
-      "stosw\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "movl $0x31e5b0, %%edi\n\t"
-      "addl $0x2c, %%ebx\n\t"
-      ".LFUN_000f5900_13:\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "call *%[f5800]\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movw %%ax, -0x74(%%ebp)\n\t"
-      "movl -0x74(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[u9cff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000f5900_14\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl $0x7f\n\t"
-      "pushl %%eax\n\t"
-      "movw $0x7f, -0x74(%%ebp)\n\t"
-      "call *%[u9cff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f5900_15\n\t"
-      ".LFUN_000f5900_14:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl $2, %%eax\n\t"
-      "addw %%ax, -0x12(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "addw %%ax, -0xe(%%ebp)\n\t"
-      "movl $5, %%eax\n\t"
-      "addw %%ax, -0x14(%%ebp)\n\t"
-      "addw %%ax, -0x10(%%ebp)\n\t"
-      "leal -0x74(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[rdraw]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5900_15:\n\t"
-      "movswl 0x46cef8, %%edx\n\t"
-      "movswl 0x46cefa, %%eax\n\t"
-      "imull $0xb, %%edx, %%edx\n\t"
-      "movsbl 0x28a790(%%edx,%%eax,1), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%esi\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "jne .LFUN_000f5900_17\n\t"
-      "cmpw $4, 0x46cefe\n\t"
-      "jne .LFUN_000f5900_16\n\t"
-      "movl 0x10(%%ebx), %%eax\n\t"
-      "jmp .LFUN_000f5900_18\n\t"
-      ".LFUN_000f5900_16:\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "jmp .LFUN_000f5900_18\n\t"
-      ".LFUN_000f5900_17:\n\t"
-      "movl -0x10(%%ebx), %%eax\n\t"
-      ".LFUN_000f5900_18:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000f5900_19\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[bmap]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f5900_19\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[drawbmp]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".LFUN_000f5900_19:\n\t"
-      "incl %%esi\n\t"
-      "addl $8, %%edi\n\t"
-      "addl $0x50, %%ebx\n\t"
-      "cmpl $0x31e6d0, %%edi\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jl .LFUN_000f5900_13\n\t"
-      "movl 0x46cef4, %%edx\n\t"
-      "cmpl $-1, 0x2c(%%edx)\n\t"
-      "je .LFUN_000f5900_32\n\t"
-      "cmpl $0x2c, %%esi\n\t"
-      "jge .LFUN_000f5900_32\n\t"
-      "movl %%esi, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%edx\n\t"
-      "leal -0x24(%%eax), %%ecx\n\t"
-      "leal 0x31e5b0(,%%eax,8), %%ebx\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "shll $4, %%edx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "leal 0x3c(%%edx,%%eax,1), %%esi\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_000f5900_20:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0x46cef4, %%edx\n\t"
-      "movl 0x2c(%%edx), %%eax\n\t"
-      "addl $-0x24, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[u9d420]\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl $7, %%eax\n\t"
-      "ja .LFUN_000f5900_28\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "jmp *.LFUN_000f5900_jt(,%%ecx,4)\n\t"
-      ".LFUN_000f5900_21:\n\t"
-      "movswl 0x46cef8, %%edx\n\t"
-      "movswl 0x46cefa, %%eax\n\t"
-      "imull $0xb, %%edx, %%edx\n\t"
-      "movsbl 0x28a790(%%edx,%%eax,1), %%ecx\n\t"
-      "cmpl -0x4(%%ebp), %%ecx\n\t"
-      "jne .LFUN_000f5900_23\n\t"
-      ".LFUN_000f5900_22:\n\t"
-      "cmpw $4, 0x46cefe\n\t"
-      "jne .LFUN_000f5900_26\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "jmp .LFUN_000f5900_27\n\t"
-      ".LFUN_000f5900_23:\n\t"
-      "movl -0x20(%%esi), %%eax\n\t"
-      "jmp .LFUN_000f5900_27\n\t"
-      ".LFUN_000f5900_24:\n\t"
-      "movswl 0x46cef8, %%edx\n\t"
-      "movswl 0x46cefa, %%eax\n\t"
-      "imull $0xb, %%edx, %%edx\n\t"
-      "movsbl 0x28a790(%%edx,%%eax,1), %%ecx\n\t"
-      "cmpl -0x4(%%ebp), %%ecx\n\t"
-      "je .LFUN_000f5900_22\n\t"
-      "movb 0x46cef1, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000f5900_23\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "jmp .LFUN_000f5900_27\n\t"
-      ".LFUN_000f5900_25:\n\t"
-      "movswl 0x46cef8, %%edx\n\t"
-      "movswl 0x46cefa, %%eax\n\t"
-      "imull $0xb, %%edx, %%edx\n\t"
-      "movsbl 0x28a790(%%edx,%%eax,1), %%ecx\n\t"
-      "cmpl -0x4(%%ebp), %%ecx\n\t"
-      "je .LFUN_000f5900_22\n\t"
-      "movb 0x46cef2, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000f5900_23\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "jmp .LFUN_000f5900_27\n\t"
-      ".LFUN_000f5900_26:\n\t"
-      "movl -0x10(%%esi), %%eax\n\t"
-      ".LFUN_000f5900_27:\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000f5900_29\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[bmap]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jmp .LFUN_000f5900_29\n\t"
-      ".LFUN_000f5900_28:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x57f\n\t"
-      "pushl $0x28a854\n\t"
-      "pushl $0x28a9a8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5900_29:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000f5900_30\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl 0x4(%%ebx), %%eax\n\t"
-      "movl (%%ebx), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "pushl $0\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      "movl $2, %%eax\n\t"
-      "addw %%ax, -0x1a(%%ebp)\n\t"
-      "addw %%ax, -0x16(%%ebp)\n\t"
-      "pushl $0\n\t"
-      "movl $5, %%eax\n\t"
-      "addw %%ax, -0x1c(%%ebp)\n\t"
-      "addw %%ax, -0x18(%%ebp)\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[rdraw]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000f5900_30:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_000f5900_31\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[drawbmp]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".LFUN_000f5900_31:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "incl %%eax\n\t"
-      "incl %%edi\n\t"
-      "addl $8, %%ebx\n\t"
-      "addl $0x50, %%esi\n\t"
-      "cmpl $0x31e710, %%ebx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "jl .LFUN_000f5900_20\n\t"
-      ".LFUN_000f5900_32:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000f5900_jt:\n\t"
-      ".long .LFUN_000f5900_21\n\t"
-      ".long .LFUN_000f5900_24\n\t"
-      ".long .LFUN_000f5900_25\n\t"
-      ".long .LFUN_000f5900_31\n\t"
-      ".long .LFUN_000f5900_21\n\t"
-      ".long .LFUN_000f5900_21\n\t"
-      ".long .LFUN_000f5900_21\n\t"
-      ".long .LFUN_000f5900_21\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(f5900_assert), [exitfn] "m"(f5900_exitfn), [tag] "m"(f5900_tag), [bmap] "m"(f5900_bmap), [drawbmp] "m"(f5900_drawbmp), [dsfont] "m"(f5900_dsfont), [u9d420] "m"(f5900_u9d420), [rdraw] "m"(f5900_rdraw), [u9cdb0] "m"(f5900_u9cdb0), [msys] "m"(f5900_msys), [u9cff0] "m"(f5900_u9cff0), [f5800] "m"(f5900_f5800)
-      : "memory");
+  char *ui_globals;
+  char *font_tag;
+  float color_white[4];
+  float color_grey[4];
+  int16_t rect[4];
+  int16_t tmp_rect[4];
+  void *bitmap;
+  wchar_t *text;
+  wchar_t *cursor;
+  int slot;
+  char *bitm_base;
+  int16_t *screen_slot;
+  unsigned short glyph;
+  void *glyph_info;
+  unsigned int millis;
+
+  color_white[0] = color_white[1] = color_white[2] = color_white[3] = 1.0f;
+  color_grey[0] = color_grey[1] = color_grey[2] = color_grey[3] = 0.9f;
+
+  ui_globals = *(char **)0x46cef4;
+  if (ui_globals == 0 || *(int *)(ui_globals + 0xc) == -1) {
+    display_assert((char *)0x0028a9d8, (char *)0x0028a854, 0x40b, 1);
+    system_exit(-1);
+    ui_globals = *(char **)0x46cef4;
+  }
+
+  font_tag = (char *)tag_get(0x666f6e74, *(int *)(ui_globals + 0xc));
+  if (font_tag == 0) {
+    display_assert((char *)0x0028a9c0, (char *)0x0028a854, 0x40d, 1);
+    system_exit(-1);
+  }
+
+  if (*(int *)(ui_globals + 0x1c) != -1) {
+    rect[0] = 0;
+    rect[1] = 0;
+    rect[2] = 0x1e0;
+    rect[3] = 0x280;
+    bitmap = FUN_00077040(*(int *)(ui_globals + 0x1c), 0, 0);
+    if (bitmap == 0) {
+      display_assert((char *)0x00263768, (char *)0x0028a854, 0x415, 1);
+      system_exit(-1);
+    }
+    draw_bitmap_in_rect((int)(uintptr_t)bitmap, rect, rect, 0, 0, 0, -1);
+  }
+
+  draw_string_set_font(*(int *)(ui_globals + 0xc), -1, 0, 0, color_grey);
+
+  if (*(int *)(ui_globals + 0x2c) != -1) {
+    rect[0] = 0x4e;
+    rect[1] = 0x72;
+    rect[2] = 0x6e;
+    rect[3] = 0x280;
+    rasterizer_draw_string(
+        (void *)rect, rect, 0, 0,
+        (unsigned short *)FUN_0019d420(*(int *)(ui_globals + 0x2c),
+                                       (int)*(uint16_t *)0x46cf04));
+  }
+
+  draw_string_set_font(*(int *)(ui_globals + 0xc), -1, 2, 0, color_white);
+
+  rect[0] = 0x76;
+  rect[1] = 0xdc;
+  rect[2] = 0x8f;
+  rect[3] = 0x1a4;
+
+  if (*(char *)0x46cf07 == 1) {
+    bitmap = FUN_00077040(*(int *)0x46cf14, 0, 0);
+    if (bitmap != 0) {
+      FUN_0019cdb0(rect, *(void **)0x46cf08, tmp_rect, rect);
+      tmp_rect[1] = (int16_t)(tmp_rect[1] - 2);
+      tmp_rect[3] = (int16_t)(tmp_rect[3] + 2);
+      draw_bitmap_in_rect((int)(uintptr_t)bitmap, tmp_rect, rect, 0, 0, 0,
+                          0x7f7f7f7f);
+    }
+  }
+
+  rasterizer_draw_string((void *)rect, rect, 0, 0, *(unsigned short **)0x46cf08);
+
+  if (*(char *)0x46cf07 == 0 && *(int *)0x46cf14 != -1) {
+    millis = system_milliseconds();
+    if ((((millis * (unsigned)0x10624dd3) >> 6) & 1) != 0) {
+      int width = 0;
+      int half = 0;
+      int line_h =
+          (int)*(uint16_t *)(font_tag + 4) + (int)*(uint16_t *)(font_tag + 6);
+      text = *(wchar_t **)0x46cf08;
+      cursor = *(wchar_t **)0x46cf0c;
+      bitmap = FUN_00077040(*(int *)0x46cf14, 0, 0);
+      if (bitmap != 0) {
+        if (text != 0) {
+          wchar_t *p = text;
+          while (*p != 0) {
+            glyph_info = FUN_0019cff0(font_tag, (unsigned short)*p);
+            if (glyph_info == 0)
+              break;
+            if ((uintptr_t)p < (uintptr_t)cursor)
+              width += (int)*(int16_t *)((char *)glyph_info + 2);
+            half += (int)*(int16_t *)((char *)glyph_info + 2);
+            p++;
+          }
+        }
+        half >>= 1;
+        rect[0] = 0x78;
+        rect[1] = (int16_t)(width - half + 0x140);
+        rect[2] = (int16_t)(line_h + 0x78);
+        rect[3] = (int16_t)(rect[1] + 1);
+        draw_bitmap_in_rect((int)(uintptr_t)bitmap, 0, rect, 0, 0, 0, -1);
+      }
+    }
+  }
+
+  draw_string_set_font(*(int *)(ui_globals + 0xc), -1, 2, 0, color_white);
+
+  bitm_base = *(char **)(ui_globals + 0x34) + 0x2c;
+  screen_slot = (int16_t *)0x31e5b0;
+  for (slot = 0; (uintptr_t)screen_slot < 0x31e6d0u; slot++) {
+    int key_action;
+    int bitm_index;
+    int16_t bounds[4];
+
+    glyph = FUN_000f5800((int16_t)slot);
+    glyph_info = FUN_0019cff0(font_tag, glyph);
+    if (glyph_info == 0) {
+      glyph = 0x7f;
+      glyph_info = FUN_0019cff0(font_tag, glyph);
+    }
+    if (glyph_info != 0) {
+      bounds[0] = screen_slot[0];
+      bounds[1] = (int16_t)(screen_slot[1] + 2);
+      bounds[2] = screen_slot[2];
+      bounds[3] = (int16_t)(screen_slot[3] + 2);
+      bounds[0] = (int16_t)(bounds[0] + 5);
+      bounds[2] = (int16_t)(bounds[2] + 5);
+      rasterizer_draw_string((void *)bounds, 0, 0, 0, &glyph);
+    }
+
+    key_action =
+        (int)(signed char)*((char *)0x28a790 + (int)*(int16_t *)0x46cef8 * 11 +
+                            (int)*(int16_t *)0x46cefa);
+    if (key_action == slot) {
+      if (*(int16_t *)0x46cefe == 4)
+        bitm_index = *(int *)(bitm_base + 0x10);
+      else
+        bitm_index = *(int *)bitm_base;
+    } else {
+      bitm_index = *(int *)(bitm_base - 0x10);
+    }
+    if (bitm_index != -1) {
+      bitmap = FUN_00077040(bitm_index, 0, 0);
+      if (bitmap != 0)
+        draw_bitmap_in_rect((int)(uintptr_t)bitmap, screen_slot, screen_slot, 0,
+                            0, 0, -1);
+    }
+
+    screen_slot += 4;
+    bitm_base += 0x50;
+  }
 }
-#else
-#error "FUN_000f5900: clang naked draft required"
-#endif
+
 
 /* 0xf5f10 — remaining UTF-16 capacity in the item-name edit buffer. */
 int object_get_type(void)
