@@ -23727,7 +23727,7 @@
         {
           "addr": "0x95c60",
           "decl": "char FUN_00095c60(int object);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00095c60"
         }
       ],
@@ -31833,7 +31833,7 @@
         {
           "addr": "0x19c3c0",
           "decl": "void FUN_0019c3c0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0019c3c0"
         }
       ],
