@@ -33501,7 +33501,7 @@
         {
           "addr": "0x798e0",
           "decl": "void FUN_000798e0(void *source_bitmap, void *destination_bitmap, short destination_mipmap_index, int unused);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000798e0"
         },
         {
