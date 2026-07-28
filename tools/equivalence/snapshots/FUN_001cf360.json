@@ -1,0 +1,5 @@
+{
+  "description": "FUN_001cf360: data_next_index -1",
+  "stub_returns": { "data_next_index": -1 },
+  "regions": { "0x4fdba4": "00000030" }
+}
