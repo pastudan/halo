@@ -12314,7 +12314,7 @@
         {
           "addr": "0xc5f60",
           "decl": "bool hs_parse_enum(int datum_index);",
-          "ported": false,
+          "ported": true,
           "name": "hs_parse_enum"
         },
         {
@@ -12473,7 +12473,7 @@
         {
           "addr": "0xc8120",
           "decl": "char hs_parse_if(int16_t function_index, int root_datum);",
-          "ported": false,
+          "ported": true,
           "name": "hs_parse_if"
         },
         {
