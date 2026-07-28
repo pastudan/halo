@@ -431,93 +431,54 @@ void *FUN_00068c70(unsigned int size /*stack*/, void *tif /*@<esi>*/)
 }
 
 
-/* FUN_00068d80 (0x68d80) — XBE naked draft (batch 339). */
-#if defined(__clang__)
-static void (*const b68d80_c68c70)(void) = (void (*)(void))FUN_00068c70;
-static void (*const b68d80_c68a70)(void) = (void (*)(void))FUN_00068a70;
-static void (*const b68d80_c68bd0)(void) = (void (*)(void))FUN_00068bd0;
-
-__attribute__((naked, noinline))
-void FUN_00068d80(void)
+/* FUN_00068d80 (0x68d80) — Capstone lift: ensure CCITT state; clear runs. */
+int FUN_00068d80(void *tif)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl 0x120(%%edi), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .LFUN_00068d80_1\n\t"
-      "pushl $0x1c\n\t"
-      "movl %%edi, %%esi\n\t"
-      "call *%[c68c70]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jne .LFUN_00068d80_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00068d80_1:\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "cmpl %%ebx, %%edx\n\t"
-      "movw %%bx, 0x2(%%esi)\n\t"
-      "movw %%bx, (%%esi)\n\t"
-      "movl %%ebx, 0x10(%%esi)\n\t"
-      "je .LFUN_00068d80_2\n\t"
-      "movw 0x4(%%esi), %%ax\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "negw %%ax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0xff, %%eax\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "jle .LFUN_00068d80_2\n\t"
-      "movb %%al, %%bl\n\t"
-      "movb %%bl, %%bh\n\t"
-      "movl %%edx, %%edi\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "shrl $2, %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "shll $0x10, %%eax\n\t"
-      "movw %%bx, %%ax\n\t"
-      "rep stosl\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $3, %%ecx\n\t"
-      "rep stosb\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      ".LFUN_00068d80_2:\n\t"
-      "testb $2, 0x9(%%edi)\n\t"
-      "jne .LFUN_00068d80_3\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "call *%[c68a70]\n\t"
-      "testb $1, 0x68(%%edi)\n\t"
-      "je .LFUN_00068d80_3\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c68bd0]\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      ".LFUN_00068d80_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68c70] "m"(b68d80_c68c70), [c68a70] "m"(b68d80_c68a70), [c68bd0] "m"(b68d80_c68bd0)
-      : "memory");
+  unsigned char *sp = *(unsigned char **)((char *)tif + 0x120);
+  unsigned char *dst;
+  unsigned int n;
+  unsigned int fill;
+  unsigned short runs;
+  int ok;
+
+  if (sp == 0) {
+    sp = (unsigned char *)FUN_00068c70(0x1c, tif);
+    if (sp == 0)
+      return 0;
+  }
+
+  dst = *(unsigned char **)(sp + 0x18);
+  *(unsigned short *)(sp + 2) = 0;
+  *(unsigned short *)sp = 0;
+  *(unsigned int *)(sp + 0x10) = 0;
+
+  if (dst != 0) {
+    runs = *(unsigned short *)(sp + 4);
+    n = *(unsigned int *)(sp + 8);
+    fill = (runs != 0) ? 0xffu : 0u;
+    if ((int)n > 0) {
+      unsigned int v = fill | (fill << 8);
+      v |= v << 16;
+      while (n >= 4) {
+        *(unsigned int *)dst = v;
+        dst += 4;
+        n -= 4;
+      }
+      while (n--)
+        *dst++ = (unsigned char)fill;
+    }
+  }
+
+  if ((*(unsigned char *)((char *)tif + 9) & 2) == 0) {
+    ((void (*)(void))(void *)FUN_00068a70)();
+    if ((*(unsigned char *)((char *)tif + 0x68) & 1) != 0) {
+      ok = ((int (*)(void *))(void *)FUN_00068bd0)(tif);
+      /* neg; sbb; inc → 1 if ok!=0 else 0 */
+      *(unsigned int *)(sp + 0x10) = ok ? 1u : 0u;
+    }
+  }
+  return 1;
 }
-#else
-#error "FUN_00068d80: clang naked draft required"
-#endif
 
 
 /* FUN_00068e20 (0x68e20) — Capstone lift: set nbits 1-bits into bitstream.
