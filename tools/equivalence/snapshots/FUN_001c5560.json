@@ -1,0 +1,13 @@
+{
+  "description": "FUN_001c5560: mode>=2 assert tip",
+  "arg_overrides": {
+    "mode": 2,
+    "sub": 0
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0,
+    "FUN_001c5010": 0,
+    "FUN_001c2b20": 0
+  }
+}

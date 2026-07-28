@@ -4670,9 +4670,15 @@
         },
         {
           "addr": "0x1c5560",
-          "decl": "void FUN_001c5560(void);",
-          "ported": false,
-          "name": "FUN_001c5560"
+          "decl": "void FUN_001c5560(unsigned short mode, unsigned short sub, void *arg);",
+          "ported": true,
+          "name": "FUN_001c5560",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c58f0",
