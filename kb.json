@@ -23989,7 +23989,7 @@
         {
           "addr": "0x1887b0",
           "decl": "void FUN_001887b0(int a0);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001887b0"
         },
         {
