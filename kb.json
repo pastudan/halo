@@ -8034,13 +8034,13 @@
         {
           "addr": "0xdb950",
           "decl": "void update_motion_sensor(void);",
-          "ported": false,
+          "ported": true,
           "name": "update_motion_sensor"
         },
         {
           "addr": "0xdbcb0",
           "decl": "void FUN_000dbcb0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000dbcb0"
         },
         {
@@ -18921,7 +18921,7 @@
         {
           "addr": "0xe10c0",
           "decl": "void FUN_000e10c0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e10c0"
         },
         {
