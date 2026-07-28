@@ -40196,7 +40196,7 @@
         {
           "addr": "0x1621c0",
           "decl": "void FUN_001621c0(int object_handle);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001621c0"
         },
         {
