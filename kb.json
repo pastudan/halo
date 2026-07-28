@@ -35854,7 +35854,7 @@
           "decl": "void ai_communication_initialize(void);",
           "addr": "0x42a30",
           "name": "ai_communication_initialize",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x42b80",
