@@ -541,37 +541,64 @@ void path_add_steps(void *path, int16_t seed_disc_index, int16_t step_index)
 }
 
 
-/* FUN_000615b0 (0x615b0) — readable C lift (restored pre-naked). */
-int FUN_000615b0(void *avoidance_record)
+/* FUN_000615b0 (0x615b0) — Capstone lift from 000615b0.obj (thiscall @eax). */
+__attribute__((regparm(1)))
+int FUN_000615b0(void *avoidance_record /*@<eax>*/)
 {
+  char *rec = (char *)avoidance_record;
+  char out[0x1c];
   int16_t step_index;
   char *step;
-  float target_point[2];
+  float target[2];
   float step_cost;
   float scale;
+  unsigned char skip;
+  int16_t new_step;
 
-  step_index = FUN_00060970(avoidance_record);
-  if (step_index == -1)
-    return 0;
+  step_index = FUN_00060970(rec);
+  if (step_index == (int16_t)0xffff)
+    goto done;
 
-  step = (char *)FUN_000600f0(avoidance_record, step_index);
-  if (*(int16_t *)(step + 0x24) == -1)
-    scale = *(float *)((char *)avoidance_record + 0x18);
-  else
-    scale = *(float *)(step + 0x20) - *(float *)(step + 0x14) +
-            *(float *)((char *)avoidance_record + 0x18);
+  step = (char *)FUN_000600f0(rec, step_index);
+  skip = (unsigned char)(*(int16_t *)(step + 0x24) == (int16_t)-1);
 
-  target_point[0] = *(float *)(step + 0xc) * scale + *(float *)step;
-  target_point[1] = *(float *)(step + 0x10) * scale + *(float *)(step + 4);
+  FUN_00061080(*(void **)(rec + 0xc), *(unsigned char *)(rec + 4),
+               *(void **)(rec + 8), (int16_t)-1, *(int *)(step + 8),
+               *(float *)rec, *(float *)(step + 0x14), skip, 1,
+               *(char *)(rec + 0x2a), out, (float *)step,
+               (float *)(step + 0xc));
+
+  if (*(int *)(out + 8) != -1)
+    goto done;
+
+  if (*(int16_t *)(out + 0xc) != (int16_t)-1) {
+    if (*(int16_t *)(out + 0xe) == *(int16_t *)(rec + 0x1c)) {
+      if (*(float *)(step + 0x14) < *(float *)(rec + 0x24)) {
+        *(float *)(rec + 0x24) = *(float *)(step + 0x14);
+        *(int16_t *)(rec + 0x20) = step_index;
+      }
+    }
+    path_add_steps(rec, *(int16_t *)(out + 0xc), step_index);
+    goto done;
+  }
+
+  if (*(int *)(out + 4) != *(int *)(rec + 0x18)) {
+    if (!FUN_000638f0(*(int *)(rec + 0xc), (float *)(rec + 0x10),
+                      *(int *)(rec + 0x18), *(int *)(out + 4)))
+      goto done;
+  }
+
+  scale = *(float *)out;
+  target[0] = scale * *(float *)(step + 0xc) + *(float *)step;
+  target[1] = scale * *(float *)(step + 0x10) + *(float *)(step + 4);
   step_cost = *(float *)(step + 0x20) - *(float *)(step + 0x14) + scale;
+  new_step = path_add_step(rec, target, (int16_t)*(int *)(out + 4), 0,
+                           step_cost, step_index);
+  *(int16_t *)(rec + 0x1e) = new_step;
 
-  path_add_step(avoidance_record, target_point,
-                *(int16_t *)((char *)avoidance_record + 0x1c), 0, step_cost,
-                -1);
-  *(int16_t *)((char *)avoidance_record + 0x1e) = step_index;
-
-  if (*(int16_t *)((char *)avoidance_record + 0x1e) == -1 &&
-      *(int16_t *)((char *)avoidance_record + 0x1430) > 0)
+done:
+  if (*(int16_t *)(rec + 0x1e) == (int16_t)-1 &&
+      *(int16_t *)(rec + 0x1430) > 0)
     return 1;
   return 0;
 }
@@ -610,8 +637,8 @@ static void (*const b61750_c628b0)(int16_t *partition, uint32_t arg2) = FUN_0006
 static void * (*const b61750_c18e3c0)(void) = scenario_get;
 static void (*const b61750_c60ea0)(void *avoidance_record, float *end_point, void *param_2, void *scenario, unsigned char param_4, float radius, float *start_point, int param_7, float param_8, unsigned char param_9, unsigned char param_10) = FUN_00060ea0;
 static int (*const b61750_c615b0)(void *avoidance_record) = FUN_000615b0;
-static char (*const b61750_c616e0)(void *avoidance_record, unsigned char path_flag, void *param_3, void *param_4, void *param_5, void *param_6, float *end_point, unsigned char param_8) = FUN_000616e0;
-static int (*const b61750_c147990)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = collision_surface_project_point2d;
+static char (*const b61750_c616e0)(void *avoidance_record, unsigned char path_flag, void *param_3, void *param_4, void *param_5, void *param_6, float *end_point, unsigned char param_8) = (char (*)(void *, unsigned char, void *, void *, void *, void *, float *, unsigned char))FUN_000616e0;
+static int (*const b61750_c147990)(int bsp, int surface_index, int projection, int sign, float *point, float *out_point) = (int (*)(int, int, int, int, float *, float *))collision_surface_project_point2d;
 static void (*const b61750_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
 
 __attribute__((naked, noinline))

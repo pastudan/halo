@@ -42450,8 +42450,8 @@
         },
         {
           "addr": "0x615b0",
-          "decl": "int FUN_000615b0(void *avoidance_record @<eax>);",
-          "ported": false,
+          "decl": "__attribute__((regparm(1))) int FUN_000615b0(void *avoidance_record /*@<eax>*/);",
+          "ported": true,
           "name": "FUN_000615b0"
         },
         {
