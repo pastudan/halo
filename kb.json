@@ -23900,7 +23900,7 @@
         {
           "addr": "0x186050",
           "decl": "char render_camera_view_to_screen(int *param_1, int *param_2, void *param_3, void *param_4);",
-          "ported": false,
+          "ported": true,
           "name": "render_camera_view_to_screen"
         },
         {
@@ -23966,7 +23966,7 @@
         {
           "addr": "0x186ef0",
           "decl": "void render_camera_mirror(void);",
-          "ported": false,
+          "ported": true,
           "name": "render_camera_mirror"
         },
         {
