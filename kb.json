@@ -5405,8 +5405,14 @@
         {
           "addr": "0x1bd210",
           "decl": "int16_t FUN_001bd210(int16_t map_type@<ax>, int header_size);",
-          "ported": false,
-          "name": "FUN_001bd210"
+          "ported": true,
+          "name": "FUN_001bd210",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1bd3a0",
