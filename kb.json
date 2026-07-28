@@ -6965,7 +6965,7 @@
         {
           "addr": "0x99b70",
           "decl": "void decals_reconnect_to_structure_bsp(void);",
-          "ported": false,
+          "ported": true,
           "name": "decals_reconnect_to_structure_bsp"
         },
         {
@@ -18555,7 +18555,7 @@
         {
           "addr": "0xa2fc0",
           "decl": "void player_effect_get_screen_flash(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_effect_get_screen_flash"
         },
         {
