@@ -38032,7 +38032,7 @@
         {
           "addr": "0x68e20",
           "decl": "void FUN_00068e20(unsigned char *buf@<eax>, int bitpos@<ecx>, int nbits@<edx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00068e20"
         },
         {
