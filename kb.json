@@ -25725,8 +25725,14 @@
         {
           "addr": "0x1ac180",
           "decl": "char FUN_001ac180(int actor, int anim_tag, void *entry, int do_flag);",
-          "ported": false,
-          "name": "FUN_001ac180"
+          "ported": true,
+          "name": "FUN_001ac180",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1ac350",
@@ -25956,8 +25962,14 @@
         {
           "addr": "0x1ce9c0",
           "decl": "void FUN_001ce9c0(void);",
-          "ported": false,
-          "name": "FUN_001ce9c0"
+          "ported": true,
+          "name": "FUN_001ce9c0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1cebb0",

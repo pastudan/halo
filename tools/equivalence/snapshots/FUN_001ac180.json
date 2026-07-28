@@ -1,0 +1,4 @@
+{
+  "description": "FUN_001ac180: actor==-1",
+  "arg_overrides": { "actor": -1 }
+}
