@@ -5560,7 +5560,7 @@
         {
           "addr": "0xa6930",
           "decl": "void FUN_000a6930(int, unsigned short);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a6930"
         }
       ],
