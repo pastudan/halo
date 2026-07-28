@@ -38831,8 +38831,8 @@
         },
         {
           "addr": "0x70610",
-          "decl": "void FUN_00070610(void);",
-          "ported": false,
+          "decl": "void FUN_00070610(const float *m@<eax>, float *out@<ecx>);",
+          "ported": true,
           "name": "FUN_00070610"
         },
         {

@@ -3266,88 +3266,24 @@ void FUN_000705b0(unsigned int *out, const unsigned short *in /*@<eax>*/)
 
 
 
-/* FUN_00070610 (0x70610) — XBE naked draft (batch 298). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00070610(void)
+/* FUN_00070610 (0x70610) — readable C lift: Gram matrix of symmetric 3x3 rows.
+ * ABI: matrix@<eax>, out@<ecx>. Layout floats at 0,4,8,0x10,0x14,0x20. */
+void FUN_00070610(const float *m /*@<eax>*/, float *out /*@<ecx>*/)
 {
-  __asm__ volatile(
-      "flds 0x8(%%eax)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "flds (%%eax)\n\t"
-      "fld %%st(0)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps (%%ecx)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x10(%%eax)\n\t"
-      "fadds (%%eax)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "flds 0x14(%%eax)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x4(%%ecx)\n\t"
-      "flds 0x20(%%eax)\n\t"
-      "fadds (%%eax)\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "flds 0x14(%%eax)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x8(%%ecx)\n\t"
-      "flds 0x14(%%eax)\n\t"
-      "flds 0x10(%%eax)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x10(%%ecx)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x20(%%eax)\n\t"
-      "fadds 0x10(%%eax)\n\t"
-      "fmuls 0x14(%%eax)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x14(%%ecx)\n\t"
-      "flds 0x20(%%eax)\n\t"
-      "flds 0x14(%%eax)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(1)\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps 0x20(%%ecx)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  float a00 = m[0];
+  float a01 = m[1];
+  float a02 = m[2];
+  float a11 = m[4];
+  float a12 = m[5];
+  float a22 = m[8];
+
+  out[0] = a00 * a00 + a01 * a01 + a02 * a02;
+  out[1] = a00 * a01 + a01 * a11 + a02 * a12;
+  out[2] = a00 * a02 + a01 * a12 + a02 * a22;
+  out[4] = a01 * a01 + a11 * a11 + a12 * a12;
+  out[5] = a01 * a02 + a11 * a12 + a12 * a22;
+  out[8] = a02 * a02 + a12 * a12 + a22 * a22;
 }
-#else
-#error "FUN_00070610: clang naked draft required"
-#endif
 
 
 /* FUN_000706b0 (0x706b0) — XBE naked draft (batch 310). */
