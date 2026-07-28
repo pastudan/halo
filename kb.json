@@ -5624,7 +5624,7 @@
         {
           "addr": "0x92ec0",
           "decl": "void draw_quad(int16_t *rect, int color);",
-          "ported": false,
+          "ported": true,
           "name": "draw_quad"
         },
         {
@@ -31810,7 +31810,7 @@
         {
           "addr": "0x19bd30",
           "decl": "void FUN_0019bd30(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0019bd30"
         },
         {

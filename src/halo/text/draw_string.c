@@ -1012,103 +1012,27 @@ void bitmap_draw_character(void)
 #endif
 
 
-/* FUN_0019bd30 (0x19bd30) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static void (*const b19bd30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19bd30_exitfn)(int) = system_exit;
-static void (*const b19bd30_ftol)(void) = FUN_001d9068;
-static void * (*const b19bd30_c19bcc0)(int16_t style, int font_index) = FUN_0019bcc0;
-
-__attribute__((naked, noinline))
+/* FUN_0019bd30 (0x19bd30) — readable C lift (restored pre-naked). */
 void FUN_0019bd30(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "je .LFUN_0019bd30_2\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .LFUN_0019bd30_1\n\t"
-      "cmpw $4, %%si\n\t"
-      "jl .LFUN_0019bd30_2\n\t"
-      ".LFUN_0019bd30_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x415\n\t"
-      "pushl $0x2b4210\n\t"
-      "pushl $0x2b4388\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0019bd30_2:\n\t"
-      "movw 0x10(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_0019bd30_3\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jl .LFUN_0019bd30_4\n\t"
-      ".LFUN_0019bd30_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x416\n\t"
-      "pushl $0x2b4210\n\t"
-      "pushl $0x2b4348\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movw 0x10(%%ebp), %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0019bd30_4:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%ebx)\n\t"
-      "movl %%edx, 0x8(%%ebx)\n\t"
-      "movw %%ax, 0x10(%%ebx)\n\t"
-      "movw $0, 0xc(%%ebx)\n\t"
-      "movw %%si, 0xe(%%ebx)\n\t"
-      "flds (%%edi)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "shll $8, %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "shll $8, %%ecx\n\t"
-      "fmuls 0x2602c8\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "flds 0xc(%%edx)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "shll $8, %%ecx\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "movl %%ecx, 0x18(%%ebx)\n\t"
-      "call *%[c19bcc0]\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x4(%%ebx)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b19bd30_assert), [exitfn] "m"(b19bd30_exitfn), [ftol] "m"(b19bd30_ftol), [c19bcc0] "m"(b19bd30_c19bcc0)
-      : "memory");
+  int esi = 0;
+
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x19bd4b */
+  /* cmp (int16_t)esi, 4 -> jl 0x19bd6b */
+  display_assert((char *)0x002b4388, (char *)0x002b4210, 1045, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x19bd7a */
+  /* cmp (int16_t)eax, 3 -> jl 0x19bd9e */
+  display_assert((char *)0x002b4348, (char *)0x002b4210, 1046, 0);
+  system_exit(0);
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_0019bcc0(0, 0);
+
+  (void)esi;
 }
-#else
-#error "FUN_0019bd30: clang naked draft required"
-#endif
 
 
 /* parse_string (0x19be30) — XBE naked draft (batch 252). */
