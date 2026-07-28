@@ -1,0 +1,15 @@
+{
+  "description": "FUN_00074210: compress flag \u2192 stubbed compress return",
+  "arg_overrides": {
+    "other": "0000000004000400010000000000020000000000000000000000000000000000",
+    "self": "0000000004000400010000000000000000000000000000000000000000000000",
+    "level": 0
+  },
+  "stub_returns": {
+    "bitmap_verify": 1,
+    "bitmap_compress_to_mipmap": 0
+  },
+  "regions": {
+    "0x334148": "00"
+  }
+}

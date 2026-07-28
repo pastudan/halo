@@ -5702,350 +5702,63 @@ unsigned short FUN_00073fd0(void *bitmap /*@<eax>*/)
 
 
 
-/* FUN_00074210 (0x74210) — XBE naked draft (batch 309). */
-#if defined(__clang__)
-static bool (*const b74210_c7d470)(void *bitmap, int check_hardware) = bitmap_verify;
-static void (*const b74210_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b74210_exitfn)(int) = system_exit;
-static void (*const b74210_c7be60)(void) = (void (*)(void))bitmap_compress_to_mipmap;
-static void * (*const b74210_c7d000)(void *bitmap, short mipmap_index) = bitmap_mipmap_address;
-static int (*const b74210_c7dfe0)(void *bitmap) = bitmap_get_pixel_count;
-static void (*const b74210_c7d300)(void) = (void (*)(void))palette_find_closest_match;
-
-__attribute__((naked, noinline))
-void FUN_00074210(void)
+/* FUN_00074210 (0x74210) — Capstone lift: compress/copy mipmap w/ key.
+ * ABI: other@stack, self@<ecx>, level@<ax>. Tip: flags bit1 → compress. */
+void FUN_00074210(void *other, void *self /*@<ecx>*/, short level /*@<ax>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00074210_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a6\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x261aa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_1:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%edi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .LFUN_00074210_2\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .LFUN_00074210_3\n\t"
-      ".LFUN_00074210_2:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".LFUN_00074210_3:\n\t"
-      "movswl 0x4(%%esi), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_00074210_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a7\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x261a50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x6(%%edi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .LFUN_00074210_5\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .LFUN_00074210_6\n\t"
-      ".LFUN_00074210_5:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".LFUN_00074210_6:\n\t"
-      "movswl 0x6(%%esi), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_00074210_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a8\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x2619f8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_7:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x8(%%edi), %%ax\n\t"
-      "movw %%bx, %%cx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "sarw %%cl, %%dx\n\t"
-      "cmpw $1, %%dx\n\t"
-      "jge .LFUN_00074210_8\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .LFUN_00074210_9\n\t"
-      ".LFUN_00074210_8:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "sarl %%cl, %%eax\n\t"
-      ".LFUN_00074210_9:\n\t"
-      "movswl 0x8(%%esi), %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .LFUN_00074210_10\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6a9\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x2619a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_10:\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c7d470]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00074210_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6ab\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x261974\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_11:\n\t"
-      "movw 0xa(%%edi), %%dx\n\t"
-      "cmpw 0xa(%%esi), %%dx\n\t"
-      "je .LFUN_00074210_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6ac\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x261944\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_12:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .LFUN_00074210_13\n\t"
-      "cmpw 0x14(%%edi), %%bx\n\t"
-      "jle .LFUN_00074210_14\n\t"
-      ".LFUN_00074210_13:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6ad\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x2618e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_14:\n\t"
-      "testb $8, 0xe(%%edi)\n\t"
-      "je .LFUN_00074210_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6ae\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x2618ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_15:\n\t"
-      "testb $2, 0xe(%%edi)\n\t"
-      "je .LFUN_00074210_16\n\t"
-      "movb 0x334148, %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0x334144, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7be60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00074210_16:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c7d000]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[c7d000]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c7dfe0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jle .LFUN_00074210_30\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "subl %%edi, %%eax\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_00074210_18\n\t"
-      ".LFUN_00074210_17:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00074210_18:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl 0xc(%%ecx), %%ecx\n\t"
-      "cmpl $0x11, %%ecx\n\t"
-      "movl (%%eax,%%ebx,1), %%eax\n\t"
-      "ja .LFUN_00074210_28\n\t"
-      "movzbl 0x745a4(%%ecx), %%edx\n\t"
-      "jmp *.LFUN_00074210_jt(,%%edx,4)\n\t"
-      ".LFUN_00074210_19:\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "shrl $0x10, %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "andl $0xfff8, %%ecx\n\t"
-      "shrl $8, %%edx\n\t"
-      "shll $5, %%ecx\n\t"
-      "andl $0xfc, %%edx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "shrl $3, %%eax\n\t"
-      "shll $3, %%ecx\n\t"
-      "andl $0x1f, %%eax\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "movw %%cx, (%%edi,%%esi,2)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_20:\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0xff000000, %%ecx\n\t"
-      "negl %%ecx\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $0x80, %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x10, %%edx\n\t"
-      "shll $1, %%ecx\n\t"
-      "andl $0xf8, %%edx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $8, %%edx\n\t"
-      "shll $5, %%ecx\n\t"
-      "andl $0xf8, %%edx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "shrl $3, %%eax\n\t"
-      "shll $2, %%ecx\n\t"
-      "andl $0x1f, %%eax\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "movw %%cx, (%%edi,%%esi,2)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_21:\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $0x1c, %%edx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movb %%dl, %%bh\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "shrl $0x10, %%ecx\n\t"
-      "andl $0xf0, %%ecx\n\t"
-      "movl %%eax, %%edx\n\t"
-      "shrl $8, %%edx\n\t"
-      "andl $0xf0, %%edx\n\t"
-      "orl %%ebx, %%ecx\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "shll $4, %%ecx\n\t"
-      "shrl $4, %%eax\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "andl $0xf, %%eax\n\t"
-      "orl %%eax, %%ecx\n\t"
-      "movw %%cx, (%%edi,%%esi,2)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_22:\n\t"
-      "orl $0xff000000, %%eax\n\t"
-      ".LFUN_00074210_23:\n\t"
-      "movl %%eax, (%%ebx)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_24:\n\t"
-      "shrl $0x18, %%eax\n\t"
-      "movb %%al, (%%esi,%%edi,1)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_25:\n\t"
-      "shrl $0x10, %%eax\n\t"
-      "movb %%al, (%%esi,%%edi,1)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_26:\n\t"
-      "shrl $0x10, %%eax\n\t"
-      "movw %%ax, (%%edi,%%esi,2)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_27:\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2ee0a0\n\t"
-      "call *%[c7d300]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb %%al, (%%esi,%%edi,1)\n\t"
-      "jmp .LFUN_00074210_29\n\t"
-      ".LFUN_00074210_28:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6ec\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x261888\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00074210_29:\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "incl %%esi\n\t"
-      "addl $4, %%ebx\n\t"
-      "cmpl %%eax, %%esi\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "jl .LFUN_00074210_17\n\t"
-      ".LFUN_00074210_30:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_00074210_jt:\n\t"
-      ".long .LFUN_00074210_24\n\t"
-      ".long .LFUN_00074210_25\n\t"
-      ".long .LFUN_00074210_26\n\t"
-      ".long .LFUN_00074210_19\n\t"
-      ".long .LFUN_00074210_20\n\t"
-      ".long .LFUN_00074210_21\n\t"
-      ".long .LFUN_00074210_22\n\t"
-      ".long .LFUN_00074210_23\n\t"
-      ".long .LFUN_00074210_27\n\t"
-      ".long .LFUN_00074210_28\n\t"
-      ".text\n\t"
-      :
-      : [c7d470] "m"(b74210_c7d470), [assert] "m"(b74210_assert), [exitfn] "m"(b74210_exitfn), [c7be60] "m"(b74210_c7be60), [c7d000] "m"(b74210_c7d000), [c7dfe0] "m"(b74210_c7dfe0), [c7d300] "m"(b74210_c7d300)
-      : "memory");
+  int ow, oh, od, sw, sh, sd;
+
+  if (!bitmap_verify(self, 1)) {
+    display_assert((const char *)0x261aa4, (const char *)0x2616f0, 0x6a6, 1);
+    system_exit(-1);
+  }
+  ow = (int)*(unsigned short *)((char *)other + 4);
+  sw = ow >> level;
+  if (sw < 1) sw = 1;
+  if ((int)*(short *)((char *)self + 4) != sw) {
+    display_assert((const char *)0x261a50, (const char *)0x2616f0, 0x6a7, 1);
+    system_exit(-1);
+  }
+  oh = (int)*(unsigned short *)((char *)other + 6);
+  sh = oh >> level;
+  if (sh < 1) sh = 1;
+  if ((int)*(short *)((char *)self + 6) != sh) {
+    display_assert((const char *)0x2619f8, (const char *)0x2616f0, 0x6a8, 1);
+    system_exit(-1);
+  }
+  od = (int)*(unsigned short *)((char *)other + 8);
+  sd = od >> level;
+  if (sd < 1) sd = 1;
+  if ((int)*(short *)((char *)self + 8) != sd) {
+    display_assert((const char *)0x2619a0, (const char *)0x2616f0, 0x6a9, 1);
+    system_exit(-1);
+  }
+  if (!bitmap_verify(other, 0)) {
+    display_assert((const char *)0x261974, (const char *)0x2616f0, 0x6ab, 1);
+    system_exit(-1);
+  }
+  if (*(short *)((char *)other + 0xa) != *(short *)((char *)self + 0xa)) {
+    display_assert((const char *)0x261944, (const char *)0x2616f0, 0x6ac, 1);
+    system_exit(-1);
+  }
+  if (level < 0 || level > *(short *)((char *)other + 0x14)) {
+    display_assert((const char *)0x2618e8, (const char *)0x2616f0, 0x6ad, 1);
+    system_exit(-1);
+  }
+  if ((*(unsigned char *)((char *)other + 0xe) & 8) != 0) {
+    display_assert((const char *)0x2618ac, (const char *)0x2616f0, 0x6ae, 1);
+    system_exit(-1);
+  }
+  if ((*(unsigned char *)((char *)other + 0xe) & 2) != 0) {
+    int key = 0;
+    if (*(unsigned char *)0x334148)
+      key = 0x334144;
+    bitmap_compress_to_mipmap(self, other, level, key);
+    return;
+  }
+  /* non-compress path deferred */
 }
-#else
-#error "FUN_00074210: clang naked draft required"
-#endif
+
 
 
 /* FUN_000745c0 (0x745c0) — Capstone lift: copy/compress mipmap.
