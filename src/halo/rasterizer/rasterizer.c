@@ -12586,7 +12586,7 @@ int FUN_0017ba10(float *position, int vis_index, int index)
   D3DDevice_SetVertexData4f(0, 0.0f, 0.0f, 0.0f, 0.0f);
   D3DDevice_SetVertexData4f(0, 0.0f, 0.0f, 0.0f, 0.0f);
   D3DDevice_End();
-  D3DDevice_EndVisibilityTest();
+  ((void(*)(void))D3DDevice_EndVisibilityTest)();
   FUN_00167ff0(0, (char *)0x002a4894);
   error(0, (char *)0x002ae898);
   return 1;

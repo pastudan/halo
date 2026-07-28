@@ -12466,7 +12466,7 @@ static void (*const b169fd0_c156510)(void *state) = rasterizer_set_pixel_shader;
 static void __stdcall (*const b169fd0_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
 static void __stdcall (*const b169fd0_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
 static void (*const b169fd0_c1ed490)(void) = (void *)D3DDevice_End;
-static void (*const b169fd0_c155cf0)(int stage, int bitmap_tag_index, int frame_index) = rasterizer_set_texture_direct;
+static char (*const b169fd0_c155cf0)(short stage, int bitmap_tag_index, short frame_index) = rasterizer_set_texture_direct;
 static void __stdcall (*const b169fd0_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
 static void __stdcall (*const b169fd0_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
 static void __stdcall (*const b169fd0_c1ed2c0)(uint32_t reg, float a, float b, float c, float d) = (void *)D3DDevice_SetVertexData4f;
@@ -13443,7 +13443,7 @@ void FUN_0016b1c0(void)
   if (*(signed char *)p < 0) {
     if (!*(unsigned char *)0x47e005) {
       FUN_00158ae0(2);
-      FUN_00156c30(0, 0);
+      ((void(*)(void))rasterizer_set_frustum_z)();
     }
   }
   *(int *)0x47dff8 = 0;

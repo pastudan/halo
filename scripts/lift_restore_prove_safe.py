@@ -28,6 +28,33 @@ os.environ.setdefault("BIPED_SIBLING_RESOLVE", "1")
 
 NAKED_RE = re.compile(r"__attribute__\s*\(\s*\(\s*naked\b")
 RESULTS_RE = re.compile(r"(\d+) passed, (\d+) failed, (\d+) errors")
+ZERO_ARG_CALL = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(\s*\)\s*;")
+
+
+def patch_zero_arg_calls(text: str) -> str:
+    """Cast register-arg callees invoked with empty parens so TU compile succeeds."""
+    decl_h = (ROOT / "build/generated/decl.h").read_text(errors="ignore")
+    decls = {}
+    for m in re.finditer(r"HFUNC\s+(.+?\))\s*;", decl_h):
+        sig = m.group(1).strip()
+        nm = sig.rsplit(" ", 1)[-1]
+        if nm.startswith("("):
+            continue
+        p0 = sig.find("(")
+        params = sig[p0 + 1 : sig.rfind(")")].strip()
+        decls[nm] = params
+
+    def repl(mm: re.Match[str]) -> str:
+        name = mm.group(1)
+        if name in ("if", "while", "for", "switch", "return"):
+            return mm.group(0)
+        params = decls.get(name)
+        if params is None or not params or params == "void":
+            return mm.group(0)
+        return f"((void(*)(void)){name})();"
+
+    return ZERO_ARG_CALL.sub(repl, text)
+
 SKIP_SUB = (
     "xdk",
     "libcmt",
@@ -172,6 +199,7 @@ def main() -> int:
         body = extract_func(old, name, addr)
         if not body:
             continue
+        body = patch_zero_arg_calls(body)
         restorable.append((name, addr, src, path, parent, body))
 
     def pref_rank(t):

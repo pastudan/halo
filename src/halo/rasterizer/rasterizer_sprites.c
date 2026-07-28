@@ -64,7 +64,7 @@ void FUN_0017cda0(void)
 /* FUN_0017cdb0 (0x17cdb0) — readable C lift. */
 void FUN_0017cdb0(void)
 {
-  FUN_00163fe0();
+  ((void(*)(void))FUN_00163fe0)();
 }
 
 /* FUN_0017cdc0 (0x17cdc0) — readable C lift. */
@@ -111,7 +111,7 @@ void FUN_0017cdf0(void)
 /* FUN_0017ce00 (0x17ce00) — readable C lift. */
 void FUN_0017ce00(void)
 {
-  FUN_00164590();
+  ((void(*)(void))FUN_00164590)();
 }
 
 /* FUN_0017ce10 (0x17ce10) — readable C lift. */
@@ -262,7 +262,7 @@ void FUN_0017ced0(void)
 /* FUN_0017cee0 (0x17cee0) — readable C lift. */
 void FUN_0017cee0(void)
 {
-  FUN_00165cb0();
+  ((void(*)(void))FUN_00165cb0)();
 }
 
 /* 0x17cef0 */
@@ -282,7 +282,7 @@ void FUN_0017cef0(void)
 /* FUN_0017cf00 (0x17cf00) — readable C lift. */
 void FUN_0017cf00(void)
 {
-  FUN_00165de0();
+  ((void(*)(void))FUN_00165de0)();
 }
 
 /* FUN_0017cf10 (0x17cf10) — readable C lift. */
@@ -292,9 +292,8 @@ void FUN_0017cf10(int pass_index)
 }
 
 /* FUN_0017cf20 (0x17cf20) — readable C lift (auto_lift_trivial). */
-void FUN_001677d0(void);
 void FUN_0017cf20(void) {
-  FUN_001677d0();
+  ((void(*)(void))FUN_001677d0)();
 }
 
 
@@ -345,7 +344,7 @@ void FUN_0017cf70(void)
 /* FUN_0017cf80 (0x17cf80) — readable C lift. */
 void FUN_0017cf80(int arg1, int arg2, uint32_t handle, int subcount2)
 {
-  FUN_0015f540(arg1, arg2, handle, subcount2);
+  ((void(*)(int, int, uint32_t, int))FUN_0015f540)(arg1, arg2, handle, subcount2);
 }
 
 /* FUN_0017cf90 (0x17cf90) — readable C lift (jmp thunk to 0x15f220). */
@@ -382,7 +381,7 @@ void FUN_0017cfe0(int tex_flags)
 /* FUN_0017cff0 (0x17cff0) — readable C lift (jmp thunk to 0x17b580). */
 void FUN_0017cff0(void)
 {
-  FUN_0017b580();
+  ((void(*)(void))FUN_0017b580)();
 }
 
 
@@ -409,7 +408,7 @@ void FUN_0017d020(void)
 /* FUN_0017d040 (0x17d040) — readable C lift. */
 void FUN_0017d040(void)
 {
-  FUN_0017adc0();
+  (void)((int(*)(void))FUN_0017adc0)();
 }
 
 /* 0x17d050 */
@@ -2777,8 +2776,8 @@ static unsigned int (*const b17ef00_c8e370)(void) = system_milliseconds;
 static int16_t (*const b17ef00_c100b00)(void) = main_get_window_count;
 static __int16 (*const b17ef00_cba4b0)(void) = local_player_count;
 static void (*const b17ef00_c16fbd0)(void) = FUN_0016fbd0;
-static void (*const b17ef00_c16fcf0)(void) = FUN_0016fcf0;
-static void (*const b17ef00_c16fb80)(void) = rasterizer_initialize;
+static int (*const b17ef00_c16fcf0)(int16_t) = FUN_0016fcf0;
+static void *(*const b17ef00_c16fb80)(int16_t) = rasterizer_initialize;
 static void __stdcall (*const b17ef00_c1d0da1)(void *status) = (void *)xbox_query_global_memory_status;
 static void * (*const b17ef00_c1d9e59)(const char *filename, const char *mode) = crt_fopen;
 static void (*const b17ef00_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
