@@ -38037,14 +38037,14 @@
         },
         {
           "addr": "0x68eb0",
-          "decl": "void FUN_00068eb0(void);",
-          "ported": false,
+          "decl": "int FUN_00068eb0(void *tif /*@<edi>*/);",
+          "ported": true,
           "name": "FUN_00068eb0"
         },
         {
           "addr": "0x68f60",
-          "decl": "void FUN_00068f60(void);",
-          "ported": false,
+          "decl": "int FUN_00068f60(void *tif /*@<edi>*/);",
+          "ported": true,
           "name": "FUN_00068f60"
         },
         {

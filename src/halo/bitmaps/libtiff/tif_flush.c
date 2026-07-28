@@ -714,164 +714,120 @@ void FUN_00068e20(void)
 #endif
 
 
-/* FUN_00068eb0 (0x68eb0) — XBE naked draft (batch 317). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068eb0(void)
+/* FUN_00068eb0 (0x68eb0) — Capstone lift: LZW/Huffman accumulate codes.
+ * ABI: tif@<edi>. Returns accumulated length or negative status. */
+int FUN_00068eb0(void *tif /*@<edi>*/)
 {
-  __asm__ volatile(
-      "movl 0x120(%%edi), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x2(%%edx), %%si\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_00068eb0_1:\n\t"
-      "cmpw $0, 0x2(%%edx)\n\t"
-      "je .LFUN_00068eb0_3\n\t"
-      ".LFUN_00068eb0_2:\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movswl (%%edx), %%esi\n\t"
-      "shll $8, %%ecx\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "movzbw 0x2cf770(%%esi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movzbw 0x2ddd70(%%esi), %%si\n\t"
-      "jne .LFUN_00068eb0_4\n\t"
-      ".LFUN_00068eb0_3:\n\t"
-      "movl 0x138(%%edi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00068eb0_5\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x138(%%edi)\n\t"
-      "movl 0x134(%%edi), %%ecx\n\t"
-      "movzbl (%%ecx), %%ecx\n\t"
-      "movl 0x14(%%edx), %%ebx\n\t"
-      "movzbw (%%ebx,%%ecx,1), %%cx\n\t"
-      "movw %%cx, (%%edx)\n\t"
-      "incl 0x134(%%edi)\n\t"
-      "jmp .LFUN_00068eb0_2\n\t"
-      ".LFUN_00068eb0_4:\n\t"
-      "cmpw $1, %%cx\n\t"
-      "je .LFUN_00068eb0_6\n\t"
-      "cmpw $0xd2, %%cx\n\t"
-      "je .LFUN_00068eb0_7\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "subl $2, %%ecx\n\t"
-      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
-      "movw %%si, 0x2(%%edx)\n\t"
-      "movw 0x2ca254(,%%ecx,2), %%cx\n\t"
-      "movswl %%cx, %%ebx\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "cmpw $0x40, %%cx\n\t"
-      "jge .LFUN_00068eb0_1\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_00068eb0_5:\n\t"
-      "popl %%esi\n\t"
-      "movl $0xfffffffc, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_00068eb0_6:\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_00068eb0_7:\n\t"
-      "popl %%esi\n\t"
-      "movl $0xfffffffd, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *state;
+  unsigned short bits;
+  unsigned short next_bits;
+  unsigned short code;
+  unsigned idx;
+  int rem;
+  unsigned char *buf;
+  unsigned char *map;
+  int acc = 0;
+  short len;
+
+  state = *(unsigned char **)((char *)tif + 0x120);
+  bits = *(unsigned short *)(state + 2);
+  for (;;) {
+    if (*(unsigned short *)(state + 2) == 0)
+      goto refill;
+  decode:
+    idx = ((unsigned)(short)bits << 8) + (unsigned)(*(short *)state);
+    next_bits = *(unsigned char *)(0x2cf770u + idx);
+    code = *(unsigned char *)(0x2ddd70u + idx);
+    if (next_bits == 0) {
+  refill:
+      rem = *(int *)((char *)tif + 0x138);
+      if (rem <= 0)
+        return (int)0xfffffffc;
+      *(int *)((char *)tif + 0x138) = rem - 1;
+      buf = *(unsigned char **)((char *)tif + 0x134);
+      map = *(unsigned char **)(state + 0x14);
+      *(unsigned short *)state = map[*buf];
+      *(int *)((char *)tif + 0x134) = *(int *)((char *)tif + 0x134) + 1;
+      bits = *(unsigned short *)(state + 2);
+      goto decode;
+    }
+    if (next_bits == 1)
+      return -1;
+    if (next_bits == 0xd2)
+      return (int)0xfffffffd;
+    {
+      int k = (int)(short)next_bits - 2;
+      k = k + k * 2;
+      *(unsigned short *)(state + 2) = code;
+      bits = code;
+      len = *(short *)(0x2ca254u + (unsigned)k * 2);
+      acc += (int)len;
+      if (len >= 0x40)
+        continue;
+      return acc;
+    }
+  }
 }
-#else
-#error "FUN_00068eb0: clang naked draft required"
-#endif
 
 
-/* FUN_00068f60 (0x68f60) — XBE naked draft (batch 317). */
-#if defined(__clang__)
 
-
-__attribute__((naked, noinline))
-void FUN_00068f60(void)
+/* FUN_00068f60 (0x68f60) — Capstone lift: LZW/Huffman accumulate (+8 bit bias).
+ * ABI: tif@<edi>. Returns accumulated length or negative status. */
+int FUN_00068f60(void *tif /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x120(%%edi), %%esi\n\t"
-      "movw 0x2(%%esi), %%dx\n\t"
-      "addw $8, %%dx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00068f60_1:\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "je .LFUN_00068f60_3\n\t"
-      ".LFUN_00068f60_2:\n\t"
-      "movswl %%dx, %%ecx\n\t"
-      "movswl (%%esi), %%edx\n\t"
-      "shll $8, %%ecx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movzbw 0x2cf770(%%edx), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "movzbw 0x2ddd70(%%edx), %%dx\n\t"
-      "jne .LFUN_00068f60_4\n\t"
-      ".LFUN_00068f60_3:\n\t"
-      "movl 0x138(%%edi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00068f60_5\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x138(%%edi)\n\t"
-      "movl 0x134(%%edi), %%ecx\n\t"
-      "movzbl (%%ecx), %%ecx\n\t"
-      "movl 0x14(%%esi), %%ebx\n\t"
-      "movzbw (%%ebx,%%ecx,1), %%cx\n\t"
-      "movw %%cx, (%%esi)\n\t"
-      "incl 0x134(%%edi)\n\t"
-      "jmp .LFUN_00068f60_2\n\t"
-      ".LFUN_00068f60_4:\n\t"
-      "cmpw $1, %%cx\n\t"
-      "je .LFUN_00068f60_6\n\t"
-      "cmpw $0xd2, %%cx\n\t"
-      "je .LFUN_00068f60_7\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "subl $0x6a, %%ecx\n\t"
-      "leal (%%ecx,%%ecx,2), %%ecx\n\t"
-      "movw %%dx, 0x2(%%esi)\n\t"
-      "movw 0x2ca254(,%%ecx,2), %%cx\n\t"
-      "movswl %%cx, %%ebx\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "cmpw $0x40, %%cx\n\t"
-      "jl .LFUN_00068f60_8\n\t"
-      "addl $8, %%edx\n\t"
-      "jmp .LFUN_00068f60_1\n\t"
-      ".LFUN_00068f60_5:\n\t"
-      "popl %%esi\n\t"
-      "movl $0xfffffffc, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_00068f60_6:\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_00068f60_7:\n\t"
-      "movl $0xfffffffd, %%eax\n\t"
-      ".LFUN_00068f60_8:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *state;
+  unsigned short bits;
+  unsigned short next_bits;
+  unsigned short code;
+  unsigned idx;
+  int rem;
+  unsigned char *buf;
+  unsigned char *map;
+  int acc = 0;
+  short len;
+
+  state = *(unsigned char **)((char *)tif + 0x120);
+  bits = (unsigned short)(*(unsigned short *)(state + 2) + 8);
+  for (;;) {
+    if (*(unsigned short *)(state + 2) == 0)
+      goto refill;
+  decode:
+    idx = ((unsigned)(short)bits << 8) + (unsigned)(*(short *)state);
+    next_bits = *(unsigned char *)(0x2cf770u + idx);
+    code = *(unsigned char *)(0x2ddd70u + idx);
+    if (next_bits == 0) {
+  refill:
+      rem = *(int *)((char *)tif + 0x138);
+      if (rem <= 0)
+        return (int)0xfffffffc;
+      *(int *)((char *)tif + 0x138) = rem - 1;
+      buf = *(unsigned char **)((char *)tif + 0x134);
+      map = *(unsigned char **)(state + 0x14);
+      *(unsigned short *)state = map[*buf];
+      *(int *)((char *)tif + 0x134) = *(int *)((char *)tif + 0x134) + 1;
+      bits = *(unsigned short *)(state + 2);
+      goto decode;
+    }
+    if (next_bits == 1)
+      return -1;
+    if (next_bits == 0xd2)
+      return (int)0xfffffffd;
+    {
+      int k = (int)(short)next_bits - 0x6a;
+      k = k + k * 2;
+      *(unsigned short *)(state + 2) = code;
+      bits = code;
+      len = *(short *)(0x2ca254u + (unsigned)k * 2);
+      acc += (int)len;
+      if (len >= 0x40) {
+        bits = (unsigned short)(bits + 8);
+        continue;
+      }
+      return acc;
+    }
+  }
 }
-#else
-#error "FUN_00068f60: clang naked draft required"
-#endif
+
 
 
 /* FUN_00069020 (0x69020) — XBE naked draft (batch 300). */
