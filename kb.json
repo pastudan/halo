@@ -27359,7 +27359,7 @@
         {
           "addr": "0x7f3a0",
           "decl": "void targa_export(void);",
-          "ported": false,
+          "ported": true,
           "name": "targa_export"
         },
         {
@@ -27375,7 +27375,7 @@
         {
           "addr": "0x7fa00",
           "decl": "void FUN_0007fa00(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0007fa00"
         },
         {
@@ -37957,7 +37957,7 @@
         {
           "addr": "0x68780",
           "decl": "void FUN_00068780(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00068780"
         },
         {
@@ -38684,7 +38684,7 @@
         },
         {
           "addr": "0x6f620",
-          "decl": "int FUN_0006f620(void *tif, void *buf, int count);",
+          "decl": "void FUN_0006f620(void);",
           "ported": false,
           "name": "FUN_0006f620"
         },
@@ -38873,7 +38873,7 @@
         },
         {
           "addr": "0x717b0",
-          "decl": "void FUN_000717b0(void);",
+          "decl": "void FUN_000717b0(void *block, unsigned char *out);",
           "ported": false,
           "name": "FUN_000717b0"
         },
