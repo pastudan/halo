@@ -28520,7 +28520,7 @@
         {
           "addr": "0xef110",
           "decl": "void FUN_000ef110(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ef110"
         },
         {
@@ -28532,7 +28532,7 @@
         {
           "addr": "0xef5c0",
           "decl": "void playlist_profile_initialize_racing_rules(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "playlist_profile_initialize_racing_rules"
         },
         {
