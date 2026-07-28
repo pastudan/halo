@@ -7941,7 +7941,7 @@
         {
           "addr": "0xd9960",
           "decl": "void FUN_000d9960(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000d9960"
         },
         {
@@ -12490,7 +12490,7 @@
         {
           "addr": "0xc85b0",
           "decl": "char FUN_000c85b0(int16_t function_index, int root_datum);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000c85b0"
         },
         {
