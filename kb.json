@@ -4788,9 +4788,15 @@
         },
         {
           "addr": "0x1c6900",
-          "decl": "void FUN_001c6900(void);",
-          "ported": false,
-          "name": "FUN_001c6900"
+          "decl": "char FUN_001c6900(void *file_ref);",
+          "ported": true,
+          "name": "FUN_001c6900",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c6b20",
@@ -41740,7 +41746,8 @@
         {
           "addr": "0x2060f8",
           "decl": "void IDirectSound_CreateSoundStream(void);",
-          "ported": true
+          "ported": true,
+          "name": "IDirectSound_CreateSoundStream"
         },
         {
           "addr": "0x206232",
@@ -45632,8 +45639,9 @@
         },
         {
           "addr": "0x002060f8",
-          "decl": "void IDirectSound_CreateSoundStream(void);",
-          "ported": true
+          "decl": "void IDirectSound_CreateSoundStream_dup(void);",
+          "ported": true,
+          "name": "IDirectSound_CreateSoundStream_dup"
         },
         {
           "addr": "0x00206232",

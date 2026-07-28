@@ -1,0 +1,6 @@
+{
+  "description": "FUN_001c6900: file_open fails \u2192 return 0",
+  "stub_returns": {
+    "file_open": 0
+  }
+}
