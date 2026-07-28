@@ -17699,7 +17699,7 @@
         {
           "addr": "0x893a0",
           "decl": "void flying_camera_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "flying_camera_update"
         },
         {
@@ -17887,7 +17887,7 @@
         {
           "addr": "0x8cf30",
           "decl": "void FUN_0008cf30(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0008cf30"
         },
         {
