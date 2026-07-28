@@ -215,4477 +215,2033 @@ void FUN_0016eef0(void *group)
   FUN_00174510(grp, 0);
 }
 
-/* rasterizer_transparent_geometry_group_draw (0x174d10) — XBE naked draft (batch 79). */
-#if defined(__clang__)
-static void (*const b174d10_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b174d10_exitfn)(int) = system_exit;
-static char (*const b174d10_c184570)(void *group) = FUN_00184570;
-static void (*const b174d10_c1845b0)(void *group, int a2) = FUN_001845b0;
-static void * (*const b174d10_c184460)(short group_presorted_index) = rasterizer_transparent_geometry_group_get;
-static void (*const b174d10_c174d10)(void *group, int dirty) = rasterizer_transparent_geometry_group_draw;
-static short (*const b174d10_c184610)(void *group) = FUN_00184610;
-static void (*const b174d10_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void __stdcall (*const b174d10_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
-static void (*const b174d10_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void __stdcall (*const b174d10_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
-static void __stdcall (*const b174d10_c1e98e0)(uint32_t value) = (void *)D3DDevice_SetRenderState_ZBias;
-static void *(*const b174d10_memset)(void *, int, unsigned int) = csmemset;
-static float (*const b174d10_rmreal)(unsigned int *) = random_math_real;
-static unsigned int (*const b174d10_cd1dd0)(float *color) = FUN_000d1dd0;
-static void (*const b174d10_c156510)(void *state) = rasterizer_set_pixel_shader;
-static void (*const b174d10_c156710)(void *a1) = rasterizer_set_model_skinning;
-static void __stdcall (*const b174d10_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
-static void (*const b174d10_c174510)(void *group, int a2) = FUN_00174510;
-static int (*const b174d10_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b174d10_c189cb0)(char flag, void *position, void *string, int color) = FUN_00189cb0;
-static void (*const b174d10_ce2220)(int state, int value) = SetRenderStateSmart;
-static char (*const b174d10_c190980)(void *shader) = shader_ignores_effect;
-static void (*const b174d10_c156ab0)(void *lighting) = rasterizer_set_model_lighting;
-static void * (*const b174d10_c1843b0)(void *group) = rasterizer_transparent_geometry_next_group;
-static char (*const b174d10_c190930)(void *shader) = shader_is_water_decal;
-static void (*const b174d10_c1595c0)(void) = (void *)FUN_001595c0;
-static int (*const b174d10_c190710)(void *shader) = shader_get_vertex_shader_permutation;
-static void (*const b174d10_c156c30)(float near_z, float far_z) = rasterizer_set_frustum_z;
-static char (*const b174d10_c1908a0)(void *shader) = shader_is_decal;
-static void * (*const b174d10_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-static void (*const b174d10_c158ae0)(int mode) = FUN_00158ae0;
-static void (*const b174d10_c159900)(void *group) = FUN_00159900;
-static void (*const b174d10_c155c20)(int stage, void *bitmap_data) = rasterizer_set_texture_bitmap_data;
-static void (*const b174d10_ce2470)(int stage, int state, int value) = SetTextureStageStateSmart;
-static void (*const b174d10_c155e80)(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index) = rasterizer_set_texture;
-static void (*const b174d10_c1580b0)(int framebuffer_blend_function) = FUN_001580b0;
-static void (*const b174d10_c190e10)(void *map_animation, void *external_animation, float u_scale, float v_scale, float u_offset, float v_offset, float rotation, float time, float *out_u, float *out_v) = FUN_00190e10;
-static void (*const b174d10_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static float (*const b174d10_c13070)(float *a, float *b) = FUN_00013070;
-static void __stdcall (*const b174d10_c1eb2d0)(uint32_t stream, void *vertex_buffer, uint32_t stride) = (void *)D3DDevice_SetStreamSource;
-static void * (*const b174d10_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void *(*const b174d10_elem)(void *, int, int) = tag_block_get_element;
-static void *(*const b174d10_tag)(int, int) = tag_get;
-static double (*const b174d10_c1d9c2b)(double x) = floor;
-static void (*const b174d10_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = D3DDevice_SetTextureStageState;
-static float (*const b174d10_c99500)(float *plane, float *point) = plane3d_distance_to_point;
-static char (*const b174d10_c17c2f0)(void *shader, void *state) = FUN_0017c2f0;
-static uint32_t (*const b174d10_c99530)(float alpha, float *color) = real_a_rgb_color_to_pixel32;
-static float (*const b174d10_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
-static unsigned int (*const b174d10_d1c90)(float *) = FUN_000d1c90;
-static int (*const b174d10_c190c00)(int a0) = numeric_countdown_timer_get;
-static char (*const b174d10_c17bca0)(void *shader, void *state) = (void *)FUN_0017bca0;
-static void (*const b174d10_c179de0)(void *group) = FUN_00179de0;
-static uint32_t (*const b174d10_c159070)(float a1) = FUN_00159070;
-static void (*const b174d10_c155cf0)(int stage, int bitmap_tag_index, int frame_index) = rasterizer_set_texture_direct;
-static void (*const b174d10_c1584f0)(int stage, int target, int max_mipmap) = FUN_001584f0;
-static void (*const b174d10_c16eef0)(void *group) = FUN_0016eef0;
-static void (*const b174d10_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void * (*const b174d10_c184390)(short *out_count) = rasterizer_secondary_geometry_groups_get;
-
-__attribute__((naked, noinline))
-void rasterizer_transparent_geometry_group_draw(void *group __attribute__((unused)), int dirty __attribute__((unused)))
+/* rasterizer_transparent_geometry_group_draw (0x174d10) — readable C lift (restored pre-naked). */
+void rasterizer_transparent_geometry_group_draw(void *group, int dirty)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x550, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movl $1, %%esi\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "movb $0, -0x2d(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_1\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0xe8\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x26276c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_1:\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_2\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0xe9\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_2:\n\t"
-      "movl 0x98(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_3\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_317\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_3:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c184570]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_317\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1845b0]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x94(%%edi), %%ax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_4\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c184460]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c174d10]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_4:\n\t"
-      "movb 0x3256c2, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_44\n\t"
-      "testb $2, (%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_309\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_309\n\t"
-      "cmpl $-1, 0x90(%%edi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_309\n\t"
-      "movl $6, %%eax\n\t"
-      "movw %%ax, -0xc8(%%ebp)\n\t"
-      "movw %%ax, -0xc6(%%ebp)\n\t"
-      "movw %%ax, -0xc4(%%ebp)\n\t"
-      "movw %%ax, -0xc2(%%ebp)\n\t"
-      "movl $0xd, %%eax\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "movw %%ax, -0xc0(%%ebp)\n\t"
-      "movw %%ax, -0xbe(%%ebp)\n\t"
-      "movl $0x41, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movw %%ax, -0xbc(%%ebp)\n\t"
-      "movw %%ax, -0xba(%%ebp)\n\t"
-      "movw %%bx, -0xb8(%%ebp)\n\t"
-      "movw %%bx, -0xb6(%%ebp)\n\t"
-      "movw %%bx, -0xb4(%%ebp)\n\t"
-      "movw %%bx, -0xb2(%%ebp)\n\t"
-      "call *%[c184610]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x3256ea, %%ax\n\t"
-      "cmpw $0x3e8, %%ax\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_5\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movb $0, 0xb(%%ebp)\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_6\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_5:\n\t"
-      "movb $1, 0xb(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_6:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_7\n\t"
-      "cmpw $0xc, %%si\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x118\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a52e0\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_8:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movw -0xc8(%%ebp,%%edx,2), %%bx\n\t"
-      "cmpw $-1, %%bx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x119\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a52b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_9:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c178b40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1e96d0]\n\t"
-      "movl $0x10101, %%edx\n\t"
-      "movl $0x40358, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "movzbl 0xb(%%ebp), %%esi\n\t"
-      "movl %%esi, %%edx\n\t"
-      "movl $0x40304, %%ecx\n\t"
-      "movl $0x10101, 0x1fb7a4\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl %%esi, 0x1fb784\n\t"
-      "movl $1, %%esi\n\t"
-      "movl %%esi, %%edx\n\t"
-      "movl $0x40344, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl %%esi, %%edx\n\t"
-      "movl $0x40348, %%ecx\n\t"
-      "movl %%esi, 0x1fb790\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl $0x8006, %%edx\n\t"
-      "movl $0x40350, %%ecx\n\t"
-      "movl %%esi, 0x1fb794\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40300, %%ecx\n\t"
-      "movl $0x8006, 0x1fb7c0\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ebx, 0x1fb788\n\t"
-      "call *%[c1ea290]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x4035c, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl $0x203, %%edx\n\t"
-      "movl $0x40354, %%ecx\n\t"
-      "movl %%ebx, 0x1fb798\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl %%ebx\n\t"
-      "movl $0x203, 0x1fb77c\n\t"
-      "call *%[c1e98e0]\n\t"
-      "pushl $0xf0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "movswl 0x3256ea, %%eax\n\t"
-      "addl 0x90(%%edi), %%eax\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl $0x3f800000, -0x2c(%%ebp)\n\t"
-      "call *%[rmreal]\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "call *%[rmreal]\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rmreal]\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "addl $0x18, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_10\n\t"
-      "fld %%st(0)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_11\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_10:\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_11:\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_13\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_12\n\t"
-      "fld %%st(0)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_14\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_12:\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_14\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_13:\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_14:\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fcomp %%st(2)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_15\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_16\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_15:\n\t"
-      "fld %%st(1)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_16:\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_17\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_19\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_17:\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fcomp %%st(2)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_18\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_19\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_18:\n\t"
-      "fld %%st(1)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_19:\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "movb 0xb(%%ebp), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "fdivrs 0x2a52b4\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      ".byte 0xd8, 0xe2\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fadds 0x256140\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      ".byte 0xd8, 0xe2\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fadds 0x256140\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "fxch %%st(2)\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fadds 0x256140\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "fstp %%st(1)\n\t"
-      "fstp %%st(0)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_24\n\t"
-      "flds 0x325724\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_21\n\t"
-      "flds 0x325724\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_20\n\t"
-      "flds 0x2533c8\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_22\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_20:\n\t"
-      "flds 0x325724\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_22\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_21:\n\t"
-      "flds 0x29d598\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_22:\n\t"
-      "cmpw $0x3e8, 0x3256ea\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_23\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "fmuls -0x20(%%ebp)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_24\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_23:\n\t"
-      "fsts -0x20(%%ebp)\n\t"
-      "fsts -0x24(%%ebp)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_24:\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_25\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_26\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_25:\n\t"
-      "movl $1, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x156\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a528c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_27\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_26:\n\t"
-      "movl $1, %%esi\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_27:\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_28\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_29\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_28:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x157\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a5264\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_29:\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_30\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_31\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_30:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x158\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a523c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_31:\n\t"
-      "leal -0x28(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cd1dd0]\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl %%eax, 0x5a5b6c\n\t"
-      "movl %%esi, 0x5a5b94\n\t"
-      "movl %%esi, 0x5a5ae0\n\t"
-      "call *%[c156510]\n\t"
-      "movl 0x60(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_32\n\t"
-      "movw 0x64(%%edi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_32\n\t"
-      "movw %%cx, -0x18(%%ebp)\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_33\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_32:\n\t"
-      "movl 0x31fc60, %%edx\n\t"
-      "movw %%si, -0x18(%%ebp)\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_33:\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c156710]\n\t"
-      "movb (%%edi), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb $0x20, %%al\n\t"
-      "movl $0x3f800000, -0xb0(%%ebp)\n\t"
-      "movl $0, -0xac(%%ebp)\n\t"
-      "movl $0, -0xa8(%%ebp)\n\t"
-      "movl $0, -0xa4(%%ebp)\n\t"
-      "movl $0, -0xa0(%%ebp)\n\t"
-      "movl $0x3f800000, -0x9c(%%ebp)\n\t"
-      "movl $0, -0x98(%%ebp)\n\t"
-      "movl $0, -0x94(%%ebp)\n\t"
-      "movl $0, -0x90(%%ebp)\n\t"
-      "movl $0, -0x8c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x88(%%ebp)\n\t"
-      "movl $0, -0x84(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_34\n\t"
-      "movl 0x5a5c64, %%ecx\n\t"
-      "movl 0x5a5c70, %%edx\n\t"
-      "movl 0x5a5c7c, %%eax\n\t"
-      "movl %%ecx, -0xb0(%%ebp)\n\t"
-      "movl 0x5a5bc8, %%ecx\n\t"
-      "movl %%edx, -0xac(%%ebp)\n\t"
-      "movl 0x5a5c68, %%edx\n\t"
-      "movl %%eax, -0xa8(%%ebp)\n\t"
-      "movl 0x5a5c74, %%eax\n\t"
-      "movl %%ecx, -0xa4(%%ebp)\n\t"
-      "movl 0x5a5c80, %%ecx\n\t"
-      "movl %%edx, -0xa0(%%ebp)\n\t"
-      "movl 0x5a5bcc, %%edx\n\t"
-      "movl %%eax, -0x9c(%%ebp)\n\t"
-      "movl 0x5a5c6c, %%eax\n\t"
-      "movl %%ecx, -0x98(%%ebp)\n\t"
-      "movl 0x5a5c78, %%ecx\n\t"
-      "movl %%edx, -0x94(%%ebp)\n\t"
-      "movl 0x5a5c84, %%edx\n\t"
-      "movl %%eax, -0x90(%%ebp)\n\t"
-      "movl 0x5a5bd0, %%eax\n\t"
-      "movl %%ecx, -0x8c(%%ebp)\n\t"
-      "movl %%edx, -0x88(%%ebp)\n\t"
-      "movl %%eax, -0x84(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_34:\n\t"
-      "pushl $3\n\t"
-      "leal -0xb0(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x58\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "call *%[c174510]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_309\n\t"
-      "flds 0x70(%%edi)\n\t"
-      "subl $8, %%esp\n\t"
-      "fstpl (%%esp)\n\t"
-      "leal -0x550(%%ebp), %%edx\n\t"
-      "pushl $0x2a5234\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls 0x254644\n\t"
-      "addl $0x10, %%esp\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_35\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x28(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_37\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_35:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_36\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x28(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_37\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_36:\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_37:\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls 0x254644\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_38\n\t"
-      "movl $0, -0x24(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_40\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_38:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_39\n\t"
-      "movl $0x3f800000, -0x24(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_40\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_39:\n\t"
-      "fsts -0x24(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_40:\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_41\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x20(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_43\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_41:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_42\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x20(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_43\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_42:\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_43:\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x550(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x74(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "call *%[c189cb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_309\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_44:\n\t"
-      "cmpw $2, 0x14(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_50\n\t"
-      "movl 0x8(%%edi), %%ebx\n\t"
-      "cmpl 0x47e4b8, %%ebx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_51\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_51\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edi, %%esi\n\t"
-      "call *%[c184610]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xd\n\t"
-      "call *%[c178b40]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x40\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x203\n\t"
-      "pushl $0x39\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $0\n\t"
-      "call *%[c1e98e0]\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl $1, 0x5a5b94\n\t"
-      "call *%[c156510]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_45:\n\t"
-      "cmpl %%ebx, 0x8(%%esi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_50\n\t"
-      "cmpw $2, 0x14(%%esi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_50\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190980]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_49\n\t"
-      "movl 0x60(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_46\n\t"
-      "movw 0x64(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_46\n\t"
-      "movw %%ax, -0x18(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_47\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_46:\n\t"
-      "movl 0x31fc60, %%ecx\n\t"
-      "movw $1, -0x18(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_47:\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "call *%[c156710]\n\t"
-      "movl 0x68(%%edi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_48\n\t"
-      "movl 0x68(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c156ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_48:\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c174510]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_49:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1843b0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_45\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_50:\n\t"
-      "movl $1, %%esi\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_51:\n\t"
-      "testb $2, (%%edi)\n\t"
-      "movl $4, %%ebx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      "movb 0x3256fa, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_52\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      "cmpw %%bx, 0x24(%%eax)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      "cmpw %%si, 0x14(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      "movl 0x47e4b8, %%ecx\n\t"
-      "cmpl %%ecx, 0x8(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_53\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_52:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_53\n\t"
-      "cmpw $7, 0x24(%%eax)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190930]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_54\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_53:\n\t"
-      "call *%[c1595c0]\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_54:\n\t"
-      "testb $2, (%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      "cmpw %%si, 0x14(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      "cmpw %%bx, 0x24(%%eax)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1843b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_55\n\t"
-      "cmpw %%si, 0x14(%%eax)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_55\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "cmpl 0x8(%%edi), %%edx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_55\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_55\n\t"
-      "cmpw %%bx, 0x24(%%eax)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_56\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_55:\n\t"
-      "movb $1, -0x2d(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_56:\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_57\n\t"
-      "movl 0x50(%%edi), %%eax\n\t"
-      "movl 0x4c(%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x48(%%edi)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_308\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_57:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190710]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, -0x40(%%ebp)\n\t"
-      "call *%[c184610]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "testb $2, (%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_60\n\t"
-      "movl 0x60(%%edi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_58\n\t"
-      "movw 0x64(%%edi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_58\n\t"
-      "movw %%ax, -0x18(%%ebp)\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_59\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_58:\n\t"
-      "movl 0x31fc60, %%edx\n\t"
-      "movw %%si, -0x18(%%ebp)\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_59:\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c156710]\n\t"
-      "movl 0x68(%%edi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_60\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c156ab0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_60:\n\t"
-      "testb $8, (%%edi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_62\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_61\n\t"
-      "pushl $0x44800000\n\t"
-      "pushl $0x3b800000\n\t"
-      "call *%[c156c30]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_61:\n\t"
-      "pushl $0\n\t"
-      "pushl $0x7b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x81\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_63\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_62:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x7b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x40\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x203\n\t"
-      "pushl $0x39\n\t"
-      "call *%[ce2220]\n\t"
-      "movl 0xc(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1908a0]\n\t"
-      "movl 0x32570c, %%esi\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl %%esi, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x81\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x24, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_63:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x80(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_64:\n\t"
-      "cmpb $0, (%%edi)\n\t"
-      "movl $1, %%ebx\n\t"
-      "jns .Lrasterizer_transparent_geometry_group_draw_68\n\t"
-      "cmpw %%bx, 0x14(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_65\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_306\n\t"
-      "movl 0x3256a0, %%edx\n\t"
-      "movl 0x32569c, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c156c30]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_69\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_65:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_67\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_66\n\t"
-      "cmpw %%bx, 0x24(%%eax)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_66\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1906b0]\n\t"
-      "movb 0x28(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_66:\n\t"
-      "pushl $3\n\t"
-      "call *%[c158ae0]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_69\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_67:\n\t"
-      "pushl $2\n\t"
-      "call *%[c158ae0]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x7b\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_69\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_68:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_306\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_69:\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "movswl 0x24(%%eax), %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "cmpl $9, %%ecx\n\t"
-      "ja .Lrasterizer_transparent_geometry_group_draw_304\n\t"
-      "jmp *.Lrasterizer_transparent_geometry_group_draw_jt0(,%%ecx,4)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_70:\n\t"
-      "movswl 0x14(%%edi), %%eax\n\t"
-      "decl %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_71\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x2ab\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a51f4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_71:\n\t"
-      "movb 0x47e4c0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_316\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c159900]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_72:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1906b0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x58(%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_73\n\t"
-      "cmpw $2, 0x5c(%%esi)\n\t"
-      "movb $1, 0xb(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_74\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_73:\n\t"
-      "movb $0, 0xb(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_74:\n\t"
-      "movl 0x5c(%%edi), %%ecx\n\t"
-      "movb 0x28(%%esi), %%bl\n\t"
-      "pushl %%ecx\n\t"
-      "shrb $1, %%bl\n\t"
-      "pushl $0\n\t"
-      "andb $1, %%bl\n\t"
-      "call *%[c155c20]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x2e(%%esi), %%dl\n\t"
-      "andl $2, %%edx\n\t"
-      "orl $1, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0xa\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x2e(%%esi), %%al\n\t"
-      "andl $4, %%eax\n\t"
-      "orl $2, %%eax\n\t"
-      "shrl $1, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xb\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x2e(%%esi), %%cl\n\t"
-      "andb $1, %%cl\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "addl $2, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0xd\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x2e(%%esi), %%dl\n\t"
-      "andb $1, %%dl\n\t"
-      "negb %%dl\n\t"
-      "sbbl %%edx, %%edx\n\t"
-      "addl $2, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0xe\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x2e(%%esi), %%al\n\t"
-      "andb $1, %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xf\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movl 0x58(%%esi), %%eax\n\t"
-      "addl $0x44, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_75\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "call *%[c155e80]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x5e(%%esi), %%dl\n\t"
-      "andl $2, %%edx\n\t"
-      "orl $1, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0xa\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movb 0x5e(%%esi), %%al\n\t"
-      "andl $4, %%eax\n\t"
-      "orl $2, %%eax\n\t"
-      "shrl $1, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xb\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x5e(%%esi), %%cl\n\t"
-      "andb $1, %%cl\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "addl $2, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0xd\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x5e(%%esi), %%dl\n\t"
-      "andb $1, %%dl\n\t"
-      "negb %%dl\n\t"
-      "sbbl %%edx, %%edx\n\t"
-      "addl $2, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0xe\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x5e(%%esi), %%al\n\t"
-      "andb $1, %%al\n\t"
-      "addl $0x44, %%esp\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xf\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_75:\n\t"
-      "pushl $0\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x10101\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x2a(%%esi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1580b0]\n\t"
-      "movl -0x40(%%ebp), %%edx\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x41\n\t"
-      "call *%[c178b40]\n\t"
-      "movb (%%edi), %%al\n\t"
-      "addl $0x30, %%esp\n\t"
-      "testb $0x20, %%al\n\t"
-      "movl $0x3f800000, -0x108(%%ebp)\n\t"
-      "movl $0, -0x104(%%ebp)\n\t"
-      "movl $0, -0x100(%%ebp)\n\t"
-      "movl $0, -0xfc(%%ebp)\n\t"
-      "movl $0, -0xf8(%%ebp)\n\t"
-      "movl $0x3f800000, -0xf4(%%ebp)\n\t"
-      "movl $0, -0xf0(%%ebp)\n\t"
-      "movl $0, -0xec(%%ebp)\n\t"
-      "movl $0, -0xe8(%%ebp)\n\t"
-      "movl $0, -0xe4(%%ebp)\n\t"
-      "movl $0x3f800000, -0xe0(%%ebp)\n\t"
-      "movl $0, -0xdc(%%ebp)\n\t"
-      "movl $0x3f800000, -0x1f0(%%ebp)\n\t"
-      "movl $0, -0x1ec(%%ebp)\n\t"
-      "movl $0, -0x1e8(%%ebp)\n\t"
-      "movl $0, -0x1e4(%%ebp)\n\t"
-      "movl $0, -0x1e0(%%ebp)\n\t"
-      "movl $0x3f800000, -0x1dc(%%ebp)\n\t"
-      "movl $0, -0x1d8(%%ebp)\n\t"
-      "movl $0, -0x1d4(%%ebp)\n\t"
-      "movl $0, -0x1d0(%%ebp)\n\t"
-      "movl $0, -0x1cc(%%ebp)\n\t"
-      "movl $0, -0x1c8(%%ebp)\n\t"
-      "movl $0, -0x1c4(%%ebp)\n\t"
-      "movl $0, -0x1c0(%%ebp)\n\t"
-      "movl $0, -0x1bc(%%ebp)\n\t"
-      "movl $0, -0x1b8(%%ebp)\n\t"
-      "movl $0, -0x1b4(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_76\n\t"
-      "movl 0x5a5c64, %%ecx\n\t"
-      "movl 0x5a5c70, %%edx\n\t"
-      "movl 0x5a5c7c, %%eax\n\t"
-      "movl %%ecx, -0x108(%%ebp)\n\t"
-      "movl 0x5a5bc8, %%ecx\n\t"
-      "movl %%edx, -0x104(%%ebp)\n\t"
-      "movl 0x5a5c68, %%edx\n\t"
-      "movl %%eax, -0x100(%%ebp)\n\t"
-      "movl 0x5a5c74, %%eax\n\t"
-      "movl %%ecx, -0xfc(%%ebp)\n\t"
-      "movl 0x5a5c80, %%ecx\n\t"
-      "movl %%edx, -0xf8(%%ebp)\n\t"
-      "movl 0x5a5bcc, %%edx\n\t"
-      "movl %%eax, -0xf4(%%ebp)\n\t"
-      "movl 0x5a5c6c, %%eax\n\t"
-      "movl %%ecx, -0xf0(%%ebp)\n\t"
-      "movl 0x5a5c78, %%ecx\n\t"
-      "movl %%edx, -0xec(%%ebp)\n\t"
-      "movl 0x5a5c84, %%edx\n\t"
-      "movl %%eax, -0xe8(%%ebp)\n\t"
-      "movl 0x5a5bd0, %%eax\n\t"
-      "movl %%ecx, -0xe4(%%ebp)\n\t"
-      "movl %%edx, -0xe0(%%ebp)\n\t"
-      "movl %%eax, -0xdc(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_76:\n\t"
-      "movb 0xb(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_77\n\t"
-      "movl 0x5a5e18, %%eax\n\t"
-      "leal -0x1c0(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x40(%%edi), %%ecx\n\t"
-      "leal -0x1d0(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x3c(%%edi), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x60(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c190e10]\n\t"
-      "addl $0x28, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_77:\n\t"
-      "pushl $3\n\t"
-      "leal -0x108(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x58\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_78\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_79\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_78:\n\t"
-      "pushl $0x2a5160\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_79:\n\t"
-      "pushl $4\n\t"
-      "leal -0x1f0(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-0x51\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_80\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_81\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_80:\n\t"
-      "pushl $0x2a50e8\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_81:\n\t"
-      "movb 0x325718, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_87\n\t"
-      "cmpw $2, 0x5c(%%esi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_87\n\t"
-      "cmpl $-1, 0x58(%%esi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_87\n\t"
-      "cmpb $0, (%%edi)\n\t"
-      "js .Lrasterizer_transparent_geometry_group_draw_87\n\t"
-      "flds 0x9c(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_82\n\t"
-      "flds 0x9c(%%esi)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_83\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_82:\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_83:\n\t"
-      "movb 0x32568c, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_84\n\t"
-      "flds 0x2a50e0\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_85\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_84:\n\t"
-      "flds 0x2a50dc\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_85:\n\t"
-      "flds 0x5a5c04\n\t"
-      "movl 0x5a5bd4, %%ecx\n\t"
-      "flds 0x5a5c08\n\t"
-      "movl 0x5a5bd8, %%edx\n\t"
-      "fld %%st(0)\n\t"
-      "movl 0x5a5bdc, %%eax\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "pushl $0x5a5bc8\n\t"
-      "fxch %%st(1)\n\t"
-      "pushl $0x5a5bd4\n\t"
-      ".byte 0xd8, 0xe2\n\t"
-      "movl %%ecx, -0x90(%%ebp)\n\t"
-      "movl %%edx, -0x8c(%%ebp)\n\t"
-      "movl %%eax, -0x88(%%ebp)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fsts -0xa0(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fchs\n\t"
-      "fstps -0x9c(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fmuls 0x98(%%esi)\n\t"
-      "fstps -0x98(%%ebp)\n\t"
-      "flds 0x5a5c04\n\t"
-      "fadds 0x25bb10\n\t"
-      "fstps -0x94(%%ebp)\n\t"
-      "call *%[c13070]\n\t"
-      "addl $8, %%esp\n\t"
-      "fchs\n\t"
-      "pushl $2\n\t"
-      "fstps -0x84(%%ebp)\n\t"
-      "leal -0xa0(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-0x3f\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_86\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_87\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_86:\n\t"
-      "pushl $0x2a5048\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_87:\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movl $0x18201415, 0x5a5ac0\n\t"
-      "movl $0xc4, 0x5a5b28\n\t"
-      "movl $0xc, 0x5a5ae0\n\t"
-      "movl $0x1c00, 0x5a5ae4\n\t"
-      "movl $0xc00, %%edx\n\t"
-      "movl $0xc0, %%ecx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_88\n\t"
-      "movl $0x8080000, 0x5a5b48\n\t"
-      "movl %%ecx, 0x5a5b74\n\t"
-      "movl $0xc0c0000, 0x5a5b4c\n\t"
-      "movl %%ecx, 0x5a5b78\n\t"
-      "movl $0x250c0508, 0x5a5b50\n\t"
-      "movl %%edx, 0x5a5b7c\n\t"
-      "movl $3, %%ebx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_89\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_88:\n\t"
-      "movl $0x8050000, 0x5a5b48\n\t"
-      "movl $0xc0, 0x5a5b74\n\t"
-      "movl $1, %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_89:\n\t"
-      "movb 0xb(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_90\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "movl $0x1c190000, 0x5a5ac0(%%eax)\n\t"
-      "movl %%ecx, 0x5a5b28(%%eax)\n\t"
-      "movl $0xc090000, 0x5a5b48(%%eax)\n\t"
-      "movl %%ecx, 0x5a5b74(%%eax)\n\t"
-      "incl %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_90:\n\t"
-      "movb 0x325718, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_93\n\t"
-      "cmpw $2, 0x5c(%%esi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_93\n\t"
-      "cmpl $-1, 0x58(%%esi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_93\n\t"
-      "cmpb $0, (%%edi)\n\t"
-      "js .Lrasterizer_transparent_geometry_group_draw_93\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa\n\t"
-      "pushl $1\n\t"
-      "movl $0x54421, 0x5a5b98\n\t"
-      "movl $0x110000, 0x5a5ba0\n\t"
-      "movl $0, 0x5a5b9c\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "movl 0x47e4bc, %%edx\n\t"
-      "addl $0x3c, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "call *%[c1eb2d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_91\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_92\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_91:\n\t"
-      "pushl $0x2a4fc8\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_92:\n\t"
-      "movl 0x58(%%esi), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x10(%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "call *%[c155e80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl $0xc00, %%edx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_94\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_93:\n\t"
-      "movb 0xb(%%ebp), %%cl\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "setne %%al\n\t"
-      "shll $5, %%eax\n\t"
-      "orl $1, %%eax\n\t"
-      "movl %%eax, 0x5a5b98\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_94:\n\t"
-      "movb 0x3256d4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_102\n\t"
-      "testb $4, (%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_102\n\t"
-      "movswl 0x2a(%%esi), %%eax\n\t"
-      "cmpl $7, %%eax\n\t"
-      "ja .Lrasterizer_transparent_geometry_group_draw_101\n\t"
-      "jmp *.Lrasterizer_transparent_geometry_group_draw_jt1(,%%eax,4)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_95:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl $0x1c140000, 0x5a5ac0(%%eax)\n\t"
-      "movl %%edx, 0x5a5b28(%%eax)\n\t"
-      "movl %%ecx, 0x5a5b94\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_96:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl $0xc142034, 0x5a5b48(%%eax)\n\t"
-      "movl %%edx, 0x5a5b74(%%eax)\n\t"
-      "movl %%ecx, 0x5a5b94\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_97:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl $0xc14a034, 0x5a5b48(%%eax)\n\t"
-      "movl %%edx, 0x5a5b74(%%eax)\n\t"
-      "movl %%ecx, 0x5a5b94\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_98:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_100\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_99:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "movl $0x1c140000, 0x5a5ac0(%%eax)\n\t"
-      "movl %%edx, 0x5a5b28(%%eax)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_100:\n\t"
-      "incl %%ebx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl $0xc140000, 0x5a5b48(%%eax)\n\t"
-      "movl %%edx, 0x5a5b74(%%eax)\n\t"
-      "movl %%ecx, 0x5a5b94\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_101:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3a2\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x29fac4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "incl %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_102:\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl %%ecx, 0x5a5b94\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_103:\n\t"
-      "pushl $5\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1906b0]\n\t"
-      "movw 0x10(%%edi), %%dx\n\t"
-      "leal 0x48(%%eax), %%ebx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movw %%dx, -0x34(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_105\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_104\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_104:\n\t"
-      "pushl $0xa0\n\t"
-      "leal -0x450(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "movl $0xffffffff, -0x3c0(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x73686472\n\t"
-      "call *%[tag]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x444(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x450(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c174d10]\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $0x28, %%esp\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "cmpl (%%ebx), %%esi\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_104\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_105:\n\t"
-      "movl -0x40(%%ebp), %%ecx\n\t"
-      "movl -0x38(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x18\n\t"
-      "call *%[c178b40]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movb 0x29(%%esi), %%al\n\t"
-      "andb $4, %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0xfffff6ff, %%eax\n\t"
-      "addl $0x901, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x10101\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x29(%%esi), %%cl\n\t"
-      "andl $1, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x7f\n\t"
-      "pushl $0x3d\n\t"
-      "call *%[ce2220]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x2c(%%esi), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1580b0]\n\t"
-      "movb 0x29(%%esi), %%al\n\t"
-      "addl $0x38, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jns .Lrasterizer_transparent_geometry_group_draw_110\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_110\n\t"
-      "movl 0x54(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "leal 0x54(%%esi), %%eax\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_110\n\t"
-      "pushl $0x64\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x28(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6269746d\n\t"
-      "call *%[tag]\n\t"
-      "movw 0x60(%%eax), %%bx\n\t"
-      "movzbw 0x28(%%esi), %%cx\n\t"
-      "movl 0x6c(%%edi), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw $8, %%bx\n\t"
-      "setne %%al\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fildl -0x14(%%ebp)\n\t"
-      "decl %%eax\n\t"
-      "andl $3, %%eax\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "shll $2, %%esi\n\t"
-      "fmuls (%%eax,%%esi,1)\n\t"
-      "fadds 0x253398\n\t"
-      "fstpl (%%esp)\n\t"
-      "call *%[c1d9c2b]\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fistps -0x10c(%%ebp)\n\t"
-      "movl -0x10c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_106\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_107\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_106:\n\t"
-      "movl 0x6c(%%edi), %%ecx\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "fmuls (%%edx,%%esi,1)\n\t"
-      "subl $8, %%esp\n\t"
-      "fadds 0x253398\n\t"
-      "fstpl (%%esp)\n\t"
-      "call *%[c1d9c2b]\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fistps -0x110(%%ebp)\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "cmpl %%eax, -0x110(%%ebp)\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_107\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "fmuls (%%ecx,%%esi,1)\n\t"
-      "subl $8, %%esp\n\t"
-      "fadds 0x253398\n\t"
-      "fstpl (%%esp)\n\t"
-      "call *%[c1d9c2b]\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fistps -0x114(%%ebp)\n\t"
-      "movl -0x114(%%ebp), %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_107:\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_109\n\t"
-      "movswl %%bx, %%esi\n\t"
-      "movzwl %%cx, %%ecx\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_108:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%esi\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_108\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_109:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "cdq\n\t"
-      "idivl %%ecx\n\t"
-      "movl %%edx, -0x34(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_110:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movl 0x54(%%ebx), %%ecx\n\t"
-      "addl $0x54, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_140\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_111:\n\t"
-      "movswl %%cx, %%esi\n\t"
-      "cmpl (%%ebx), %%esi\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_127\n\t"
-      "pushl $0x64\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movw 0x2a(%%edx), %%bx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl $2, %%eax\n\t"
-      "movw %%ax, -0xd6(%%ebp)\n\t"
-      "movw %%ax, -0xd4(%%ebp)\n\t"
-      "movw %%ax, -0xd2(%%ebp)\n\t"
-      "movl $3, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0, -0x10(%%ebp)\n\t"
-      "movl %%ebx, -0xc(%%ebp)\n\t"
-      "movw $0, -0xd8(%%ebp)\n\t"
-      "movl $1, -0x134(%%ebp)\n\t"
-      "movl %%eax, -0x130(%%ebp)\n\t"
-      "movl %%eax, -0x12c(%%ebp)\n\t"
-      "movl %%eax, -0x128(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_112\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_113\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_112:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "movw -0xd8(%%ebp,%%eax,2), %%cx\n\t"
-      "movw %%cx, -0x14(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_113:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "testb $4, (%%edx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_114\n\t"
-      "testw %%bx, %%bx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_115\n\t"
-      "pushl $1\n\t"
-      "pushl $0x406\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4f00\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_114:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_116\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_115:\n\t"
-      "cmpw $4, %%bx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_117\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_116:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x407\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4ec4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_117:\n\t"
-      "movl -0x34(%%ebp), %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x28(%%ecx), %%edx\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c155e80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $0, -0x14(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_118\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "testb $2, (%%edx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_118\n\t"
-      "movl $3, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_121\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_118:\n\t"
-      "cmpw $0, -0x10(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_119\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_120\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_119:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "movl -0x134(%%ebp,%%eax,4), %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_120:\n\t"
-      "cmpw $0, -0x14(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_122\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_121:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "testb $4, (%%ecx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_122\n\t"
-      "movl $3, %%ebx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_124\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_122:\n\t"
-      "cmpw $0, -0x10(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_123\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_124\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_123:\n\t"
-      "movswl -0xc(%%ebp), %%edx\n\t"
-      "movl -0x134(%%ebp,%%edx,4), %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_124:\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xa\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0xb\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpw $0, -0x10(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_125\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_126\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_125:\n\t"
-      "movswl -0xc(%%ebp), %%eax\n\t"
-      "movl -0x134(%%ebp,%%eax,4), %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_126:\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xc\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "movb (%%ebx), %%cl\n\t"
-      "andb $1, %%cl\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "addl $2, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0xe\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce2470]\n\t"
-      "movb (%%ebx), %%dl\n\t"
-      "andb $1, %%dl\n\t"
-      "negb %%dl\n\t"
-      "sbbl %%edx, %%edx\n\t"
-      "addl $2, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0xf\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_127:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x54(%%edx), %%ecx\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "leal 0x54(%%edx), %%ebx\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_134\n\t"
-      "cmpw %%ax, -0x10(%%ebp)\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_128\n\t"
-      "cmpw %%ax, 0x2a(%%edx)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_133\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_128:\n\t"
-      "pushl $0x64\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl 0x8(%%eax), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0, -0x10(%%ebp)\n\t"
-      "movl %%ecx, -0x54(%%ebp)\n\t"
-      "movl %%edx, -0x50(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_129\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "testb $0x40, 0x29(%%ecx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_130\n\t"
-      "flds -0x54(%%ebp)\n\t"
-      "fmuls 0x70(%%edi)\n\t"
-      "fchs\n\t"
-      "fstps -0x54(%%ebp)\n\t"
-      "flds -0x50(%%ebp)\n\t"
-      "fmuls 0x70(%%edi)\n\t"
-      "fchs\n\t"
-      "fstps -0x50(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_130\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_129:\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_131\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_130:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "testb $8, 0x29(%%edx)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_132\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_131:\n\t"
-      "flds -0x54(%%ebp)\n\t"
-      "fmuls 0x3c(%%edi)\n\t"
-      "fstps -0x54(%%ebp)\n\t"
-      "flds -0x50(%%ebp)\n\t"
-      "fmuls 0x40(%%edi)\n\t"
-      "fstps -0x50(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_132:\n\t"
-      "shll $5, %%esi\n\t"
-      "leal -0x320(%%ebp,%%esi,1), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x5a5e18, %%ecx\n\t"
-      "leal -0x330(%%ebp,%%esi,1), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x14(%%eax), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0x50(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl -0x54(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x6c(%%edi), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x2c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190e10]\n\t"
-      "addl $0x28, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_136\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_133:\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_134\n\t"
-      "testb $8, 0x29(%%edx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_134\n\t"
-      "flds 0x5a5c64\n\t"
-      "shll $5, %%esi\n\t"
-      "fstps -0x330(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c68\n\t"
-      "fstps -0x32c(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c6c\n\t"
-      "fstps -0x328(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c70\n\t"
-      "fstps -0x320(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c74\n\t"
-      "fstps -0x31c(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c78\n\t"
-      "fstps -0x318(%%ebp,%%esi,1)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_135\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_134:\n\t"
-      "shll $5, %%esi\n\t"
-      "movl $0x3f800000, %%ecx\n\t"
-      "movl %%ecx, -0x330(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x32c(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x328(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x320(%%ebp,%%esi,1)\n\t"
-      "movl %%ecx, -0x31c(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x318(%%ebp,%%esi,1)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_135:\n\t"
-      "movl %%eax, -0x324(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x314(%%ebp,%%esi,1)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_136:\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "incl %%ecx\n\t"
-      "cmpw $4, %%cx\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_111\n\t"
-      "pushl $8\n\t"
-      "leal -0x330(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-0x51\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_141\n\t"
-      "pushl $0x2a4e30\n\t"
-      "pushl $0\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_137:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_138:\n\t"
-      "movb 0x3256d4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb %%bl, -0x1(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_163\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x60(%%eax), %%esi\n\t"
-      "cmpl $1, %%esi\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_139\n\t"
-      "movl $1, %%esi\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_139:\n\t"
-      "testb $0x10, (%%edi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_144\n\t"
-      "cmpw $0, 0x2c(%%eax)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_144\n\t"
-      "pushl $0x5a5bc8\n\t"
-      "pushl $0x5a5dc8\n\t"
-      "call *%[c99500]\n\t"
-      "fdivs 0x5a5dec\n\t"
-      "addl $8, %%esp\n\t"
-      "fchs\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_142\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_143\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_140:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_137\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_141:\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c17c2f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_137\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_138\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_142:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_143\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_143:\n\t"
-      "fmuls 0x5a5de4\n\t"
-      "movswl %%si, %%esi\n\t"
-      "pushl $0x5a5dd8\n\t"
-      "shll $2, %%esi\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99530]\n\t"
-      "movl %%eax, 0x5a5ae8(%%esi)\n\t"
-      "movl $0x310c1101, 0x5a5b48(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "movl $0xc00, 0x5a5b74(%%esi)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_163\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_144:\n\t"
-      "cmpw $1, 0x14(%%edi)\n\t"
-      "movw 0x30(%%eax), %%cx\n\t"
-      "movl $0, -0x180(%%ebp)\n\t"
-      "movl $0, -0x17c(%%ebp)\n\t"
-      "movl $0, -0x178(%%ebp)\n\t"
-      "movl $0, -0x174(%%ebp)\n\t"
-      "movl $0, -0x170(%%ebp)\n\t"
-      "movl $0, -0x16c(%%ebp)\n\t"
-      "movl $0, -0x168(%%ebp)\n\t"
-      "movl $0, -0x164(%%ebp)\n\t"
-      "movl $0, -0x160(%%ebp)\n\t"
-      "movl $0, -0x15c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x158(%%ebp)\n\t"
-      "movl $0, -0x154(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_147\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x18(%%edi)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_145\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_146\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_145:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_146\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_146:\n\t"
-      "fstps -0x158(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_147:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_148\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_148\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_148\n\t"
-      "flds -0x158(%%ebp)\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "fmuls -0x4(%%eax,%%edx,4)\n\t"
-      "fstps -0x158(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_148:\n\t"
-      "pushl $3\n\t"
-      "leal -0x180(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-0x54\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_149\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_150\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_149:\n\t"
-      "pushl $0x2a4d98\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_150:\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "movswl 0x2e(%%ebx), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_153\n\t"
-      "decl %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_152\n\t"
-      "decl %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_151\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4a1\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4d68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x6c(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_155\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_151:\n\t"
-      "movl $5, %%ecx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_154\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_152:\n\t"
-      "movl $0x15, %%ecx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_154\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_153:\n\t"
-      "movl $0x14, %%ecx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_154:\n\t"
-      "movl %%ecx, -0x6c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_155:\n\t"
-      "movswl 0x2c(%%ebx), %%eax\n\t"
-      "cmpl $7, %%eax\n\t"
-      "ja .Lrasterizer_transparent_geometry_group_draw_162\n\t"
-      "jmp *.Lrasterizer_transparent_geometry_group_draw_jt2(,%%eax,4)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_156:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0x1c00, %%ecx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "movl %%ecx, 0x5a5ac0(%%eax)\n\t"
-      "movl $0xc00, 0x5a5b28(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_163\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_157:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "xorl $0x20, %%edx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0xc002000, %%edx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_159\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_158:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "xorl $0x20, %%edx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0xc00a000, %%edx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_159:\n\t"
-      "movl %%edx, 0x5a5b48(%%eax)\n\t"
-      "movl $0xc00, 0x5a5b74(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_163\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_160:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0xc00, %%ecx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "movl %%ecx, 0x5a5b48(%%eax)\n\t"
-      "movl $0xc00, 0x5a5b74(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_163\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_161:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0x1c00, %%edx\n\t"
-      "shll $0x10, %%edx\n\t"
-      "movl %%edx, 0x5a5ac0(%%eax)\n\t"
-      "movl $0xc00, %%edx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%edx, 0x5a5b28(%%eax)\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "movl %%ecx, 0x5a5b48(%%eax)\n\t"
-      "movl %%edx, 0x5a5b74(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_163\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_162:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4c0\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x29fac4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_163:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x60(%%eax), %%ecx\n\t"
-      "addl $0x60, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_164:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl $0x70\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_165\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4d3\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4d38\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_165:\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_166\n\t"
-      "testb $4, (%%esi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_166\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_167\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_166:\n\t"
-      "flds 0x5a5e18\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "fdivs 0x8(%%esi)\n\t"
-      "movw 0x6(%%esi), %%dx\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c10a5e0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_167:\n\t"
-      "flds 0x1c(%%esi)\n\t"
-      "fsubs 0xc(%%esi)\n\t"
-      "flds 0x20(%%esi)\n\t"
-      "fsubs 0x10(%%esi)\n\t"
-      "flds 0x24(%%esi)\n\t"
-      "fsubs 0x14(%%esi)\n\t"
-      "fstps -0xb8(%%ebp)\n\t"
-      "flds 0x28(%%esi)\n\t"
-      "fsubs 0x18(%%esi)\n\t"
-      "fstps -0xb4(%%ebp)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "fadds 0xc(%%esi)\n\t"
-      "fstps -0x64(%%ebp)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fadds 0x10(%%esi)\n\t"
-      "fstps -0x60(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0xb8(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fadds 0x14(%%esi)\n\t"
-      "fstps -0x5c(%%ebp)\n\t"
-      "fmuls -0xb4(%%ebp)\n\t"
-      "fadds 0x18(%%esi)\n\t"
-      "fstps -0x58(%%ebp)\n\t"
-      "flds -0x60(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_168\n\t"
-      "flds -0x60(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_169\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_168:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4e8\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4cfc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_169:\n\t"
-      "flds -0x5c(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_170\n\t"
-      "flds -0x5c(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_171\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_170:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4e9\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4cc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_171:\n\t"
-      "flds -0x58(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_172\n\t"
-      "flds -0x58(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_173\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_172:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4ea\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4c84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_173:\n\t"
-      "movw 0x4(%%esi), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_180\n\t"
-      "cmpw $5, %%si\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_180\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_180\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_180\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal -0xc(%%ecx,%%eax,4), %%esi\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_174\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_175\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_174:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f5\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a37d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_175:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_176\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_177\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_176:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f6\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a3798\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_177:\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_178\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_179\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_178:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f7\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a375c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_179:\n\t"
-      "flds -0x60(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      "fstps -0x60(%%ebp)\n\t"
-      "flds -0x5c(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "fstps -0x5c(%%ebp)\n\t"
-      "flds -0x58(%%ebp)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "fstps -0x58(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_180:\n\t"
-      "leal -0x64(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[d1c90]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x5a5ae8(,%%ebx,4)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "cmpl (%%edx), %%ebx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_164\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_181:\n\t"
-      "pushl $6\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1906b0]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movw 0x10(%%edi), %%ax\n\t"
-      "leal 0x48(%%ebx), %%esi\n\t"
-      "movw %%ax, -0x14(%%ebp)\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%ebx, -0x34(%%ebp)\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_183\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_182:\n\t"
-      "pushl $0xa0\n\t"
-      "leal -0x4f0(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x10\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "movl $0xffffffff, -0x460(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x73686472\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, -0x4e4(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x4f0(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c174d10]\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $0x28, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_182\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_183:\n\t"
-      "movl -0x40(%%ebp), %%edx\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x18\n\t"
-      "call *%[c178b40]\n\t"
-      "movb 0x29(%%ebx), %%cl\n\t"
-      "andb $4, %%cl\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $0xfffff6ff, %%ecx\n\t"
-      "addl $0x901, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x10101\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0x29(%%ebx), %%dl\n\t"
-      "andl $1, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x7f\n\t"
-      "pushl $0x3d\n\t"
-      "call *%[ce2220]\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2c(%%ebx), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1580b0]\n\t"
-      "movb 0x29(%%ebx), %%al\n\t"
-      "addl $0x38, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jns .Lrasterizer_transparent_geometry_group_draw_190\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_190\n\t"
-      "movl 0x54(%%ebx), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "leal 0x54(%%ebx), %%eax\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_190\n\t"
-      "pushl $0xdc\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x78(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x6269746d\n\t"
-      "call *%[tag]\n\t"
-      "movw 0x60(%%eax), %%dx\n\t"
-      "movb 0x60(%%ebx), %%al\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb $2, %%al\n\t"
-      "movw %%dx, -0x14(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_184\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x10(%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190c00]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_190\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_184:\n\t"
-      "movzbw 0x28(%%ebx), %%cx\n\t"
-      "movl 0x6c(%%edi), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw $8, -0x14(%%ebp)\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "setne %%al\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "subl $8, %%esp\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "decl %%eax\n\t"
-      "andl $3, %%eax\n\t"
-      "movswl %%ax, %%esi\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "shll $2, %%esi\n\t"
-      "fmuls (%%eax,%%esi,1)\n\t"
-      "fadds 0x253398\n\t"
-      "fstpl (%%esp)\n\t"
-      "call *%[c1d9c2b]\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fistps -0x11c(%%ebp)\n\t"
-      "movl -0x11c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_185\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_187\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_185:\n\t"
-      "movl 0x6c(%%edi), %%ecx\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "fmuls (%%edx,%%esi,1)\n\t"
-      "subl $8, %%esp\n\t"
-      "fadds 0x253398\n\t"
-      "fstpl (%%esp)\n\t"
-      "call *%[c1d9c2b]\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fistps -0x124(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%eax, -0x124(%%ebp)\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_186\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_187\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_186:\n\t"
-      "movl 0x6c(%%edi), %%ecx\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "fmuls (%%edx,%%esi,1)\n\t"
-      "subl $8, %%esp\n\t"
-      "fadds 0x253398\n\t"
-      "fstpl (%%esp)\n\t"
-      "call *%[c1d9c2b]\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fistps -0x120(%%ebp)\n\t"
-      "movl -0x120(%%ebp), %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_187:\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_189\n\t"
-      "movswl -0x14(%%ebp), %%esi\n\t"
-      "movzwl %%cx, %%ecx\n\t"
-      "nop\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_188:\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%esi\n\t"
-      "decl %%ecx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_188\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_189:\n\t"
-      "movswl -0x14(%%ebp), %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cdq\n\t"
-      "idivl %%ecx\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_190:\n\t"
-      "movl $0, 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_191:\n\t"
-      "movl 0x54(%%ebx), %%ecx\n\t"
-      "movswl %%dx, %%esi\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_206\n\t"
-      "pushl $0xdc\n\t"
-      "leal 0x54(%%ebx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x2a(%%ebx), %%dx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl $2, %%eax\n\t"
-      "movw %%ax, -0xce(%%ebp)\n\t"
-      "movw %%ax, -0xcc(%%ebp)\n\t"
-      "movw %%ax, -0xca(%%ebp)\n\t"
-      "movl $3, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "movw %%dx, -0x10(%%ebp)\n\t"
-      "movw $0, -0xd0(%%ebp)\n\t"
-      "movl $1, -0x144(%%ebp)\n\t"
-      "movl %%eax, -0x140(%%ebp)\n\t"
-      "movl %%eax, -0x13c(%%ebp)\n\t"
-      "movl %%eax, -0x138(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_192\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_193\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_192:\n\t"
-      "movswl -0x10(%%ebp), %%eax\n\t"
-      "movw -0xd0(%%ebp,%%eax,2), %%cx\n\t"
-      "movw %%cx, -0xc(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_193:\n\t"
-      "testb $4, (%%ebx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_194\n\t"
-      "cmpw $0, -0x10(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_194\n\t"
-      "pushl $1\n\t"
-      "pushl $0x567\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4bc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_194:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_195\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_196\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_195:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x568\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4b84\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_196:\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x78(%%eax), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c155e80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_197\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "testb $4, (%%eax)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_197\n\t"
-      "movl $3, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_200\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_197:\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_198\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_199\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_198:\n\t"
-      "movswl -0x10(%%ebp), %%ecx\n\t"
-      "movl -0x144(%%ebp,%%ecx,4), %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_199:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_201\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_200:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "testb $8, (%%edx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_201\n\t"
-      "movl $3, %%ebx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_203\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_201:\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_202\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_203\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_202:\n\t"
-      "movswl -0x10(%%ebp), %%ecx\n\t"
-      "movl -0x144(%%ebp,%%ecx,4), %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_203:\n\t"
-      "pushl %%eax\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl %%ebx\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_204\n\t"
-      "movl $1, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_205\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_204:\n\t"
-      "movswl -0x10(%%ebp), %%edx\n\t"
-      "movl -0x144(%%ebp,%%edx,4), %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_205:\n\t"
-      "pushl %%eax\n\t"
-      "movl $0xc, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl -0x8(%%ebp), %%ebx\n\t"
-      "movb (%%ebx), %%al\n\t"
-      "andb $1, %%al\n\t"
-      "negb %%al\n\t"
-      "movl $0xe, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e9410]\n\t"
-      "movb (%%ebx), %%cl\n\t"
-      "andb $1, %%cl\n\t"
-      "negb %%cl\n\t"
-      "movl $0xf, %%edx\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "addl $2, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl -0x34(%%ebp), %%ebx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_206:\n\t"
-      "movl 0x54(%%ebx), %%ecx\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_213\n\t"
-      "cmpw %%ax, %%dx\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_207\n\t"
-      "cmpw %%ax, 0x2a(%%ebx)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_212\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_207:\n\t"
-      "pushl $0xdc\n\t"
-      "leal 0x54(%%ebx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x54(%%eax), %%edx\n\t"
-      "movl 0x58(%%eax), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_208\n\t"
-      "testb $0x40, 0x29(%%ebx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_209\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls 0x70(%%edi)\n\t"
-      "fchs\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x70(%%edi)\n\t"
-      "fchs\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_209\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_208:\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_210\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_209:\n\t"
-      "testb $8, 0x29(%%ebx)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_211\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_210:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls 0x3c(%%edi)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x40(%%edi)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_211:\n\t"
-      "shll $5, %%esi\n\t"
-      "leal -0x3a0(%%ebp,%%esi,1), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x5a5e18, %%edx\n\t"
-      "leal -0x3b0(%%ebp,%%esi,1), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x64(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x60(%%eax), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x5c(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x6c(%%edi), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "addl $0xa4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190e10]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "addl $0x28, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_215\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_212:\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "jge .Lrasterizer_transparent_geometry_group_draw_213\n\t"
-      "testb $8, 0x29(%%ebx)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_213\n\t"
-      "flds 0x5a5c64\n\t"
-      "shll $5, %%esi\n\t"
-      "fstps -0x3b0(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c68\n\t"
-      "fstps -0x3ac(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c6c\n\t"
-      "fstps -0x3a8(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c70\n\t"
-      "fstps -0x3a0(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c74\n\t"
-      "fstps -0x39c(%%ebp,%%esi,1)\n\t"
-      "flds 0x5a5c78\n\t"
-      "fstps -0x398(%%ebp,%%esi,1)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_214\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_213:\n\t"
-      "shll $5, %%esi\n\t"
-      "movl $0x3f800000, %%ecx\n\t"
-      "movl %%ecx, -0x3b0(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x3ac(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x3a8(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x3a0(%%ebp,%%esi,1)\n\t"
-      "movl %%ecx, -0x39c(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x398(%%ebp,%%esi,1)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_214:\n\t"
-      "movl %%eax, -0x3a4(%%ebp,%%esi,1)\n\t"
-      "movl %%eax, -0x394(%%ebp,%%esi,1)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_215:\n\t"
-      "incl %%edx\n\t"
-      "cmpw $4, %%dx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_191\n\t"
-      "pushl $8\n\t"
-      "leal -0x3b0(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-0x51\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_216\n\t"
-      "pushl $0x2a4e30\n\t"
-      "pushl $0\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_217\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_216:\n\t"
-      "movl 0xc(%%edi), %%ecx\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c17bca0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_218\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_217:\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_218:\n\t"
-      "movb 0x3256d4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      "testb $0x10, (%%edi)\n\t"
-      "movw 0x54(%%ebx), %%si\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_221\n\t"
-      "cmpw $0, 0x2c(%%ebx)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_221\n\t"
-      "pushl $0x5a5bc8\n\t"
-      "pushl $0x5a5dc8\n\t"
-      "call *%[c99500]\n\t"
-      "fdivs 0x5a5dec\n\t"
-      "addl $8, %%esp\n\t"
-      "fchs\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_219\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_220\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_219:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_220\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_220:\n\t"
-      "flds 0x5a5de4\n\t"
-      "movswl %%si, %%esi\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "pushl $0x5a5dd8\n\t"
-      "shll $2, %%esi\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[c99530]\n\t"
-      "movl %%eax, 0x5a5ae8(%%esi)\n\t"
-      "movl $0x310c1101, 0x5a5b48(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "movl $0xc00, 0x5a5b74(%%esi)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_221:\n\t"
-      "cmpw $1, 0x14(%%edi)\n\t"
-      "movw 0x30(%%ebx), %%cx\n\t"
-      "movl $0, -0x1b0(%%ebp)\n\t"
-      "movl $0, -0x1ac(%%ebp)\n\t"
-      "movl $0, -0x1a8(%%ebp)\n\t"
-      "movl $0, -0x1a4(%%ebp)\n\t"
-      "movl $0, -0x1a0(%%ebp)\n\t"
-      "movl $0, -0x19c(%%ebp)\n\t"
-      "movl $0, -0x198(%%ebp)\n\t"
-      "movl $0, -0x194(%%ebp)\n\t"
-      "movl $0, -0x190(%%ebp)\n\t"
-      "movl $0, -0x18c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x188(%%ebp)\n\t"
-      "movl $0, -0x184(%%ebp)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_224\n\t"
-      "testb $1, 0x60(%%ebx)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_224\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs 0x18(%%edi)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_222\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_223\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_222:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_223\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_223:\n\t"
-      "fstps -0x188(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_224:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_225\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_225\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_225\n\t"
-      "flds -0x188(%%ebp)\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "fmuls -0x4(%%eax,%%ecx,4)\n\t"
-      "fstps -0x188(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_225:\n\t"
-      "pushl $3\n\t"
-      "leal -0x1b0(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-0x54\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_226\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_227\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_226:\n\t"
-      "pushl $0x2a4d98\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_227:\n\t"
-      "movswl 0x2e(%%ebx), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_230\n\t"
-      "decl %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_229\n\t"
-      "decl %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_228\n\t"
-      "pushl $1\n\t"
-      "pushl $0x603\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4d68\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x70(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_232\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_228:\n\t"
-      "movl $5, %%ecx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_231\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_229:\n\t"
-      "movl $0x15, %%ecx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_231\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_230:\n\t"
-      "movl $0x14, %%ecx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_231:\n\t"
-      "movl %%ecx, -0x70(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_232:\n\t"
-      "movswl 0x2c(%%ebx), %%eax\n\t"
-      "cmpl $7, %%eax\n\t"
-      "ja .Lrasterizer_transparent_geometry_group_draw_239\n\t"
-      "jmp *.Lrasterizer_transparent_geometry_group_draw_jt3(,%%eax,4)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_233:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0x1c00, %%ecx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "movl %%ecx, 0x5a5ac0(%%eax)\n\t"
-      "movl $0xc00, 0x5a5b28(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_234:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "xorl $0x20, %%edx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0xc002000, %%edx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_236\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_235:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "xorl $0x20, %%edx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "orl %%ecx, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0xc00a000, %%edx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_236:\n\t"
-      "movl %%edx, 0x5a5b48(%%eax)\n\t"
-      "movl $0xc00, 0x5a5b74(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_237:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0xc00, %%ecx\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "movl %%ecx, 0x5a5b48(%%eax)\n\t"
-      "movl $0xc00, 0x5a5b74(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_238:\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "orl $0x1c00, %%edx\n\t"
-      "shll $0x10, %%edx\n\t"
-      "movl %%edx, 0x5a5ac0(%%eax)\n\t"
-      "movl $0xc00, %%edx\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl %%edx, 0x5a5b28(%%eax)\n\t"
-      "shll $0x10, %%ecx\n\t"
-      "movl %%ecx, 0x5a5b48(%%eax)\n\t"
-      "movl %%edx, 0x5a5b74(%%eax)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_240\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_239:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x622\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x29fac4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_240:\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[c156510]\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c174510]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_241:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c179de0]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_242:\n\t"
-      "pushl $8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1906b0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movw 0x8a(%%esi), %%bx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $2, %%bx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_243\n\t"
-      "movb 0x5a5bc4, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_245\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_243:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_245\n\t"
-      "testb $8, 0x28(%%esi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_244\n\t"
-      "cmpl $-1, 0xcc(%%esi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_245\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_244:\n\t"
-      "movl $1, %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_245:\n\t"
-      "movl 0x70(%%esi), %%ecx\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_246\n\t"
-      "flds 0x54(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_246\n\t"
-      "flds 0x58(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_246\n\t"
-      "flds 0x5c(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lrasterizer_transparent_geometry_group_draw_250\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_246:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x10(%%edi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c155e80]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x28(%%esi), %%cl\n\t"
-      "andb $4, %%cl\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $0xfffff6ff, %%ecx\n\t"
-      "addl $0x901, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x10101\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3e\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x300\n\t"
-      "pushl $0x3f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x8006\n\t"
-      "pushl $0x4a\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3d\n\t"
-      "call *%[ce2220]\n\t"
-      "movl -0x40(%%ebp), %%edx\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2e\n\t"
-      "call *%[c178b40]\n\t"
-      "flds 0x3c(%%edi)\n\t"
-      "fmuls 0x60(%%esi)\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl $0x3f800000, -0x278(%%ebp)\n\t"
-      "movl $0x3f800000, -0x274(%%ebp)\n\t"
-      "fstps -0x280(%%ebp)\n\t"
-      "movl $0, -0x270(%%ebp)\n\t"
-      "flds 0x40(%%edi)\n\t"
-      "movl $0, -0x26c(%%ebp)\n\t"
-      "fmuls 0x60(%%esi)\n\t"
-      "movl $0, -0x268(%%ebp)\n\t"
-      "movl $0, -0x264(%%ebp)\n\t"
-      "movl $0, -0x260(%%ebp)\n\t"
-      "fstps -0x27c(%%ebp)\n\t"
-      "movl $0, -0x25c(%%ebp)\n\t"
-      "pushl $3\n\t"
-      "leal -0x280(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-0x54\n\t"
-      "movl $0, -0x258(%%ebp)\n\t"
-      "movl $0, -0x254(%%ebp)\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_247\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_248\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_247:\n\t"
-      "pushl $0x2a4d98\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_248:\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "movl $1, %%eax\n\t"
-      "leal 0x54(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, 0x5a5b98\n\t"
-      "movl %%eax, 0x5a5b94\n\t"
-      "call *%[cd1dd0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, 0x5a5ae8\n\t"
-      "movl $0x8010000, 0x5a5b48\n\t"
-      "movl $0xc0, 0x5a5b74\n\t"
-      "cmpw $1, 0x14(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_249\n\t"
-      "movl 0x18(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c159070]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, 0x5a5b08\n\t"
-      "movl $0x14320000, 0x5a5ac0\n\t"
-      "movl $0x40, 0x5a5b28\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_249:\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl $0x140c2000, 0x5a5ae0\n\t"
-      "movl $0x1400, 0x5a5ae4\n\t"
-      "call *%[c156510]\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c174510]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_250:\n\t"
-      "flds 0x8c(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_251\n\t"
-      "flds 0x9c(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_275\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_251:\n\t"
-      "cmpl $-1, 0xb8(%%esi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_252\n\t"
-      "cmpw $2, %%bx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_275\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_252:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_253\n\t"
-      "cmpw $3, %%bx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_254\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_253:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x69e\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4b28\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_254:\n\t"
-      "movl 0xcc(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c155e80]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movl 0x476204, %%eax\n\t"
-      "movl 0x1c(%%eax), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "call *%[c155cf0]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xa\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xb\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xc\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x48, %%esp\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "movl 0x476204, %%edx\n\t"
-      "movl 0x1c(%%edx), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl $2\n\t"
-      "call *%[c155cf0]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xa\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xb\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xc\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x48, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "cmpw $2, %%bx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_255\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $3\n\t"
-      "call *%[c1584f0]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xa\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xb\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xf\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x48, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_256\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_255:\n\t"
-      "movl 0xb8(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $2\n\t"
-      "pushl $3\n\t"
-      "call *%[c155e80]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xa\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xb\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xc\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $3\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_256:\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "andb $4, %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0xfffff6ff, %%eax\n\t"
-      "addl $0x901, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x10101\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x302\n\t"
-      "pushl $0x3e\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x8006\n\t"
-      "pushl $0x4a\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2b\n\t"
-      "call *%[c178b40]\n\t"
-      "flds 0x3c(%%edi)\n\t"
-      "fmuls 0xbc(%%esi)\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $3\n\t"
-      "leal -0x2b0(%%ebp), %%edx\n\t"
-      "fstps -0x2b0(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "flds 0x40(%%edi)\n\t"
-      "pushl $-0x54\n\t"
-      "fmuls 0xbc(%%esi)\n\t"
-      "movl $0x43a00000, -0x2a8(%%ebp)\n\t"
-      "movl $0x43700000, -0x2a4(%%ebp)\n\t"
-      "movl $0, -0x2a0(%%ebp)\n\t"
-      "fstps -0x2ac(%%ebp)\n\t"
-      "movl $0, -0x29c(%%ebp)\n\t"
-      "movl $0, -0x298(%%ebp)\n\t"
-      "movl $0, -0x294(%%ebp)\n\t"
-      "movl $0, -0x290(%%ebp)\n\t"
-      "movl $0, -0x28c(%%ebp)\n\t"
-      "movl $0, -0x288(%%ebp)\n\t"
-      "movl $0, -0x284(%%ebp)\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_257\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_258\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_257:\n\t"
-      "pushl $0x2a4d98\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_258:\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_261\n\t"
-      "decl %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_260\n\t"
-      "decl %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_259\n\t"
-      "pushl $1\n\t"
-      "pushl $0x707\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a1b50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_262\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_259:\n\t"
-      "movl $0x8c61, 0x5a5b98\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_262\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_260:\n\t"
-      "movl $0x18c61, 0x5a5b98\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_262\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_261:\n\t"
-      "movl $0x62e21, 0x5a5b98\n\t"
-      "movl $0, 0x5a5ba0\n\t"
-      "movl $0x111, 0x5a5b9c\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_262:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl $0x11005, 0x5a5b94\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_263\n\t"
-      "cmpl $-1, 0xcc(%%esi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_263\n\t"
-      "movl $0x49480b0b, 0x5a5b48\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_273\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_263:\n\t"
-      "flds 0x5a5bd4\n\t"
-      "fmuls 0x253398\n\t"
-      "fsubrs 0x253398\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_264\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x7c(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_266\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_264:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_265\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x7c(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_266\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_265:\n\t"
-      "fstps -0x7c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_266:\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls 0x253398\n\t"
-      "fsubrs 0x253398\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_267\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x78(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_269\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_267:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_268\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x78(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_269\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_268:\n\t"
-      "fstps -0x78(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_269:\n\t"
-      "flds 0x5a5bdc\n\t"
-      "fmuls 0x253398\n\t"
-      "fsubrs 0x253398\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrasterizer_transparent_geometry_group_draw_270\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x74(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_272\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_270:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_271\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x74(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_272\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_271:\n\t"
-      "fstps -0x74(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_272:\n\t"
-      "leal -0x7c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cd1dd0]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, 0x5a5ae8\n\t"
-      "movl $0x4a410b0b, 0x5a5b48\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_273:\n\t"
-      "movl $0x20cd, 0x5a5b74\n\t"
-      "movl $0xc0c0d0d, 0x5a5b4c\n\t"
-      "movl $0xcd, 0x5a5b78\n\t"
-      "cmpw $1, 0x14(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_274\n\t"
-      "movl 0x18(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c159070]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, 0x5a5b0c\n\t"
-      "movl $0x14320000, 0x5a5ac4\n\t"
-      "movl $0x40, 0x5a5b2c\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_274:\n\t"
-      "leal 0x8c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl $0xc0c0d0d, 0x5a5b50\n\t"
-      "movl $0xd, 0x5a5b7c\n\t"
-      "call *%[d1c90]\n\t"
-      "leal 0x9c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, 0x5a5af4\n\t"
-      "call *%[d1c90]\n\t"
-      "movl %%eax, 0x5a5b14\n\t"
-      "movl $0xc00, %%eax\n\t"
-      "movl %%eax, 0x5a5b34\n\t"
-      "movl %%eax, 0x5a5b80\n\t"
-      "movl %%eax, 0x5a5b84\n\t"
-      "movl $0x2c120c11, 0x5a5acc\n\t"
-      "movl $0x2c020c01, 0x5a5b54\n\t"
-      "movl $0x2c0d0c0b, 0x5a5b58\n\t"
-      "movl $0xc0f0000, 0x5a5ae0\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "andb $8, %%al\n\t"
-      "negb %%al\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0xfffffff4, %%eax\n\t"
-      "addl $0x14, %%eax\n\t"
-      "shll $0x10, %%eax\n\t"
-      "orl $0x1c002000, %%eax\n\t"
-      "movl %%eax, 0x5a5ae4\n\t"
-      "call *%[c156510]\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c174510]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_275:\n\t"
-      "movl 0x164(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_276\n\t"
-      "cmpl %%eax, 0x178(%%esi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_276:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c155e80]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movl 0x178(%%esi), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x10(%%edi), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "call *%[c155e80]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $1\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x28(%%esi), %%cl\n\t"
-      "andb $4, %%cl\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $0xfffff6ff, %%ecx\n\t"
-      "addl $0x901, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x10101\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x302\n\t"
-      "pushl $0x3e\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x303\n\t"
-      "pushl $0x3f\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x40, %%esp\n\t"
-      "pushl $0x8006\n\t"
-      "pushl $0x4a\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3d\n\t"
-      "call *%[ce2220]\n\t"
-      "movl 0x5c(%%edi), %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_277\n\t"
-      "pushl %%eax\n\t"
-      "pushl $2\n\t"
-      "call *%[c155c20]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xa\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xb\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_278\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_277:\n\t"
-      "pushl $0\n\t"
-      "pushl $-1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $2\n\t"
-      "call *%[c155e80]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xa\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $3\n\t"
-      "pushl $0xb\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xd\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $2\n\t"
-      "pushl $0xe\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $2\n\t"
-      "pushl $0xf\n\t"
-      "pushl $2\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_278:\n\t"
-      "movl -0x40(%%ebp), %%edx\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x19\n\t"
-      "call *%[c178b40]\n\t"
-      "flds 0x154(%%esi)\n\t"
-      "fmuls 0x3c(%%edi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $3\n\t"
-      "leal -0x220(%%ebp), %%ecx\n\t"
-      "fstps -0x220(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x154(%%esi)\n\t"
-      "pushl $-0x54\n\t"
-      "fmuls 0x40(%%edi)\n\t"
-      "movl $0, -0x210(%%ebp)\n\t"
-      "movl $0, -0x20c(%%ebp)\n\t"
-      "movl $0, -0x208(%%ebp)\n\t"
-      "fstps -0x21c(%%ebp)\n\t"
-      "movl $0, -0x204(%%ebp)\n\t"
-      "flds 0x168(%%esi)\n\t"
-      "movl $0, -0x200(%%ebp)\n\t"
-      "fmuls 0x3c(%%edi)\n\t"
-      "movl $0, -0x1fc(%%ebp)\n\t"
-      "movl $0, -0x1f8(%%ebp)\n\t"
-      "movl $0, -0x1f4(%%ebp)\n\t"
-      "fstps -0x218(%%ebp)\n\t"
-      "flds 0x168(%%esi)\n\t"
-      "fmuls 0x40(%%edi)\n\t"
-      "fstps -0x214(%%ebp)\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_279\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_280\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_279:\n\t"
-      "pushl $0x2a4d98\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_280:\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "movl $0xc0, %%eax\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl $0x421, 0x5a5b98\n\t"
-      "movl $3, 0x5a5b94\n\t"
-      "movl $0x18190000, 0x5a5ac0\n\t"
-      "movl %%eax, 0x5a5b28\n\t"
-      "movl $0x8090000, 0x5a5b48\n\t"
-      "movl $0x100c0, 0x5a5b74\n\t"
-      "movl $0x1c140000, 0x5a5ac4\n\t"
-      "movl %%eax, 0x5a5b2c\n\t"
-      "movl $0xa200420, 0x5a5b4c\n\t"
-      "movl $0xd00, 0x5a5b78\n\t"
-      "movl $0xc0d0000, 0x5a5b50\n\t"
-      "movl %%eax, 0x5a5b7c\n\t"
-      "movl $0xc, 0x5a5ae0\n\t"
-      "movl $0x1c00, 0x5a5ae4\n\t"
-      "call *%[c156510]\n\t"
-      "movl 0x5c(%%edi), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "setne %%dl\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c174510]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_281:\n\t"
-      "pushl $9\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1906b0]\n\t"
-      "flds 0x2533c8\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x6c(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $0x3f800000, -0x3c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x44(%%ebp)\n\t"
-      "movl $0x3f800000, -0x4c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x48(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_286\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_286\n\t"
-      "movw 0xd8(%%esi), %%cx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_282\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_282\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "flds -0x4(%%eax,%%ecx,4)\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_282:\n\t"
-      "movw 0xda(%%esi), %%cx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_283\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_283\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "flds -0x4(%%eax,%%edx,4)\n\t"
-      "fstps -0x44(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_283:\n\t"
-      "movw 0xdc(%%esi), %%cx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_284\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_284\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "flds -0x4(%%eax,%%ecx,4)\n\t"
-      "fstps -0x4c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_284:\n\t"
-      "movw 0xde(%%esi), %%cx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_285\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_285\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%eax,%%edx,4)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_285:\n\t"
-      "movw 0xe0(%%esi), %%cx\n\t"
-      "cmpw %%bx, %%cx\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_286\n\t"
-      "cmpw $4, %%cx\n\t"
-      "jg .Lrasterizer_transparent_geometry_group_draw_286\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "flds -0x4(%%eax,%%ecx,4)\n\t"
-      "fstps -0x48(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_286:\n\t"
-      "movb 0x3256c3, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_296\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%ecx\n\t"
-      "flds 0x5a5e18\n\t"
-      "fdivs 0x325724\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $2\n\t"
-      "call *%[c10a5e0]\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x325728\n\t"
-      "addl $8, %%esp\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_287\n\t"
-      "movl 0x325728, %%edx\n\t"
-      "movl %%edx, -0x3c(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_288\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_287:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x3c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_288:\n\t"
-      "flds 0x32572c\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_289\n\t"
-      "movl 0x32572c, %%ecx\n\t"
-      "movl %%ecx, -0x44(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_290\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_289:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl %%edx, -0x44(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_290:\n\t"
-      "flds 0x325730\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_291\n\t"
-      "movl 0x325730, %%eax\n\t"
-      "movl %%eax, -0x4c(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_292\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_291:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, -0x4c(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_292:\n\t"
-      "flds 0x325734\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_293\n\t"
-      "flds 0x325734\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_294\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_293:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_294:\n\t"
-      "flds 0x325738\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_295\n\t"
-      "movl 0x325738, %%edx\n\t"
-      "movl %%edx, -0x48(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_296\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_295:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x48(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_296:\n\t"
-      "flds -0x44(%%ebp)\n\t"
-      "fmuls 0xa0(%%esi)\n\t"
-      "fstps -0x150(%%ebp)\n\t"
-      "flds -0x44(%%ebp)\n\t"
-      "fmuls 0xa4(%%esi)\n\t"
-      "fstps -0x14c(%%ebp)\n\t"
-      "flds -0x44(%%ebp)\n\t"
-      "fmuls 0xa8(%%esi)\n\t"
-      "fstps -0x148(%%ebp)\n\t"
-      "fmuls 0x253f78\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_297\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_297:\n\t"
-      "flds 0x2533c8\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "testb $8, %%al\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_298\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      "movl 0xbc(%%esi), %%ecx\n\t"
-      "fmuls 0xac(%%esi)\n\t"
-      "movl 0xb8(%%esi), %%edx\n\t"
-      "leal 0x7c(%%esi), %%eax\n\t"
-      "movl %%ecx, -0x118(%%ebp)\n\t"
-      "movl -0x4c(%%ebp), %%ecx\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "fmuls 0xb0(%%esi)\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x68(%%ebp)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "flds -0x3c(%%ebp)\n\t"
-      "fmuls 0xb4(%%esi)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "call *%[c99530]\n\t"
-      "leal 0x88(%%esi), %%edx\n\t"
-      "movl %%eax, -0x34(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c99530]\n\t"
-      "movl -0x118(%%ebp), %%edx\n\t"
-      "leal 0x94(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "call *%[c99530]\n\t"
-      "movl -0x48(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "leal -0x150(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99530]\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl -0x68(%%ebp), %%eax\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_299\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_298:\n\t"
-      "movl -0x4c(%%ebp), %%edx\n\t"
-      "leal 0x7c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c99530]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x34(%%ebp)\n\t"
-      "leal 0x88(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99530]\n\t"
-      "leal 0x94(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "call *%[c99530]\n\t"
-      "movl -0x48(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "leal -0x150(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99530]\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl -0x3c(%%ebp), %%eax\n\t"
-      "leal 0xac(%%esi), %%edx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_299:\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c99530]\n\t"
-      "movl 0x58(%%esi), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x10(%%edi), %%cx\n\t"
-      "addl $0x28, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c155e80]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "andb $0x10, %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xd\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x28(%%esi), %%cl\n\t"
-      "andb $0x10, %%cl\n\t"
-      "negb %%cl\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "addl $2, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0xe\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x28(%%esi), %%dl\n\t"
-      "andb $0x10, %%dl\n\t"
-      "addl $0x44, %%esp\n\t"
-      "negb %%dl\n\t"
-      "sbbl %%edx, %%edx\n\t"
-      "addl $2, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0xf\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movb 0x28(%%esi), %%al\n\t"
-      "andb $2, %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $0xfffff6ff, %%eax\n\t"
-      "addl $0x901, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x10101\n\t"
-      "pushl $0x43\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movb 0x28(%%esi), %%cl\n\t"
-      "shrl $2, %%ecx\n\t"
-      "notl %%ecx\n\t"
-      "andl $2, %%ecx\n\t"
-      "orl $0x8001, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x3e\n\t"
-      "call *%[ce2220]\n\t"
-      "movb 0x28(%%esi), %%dl\n\t"
-      "andb $8, %%dl\n\t"
-      "negb %%dl\n\t"
-      "sbbl %%edx, %%edx\n\t"
-      "andl $0xffff8301, %%edx\n\t"
-      "addl $0x8001, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x3f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x4b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x8006\n\t"
-      "pushl $0x4a\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x44, %%esp\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3c\n\t"
-      "call *%[ce2220]\n\t"
-      "movl -0x40(%%ebp), %%eax\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x16\n\t"
-      "call *%[c178b40]\n\t"
-      "movl 0x3c(%%edi), %%edx\n\t"
-      "movl 0x40(%%edi), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl $3\n\t"
-      "leal -0x250(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $-0x54\n\t"
-      "movl $0x3f800000, -0x250(%%ebp)\n\t"
-      "movl $0x3f800000, -0x24c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x248(%%ebp)\n\t"
-      "movl $0x3f800000, -0x244(%%ebp)\n\t"
-      "movl %%edx, -0x240(%%ebp)\n\t"
-      "movl $0, -0x23c(%%ebp)\n\t"
-      "movl $0, -0x238(%%ebp)\n\t"
-      "movl $0, -0x234(%%ebp)\n\t"
-      "movl $0, -0x230(%%ebp)\n\t"
-      "movl %%eax, -0x22c(%%ebp)\n\t"
-      "movl $0, -0x228(%%ebp)\n\t"
-      "movl $0, -0x224(%%ebp)\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_300\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_301\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_300:\n\t"
-      "pushl $0x2a4d98\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_301:\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "pushl $4\n\t"
-      "pushl $0x15\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl $0x20c00, %%eax\n\t"
-      "movl %%eax, 0x5a5b28\n\t"
-      "movl %%eax, 0x5a5b74\n\t"
-      "movl -0x34(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x5a5ae8\n\t"
-      "movl %%edx, 0x5a5b10\n\t"
-      "movl %%ecx, 0x5a5b08\n\t"
-      "movl %%ecx, 0x5a5b0c\n\t"
-      "movl $0xc00, %%ecx\n\t"
-      "movl %%eax, 0x5a5aec\n\t"
-      "movl %%eax, 0x5a5af0\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl $1, 0x5a5b98\n\t"
-      "movl $0x11104, 0x5a5b94\n\t"
-      "movl $0x12081208, 0x5a5ac0\n\t"
-      "movl $0x1120e820, 0x5a5b48\n\t"
-      "movl $0x6c200000, 0x5a5ac4\n\t"
-      "movl $0xc0, 0x5a5b2c\n\t"
-      "movl $0x3c011c02, 0x5a5b4c\n\t"
-      "movl %%ecx, 0x5a5b78\n\t"
-      "movl $0x820b120, 0x5a5ac8\n\t"
-      "movl %%ecx, 0x5a5b30\n\t"
-      "movb 0x28(%%esi), %%dl\n\t"
-      "andb $4, %%dl\n\t"
-      "addl $0x18, %%esp\n\t"
-      "negb %%dl\n\t"
-      "movl %%eax, 0x5a5af4\n\t"
-      "movl $0x4c00, %%eax\n\t"
-      "movl %%eax, 0x5a5b34\n\t"
-      "movl %%eax, 0x5a5b80\n\t"
-      "movb 0x3256c3, %%al\n\t"
-      "movl %%ecx, 0x5a5b7c\n\t"
-      "sbbl %%edx, %%edx\n\t"
-      "andl $0xe0, %%edx\n\t"
-      "addl $2, %%edx\n\t"
-      "orl $0xc201c00, %%edx\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%edx, 0x5a5b50\n\t"
-      "movl %%ebx, 0x5a5b14\n\t"
-      "movl $0x12201120, 0x5a5acc\n\t"
-      "movl $0xc200120, 0x5a5b54\n\t"
-      "movl $0xc180000, 0x5a5ae0\n\t"
-      "movl $0x1c00, 0x5a5ae4\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_302\n\t"
-      "cmpw $0, 0x3256ea\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_302\n\t"
-      "pushl $0xf0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x15\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl $1, %%eax\n\t"
-      "addl $0x20, %%esp\n\t"
-      "cmpw %%ax, 0x3256ea\n\t"
-      "movl %%eax, 0x5a5b98\n\t"
-      "setle %%cl\n\t"
-      "movl %%eax, 0x5a5b94\n\t"
-      "decl %%ecx\n\t"
-      "andl $0x10, %%ecx\n\t"
-      "addl $8, %%ecx\n\t"
-      "movl %%ecx, 0x5a5ae0\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_302:\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[c156510]\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c174510]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x15\n\t"
-      "pushl $0\n\t"
-      "call *%[ce2470]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_303:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c16eef0]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .Lrasterizer_transparent_geometry_group_draw_305\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_304:\n\t"
-      "pushl $0x2a4b04\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_305:\n\t"
-      "movl -0x80(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw $2, %%ax\n\t"
-      "movl %%eax, -0x80(%%ebp)\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_64\n\t"
-      "movl $1, %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_306:\n\t"
-      "testb $8, (%%edi)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_307\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_307\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c156c30]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_307:\n\t"
-      "cmpb $0, (%%edi)\n\t"
-      "jns .Lrasterizer_transparent_geometry_group_draw_309\n\t"
-      "cmpw %%bx, 0x14(%%edi)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_309\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c156c30]\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_308:\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_309:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_310\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "movl %%edx, 0x47e4b8\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_310:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x96(%%edi), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_311\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c184460]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c174d10]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_311:\n\t"
-      "movb -0x2d(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_315\n\t"
-      "leal 0xa(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c184390]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movl %%eax, -0x68(%%ebp)\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_312\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8e0\n\t"
-      "pushl $0x2a4800\n\t"
-      "pushl $0x2a4afc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_312:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpw %%si, 0xa(%%ebp)\n\t"
-      "jle .Lrasterizer_transparent_geometry_group_draw_315\n\t"
-      "movl $1, %%ebx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_313:\n\t"
-      "movl -0x68(%%ebp), %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%ecx\n\t"
-      "shll $5, %%ecx\n\t"
-      "leal (%%ecx,%%edx,1), %%eax\n\t"
-      "movl 0x98(%%eax), %%ecx\n\t"
-      "cmpl 0x8(%%edi), %%ecx\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_314\n\t"
-      "cmpw %%bx, 0x14(%%eax)\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_314\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c174d10]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x3256ea\n\t"
-      "je .Lrasterizer_transparent_geometry_group_draw_314\n\t"
-      "movb $1, 0x47e4c0\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_314:\n\t"
-      "incl %%esi\n\t"
-      "cmpw 0xa(%%ebp), %%si\n\t"
-      "jl .Lrasterizer_transparent_geometry_group_draw_313\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_315:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lrasterizer_transparent_geometry_group_draw_316\n\t"
-      "pushl $0x2a4ac0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_316:\n\t"
-      "popl %%ebx\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_317:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_jt0:\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_72\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_304\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_304\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_70\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_103\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_181\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_241\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_242\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_281\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_303\n\t"
-      ".text\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_jt1:\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_95\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_96\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_97\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_98\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_98\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_96\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_98\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_99\n\t"
-      ".text\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_jt2:\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_156\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_157\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_158\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_160\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_160\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_157\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_160\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_161\n\t"
-      ".text\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lrasterizer_transparent_geometry_group_draw_jt3:\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_233\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_234\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_235\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_237\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_237\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_234\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_237\n\t"
-      ".long .Lrasterizer_transparent_geometry_group_draw_238\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b174d10_assert), [exitfn] "m"(b174d10_exitfn), [c184570] "m"(b174d10_c184570), [c1845b0] "m"(b174d10_c1845b0), [c184460] "m"(b174d10_c184460), [c174d10] "m"(b174d10_c174d10), [c184610] "m"(b174d10_c184610), [c178b40] "m"(b174d10_c178b40), [c1e96d0] "m"(b174d10_c1e96d0), [c1e9350] "m"(b174d10_c1e9350), [c1ea290] "m"(b174d10_c1ea290), [c1e98e0] "m"(b174d10_c1e98e0), [memset] "m"(b174d10_memset), [rmreal] "m"(b174d10_rmreal), [cd1dd0] "m"(b174d10_cd1dd0), [c156510] "m"(b174d10_c156510), [c156710] "m"(b174d10_c156710), [c1eb8d0] "m"(b174d10_c1eb8d0), [c174510] "m"(b174d10_c174510), [c1d90f0] "m"(b174d10_c1d90f0), [c189cb0] "m"(b174d10_c189cb0), [ce2220] "m"(b174d10_ce2220), [c190980] "m"(b174d10_c190980), [c156ab0] "m"(b174d10_c156ab0), [c1843b0] "m"(b174d10_c1843b0), [c190930] "m"(b174d10_c190930), [c1595c0] "m"(b174d10_c1595c0), [c190710] "m"(b174d10_c190710), [c156c30] "m"(b174d10_c156c30), [c1908a0] "m"(b174d10_c1908a0), [c1906b0] "m"(b174d10_c1906b0), [c158ae0] "m"(b174d10_c158ae0), [c159900] "m"(b174d10_c159900), [c155c20] "m"(b174d10_c155c20), [ce2470] "m"(b174d10_ce2470), [c155e80] "m"(b174d10_c155e80), [c1580b0] "m"(b174d10_c1580b0), [c190e10] "m"(b174d10_c190e10), [c167ff0] "m"(b174d10_c167ff0), [c13070] "m"(b174d10_c13070), [c1eb2d0] "m"(b174d10_c1eb2d0), [c8e0b0] "m"(b174d10_c8e0b0), [elem] "m"(b174d10_elem), [tag] "m"(b174d10_tag), [c1d9c2b] "m"(b174d10_c1d9c2b), [c1e9410] "m"(b174d10_c1e9410), [c99500] "m"(b174d10_c99500), [c17c2f0] "m"(b174d10_c17c2f0), [c99530] "m"(b174d10_c99530), [c10a5e0] "m"(b174d10_c10a5e0), [d1c90] "m"(b174d10_d1c90), [c190c00] "m"(b174d10_c190c00), [c17bca0] "m"(b174d10_c17bca0), [c179de0] "m"(b174d10_c179de0), [c159070] "m"(b174d10_c159070), [c155cf0] "m"(b174d10_c155cf0), [c1584f0] "m"(b174d10_c1584f0), [c16eef0] "m"(b174d10_c16eef0), [c8f390] "m"(b174d10_c8f390), [c184390] "m"(b174d10_c184390)
-      : "memory");
-}
-#else
-#error "rasterizer_transparent_geometry_group_draw: clang naked draft required"
+  char *grp = (char *)group;
+  char success; /* [EBP-0x1] draw success accumulator */
+  char draw_secondary; /* [EBP-0x2d] draw dirty secondary groups after */
+  char *sh;
+  int vertex_type; /* [EBP-0x38] */
+  int permutation; /* [EBP-0x40] */
+  int pass; /* [EBP-0x80] two-pass layer loop */
+  char has_multi; /* [EBP+0xb] case-1 secondary-map flag */
+  short sec_count; /* [EBP+0xa] secondary group count */
+  char *sec;
+  short si;
+  char *rec;
+  char *next;
+
+  success = 1;
+  draw_secondary = 0;
+  if (grp == (char *)0) {
+    display_assert("group",
+                   "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                   "transparent_geometry.c",
+                   0xe8, 1);
+    system_exit(-1);
+  }
+  if (*(int *)0x476ab0 == 0) {
+    display_assert("global_d3d_device",
+                   "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                   "transparent_geometry.c",
+                   0xe9, 1);
+    system_exit(-1);
+  }
+  if (*(int *)(grp + 0x98) != 0 && (char)dirty == 0) {
+    return;
+  }
+  if (FUN_00184570(grp) == 0) {
+    return;
+  }
+  FUN_001845b0(grp, 0);
+  if (*(short *)(grp + 0x94) != -1) {
+    rasterizer_transparent_geometry_group_draw(
+      rasterizer_transparent_geometry_group_get(*(short *)(grp + 0x94)), dirty);
+  }
+
+  /* rasterizer_debug_transparents: draw with random per-group tint */
+  if (*(char *)0x3256c2 != 0) {
+    if ((*grp & 2) == 0 && *(int *)(grp + 0xc) != 0 &&
+        *(int *)(grp + 0x90) != -1) {
+      short vertex_shader_table[12];
+      char solid_color; /* [EBP+0xb] debug value forces solid color */
+      unsigned int seed;
+      float argb[4]; /* [EBP-0x2c] alpha,red,green,blue */
+      float blue;
+      float minimum;
+      float maximum;
+      float range_scale;
+      float tint;
+      float dim;
+      float skin_xform[12]; /* [EBP-0xb0] */
+      struct {
+        void *matrices;
+        short node_count;
+      } skinning; /* [EBP-0x1c] */
+      char text_buffer[96]; /* [EBP-0x550] */
+
+      vertex_shader_table[0] = 6;
+      vertex_shader_table[1] = 6;
+      vertex_shader_table[2] = 6;
+      vertex_shader_table[3] = 6;
+      vertex_shader_table[4] = 0xd;
+      vertex_shader_table[5] = 0xd;
+      vertex_shader_table[6] = 0x41;
+      vertex_shader_table[7] = 0x41;
+      vertex_shader_table[8] = -1;
+      vertex_shader_table[9] = -1;
+      vertex_shader_table[10] = -1;
+      vertex_shader_table[11] = -1;
+      vertex_type = (short)FUN_00184610(grp);
+      if (*(short *)0x3256ea >= 1000 || *(short *)0x3256ea < 0) {
+        solid_color = 1;
+      } else {
+        solid_color = 0;
+      }
+      if ((short)vertex_type < 0 || (short)vertex_type >= 0xc) {
+        display_assert(
+          "vertex_type>=0 && vertex_type<NUMBER_OF_RASTERIZER_VERTEX_TYPES",
+          "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+          "geometry.c",
+          0x118, 1);
+        system_exit(-1);
+      }
+      if (vertex_shader_table[(short)vertex_type] == -1) {
+        display_assert("vertex_shader_table[vertex_type]!=NONE",
+                       "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                       "transparent_geometry.c",
+                       0x119, 1);
+        system_exit(-1);
+      }
+      FUN_00178b40(
+        (int)(0xffff0000u |
+              (unsigned short)vertex_shader_table[(short)vertex_type]),
+        vertex_type, 0);
+      D3DDevice_SetRenderState_CullMode(0);
+      D3DDevice_SetRenderState_Simple(NV097_SET_COLOR_MASK_CMD, NV097_COLOR_MASK_RGB);
+      *(uint32_t *)0x1fb7a4 = 0x10101;
+      D3DDevice_SetRenderState_Simple(0x40304, (unsigned char)solid_color);
+      *(uint32_t *)0x1fb784 = (unsigned char)solid_color;
+      D3DDevice_SetRenderState_Simple(0x40344, 1);
+      *(uint32_t *)0x1fb790 = 1;
+      D3DDevice_SetRenderState_Simple(0x40348, 1);
+      *(uint32_t *)0x1fb794 = 1;
+      D3DDevice_SetRenderState_Simple(0x40350, 0x8006);
+      *(uint32_t *)0x1fb7c0 = 0x8006;
+      D3DDevice_SetRenderState_Simple(0x40300, 0);
+      *(uint32_t *)0x1fb788 = 0;
+      D3DDevice_SetRenderState_ZEnable(1);
+      D3DDevice_SetRenderState_Simple(0x4035c, 0);
+      *(uint32_t *)0x1fb798 = 0;
+      D3DDevice_SetRenderState_Simple(0x40354, 0x203);
+      *(uint32_t *)0x1fb77c = 0x203;
+      D3DDevice_SetRenderState_ZBias(0);
+      csmemset((void *)0x5a5ac0, 0, 0xf0);
+      seed = (unsigned int)((int)*(short *)0x3256ea + *(int *)(grp + 0x90));
+      argb[0] = 1.0f;
+      argb[1] = random_math_real(&seed);
+      argb[2] = random_math_real(&seed);
+      blue = random_math_real(&seed);
+      /* normalize color so channels span [0.15, 0.33]; MIN/MAX macros
+       * re-evaluate their arguments as in the original */
+      minimum = (argb[1] <= ((argb[2] <= blue) ? argb[2] : blue)) ?
+                  argb[1] :
+                  ((argb[2] <= blue) ? argb[2] : blue);
+      maximum = (argb[1] <= ((blue < argb[2]) ? argb[2] : blue)) ?
+                  ((blue < argb[2]) ? argb[2] : blue) :
+                  argb[1];
+      range_scale = *(float *)0x2a52b4 / (maximum - minimum);
+      argb[1] = (argb[1] - minimum) * range_scale + *(float *)0x256140;
+      argb[2] = (argb[2] - minimum) * range_scale + *(float *)0x256140;
+      argb[3] = (blue - minimum) * range_scale + *(float *)0x256140;
+      if (solid_color != 0) {
+        tint = *(float *)0x325724;
+        if (tint < *(float *)0x2533c0) {
+          tint = *(float *)0x29d598;
+        } else if (tint > *(float *)0x2533c8) {
+          tint = 1.0f;
+        } else if (tint == *(float *)0x2533c0) {
+          tint = *(float *)0x29d598;
+        }
+        if (*(short *)0x3256ea >= 1000) {
+          argb[1] = argb[1] * tint;
+          argb[2] = argb[2] * tint;
+          argb[3] = tint * argb[3];
+        } else {
+          argb[1] = tint;
+          argb[2] = tint;
+          argb[3] = tint;
+        }
+      }
+      if (!(argb[1] >= *(float *)0x2533c0 && argb[1] <= *(float *)0x2533c8)) {
+        display_assert("color.red >=0.0f && color.red <=1.0f",
+                       "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                       "transparent_geometry.c",
+                       0x156, 1);
+        system_exit(-1);
+      }
+      if (!(argb[2] >= *(float *)0x2533c0 && argb[2] <= *(float *)0x2533c8)) {
+        display_assert("color.green>=0.0f && color.green<=1.0f",
+                       "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                       "transparent_geometry.c",
+                       0x157, 1);
+        system_exit(-1);
+      }
+      if (!(argb[3] >= *(float *)0x2533c0 && argb[3] <= *(float *)0x2533c8)) {
+        display_assert("color.blue >=0.0f && color.blue <=1.0f",
+                       "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                       "transparent_geometry.c",
+                       0x158, 1);
+        system_exit(-1);
+      }
+      *(uint32_t *)0x5a5b6c = FUN_000d1dd0(&argb[1]);
+      *(uint32_t *)0x5a5b94 = 1;
+      *(uint32_t *)0x5a5ae0 = 1;
+      rasterizer_set_pixel_shader((void *)0x5a5ac0);
+      if (*(void **)(grp + 0x60) != (void *)0 && *(short *)(grp + 0x64) != 0) {
+        skinning.matrices = *(void **)(grp + 0x60);
+        skinning.node_count = *(short *)(grp + 0x64);
+      } else {
+        skinning.matrices = *(void **)0x31fc60;
+        skinning.node_count = 1;
+      }
+      rasterizer_set_model_skinning(&skinning);
+      skin_xform[0] = 1.0f;
+      skin_xform[1] = 0.0f;
+      skin_xform[2] = 0.0f;
+      skin_xform[3] = 0.0f;
+      skin_xform[4] = 0.0f;
+      skin_xform[5] = 1.0f;
+      skin_xform[6] = 0.0f;
+      skin_xform[7] = 0.0f;
+      skin_xform[8] = 0.0f;
+      skin_xform[9] = 0.0f;
+      skin_xform[10] = 1.0f;
+      skin_xform[11] = 0.0f;
+      if ((*grp & 0x20) != 0) {
+        skin_xform[0] = *(float *)0x5a5c64;
+        skin_xform[1] = *(float *)0x5a5c70;
+        skin_xform[2] = *(float *)0x5a5c7c;
+        skin_xform[3] = *(float *)0x5a5bc8;
+        skin_xform[4] = *(float *)0x5a5c68;
+        skin_xform[5] = *(float *)0x5a5c74;
+        skin_xform[6] = *(float *)0x5a5c80;
+        skin_xform[7] = *(float *)0x5a5bcc;
+        skin_xform[8] = *(float *)0x5a5c6c;
+        skin_xform[9] = *(float *)0x5a5c78;
+        skin_xform[10] = *(float *)0x5a5c84;
+        skin_xform[11] = *(float *)0x5a5bd0;
+      }
+      D3DDevice_SetVertexShaderConstant(0x58, skin_xform, 3);
+      success = 1;
+      FUN_00174510(grp, 0);
+      if (solid_color == 0) {
+        crt_sprintf(text_buffer, "%.03f", (double)*(float *)(grp + 0x70));
+        argb[1] = argb[1] * *(float *)0x254644;
+        if (argb[1] < *(float *)0x2533c0) {
+          argb[1] = 0.0f;
+        } else if (argb[1] > *(float *)0x2533c8) {
+          argb[1] = 1.0f;
+        }
+        dim = argb[1] * *(float *)0x254644;
+        if (dim < *(float *)0x2533c0) {
+          argb[2] = 0.0f;
+          argb[3] = 0.0f;
+        } else if (dim > *(float *)0x2533c8) {
+          argb[2] = 1.0f;
+          argb[3] = 1.0f;
+        } else {
+          argb[2] = dim;
+          argb[3] = dim;
+        }
+        FUN_00189cb0(0, grp + 0x74, text_buffer, (int)argb);
+      }
+    }
+    goto tail;
+  }
+
+  /* predicted shaders: pre-set state for run of type-2 groups w/ same tag */
+  if (*(short *)(grp + 0x14) == 2 && *(int *)(grp + 8) != *(int *)0x47e4b8 &&
+      (char)dirty == 0) {
+    char *g2;
+    int first_tag;
+    struct {
+      void *matrices;
+      short node_count;
+    } skinning2;
+
+    first_tag = *(int *)(grp + 8);
+    g2 = grp;
+    vertex_type = FUN_00184610(grp);
+    FUN_00178b40(0xd, vertex_type, 0);
+    SetRenderStateSmart(0x7f, 0);
+    SetRenderStateSmart(0x43, 0);
+    SetRenderStateSmart(0x3b, 0);
+    SetRenderStateSmart(0x3c, 0);
+    SetRenderStateSmart(0x7b, 1);
+    SetRenderStateSmart(0x40, 1);
+    SetRenderStateSmart(0x39, 0x203);
+    D3DDevice_SetRenderState_ZBias(0);
+    csmemset((void *)0x5a5ac0, 0, 0xf0);
+    *(uint32_t *)0x5a5b94 = 1;
+    rasterizer_set_pixel_shader((void *)0x5a5ac0);
+    do {
+      if (*(int *)(g2 + 8) != first_tag || *(short *)(g2 + 0x14) != 2) {
+        break;
+      }
+      if (shader_ignores_effect(*(void **)(g2 + 0xc)) == 0) {
+        if (*(void **)(g2 + 0x60) != (void *)0 && *(short *)(g2 + 0x64) != 0) {
+          skinning2.node_count = *(short *)(g2 + 0x64);
+          skinning2.matrices = *(void **)(g2 + 0x60);
+        } else {
+          skinning2.node_count = 1;
+          skinning2.matrices = *(void **)0x31fc60;
+        }
+        rasterizer_set_model_skinning(&skinning2);
+        if (*(int *)(grp + 0x68) != 0) {
+          rasterizer_set_model_lighting(*(void **)(g2 + 0x68));
+        }
+        FUN_00174510(g2, 0);
+      }
+      g2 = (char *)rasterizer_transparent_geometry_next_group(g2);
+    } while (g2 != (char *)0);
+  }
+
+  if ((*grp & 2) == 0) {
+    if (*(short *)0x5a5bc0 == 0 && (char)dirty == 0) {
+      sh = *(char **)(grp + 0xc);
+      if (*(char *)0x3256fa == 0) {
+        if (sh == (char *)0 ||
+            (*(short *)(sh + 0x24) != 7 && shader_is_water_decal(sh) == 0)) {
+          FUN_001595c0();
+        }
+      } else if (sh != (char *)0 && *(short *)(sh + 0x24) == 4 &&
+                 *(short *)(grp + 0x14) == 1 &&
+                 *(int *)(grp + 8) != *(int *)0x47e4b8) {
+        FUN_001595c0();
+      }
+    }
+    if ((*grp & 2) == 0 && *(short *)0x5a5bc0 == 0 &&
+        *(short *)(grp + 0x14) == 1 && *(int *)(grp + 0xc) != 0 &&
+        *(short *)(*(char **)(grp + 0xc) + 0x24) == 4 && (char)dirty == 0) {
+      next = (char *)rasterizer_transparent_geometry_next_group(grp);
+      if (next == (char *)0 || *(short *)(next + 0x14) != 1 ||
+          *(int *)(next + 8) != *(int *)(grp + 8) ||
+          *(int *)(next + 0xc) == 0 ||
+          *(short *)(*(char **)(next + 0xc) + 0x24) != 4) {
+        draw_secondary = 1;
+      }
+    }
+  }
+
+  if (*(int *)(grp + 0xc) == 0) {
+    /* group with no shader: invoke user callback stored in the record */
+    (*(void (**)(int, int))(grp + 0x48))(*(int *)(grp + 0x4c),
+                                         *(int *)(grp + 0x50));
+    goto tail;
+  }
+
+  permutation = shader_get_vertex_shader_permutation(*(void **)(grp + 0xc));
+  vertex_type = FUN_00184610(grp);
+  if ((*grp & 2) == 0) {
+    struct {
+      void *matrices;
+      short node_count;
+    } skinning3;
+    if (*(void **)(grp + 0x60) != (void *)0 && *(short *)(grp + 0x64) != 0) {
+      skinning3.node_count = *(short *)(grp + 0x64);
+      skinning3.matrices = *(void **)(grp + 0x60);
+    } else {
+      skinning3.node_count = 1;
+      skinning3.matrices = *(void **)0x31fc60;
+    }
+    rasterizer_set_model_skinning(&skinning3);
+    if (*(int *)(grp + 0x68) != 0) {
+      rasterizer_set_model_lighting(*(void **)(grp + 0x68));
+    }
+  }
+  if ((*grp & 8) != 0) {
+    if (*(short *)0x5a5bc0 == 0) {
+      rasterizer_set_frustum_z(0.00390625f, 1024.0f);
+    }
+    SetRenderStateSmart(0x7b, 0);
+    SetRenderStateSmart(0x81, 0);
+  } else {
+    SetRenderStateSmart(0x7b, 1);
+    SetRenderStateSmart(0x40, 0);
+    SetRenderStateSmart(0x39, 0x203);
+    SetRenderStateSmart(0x81,
+                        -(int)(shader_is_decal(*(void **)(grp + 0xc)) != 0) &
+                          *(int *)0x32570c);
+  }
+
+  pass = 0;
+  do {
+    if ((char)*grp < 0) {
+      if (*(short *)(grp + 0x14) == 1) {
+        if ((short)pass > 0) {
+          break;
+        }
+        rasterizer_set_frustum_z(*(float *)0x32569c, *(float *)0x3256a0);
+      } else if ((short)pass != 0) {
+        FUN_00158ae0(2);
+        SetRenderStateSmart(0x7b, 0);
+      } else {
+        sh = *(char **)(grp + 0xc);
+        if (sh != (char *)0 && *(short *)(sh + 0x24) == 1) {
+          char *senv = (char *)FUN_001906b0(sh, 1);
+          if ((*(unsigned char *)(senv + 0x28) & 4) != 0) {
+            goto next_pass;
+          }
+        }
+        FUN_00158ae0(3);
+      }
+    } else if ((short)pass > 0) {
+      break;
+    }
+
+    sh = *(char **)(grp + 0xc);
+    switch (*(short *)(sh + 0x24)) {
+    case 1: {
+      /* shader_environment-style multitexture path */
+      char *env;
+      char env_flags_bit1; /* BL: (shader->flags >> 1) & 1 */
+      float skin_xform1[12]; /* [EBP-0x108] */
+      float texanim1[16]; /* [EBP-0x1f0] rows 2,3 written by texture anim */
+      float fog_consts[8]; /* [EBP-0xa0] */
+      float opacity;
+      float fog_scale;
+      int stage_count;
+      int idx;
+
+      env = (char *)FUN_001906b0(sh, 1);
+      /* has_multi = secondary map used as a regular multitexture stage.
+       * A z-sprite secondary map (env+0x5c == 2) is NOT a multitexture
+       * stage — it goes through the dedicated z-sprite final-combiner
+       * path instead (original 0x175830: jne keeps 1, i.e. != 2). */
+      if (*(int *)(env + 0x58) != -1 && *(short *)(env + 0x5c) != 2) {
+        has_multi = 1;
+      } else {
+        has_multi = 0;
+      }
+      env_flags_bit1 = (char)((*(unsigned char *)(env + 0x28) >> 1) & 1);
+      rasterizer_set_texture_bitmap_data(0, *(void **)(grp + 0x5c));
+      SetTextureStageStateSmart(0, 0xa,
+                                (*(unsigned char *)(env + 0x2e) & 2) | 1);
+      SetTextureStageStateSmart(
+        0, 0xb, ((*(unsigned char *)(env + 0x2e) & 4) | 2) >> 1);
+      SetTextureStageStateSmart(
+        0, 0xd, 2 - (int)((*(unsigned char *)(env + 0x2e) & 1) != 0));
+      SetTextureStageStateSmart(
+        0, 0xe, 2 - (int)((*(unsigned char *)(env + 0x2e) & 1) != 0));
+      SetTextureStageStateSmart(
+        0, 0xf, 2 - (int)((*(unsigned char *)(env + 0x2e) & 1) != 0));
+      if (*(int *)(env + 0x58) != -1) {
+        rasterizer_set_texture(1, 0, 1, *(int *)(env + 0x58),
+                               *(unsigned short *)(grp + 0x10));
+        SetTextureStageStateSmart(1, 0xa,
+                                  (*(unsigned char *)(env + 0x5e) & 2) | 1);
+        SetTextureStageStateSmart(
+          1, 0xb, ((*(unsigned char *)(env + 0x5e) & 4) | 2) >> 1);
+        SetTextureStageStateSmart(
+          1, 0xd, 2 - (int)((*(unsigned char *)(env + 0x5e) & 1) != 0));
+        SetTextureStageStateSmart(
+          1, 0xe, 2 - (int)((*(unsigned char *)(env + 0x5e) & 1) != 0));
+        SetTextureStageStateSmart(
+          1, 0xf, 2 - (int)((*(unsigned char *)(env + 0x5e) & 1) != 0));
+      }
+      SetRenderStateSmart(0x7f, 0);
+      SetRenderStateSmart(0x43, 0x10101);
+      SetRenderStateSmart(0x3b, 1);
+      SetRenderStateSmart(0x3c, 0);
+      FUN_001580b0(*(unsigned short *)(env + 0x2a));
+      FUN_00178b40(0x41, vertex_type, permutation);
+      skin_xform1[0] = 1.0f;
+      skin_xform1[1] = 0.0f;
+      skin_xform1[2] = 0.0f;
+      skin_xform1[3] = 0.0f;
+      skin_xform1[4] = 0.0f;
+      skin_xform1[5] = 1.0f;
+      skin_xform1[6] = 0.0f;
+      skin_xform1[7] = 0.0f;
+      skin_xform1[8] = 0.0f;
+      skin_xform1[9] = 0.0f;
+      skin_xform1[10] = 1.0f;
+      skin_xform1[11] = 0.0f;
+      texanim1[0] = 1.0f;
+      texanim1[1] = 0.0f;
+      texanim1[2] = 0.0f;
+      texanim1[3] = 0.0f;
+      texanim1[4] = 0.0f;
+      texanim1[5] = 1.0f;
+      texanim1[6] = 0.0f;
+      texanim1[7] = 0.0f;
+      texanim1[8] = 0.0f;
+      texanim1[9] = 0.0f;
+      texanim1[10] = 0.0f;
+      texanim1[11] = 0.0f;
+      texanim1[12] = 0.0f;
+      texanim1[13] = 0.0f;
+      texanim1[14] = 0.0f;
+      texanim1[15] = 0.0f;
+      if ((*grp & 0x20) != 0) {
+        skin_xform1[0] = *(float *)0x5a5c64;
+        skin_xform1[1] = *(float *)0x5a5c70;
+        skin_xform1[2] = *(float *)0x5a5c7c;
+        skin_xform1[3] = *(float *)0x5a5bc8;
+        skin_xform1[4] = *(float *)0x5a5c68;
+        skin_xform1[5] = *(float *)0x5a5c74;
+        skin_xform1[6] = *(float *)0x5a5c80;
+        skin_xform1[7] = *(float *)0x5a5bcc;
+        skin_xform1[8] = *(float *)0x5a5c6c;
+        skin_xform1[9] = *(float *)0x5a5c78;
+        skin_xform1[10] = *(float *)0x5a5c84;
+        skin_xform1[11] = *(float *)0x5a5bd0;
+      }
+      if (has_multi != 0) {
+        FUN_00190e10(env + 0x60, *(void **)(grp + 0x6c), *(float *)(grp + 0x3c),
+                     *(float *)(grp + 0x40), 0.0f, 0.0f, 0.0f,
+                     *(float *)0x5a5e18, &texanim1[8], &texanim1[12]);
+      }
+      D3DDevice_SetVertexShaderConstant(0x58, skin_xform1, 3);
+      if (success != 0) {
+        success = 1;
+      } else {
+        success = 0;
+        FUN_00167ff0(0,
+                     "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_"
+                     "device, VSH_CONSTANTS__INVERSE_OFFSET, "
+                     "vsh_constants__inverse, VSH_CONSTANTS__INVERSE_COUNT)");
+      }
+      D3DDevice_SetVertexShaderConstant(-0x51, texanim1, 4);
+      if (success != 0) {
+        success = 1;
+      } else {
+        success = 0;
+        FUN_00167ff0(
+          0, "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, "
+             "VSH_CONSTANTS__TEXANIM_OFFSET, vsh_constants__texanim, 4)");
+      }
+      if (*(char *)0x325718 != 0 && *(short *)(env + 0x5c) == 2 &&
+          *(int *)(env + 0x58) != -1 && (char)*grp >= 0) {
+        /* z-sprite fog constants */
+        opacity = 1.0f;
+        if (*(float *)(env + 0x9c) != *(float *)0x2533c0) {
+          opacity = *(float *)(env + 0x9c);
+        }
+        fog_scale = *(float *)0x2a50dc;
+        if (*(char *)0x32568c != 0) {
+          fog_scale = *(float *)0x2a50e0;
+        }
+        fog_consts[4] = *(float *)0x5a5bd4;
+        fog_consts[5] = *(float *)0x5a5bd8;
+        fog_consts[6] = *(float *)0x5a5bdc;
+        fog_consts[0] = (*(float *)0x5a5c08 * fog_scale) /
+                        (*(float *)0x5a5c08 - *(float *)0x5a5c04);
+        fog_consts[1] = -(fog_consts[0] * *(float *)0x5a5c04);
+        fog_consts[2] = opacity * *(float *)(env + 0x98);
+        fog_consts[3] = *(float *)0x5a5c04 + *(float *)0x25bb10;
+        fog_consts[7] = -FUN_00013070((float *)0x5a5bd4, (float *)0x5a5bc8);
+        D3DDevice_SetVertexShaderConstant(-0x3f, fog_consts, 2);
+        if (success != 0) {
+          success = 1;
+        } else {
+          success = 0;
+          FUN_00167ff0(0,
+                       "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_"
+                       "device, VSH_CONSTANTS__ZSPRITE_OFFSET, "
+                       "vsh_constants__zsprite, VSH_CONSTANTS__ZSPRITE_COUNT)");
+        }
+      }
+      csmemset((void *)0x5a5ac0, 0, 0xf0);
+      *(uint32_t *)0x5a5ac0 = 0x18201415;
+      *(uint32_t *)0x5a5b28 = 0xc4;
+      *(uint32_t *)0x5a5ae0 = 0xc;
+      *(uint32_t *)0x5a5ae4 = 0x1c00;
+      if (env_flags_bit1 != 0) {
+        *(uint32_t *)0x5a5b48 = 0x8080000;
+        *(uint32_t *)0x5a5b74 = 0xc0;
+        *(uint32_t *)0x5a5b4c = 0xc0c0000;
+        *(uint32_t *)0x5a5b78 = 0xc0;
+        *(uint32_t *)0x5a5b50 = 0x250c0508;
+        *(uint32_t *)0x5a5b7c = 0xc00;
+        stage_count = 3;
+      } else {
+        *(uint32_t *)0x5a5b48 = 0x8050000;
+        *(uint32_t *)0x5a5b74 = 0xc0;
+        stage_count = 1;
+      }
+      if (has_multi != 0) {
+        idx = (short)stage_count * 4;
+        *(uint32_t *)(0x5a5ac0 + idx) = 0x1c190000;
+        *(uint32_t *)(0x5a5b28 + idx) = 0xc0;
+        *(uint32_t *)(0x5a5b48 + idx) = 0xc090000;
+        *(uint32_t *)(0x5a5b74 + idx) = 0xc0;
+        stage_count = stage_count + 1;
+      }
+      if (*(char *)0x325718 == 0 || *(short *)(env + 0x5c) != 2 ||
+          *(int *)(env + 0x58) == -1 || (char)*grp < 0) {
+        *(uint32_t *)0x5a5b98 = ((unsigned int)(has_multi != 0) << 5) | 1;
+      } else {
+        *(uint32_t *)0x5a5b98 = 0x54421;
+        *(uint32_t *)0x5a5ba0 = 0x110000;
+        *(uint32_t *)0x5a5b9c = 0;
+        SetTextureStageStateSmart(1, 0xa, 1);
+        SetTextureStageStateSmart(1, 0xb, 1);
+        SetTextureStageStateSmart(1, 0xd, 2);
+        SetTextureStageStateSmart(1, 0xe, 2);
+        SetTextureStageStateSmart(1, 0xf, 2);
+        D3DDevice_SetStreamSource(1, *(void **)0x47e4bc, 2);
+        if (success != 0) {
+          success = 1;
+        } else {
+          success = 0;
+          FUN_00167ff0(0,
+                       "IDirect3DDevice8_SetStreamSource(global_d3d_device, 1, "
+                       "rasterizer_xbox_transparent_geometry_texcoord_stream, "
+                       "2*sizeof(byte))");
+        }
+        rasterizer_set_texture(1, 0, 0, *(int *)(env + 0x58),
+                               *(unsigned short *)(grp + 0x10));
+      }
+      if (*(char *)0x3256d4 != 0 && (*grp & 4) == 0) {
+        switch (*(short *)(env + 0x2a)) {
+        case 0:
+          idx = (short)stage_count * 4;
+          *(uint32_t *)(0x5a5ac0 + idx) = 0x1c140000;
+          *(uint32_t *)(0x5a5b28 + idx) = 0xc00;
+          stage_count = stage_count + 1;
+          *(int *)0x5a5b94 = (short)stage_count;
+          break;
+        case 1:
+        case 5:
+          idx = (short)stage_count * 4;
+          *(uint32_t *)(0x5a5b48 + idx) = 0xc142034;
+          *(uint32_t *)(0x5a5b74 + idx) = 0xc00;
+          stage_count = stage_count + 1;
+          *(int *)0x5a5b94 = (short)stage_count;
+          break;
+        case 2:
+          idx = (short)stage_count * 4;
+          *(uint32_t *)(0x5a5b48 + idx) = 0xc14a034;
+          *(uint32_t *)(0x5a5b74 + idx) = 0xc00;
+          stage_count = stage_count + 1;
+          *(int *)0x5a5b94 = (short)stage_count;
+          break;
+        case 3:
+        case 4:
+        case 6:
+          idx = (short)stage_count * 4;
+          *(uint32_t *)(0x5a5b48 + idx) = 0xc140000;
+          *(uint32_t *)(0x5a5b74 + idx) = 0xc00;
+          stage_count = stage_count + 1;
+          *(int *)0x5a5b94 = (short)stage_count;
+          break;
+        case 7:
+          idx = (short)stage_count * 4;
+          *(uint32_t *)(0x5a5ac0 + idx) = 0x1c140000;
+          *(uint32_t *)(0x5a5b28 + idx) = 0xc00;
+          *(uint32_t *)(0x5a5b48 + idx) = 0xc140000;
+          *(uint32_t *)(0x5a5b74 + idx) = 0xc00;
+          stage_count = stage_count + 1;
+          *(int *)0x5a5b94 = (short)stage_count;
+          break;
+        default:
+          display_assert("### ERROR unsupported framebuffer blend function",
+                         "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                         "transparent_geometry.c",
+                         0x3a2, 1);
+          system_exit(-1);
+        }
+      } else {
+        *(int *)0x5a5b94 = (short)stage_count;
+      }
+      goto set_shader_and_draw;
+    }
+
+    case 4:
+      /* model effect: only valid for object groups; drawn via decal path */
+      if (*(short *)(grp + 0x14) != 1) {
+        display_assert(
+          "### ERROR unsupported model effect type in transparent group",
+          "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+          "geometry.c",
+          0x2ab, 1);
+        system_exit(-1);
+      }
+      if (*(char *)0x47e4c0 != 0) {
+        return;
+      }
+      FUN_00159900(grp);
+      break;
+    case 5: {
+      /* shader_transparent_generic */
+      char *gen;
+      char *layers;
+      char *map;
+      char *stage;
+      char *bitm;
+      int frame_index; /* [EBP-0x34] */
+      int n;
+      int m;
+      int j;
+      short gtype;
+      short first_map_type; /* [EBP-0x14] */
+      short first_map_type_table[4]; /* [EBP-0xd8] */
+      int op_table[4]; /* [EBP-0x134] */
+      int colorop;
+      int alphaop;
+      float u;
+      float v;
+      float anim_out[32]; /* [EBP-0x330] 4 stages x 8 floats */
+      char sub_group[0xa0]; /* [EBP-0x450] */
+      int nstages;
+      unsigned int fade_mode_value; /* [EBP-0x6c] */
+      float fade_consts[12]; /* [EBP-0x180] */
+      float t;
+      float c[4]; /* [EBP-0x64] stage argb color */
+      float da;
+      float dr;
+      float dg;
+      float db;
+      float *pf;
+      char ok;
+      int bcount;
+      int limit;
+      int eidx;
+      int fvi;
+      int k;
+      float x;
+      unsigned int blendrow;
+
+      gen = (char *)FUN_001906b0(sh, 5);
+      frame_index = *(unsigned short *)(grp + 0x10);
+      layers = gen + 0x48;
+      if (*(int *)layers > 0) {
+        n = 0;
+        do {
+          csmemcpy(sub_group, grp, 0xa0);
+          *(int *)(sub_group + 0x90) = -1;
+          map = (char *)tag_block_get_element(layers, (short)n, 0x10);
+          *(void **)(sub_group + 0xc) =
+            tag_get(0x73686472, *(int *)(map + 0xc));
+          rasterizer_transparent_geometry_group_draw(sub_group, dirty);
+          n = n + 1;
+        } while ((int)(short)n < *(int *)layers);
+      }
+      FUN_00178b40(0x18, vertex_type, permutation);
+      SetRenderStateSmart(
+        0x7f,
+        (int)((-(unsigned int)((*(unsigned char *)(gen + 0x29) & 4) != 0) &
+               0xfffff6ff) +
+              0x901));
+      SetRenderStateSmart(0x43, 0x10101);
+      SetRenderStateSmart(0x3b, 1);
+      SetRenderStateSmart(0x3c, *(unsigned char *)(gen + 0x29) & 1);
+      SetRenderStateSmart(0x3d, 0x7f);
+      FUN_001580b0(*(unsigned short *)(gen + 0x2c));
+      if ((char)*(char *)(gen + 0x29) < 0 && *(int *)(grp + 0x6c) != 0 &&
+          *(int *)(gen + 0x54) > 0) {
+        /* numeric-counter driven first map index */
+        map = (char *)tag_block_get_element(gen + 0x54, 0, 0x64);
+        bitm = (char *)tag_get(0x6269746d, *(int *)(map + 0x28));
+        bcount = *(short *)(bitm + 0x60);
+        limit = (short)*(unsigned char *)(gen + 0x28);
+        eidx = ((bcount != 8) - 1 & 3);
+        x = (float)limit *
+              *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) + eidx * 4) +
+            *(float *)0x253398;
+        /* PIN(FLOOR(...)) re-evaluates the floor expression per compare */
+        if ((int)floor((double)x) < 0) {
+          fvi = 0;
+        } else if ((int)floor(
+                     (double)((float)limit *
+                                *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) +
+                                           eidx * 4) +
+                              *(float *)0x253398)) > limit) {
+          fvi = limit;
+        } else {
+          fvi = (int)floor(
+            (double)((float)limit *
+                       *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) +
+                                  eidx * 4) +
+                     *(float *)0x253398));
+        }
+        for (k = *(short *)(grp + 0x10); k > 0; k--) {
+          fvi = (int)(short)fvi / (int)(short)bcount;
+        }
+        frame_index = (int)(short)fvi % (int)(short)bcount;
+      }
+      m = 0;
+      do {
+        if ((int)(short)m < *(int *)(gen + 0x54)) {
+          map = (char *)tag_block_get_element(gen + 0x54, (short)m, 0x64);
+          gtype = *(short *)(gen + 0x2a);
+          first_map_type_table[0] = 0;
+          first_map_type_table[1] = 2;
+          first_map_type_table[2] = 2;
+          first_map_type_table[3] = 2;
+          op_table[0] = 1;
+          op_table[1] = 3;
+          op_table[2] = 3;
+          op_table[3] = 3;
+          if ((short)m == 0) {
+            first_map_type = first_map_type_table[gtype];
+          } else {
+            first_map_type = 0;
+          }
+          if ((*gen & 4) != 0 && gtype != 0) {
+            display_assert(
+              "!TEST_FLAG(shader_transparent_generic->shader.radiosity.flags, "
+              "_shader_radiosity_FILTHY_transparent_lit_bit) || "
+              "shader_transparent_generic->generic.type==_shader_transparent_"
+              "generic_type_2d_map",
+              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+              "geometry.c",
+              0x406, 1);
+            system_exit(-1);
+          }
+          if (gtype < 0 || gtype > 3) {
+            display_assert(
+              "type>=0 && type<NUMBER_OF_SHADER_TRANSPARENT_GENERIC_TYPES",
+              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+              "geometry.c",
+              0x407, 1);
+            system_exit(-1);
+          }
+          rasterizer_set_texture((short)m, first_map_type, 0,
+                                 *(int *)(map + 0x28), frame_index);
+          if (first_map_type == 0 && (*map & 2) != 0) {
+            colorop = 3;
+          } else if ((short)m != 0) {
+            colorop = 1;
+          } else {
+            colorop = op_table[gtype];
+          }
+          if (first_map_type == 0 && (*map & 4) != 0) {
+            alphaop = 3;
+          } else if ((short)m != 0) {
+            alphaop = 1;
+          } else {
+            alphaop = op_table[gtype];
+          }
+          SetTextureStageStateSmart((short)m, 0xa, colorop);
+          SetTextureStageStateSmart((short)m, 0xb, alphaop);
+          SetTextureStageStateSmart((short)m, 0xc,
+                                    ((short)m != 0) ? 1 : op_table[gtype]);
+          D3DDevice_SetTextureStageState((short)m, 0xd, 2);
+          SetTextureStageStateSmart((short)m, 0xe, 2 - (int)((*map & 1) != 0));
+          SetTextureStageStateSmart((short)m, 0xf, 2 - (int)((*map & 1) != 0));
+        }
+        if ((int)(short)m < *(int *)(gen + 0x54) &&
+            ((short)m > 0 || *(short *)(gen + 0x2a) == 0)) {
+          map = (char *)tag_block_get_element(gen + 0x54, (short)m, 0x64);
+          u = *(float *)(map + 4);
+          v = *(float *)(map + 8);
+          if ((short)m == 0) {
+            if ((*(unsigned char *)(gen + 0x29) & 0x40) != 0) {
+              u = -(u * *(float *)(grp + 0x70));
+              v = -(v * *(float *)(grp + 0x70));
+            }
+            if ((*(unsigned char *)(gen + 0x29) & 8) == 0) {
+              u = u * *(float *)(grp + 0x3c);
+              v = v * *(float *)(grp + 0x40);
+            }
+          } else {
+            u = u * *(float *)(grp + 0x3c);
+            v = v * *(float *)(grp + 0x40);
+          }
+          FUN_00190e10(map + 0x2c, *(void **)(grp + 0x6c), u, v,
+                       *(float *)(map + 0xc), *(float *)(map + 0x10),
+                       *(float *)(map + 0x14), *(float *)0x5a5e18,
+                       &anim_out[(short)m * 8], &anim_out[(short)m * 8 + 4]);
+        } else if ((int)(short)m < *(int *)(gen + 0x54) &&
+                   (*(unsigned char *)(gen + 0x29) & 8) != 0) {
+          anim_out[(short)m * 8] = *(float *)0x5a5c64;
+          anim_out[(short)m * 8 + 1] = *(float *)0x5a5c68;
+          anim_out[(short)m * 8 + 2] = *(float *)0x5a5c6c;
+          anim_out[(short)m * 8 + 4] = *(float *)0x5a5c70;
+          anim_out[(short)m * 8 + 5] = *(float *)0x5a5c74;
+          anim_out[(short)m * 8 + 6] = *(float *)0x5a5c78;
+          anim_out[(short)m * 8 + 3] = 0.0f;
+          anim_out[(short)m * 8 + 7] = 0.0f;
+        } else {
+          anim_out[(short)m * 8] = 1.0f;
+          anim_out[(short)m * 8 + 1] = 0.0f;
+          anim_out[(short)m * 8 + 2] = 0.0f;
+          anim_out[(short)m * 8 + 4] = 0.0f;
+          anim_out[(short)m * 8 + 5] = 1.0f;
+          anim_out[(short)m * 8 + 6] = 0.0f;
+          anim_out[(short)m * 8 + 3] = 0.0f;
+          anim_out[(short)m * 8 + 7] = 0.0f;
+        }
+        m = m + 1;
+      } while ((short)m < 4);
+      D3DDevice_SetVertexShaderConstant(-0x51, anim_out, 8);
+      if (success != 0) {
+        ok = FUN_0017c2f0(*(void **)(grp + 0xc), (void *)0x5a5ac0);
+        if (ok == 0) {
+          success = 0;
+        } else {
+          success = 1;
+        }
+      } else {
+        FUN_00167ff0(0,
+                     "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_"
+                     "device, VSH_CONSTANTS__TEXANIM_OFFSET, "
+                     "vsh_constants__texanim, VSH_CONSTANTS__TEXANIM_COUNT)");
+        success = 0;
+      }
+      if (*(char *)0x3256d4 == 0) {
+        goto generic_stage_colors;
+      }
+      nstages = *(int *)(gen + 0x60);
+      if (nstages < 1) {
+        nstages = 1;
+      }
+      if ((*grp & 0x10) != 0 && *(short *)(gen + 0x2c) == 0) {
+        /* fog-plane driven fade into an extra combiner stage */
+        t = -(plane3d_distance_to_point((float *)0x5a5dc8, (float *)0x5a5bc8) /
+              *(float *)0x5a5dec);
+        if (t < *(float *)0x2533c0) {
+          t = 0.0f;
+        } else if (t > *(float *)0x2533c8) {
+          t = 1.0f;
+        }
+        ((uint32_t *)0x5a5ae8)[(short)nstages] = real_a_rgb_color_to_pixel32(
+          t * *(float *)0x5a5de4, (float *)0x5a5dd8);
+        *(uint32_t *)(0x5a5b48 + (short)nstages * 4) = 0x310c1101;
+        *(uint32_t *)(0x5a5b74 + (short)nstages * 4) = 0xc00;
+        goto generic_stage_colors;
+      }
+      fade_consts[0] = 0.0f;
+      fade_consts[1] = 0.0f;
+      fade_consts[2] = 0.0f;
+      fade_consts[3] = 0.0f;
+      fade_consts[4] = 0.0f;
+      fade_consts[5] = 0.0f;
+      fade_consts[6] = 0.0f;
+      fade_consts[7] = 0.0f;
+      fade_consts[8] = 0.0f;
+      fade_consts[9] = 0.0f;
+      fade_consts[10] = 1.0f;
+      fade_consts[11] = 0.0f;
+      if (*(short *)(grp + 0x14) == 1) {
+        t = *(float *)0x2533c8 - *(float *)(grp + 0x18);
+        if (t < *(float *)0x2533c0) {
+          fade_consts[10] = 0.0f;
+        } else if (t > *(float *)0x2533c8) {
+          fade_consts[10] = 1.0f;
+        } else {
+          fade_consts[10] = t;
+        }
+      }
+      if (*(short *)(gen + 0x30) > 0 && *(int *)(grp + 0x6c) != 0 &&
+          *(int *)(*(int *)(grp + 0x6c) + 4) != 0) {
+        fade_consts[10] =
+          fade_consts[10] * *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) - 4 +
+                                       *(short *)(gen + 0x30) * 4);
+      }
+      D3DDevice_SetVertexShaderConstant(-0x54, fade_consts, 3);
+      if (success != 0) {
+        success = 1;
+      } else {
+        success = 0;
+        FUN_00167ff0(0,
+                     "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_"
+                     "device, VSH_CONSTANTS__TEXSCALE_OFFSET, "
+                     "vsh_constants__texscale, VSH_CONSTANTS__TEXSCALE_COUNT)");
+      }
+      if (*(short *)(gen + 0x2e) == 0) {
+        fade_mode_value = 0x14;
+      } else if (*(short *)(gen + 0x2e) == 1) {
+        fade_mode_value = 0x15;
+      } else {
+        if (*(short *)(gen + 0x2e) != 2) {
+          display_assert("### ERROR unsupported framebuffer fade mode",
+                         "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                         "transparent_geometry.c",
+                         0x4a1, 1);
+          system_exit(-1);
+        }
+        fade_mode_value = 5;
+      }
+      switch (*(short *)(gen + 0x2c)) {
+      case 0:
+        *(uint32_t *)(0x5a5ac0 + (short)nstages * 4) =
+          (fade_mode_value | 0x1c00) << 0x10;
+        *(uint32_t *)(0x5a5b28 + (short)nstages * 4) = 0xc00;
+        break;
+      case 1:
+      case 5:
+        blendrow =
+          (fade_mode_value ^ 0x20) | fade_mode_value << 0x10 | 0xc002000;
+        *(uint32_t *)(0x5a5b48 + (short)nstages * 4) = blendrow;
+        *(uint32_t *)(0x5a5b74 + (short)nstages * 4) = 0xc00;
+        break;
+      case 2:
+        blendrow =
+          (fade_mode_value ^ 0x20) | fade_mode_value << 0x10 | 0xc00a000;
+        *(uint32_t *)(0x5a5b48 + (short)nstages * 4) = blendrow;
+        *(uint32_t *)(0x5a5b74 + (short)nstages * 4) = 0xc00;
+        break;
+      case 3:
+      case 4:
+      case 6:
+        *(uint32_t *)(0x5a5b48 + (short)nstages * 4) = (fade_mode_value | 0xc00)
+                                                       << 0x10;
+        *(uint32_t *)(0x5a5b74 + (short)nstages * 4) = 0xc00;
+        break;
+      case 7:
+        *(uint32_t *)(0x5a5ac0 + (short)nstages * 4) =
+          (fade_mode_value | 0x1c00) << 0x10;
+        *(uint32_t *)(0x5a5b28 + (short)nstages * 4) = 0xc00;
+        *(uint32_t *)(0x5a5b48 + (short)nstages * 4) = (fade_mode_value | 0xc00)
+                                                       << 0x10;
+        *(uint32_t *)(0x5a5b74 + (short)nstages * 4) = 0xc00;
+        break;
+      default:
+        display_assert("### ERROR unsupported framebuffer blend function",
+                       "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                       "transparent_geometry.c",
+                       0x4c0, 1);
+        system_exit(-1);
+      }
+    generic_stage_colors:
+      j = 0;
+      if (*(int *)(gen + 0x60) > 0) {
+        do {
+          stage = (char *)tag_block_get_element(gen + 0x60, (short)j, 0x70);
+          if (*(float *)(stage + 8) == *(float *)0x2533c0) {
+            display_assert("stage->constant_color0_animation_period!=0.0f",
+                           "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_"
+                           "xbox_transparent_geometry.c",
+                           0x4d3, 1);
+            system_exit(-1);
+          }
+          if (*(int *)(grp + 0x6c) != 0 && (*stage & 4) != 0) {
+            t = **(float **)(*(int *)(grp + 0x6c) + 4);
+          } else {
+            t = FUN_0010a5e0(*(short *)(stage + 6),
+                             *(float *)0x5a5e18 / *(float *)(stage + 8));
+          }
+          da = *(float *)(stage + 0x1c) - *(float *)(stage + 0xc);
+          dr = *(float *)(stage + 0x20) - *(float *)(stage + 0x10);
+          dg = *(float *)(stage + 0x24) - *(float *)(stage + 0x14);
+          db = *(float *)(stage + 0x28) - *(float *)(stage + 0x18);
+          c[0] = t * da + *(float *)(stage + 0xc);
+          c[1] = t * dr + *(float *)(stage + 0x10);
+          c[2] = dg * t + *(float *)(stage + 0x14);
+          c[3] = t * db + *(float *)(stage + 0x18);
+#if !defined(_MSC_VER) || defined(__clang__)
+          /* The original stores each channel to a 32-bit float (FSTP) and the
+           * range asserts below reload the rounded value; clang keeps the
+           * channels in x87 registers (FST + FUCOMI) and compares at 80-bit
+           * extended precision.  When t == 1.0 the lerp lo + round32(hi-lo)*t
+           * can land half a ULP above 1.0 (e.g. needler core stage 6 with the
+           * weapon A-out pegged at 1.0), which passes the original's rounded
+           * compare but trips the extended-precision one.  Force the same
+           * store+reload rounding before comparing. */
+          asm volatile("" : "+m"(c[0]), "+m"(c[1]), "+m"(c[2]), "+m"(c[3]));
 #endif
+          if (!(c[1] >= *(float *)0x2533c0 && c[1] <= *(float *)0x2533c8)) {
+            display_assert(
+              "constant_color0.red >=0.0f && constant_color0.red <=1.0f",
+              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+              "geometry.c",
+              0x4e8, 1);
+            system_exit(-1);
+          }
+          if (!(c[2] >= *(float *)0x2533c0 && c[2] <= *(float *)0x2533c8)) {
+            display_assert(
+              "constant_color0.green>=0.0f && constant_color0.green<=1.0f",
+              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+              "geometry.c",
+              0x4e9, 1);
+            system_exit(-1);
+          }
+          if (!(c[3] >= *(float *)0x2533c0 && c[3] <= *(float *)0x2533c8)) {
+            display_assert(
+              "constant_color0.blue >=0.0f && constant_color0.blue <=1.0f",
+              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+              "geometry.c",
+              0x4ea, 1);
+            system_exit(-1);
+          }
+          if (*(short *)(stage + 4) > 0 && *(short *)(stage + 4) < 5 &&
+              *(int **)(grp + 0x6c) != (int *)0 &&
+              **(int **)(grp + 0x6c) != 0) {
+            pf = (float *)(**(int **)(grp + 0x6c) - 0xc +
+                           *(short *)(stage + 4) * 0xc);
+            if (!(pf[0] >= *(float *)0x2533c0 && pf[0] <= *(float *)0x2533c8)) {
+              display_assert(
+                "external_color->red >=0.0f && external_color->red <=1.0f",
+                "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                "transparent_geometry.c",
+                0x4f5, 1);
+              system_exit(-1);
+            }
+            if (!(pf[1] >= *(float *)0x2533c0 && pf[1] <= *(float *)0x2533c8)) {
+              display_assert(
+                "external_color->green>=0.0f && external_color->green<=1.0f",
+                "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                "transparent_geometry.c",
+                0x4f6, 1);
+              system_exit(-1);
+            }
+            if (!(pf[2] >= *(float *)0x2533c0 && pf[2] <= *(float *)0x2533c8)) {
+              display_assert(
+                "external_color->blue >=0.0f && external_color->blue <=1.0f",
+                "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                "transparent_geometry.c",
+                0x4f7, 1);
+              system_exit(-1);
+            }
+            c[1] = c[1] * pf[0];
+            c[2] = c[2] * pf[1];
+            c[3] = c[3] * pf[2];
+          }
+          ((uint32_t *)0x5a5ae8)[(short)j] = FUN_000d1c90(c);
+          j = j + 1;
+        } while ((int)(short)j < *(int *)(gen + 0x60));
+      }
+      goto set_shader_and_draw;
+    }
+    case 6: {
+      /* shader_transparent_chicago */
+      char *chi;
+      char *layers2;
+      char *map2;
+      char *bitm2;
+      int frame_index2; /* [EBP-0x14] */
+      int m2; /* loop counter (param slot reuse in original) */
+      short ctype;
+      short first_map_type2; /* [EBP-0xc] */
+      short first_map_type_table2[4]; /* [EBP-0xd0] */
+      int op_table2[4]; /* [EBP-0x144] */
+      int colorop2;
+      int alphaop2;
+      float u2;
+      float v2;
+      float anim_out2[32]; /* [EBP-0x3b0] */
+      char sub_group2[0xa0]; /* [EBP-0x4f0] */
+      short nstages2;
+      unsigned int fade_mode_value2; /* [EBP-0x70] */
+      float fade_consts2[12]; /* [EBP-0x1b0] */
+      float t2;
+      char ok2;
+      int bcount2;
+      int limit2;
+      int eidx2;
+      int fvi2;
+      int k2;
+      float x2;
+      unsigned int blendrow2;
+
+      chi = (char *)FUN_001906b0(sh, 6);
+      frame_index2 = *(unsigned short *)(grp + 0x10);
+      layers2 = chi + 0x48;
+      /* NOTE: original re-reads the layer count each iteration and always
+       * fetches element 0 -- faithful reproduction of the binary */
+      while (*(int *)layers2 > 0) {
+        csmemcpy(sub_group2, grp, 0xa0);
+        *(int *)(sub_group2 + 0x90) = -1;
+        map2 = (char *)tag_block_get_element(layers2, 0, 0x10);
+        *(void **)(sub_group2 + 0xc) =
+          tag_get(0x73686472, *(int *)(map2 + 0xc));
+        rasterizer_transparent_geometry_group_draw(sub_group2, dirty);
+      }
+      FUN_00178b40(0x18, vertex_type, permutation);
+      SetRenderStateSmart(
+        0x7f,
+        (int)((-(unsigned int)((*(unsigned char *)(chi + 0x29) & 4) != 0) &
+               0xfffff6ff) +
+              0x901));
+      SetRenderStateSmart(0x43, 0x10101);
+      SetRenderStateSmart(0x3b, 1);
+      SetRenderStateSmart(0x3c, *(unsigned char *)(chi + 0x29) & 1);
+      SetRenderStateSmart(0x3d, 0x7f);
+      FUN_001580b0(*(unsigned short *)(chi + 0x2c));
+      if ((char)*(char *)(chi + 0x29) < 0 && *(int *)(grp + 0x6c) != 0 &&
+          *(int *)(chi + 0x54) > 0) {
+        map2 = (char *)tag_block_get_element(chi + 0x54, 0, 0xdc);
+        bitm2 = (char *)tag_get(0x6269746d, *(int *)(map2 + 0x78));
+        bcount2 = *(short *)(bitm2 + 0x60);
+        frame_index2 = (short)bcount2;
+        if ((*(unsigned char *)(chi + 0x60) & 2) != 0) {
+          frame_index2 =
+            numeric_countdown_timer_get(*(unsigned short *)(grp + 0x10));
+        } else {
+          limit2 = (short)*(unsigned char *)(chi + 0x28);
+          eidx2 = ((bcount2 != 8) - 1 & 3);
+          x2 = (float)limit2 *
+                 *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) + eidx2 * 4) +
+               *(float *)0x253398;
+          /* PIN(FLOOR(...)) re-evaluates the floor expression per compare */
+          if ((int)floor((double)x2) < 0) {
+            fvi2 = 0;
+          } else if ((int)floor((
+                       double)((float)limit2 *
+                                 *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) +
+                                            eidx2 * 4) +
+                               *(float *)0x253398)) > limit2) {
+            fvi2 = limit2;
+          } else {
+            fvi2 = (int)floor(
+              (double)((float)limit2 *
+                         *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) +
+                                    eidx2 * 4) +
+                       *(float *)0x253398));
+          }
+          for (k2 = *(short *)(grp + 0x10); k2 > 0; k2--) {
+            fvi2 = (int)(short)fvi2 / (int)(short)frame_index2;
+          }
+          frame_index2 = (int)(short)fvi2 % (int)(short)frame_index2;
+        }
+      }
+      m2 = 0;
+      do {
+        if ((int)(short)m2 < *(int *)(chi + 0x54)) {
+          map2 = (char *)tag_block_get_element(chi + 0x54, (short)m2, 0xdc);
+          ctype = *(short *)(chi + 0x2a);
+          first_map_type_table2[0] = 0;
+          first_map_type_table2[1] = 2;
+          first_map_type_table2[2] = 2;
+          first_map_type_table2[3] = 2;
+          op_table2[0] = 1;
+          op_table2[1] = 3;
+          op_table2[2] = 3;
+          op_table2[3] = 3;
+          if ((short)m2 == 0) {
+            first_map_type2 = first_map_type_table2[ctype];
+          } else {
+            first_map_type2 = 0;
+          }
+          if ((*chi & 4) != 0 && ctype != 0) {
+            display_assert(
+              "!TEST_FLAG(shader_transparent_chicago->shader.radiosity.flags, "
+              "_shader_radiosity_FILTHY_transparent_lit_bit) || "
+              "shader_transparent_chicago->chicago.type==_shader_transparent_"
+              "chicago_type_2d_map",
+              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+              "geometry.c",
+              0x567, 1);
+            system_exit(-1);
+          }
+          if (ctype < 0 || ctype > 3) {
+            display_assert(
+              "type>=0 && type<NUMBER_OF_SHADER_TRANSPARENT_CHICAGO_TYPES",
+              "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_transparent_"
+              "geometry.c",
+              0x568, 1);
+            system_exit(-1);
+          }
+          rasterizer_set_texture((short)m2, first_map_type2, 0,
+                                 *(int *)(map2 + 0x78), frame_index2);
+          if (first_map_type2 == 0 && (*map2 & 4) != 0) {
+            colorop2 = 3;
+          } else if ((short)m2 != 0) {
+            colorop2 = 1;
+          } else {
+            colorop2 = op_table2[ctype];
+          }
+          if (first_map_type2 == 0 && (*map2 & 8) != 0) {
+            alphaop2 = 3;
+          } else if ((short)m2 != 0) {
+            alphaop2 = 1;
+          } else {
+            alphaop2 = op_table2[ctype];
+          }
+          D3DDevice_SetTextureStageState((short)m2, 0xa, colorop2);
+          D3DDevice_SetTextureStageState((short)m2, 0xb, alphaop2);
+          D3DDevice_SetTextureStageState(
+            (short)m2, 0xc, ((short)m2 != 0) ? 1 : op_table2[ctype]);
+          D3DDevice_SetTextureStageState((short)m2, 0xd, 2);
+          D3DDevice_SetTextureStageState((short)m2, 0xe,
+                                         2 - (int)((*map2 & 1) != 0));
+          D3DDevice_SetTextureStageState((short)m2, 0xf,
+                                         2 - (int)((*map2 & 1) != 0));
+        }
+        if ((int)(short)m2 < *(int *)(chi + 0x54) &&
+            ((short)m2 > 0 || *(short *)(chi + 0x2a) == 0)) {
+          map2 = (char *)tag_block_get_element(chi + 0x54, (short)m2, 0xdc);
+          u2 = *(float *)(map2 + 0x54);
+          v2 = *(float *)(map2 + 0x58);
+          if ((short)m2 == 0) {
+            if ((*(unsigned char *)(chi + 0x29) & 0x40) != 0) {
+              u2 = -(u2 * *(float *)(grp + 0x70));
+              v2 = -(v2 * *(float *)(grp + 0x70));
+            }
+            if ((*(unsigned char *)(chi + 0x29) & 8) == 0) {
+              u2 = u2 * *(float *)(grp + 0x3c);
+              v2 = v2 * *(float *)(grp + 0x40);
+            }
+          } else {
+            u2 = u2 * *(float *)(grp + 0x3c);
+            v2 = v2 * *(float *)(grp + 0x40);
+          }
+          FUN_00190e10(map2 + 0xa4, *(void **)(grp + 0x6c), u2, v2,
+                       *(float *)(map2 + 0x5c), *(float *)(map2 + 0x60),
+                       *(float *)(map2 + 0x64), *(float *)0x5a5e18,
+                       &anim_out2[(short)m2 * 8],
+                       &anim_out2[(short)m2 * 8 + 4]);
+        } else if ((int)(short)m2 < *(int *)(chi + 0x54) &&
+                   (*(unsigned char *)(chi + 0x29) & 8) != 0) {
+          anim_out2[(short)m2 * 8] = *(float *)0x5a5c64;
+          anim_out2[(short)m2 * 8 + 1] = *(float *)0x5a5c68;
+          anim_out2[(short)m2 * 8 + 2] = *(float *)0x5a5c6c;
+          anim_out2[(short)m2 * 8 + 4] = *(float *)0x5a5c70;
+          anim_out2[(short)m2 * 8 + 5] = *(float *)0x5a5c74;
+          anim_out2[(short)m2 * 8 + 6] = *(float *)0x5a5c78;
+          anim_out2[(short)m2 * 8 + 3] = 0.0f;
+          anim_out2[(short)m2 * 8 + 7] = 0.0f;
+        } else {
+          anim_out2[(short)m2 * 8] = 1.0f;
+          anim_out2[(short)m2 * 8 + 1] = 0.0f;
+          anim_out2[(short)m2 * 8 + 2] = 0.0f;
+          anim_out2[(short)m2 * 8 + 4] = 0.0f;
+          anim_out2[(short)m2 * 8 + 5] = 1.0f;
+          anim_out2[(short)m2 * 8 + 6] = 0.0f;
+          anim_out2[(short)m2 * 8 + 3] = 0.0f;
+          anim_out2[(short)m2 * 8 + 7] = 0.0f;
+        }
+        m2 = m2 + 1;
+      } while ((short)m2 < 4);
+      D3DDevice_SetVertexShaderConstant(-0x51, anim_out2, 8);
+      if (success == 0) {
+        FUN_00167ff0(0,
+                     "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_"
+                     "device, VSH_CONSTANTS__TEXANIM_OFFSET, "
+                     "vsh_constants__texanim, VSH_CONSTANTS__TEXANIM_COUNT)");
+        success = 0;
+      } else {
+        ok2 = FUN_0017bca0(*(void **)(grp + 0xc), (void *)0x5a5ac0);
+        success = 1;
+        if (ok2 == 0) {
+          success = 0;
+        }
+      }
+      if (*(char *)0x3256d4 == 0) {
+        goto set_shader_and_draw;
+      }
+      nstages2 = *(short *)(chi + 0x54);
+      if ((*grp & 0x10) != 0 && *(short *)(chi + 0x2c) == 0) {
+        t2 = -(plane3d_distance_to_point((float *)0x5a5dc8, (float *)0x5a5bc8) /
+               *(float *)0x5a5dec);
+        if (t2 < *(float *)0x2533c0) {
+          t2 = 0.0f;
+        } else if (t2 > *(float *)0x2533c8) {
+          t2 = 1.0f;
+        }
+        ((uint32_t *)0x5a5ae8)[nstages2] = real_a_rgb_color_to_pixel32(
+          *(float *)0x5a5de4 * t2, (float *)0x5a5dd8);
+        *(uint32_t *)(0x5a5b48 + nstages2 * 4) = 0x310c1101;
+        *(uint32_t *)(0x5a5b74 + nstages2 * 4) = 0xc00;
+        goto set_shader_and_draw;
+      }
+      fade_consts2[0] = 0.0f;
+      fade_consts2[1] = 0.0f;
+      fade_consts2[2] = 0.0f;
+      fade_consts2[3] = 0.0f;
+      fade_consts2[4] = 0.0f;
+      fade_consts2[5] = 0.0f;
+      fade_consts2[6] = 0.0f;
+      fade_consts2[7] = 0.0f;
+      fade_consts2[8] = 0.0f;
+      fade_consts2[9] = 0.0f;
+      fade_consts2[10] = 1.0f;
+      fade_consts2[11] = 0.0f;
+      if (*(short *)(grp + 0x14) == 1 &&
+          (*(unsigned char *)(chi + 0x60) & 1) == 0) {
+        t2 = *(float *)0x2533c8 - *(float *)(grp + 0x18);
+        if (t2 < *(float *)0x2533c0) {
+          fade_consts2[10] = 0.0f;
+        } else if (t2 > *(float *)0x2533c8) {
+          fade_consts2[10] = 1.0f;
+        } else {
+          fade_consts2[10] = t2;
+        }
+      }
+      if (*(short *)(chi + 0x30) > 0 && *(int *)(grp + 0x6c) != 0 &&
+          *(int *)(*(int *)(grp + 0x6c) + 4) != 0) {
+        fade_consts2[10] =
+          fade_consts2[10] * *(float *)(*(int *)(*(int *)(grp + 0x6c) + 4) - 4 +
+                                        *(short *)(chi + 0x30) * 4);
+      }
+      D3DDevice_SetVertexShaderConstant(-0x54, fade_consts2, 3);
+      if (success != 0) {
+        success = 1;
+      } else {
+        success = 0;
+        FUN_00167ff0(0,
+                     "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_"
+                     "device, VSH_CONSTANTS__TEXSCALE_OFFSET, "
+                     "vsh_constants__texscale, VSH_CONSTANTS__TEXSCALE_COUNT)");
+      }
+      if (*(short *)(chi + 0x2e) == 0) {
+        fade_mode_value2 = 0x14;
+      } else if (*(short *)(chi + 0x2e) == 1) {
+        fade_mode_value2 = 0x15;
+      } else {
+        if (*(short *)(chi + 0x2e) != 2) {
+          display_assert("### ERROR unsupported framebuffer fade mode",
+                         "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                         "transparent_geometry.c",
+                         0x603, 1);
+          system_exit(-1);
+        }
+        fade_mode_value2 = 5;
+      }
+      switch (*(short *)(chi + 0x2c)) {
+      case 0:
+        *(uint32_t *)(0x5a5ac0 + nstages2 * 4) = (fade_mode_value2 | 0x1c00)
+                                                 << 0x10;
+        *(uint32_t *)(0x5a5b28 + nstages2 * 4) = 0xc00;
+        break;
+      case 1:
+      case 5:
+        blendrow2 =
+          (fade_mode_value2 ^ 0x20) | fade_mode_value2 << 0x10 | 0xc002000;
+        *(uint32_t *)(0x5a5b48 + nstages2 * 4) = blendrow2;
+        *(uint32_t *)(0x5a5b74 + nstages2 * 4) = 0xc00;
+        break;
+      case 2:
+        blendrow2 =
+          (fade_mode_value2 ^ 0x20) | fade_mode_value2 << 0x10 | 0xc00a000;
+        *(uint32_t *)(0x5a5b48 + nstages2 * 4) = blendrow2;
+        *(uint32_t *)(0x5a5b74 + nstages2 * 4) = 0xc00;
+        break;
+      case 3:
+      case 4:
+      case 6:
+        *(uint32_t *)(0x5a5b48 + nstages2 * 4) = (fade_mode_value2 | 0xc00)
+                                                 << 0x10;
+        *(uint32_t *)(0x5a5b74 + nstages2 * 4) = 0xc00;
+        break;
+      case 7:
+        *(uint32_t *)(0x5a5ac0 + nstages2 * 4) = (fade_mode_value2 | 0x1c00)
+                                                 << 0x10;
+        *(uint32_t *)(0x5a5b28 + nstages2 * 4) = 0xc00;
+        *(uint32_t *)(0x5a5b48 + nstages2 * 4) = (fade_mode_value2 | 0xc00)
+                                                 << 0x10;
+        *(uint32_t *)(0x5a5b74 + nstages2 * 4) = 0xc00;
+        break;
+      default:
+        display_assert("### ERROR unsupported framebuffer blend function",
+                       "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                       "transparent_geometry.c",
+                       0x622, 1);
+        system_exit(-1);
+      }
+      goto set_shader_and_draw;
+    }
+
+    case 7:
+      FUN_00179de0(grp);
+      break;
+    case 8: {
+      /* shader_transparent_glass */
+      char *gls;
+      short reflection_type;
+      float glass_consts[12]; /* diffuse [EBP-0x280] */
+      float refl_consts[12]; /* reflection [EBP-0x2b0] */
+      float bump_consts[12]; /* bump/specular [EBP-0x220] */
+      float bump_color[3]; /* [EBP-0x7c] */
+      float bc;
+
+      gls = (char *)FUN_001906b0(sh, 8);
+      reflection_type = *(short *)(gls + 0x8a);
+      if (reflection_type == 2) {
+        if (*(char *)0x5a5bc4 == 0 || *(short *)0x5a5bc0 != 0) {
+          break;
+        }
+      } else if (reflection_type == 0 &&
+                 ((*(unsigned char *)(gls + 0x28) & 8) != 0 ||
+                  *(int *)(gls + 0xcc) == -1)) {
+        reflection_type = 1;
+      }
+      if (*(int *)(gls + 0x70) != -1 ||
+          *(float *)(gls + 0x54) != *(float *)0x2533c0 ||
+          *(float *)(gls + 0x58) != *(float *)0x2533c0 ||
+          *(float *)(gls + 0x5c) != *(float *)0x2533c0) {
+        /* diffuse pass */
+        rasterizer_set_texture(0, 0, 1, *(int *)(gls + 0x70),
+                               *(unsigned short *)(grp + 0x10));
+        SetTextureStageStateSmart(0, 0xa, 1);
+        SetTextureStageStateSmart(0, 0xb, 1);
+        SetTextureStageStateSmart(0, 0xd, 2);
+        SetTextureStageStateSmart(0, 0xe, 2);
+        SetTextureStageStateSmart(0, 0xf, 2);
+        SetRenderStateSmart(
+          0x7f,
+          (int)((-(unsigned int)((*(unsigned char *)(gls + 0x28) & 4) != 0) &
+                 0xfffff6ff) +
+                0x901));
+        SetRenderStateSmart(0x43, 0x10101);
+        SetRenderStateSmart(0x3b, 1);
+        SetRenderStateSmart(0x3e, 0);
+        SetRenderStateSmart(0x3f, 0x300);
+        SetRenderStateSmart(0x4a, 0x8006);
+        SetRenderStateSmart(0x3c, 1);
+        SetRenderStateSmart(0x3d, 0);
+        FUN_00178b40(0x2e, vertex_type, permutation);
+        glass_consts[0] = *(float *)(grp + 0x3c) * *(float *)(gls + 0x60);
+        glass_consts[1] = *(float *)(grp + 0x40) * *(float *)(gls + 0x60);
+        glass_consts[2] = 1.0f;
+        glass_consts[3] = 1.0f;
+        glass_consts[4] = 0.0f;
+        glass_consts[5] = 0.0f;
+        glass_consts[6] = 0.0f;
+        glass_consts[7] = 0.0f;
+        glass_consts[8] = 0.0f;
+        glass_consts[9] = 0.0f;
+        glass_consts[10] = 0.0f;
+        glass_consts[11] = 0.0f;
+        D3DDevice_SetVertexShaderConstant(-0x54, glass_consts, 3);
+        if (success != 0) {
+          success = 1;
+        } else {
+          success = 0;
+          FUN_00167ff0(
+            0, "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, "
+               "VSH_CONSTANTS__TEXSCALE_OFFSET, vsh_constants__texscale, "
+               "VSH_CONSTANTS__TEXSCALE_COUNT)");
+        }
+        csmemset((void *)0x5a5ac0, 0, 0xf0);
+        *(uint32_t *)0x5a5b98 = 1;
+        *(uint32_t *)0x5a5b94 = 1;
+        *(uint32_t *)0x5a5ae8 = FUN_000d1dd0((float *)(gls + 0x54));
+        *(uint32_t *)0x5a5b48 = 0x8010000;
+        *(uint32_t *)0x5a5b74 = 0xc0;
+        if (*(short *)(grp + 0x14) == 1) {
+          *(uint32_t *)0x5a5b08 = FUN_00159070(*(float *)(grp + 0x18));
+          *(uint32_t *)0x5a5ac0 = 0x14320000;
+          *(uint32_t *)0x5a5b28 = 0x40;
+        }
+        *(uint32_t *)0x5a5ae0 = 0x140c2000;
+        *(uint32_t *)0x5a5ae4 = 0x1400;
+        rasterizer_set_pixel_shader((void *)0x5a5ac0);
+        FUN_00174510(grp, 0);
+      }
+      if ((*(float *)(gls + 0x8c) > *(float *)0x2533c0 ||
+           *(float *)(gls + 0x9c) > *(float *)0x2533c0) &&
+          (*(int *)(gls + 0xb8) != -1 || reflection_type == 2)) {
+        /* reflection pass */
+        if (reflection_type < 0 || reflection_type > 2) {
+          display_assert("reflection_type>=0 && "
+                         "reflection_type<NUMBER_OF_SHADER_TRANSPARENT_GLASS_"
+                         "REFLECTION_TYPES",
+                         "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                         "transparent_geometry.c",
+                         0x69e, 1);
+          system_exit(-1);
+        }
+        rasterizer_set_texture(0, 0, 3, *(int *)(gls + 0xcc),
+                               *(unsigned short *)(grp + 0x10));
+        SetTextureStageStateSmart(0, 0xa, 1);
+        SetTextureStageStateSmart(0, 0xb, 1);
+        SetTextureStageStateSmart(0, 0xd, 2);
+        SetTextureStageStateSmart(0, 0xe, 2);
+        SetTextureStageStateSmart(0, 0xf, 2);
+        rasterizer_set_texture_direct(1, *(int *)(*(int *)0x476204 + 0x1c), 0);
+        SetTextureStageStateSmart(1, 0xa, 3);
+        SetTextureStageStateSmart(1, 0xb, 3);
+        SetTextureStageStateSmart(1, 0xc, 3);
+        SetTextureStageStateSmart(1, 0xd, 2);
+        SetTextureStageStateSmart(1, 0xe, 1);
+        SetTextureStageStateSmart(1, 0xf, 1);
+        rasterizer_set_texture_direct(2, *(int *)(*(int *)0x476204 + 0x1c), 0);
+        SetTextureStageStateSmart(2, 0xa, 3);
+        SetTextureStageStateSmart(2, 0xb, 3);
+        SetTextureStageStateSmart(2, 0xc, 3);
+        SetTextureStageStateSmart(2, 0xd, 2);
+        SetTextureStageStateSmart(2, 0xe, 1);
+        SetTextureStageStateSmart(2, 0xf, 1);
+        if (reflection_type == 2) {
+          FUN_001584f0(3, 1, 0);
+          SetTextureStageStateSmart(3, 0xa, 3);
+          SetTextureStageStateSmart(3, 0xb, 3);
+          SetTextureStageStateSmart(3, 0xd, 2);
+          SetTextureStageStateSmart(3, 0xe, 2);
+          SetTextureStageStateSmart(3, 0xf, 1);
+        } else {
+          rasterizer_set_texture(3, 2, 0, *(int *)(gls + 0xb8),
+                                 *(unsigned short *)(grp + 0x10));
+          SetTextureStageStateSmart(3, 0xa, 3);
+          SetTextureStageStateSmart(3, 0xb, 3);
+          SetTextureStageStateSmart(3, 0xc, 3);
+          SetTextureStageStateSmart(3, 0xd, 2);
+          SetTextureStageStateSmart(3, 0xe, 2);
+          SetTextureStageStateSmart(3, 0xf, 2);
+        }
+        SetRenderStateSmart(
+          0x7f,
+          (int)((-(unsigned int)((*(unsigned char *)(gls + 0x28) & 4) != 0) &
+                 0xfffff6ff) +
+                0x901));
+        SetRenderStateSmart(0x43, 0x10101);
+        SetRenderStateSmart(0x3b, 1);
+        SetRenderStateSmart(0x3e, 0x302);
+        SetRenderStateSmart(0x3f, 1);
+        SetRenderStateSmart(0x4a, 0x8006);
+        SetRenderStateSmart(0x3c, 0);
+        FUN_00178b40(0x2b, vertex_type, reflection_type);
+        refl_consts[0] = *(float *)(grp + 0x3c) * *(float *)(gls + 0xbc);
+        refl_consts[1] = *(float *)(grp + 0x40) * *(float *)(gls + 0xbc);
+        refl_consts[2] = 320.0f;
+        refl_consts[3] = 240.0f;
+        refl_consts[4] = 0.0f;
+        refl_consts[5] = 0.0f;
+        refl_consts[6] = 0.0f;
+        refl_consts[7] = 0.0f;
+        refl_consts[8] = 0.0f;
+        refl_consts[9] = 0.0f;
+        refl_consts[10] = 0.0f;
+        refl_consts[11] = 0.0f;
+        D3DDevice_SetVertexShaderConstant(-0x54, refl_consts, 3);
+        if (success != 0) {
+          success = 1;
+        } else {
+          success = 0;
+          FUN_00167ff0(
+            0, "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, "
+               "VSH_CONSTANTS__TEXSCALE_OFFSET, vsh_constants__texscale, "
+               "VSH_CONSTANTS__TEXSCALE_COUNT)");
+        }
+        csmemset((void *)0x5a5ac0, 0, 0xf0);
+        if (reflection_type == 0) {
+          *(uint32_t *)0x5a5b98 = 0x62e21;
+          *(uint32_t *)0x5a5ba0 = 0;
+          *(uint32_t *)0x5a5b9c = 0x111;
+        } else if (reflection_type == 1) {
+          *(uint32_t *)0x5a5b98 = 0x18c61;
+        } else {
+          if (reflection_type != 2) {
+            display_assert("### ERROR unsupported reflection type",
+                           "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_"
+                           "xbox_transparent_geometry.c",
+                           0x707, 1);
+            system_exit(-1);
+          }
+          *(uint32_t *)0x5a5b98 = 0x8c61;
+        }
+        *(uint32_t *)0x5a5b94 = 0x11005;
+        if (reflection_type != 0 && *(int *)(gls + 0xcc) != -1) {
+          *(uint32_t *)0x5a5b48 = 0x49480b0b;
+        } else {
+          bc = *(float *)0x253398 - *(float *)0x5a5bd4 * *(float *)0x253398;
+          if (bc < *(float *)0x2533c0) {
+            bump_color[0] = 0.0f;
+          } else if (bc > *(float *)0x2533c8) {
+            bump_color[0] = 1.0f;
+          } else {
+            bump_color[0] = bc;
+          }
+          bc = *(float *)0x253398 - *(float *)0x5a5bd8 * *(float *)0x253398;
+          if (bc < *(float *)0x2533c0) {
+            bump_color[1] = 0.0f;
+          } else if (bc > *(float *)0x2533c8) {
+            bump_color[1] = 1.0f;
+          } else {
+            bump_color[1] = bc;
+          }
+          bc = *(float *)0x253398 - *(float *)0x5a5bdc * *(float *)0x253398;
+          if (bc < *(float *)0x2533c0) {
+            bump_color[2] = 0.0f;
+          } else if (bc > *(float *)0x2533c8) {
+            bump_color[2] = 1.0f;
+          } else {
+            bump_color[2] = bc;
+          }
+          *(uint32_t *)0x5a5ae8 = FUN_000d1dd0(bump_color);
+          *(uint32_t *)0x5a5b48 = 0x4a410b0b;
+        }
+        *(uint32_t *)0x5a5b74 = 0x20cd;
+        *(uint32_t *)0x5a5b4c = 0xc0c0d0d;
+        *(uint32_t *)0x5a5b78 = 0xcd;
+        if (*(short *)(grp + 0x14) == 1) {
+          *(uint32_t *)0x5a5b0c = FUN_00159070(*(float *)(grp + 0x18));
+          *(uint32_t *)0x5a5ac4 = 0x14320000;
+          *(uint32_t *)0x5a5b2c = 0x40;
+        }
+        *(uint32_t *)0x5a5b50 = 0xc0c0d0d;
+        *(uint32_t *)0x5a5b7c = 0xd;
+        *(uint32_t *)0x5a5af4 = FUN_000d1c90((float *)(gls + 0x8c));
+        *(uint32_t *)0x5a5b14 = FUN_000d1c90((float *)(gls + 0x9c));
+        *(uint32_t *)0x5a5b34 = 0xc00;
+        *(uint32_t *)0x5a5b80 = 0xc00;
+        *(uint32_t *)0x5a5b84 = 0xc00;
+        *(uint32_t *)0x5a5acc = 0x2c120c11;
+        *(uint32_t *)0x5a5b54 = 0x2c020c01;
+        *(uint32_t *)0x5a5b58 = 0x2c0d0c0b;
+        *(uint32_t *)0x5a5ae0 = 0xc0f0000;
+        *(uint32_t *)0x5a5ae4 =
+          ((-(unsigned int)((*(unsigned char *)(gls + 0x28) & 8) != 0) &
+            0xfffffff4) +
+           0x14) *
+            0x10000 |
+          0x1c002000;
+        rasterizer_set_pixel_shader((void *)0x5a5ac0);
+        FUN_00174510(grp, 0);
+      }
+      if (*(int *)(gls + 0x164) != -1 || *(int *)(gls + 0x178) != -1) {
+        /* bump/specular pass */
+        rasterizer_set_texture(0, 0, 1, *(int *)(gls + 0x164),
+                               *(unsigned short *)(grp + 0x10));
+        SetTextureStageStateSmart(0, 0xa, 1);
+        SetTextureStageStateSmart(0, 0xb, 1);
+        SetTextureStageStateSmart(0, 0xd, 2);
+        SetTextureStageStateSmart(0, 0xe, 2);
+        SetTextureStageStateSmart(0, 0xf, 2);
+        rasterizer_set_texture(1, 0, 2, *(int *)(gls + 0x178),
+                               *(unsigned short *)(grp + 0x10));
+        SetTextureStageStateSmart(1, 0xa, 1);
+        SetTextureStageStateSmart(1, 0xb, 1);
+        SetTextureStageStateSmart(1, 0xd, 2);
+        SetTextureStageStateSmart(1, 0xe, 2);
+        SetTextureStageStateSmart(1, 0xf, 2);
+        SetRenderStateSmart(
+          0x7f,
+          (int)((-(unsigned int)((*(unsigned char *)(gls + 0x28) & 4) != 0) &
+                 0xfffff6ff) +
+                0x901));
+        SetRenderStateSmart(0x43, 0x10101);
+        SetRenderStateSmart(0x3b, 1);
+        SetRenderStateSmart(0x3e, 0x302);
+        SetRenderStateSmart(0x3f, 0x303);
+        SetRenderStateSmart(0x4a, 0x8006);
+        SetRenderStateSmart(0x3c, 1);
+        SetRenderStateSmart(0x3d, 0);
+        if (*(int *)(grp + 0x5c) == 0) {
+          rasterizer_set_texture(2, 0, 0, -1, 0);
+          SetTextureStageStateSmart(2, 0xa, 3);
+          SetTextureStageStateSmart(2, 0xb, 3);
+          SetTextureStageStateSmart(2, 0xd, 2);
+          SetTextureStageStateSmart(2, 0xe, 2);
+          SetTextureStageStateSmart(2, 0xf, 2);
+        } else {
+          rasterizer_set_texture_bitmap_data(2, *(void **)(grp + 0x5c));
+          SetTextureStageStateSmart(2, 0xa, 3);
+          SetTextureStageStateSmart(2, 0xb, 3);
+          SetTextureStageStateSmart(2, 0xd, 2);
+          SetTextureStageStateSmart(2, 0xe, 2);
+          SetTextureStageStateSmart(2, 0xf, 2);
+        }
+        FUN_00178b40(0x19, vertex_type, permutation);
+        bump_consts[0] = *(float *)(gls + 0x154) * *(float *)(grp + 0x3c);
+        bump_consts[1] = *(float *)(gls + 0x154) * *(float *)(grp + 0x40);
+        bump_consts[2] = *(float *)(gls + 0x168) * *(float *)(grp + 0x3c);
+        bump_consts[3] = *(float *)(gls + 0x168) * *(float *)(grp + 0x40);
+        bump_consts[4] = 0.0f;
+        bump_consts[5] = 0.0f;
+        bump_consts[6] = 0.0f;
+        bump_consts[7] = 0.0f;
+        bump_consts[8] = 0.0f;
+        bump_consts[9] = 0.0f;
+        bump_consts[10] = 0.0f;
+        bump_consts[11] = 0.0f;
+        D3DDevice_SetVertexShaderConstant(-0x54, bump_consts, 3);
+        if (success != 0) {
+          success = 1;
+        } else {
+          success = 0;
+          FUN_00167ff0(
+            0, "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_device, "
+               "VSH_CONSTANTS__TEXSCALE_OFFSET, vsh_constants__texscale, "
+               "VSH_CONSTANTS__TEXSCALE_COUNT)");
+        }
+        csmemset((void *)0x5a5ac0, 0, 0xf0);
+        *(uint32_t *)0x5a5b98 = 0x421;
+        *(uint32_t *)0x5a5b94 = 3;
+        *(uint32_t *)0x5a5ac0 = 0x18190000;
+        *(uint32_t *)0x5a5b28 = 0xc0;
+        *(uint32_t *)0x5a5b48 = 0x8090000;
+        *(uint32_t *)0x5a5b74 = 0x100c0;
+        *(uint32_t *)0x5a5ac4 = 0x1c140000;
+        *(uint32_t *)0x5a5b2c = 0xc0;
+        *(uint32_t *)0x5a5b4c = 0xa200420;
+        *(uint32_t *)0x5a5b78 = 0xd00;
+        *(uint32_t *)0x5a5b50 = 0xc0d0000;
+        *(uint32_t *)0x5a5b7c = 0xc0;
+        *(uint32_t *)0x5a5ae0 = 0xc;
+        *(uint32_t *)0x5a5ae4 = 0x1c00;
+        rasterizer_set_pixel_shader((void *)0x5a5ac0);
+        FUN_00174510(grp, *(int *)(grp + 0x5c) != 0);
+      }
+      break;
+    }
+
+    case 9: {
+      /* shader_transparent_meter */
+      char *met;
+      float brightness; /* [EBP-0x3c] */
+      float power; /* [EBP-0x44] */
+      float gradient; /* [EBP-0x4c] */
+      float met_alpha; /* [EBP-0x48] */
+      float flash; /* rides FPU stack in original */
+      float tint[3]; /* [EBP-0x150] */
+      float flash_color[3]; /* [EBP-0x28] */
+      float inv_flash;
+      float x9;
+      float t9;
+      short src;
+      int *ext9;
+      uint32_t px1;
+      uint32_t px2;
+      uint32_t px3;
+      uint32_t px4;
+      uint32_t px_final;
+      float px_final_alpha;
+      float *px_final_color;
+      float px3_alpha;
+      float meter_consts[12]; /* [EBP-0x250] */
+
+      met = (char *)FUN_001906b0(sh, 9);
+      brightness = 1.0f;
+      power = 1.0f;
+      gradient = 1.0f;
+      met_alpha = 1.0f;
+      flash = 1.0f;
+      if (*(int *)(grp + 0x6c) != 0 &&
+          *(int *)(*(int *)(grp + 0x6c) + 4) != 0) {
+        ext9 = (int *)*(int *)(*(int *)(grp + 0x6c) + 4);
+        src = *(short *)(met + 0xd8);
+        if (src > 0 && src < 5) {
+          brightness = *((float *)ext9 + (src - 1));
+        }
+        src = *(short *)(met + 0xda);
+        if (src > 0 && src < 5) {
+          power = *((float *)ext9 + (src - 1));
+        }
+        src = *(short *)(met + 0xdc);
+        if (src > 0 && src < 5) {
+          gradient = *((float *)ext9 + (src - 1));
+        }
+        src = *(short *)(met + 0xde);
+        if (src > 0 && src < 5) {
+          flash = *((float *)ext9 + (src - 1));
+        }
+        src = *(short *)(met + 0xe0);
+        if (src > 0 && src < 5) {
+          met_alpha = *((float *)ext9 + (src - 1));
+        }
+      }
+      if (*(char *)0x3256c3 != 0) {
+        /* rasterizer_debug_meters override */
+        t9 = FUN_0010a5e0(2, *(float *)0x5a5e18 / *(float *)0x325724);
+        if (*(float *)0x325728 >= *(float *)0x2533c0) {
+          brightness = *(float *)0x325728;
+        } else {
+          brightness = t9;
+        }
+        if (*(float *)0x32572c >= *(float *)0x2533c0) {
+          power = *(float *)0x32572c;
+        } else {
+          power = t9;
+        }
+        if (*(float *)0x325730 >= *(float *)0x2533c0) {
+          gradient = *(float *)0x325730;
+        } else {
+          gradient = t9;
+        }
+        if (*(float *)0x325734 >= *(float *)0x2533c0) {
+          flash = *(float *)0x325734;
+        } else {
+          flash = t9;
+        }
+        if (*(float *)0x325738 >= *(float *)0x2533c0) {
+          met_alpha = *(float *)0x325738;
+        } else {
+          met_alpha = t9;
+        }
+      }
+      tint[0] = power * *(float *)(met + 0xa0);
+      tint[1] = power * *(float *)(met + 0xa4);
+      tint[2] = power * *(float *)(met + 0xa8);
+      x9 = flash * *(float *)0x253f78;
+      if (x9 <= *(float *)0x2533c8) {
+        x9 = 1.0f;
+      }
+      inv_flash = *(float *)0x2533c8 / x9;
+      if ((*(unsigned char *)(met + 0x28) & 8) != 0) {
+        flash_color[0] = brightness * *(float *)(met + 0xac);
+        flash_color[1] = brightness * *(float *)(met + 0xb0);
+        flash_color[2] = brightness * *(float *)(met + 0xb4);
+        px3_alpha = *(float *)(met + 0xbc);
+        px1 = real_a_rgb_color_to_pixel32(gradient, (float *)(met + 0x7c));
+        px2 = real_a_rgb_color_to_pixel32(inv_flash, (float *)(met + 0x88));
+        px3 = real_a_rgb_color_to_pixel32(px3_alpha, (float *)(met + 0x94));
+        px4 = real_a_rgb_color_to_pixel32(met_alpha, tint);
+        px_final_alpha = *(float *)(met + 0xb8);
+        px_final_color = flash_color;
+      } else {
+        px1 = real_a_rgb_color_to_pixel32(gradient, (float *)(met + 0x7c));
+        px2 = real_a_rgb_color_to_pixel32(inv_flash, (float *)(met + 0x88));
+        px3 = real_a_rgb_color_to_pixel32(*(float *)0x2533c0,
+                                          (float *)(met + 0x94));
+        px4 = real_a_rgb_color_to_pixel32(met_alpha, tint);
+        px_final_alpha = brightness;
+        px_final_color = (float *)(met + 0xac);
+      }
+      px_final = real_a_rgb_color_to_pixel32(px_final_alpha, px_final_color);
+      rasterizer_set_texture(0, 0, 1, *(int *)(met + 0x58),
+                             *(unsigned short *)(grp + 0x10));
+      SetTextureStageStateSmart(0, 0xa, 1);
+      SetTextureStageStateSmart(0, 0xb, 1);
+      SetTextureStageStateSmart(
+        0, 0xd, 2 - (int)((*(unsigned char *)(met + 0x28) & 0x10) != 0));
+      SetTextureStageStateSmart(
+        0, 0xe, 2 - (int)((*(unsigned char *)(met + 0x28) & 0x10) != 0));
+      SetTextureStageStateSmart(0, 0xf, 2);
+      SetRenderStateSmart(
+        0x7f,
+        (int)((-(unsigned int)((*(unsigned char *)(met + 0x28) & 2) != 0) &
+               0xfffff6ff) +
+              0x901));
+      SetRenderStateSmart(0x43, 0x10101);
+      SetRenderStateSmart(0x3b, 1);
+      SetRenderStateSmart(
+        0x3e, (int)((~((unsigned int)*(unsigned char *)(met + 0x28) >> 2) & 2) |
+                    0x8001));
+      SetRenderStateSmart(
+        0x3f,
+        (int)((-(unsigned int)((*(unsigned char *)(met + 0x28) & 8) != 0) &
+               0xffff8301) +
+              0x8001));
+      SetRenderStateSmart(0x4b, px_final);
+      SetRenderStateSmart(0x4a, 0x8006);
+      SetRenderStateSmart(0x3c, 0);
+      FUN_00178b40(0x16, vertex_type, permutation);
+      meter_consts[0] = 1.0f;
+      meter_consts[1] = 1.0f;
+      meter_consts[2] = 1.0f;
+      meter_consts[3] = 1.0f;
+      meter_consts[4] = *(float *)(grp + 0x3c);
+      meter_consts[5] = 0.0f;
+      meter_consts[6] = 0.0f;
+      meter_consts[7] = 0.0f;
+      meter_consts[8] = 0.0f;
+      meter_consts[9] = *(float *)(grp + 0x40);
+      meter_consts[10] = 0.0f;
+      meter_consts[11] = 0.0f;
+      D3DDevice_SetVertexShaderConstant(-0x54, meter_consts, 3);
+      if (success != 0) {
+        success = 1;
+      } else {
+        success = 0;
+        FUN_00167ff0(0,
+                     "IDirect3DDevice8_SetVertexShaderConstant(global_d3d_"
+                     "device, VSH_CONSTANTS__TEXSCALE_OFFSET, "
+                     "vsh_constants__texscale, VSH_CONSTANTS__TEXSCALE_COUNT)");
+      }
+      csmemset((void *)0x5a5ac0, 0, 0xf0);
+      SetTextureStageStateSmart(0, 0x15, 4);
+      *(uint32_t *)0x5a5b28 = 0x20c00;
+      *(uint32_t *)0x5a5b74 = 0x20c00;
+      *(uint32_t *)0x5a5ae8 = px4;
+      *(uint32_t *)0x5a5b10 = px4;
+      *(uint32_t *)0x5a5b08 = px2;
+      *(uint32_t *)0x5a5b0c = px2;
+      *(uint32_t *)0x5a5aec = px1;
+      *(uint32_t *)0x5a5af0 = px1;
+      *(uint32_t *)0x5a5b98 = 1;
+      *(uint32_t *)0x5a5b94 = 0x11104;
+      *(uint32_t *)0x5a5ac0 = 0x12081208;
+      *(uint32_t *)0x5a5b48 = 0x1120e820;
+      *(uint32_t *)0x5a5ac4 = 0x6c200000;
+      *(uint32_t *)0x5a5b2c = 0xc0;
+      *(uint32_t *)0x5a5b4c = 0x3c011c02;
+      *(uint32_t *)0x5a5b78 = 0xc00;
+      *(uint32_t *)0x5a5ac8 = 0x820b120;
+      *(uint32_t *)0x5a5b30 = 0xc00;
+      *(uint32_t *)0x5a5af4 = px3;
+      *(uint32_t *)0x5a5b34 = 0x4c00;
+      *(uint32_t *)0x5a5b80 = 0x4c00;
+      *(uint32_t *)0x5a5b7c = 0xc00;
+      *(uint32_t *)0x5a5b50 =
+        ((-(unsigned int)((*(unsigned char *)(met + 0x28) & 4) != 0) & 0xe0) +
+         2) |
+        0xc201c00;
+      *(uint32_t *)0x5a5b14 = px_final;
+      *(uint32_t *)0x5a5acc = 0x12201120;
+      *(uint32_t *)0x5a5b54 = 0xc200120;
+      *(uint32_t *)0x5a5ae0 = 0xc180000;
+      *(uint32_t *)0x5a5ae4 = 0x1c00;
+      if (*(char *)0x3256c3 != 0 && *(short *)0x3256ea != 0) {
+        csmemset((void *)0x5a5ac0, 0, 0xf0);
+        SetTextureStageStateSmart(0, 0x15, 0);
+        SetRenderStateSmart(0x3b, 0);
+        *(uint32_t *)0x5a5b98 = 1;
+        *(uint32_t *)0x5a5b94 = 1;
+        *(uint32_t *)0x5a5ae0 = ((*(short *)0x3256ea < 2) - 1 & 0x10) + 8;
+      }
+      rasterizer_set_pixel_shader((void *)0x5a5ac0);
+      FUN_00174510(grp, 0);
+      SetTextureStageStateSmart(0, 0x15, 0);
+      break;
+    }
+
+    case 10:
+      FUN_0016eef0(grp);
+      break;
+
+    default:
+      error(2, "### ERROR unsupported shader type");
+      success = 0;
+      break;
+    }
+
+    goto next_pass;
+
+  set_shader_and_draw:
+    /* shared tail for shader types 1/5/6 (0x17744d) */
+    rasterizer_set_pixel_shader((void *)0x5a5ac0);
+    FUN_00174510(grp, 0);
+
+  next_pass:
+    pass = pass + 1;
+  } while ((short)pass < 2);
+
+  if ((*grp & 8) != 0 && *(short *)0x5a5bc0 == 0) {
+    rasterizer_set_frustum_z(*(float *)0x2533c0, *(float *)0x2533c0);
+  }
+  if ((char)*grp < 0 && *(short *)(grp + 0x14) == 1) {
+    rasterizer_set_frustum_z(*(float *)0x2533c0, *(float *)0x2533c0);
+  }
+
+tail:
+  if ((char)dirty == 0) {
+    *(int *)0x47e4b8 = *(int *)(grp + 8);
+  }
+  if (*(short *)(grp + 0x96) != -1) {
+    rasterizer_transparent_geometry_group_draw(
+      rasterizer_transparent_geometry_group_get(*(short *)(grp + 0x96)), dirty);
+  }
+  if (draw_secondary != 0) {
+    sec = (char *)rasterizer_secondary_geometry_groups_get(&sec_count);
+    if ((char)dirty != 0) {
+      display_assert("!dirty",
+                     "c:\\halo\\SOURCE\\rasterizer\\xbox\\rasterizer_xbox_"
+                     "transparent_geometry.c",
+                     0x8e0, 1);
+      system_exit(-1);
+    }
+    for (si = 0; si < sec_count; si++) {
+      rec = sec + (int)si * 0xa0;
+      if (*(int *)(rec + 0x98) == *(int *)(grp + 8) &&
+          *(short *)(rec + 0x14) == 1) {
+        rasterizer_transparent_geometry_group_draw(rec, 1);
+        if (*(short *)0x3256ea != 0) {
+          *(char *)0x47e4c0 = 1;
+        }
+      }
+    }
+  }
+  if (success == 0) {
+    error(2, "### ERROR rasterizer_transparent_geometry_group_draw failed");
+  }
+}
 
 
 void rasterizer_frame_begin(float *elapsed)
@@ -5481,1153 +3037,300 @@ void FUN_00170440(void *params, short pass, short pass_count)
 }
 
 
-/* FUN_00170c90 (0x170c90) — XBE naked draft (batch 297). */
-#if defined(__clang__)
-static void (*const b170c90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b170c90_exitfn)(int) = system_exit;
-static void (*const b170c90_c16f910)(int16_t profile) = FUN_0016f910;
-static void * (*const b170c90_c17dc70)(void *effect) = rasterizer_screen_effect_get_cinematic_parameters;
-static void (*const b170c90_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void (*const b170c90_c1584f0)(int stage, int target, int max_mipmap) = FUN_001584f0;
-static void __stdcall (*const b170c90_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
-static void (*const b170c90_c155c20)(int stage, void *bitmap_data) = rasterizer_set_texture_bitmap_data;
-static void __stdcall (*const b170c90_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
-static void (*const b170c90_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void __stdcall (*const b170c90_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
-static void __stdcall (*const b170c90_c1e98e0)(uint32_t value) = (void *)D3DDevice_SetRenderState_ZBias;
-static void (*const b170c90_c170440)(void *params, short pass, short pass_count) = FUN_00170440;
-static void (*const b170c90_c158140)(int target, int mipmap_index, uint32_t color, int do_clear, int zbuffer) = FUN_00158140;
-static void *(*const b170c90_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b170c90_c156510)(void *state) = rasterizer_set_pixel_shader;
-static uint32_t (*const b170c90_c159070)(float a1) = FUN_00159070;
-static unsigned int (*const b170c90_cd1dd0)(float *color) = FUN_000d1dd0;
-static void (*const b170c90_ce2220)(int state, int value) = SetRenderStateSmart;
-static int16_t (*const b170c90_c100b00)(void) = (void *)main_get_window_count;
-static void __stdcall (*const b170c90_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
-static void (*const b170c90_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void __stdcall (*const b170c90_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
-static void __stdcall (*const b170c90_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-static void (*const b170c90_c1ed490)(void) = (void *)D3DDevice_End;
-static void (*const b170c90_c16fa40)(int16_t profile) = FUN_0016fa40;
-static void (*const b170c90_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_00170c90(void *effect __attribute__((unused)))
+/* FUN_00170c90 (0x170c90) — readable C lift (restored pre-naked). */
+void FUN_00170c90(void *effect)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x40, %%esp\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jne .LFUN_00170c90_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xfb\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_1:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x1a\n\t"
-      "call *%[c16f910]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c17dc70]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%esi, 0x8(%%ebp)\n\t"
-      "je .LFUN_00170c90_84\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "jne .LFUN_00170c90_2\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00170c90_2\n\t"
-      "flds 0xc(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00170c90_2\n\t"
-      "flds 0x10(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_00170c90_2\n\t"
-      "movb 0x23(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00170c90_84\n\t"
-      ".LFUN_00170c90_2:\n\t"
-      "movb 0x325700, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00170c90_84\n\t"
-      "cmpw $0, 0x5a5bc0\n\t"
-      "jne .LFUN_00170c90_84\n\t"
-      "movb 0x23(%%esi), %%al\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw (%%esi), %%di\n\t"
-      "incw %%di\n\t"
-      "shll $1, %%edi\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%edi, -0xc(%%ebp)\n\t"
-      "je .LFUN_00170c90_8\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00170c90_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x114\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4460\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_3:\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00170c90_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x115\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a443c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_4:\n\t"
-      "cmpw $0, (%%esi)\n\t"
-      "je .LFUN_00170c90_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x116\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4404\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_5:\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "je .LFUN_00170c90_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x117\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a43d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_6:\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_00170c90_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x118\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a439c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_7:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00170c90_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x119\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a436c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_8:\n\t"
-      "cmpw $1, 0x2(%%esi)\n\t"
-      "jne .LFUN_00170c90_9\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00170c90_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0x11e\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4340\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_9:\n\t"
-      "pushl $0\n\t"
-      "pushl $8\n\t"
-      "pushl $0x26\n\t"
-      "call *%[c178b40]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jle .LFUN_00170c90_83\n\t"
-      "pushl %%ebx\n\t"
-      "jmp .LFUN_00170c90_11\n\t"
-      ".LFUN_00170c90_10:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      ".LFUN_00170c90_11:\n\t"
-      "cmpw $1, -0xc(%%ebp)\n\t"
-      "jne .LFUN_00170c90_13\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_00170c90_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x139\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4338\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_12:\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "jmp .LFUN_00170c90_15\n\t"
-      ".LFUN_00170c90_13:\n\t"
-      "testb $1, %%cl\n\t"
-      "jne .LFUN_00170c90_14\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movl $7, %%edi\n\t"
-      "jmp .LFUN_00170c90_15\n\t"
-      ".LFUN_00170c90_14:\n\t"
-      "movl $7, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".LFUN_00170c90_15:\n\t"
-      "testb $1, %%cl\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl %%edi, -0x10(%%ebp)\n\t"
-      "je .LFUN_00170c90_18\n\t"
-      "movb 0x23(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00170c90_18\n\t"
-      "cmpw $1, %%cx\n\t"
-      "je .LFUN_00170c90_16\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14e\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4330\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_16:\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0\n\t"
-      "call *%[c1584f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $3\n\t"
-      "movl $0xa, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xb, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xd, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xe, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xf, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl 0x28(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $1\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $3\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl $1, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl $1, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl $1, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xe, %%edx\n\t"
-      "movl $1, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xf, %%edx\n\t"
-      "movl $1, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl 0x34(%%esi), %%edx\n\t"
-      "testb $0x10, 0xe(%%edx)\n\t"
-      "je .LFUN_00170c90_17\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15f\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a42fc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_17:\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $2\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $1\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xf, %%edx\n\t"
-      "movl $2, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "jmp .LFUN_00170c90_34\n\t"
-      ".LFUN_00170c90_18:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "jmp .LFUN_00170c90_19\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00170c90_19:\n\t"
-      "cmpw $0, 0x2(%%esi)\n\t"
-      "jne .LFUN_00170c90_26\n\t"
-      "cmpw $1, -0xc(%%ebp)\n\t"
-      "jne .LFUN_00170c90_21\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_00170c90_20\n\t"
-      "pushl $1\n\t"
-      "pushl $0x173\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4338\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_20:\n\t"
-      "testw %%di, %%di\n\t"
-      "jne .LFUN_00170c90_33\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_00170c90_32\n\t"
-      ".LFUN_00170c90_21:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jne .LFUN_00170c90_23\n\t"
-      ".LFUN_00170c90_22:\n\t"
-      "testw %%di, %%di\n\t"
-      "jne .LFUN_00170c90_33\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0\n\t"
-      "jmp .LFUN_00170c90_31\n\t"
-      ".LFUN_00170c90_23:\n\t"
-      "cmpw $1, %%cx\n\t"
-      "jne .LFUN_00170c90_25\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00170c90_22\n\t"
-      "testw %%di, %%di\n\t"
-      "jne .LFUN_00170c90_24\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_00170c90_32\n\t"
-      ".LFUN_00170c90_24:\n\t"
-      "cmpw $1, %%di\n\t"
-      "jne .LFUN_00170c90_33\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "jmp .LFUN_00170c90_31\n\t"
-      ".LFUN_00170c90_25:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x18e\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a42b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_00170c90_32\n\t"
-      ".LFUN_00170c90_26:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00170c90_27\n\t"
-      "testw %%di, %%di\n\t"
-      "jne .LFUN_00170c90_28\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[c155c20]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_00170c90_32\n\t"
-      ".LFUN_00170c90_27:\n\t"
-      "testw %%di, %%di\n\t"
-      "jne .LFUN_00170c90_28\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0\n\t"
-      "jmp .LFUN_00170c90_31\n\t"
-      ".LFUN_00170c90_28:\n\t"
-      "cmpw $1, %%di\n\t"
-      "jne .LFUN_00170c90_29\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $1\n\t"
-      "jmp .LFUN_00170c90_31\n\t"
-      ".LFUN_00170c90_29:\n\t"
-      "cmpw $2, %%di\n\t"
-      "jne .LFUN_00170c90_30\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $2\n\t"
-      "jmp .LFUN_00170c90_31\n\t"
-      ".LFUN_00170c90_30:\n\t"
-      "cmpw $3, %%di\n\t"
-      "jne .LFUN_00170c90_33\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $3\n\t"
-      ".LFUN_00170c90_31:\n\t"
-      "call *%[c1584f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00170c90_32:\n\t"
-      "movswl %%di, %%esi\n\t"
-      "pushl $3\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $3\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xf, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".LFUN_00170c90_33:\n\t"
-      "incl %%edi\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .LFUN_00170c90_19\n\t"
-      "movl -0x10(%%ebp), %%edi\n\t"
-      ".LFUN_00170c90_34:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1e96d0]\n\t"
-      "movl $0x10101, %%edx\n\t"
-      "movl $0x40358, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40304, %%ecx\n\t"
-      "movl $0x10101, 0x1fb7a4\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40300, %%ecx\n\t"
-      "movl %%ebx, 0x1fb784\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%ebx, 0x1fb788\n\t"
-      "call *%[c1ea290]\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1e98e0]\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c170440]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_00170c90_35\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c158140]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_35:\n\t"
-      "movb 0x23(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl $0xf0\n\t"
-      "je .LFUN_00170c90_43\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[memset]\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jne .LFUN_00170c90_36\n\t"
-      "movl $1, %%eax\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl %%eax, 0x5a5b98\n\t"
-      "movl %%eax, 0x5a5b94\n\t"
-      "movl $8, 0x5a5ae0\n\t"
-      "call *%[c156510]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_00170c90_60\n\t"
-      ".LFUN_00170c90_36:\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .LFUN_00170c90_42\n\t"
-      "movl $0x421, 0x5a5b98\n\t"
-      "movl $4, 0x5a5b94\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl %%ebx, -0x24(%%ebp)\n\t"
-      "movl $0x10, -0x20(%%ebp)\n\t"
-      "movl $0x20, -0x1c(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00170c90_37\n\t"
-      "movl $0, -0x14(%%ebp)\n\t"
-      "jmp .LFUN_00170c90_39\n\t"
-      ".LFUN_00170c90_37:\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00170c90_38\n\t"
-      "movl $0x3f800000, -0x14(%%ebp)\n\t"
-      "jmp .LFUN_00170c90_39\n\t"
-      ".LFUN_00170c90_38:\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      ".LFUN_00170c90_39:\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c159070]\n\t"
-      "movl %%eax, 0x5a5ae8\n\t"
-      "movl $0xc00, %%eax\n\t"
-      "movl $0x3120111a, 0x5a5ac0\n\t"
-      "movl %%eax, 0x5a5b28\n\t"
-      "movl $0x3120110a, 0x5a5b48\n\t"
-      "movl %%eax, 0x5a5b74\n\t"
-      "movl $0xc091c19, 0x5a5b4c\n\t"
-      "movl $0xc4, 0x5a5b78\n\t"
-      "movl $0x8080000, 0x5a5b50\n\t"
-      "movl $0xd0, 0x5a5b7c\n\t"
-      "movw 0x24(%%esi), %%ax\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jl .LFUN_00170c90_40\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jl .LFUN_00170c90_41\n\t"
-      ".LFUN_00170c90_40:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1f1\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4230\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_41:\n\t"
-      "movl $0xd0d0820, 0x5a5b54\n\t"
-      "movswl 0x24(%%esi), %%eax\n\t"
-      "movl -0x24(%%ebp,%%eax,4), %%ecx\n\t"
-      "shll $0xc, %%ecx\n\t"
-      "orl $0xd8, %%ecx\n\t"
-      "movl %%ecx, 0x5a5b80\n\t"
-      "movl $1, %%edx\n\t"
-      "movl $0x40304, %%ecx\n\t"
-      "movl $0x2c0d0800, 0x5a5ae0\n\t"
-      "movl $0x400, 0x5a5ae4\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl $0x303, %%edx\n\t"
-      "movl $0x40344, %%ecx\n\t"
-      "movl $1, 0x1fb784\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40348, %%ecx\n\t"
-      "movl $0x303, 0x1fb790\n\t"
-      "call *%[c1e9350]\n\t"
-      "movl $0x8006, %%edx\n\t"
-      "movl $0x40350, %%ecx\n\t"
-      "movl %%ebx, 0x1fb794\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl $0x8006, 0x1fb7c0\n\t"
-      "call *%[c156510]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_00170c90_60\n\t"
-      ".LFUN_00170c90_42:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x201\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a41f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[c156510]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_00170c90_60\n\t"
-      ".LFUN_00170c90_43:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw %%bx, 0x2(%%esi)\n\t"
-      "jne .LFUN_00170c90_49\n\t"
-      "movl $1, %%ecx\n\t"
-      "cmpw %%cx, -0xc(%%ebp)\n\t"
-      "jne .LFUN_00170c90_45\n\t"
-      "cmpw %%bx, -0x8(%%ebp)\n\t"
-      "je .LFUN_00170c90_44\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x211\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a4338\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl $1, %%ecx\n\t"
-      ".LFUN_00170c90_44:\n\t"
-      "movl %%ecx, 0x5a5b98\n\t"
-      "movl $0x8200000, 0x5a5b48\n\t"
-      "movl $0xc0, 0x5a5b74\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movl $0x800, 0x5a5ae4\n\t"
-      "jmp .LFUN_00170c90_52\n\t"
-      ".LFUN_00170c90_45:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jne .LFUN_00170c90_46\n\t"
-      "movl %%ecx, 0x5a5b98\n\t"
-      "movl $0x8200000, 0x5a5b48\n\t"
-      "movl $0xc0, 0x5a5b74\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "jmp .LFUN_00170c90_51\n\t"
-      ".LFUN_00170c90_46:\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "jne .LFUN_00170c90_48\n\t"
-      "cmpl %%ebx, 0x8(%%esi)\n\t"
-      "movl $0xc, 0x5a5ae0\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movl $0xc0, 0x5a5b74\n\t"
-      "movl $0x21, 0x5a5b98\n\t"
-      "je .LFUN_00170c90_47\n\t"
-      "movl $0x9200000, 0x5a5b48\n\t"
-      "movl $0x800, 0x5a5ae4\n\t"
-      "jmp .LFUN_00170c90_53\n\t"
-      ".LFUN_00170c90_47:\n\t"
-      "movl $0x8200000, 0x5a5b48\n\t"
-      "movl %%ebx, 0x5a5ae4\n\t"
-      "jmp .LFUN_00170c90_53\n\t"
-      ".LFUN_00170c90_48:\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x248\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a42b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_00170c90_53\n\t"
-      ".LFUN_00170c90_49:\n\t"
-      "cmpl %%ebx, 0x8(%%esi)\n\t"
-      "movl $0x8421, 0x5a5b98\n\t"
-      "je .LFUN_00170c90_50\n\t"
-      "movl $0xc00, %%esi\n\t"
-      "pushl $0x3eaaaaab\n\t"
-      "movl $0x89208a20, 0x5a5b48\n\t"
-      "movl %%esi, 0x5a5b74\n\t"
-      "call *%[c159070]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%eax, 0x5a5aec\n\t"
-      "movl $0xcc118b11, 0x5a5b4c\n\t"
-      "movl %%esi, 0x5a5b78\n\t"
-      "movl $0xcc20a020, 0x5a5b50\n\t"
-      "movl %%esi, 0x5a5b7c\n\t"
-      "movl $0x3809180c, 0x5a5b54\n\t"
-      "movl %%esi, 0x5a5b80\n\t"
-      "movl $4, %%edi\n\t"
-      "movl $0x800, 0x5a5ae4\n\t"
-      "jmp .LFUN_00170c90_52\n\t"
-      ".LFUN_00170c90_50:\n\t"
-      "movl $0x30c00, %%eax\n\t"
-      "movl $0x88208920, 0x5a5b48\n\t"
-      "movl %%eax, 0x5a5b74\n\t"
-      "movl $0x8a208b20, 0x5a5b4c\n\t"
-      "movl $0x30d00, 0x5a5b78\n\t"
-      "movl $0xcc20cd20, 0x5a5b50\n\t"
-      "movl %%eax, 0x5a5b7c\n\t"
-      "movl $0xcc20a020, 0x5a5b54\n\t"
-      "movl $0xc00, 0x5a5b80\n\t"
-      "movl $4, %%edi\n\t"
-      ".LFUN_00170c90_51:\n\t"
-      "movl %%ebx, 0x5a5ae4\n\t"
-      ".LFUN_00170c90_52:\n\t"
-      "movl $0xc, 0x5a5ae0\n\t"
-      ".LFUN_00170c90_53:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movb 0x21(%%eax), %%bl\n\t"
-      "movb 0x22(%%eax), %%dl\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "negb %%bl\n\t"
-      "movswl %%di, %%esi\n\t"
-      "pushl %%eax\n\t"
-      "sbbl %%ebx, %%ebx\n\t"
-      "andl $0x48, %%ebx\n\t"
-      "addl $0x20, %%ebx\n\t"
-      "negb %%dl\n\t"
-      "sbbl %%edx, %%edx\n\t"
-      "andl $0x48, %%edx\n\t"
-      "addl $0x20, %%edx\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "shll $2, %%esi\n\t"
-      "call *%[c159070]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x5a5ae8(%%esi)\n\t"
-      "movl 0x10(%%ecx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c159070]\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x5a5b08(%%esi)\n\t"
-      "movswl -0xc(%%ebp), %%eax\n\t"
-      "shll $0x10, %%ebx\n\t"
-      "orl %%edx, %%ebx\n\t"
-      "movswl -0x8(%%ebp), %%edx\n\t"
-      "orl $0x11001200, %%ebx\n\t"
-      "leal -0x1(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "movl %%ebx, 0x5a5ac0(%%esi)\n\t"
-      "movl $0xcd, 0x5a5b28(%%esi)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "jne .LFUN_00170c90_57\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00170c90_54\n\t"
-      "incl %%edi\n\t"
-      "movl $0x2c2c0000, 0x5a5b48(%%esi)\n\t"
-      "movswl %%di, %%eax\n\t"
-      "shll $2, %%eax\n\t"
-      "movl $0xd00, %%ebx\n\t"
-      "movl %%ebx, 0x5a5b74(%%esi)\n\t"
-      "movl $0xd0d0000, 0x5a5b48(%%eax)\n\t"
-      "movl %%ebx, 0x5a5b74(%%eax)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl $0x3c0c2d00, 0x5a5ae0\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "incl %%edi\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $8, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "movl %%eax, 0x5a5ae4\n\t"
-      ".LFUN_00170c90_54:\n\t"
-      "cmpl %%ecx, %%edx\n\t"
-      "jne .LFUN_00170c90_57\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "flds 0x10(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00170c90_57\n\t"
-      "flds 0xc(%%ebx)\n\t"
-      "movl $0x3eaaaaab, -0x30(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "movl $0x3eaaaaab, -0x2c(%%ebp)\n\t"
-      "movl $0x3eaaaaab, -0x28(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00170c90_55\n\t"
-      "movl 0xc(%%ebx), %%ecx\n\t"
-      "movswl %%di, %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "shll $2, %%esi\n\t"
-      "call *%[c159070]\n\t"
-      "movl %%eax, 0x5a5ae8(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0x3c0c1c2d, 0x5a5b48(%%esi)\n\t"
-      "movl $0xc00, 0x5a5b74(%%esi)\n\t"
-      "incl %%edi\n\t"
-      ".LFUN_00170c90_55:\n\t"
-      "movswl %%di, %%esi\n\t"
-      "leal -0x30(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "shll $2, %%esi\n\t"
-      "call *%[cd1dd0]\n\t"
-      "movl %%eax, 0x5a5ae8(%%esi)\n\t"
-      "movl $0xc010000, 0x5a5b48(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0x20d0, 0x5a5b74(%%esi)\n\t"
-      "movb 0x20(%%ebx), %%al\n\t"
-      "incl %%edi\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00170c90_56\n\t"
-      "leal 0x14(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cd1dd0]\n\t"
-      "movl %%eax, 0x5a5b6c\n\t"
-      "movl $0x1d0f000c, 0x5a5ae0\n\t"
-      "movl 0x8(%%ebx), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "negl %%ecx\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $8, %%ecx\n\t"
-      "orl $0x10d00, %%ecx\n\t"
-      "shll $8, %%ecx\n\t"
-      "movl %%ecx, 0x5a5ae4\n\t"
-      "jmp .LFUN_00170c90_57\n\t"
-      ".LFUN_00170c90_56:\n\t"
-      "leal 0x14(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cd1dd0]\n\t"
-      "movl %%eax, 0x5a5b6c\n\t"
-      "movl $0x1d0f0c00, 0x5a5ae0\n\t"
-      "movl 0x8(%%ebx), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "andl $8, %%eax\n\t"
-      "orl $0x10d00, %%eax\n\t"
-      "shll $8, %%eax\n\t"
-      "movl %%eax, 0x5a5ae4\n\t"
-      ".LFUN_00170c90_57:\n\t"
-      "cmpw $8, %%di\n\t"
-      "jle .LFUN_00170c90_58\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2c1\n\t"
-      "pushl $0x2a3e80\n\t"
-      "pushl $0x2a41bc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00170c90_58:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "orl $0x11000, %%ecx\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl %%ecx, 0x5a5b94\n\t"
-      "call *%[c156510]\n\t"
-      "movl $1, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw %%si, -0xc(%%ebp)\n\t"
-      "jne .LFUN_00170c90_59\n\t"
-      "movl %%esi, %%edx\n\t"
-      "movl $0x40304, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40344, %%ecx\n\t"
-      "movl %%esi, 0x1fb784\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl $0x303\n\t"
-      "pushl $0x3f\n\t"
-      "movl $0, 0x1fb790\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x8006\n\t"
-      "pushl $0x4a\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "jmp .LFUN_00170c90_60\n\t"
-      ".LFUN_00170c90_59:\n\t"
-      "movswl -0x8(%%ebp), %%eax\n\t"
-      "cmpl -0x10(%%ebp), %%eax\n\t"
-      "jne .LFUN_00170c90_60\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x3b\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x303\n\t"
-      "pushl $0x3e\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0\n\t"
-      "pushl $0x3f\n\t"
-      "call *%[ce2220]\n\t"
-      "pushl $0x8006\n\t"
-      "pushl $0x4a\n\t"
-      "call *%[ce2220]\n\t"
-      "addl $0x20, %%esp\n\t"
-      ".LFUN_00170c90_60:\n\t"
-      "movl 0x5a5bf8, %%esi\n\t"
-      "movl 0x5a5bf4, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x5a5bfa, %%ax\n\t"
-      "subw 0x5a5bf6, %%ax\n\t"
-      "subl %%ecx, %%esi\n\t"
-      "cmpw $0, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "jne .LFUN_00170c90_61\n\t"
-      "call *%[c100b00]\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jle .LFUN_00170c90_61\n\t"
-      "cmpw $1, -0xc(%%ebp)\n\t"
-      "je .LFUN_00170c90_61\n\t"
-      "movswl 0x5a5bf6, %%edx\n\t"
-      "movswl 0x5a5bfa, %%eax\n\t"
-      "movswl 0x5a5bf4, %%ecx\n\t"
-      "shll $1, %%edx\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "movswl 0x5a5bf8, %%edx\n\t"
-      "fildl -0x18(%%ebp)\n\t"
-      "shll $1, %%eax\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "fmuls 0x2a41b8\n\t"
-      "negl %%ecx\n\t"
-      "shll $1, %%ecx\n\t"
-      "negl %%edx\n\t"
-      "fsubs 0x2533c8\n\t"
-      "shll $1, %%edx\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      "fildl -0x18(%%ebp)\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "fmuls 0x2a41b8\n\t"
-      "fsubs 0x2533c8\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "fildl -0x18(%%ebp)\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "fmuls 0x2a41b4\n\t"
-      "fadds 0x2533c8\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "fildl -0x18(%%ebp)\n\t"
-      "fmuls 0x2a41b4\n\t"
-      "fadds 0x2533c8\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      "jmp .LFUN_00170c90_62\n\t"
-      ".LFUN_00170c90_61:\n\t"
-      "movl $0xbf800000, -0x34(%%ebp)\n\t"
-      "movl $0xbf800000, -0x40(%%ebp)\n\t"
-      "movl $0x3f800000, -0x38(%%ebp)\n\t"
-      "movl $0x3f800000, -0x3c(%%ebp)\n\t"
-      ".LFUN_00170c90_62:\n\t"
-      "pushl $7\n\t"
-      "call *%[c1ed450]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00170c90_63\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_64\n\t"
-      ".LFUN_00170c90_63:\n\t"
-      "pushl $0x2a3004\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_64:\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_65\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_66\n\t"
-      ".LFUN_00170c90_65:\n\t"
-      "pushl $0x2a4168\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_66:\n\t"
-      "movl -0x34(%%ebp), %%edi\n\t"
-      "movl -0x40(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_67\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_68\n\t"
-      ".LFUN_00170c90_67:\n\t"
-      "pushl $0x2a4100\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_68:\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_69\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_70\n\t"
-      ".LFUN_00170c90_69:\n\t"
-      "pushl $0x2a40a8\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_70:\n\t"
-      "pushl %%edi\n\t"
-      "movl -0x3c(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_71\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_72\n\t"
-      ".LFUN_00170c90_71:\n\t"
-      "pushl $0x2a4040\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_72:\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_73\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_74\n\t"
-      ".LFUN_00170c90_73:\n\t"
-      "pushl $0x2a3ff0\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_74:\n\t"
-      "movl -0x38(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_75\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_76\n\t"
-      ".LFUN_00170c90_75:\n\t"
-      "pushl $0x2a3f88\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_76:\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_77\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_78\n\t"
-      ".LFUN_00170c90_77:\n\t"
-      "pushl $0x2a2fc4\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_78:\n\t"
-      "movl -0x40(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_79\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_00170c90_80\n\t"
-      ".LFUN_00170c90_79:\n\t"
-      "pushl $0x2a3f20\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_80:\n\t"
-      "call *%[c1ed490]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_00170c90_81\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "jmp .LFUN_00170c90_82\n\t"
-      ".LFUN_00170c90_81:\n\t"
-      "pushl $0x29f728\n\t"
-      "pushl $0\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_82:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpw -0xc(%%ebp), %%ax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jl .LFUN_00170c90_10\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00170c90_83:\n\t"
-      "pushl $1\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x5a5bc0, %%cx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c158140]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      ".LFUN_00170c90_84:\n\t"
-      "pushl $0x1a\n\t"
-      "call *%[c16fa40]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "jne .LFUN_00170c90_85\n\t"
-      "pushl $0x2a3ef4\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00170c90_85:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b170c90_assert), [exitfn] "m"(b170c90_exitfn), [c16f910] "m"(b170c90_c16f910), [c17dc70] "m"(b170c90_c17dc70), [c178b40] "m"(b170c90_c178b40), [c1584f0] "m"(b170c90_c1584f0), [c1e9410] "m"(b170c90_c1e9410), [c155c20] "m"(b170c90_c155c20), [c1e96d0] "m"(b170c90_c1e96d0), [c1e9350] "m"(b170c90_c1e9350), [c1ea290] "m"(b170c90_c1ea290), [c1e98e0] "m"(b170c90_c1e98e0), [c170440] "m"(b170c90_c170440), [c158140] "m"(b170c90_c158140), [memset] "m"(b170c90_memset), [c156510] "m"(b170c90_c156510), [c159070] "m"(b170c90_c159070), [cd1dd0] "m"(b170c90_cd1dd0), [ce2220] "m"(b170c90_ce2220), [c100b00] "m"(b170c90_c100b00), [c1ed450] "m"(b170c90_c1ed450), [c167ff0] "m"(b170c90_c167ff0), [c1ed320] "m"(b170c90_c1ed320), [c1ed280] "m"(b170c90_c1ed280), [c1ed490] "m"(b170c90_c1ed490), [c16fa40] "m"(b170c90_c16fa40), [c8f390] "m"(b170c90_c8f390)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  display_assert((char *)0x0029dc40, (char *)0x002a3e80, 251, 0);
+  system_exit(0);
+  FUN_0016f910(26);
+  rasterizer_screen_effect_get_cinematic_parameters((void *)(uintptr_t)eax);
+  /* relift: cmp word ptr [esi + 2], 0 -> jne 0x170d1d */
+  /* test eax, eax -> jne 0x170d1d */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> je 0x170d1d */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> je 0x170d1d */
+  /* test (char)eax, (char)eax -> je 0x171b94 */
+  /* relift: relift: mov (char)eax, byte ptr [0x325700] */
+  /* test (char)eax, (char)eax -> je 0x171b94 */
+  /* relift: cmp word ptr [0x5a5bc0], 0 -> jne 0x171b94 */
+  /* test eax, eax -> jne 0x170d77 */
+  display_assert((char *)0x002a4460, (char *)0x002a3e80, 276, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x170d9e */
+  display_assert((char *)0x002a443c, (char *)0x002a3e80, 277, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi], 0 -> je 0x170dc4 */
+  display_assert((char *)0x002a4404, (char *)0x002a3e80, 278, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 2], 0 -> je 0x170deb */
+  display_assert((char *)0x002a43d4, (char *)0x002a3e80, 279, 0);
+  system_exit(0);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  display_assert((char *)0x002a439c, (char *)0x002a3e80, 280, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x170e42 */
+  display_assert((char *)0x002a436c, (char *)0x002a3e80, 281, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [esi + 2], 1 -> jne 0x170e70 */
+  /* test eax, eax -> je 0x170e70 */
+  display_assert((char *)0x002a4340, (char *)0x002a3e80, 286, 0);
+  system_exit(0);
+  FUN_00178b40(38, 0, 0);
+  /* relift: cmp word ptr [ebp - 0xc], 1 -> jne 0x170ec9 */
+  /* test (int16_t)ecx, (int16_t)ecx -> je 0x170ec1 */
+  display_assert((char *)0x002a4338, (char *)0x002a3e80, 313, 0);
+  system_exit(0);
+  /* test (char)ecx, 1 -> jne 0x170ed7 */
+  /* test (char)eax, (char)eax -> je 0x171065 */
+  /* cmp (int16_t)ecx, 1 -> je 0x170f1e */
+  display_assert((char *)0x002a4330, (char *)0x002a3e80, 334, 0);
+  system_exit(0);
+  FUN_001584f0(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)ecx);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  /* relift: test byte ptr [edx + 0xe], 0x10 -> je 0x170ffd */
+  display_assert((char *)0x002a42fc, (char *)0x002a3e80, 351, 0);
+  system_exit(0);
+  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)eax);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  /* relift: cmp word ptr [esi + 2], 0 -> jne 0x171133 */
+  /* relift: cmp word ptr [ebp - 0xc], 1 -> jne 0x1710c6 */
+  /* test (int16_t)ecx, (int16_t)ecx -> je 0x1710aa */
+  display_assert((char *)0x002a4338, (char *)0x002a3e80, 371, 0);
+  system_exit(0);
+  /* test (int16_t)edi, (int16_t)edi -> jne 0x1711d4 */
+  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)ecx);
+  /* test (int16_t)ecx, (int16_t)ecx -> jne 0x1710de */
+  /* test (int16_t)edi, (int16_t)edi -> jne 0x1711d4 */
+  /* cmp (int16_t)ecx, 1 -> jne 0x171111 */
+  /* test eax, eax -> je 0x1710cb */
+  /* test (int16_t)edi, (int16_t)edi -> jne 0x171100 */
+  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)eax);
+  /* cmp (int16_t)edi, 1 -> jne 0x1711d4 */
+  display_assert((char *)0x002a42b8, (char *)0x002a3e80, 398, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x17114c */
+  /* test (int16_t)edi, (int16_t)edi -> jne 0x171158 */
+  rasterizer_set_texture_bitmap_data(0, (void *)(uintptr_t)eax);
+  /* test (int16_t)edi, (int16_t)edi -> jne 0x171158 */
+  /* cmp (int16_t)edi, 1 -> jne 0x171165 */
+  /* cmp (int16_t)edi, 2 -> jne 0x171172 */
+  /* cmp (int16_t)edi, 3 -> jne 0x1711d4 */
+  FUN_001584f0(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  /* cmp (int16_t)edi, 4 -> jl 0x171070 */
+  D3DDevice_SetRenderState_CullMode(ebx);
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb7a4] = 0x10101 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb784] = ebx */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb788] = ebx */
+  D3DDevice_SetRenderState_ZEnable(ebx);
+  D3DDevice_SetRenderState_ZBias(ebx);
+  FUN_00170440((void *)(uintptr_t)eax, 0, 0);
+  /* cmp (int16_t)edi, -1 -> je 0x171258 */
+  FUN_00158140(0, 0, ebx, 0, 0);
+  csmemset((void *)0x005a5ac0, 0, 0);
+  /* cmp (int16_t)eax, (int16_t)ebx -> jne 0x1712a9 */
+  /* mem[0x005a5b98] = eax */
+  /* mem[0x005a5b94] = eax */
+  /* mem[0x005a5ae0] = 8 */
+  rasterizer_set_pixel_shader((void *)0x005a5ac0);
+  /* cmp (int16_t)eax, 1 -> jne 0x17143f */
+  /* mem[0x005a5b98] = 0x421 */
+  /* mem[0x005a5b94] = 4 */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fcomp dword ptr [0x2533c8] */
+  /* test (char)eax, 0x41 -> jne 0x17130a */
+  FUN_00159070(0.0f);
+  /* mem[0x005a5ae8] = eax */
+  /* mem[0x005a5ac0] = 0x3120111a */
+  /* mem[0x005a5b28] = eax */
+  /* mem[0x005a5b48] = 0x3120110a */
+  /* mem[0x005a5b74] = eax */
+  /* mem[0x005a5b4c] = 0xc091c19 */
+  /* mem[0x005a5b78] = 0xc4 */
+  /* mem[0x005a5b50] = 0x8080000 */
+  /* mem[0x005a5b7c] = 0xd0 */
+  /* cmp (int16_t)eax, (int16_t)ebx -> jl 0x17137b */
+  /* cmp (int16_t)eax, 3 -> jl 0x17139b */
+  display_assert((char *)0x002a4230, (char *)0x002a3e80, 497, 0);
+  system_exit(0);
+  /* mem[0x005a5b54] = 0xd0d0820 */
+  /* mem[0x005a5b80] = ecx */
+  /* mem[0x005a5ae0] = 0x2c0d0800 */
+  /* mem[0x005a5ae4] = 0x400 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb784] = 1 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb790] = 0x303 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb794] = ebx */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb7c0] = 0x8006 */
+  rasterizer_set_pixel_shader((void *)0x005a5ac0);
+  display_assert((char *)0x002a41f0, (char *)0x002a3e80, 513, 0);
+  system_exit(0);
+  rasterizer_set_pixel_shader((void *)0x005a5ac0);
+  csmemset((void *)0x005a5ac0, 0, 0);
+  /* relift: cmp word ptr [esi + 2], (int16_t)ebx -> jne 0x171592 */
+  /* relift: cmp word ptr [ebp - 0xc], (int16_t)ecx -> jne 0x1714ed */
+  /* relift: cmp word ptr [ebp - 8], (int16_t)ebx -> je 0x1714c2 */
+  display_assert((char *)0x002a4338, (char *)0x002a3e80, 529, ecx);
+  system_exit(0);
+  /* mem[0x005a5b98] = ecx */
+  /* mem[0x005a5b48] = 0x8200000 */
+  /* mem[0x005a5b74] = 0xc0 */
+  /* mem[0x005a5ae4] = 0x800 */
+  /* cmp (int16_t)eax, (int16_t)ebx -> jne 0x171516 */
+  /* mem[0x005a5b98] = ecx */
+  /* mem[0x005a5b48] = 0x8200000 */
+  /* mem[0x005a5b74] = 0xc0 */
+  /* cmp (int16_t)eax, (int16_t)ecx -> jne 0x17156e */
+  /* mem[0x005a5ae0] = 0xc */
+  /* mem[0x005a5b74] = 0xc0 */
+  /* mem[0x005a5b98] = 0x21 */
+  /* mem[0x005a5b48] = 0x9200000 */
+  /* mem[0x005a5ae4] = 0x800 */
+  /* mem[0x005a5b48] = 0x8200000 */
+  /* mem[0x005a5ae4] = ebx */
+  display_assert((char *)0x002a42b8, (char *)0x002a3e80, 584, ecx);
+  system_exit(0);
+  /* mem[0x005a5b98] = 0x8421 */
+  /* mem[0x005a5b48] = 0x89208a20 */
+  /* mem[0x005a5b74] = esi */
+  FUN_00159070(0.0f);
+  /* mem[0x005a5aec] = eax */
+  /* mem[0x005a5b4c] = 0xcc118b11 */
+  /* mem[0x005a5b78] = esi */
+  /* mem[0x005a5b50] = 0xcc20a020 */
+  /* mem[0x005a5b7c] = esi */
+  /* mem[0x005a5b54] = 0x3809180c */
+  /* mem[0x005a5b80] = esi */
+  /* mem[0x005a5ae4] = 0x800 */
+  /* mem[0x005a5b48] = 0x88208920 */
+  /* mem[0x005a5b74] = eax */
+  /* mem[0x005a5b4c] = 0x8a208b20 */
+  /* mem[0x005a5b78] = 0x30d00 */
+  /* mem[0x005a5b50] = 0xcc20cd20 */
+  /* mem[0x005a5b7c] = eax */
+  /* mem[0x005a5b54] = 0xcc20a020 */
+  /* mem[0x005a5b80] = 0xc00 */
+  /* mem[0x005a5ae4] = ebx */
+  /* mem[0x005a5ae0] = 0xc */
+  FUN_00159070(0.0f);
+  FUN_00159070(0.0f);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x171746 */
+  /* mem[0x005a5ae0] = 0x3c0c2d00 */
+  /* mem[0x005a5ae4] = eax */
+  /* cmp edx, ecx -> jne 0x171853 */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x171853 */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x1717b7 */
+  FUN_00159070(0.0f);
+  FUN_000d1dd0((float *)0);
+  /* test (char)eax, (char)eax -> je 0x171821 */
+  FUN_000d1dd0((float *)(uintptr_t)eax);
+  /* mem[0x005a5b6c] = eax */
+  /* mem[0x005a5ae0] = 0x1d0f000c */
+  /* mem[0x005a5ae4] = ecx */
+  FUN_000d1dd0((float *)(uintptr_t)edx);
+  /* mem[0x005a5b6c] = eax */
+  /* mem[0x005a5ae0] = 0x1d0f0c00 */
+  /* mem[0x005a5ae4] = eax */
+  /* cmp (int16_t)edi, 8 -> jle 0x171879 */
+  display_assert((char *)0x002a41bc, (char *)0x002a3e80, 705, 0);
+  system_exit(0);
+  /* mem[0x005a5b94] = ecx */
+  rasterizer_set_pixel_shader((void *)0x005a5ac0);
+  /* relift: cmp word ptr [ebp - 0xc], (int16_t)esi -> jne 0x1718e5 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb784] = esi */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb790] = 0 */
+  SetRenderStateSmart(63, 771);
+  SetRenderStateSmart(74, 32774);
+  /* relift: cmp eax, dword ptr [ebp - 0x10] -> jne 0x17191a */
+  SetRenderStateSmart(59, 0);
+  SetRenderStateSmart(62, 771);
+  SetRenderStateSmart(63, 0);
+  SetRenderStateSmart(74, 32774);
+  /* relift: relift: mov (int16_t)eax, word ptr [0x5a5bfa] */
+  main_get_window_count();
+  /* cmp (int16_t)eax, 1 -> jle 0x1719dd */
+  /* relift: cmp word ptr [ebp - 0xc], 1 -> je 0x1719dd */
+  D3DDevice_Begin(0);
+  /* test (char)eax, (char)eax -> je 0x171a0b */
+  FUN_00167ff0(0, (char *)0x002a3004);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x171a2e */
+  FUN_00167ff0(0, (char *)0x002a4168);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x171a56 */
+  FUN_00167ff0(0, (char *)0x002a4100);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x171a7b */
+  FUN_00167ff0(0, (char *)0x002a40a8);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x171aa0 */
+  FUN_00167ff0(0, (char *)0x002a4040);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x171ac6 */
+  FUN_00167ff0(0, (char *)0x002a3ff0);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x171aeb */
+  FUN_00167ff0(0, (char *)0x002a3f88);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x171b0f */
+  FUN_00167ff0(0, (char *)0x002a2fc4);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x171b34 */
+  FUN_00167ff0(0, (char *)0x002a3f20);
+  D3DDevice_End();
+  /* test (char)ebx, (char)ebx -> je 0x171b54 */
+  FUN_00167ff0(0, (char *)0x0029f728);
+  /* relift: relift: mov (int16_t)ecx, word ptr [0x5a5bc0] */
+  FUN_00158140(0, 0, 0, 0, 0);
+  FUN_0016fa40(26);
+  error(0, (char *)0x002a3ef4);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
-#else
-#error "FUN_00170c90: clang naked draft required"
-#endif
 
 
 /* FUN_00171bc0 (0x171bc0) — readable C lift (restored pre-naked). */
@@ -8831,693 +5534,145 @@ int FUN_00179570(int a, int b, int c)
   return 0;
 }
 
-/* FUN_001795c0 (0x1795c0) — XBE naked draft (batch 298). */
-#if defined(__clang__)
-static void (*const b1795c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1795c0_exitfn)(int) = system_exit;
-static void * (*const b1795c0_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-static void *(*const b1795c0_elem)(void *, int, int) = tag_block_get_element;
-static void *(*const b1795c0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1795c0_c155e80)(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index) = rasterizer_set_texture;
-static void __stdcall (*const b1795c0_c1e9410)(uint32_t stage, uint32_t state, uint32_t value) = (void *)D3DDevice_SetTextureStageState;
-static void __stdcall (*const b1795c0_c1e96d0)(uint32_t mode) = (void *)D3DDevice_SetRenderState_CullMode;
-static void (*const b1795c0_c1e9350)(uint32_t reg, uint32_t value) = D3DDevice_SetRenderState_Simple;
-static void __stdcall (*const b1795c0_c1ea290)(uint32_t enable) = (void *)D3DDevice_SetRenderState_ZEnable;
-static void __stdcall (*const b1795c0_c1e98e0)(uint32_t value) = (void *)D3DDevice_SetRenderState_ZBias;
-static void (*const b1795c0_c178b40)(int a1, int a2, int a3) = FUN_00178b40;
-static void __stdcall (*const b1795c0_c1eb8d0)(int register_index, const void *data, uint32_t count) = (void *)D3DDevice_SetVertexShaderConstant;
-static void (*const b1795c0_c156510)(void *state) = rasterizer_set_pixel_shader;
-static void (*const b1795c0_c158ae0)(int mode) = FUN_00158ae0;
-static void (*const b1795c0_c158140)(int target, int mipmap_index, uint32_t color, int do_clear, int zbuffer) = FUN_00158140;
-static void __stdcall (*const b1795c0_c1ed450)(uint32_t primitive_type) = (void *)D3DDevice_Begin;
-static void (*const b1795c0_c167ff0)(int a1, const char *call_text) = FUN_00167ff0;
-static void __stdcall (*const b1795c0_c1ed320)(unsigned int reg, int a, int b) = (void *)D3DDevice_SetVertexData2s;
-static void __stdcall (*const b1795c0_c1ed280)(uint32_t reg, float a, float b) = (void *)D3DDevice_SetVertexData2f;
-static void (*const b1795c0_c1ed490)(void) = (void *)D3DDevice_End;
-static void (*const b1795c0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
+/* FUN_001795c0 (0x1795c0) — readable C lift (restored pre-naked). */
 void FUN_001795c0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1d8, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001795c0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f\n\t"
-      "pushl $0x2ae750\n\t"
-      "pushl $0x2a18b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_1:\n\t"
-      "movl 0x476ab0, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001795c0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x30\n\t"
-      "pushl $0x2ae750\n\t"
-      "pushl $0x29dc40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_2:\n\t"
-      "movb 0x3256d6, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001795c0_48\n\t"
-      "pushl $7\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movw 0xd8(%%eax), %%cx\n\t"
-      "movl $4, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "jg .LFUN_001795c0_3\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      ".LFUN_001795c0_3:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x124(%%eax), %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "movl %%esi, 0x8(%%ebp)\n\t"
-      "leal -0x158(%%ebp), %%ebx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "nop\n\t"
-      ".LFUN_001795c0_4:\n\t"
-      "cmpl (%%edi), %%esi\n\t"
-      "pushl $0x4c\n\t"
-      "jge .LFUN_001795c0_5\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movl $0x13, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "rep movsl\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "jmp .LFUN_001795c0_6\n\t"
-      ".LFUN_001795c0_5:\n\t"
-      "pushl $0\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[memset]\n\t"
-      "movw $1, 0x38(%%ebx)\n\t"
-      ".LFUN_001795c0_6:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incl %%esi\n\t"
-      "addl $0x4c, %%ebx\n\t"
-      "decl %%eax\n\t"
-      "movl %%esi, 0x8(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .LFUN_001795c0_4\n\t"
-      "flds -0x154(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_001795c0_7\n\t"
-      "flds -0x108(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_001795c0_7\n\t"
-      "movl $0x3f800000, -0x108(%%ebp)\n\t"
-      ".LFUN_001795c0_7:\n\t"
-      "flds -0xbc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_001795c0_8\n\t"
-      "flds -0x70(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .LFUN_001795c0_8\n\t"
-      "movl $0x3f800000, -0x70(%%ebp)\n\t"
-      ".LFUN_001795c0_8:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal -0x11e(%%ebp), %%ebx\n\t"
-      "jmp .LFUN_001795c0_9\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_001795c0_9:\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "movl 0x124(%%eax), %%ecx\n\t"
-      "addl $0x124, %%eax\n\t"
-      "cmpl %%ecx, %%esi\n\t"
-      "jge .LFUN_001795c0_10\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "movl 0xd4(%%eax), %%eax\n\t"
-      "jmp .LFUN_001795c0_11\n\t"
-      ".LFUN_001795c0_10:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      ".LFUN_001795c0_11:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%ebx), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $3\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c155e80]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl $1\n\t"
-      "movl $0xa, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $1\n\t"
-      "movl $0xb, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xd, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xe, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "pushl $2\n\t"
-      "movl $0xf, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c1e9410]\n\t"
-      "incl %%edi\n\t"
-      "incl %%esi\n\t"
-      "addl $0x4c, %%ebx\n\t"
-      "cmpw $4, %%di\n\t"
-      "jl .LFUN_001795c0_9\n\t"
-      "pushl $0x901\n\t"
-      "call *%[c1e96d0]\n\t"
-      "movl $0x10101, %%edx\n\t"
-      "movl $0x40358, %%ecx\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40304, %%ecx\n\t"
-      "movl $0x10101, 0x1fb7a4\n\t"
-      "call *%[c1e9350]\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl $0x40300, %%ecx\n\t"
-      "movl %%esi, 0x1fb784\n\t"
-      "call *%[c1e9350]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%esi, 0x1fb788\n\t"
-      "call *%[c1ea290]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1e98e0]\n\t"
-      "pushl %%esi\n\t"
-      "pushl $8\n\t"
-      "pushl $0x26\n\t"
-      "call *%[c178b40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "leal -0x120(%%ebp), %%edi\n\t"
-      "leal -0x1d4(%%ebp), %%esi\n\t"
-      "movl $4, %%ebx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001795c0_12:\n\t"
-      "flds -0x10(%%edi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpw %%ax, (%%edi)\n\t"
-      "fcos\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x10(%%edi)\n\t"
-      "fsin\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "jg .LFUN_001795c0_13\n\t"
-      "pushl $1\n\t"
-      "pushl $0x7c\n\t"
-      "pushl $0x2ae750\n\t"
-      "pushl $0x2ae72c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001795c0_13:\n\t"
-      "movswl (%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%eax, 0x4(%%esi)\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "movl %%eax, 0x14(%%esi)\n\t"
-      "fsts -0x4(%%esi)\n\t"
-      "addl $0x4c, %%edi\n\t"
-      "flds 0x5a5e18\n\t"
-      "addl $0x20, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "fmuls -0x58(%%edi)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds -0x54(%%edi)\n\t"
-      "fstps -0x18(%%esi)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0x10(%%esi)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "fadds -0x50(%%edi)\n\t"
-      "fstps -0x8(%%esi)\n\t"
-      "jne .LFUN_001795c0_12\n\t"
-      "pushl $8\n\t"
-      "leal -0x1d8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-0x51\n\t"
-      "call *%[c1eb8d0]\n\t"
-      "pushl $0xf0\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[memset]\n\t"
-      "flds -0x108(%%ebp)\n\t"
-      "fadds -0x154(%%ebp)\n\t"
-      "movl $0xc00, %%eax\n\t"
-      "movl %%eax, 0x5a5b74\n\t"
-      "movl %%eax, 0x5a5b80\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl $0x8421, 0x5a5b98\n\t"
-      "movl $0x11004, 0x5a5b94\n\t"
-      "movl $0x31481149, 0x5a5b48\n\t"
-      "fnstsw %%ax\n\t"
-      "movl $0x314a114b, 0x5a5b4c\n\t"
-      "movl $0xd00, 0x5a5b78\n\t"
-      "testb $0x41, %%ah\n\t"
-      "movl $0x31cc11cd, 0x5a5b50\n\t"
-      "movl $0x30c00, 0x5a5b7c\n\t"
-      "movl $0xcc20a020, 0x5a5b54\n\t"
-      "movl $0x310c0100, 0x5a5ae0\n\t"
-      "movl %%esi, 0x5a5ae4\n\t"
-      "je .LFUN_001795c0_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9f\n\t"
-      "pushl $0x2ae750\n\t"
-      "pushl $0x2ae6e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_14:\n\t"
-      "flds -0x70(%%ebp)\n\t"
-      "fadds -0xbc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_001795c0_15\n\t"
-      "pushl $1\n\t"
-      "pushl $0xa0\n\t"
-      "pushl $0x2ae750\n\t"
-      "pushl $0x2ae6a0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_15:\n\t"
-      "flds -0x108(%%ebp)\n\t"
-      "movl $0x437f0000, -0x8(%%ebp)\n\t"
-      "fadds -0x154(%%ebp)\n\t"
-      "fdivrs -0x154(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001795c0_16\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_001795c0_17\n\t"
-      ".LFUN_001795c0_16:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x123\n\t"
-      "pushl $0x269ffc\n\t"
-      "pushl $0x269fe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_17:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fistps -0x4(%%ebp)\n\t"
-      "shll $0x18, -0x4(%%ebp)\n\t"
-      "flds -0x70(%%ebp)\n\t"
-      "fadds -0xbc(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x5a5ae8\n\t"
-      "movl $0x437f0000, -0x8(%%ebp)\n\t"
-      "fdivrs -0xbc(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001795c0_18\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_001795c0_19\n\t"
-      ".LFUN_001795c0_18:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x123\n\t"
-      "pushl $0x269ffc\n\t"
-      "pushl $0x269fe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_19:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fistps -0x4(%%ebp)\n\t"
-      "shll $0x18, -0x4(%%ebp)\n\t"
-      "flds -0x108(%%ebp)\n\t"
-      "fadds -0x154(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "flds -0x70(%%ebp)\n\t"
-      "movl %%edx, 0x5a5aec\n\t"
-      "fadds -0xbc(%%ebp)\n\t"
-      "movl $0x437f0000, -0x8(%%ebp)\n\t"
-      "fadds -0x108(%%ebp)\n\t"
-      "fadds -0x154(%%ebp)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001795c0_20\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_001795c0_21\n\t"
-      ".LFUN_001795c0_20:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x123\n\t"
-      "pushl $0x269ffc\n\t"
-      "pushl $0x269fe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_21:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fistps -0x4(%%ebp)\n\t"
-      "shll $0x18, -0x4(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "movl %%eax, 0x5a5af0\n\t"
-      "call *%[c156510]\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c158ae0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%si, -0x14(%%ebp)\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jle .LFUN_001795c0_47\n\t"
-      "movl %%esi, -0x10(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001795c0_22:\n\t"
-      "movl -0x18(%%ebp), %%ecx\n\t"
-      "movw 0xd8(%%ecx), %%ax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jle .LFUN_001795c0_25\n\t"
-      "fildl -0x10(%%ebp)\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "decl %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "movl $0x437f0000, -0x28(%%ebp)\n\t"
-      "fidivl 0x8(%%ebp)\n\t"
-      "fmuls 0xdc(%%ecx)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .LFUN_001795c0_23\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jnp .LFUN_001795c0_24\n\t"
-      ".LFUN_001795c0_23:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x123\n\t"
-      "pushl $0x269ffc\n\t"
-      "pushl $0x269fe0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001795c0_24:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "fistps -0x20(%%ebp)\n\t"
-      "shll $0x18, -0x20(%%ebp)\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "orl $0x8080ff, %%eax\n\t"
-      "movl %%eax, 0x5a5b6c\n\t"
-      "jmp .LFUN_001795c0_26\n\t"
-      ".LFUN_001795c0_25:\n\t"
-      "movl $0x7f7fff, 0x5a5b6c\n\t"
-      ".LFUN_001795c0_26:\n\t"
-      "pushl $0x5a5ac0\n\t"
-      "call *%[c156510]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $6\n\t"
-      "call *%[c158140]\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl $0x80, %%edx\n\t"
-      "sarl %%cl, %%edx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "pushl $7\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fsts 0x8(%%ebp)\n\t"
-      "fmuls 0x25eeac\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "call *%[c1ed450]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_27\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_28\n\t"
-      ".LFUN_001795c0_27:\n\t"
-      "pushl $0x2a3004\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_28:\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_29\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_30\n\t"
-      ".LFUN_001795c0_29:\n\t"
-      "pushl $0x2a2fc4\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_30:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "movl -0x24(%%ebp), %%esi\n\t"
-      "fsubs 0x2533c8\n\t"
-      "pushl %%esi\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fadds -0x1c(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_31\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_32\n\t"
-      ".LFUN_001795c0_31:\n\t"
-      "pushl $0x2a2f48\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_32:\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_33\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_34\n\t"
-      ".LFUN_001795c0_33:\n\t"
-      "pushl $0x2a2f04\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_34:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_35\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_36\n\t"
-      ".LFUN_001795c0_35:\n\t"
-      "pushl $0x2a2e88\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_36:\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_37\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_38\n\t"
-      ".LFUN_001795c0_37:\n\t"
-      "pushl $0x2a2e44\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_38:\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_39\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_40\n\t"
-      ".LFUN_001795c0_39:\n\t"
-      "pushl $0x2a2dc8\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_40:\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl $4\n\t"
-      "call *%[c1ed320]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_41\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_42\n\t"
-      ".LFUN_001795c0_41:\n\t"
-      "pushl $0x2a2d84\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_42:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "call *%[c1ed280]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_43\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_44\n\t"
-      ".LFUN_001795c0_43:\n\t"
-      "pushl $0x2a2d08\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_44:\n\t"
-      "call *%[c1ed490]\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001795c0_45\n\t"
-      "movb $1, %%bl\n\t"
-      "jmp .LFUN_001795c0_46\n\t"
-      ".LFUN_001795c0_45:\n\t"
-      "pushl $0x29f728\n\t"
-      "pushl $0\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c167ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_46:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "incl %%eax\n\t"
-      "incl %%edx\n\t"
-      "cmpw -0x14(%%ebp), %%ax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "jl .LFUN_001795c0_22\n\t"
-      ".LFUN_001795c0_47:\n\t"
-      "pushl $1\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x5a5bc0, %%dx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c158140]\n\t"
-      "pushl $2\n\t"
-      "call *%[c158ae0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "testb %%bl, %%bl\n\t"
-      "popl %%ebx\n\t"
-      "jne .LFUN_001795c0_48\n\t"
-      "pushl $0x2ae670\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001795c0_48:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1795c0_assert), [exitfn] "m"(b1795c0_exitfn), [c1906b0] "m"(b1795c0_c1906b0), [elem] "m"(b1795c0_elem), [memset] "m"(b1795c0_memset), [c155e80] "m"(b1795c0_c155e80), [c1e9410] "m"(b1795c0_c1e9410), [c1e96d0] "m"(b1795c0_c1e96d0), [c1e9350] "m"(b1795c0_c1e9350), [c1ea290] "m"(b1795c0_c1ea290), [c1e98e0] "m"(b1795c0_c1e98e0), [c178b40] "m"(b1795c0_c178b40), [c1eb8d0] "m"(b1795c0_c1eb8d0), [c156510] "m"(b1795c0_c156510), [c158ae0] "m"(b1795c0_c158ae0), [c158140] "m"(b1795c0_c158140), [c1ed450] "m"(b1795c0_c1ed450), [c167ff0] "m"(b1795c0_c167ff0), [c1ed320] "m"(b1795c0_c1ed320), [c1ed280] "m"(b1795c0_c1ed280), [c1ed490] "m"(b1795c0_c1ed490), [c8f390] "m"(b1795c0_c8f390)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test esi, esi -> jne 0x1795ee */
+  display_assert((char *)0x002a18b8, (char *)0x002ae750, 47, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x179614 */
+  display_assert((char *)0x0029dc40, (char *)0x002ae750, 48, 0);
+  system_exit(0);
+  /* relift: relift: mov (char)eax, byte ptr [0x3256d6] */
+  /* test (char)eax, (char)eax -> je 0x179dd5 */
+  FUN_001906b0((void *)(uintptr_t)esi, 0);
+  tag_block_get_element((void *)(uintptr_t)edi, 0, 0);
+  csmemset((void *)(uintptr_t)ebx, 0, 0);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* cmp esi, ecx -> jge 0x17972d */
+  rasterizer_set_texture(0, 0, 0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  D3DDevice_SetTextureStageState(0, 0, 0);
+  /* cmp (int16_t)edi, 4 -> jl 0x179710 */
+  D3DDevice_SetRenderState_CullMode(2305);
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb7a4] = 0x10101 */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb784] = esi */
+  D3DDevice_SetRenderState_Simple(0, 0);
+  /* mem[0x001fb788] = esi */
+  D3DDevice_SetRenderState_ZEnable(esi);
+  D3DDevice_SetRenderState_ZBias(esi);
+  FUN_00178b40(38, 0, 0);
+  display_assert((char *)0x002ae72c, (char *)0x002ae750, 124, 0);
+  system_exit(0);
+  /* relift: relift: fld dword ptr [0x5a5e18] */
+  D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)eax, 0);
+  csmemset((void *)0x005a5ac0, 0, 240);
+  /* mem[0x005a5b74] = eax */
+  /* mem[0x005a5b80] = eax */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* mem[0x005a5b98] = 0x8421 */
+  /* mem[0x005a5b94] = 0x11004 */
+  /* mem[0x005a5b48] = 0x31481149 */
+  /* mem[0x005a5b4c] = 0x314a114b */
+  /* mem[0x005a5b78] = 0xd00 */
+  /* mem[0x005a5b50] = 0x31cc11cd */
+  /* mem[0x005a5b7c] = 0x30c00 */
+  /* mem[0x005a5b54] = 0xcc20a020 */
+  /* mem[0x005a5ae0] = 0x310c0100 */
+  /* mem[0x005a5ae4] = esi */
+  display_assert((char *)0x002ae6e8, (char *)0x002ae750, 159, 0);
+  system_exit(0);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> je 0x17998d */
+  display_assert((char *)0x002ae6a0, (char *)0x002ae750, 160, 0);
+  system_exit(0);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 1 -> jne 0x1799c9 */
+  /* relift: relift: fcomp dword ptr [0x2533c8] */
+  display_assert((char *)0x00269fe0, (char *)0x00269ffc, 291, 0);
+  system_exit(0);
+  /* mem[0x005a5ae8] = ecx */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 1 -> jne 0x179a3a */
+  /* relift: relift: fcomp dword ptr [0x2533c8] */
+  display_assert((char *)0x00269fe0, (char *)0x00269ffc, 291, 0);
+  system_exit(0);
+  /* mem[0x005a5aec] = edx */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 1 -> jne 0x179abf */
+  /* relift: relift: fcomp dword ptr [0x2533c8] */
+  display_assert((char *)0x00269fe0, (char *)0x00269ffc, 291, 0);
+  system_exit(0);
+  /* mem[0x005a5af0] = eax */
+  rasterizer_set_pixel_shader((void *)0x005a5ac0);
+  FUN_00158ae0(0);
+  /* cmp (int16_t)eax, 1 -> jle 0x179bab */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 1 -> jne 0x179b6d */
+  /* relift: relift: fcomp dword ptr [0x2533c8] */
+  display_assert((char *)0x00269fe0, (char *)0x00269ffc, 291, 0);
+  system_exit(0);
+  /* mem[0x005a5b6c] = eax */
+  /* mem[0x005a5b6c] = 0x7f7fff */
+  rasterizer_set_pixel_shader((void *)0x005a5ac0);
+  FUN_00158140(0, 0, 0, 0, 0);
+  D3DDevice_Begin(0);
+  /* test (char)ebx, (char)ebx -> je 0x179c04 */
+  FUN_00167ff0(0, (char *)0x002a3004);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x179c28 */
+  FUN_00167ff0(0, (char *)0x002a2fc4);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x179c6e */
+  FUN_00167ff0(0, (char *)0x002a2f48);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x179c92 */
+  FUN_00167ff0(0, (char *)0x002a2f04);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x179cc6 */
+  FUN_00167ff0(0, (char *)0x002a2e88);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x179cea */
+  FUN_00167ff0(0, (char *)0x002a2e44);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x179d0f */
+  FUN_00167ff0(0, (char *)0x002a2dc8);
+  D3DDevice_SetVertexData2s(0, 0, 0);
+  /* test (char)ebx, (char)ebx -> je 0x179d33 */
+  FUN_00167ff0(0, (char *)0x002a2d84);
+  D3DDevice_SetVertexData2f(0, 0.0f, 0.0f);
+  /* test (char)ebx, (char)ebx -> je 0x179d58 */
+  FUN_00167ff0(0, (char *)0x002a2d08);
+  D3DDevice_End();
+  /* test (char)ebx, (char)ebx -> je 0x179d76 */
+  FUN_00167ff0(0, (char *)0x0029f728);
+  /* relift: relift: mov (int16_t)edx, word ptr [0x5a5bc0] */
+  FUN_00158140(0, 0, 0, 0, 0);
+  FUN_00158ae0(0);
+  error(0, (char *)0x002ae670);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_001795c0: clang naked draft required"
-#endif
 
 
 /* FUN_00179de0 (0x179de0) — XBE naked draft (batch 298). */
