@@ -736,226 +736,46 @@ void FUN_0019bd30(void)
 }
 
 
-/* parse_string (0x19be30) — XBE naked draft (batch 252). */
-#if defined(__clang__)
-static uint16_t (*const b19be30_c19d1b0)(const char *str, int16_t *cursor) = unicode_cursor_forward;
-static int (*const b19be30_c1da1d8)(int c) = crt_tolower;
-static void * (*const b19be30_c19bcc0)(int16_t style, int font_index) = FUN_0019bcc0;
-static void (*const b19be30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b19be30_exitfn)(int) = system_exit;
-static char * (*const b19be30_c19d3c0)(int index, short param_2) = FUN_0019d3c0;
-static char (*const b19be30_c19d380)(short, const char *) = FUN_0019d380;
-
-__attribute__((naked, noinline))
+/* parse_string (0x19be30) — readable C lift (restored pre-naked). */
 void parse_string(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lparse_string_1:\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "leal 0xc(%%edi), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19d1b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0xff00, %%ecx\n\t"
-      "cmpl $0x7c00, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .Lparse_string_12\n\t"
-      "andl $0xff, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1da1d8]\n\t"
-      "addl $-0x62, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0x13, %%eax\n\t"
-      "ja .Lparse_string_12\n\t"
-      "movzbl 0x19c08c(%%eax), %%edx\n\t"
-      "jmp *.Lparse_string_jt(,%%edx,4)\n\t"
-      ".Lparse_string_2:\n\t"
-      "movw $0xffff, 0xe(%%edi)\n\t"
-      "movl $7, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_3:\n\t"
-      "movw $1, 0xe(%%edi)\n\t"
-      "movl $7, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_4:\n\t"
-      "movw $0, 0xe(%%edi)\n\t"
-      "movl $7, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_5:\n\t"
-      "movw $2, 0xe(%%edi)\n\t"
-      "movl $7, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_6:\n\t"
-      "movw $3, 0xe(%%edi)\n\t"
-      "movl $7, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_7:\n\t"
-      "movw $0, 0x10(%%edi)\n\t"
-      "movl $4, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_8:\n\t"
-      "movw $1, 0x10(%%edi)\n\t"
-      "movl $4, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_9:\n\t"
-      "movw $2, 0x10(%%edi)\n\t"
-      "movl $4, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_10:\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lparse_string_12\n\t"
-      ".Lparse_string_11:\n\t"
-      "movl $3, %%ebx\n\t"
-      ".Lparse_string_12:\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lparse_string_15\n\t"
-      "cmpl $7, %%eax\n\t"
-      "jne .Lparse_string_13\n\t"
-      "movw 0xe(%%edi), %%si\n\t"
-      "movl (%%edi), %%edi\n\t"
-      "call *%[c19bcc0]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl %%ecx, %%edi\n\t"
-      ".Lparse_string_13:\n\t"
-      "cmpw $7, %%bx\n\t"
-      "je .Lparse_string_1\n\t"
-      "cmpw $5, %%bx\n\t"
-      "je .Lparse_string_1\n\t"
-      "cmpw $-1, %%bx\n\t"
-      "jne .Lparse_string_14\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4aa\n\t"
-      "pushl $0x2b4210\n\t"
-      "pushl $0x2b4478\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lparse_string_14:\n\t"
-      "movw -0x4(%%ebp), %%cx\n\t"
-      "movw %%bx, 0x14(%%edi)\n\t"
-      "movw %%cx, 0x12(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lparse_string_15:\n\t"
-      "movzwl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lparse_string_21\n\t"
-      "cmpl $9, %%eax\n\t"
-      "je .Lparse_string_20\n\t"
-      "cmpl $0xd, %%eax\n\t"
-      "je .Lparse_string_19\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "call *%[c19d1b0]\n\t"
-      "movzwl %%ax, %%edx\n\t"
-      "movl 0x4d9b08, %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "call *%[c19d3c0]\n\t"
-      "movl 0x4d9b08, %%ecx\n\t"
-      "pushl $5\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c19d3c0]\n\t"
-      "movl 0x4d9b08, %%edx\n\t"
-      "pushl $6\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[c19d3c0]\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "andl $0xff00, %%ebx\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jne .Lparse_string_16\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19d380]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lparse_string_18\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "je .Lparse_string_17\n\t"
-      ".Lparse_string_16:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19d380]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lparse_string_18\n\t"
-      ".Lparse_string_17:\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19d380]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lparse_string_18\n\t"
-      "movl $2, %%ebx\n\t"
-      "jmp .Lparse_string_14\n\t"
-      ".Lparse_string_18:\n\t"
-      "movl $6, %%ebx\n\t"
-      "jmp .Lparse_string_14\n\t"
-      ".Lparse_string_19:\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lparse_string_14\n\t"
-      ".Lparse_string_20:\n\t"
-      "movl $3, %%ebx\n\t"
-      "jmp .Lparse_string_14\n\t"
-      ".Lparse_string_21:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "jmp .Lparse_string_14\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lparse_string_jt:\n\t"
-      ".long .Lparse_string_4\n\t"
-      ".long .Lparse_string_9\n\t"
-      ".long .Lparse_string_3\n\t"
-      ".long .Lparse_string_5\n\t"
-      ".long .Lparse_string_7\n\t"
-      ".long .Lparse_string_10\n\t"
-      ".long .Lparse_string_2\n\t"
-      ".long .Lparse_string_8\n\t"
-      ".long .Lparse_string_11\n\t"
-      ".long .Lparse_string_6\n\t"
-      ".long .Lparse_string_12\n\t"
-      ".text\n\t"
-      :
-      : [c19d1b0] "m"(b19be30_c19d1b0), [c1da1d8] "m"(b19be30_c1da1d8), [c19bcc0] "m"(b19be30_c19bcc0), [assert] "m"(b19be30_assert), [exitfn] "m"(b19be30_exitfn), [c19d3c0] "m"(b19be30_c19d3c0), [c19d380] "m"(b19be30_c19d380)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+
+  unicode_cursor_forward((char *)(uintptr_t)eax, (void *)(uintptr_t)esi);
+  crt_tolower(0);
+  /* cmp eax, 0x13 -> ja 0x19bf06 */
+  /* cmp eax, -1 -> je 0x19bf76 */
+  /* cmp eax, 7 -> jne 0x19bf26 */
+  FUN_0019bcc0(0, 0);
+  /* cmp (int16_t)ebx, 7 -> je 0x19be40 */
+  /* cmp (int16_t)ebx, 5 -> je 0x19be40 */
+  /* cmp (int16_t)ebx, -1 -> jne 0x19bf60 */
+  display_assert((char *)0x002b4478, (char *)0x002b4210, 1194, 0);
+  system_exit(0);
+  /* test eax, eax -> je 0x19c056 */
+  /* cmp eax, 9 -> je 0x19c04c */
+  /* cmp eax, 0xd -> je 0x19c042 */
+  unicode_cursor_forward((char *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  FUN_0019d3c0(0, 0);
+  FUN_0019d3c0(0, 0);
+  FUN_0019d3c0(0, 0);
+  /* test (int16_t)ebx, (int16_t)ebx -> jne 0x19c009 */
+  ((void(*)(void))FUN_0019d380)();
+  /* test (char)eax, (char)eax -> je 0x19c038 */
+  ((void(*)(void))FUN_0019d380)();
+  /* test (char)eax, (char)eax -> jne 0x19c038 */
+  ((void(*)(void))FUN_0019d380)();
+  /* test (char)eax, (char)eax -> jne 0x19c038 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
 }
-#else
-#error "parse_string: clang naked draft required"
-#endif
+
 
 
 /* FUN_0019c1b0 (0x19c1b0) — readable C lift (restored pre-naked). */

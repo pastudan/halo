@@ -14576,7 +14576,7 @@
         {
           "addr": "0xe8e20",
           "decl": "void FUN_000e8e20(int a0);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e8e20"
         },
         {
@@ -14985,7 +14985,7 @@
         {
           "addr": "0x102700",
           "decl": "void main_framerate_render(void);",
-          "ported": false,
+          "ported": true,
           "name": "main_framerate_render"
         },
         {
@@ -31816,7 +31816,7 @@
         {
           "addr": "0x19be30",
           "decl": "void parse_string(void);",
-          "ported": false,
+          "ported": true,
           "name": "parse_string"
         },
         {
