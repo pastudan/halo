@@ -27851,7 +27851,7 @@
         {
           "addr": "0xe3e80",
           "decl": "void draw_bitmap_in_rect(int bitmap, int16_t *src_rect, int16_t *dst_rect, int16_t *clip_rect, int flags, int param_6, int param_7);",
-          "ported": false,
+          "ported": true,
           "name": "draw_bitmap_in_rect"
         },
         {
@@ -28692,7 +28692,7 @@
         {
           "addr": "0xf1ed0",
           "decl": "void network_pregame_status_screen_update(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "network_pregame_status_screen_update"
         },
         {

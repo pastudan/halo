@@ -3034,353 +3034,104 @@ static __attribute__((unused)) void ui_widget_read_draw_color(float color[4])
   color[3] = *(float *)0x4d9b24;
 }
 
-/* draw_bitmap_in_rect (0xe3e80) — XBE naked draft (batch 108). */
-#if defined(__clang__)
-static void *(*const be3e80_memset)(void *, int, unsigned int) = (void *)csmemset;
-static int (*const be3e80_cdeca0)(int interface_tag_index) = (void *)interface_get_tag_index;
-static void *(*const be3e80_tag)(int, int) = (void *)tag_get;
-static void *(*const be3e80_elem)(void *, int, int) = (void *)tag_block_get_element;
-static unsigned int (*const be3e80_c8e370)(void) = (void *)system_milliseconds;
-static void (*const be3e80_c1daf7e)(void) = (void *)FUN_001daf7e;
-static void (*const be3e80_c17cfa0)(void *render_data, void *vertices) = (void *)rasterizer_sprites_render;
+/* draw_bitmap_in_rect (0xe3e80) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-void draw_bitmap_in_rect(int bitmap, int16_t *src_rect, int16_t *dst_rect, int16_t *clip_rect, int flags, int param_6, int param_7)
+
+void draw_bitmap_in_rect(int bitmap, int16_t *src_rect, int16_t *dst_rect,
+                         int16_t *clip_rect, int flags, int param_6, int param_7)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x13c, %%esp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "cmpl %%esi, %%ecx\n\t"
-      "je .Ldraw_bitmap_in_rect_17\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "je .Ldraw_bitmap_in_rect_17\n\t"
-      "movl 0x5aa460, %%eax\n\t"
-      "movl %%eax, -0x54(%%ebp)\n\t"
-      "movl 0x5aa464, %%eax\n\t"
-      "movl %%eax, -0x50(%%ebp)\n\t"
-      "movl 0x5aa468, %%eax\n\t"
-      "movl %%eax, -0x4c(%%ebp)\n\t"
-      "movl 0x5aa46c, %%eax\n\t"
-      "movl %%eax, -0x48(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl $0x3f666666, -0x60(%%ebp)\n\t"
-      "movl $0x3f666666, -0x5c(%%ebp)\n\t"
-      "movl $0x3f666666, -0x58(%%ebp)\n\t"
-      "movl $0x3f666666, -0x24(%%ebp)\n\t"
-      "jne .Ldraw_bitmap_in_rect_1\n\t"
-      "movw 0x4(%%ecx), %%ax\n\t"
-      "movw 0x6(%%ecx), %%cx\n\t"
-      "movw %%ax, -0xa(%%ebp)\n\t"
-      "movw %%si, -0xe(%%ebp)\n\t"
-      "movw %%si, -0x10(%%ebp)\n\t"
-      "movw %%cx, -0xc(%%ebp)\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      ".Ldraw_bitmap_in_rect_1:\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movw 0x4(%%edx), %%bx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x6(%%edx), %%cx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movw 0x2(%%edx), %%si\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw (%%edx), %%di\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "movl %%ebx, -0x14(%%ebp)\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movw 0x6(%%eax), %%bx\n\t"
-      "subw 0x2(%%eax), %%bx\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "subl %%esi, %%ecx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "subl %%edi, %%edx\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movw 0x4(%%eax), %%bx\n\t"
-      "subw (%%eax), %%bx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movswl %%di, %%eax\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "fsts -0x44(%%ebp)\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "addl %%eax, %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "fsts -0x40(%%ebp)\n\t"
-      "testl %%eax, %%eax\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "fsts -0x3c(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fsts -0x30(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0x2c(%%ebp)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "je .Ldraw_bitmap_in_rect_5\n\t"
-      "movw 0x2(%%eax), %%cx\n\t"
-      "cmpw %%si, %%cx\n\t"
-      "jle .Ldraw_bitmap_in_rect_2\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fsts -0x2c(%%ebp)\n\t"
-      "fstps -0x44(%%ebp)\n\t"
-      ".Ldraw_bitmap_in_rect_2:\n\t"
-      "movw 0x6(%%eax), %%cx\n\t"
-      "cmpw -0x1c(%%ebp), %%cx\n\t"
-      "jge .Ldraw_bitmap_in_rect_3\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      "fildl -0x1c(%%ebp)\n\t"
-      "fsts -0x34(%%ebp)\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      ".Ldraw_bitmap_in_rect_3:\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "cmpw %%di, %%cx\n\t"
-      "jle .Ldraw_bitmap_in_rect_4\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "fildl -0x1c(%%ebp)\n\t"
-      "fsts -0x38(%%ebp)\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      ".Ldraw_bitmap_in_rect_4:\n\t"
-      "movw 0x4(%%eax), %%ax\n\t"
-      "cmpw -0x14(%%ebp), %%ax\n\t"
-      "jge .Ldraw_bitmap_in_rect_5\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "fildl -0x14(%%ebp)\n\t"
-      "fsts -0x28(%%ebp)\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      ".Ldraw_bitmap_in_rect_5:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "fildl -0x14(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldraw_bitmap_in_rect_6\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Ldraw_bitmap_in_rect_6:\n\t"
-      "movswl -0x4(%%ebp), %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fidivrs -0x4(%%ebp)\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldraw_bitmap_in_rect_7\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Ldraw_bitmap_in_rect_7:\n\t"
-      "movswl 0x6(%%ecx), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldraw_bitmap_in_rect_8\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Ldraw_bitmap_in_rect_8:\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "fidivrs -0x4(%%ebp)\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Ldraw_bitmap_in_rect_9\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".Ldraw_bitmap_in_rect_9:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "leal -0x44(%%ebp), %%esi\n\t"
-      "leal -0x134(%%ebp), %%ecx\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Ldraw_bitmap_in_rect_10:\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "cdq\n\t"
-      "movl $3, %%edi\n\t"
-      "idivl %%edi\n\t"
-      "testl %%edx, %%edx\n\t"
-      "je .Ldraw_bitmap_in_rect_11\n\t"
-      "fld %%st(1)\n\t"
-      "jmp .Ldraw_bitmap_in_rect_12\n\t"
-      ".Ldraw_bitmap_in_rect_11:\n\t"
-      "flds 0x2533c0\n\t"
-      ".Ldraw_bitmap_in_rect_12:\n\t"
-      "cmpw $1, %%bx\n\t"
-      "fstps (%%ecx)\n\t"
-      "jle .Ldraw_bitmap_in_rect_13\n\t"
-      "fld %%st(0)\n\t"
-      "jmp .Ldraw_bitmap_in_rect_14\n\t"
-      ".Ldraw_bitmap_in_rect_13:\n\t"
-      "flds 0x2533c0\n\t"
-      ".Ldraw_bitmap_in_rect_14:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "fstps 0x4(%%ecx)\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl %%eax, -0x8(%%ecx)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "incl %%ebx\n\t"
-      "movl %%edx, -0x4(%%ecx)\n\t"
-      "incl %%eax\n\t"
-      "addl $8, %%esi\n\t"
-      "addl $0x14, %%ecx\n\t"
-      "cmpw $4, %%bx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "jl .Ldraw_bitmap_in_rect_10\n\t"
-      "pushl $0x8c\n\t"
-      "fstp %%st(0)\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "fstp %%st(0)\n\t"
-      "leal -0xec(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movb 0x20(%%ebp), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Ldraw_bitmap_in_rect_15\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl $0x3f800000, -0xa8(%%ebp)\n\t"
-      "movl $0x3f800000, -0xac(%%ebp)\n\t"
-      "movl $0x3f800000, -0xc0(%%ebp)\n\t"
-      "movl $0x3f800000, -0xc4(%%ebp)\n\t"
-      "movl %%ecx, -0xe0(%%ebp)\n\t"
-      "jmp .Ldraw_bitmap_in_rect_16\n\t"
-      ".Ldraw_bitmap_in_rect_15:\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0xf\n\t"
-      "call *%[cdeca0]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6269746d\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x60, %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c8e370]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "fmuls 0x283304\n\t"
-      "fldl 0x2573d8\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fmuls 0x283300\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x2832fc\n\t"
-      "fldl 0x2573d8\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fmuls 0x283300\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x2832f8\n\t"
-      "fldl 0x2573d8\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fchs\n\t"
-      "fmuls 0x2832f4\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x2832f0\n\t"
-      "fldl 0x2573d8\n\t"
-      "call *%[c1daf7e]\n\t"
-      "fchs\n\t"
-      "leal -0x60(%%ebp), %%edx\n\t"
-      "movl %%edx, -0x94(%%ebp)\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "leal -0x60(%%ebp), %%edx\n\t"
-      "fmuls 0x2832f4\n\t"
-      "movl %%eax, -0x74(%%ebp)\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0xd0(%%ebp)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "movl %%edx, -0x90(%%ebp)\n\t"
-      "movl -0x54(%%ebp), %%edx\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x70(%%ebp)\n\t"
-      "movl -0x50(%%ebp), %%eax\n\t"
-      "movl %%esi, -0xe0(%%ebp)\n\t"
-      "movw $5, -0x68(%%ebp)\n\t"
-      "movl $0x3f800000, -0xc4(%%ebp)\n\t"
-      "movl $0x3f800000, -0xc0(%%ebp)\n\t"
-      "movb $1, -0xd4(%%ebp)\n\t"
-      "movb $1, -0xe4(%%ebp)\n\t"
-      "movl $0x3b52ba08, -0xac(%%ebp)\n\t"
-      "movl $0x3b52ba08, -0xa8(%%ebp)\n\t"
-      "movl %%esi, -0xdc(%%ebp)\n\t"
-      "movl %%ecx, -0xcc(%%ebp)\n\t"
-      "movw %%di, -0x66(%%ebp)\n\t"
-      "movl $0x3f800000, -0xbc(%%ebp)\n\t"
-      "movl $0x3f800000, -0xb8(%%ebp)\n\t"
-      "movb $1, -0xd3(%%ebp)\n\t"
-      "movb $1, -0xe3(%%ebp)\n\t"
-      "movl $0x3ba3065e, -0xa4(%%ebp)\n\t"
-      "movl $0x3ba3065e, -0xa0(%%ebp)\n\t"
-      "movl %%edx, -0x88(%%ebp)\n\t"
-      "movl -0x4c(%%ebp), %%ecx\n\t"
-      "movl -0x48(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x84(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x80(%%ebp)\n\t"
-      "movl %%edx, -0x7c(%%ebp)\n\t"
-      "movl %%edi, -0x6c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x98(%%ebp)\n\t"
-      "movl $0x3f800000, -0x9c(%%ebp)\n\t"
-      "movl $0x3f800000, -0xb0(%%ebp)\n\t"
-      "movl $0x3f800000, -0xb4(%%ebp)\n\t"
-      "movl %%eax, -0xd8(%%ebp)\n\t"
-      "movb $1, -0x78(%%ebp)\n\t"
-      ".Ldraw_bitmap_in_rect_16:\n\t"
-      "leal -0x13c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xec(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%edi, -0xec(%%ebp)\n\t"
-      "movb $0, -0x62(%%ebp)\n\t"
-      "movw %%di, -0x64(%%ebp)\n\t"
-      "call *%[c17cfa0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".Ldraw_bitmap_in_rect_17:\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(be3e80_memset), [cdeca0] "m"(be3e80_cdeca0), [tag] "m"(be3e80_tag), [elem] "m"(be3e80_elem), [c8e370] "m"(be3e80_c8e370), [c1daf7e] "m"(be3e80_c1daf7e), [c17cfa0] "m"(be3e80_c17cfa0)
-      : "memory");
+  void *bitmap_ptr;
+  float color[4];
+  float uv[4];
+  float xy[4];
+  char sprite_buf[0x8c];
+  char render_state[0x50];
+  void *tag_data;
+  void *elem;
+  int tag_index;
+  int i;
+  float scale_x;
+  float scale_y;
+  int16_t local_src[4];
+  int16_t local_dst[4];
+
+  (void)param_6;
+  (void)param_7;
+  bitmap_ptr = (void *)(size_t)bitmap;
+  if (bitmap == 0 || dst_rect == NULL)
+    return;
+
+  color[0] = *(float *)0x5aa460;
+  color[1] = *(float *)0x5aa464;
+  color[2] = *(float *)0x5aa468;
+  color[3] = *(float *)0x5aa46c;
+
+  if (src_rect == NULL) {
+    local_src[0] = 0;
+    local_src[1] = 0;
+    local_src[2] = *(int16_t *)((char *)bitmap_ptr + 4);
+    local_src[3] = *(int16_t *)((char *)bitmap_ptr + 6);
+    src_rect = local_src;
+  }
+
+  local_dst[0] = dst_rect[0];
+  local_dst[1] = dst_rect[1];
+  local_dst[2] = dst_rect[2];
+  local_dst[3] = dst_rect[3];
+
+  if (clip_rect != NULL) {
+    if (clip_rect[1] > local_dst[1])
+      xy[1] = (float)clip_rect[1];
+    if (clip_rect[3] < local_dst[3])
+      xy[3] = (float)clip_rect[3];
+    if (clip_rect[0] > local_dst[0])
+      xy[0] = (float)clip_rect[0];
+    if (clip_rect[2] < local_dst[2])
+      xy[2] = (float)clip_rect[2];
+  }
+
+  scale_x = (float)(src_rect[2] - src_rect[0]);
+  if (scale_x < *(float *)0x2533c8)
+    scale_x = *(float *)0x2533c8;
+  scale_x = (float)(local_dst[2] - local_dst[0]) / scale_x;
+
+  scale_y = (float)(src_rect[3] - src_rect[1]);
+  if (scale_y < *(float *)0x2533c8)
+    scale_y = *(float *)0x2533c8;
+  scale_y = (float)(local_dst[3] - local_dst[1]) / scale_y;
+
+  csmemset(sprite_buf, 0, 0x8c);
+  if (flags != 0) {
+    csmemset(render_state, 0, 0x50);
+    *(void **)(render_state + 0x54) = bitmap_ptr;
+    *(float *)(render_state + 0x28) = 1.0f;
+    *(float *)(render_state + 0x2c) = 1.0f;
+    *(float *)(render_state + 0x30) = 1.0f;
+    *(float *)(render_state + 0x34) = 1.0f;
+    rasterizer_sprites_render(render_state, sprite_buf);
+    return;
+  }
+
+  tag_index = interface_get_tag_index(0xf);
+  tag_data = tag_get(0x6269746d, tag_index);
+  elem = tag_block_get_element((char *)tag_data + 0x60, 0, 0);
+
+  for (i = 0; i < 4; i++) {
+    uv[i * 2] = ((float *)&color)[i];
+    uv[i * 2 + 1] = ((float *)&color)[i];
+  }
+
+  csmemset(render_state, 0, 0x50);
+  *(void **)(render_state + 0x54) = elem;
+  *(void **)(render_state + 0x58) = elem;
+  *(void **)(render_state + 0x7c) = bitmap_ptr;
+  *(float *)(render_state + 0x28) = color[0];
+  *(float *)(render_state + 0x2c) = color[1];
+  *(float *)(render_state + 0x30) = color[2];
+  *(float *)(render_state + 0x34) = color[3];
+  *(char *)(render_state + 0x62) = 0;
+  rasterizer_sprites_render(render_state, sprite_buf);
 }
-#else
-#error "draw_bitmap_in_rect: clang naked draft required"
-#endif
 
 
 /* FUN_000e4ad0 (0xe4ad0) — XBE naked draft (batch 120). */
