@@ -130,7 +130,7 @@ void FUN_00068780(void)
 
 /* FUN_00068890 (0x68890) — XBE naked draft (batch 336). */
 #if defined(__clang__)
-static void (*const b68890_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b68890_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void * (*const b68890_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
 static void (*const b68890_c6f220)(void) = (void *)FUN_0006f220;
 static void (*const b68890_c6f1f0)(void) = (void *)FUN_0006f1f0;
@@ -516,7 +516,7 @@ void FUN_00068c40(unsigned char value, void *dest /*@<edx>*/, int count /*@<ecx>
 
 /* FUN_00068c70 (0x68c70) — XBE naked draft (batch 333). */
 #if defined(__clang__)
-static void (*const b68c70_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b68c70_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void (*const b68c70_c6f890)(void) = FUN_0006f890;
 static void (*const b68c70_c6d820)(void) = (void *)TIFFScanlineSize;
 static void * (*const b68c70_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
@@ -975,7 +975,7 @@ void FUN_00068f60(void)
 static void (*const b69020_c68eb0)(void) = FUN_00068eb0;
 static void (*const b69020_c68f60)(void) = FUN_00068f60;
 static void (*const b69020_c68e20)(void) = FUN_00068e20;
-static void (*const b69020_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b69020_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void (*const b69020_c68a70)(void) = FUN_00068a70;
 static void (*const b69020_c6f9d0)(void) = FUN_0006f9d0;
 
@@ -1723,7 +1723,7 @@ static void (*const b696d0_c69180)(void) = FUN_00069180;
 static void (*const b696d0_c68bd0)(void) = FUN_00068bd0;
 static void (*const b696d0_c6f9d0)(void) = FUN_0006f9d0;
 static void (*const b696d0_c68a70)(void) = FUN_00068a70;
-static void (*const b696d0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b696d0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 
 __attribute__((naked, noinline))
 void FUN_000696d0(void)
@@ -2987,7 +2987,7 @@ void FUN_0006a310(void)
 /* FUN_0006a3b0 (0x6a3b0) — XBE naked draft (batch 309). */
 #if defined(__clang__)
 static void * (*const b6a3b0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b6a3b0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6a3b0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 
 __attribute__((naked, noinline))
 void FUN_0006a3b0(void)
@@ -3202,7 +3202,7 @@ void FUN_0006a3b0(void)
 /* FUN_0006a5d0 (0x6a5d0) — XBE naked draft (batch 305). */
 #if defined(__clang__)
 static void * (*const b6a5d0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b6a5d0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6a5d0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 
 __attribute__((naked, noinline))
 void FUN_0006a5d0(void)
@@ -5220,7 +5220,7 @@ void FUN_0006b610(void)
 
 /* FUN_0006b780 (0x6b780) — XBE naked draft (batch 319). */
 #if defined(__clang__)
-static void (*const b6b780_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6b780_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 
 __attribute__((naked, noinline))
 void FUN_0006b780(void)
@@ -5337,9 +5337,9 @@ void FUN_0006b780(void)
 /* FUN_0006b8e0 (0x6b8e0) — XBE naked draft (batch 341). */
 #if defined(__clang__)
 static void (*const b6b8e0_c6b780)(void) = FUN_0006b780;
-static void (*const b6b8e0_c6f910)(void) = FUN_0006f910;
+static void (*const b6b8e0_c6f910)(void) = (void (*)(void))FUN_0006f910;
 static void * (*const b6b8e0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b6b8e0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6b8e0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void (*const b6b8e0_c65e90)(void) = TIFFGetField;
 static void (*const b6b8e0_c6a310)(void) = FUN_0006a310;
 static void (*const b6b8e0_c6eea0)(void) = FUN_0006eea0;
@@ -5532,8 +5532,8 @@ void FUN_0006b8e0(void)
 
 /* FUN_0006ba70 (0x6ba70) — XBE naked draft (batch 339). */
 #if defined(__clang__)
-static void (*const b6ba70_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
-static void (*const b6ba70_c6f910)(void) = FUN_0006f910;
+static void (*const b6ba70_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
+static void (*const b6ba70_c6f910)(void) = (void (*)(void))FUN_0006f910;
 static void * (*const b6ba70_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
 static void (*const b6ba70_c65e90)(void) = TIFFGetField;
 static void (*const b6ba70_c6a310)(void) = FUN_0006a310;

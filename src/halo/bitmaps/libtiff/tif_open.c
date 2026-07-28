@@ -7,7 +7,7 @@
 static int (*const b6c400_c64ec0)(char *prop, int tag, void *out) = FUN_00064ec0;
 static void (*const b6c400_c65e90)(void) = TIFFGetField;
 static void (*const b6c400_c6d850)(void) = (void *)TIFFFileName;
-static void (*const b6c400_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6c400_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void (*const b6c400_c6c080)(void) = FUN_0006c080;
 static void (*const b6c400_c8ef70)(void *ptr, const char *file, int line) = debug_free;
 
@@ -177,7 +177,7 @@ void FUN_0006c400(void)
 
 /* FUN_0006c5e0 (0x6c5e0) — XBE naked draft (batch 343). */
 #if defined(__clang__)
-static void (*const b6c5e0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6c5e0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void (*const b6c5e0_c6f890)(void) = FUN_0006f890;
 static void (*const b6c5e0_c6d820)(void) = (void *)TIFFScanlineSize;
 
@@ -862,7 +862,7 @@ void FUN_0006cac0(unsigned char *tif)
 #if defined(__clang__)
 static void (*const b6cb00_c6c780)(void) = FUN_0006c780;
 static void *(*const b6cb00_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b6cb00_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6cb00_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 
 __attribute__((naked, noinline))
 void FUN_0006cb00(void)
@@ -1250,7 +1250,7 @@ void FUN_0006cde0(void)
 /* FUN_0006ce60 (0x6ce60) — XBE naked draft (batch 348). */
 #if defined(__clang__)
 static void * (*const b6ce60_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b6ce60_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6ce60_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void (*const b6ce60_c6c5e0)(void) = FUN_0006c5e0;
 static void (*const b6ce60_c6f9d0)(void) = FUN_0006f9d0;
 
@@ -1641,7 +1641,7 @@ void FUN_0006d180(void)
 /* FUN_0006d1e0 (0x6d1e0) — XBE naked draft (batch 352). */
 #if defined(__clang__)
 static void * (*const b6d1e0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b6d1e0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6d1e0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static void (*const b6d1e0_c6c5e0)(void) = FUN_0006c5e0;
 static void (*const b6d1e0_c6ca50)(void) = FUN_0006ca50;
 
@@ -1760,7 +1760,7 @@ void FUN_0006d2d0(void)
 /* FUN_0006d340 (0x6d340) — XBE naked draft (batch 325). */
 #if defined(__clang__)
 static void * (*const b6d340_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b6d340_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6d340_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 
 __attribute__((naked, noinline))
 void FUN_0006d340(void)
@@ -1990,7 +1990,7 @@ void FUN_0006d500(void)
 #if defined(__clang__)
 static int (*const b6d590_c8df60)(const char *s1) = csstrlen;
 static void * (*const b6d590_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b6d590_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6d590_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 static int (*const b6d590_c1e0218)(int fd) = __close;
 static void *(*const b6d590_memset)(void *, int, unsigned int) = csmemset;
 static char * (*const b6d590_c8dff0)(char *destination, const char *source) = csstrcpy;
@@ -2622,7 +2622,7 @@ void FUN_0006d9c0(void)
 /* FUN_0006dbf0 (0x6dbf0) — XBE naked draft (batch 323). */
 #if defined(__clang__)
 static void * (*const b6dbf0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b6dbf0_c68a30)(int param_1, const char *format, ...) = FUN_00068a30;
+static void (*const b6dbf0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
 
 __attribute__((naked, noinline))
 void FUN_0006dbf0(void)
