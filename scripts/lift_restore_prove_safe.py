@@ -74,7 +74,8 @@ def patch_zero_arg_calls(text: str) -> str:
         # trailing "(params)" chunk from rsplit — that bug left decls empty
         # for almost every symbol and disabled zero-arg casts.
         nm = sig[:p0].rsplit(" ", 1)[-1].strip()
-        if not nm or nm.startswith("*") or nm.startswith("("):
+        nm = nm.lstrip("*").strip()
+        if not nm or nm.startswith("("):
             continue
         params = sig[p0 + 1 : sig.rfind(")")].strip()
         decls[nm] = params
