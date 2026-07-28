@@ -38103,14 +38103,14 @@
         },
         {
           "addr": "0x69600",
-          "decl": "void FUN_00069600(void);",
+          "decl": "int FUN_00069600(unsigned char **pptr, unsigned bit_index@<ecx>, unsigned end_index@<edx>, const unsigned char *table@<ebx>);",
           "ported": false,
           "name": "FUN_00069600"
         },
         {
           "addr": "0x69690",
-          "decl": "void FUN_00069690(void);",
-          "ported": false,
+          "decl": "int FUN_00069690(unsigned char *buf, int flag, int bit@<esi>, int end@<edx>);",
+          "ported": true,
           "name": "FUN_00069690"
         },
         {
