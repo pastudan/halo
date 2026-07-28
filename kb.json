@@ -38944,8 +38944,8 @@
         },
         {
           "addr": "0x73390",
-          "decl": "void FUN_00073390(void);",
-          "ported": false,
+          "decl": "void FUN_00073390(void *bitmap, unsigned int color, void *clip, float *p0, float *p1);",
+          "ported": true,
           "name": "FUN_00073390"
         },
         {
