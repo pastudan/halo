@@ -1462,300 +1462,173 @@ short shell_update(short vertex_count, float *vertices /* @<ebx> */)
 
 
 
-/* convex_hull2d_reduce (0x105d20) — XBE naked draft (batch 80). */
-#if defined(__clang__)
-static short (*const b105d20_c105c80)(short vertex_count, float *vertices) = shell_update;
-static void (*const b105d20_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b105d20_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-int16_t convex_hull2d_reduce(int16_t vertex_count __attribute__((unused)), float *vertices __attribute__((unused)), int16_t *out_indices __attribute__((unused)))
+/* convex_hull2d_reduce (0x105d20) — readable C lift (restored pre-naked). */
+int16_t convex_hull2d_reduce(int16_t vertex_count, float *vertices,
+                             int16_t *out_indices)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "call *%[c105c80]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jne .Lconvex_hull2d_reduce_17\n\t"
-      "flds 0x2533c0\n\t"
-      "movl $0x7f7fffff, -0x10(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testw %%si, %%si\n\t"
-      "movl -0x10(%%ebp), %%esi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movl $0x7f7fffff, -0xc(%%ebp)\n\t"
-      "jle .Lconvex_hull2d_reduce_5\n\t"
-      "leal 0x4(%%edi), %%ecx\n\t"
-      ".Lconvex_hull2d_reduce_1:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs 0x253f44\n\t"
-      "fcomps (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lconvex_hull2d_reduce_3\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps -0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_hull2d_reduce_2\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fadds 0x253f44\n\t"
-      "fcomps -0x4(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lconvex_hull2d_reduce_3\n\t"
-      ".Lconvex_hull2d_reduce_2:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fadds 0x253f44\n\t"
-      "fcomps (%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_hull2d_reduce_4\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fsubs 0x253f44\n\t"
-      "fcomps -0x4(%%ecx)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lconvex_hull2d_reduce_4\n\t"
-      ".Lconvex_hull2d_reduce_3:\n\t"
-      "movl -0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl %%edx, %%esi\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      ".Lconvex_hull2d_reduce_4:\n\t"
-      "incl %%edx\n\t"
-      "addl $8, %%ecx\n\t"
-      "cmpw 0x8(%%ebp), %%dx\n\t"
-      "jl .Lconvex_hull2d_reduce_1\n\t"
-      ".Lconvex_hull2d_reduce_5:\n\t"
-      "movl -0x10(%%ebp), %%ebx\n\t"
-      ".Lconvex_hull2d_reduce_6:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "cmpw %%ax, %%cx\n\t"
-      "movl $0x7f7fffff, -0x10(%%ebp)\n\t"
-      "jge .Lconvex_hull2d_reduce_18\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "movw %%si, (%%edx,%%ecx,2)\n\t"
-      "incl -0x8(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lconvex_hull2d_reduce_13\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%edi,%%eax,8), %%esi\n\t"
-      "movl %%edi, %%ecx\n\t"
-      ".Lconvex_hull2d_reduce_7:\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps (%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lconvex_hull2d_reduce_8\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fcomps 0x4(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lconvex_hull2d_reduce_12\n\t"
-      ".Lconvex_hull2d_reduce_8:\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fpatan\n\t"
-      ".byte 0xd8, 0xe1\n\t"
-      "fcoms 0x26a810\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_hull2d_reduce_10\n\t"
-      "jmp .Lconvex_hull2d_reduce_9\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Lconvex_hull2d_reduce_9:\n\t"
-      "fadds 0x255a54\n\t"
-      "fcoms 0x26a810\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lconvex_hull2d_reduce_9\n\t"
-      ".Lconvex_hull2d_reduce_10:\n\t"
-      "fcoms -0x10(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_hull2d_reduce_11\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "movl %%edx, %%ebx\n\t"
-      "jmp .Lconvex_hull2d_reduce_12\n\t"
-      ".Lconvex_hull2d_reduce_11:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lconvex_hull2d_reduce_12:\n\t"
-      "incl %%edx\n\t"
-      "addl $8, %%ecx\n\t"
-      "cmpw 0x8(%%ebp), %%dx\n\t"
-      "jl .Lconvex_hull2d_reduce_7\n\t"
-      ".Lconvex_hull2d_reduce_13:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "fadds -0x10(%%ebp)\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "jne .Lconvex_hull2d_reduce_15\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movswl (%%edx), %%eax\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "flds (%%edi,%%ecx,8)\n\t"
-      "leal (%%edi,%%ecx,8), %%ecx\n\t"
-      "fsubs (%%edi,%%eax,8)\n\t"
-      "leal (%%edi,%%eax,8), %%edx\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_hull2d_reduce_14\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%edx)\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lconvex_hull2d_reduce_15\n\t"
-      ".Lconvex_hull2d_reduce_14:\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Lconvex_hull2d_reduce_15:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movw (%%ecx), %%ax\n\t"
-      "cmpw %%ax, %%bx\n\t"
-      "je .Lconvex_hull2d_reduce_16\n\t"
-      "movb -0x1(%%ebp), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lconvex_hull2d_reduce_6\n\t"
-      "movswl %%bx, %%edx\n\t"
-      "flds (%%edi,%%edx,8)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "fsubs (%%edi,%%eax,8)\n\t"
-      "leal (%%edi,%%edx,8), %%ecx\n\t"
-      "leal (%%edi,%%eax,8), %%edx\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_hull2d_reduce_6\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%edx)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lconvex_hull2d_reduce_6\n\t"
-      ".Lconvex_hull2d_reduce_16:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lconvex_hull2d_reduce_17:\n\t"
-      "movw -0x8(%%ebp), %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lconvex_hull2d_reduce_18:\n\t"
-      "leal -0x1(%%ecx), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "leal -0x1(%%eax), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .Lconvex_hull2d_reduce_25\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movw (%%ecx,%%edx,2), %%dx\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lconvex_hull2d_reduce_19:\n\t"
-      "movswl %%si, %%edi\n\t"
-      "cmpw %%dx, (%%ecx,%%edi,2)\n\t"
-      "je .Lconvex_hull2d_reduce_20\n\t"
-      "decl %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jg .Lconvex_hull2d_reduce_19\n\t"
-      "jmp .Lconvex_hull2d_reduce_25\n\t"
-      ".Lconvex_hull2d_reduce_20:\n\t"
-      "subl %%esi, %%eax\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jle .Lconvex_hull2d_reduce_24\n\t"
-      "movswl %%si, %%ebx\n\t"
-      "leal (%%ecx,%%ebx,2), %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      ".Lconvex_hull2d_reduce_21:\n\t"
-      "cmpw 0x8(%%ebp), %%di\n\t"
-      "jl .Lconvex_hull2d_reduce_22\n\t"
-      "pushl $1\n\t"
-      "pushl $0x279\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28bfb8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lconvex_hull2d_reduce_22:\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jl .Lconvex_hull2d_reduce_23\n\t"
-      "pushl $1\n\t"
-      "pushl $0x27a\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28bf88\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lconvex_hull2d_reduce_23:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movw (%%eax), %%dx\n\t"
-      "incl %%edi\n\t"
-      "movw %%dx, (%%ecx)\n\t"
-      "addl $2, %%eax\n\t"
-      "addl $2, %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "cmpw -0x8(%%ebp), %%di\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "jl .Lconvex_hull2d_reduce_21\n\t"
-      ".Lconvex_hull2d_reduce_24:\n\t"
-      "testw %%si, %%si\n\t"
-      "jg .Lconvex_hull2d_reduce_17\n\t"
-      ".Lconvex_hull2d_reduce_25:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x282\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28bf70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movw -0x8(%%ebp), %%ax\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c105c80] "m"(b105d20_c105c80), [assert] "m"(b105d20_assert), [exitfn] "m"(b105d20_exitfn)
-      : "memory");
+  int16_t index_count;
+
+  index_count = 0;
+  if (shell_update(vertex_count, vertices) == 2) {
+    float base_angle;
+    float best_x;
+    float best_y;
+    int16_t start_index;
+    int16_t current_index;
+    int16_t next_index;
+    float min_angle;
+    int16_t collinear_flag;
+    int16_t i;
+    int16_t first;
+    float *p;
+    float *ref;
+
+    base_angle = 0.0f; /* FLOAT_002533c0 = 0.0f, running gift-wrap base */
+    best_x = 3.4028235e38f; /* FLT_MAX */
+    best_y = 3.4028235e38f;
+    start_index = -1; /* SI default = low word of FLT_MAX (dead: count>0) */
+    collinear_flag = 0;
+
+    /* Phase 1: lowest y, then leftmost x, with epsilon tie-break. */
+    if (vertex_count > 0) {
+      p = vertices + 1; /* &vertices[0].y */
+      for (i = 0; i < vertex_count; i = i + 1) {
+        if ((p[0] < best_y - 1e-4f) ||
+            ((p[0] < best_y) && (p[-1] < best_x + 1e-4f)) ||
+            ((p[0] < best_y + 1e-4f) && (p[-1] < best_x - 1e-4f))) {
+          best_x = p[-1];
+          best_y = p[0];
+          start_index = i;
+        }
+        p = p + 2;
+      }
+    }
+
+    current_index = start_index;
+    next_index =
+      start_index; /* EBX default (dead: inner loop always assigns) */
+    for (;;) {
+      min_angle = 3.4028235e38f; /* FLT_MAX reset (0x105de9) */
+      if (index_count >= vertex_count) {
+        goto compaction;
+      }
+      out_indices[index_count] = current_index;
+      index_count = index_count + 1;
+
+      /* Phase 2: min-angle gift-wrap scan. */
+      if (vertex_count > 0) {
+        ref = vertices + current_index * 2;
+        p = vertices;
+        for (i = 0; i < vertex_count; i = i + 1) {
+          if ((p[0] != ref[0]) || (p[1] != ref[1])) {
+            float angle;
+
+            angle = x87_fatan2f(p[1] - ref[1], p[0] - ref[0]) - base_angle;
+            if (angle < -1e-4f) {
+              do {
+                angle = angle + 6.2831855f; /* 2*pi wrap */
+              } while (angle < -1e-4f);
+            }
+            if (angle < min_angle) {
+              min_angle = angle;
+              next_index = i;
+            }
+          }
+          p = p + 2;
+        }
+      }
+
+      base_angle = base_angle + min_angle;
+      current_index = next_index;
+
+      first = out_indices[0];
+      if (collinear_flag == 0) {
+        if ((fabs(vertices[next_index * 2] - vertices[first * 2]) >= 1e-4f) ||
+            (fabs(vertices[next_index * 2 + 1] - vertices[first * 2 + 1]) >=
+             1e-4f)) {
+          collinear_flag = 1;
+        }
+      }
+
+      first = out_indices[0];
+      if (next_index == first) {
+        return index_count;
+      }
+      if (collinear_flag == 0) {
+        continue;
+      }
+      if ((fabs(vertices[next_index * 2] - vertices[first * 2]) >= 1e-4f) ||
+          (fabs(vertices[next_index * 2 + 1] - vertices[first * 2 + 1]) >=
+           1e-4f)) {
+        continue;
+      }
+      return index_count;
+    }
+
+  compaction: {
+    int16_t last_hull;
+    int16_t search;
+    int16_t k;
+
+    search = index_count - 2;
+    if (search <= 0) {
+      goto assert_start_positive;
+    }
+    last_hull = out_indices[index_count - 1];
+    for (;;) {
+      if (out_indices[search] == last_hull) {
+        int16_t new_count;
+
+        new_count = (index_count - 1) - search;
+        index_count = new_count;
+        if (new_count > 0) {
+          int src;
+          int16_t *psrc;
+          int16_t *pdst;
+
+          src = search;
+          psrc = out_indices + search;
+          pdst = out_indices;
+          k = 0;
+          do {
+            if (vertex_count <= k) {
+              display_assert("vertex_index<vertex_count",
+                             "c:\\halo\\SOURCE\\math\\geometry.c", 0x279, 1);
+              system_exit(-1);
+            }
+            if (vertex_count <= src) {
+              display_assert("start_vertex_index+vertex_index<vertex_count",
+                             "c:\\halo\\SOURCE\\math\\geometry.c", 0x27a, 1);
+              system_exit(-1);
+            }
+            k = k + 1;
+            *pdst = *psrc;
+            psrc = psrc + 1;
+            pdst = pdst + 1;
+            src = src + 1;
+          } while (k < new_count);
+        }
+        if (search > 0) {
+          return index_count;
+        }
+        goto assert_start_positive;
+      }
+      search = search - 1;
+      if (search < 1) {
+        goto assert_start_positive;
+      }
+    }
+  }
+
+  assert_start_positive:
+    display_assert("start_vertex_index>0", "c:\\halo\\SOURCE\\math\\geometry.c",
+                   0x282, 1);
+    system_exit(-1);
+  }
+  return index_count;
 }
-#else
-#error "convex_hull2d_reduce: clang naked draft required"
-#endif
+
+
 
 
 /* FUN_00106030 (0x106030) — XBE naked draft (batch 85). */
