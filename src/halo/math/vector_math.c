@@ -1393,125 +1393,58 @@ void FUN_00021430(float *target /* */ __attribute__((unused)), float distance __
 #endif
 
 
-/* FUN_00021e50 (0x21e50) — XBE naked draft (batch 261). */
-#if defined(__clang__)
-static void *(*const b21e50_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b21e50_tag)(int, int) = tag_get;
-static char (*const b21e50_c218d0)(int origin, float *direction, int16_t grenade_index, float *target_pos, float *param_14, float *aim_vector, float *param_20, float *launch_velocity, float *out_speed) = actor_combat_build_grenade_trajectory;
-static char (*const b21e50_c41ad0)(int actor_handle, int param_2, int target, float *impact_point, float accel, int param_6, char param_7) = ai_test_ballistic_line_of_fire;
-
-__attribute__((naked, noinline))
-char FUN_00021e50(int actor_handle __attribute__((unused)), short param_2 __attribute__((unused)), float *param_3 __attribute__((unused)), int param_4 __attribute__((unused)), int param_5 __attribute__((unused)))
+/* FUN_00021e50 (0x21e50) — readable C lift from Capstone XBE leaf.
+ * Grenade aim: build trajectory from actor look origin, then ballistic LOF. */
+char FUN_00021e50(int actor_handle, short param_2, float *target_pos, int param_4,
+                  int param_5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x6325a4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x5c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x61637476\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "leal 0x120(%%esi), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "leal 0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x30(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x190(%%eax), %%edx\n\t"
-      "movswl 0x180(%%eax), %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x24(%%ebp), %%ebx\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[c218d0]\n\t"
-      "addl $0x34, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00021e50_1\n\t"
-      "movl 0x158(%%esi), %%ebx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "setne %%cl\n\t"
-      "leal -0x30(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c41ad0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00021e50_1\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "leal 0x6a8(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl -0x24(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x6b4(%%esi)\n\t"
-      "movl -0x20(%%ebp), %%eax\n\t"
-      "leal 0x6bc(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebx, 0x6b8(%%esi)\n\t"
-      "movl %%eax, 0x6c8(%%esi)\n\t"
-      "movb $0, 0x6a1(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00021e50_1:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b21e50_dget), [tag] "m"(b21e50_tag), [c218d0] "m"(b21e50_c218d0), [c41ad0] "m"(b21e50_c41ad0)
-      : "memory");
+  char *actor;
+  void *tag;
+  float origin[3];
+  float launch_dir[3];
+  float impact[3];
+  float aim_speed;
+  float aim_param;
+  float accel_bits;
+  char ok;
+  char has_vehicle;
+  void *tp;
+
+  (void)param_2;
+  ok = 0;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  tag = tag_get(0x61637476, *(int *)(actor + 0x5c));
+  origin[0] = *(float *)(actor + 0x120);
+  origin[1] = *(float *)(actor + 0x124);
+  origin[2] = *(float *)(actor + 0x128);
+
+  if (!actor_combat_build_grenade_trajectory(
+          origin, launch_dir, *(int16_t *)((char *)tag + 0x180),
+          *(float *)((char *)tag + 0x190), target_pos, NULL, NULL, &aim_speed,
+          &aim_param, impact, (float *)&target_pos))
+    return ok;
+
+  has_vehicle = (char)(*(int *)(actor + 0x158) != -1);
+  tp = target_pos;
+  accel_bits = *(float *)&tp;
+  if (!ai_test_ballistic_line_of_fire(actor_handle, (int)(uintptr_t)origin,
+                                      *(int *)&aim_param, impact, accel_bits,
+                                      param_5, has_vehicle))
+    return ok;
+
+  *(float *)(actor + 0x6a8) = target_pos[0];
+  *(float *)(actor + 0x6ac) = target_pos[1];
+  *(float *)(actor + 0x6b0) = target_pos[2];
+  *(int *)(actor + 0x6b4) = param_4;
+  *(float *)(actor + 0x6bc) = launch_dir[0];
+  *(float *)(actor + 0x6c0) = launch_dir[1];
+  *(float *)(actor + 0x6c4) = launch_dir[2];
+  *(int *)(actor + 0x6b8) = param_5;
+  *(float *)(actor + 0x6c8) = aim_speed;
+  *(char *)(actor + 0x6a1) = 0;
+  return 1;
 }
-#else
-#error "FUN_00021e50: clang naked draft required"
-#endif
+
 
 
 /* FUN_00028250 (0x28250) — readable C lift (restored pre-naked) — hand-lift from XBE/oracle (look-type sample).

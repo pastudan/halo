@@ -1,0 +1,8 @@
+{
+  "description": "FUN_001d0669: u64 compare",
+  "memory": {},
+  "arg_overrides": {
+    "a": "0100000000000000",
+    "b": "0000000001000000"
+  }
+}

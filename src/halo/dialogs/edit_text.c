@@ -331,126 +331,62 @@ void FUN_00096d70(void)
 }
 
 
-/* FUN_00096f20 (0x96f20) — XBE naked draft (batch 337). */
-#if defined(__clang__)
-static void *(*const b96f20_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b96f20_c13d6f0)(void *iter, int type_mask, int flags) = object_iterator_new;
-static void * (*const b96f20_c13d730)(void *iter) = object_iterator_next;
-static void *(*const b96f20_tag)(int, int) = tag_get;
-static void (*const b96f20_c967a0)(void *rec, int object) = FUN_000967a0;
-
-__attribute__((naked, noinline))
-int FUN_00096f20(int a0 __attribute__((unused)), float a1 __attribute__((unused)))
+/* FUN_00096f20 (0x96f20) — readable C lift from Capstone XBE leaf.
+ * Clamp device-group desired value into [0,1] and notify matching devices. */
+char FUN_00096f20(int a0, float a1)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "fcomps 0x2533c0\n\t"
-      "pushl %%esi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "pushl %%edi\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00096f20_1\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "jmp .LFUN_00096f20_2\n\t"
-      ".LFUN_00096f20_1:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00096f20_2\n\t"
-      "movl $0x3f800000, 0xc(%%ebp)\n\t"
-      ".LFUN_00096f20_2:\n\t"
-      "movw 0x8(%%ebp), %%di\n\t"
-      "cmpw $-1, %%di\n\t"
-      "je .LFUN_00096f20_8\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fcomps 0xc(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_00096f20_8\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x2(%%ecx), %%ax\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_00096f20_3\n\t"
-      "testb $2, %%al\n\t"
-      "jne .LFUN_00096f20_8\n\t"
-      ".LFUN_00096f20_3:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "orl $2, %%eax\n\t"
-      "pushl $0\n\t"
-      "movw %%ax, 0x2(%%ecx)\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c13d6f0]\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d730]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_00096f20_8\n\t"
-      ".LFUN_00096f20_4:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x64657669\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%di, 0x1a8(%%esi)\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "jne .LFUN_00096f20_7\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00096f20_5\n\t"
-      "movl 0x1fc(%%ecx), %%ecx\n\t"
-      "jmp .LFUN_00096f20_6\n\t"
-      ".LFUN_00096f20_5:\n\t"
-      "movl 0x1ec(%%ecx), %%ecx\n\t"
-      ".LFUN_00096f20_6:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c967a0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00096f20_7:\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c13d730]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_00096f20_4\n\t"
-      ".LFUN_00096f20_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b96f20_dget), [c13d6f0] "m"(b96f20_c13d6f0), [c13d730] "m"(b96f20_c13d730), [tag] "m"(b96f20_tag), [c967a0] "m"(b96f20_c967a0)
-      : "memory");
+  char *group;
+  unsigned char iter[0x10];
+  void *obj;
+  void *tag;
+  unsigned short flags;
+  char changed;
+  float cur;
+  void *rec;
+
+  if (a1 < *(float *)0x2533c0)
+    a1 = 0.0f;
+  else if (a1 > *(float *)0x2533c8)
+    a1 = 1.0f;
+
+  changed = 0;
+  if ((short)a0 == -1)
+    return 0;
+
+  group = (char *)datum_get(*(data_t **)0x5aa8c8, (int)(short)a0);
+  cur = *(float *)(group + 4);
+  /* fcomp / test ah,0x44 / jnp => ZF|PF (equal or unordered) */
+  {
+    volatile float a = cur;
+    volatile float b = a1;
+    if (a == b)
+      return 0;
+  }
+
+  flags = *(unsigned short *)(group + 2);
+  if ((flags & 1) != 0 && (flags & 2) != 0)
+    return 0;
+
+  *(unsigned short *)(group + 2) = (unsigned short)(flags | 2);
+  *(float *)(group + 4) = a1;
+  changed = 1;
+
+  object_iterator_new(iter, 0x380, 0);
+  obj = object_iterator_next(iter);
+  while (obj != 0) {
+    tag = tag_get(0x64657669, *(int *)obj);
+    if (*(short *)((char *)obj + 0x1a8) == (short)a0) {
+      rec = *(void **)(iter + 8);
+      if (a1 > *(float *)0x2533c0)
+        FUN_000967a0(rec, *(int *)((char *)tag + 0x1fc));
+      else
+        FUN_000967a0(rec, *(int *)((char *)tag + 0x1ec));
+    }
+    obj = object_iterator_next(iter);
+  }
+  return changed;
 }
-#else
-#error "FUN_00096f20: clang naked draft required"
-#endif
+
 
 
 /* FUN_00097040 (0x97040) — readable C lift. */

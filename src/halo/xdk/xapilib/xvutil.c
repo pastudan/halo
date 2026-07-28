@@ -118,51 +118,25 @@ bool SystemTimeToFileTime(void *system_time, void *file_time)
   (void)eax;
 }
 
-/* FUN_001d0669 (0x1d0669) — XBE naked draft (batch 344). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001d0669(void)
+/* FUN_001d0669 (0x1d0669) — readable C: compare two unsigned 64-bit values. */
+int __stdcall FUN_001d0669(unsigned int *a, unsigned int *b)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "movl 0x8(%%esp), %%ecx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movl 0x4(%%eax), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl (%%ecx), %%esi\n\t"
-      "movl 0x4(%%ecx), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "ja .LFUN_001d0669_3\n\t"
-      "jb .LFUN_001d0669_1\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jae .LFUN_001d0669_2\n\t"
-      ".LFUN_001d0669_1:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "jmp .LFUN_001d0669_5\n\t"
-      ".LFUN_001d0669_2:\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jb .LFUN_001d0669_4\n\t"
-      "ja .LFUN_001d0669_3\n\t"
-      "cmpl %%esi, %%edx\n\t"
-      "jbe .LFUN_001d0669_4\n\t"
-      ".LFUN_001d0669_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      "jmp .LFUN_001d0669_5\n\t"
-      ".LFUN_001d0669_4:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_001d0669_5:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int a_lo, a_hi, b_lo, b_hi;
+  a_lo = a[0];
+  a_hi = a[1];
+  b_lo = b[0];
+  b_hi = b[1];
+  if (a_hi > b_hi)
+    return 1;
+  if (a_hi < b_hi)
+    return -1;
+  if (a_lo < b_lo)
+    return -1;
+  if (a_lo > b_lo)
+    return 1;
+  return 0;
 }
-#else
-#error "FUN_001d0669: clang naked draft required"
-#endif
+
 
 
 /* FUN_001d06a0 (0x1d06a0) — XBE naked draft (batch 302). */
@@ -552,7 +526,7 @@ static void (*const b1d0a06_c1d08aa)(void) = GetTimeZoneInformation;
 static void (*const b1d0a06_c1dd620)(void) = __allmul;
 
 __attribute__((naked, noinline))
-void FUN_001d0a06(void)
+void __stdcall FUN_001d0a06(void *out)
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -659,76 +633,26 @@ void FUN_001d0a5c(void)
 #endif
 
 
-/* FUN_001d0adb (0x1d0adb) — XBE naked draft (batch 337). */
-#if defined(__clang__)
-static void (*const b1d0adb_c1d0a06)(void) = FUN_001d0a06;
-
-__attribute__((naked, noinline))
-void FUN_001d0adb(void)
+/* FUN_001d0adb (0x1d0adb) — readable C lift: out = *in - now. */
+int __stdcall FUN_001d0adb(unsigned long long *in, unsigned long long *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d0a06]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "subl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x4(%%ecx), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "sbbl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "incl %%eax\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      : [c1d0a06] "m"(b1d0adb_c1d0a06)
-      : "memory");
+  unsigned long long now;
+  ((void (*)(void *))(void *)FUN_001d0a06)(&now);
+  *out = *in - now;
+  return 1;
 }
-#else
-#error "FUN_001d0adb: clang naked draft required"
-#endif
 
 
-/* FUN_001d0b06 (0x1d0b06) — XBE naked draft (batch 337). */
-#if defined(__clang__)
-static void (*const b1d0b06_c1d0a06)(void) = FUN_001d0a06;
 
-__attribute__((naked, noinline))
-void FUN_001d0b06(void)
+/* FUN_001d0b06 (0x1d0b06) — readable C lift: out = *in + now. */
+int __stdcall FUN_001d0b06(unsigned long long *in, unsigned long long *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d0a06]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "addl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x4(%%ecx), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "adcl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "incl %%eax\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      : [c1d0a06] "m"(b1d0b06_c1d0a06)
-      : "memory");
+  unsigned long long now;
+  ((void (*)(void *))(void *)FUN_001d0a06)(&now);
+  *out = *in + now;
+  return 1;
 }
-#else
-#error "FUN_001d0b06: clang naked draft required"
-#endif
+
 
 
 /* FUN_001d0b31 (0x1d0b31) — XBE naked draft (batch 360). */

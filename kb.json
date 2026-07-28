@@ -22590,7 +22590,7 @@
         {
           "addr": "0x21e50",
           "decl": "char FUN_00021e50(int actor_handle, short param_2, float *param_3, int param_4, int param_5);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00021e50"
         },
         {
@@ -34062,7 +34062,7 @@
         },
         {
           "addr": "0x1d350a",
-          "decl": "void FUN_001d350a(void);",
+          "decl": "void __stdcall FUN_001d350a(void *src, void *dst);",
           "ported": false,
           "name": "FUN_001d350a"
         },
@@ -34205,7 +34205,7 @@
         },
         {
           "addr": "0x1d4436",
-          "decl": "long long *__stdcall FUN_001d4436(long long *out, unsigned int ms);",
+          "decl": "void *__stdcall FUN_001d4436(void *out, unsigned int ms);",
           "ported": false,
           "name": "FUN_001d4436"
         },
@@ -34259,7 +34259,7 @@
         },
         {
           "addr": "0x1d47c3",
-          "decl": "void FUN_001d47c3(void);",
+          "decl": "void __stdcall FUN_001d47c3(void *ctx, unsigned int *node);",
           "ported": false,
           "name": "FUN_001d47c3"
         },
@@ -34295,7 +34295,7 @@
         },
         {
           "addr": "0x1d4dd3",
-          "decl": "void FUN_001d4dd3(void);",
+          "decl": "void *__stdcall FUN_001d4dd3(void *entry);",
           "ported": false,
           "name": "FUN_001d4dd3"
         },
@@ -34313,7 +34313,7 @@
         },
         {
           "addr": "0x1d52c4",
-          "decl": "void FUN_001d52c4(void *heap, unsigned int flags, void *ptr);",
+          "decl": "unsigned int __stdcall FUN_001d52c4(void *heap, unsigned int flags, void *ptr);",
           "ported": false,
           "name": "FUN_001d52c4"
         },
@@ -34379,8 +34379,8 @@
         },
         {
           "addr": "0x1d0669",
-          "decl": "void FUN_001d0669(void);",
-          "ported": false,
+          "decl": "int __stdcall FUN_001d0669(unsigned int *a, unsigned int *b);",
+          "ported": true,
           "name": "FUN_001d0669"
         },
         {
@@ -34397,7 +34397,7 @@
         },
         {
           "addr": "0x1d0a06",
-          "decl": "void FUN_001d0a06(void);",
+          "decl": "void __stdcall FUN_001d0a06(void *out);",
           "ported": false,
           "name": "FUN_001d0a06"
         },
@@ -34409,14 +34409,14 @@
         },
         {
           "addr": "0x1d0adb",
-          "decl": "void FUN_001d0adb(void);",
-          "ported": false,
+          "decl": "int __stdcall FUN_001d0adb(unsigned long long *in, unsigned long long *out);",
+          "ported": true,
           "name": "FUN_001d0adb"
         },
         {
           "addr": "0x1d0b06",
-          "decl": "void FUN_001d0b06(void);",
-          "ported": false,
+          "decl": "int __stdcall FUN_001d0b06(unsigned long long *in, unsigned long long *out);",
+          "ported": true,
           "name": "FUN_001d0b06"
         },
         {
@@ -34756,8 +34756,8 @@
         },
         {
           "addr": "0x96f20",
-          "decl": "int FUN_00096f20(int a0, float a1);",
-          "ported": false,
+          "decl": "char FUN_00096f20(int a0, float a1);",
+          "ported": true,
           "name": "FUN_00096f20"
         },
         {
