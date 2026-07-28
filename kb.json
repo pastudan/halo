@@ -28457,8 +28457,14 @@
         {
           "addr": "0xea210",
           "decl": "char display_scenario_help(void *widget);",
-          "ported": false,
-          "name": "display_scenario_help"
+          "ported": true,
+          "name": "display_scenario_help",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0xea3e0",
@@ -28474,8 +28480,14 @@
         {
           "addr": "0xea570",
           "decl": "char network_game_join_game_from_server_list(void *widget);",
-          "ported": false,
-          "name": "network_game_join_game_from_server_list"
+          "ported": true,
+          "name": "network_game_join_game_from_server_list",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0xea810",
