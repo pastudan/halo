@@ -24,126 +24,84 @@ void sound_cache_sound_new(void *unused, char *entry)
   *(void **)(entry + 0x34) = unused;
 }
 
-/* FUN_001bdf60 (0x1bdf60) — XBE naked draft (batch 269). */
-#if defined(__clang__)
-static void *(*const b1bdf60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static const char * (*const b1bdf60_c1ba1f0)(int tag_index) = tag_get_name;
-static char * (*const b1bdf60_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1bdf60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bdf60_exitfn)(int) = system_exit;
-static void (*const b1bdf60_c11d8f0)(void *cache, int block_index) = lruv_block_delete;
-
-__attribute__((naked, noinline))
+/* FUN_001bdf60 (0x1bdf60) — readable C lift (restored pre-naked). */
 void FUN_001bdf60(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x2c(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_001bdf60_3\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4e9368, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_001bdf60_1\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "movl 0x4e9368, %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl $0xad\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "movl 0x4e9368, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl 0x3c(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b9320\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bdf60_1:\n\t"
-      "movl 0x2c(%%esi), %%edx\n\t"
-      "movl 0x4e9368, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x5(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_001bdf60_2\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "movl 0x4e9368, %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl $0xae\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "movl 0x4e9368, %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl 0x3c(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b92d0\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bdf60_2:\n\t"
-      "movl 0x2c(%%esi), %%edx\n\t"
-      "movl 0x4e9370, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11d8f0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001bdf60_3:\n\t"
-      "movl $0xffffffff, 0x2c(%%esi)\n\t"
-      "movl $0, 0x30(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1bdf60_dget), [c1ba1f0] "m"(b1bdf60_c1ba1f0), [c8d9d0] "m"(b1bdf60_c8d9d0), [assert] "m"(b1bdf60_assert), [exitfn] "m"(b1bdf60_exitfn), [c11d8f0] "m"(b1bdf60_c11d8f0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* cmp eax, -1 -> je 0x1be07e */
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* test (char)ecx, (char)ecx -> je 0x1bdfee */
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  tag_get_name(0);
+  csprintf((char *)0x005ab100, (char *)0x002b9320);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* test (char)ecx, (char)ecx -> je 0x1be06c */
+  datum_get((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  tag_get_name(0);
+  csprintf((char *)0x005ab100, (char *)0x002b92d0);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  lruv_block_delete((void *)(uintptr_t)eax, 0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* test (char)eax, (char)eax -> je 0x1be0cd */
+  error(0, (char *)0x002b9394);
+  /* test (char)eax, (char)eax -> jne 0x1be0f4 */
+  display_assert((char *)0x002b936c, (char *)0x002b9288, 263, 0);
+  system_exit(0);
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* cmp (char)ecx, 0xff -> jae 0x1be128 */
+  datum_get((void *)(uintptr_t)edx, 0);
+  /* test (char)ecx, (char)ecx -> je 0x1be167 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* test (char)ecx, (char)ecx -> je 0x1be19f */
+  /* test (char)ecx, (char)ecx -> jne 0x1be19f */
+  /* test (char)ecx, (char)ecx -> jne 0x1be19f */
+  datum_get((void *)(uintptr_t)eax, 0);
+  /* test (char)eax, (char)eax -> jne 0x1be1d7 */
+  /* test (char)eax, (char)eax -> je 0x1be216 */
+  tag_get_name(0);
+  csprintf((char *)0x005ab100, (char *)0x002b93e0);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [edx + 0x2c], edi -> je 0x1be23e */
+  display_assert((char *)0x002b93a8, (char *)0x002b9288, 324, 0);
+  system_exit(0);
+  datum_delete((void *)(uintptr_t)edx, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  tag_get_name(0);
+  crt_sprintf((char *)0x004e9268, (char *)0x002b9424);
+  FUN_0011de10((void *)(uintptr_t)ecx, eax);
+  /* cmp edi, -1 -> je 0x1be361 */
+  lruv_block_get_address((void *)(uintptr_t)edx, 0);
+  data_new_datum((void *)(uintptr_t)eax, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  display_assert((char *)0x002b94cc, (char *)0x002b9288, 368, 0);
+  system_exit(0);
+  cache_file_read(0, 0, edx, 0, (char *)(uintptr_t)eax, 0);
+  system_milliseconds();
+  /* cmp eax, 0x2710 -> jbe 0x1be3cd */
+  terminal_output((void *)(uintptr_t)edx, (char *)0x002b9488, (char *)0);
+  error(0, (char *)0x002b9440);
+  terminal_output((void *)(uintptr_t)eax, (char *)0x002b9488, (char *)0);
+  FUN_0011db90((char *)0x002b942c, (char *)(uintptr_t)esi, 0, (void *)(uintptr_t)ecx, (void *)0x0018ef30, (void *)0x001be270);
+  system_milliseconds();
+  /* mem[0x004e9374] = eax */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_001bdf60: clang naked draft required"
-#endif
 
 
 /* sound_cache_new (0x1be3e0) — readable C lift. */

@@ -1362,219 +1362,67 @@ static __attribute__((unused)) char network_client_manager_send_player_request(v
   return 1;
 }
 
-/* network_game_client_add_player (0x1258a0) — XBE naked draft (batch 114). */
-#if defined(__clang__)
-static void (*const b1258a0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1258a0_exitfn)(int) = system_exit;
-static void (*const b1258a0_ce0980)(void) = (void (*)(void))player_ui_get_active_player_profile;
-static wchar_t * (*const b1258a0_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-static void (*const b1258a0_c12b650)(const char *fmt, ...) = network_game_log;
-static void * (*const b1258a0_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void * (*const b1258a0_c12b700)(int type, void *data, int16_t message_struct_size) = encode_network_game_message;
-static bool (*const b1258a0_c128e00)(void *connection, void *message, unsigned short size, int dest_address, bool reliable) = network_connection_write;
-
-__attribute__((naked, noinline))
-char network_game_client_add_player(void *client __attribute__((unused)), int16_t local_player_index __attribute__((unused)))
+/* network_game_client_add_player (0x1258a0) — readable C lift (restored pre-naked). */
+char network_game_client_add_player(void *client, int16_t local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x70, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movb $1, %%bl\n\t"
-      "je .Lnetwork_game_client_add_player_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lnetwork_game_client_add_player_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lnetwork_game_client_add_player_2\n\t"
-      ".Lnetwork_game_client_add_player_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x530\n\t"
-      "pushl $0x291774\n\t"
-      "pushl $0x2921c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_client_add_player_2:\n\t"
-      "leal -0x70(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ce0980]\n\t"
-      "movb 0xc(%%ebp), %%dl\n\t"
-      "movb (%%esi), %%al\n\t"
-      "pushl $0xb\n\t"
-      "leal -0x70(%%ebp), %%ecx\n\t"
-      "movb %%dl, -0x3(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movb %%al, -0x4(%%ebp)\n\t"
-      "call *%[c19dc90]\n\t"
-      "movsbl -0x3(%%ebp), %%ecx\n\t"
-      "movw -0x58(%%ebp), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x29218c\n\t"
-      "movw $0, -0xa(%%ebp)\n\t"
-      "movw %%ax, -0x8(%%ebp)\n\t"
-      "movw $0xffff, -0x6(%%ebp)\n\t"
-      "movb $0xff, -0x2(%%ebp)\n\t"
-      "movb $0xff, -0x1(%%ebp)\n\t"
-      "call *%[c12b650]\n\t"
-      "movzwl 0xca6(%%esi), %%eax\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "cmpl $4, %%eax\n\t"
-      "ja .Lnetwork_game_client_add_player_9\n\t"
-      "jmp *.Lnetwork_game_client_add_player_jt(,%%eax,4)\n\t"
-      ".Lnetwork_game_client_add_player_3:\n\t"
-      "pushl $0x292150\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_add_player_4:\n\t"
-      "pushl $0x20\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x40(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x20\n\t"
-      "leal -0x40(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0xd\n\t"
-      "call *%[c12b700]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_game_client_add_player_5\n\t"
-      "movl 0x82c(%%esi), %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "shrw $4, %%cx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c128e00]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lnetwork_game_client_add_player_10\n\t"
-      "pushl $0x2920e8\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_add_player_5:\n\t"
-      "pushl $0x2920a0\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_add_player_6:\n\t"
-      "pushl $0x20\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x40(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8e0b0]\n\t"
-      "pushl $0x20\n\t"
-      "leal -0x40(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x1a\n\t"
-      "call *%[c12b700]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lnetwork_game_client_add_player_7\n\t"
-      "movl 0x82c(%%esi), %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%eax), %%cx\n\t"
-      "shrw $4, %%cx\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c128e00]\n\t"
-      "movb %%al, %%bl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "jne .Lnetwork_game_client_add_player_10\n\t"
-      "pushl $0x292038\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_add_player_7:\n\t"
-      "pushl $0x291ff0\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_add_player_8:\n\t"
-      "pushl $0x291fbc\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_client_add_player_9:\n\t"
-      "pushl $0x291f9c\n\t"
-      "call *%[c12b650]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lnetwork_game_client_add_player_10:\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lnetwork_game_client_add_player_jt:\n\t"
-      ".long .Lnetwork_game_client_add_player_3\n\t"
-      ".long .Lnetwork_game_client_add_player_3\n\t"
-      ".long .Lnetwork_game_client_add_player_4\n\t"
-      ".long .Lnetwork_game_client_add_player_6\n\t"
-      ".long .Lnetwork_game_client_add_player_8\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b1258a0_assert), [exitfn] "m"(b1258a0_exitfn), [ce0980] "m"(b1258a0_ce0980), [c19dc90] "m"(b1258a0_c19dc90), [c12b650] "m"(b1258a0_c12b650), [c8e0b0] "m"(b1258a0_c8e0b0), [c12b700] "m"(b1258a0_c12b700), [c128e00] "m"(b1258a0_c128e00)
-      : "memory");
+  char profile[0x70];
+  char payload[0x40];
+  char result;
+  int16_t state;
+
+  result = 1;
+  if (client == NULL || local_player_index < 0 || local_player_index >= 4) {
+    display_assert("client && (local_player_index>=0) && "
+                   "(local_player_index<MAXIMUM_NUMBER_OF_LOCAL_PLAYERS)",
+                   "c:\\halo\\SOURCE\\networking\\network_client_manager.c",
+                   0x530, 1);
+    system_exit(-1);
+  }
+
+  {
+    void (*get_profile)(void *, int16_t) =
+      (void (*)(void *, int16_t))player_ui_get_active_player_profile;
+    get_profile(profile, local_player_index);
+  }
+  csmemset(payload, 0, sizeof(payload));
+  payload[0] = (char)*(uint16_t *)client;
+  payload[1] = (char)local_player_index;
+  ustrncpy((wchar_t *)(payload + 0x20), (wchar_t *)(profile + 0x38), 0xb);
+
+  network_game_log("requesting a player addition (controller index #%d)",
+                   (int)local_player_index);
+  state = *(int16_t *)((char *)client + 0xca6);
+  switch (state) {
+  case 0:
+  case 1:
+    network_game_log("can't add players to a game until after a game is joined");
+    result = 0;
+    break;
+  case 2:
+    result = network_client_manager_send_player_request(
+      client, payload, 0xd,
+      "failed to create a message_client_add_player_request_pregame message",
+      "network_game_client_write() failed while sending a "
+      "message_client_add_player_request_pregame message");
+    break;
+  case 3:
+    result = network_client_manager_send_player_request(
+      client, payload, 0x1a,
+      "failed to create a message_client_add_player_request_ingame message",
+      "network_game_client_write() failed while sending a "
+      "message_client_add_player_request_ingame message");
+    break;
+  case 4:
+    network_game_log("client tried to add a new player in post-game");
+    result = 0;
+    break;
+  default:
+    network_game_log("client is in an unknown state");
+    result = 0;
+    break;
+  }
+  return result;
 }
-#else
-#error "network_game_client_add_player: clang naked draft required"
-#endif
 
 
 /* network_game_client_update_local_player_data (0x125a90) — readable C lift. */

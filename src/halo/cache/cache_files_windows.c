@@ -733,129 +733,60 @@ void FUN_001bdb10(void)
   FUN_001bc280();
 }
 
-/* cache_files_precache_map_begin (0x1bd910) — XBE naked draft (batch 277). */
-#if defined(__clang__)
-static const char * (*const b1bd910_c19b0d0)(const char *tag_name) = tag_name_strip_path;
-static short (*const b1bd910_c1bd1b0)(const char *) = FUN_001bd1b0;
-static bool (*const b1bd910_c1bcb80)(const char *map_name, void *header_buf) = FUN_001bcb80;
-static void * (*const b1bd910_c1ba250)(unsigned char) = FUN_001ba250;
-static void * (*const b1bd910_c1bea30)(unsigned int size) = xbox_texture_cache_steal_memory;
-static int16_t (*const b1bd910_c1bd210)(int16_t map_type, int header_size) = FUN_001bd210;
-static void * (*const b1bd910_c1bc720)(short map_file_index) = FUN_001bc720;
-static void *(*const b1bd910_memset)(void *, int, unsigned int) = csmemset;
-static void * (*const b1bd910_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-static int (*const b1bd910_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b1bd910_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int (*const b1bd910_c1bc7e0)(short map_file_index) = FUN_001bc7e0;
-static unsigned int (*const b1bd910_c1bc7a0)(short map_file_index) = FUN_001bc7a0;
-static void (*const b1bd910_c1ba2f0)(int buffer, int size, int dest_file, int dest_file_size, const char *source_file_name) = FUN_001ba2f0;
-static void (*const b1bd910_ce8d20)(void) = display_error_damaged_media;
+/* cache_files_precache_map_begin (0x1bd910) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-bool cache_files_precache_map_begin(char *map_name __attribute__((unused)), bool a1 __attribute__((unused)))
+bool cache_files_precache_map_begin(char *map_name, bool show_error)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x904, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19b0d0]\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[c19b0d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c1bd1b0]\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "jne .Lcache_files_precache_map_begin_1\n\t"
-      "leal -0x904(%%ebp), %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "call *%[c1bcb80]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_files_precache_map_begin_2\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ba250]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1bea30]\n\t"
-      "movl -0x8fc(%%ebp), %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl -0x8a4(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1bd210]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1bc720]\n\t"
-      "pushl $0x800\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "pushl $0x1f\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x4e9224\n\t"
-      "movb $1, 0x4e9220\n\t"
-      "movw %%si, 0x4e9222\n\t"
-      "call *%[c8de70]\n\t"
-      "pushl %%ebx\n\t"
-      "leal -0x104(%%ebp), %%edx\n\t"
-      "pushl $0x2b8eb8\n\t"
-      "pushl %%edx\n\t"
-      "movb $0, 0x4e9243\n\t"
-      "call *%[c1d90f0]\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x2b9070\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "leal -0x104(%%ebp), %%eax\n\t"
-      "addl $0x3c, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bc7e0]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bc7a0]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1ba2f0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcache_files_precache_map_begin_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lcache_files_precache_map_begin_2:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x2b904c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lcache_files_precache_map_begin_3\n\t"
-      "call *%[ce8d20]\n\t"
-      ".Lcache_files_precache_map_begin_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19b0d0] "m"(b1bd910_c19b0d0), [c1bd1b0] "m"(b1bd910_c1bd1b0), [c1bcb80] "m"(b1bd910_c1bcb80), [c1ba250] "m"(b1bd910_c1ba250), [c1bea30] "m"(b1bd910_c1bea30), [c1bd210] "m"(b1bd910_c1bd210), [c1bc720] "m"(b1bd910_c1bc720), [memset] "m"(b1bd910_memset), [c8de70] "m"(b1bd910_c8de70), [c1d90f0] "m"(b1bd910_c1d90f0), [c8f390] "m"(b1bd910_c8f390), [c1bc7e0] "m"(b1bd910_c1bc7e0), [c1bc7a0] "m"(b1bd910_c1bc7a0), [c1ba2f0] "m"(b1bd910_c1ba2f0), [ce8d20] "m"(b1bd910_ce8d20)
-      : "memory");
+  char path[256];
+  char header_buf[0x800];
+  char *canonical;
+  int16_t cache_idx;
+
+  canonical = ((char *(*)(char *))0x19b0d0)(map_name);
+  ((char *(*)(char *))0x19b0d0)(map_name);
+  cache_idx = ((int16_t (*)(void))0x1bd1b0)();
+
+  if (cache_idx == -1) {
+    if (!FUN_001bcb80(canonical, header_buf)) {
+      error(2, "couldn't find map '%s' on the DVD", canonical);
+      if (show_error)
+        ((void (*)(void))0xe8d20)();
+      return 0;
+    }
+
+    {
+      int copy_handle;
+      int buffer;
+      int16_t slot;
+      int block;
+      int file;
+      int mapped;
+
+      copy_handle = ((int (*)(bool))0x1ba250)(show_error);
+      buffer = (int)xbox_texture_cache_steal_memory(copy_handle);
+      slot = FUN_001bd210(
+        *(int16_t *)(header_buf + 0x60), *(int *)(header_buf + 8));
+
+      block = (int)FUN_001bc720(slot);
+      csmemset((void *)(block + 0xc), 0, 0x800);
+
+      *(uint8_t *)0x4e9220 = 1;
+      *(int16_t *)0x4e9222 = slot;
+      csstrncpy((char *)0x4e9224, canonical, 0x1f);
+      *(uint8_t *)0x4e9243 = 0;
+
+      ((int (*)(char *, const char *, ...))0x1d90f0)(
+        path, "d:\\maps\\%s.map", canonical);
+      error(2, "starting precaching of map '%s'", canonical);
+
+      file = FUN_001bc7e0(slot);
+      mapped = (int)FUN_001bc7a0(slot);
+      FUN_001ba2f0(buffer, copy_handle, mapped, file, path);
+    }
+  }
+
+  return 1;
 }
-#else
-#error "cache_files_precache_map_begin: clang naked draft required"
-#endif
 
 
 /* cache_files_precache_map_end (0x1bda30) — readable C lift. */
@@ -1672,165 +1603,63 @@ void cache_files_dispose(void)
   debug_free(*(void **)0x4e9250, DAT_002b8c98, 0xcb);
 }
 
-/* FUN_001bc3b0 (0x1bc3b0) — XBE naked draft (batch 248). */
-#if defined(__clang__)
-static void (*const b1bc3b0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bc3b0_exitfn)(int) = system_exit;
-static void *(*const b1bc3b0_memset)(void *, int, unsigned int) = csmemset;
-static unsigned int __stdcall (*const b1bc3b0_c1d01c4)(unsigned int milliseconds, int alertable) = SleepEx;
-static void __stdcall (*const b1bc3b0_c1d2268)(unsigned int error) = SetLastError;
-static int (*const b1bc3b0_c1d2240)(void) = xapi_GetLastError;
-static char * (*const b1bc3b0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-
-__attribute__((naked, noinline))
+/* FUN_001bc3b0 (0x1bc3b0) — readable C lift (restored pre-naked). */
 void FUN_001bc3b0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_001bc3b0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x180\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8d30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc3b0_1:\n\t"
-      "cmpl $-1, 0x8(%%ebp)\n\t"
-      "jne .LFUN_001bc3b0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x181\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8d14\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc3b0_2:\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001bc3b0_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x182\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8d08\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc3b0_3:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001bc3b0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x183\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x267900\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc3b0_4:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001bc3b0_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x184\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8cf8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc3b0_5:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_001bc3b0_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x185\n\t"
-      "pushl $0x2b8c98\n\t"
-      "pushl $0x2b8ce4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc3b0_6:\n\t"
-      "pushl $0x14\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      "movl $0, 0xc(%%esi)\n\t"
-      "movl %%ecx, 0x10(%%esi)\n\t"
-      "call *%[c1d01c4]\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d2268]\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001bc3b0_9\n\t"
-      ".LFUN_001bc3b0_7:\n\t"
-      "call *%[c1d2240]\n\t"
-      "cmpl $8, %%eax\n\t"
-      "je .LFUN_001bc3b0_8\n\t"
-      "cmpl $0x5aa, %%eax\n\t"
-      "je .LFUN_001bc3b0_8\n\t"
-      "cmpl $0x6f8, %%eax\n\t"
-      "je .LFUN_001bc3b0_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a0\n\t"
-      "pushl $0x2b8c98\n\t"
-      "call *%[c1d2240]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b8cc4\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc3b0_8:\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d01c4]\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d2268]\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001bc3b0_7\n\t"
-      ".LFUN_001bc3b0_9:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1bc3b0_assert), [exitfn] "m"(b1bc3b0_exitfn), [memset] "m"(b1bc3b0_memset), [c1d01c4] "m"(b1bc3b0_c1d01c4), [c1d2268] "m"(b1bc3b0_c1d2268), [c1d2240] "m"(b1bc3b0_c1d2240), [c8d9d0] "m"(b1bc3b0_c8d9d0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  /* test edi, edi -> jne 0x1bc3d7 */
+  display_assert((char *)0x002b8d30, (char *)0x002b8c98, 384, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 8], -1 -> jne 0x1bc3fd */
+  display_assert((char *)0x002b8d14, (char *)0x002b8c98, 385, 0);
+  system_exit(0);
+  /* test esi, esi -> jne 0x1bc421 */
+  display_assert((char *)0x002b8d08, (char *)0x002b8c98, 386, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1bc448 */
+  display_assert((char *)0x00267900, (char *)0x002b8c98, 387, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x1bc46f */
+  display_assert((char *)0x002b8cf8, (char *)0x002b8c98, 388, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x1bc493 */
+  display_assert((char *)0x002b8ce4, (char *)0x002b8c98, 389, 0);
+  system_exit(0);
+  csmemset((void *)(uintptr_t)esi, 0, 20);
+  SleepEx(0, 0);
+  SetLastError(0);
+  /* test eax, eax -> jne 0x1bc547 */
+  xapi_GetLastError();
+  /* cmp eax, 8 -> je 0x1bc523 */
+  /* cmp eax, 0x5aa -> je 0x1bc523 */
+  /* cmp eax, 0x6f8 -> je 0x1bc523 */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b8cc4);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+  SleepEx(0, 0);
+  SetLastError(0);
+  /* test eax, eax -> je 0x1bc4d7 */
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x1bc578 */
+  SleepEx(5000, 0);
+  /* cmp eax, 0xc0 -> jne 0x1bc578 */
+  /* relift: cmp byte ptr [esi], 0 -> je 0x1bc560 */
+  /* test (int16_t)esi, (int16_t)esi -> jl 0x1bc58c */
+  /* cmp (int16_t)esi, 0x200 -> jl 0x1bc5ac */
+  display_assert((char *)0x002b8d48, (char *)0x002b8c98, 608, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
-#else
-#error "FUN_001bc3b0: clang naked draft required"
-#endif
 
 
 /* FUN_001bc5c0 (0x1bc5c0) — readable C lift. */

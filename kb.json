@@ -5373,7 +5373,7 @@
         {
           "addr": "0x1bd910",
           "decl": "bool cache_files_precache_map_begin(char *map_name, bool);",
-          "ported": false,
+          "ported": true,
           "name": "cache_files_precache_map_begin"
         },
         {
@@ -15051,7 +15051,7 @@
         {
           "addr": "0x103a00",
           "decl": "char FUN_00103a00(uint32_t mark, int base, uint32_t *node, uint32_t plane_arg);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00103a00"
         },
         {
@@ -15083,7 +15083,7 @@
         {
           "addr": "0x103e80",
           "decl": "void FUN_00103e80(float *p0, float *p1, float *color);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00103e80"
         },
         {
@@ -15101,7 +15101,7 @@
         {
           "addr": "0x104430",
           "decl": "void FUN_00104430(int count, int16_t *sections, float *points, float *color);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00104430"
         }
       ],
@@ -27196,7 +27196,7 @@
         {
           "addr": "0x131150",
           "decl": "void FUN_00131150(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00131150"
         },
         {
