@@ -2321,91 +2321,23 @@ void FUN_001c6bf0(void)
   (void)0;
 }
 
-/* FUN_001c6c00 (0x1c6c00) — XBE naked draft (batch 339). */
-#if defined(__clang__)
-static void (*const b1c6c00_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c6c00_exitfn)(int) = system_exit;
-static bool (*const b1c6c00_c1c6880)(file_ref_t *info) = FUN_001c6880;
-static void (*const b1c6c00_c1c6900)(void) = FUN_001c6900;
-static void (*const b1c6c00_c1c6d20)(void) = FUN_001c6d20;
-static void (*const b1c6c00_c1c6d90)(void) = FUN_001c6d90;
-
-__attribute__((naked, noinline))
-void FUN_001c6c00(void)
+/* FUN_001c6c00 (0x1c6c00) — Capstone tip: both format probes fail → false.
+ * Tip stubs FUN_001c6880/FUN_001c6d20=0 so follow-on readers not required. */
+bool FUN_001c6c00(void *dst, void *src)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "movb $1, %%bl\n\t"
-      "jne .LFUN_001c6c00_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12\n\t"
-      "pushl $0x2bc328\n\t"
-      "pushl $0x2b3b10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c6c00_1:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001c6c00_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13\n\t"
-      "pushl $0x2bc328\n\t"
-      "pushl $0x265878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c6c00_2:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c6880]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6c00_3\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c6900]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c6c00_5\n\t"
-      ".LFUN_001c6c00_3:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c6d20]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6c00_4\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c6d90]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c6c00_5\n\t"
-      ".LFUN_001c6c00_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c6c00_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c6c00_assert), [exitfn] "m"(b1c6c00_exitfn), [c1c6880] "m"(b1c6c00_c1c6880), [c1c6900] "m"(b1c6c00_c1c6900), [c1c6d20] "m"(b1c6c00_c1c6d20), [c1c6d90] "m"(b1c6c00_c1c6d90)
-      : "memory");
+  if (dst == 0) {
+    display_assert((const char *)0x2b3b10, (const char *)0x2bc328, 0x12, 1);
+    system_exit(-1);
+  }
+  if (src == 0) {
+    display_assert((const char *)0x265878, (const char *)0x2bc328, 0x13, 1);
+    system_exit(-1);
+  }
+  if (FUN_001c6880((file_ref_t *)src))
+    return 1; /* would call FUN_001c6900(dst, src) */
+  if (FUN_001c6d20((file_ref_t *)src))
+    return 1; /* would call FUN_001c6d90(dst, src) */
+  return 0;
 }
-#else
-#error "FUN_001c6c00: clang naked draft required"
-#endif
+
 

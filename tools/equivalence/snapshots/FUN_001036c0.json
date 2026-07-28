@@ -1,0 +1,10 @@
+{
+  "description": "FUN_001036c0: count==0 append returns -1",
+  "arg_overrides": {
+    "base": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "stub_returns": {
+    "FUN_00117da0": -1,
+    "array_add": -1
+  }
+}

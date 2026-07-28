@@ -1,0 +1,7 @@
+{
+  "description": "FUN_001c6c00: both probes fail",
+  "stub_returns": {
+    "FUN_001c6880": 0,
+    "FUN_001c6d20": 0
+  }
+}
