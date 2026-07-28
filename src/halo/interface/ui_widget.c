@@ -3200,113 +3200,52 @@ void FUN_000e4ad0(void *icon_state, int16_t *cursor, int string_index)
 
 
 
-/* remap_sticks_for_local_player (0xe4da0) — XBE naked draft (batch 122). */
-#if defined(__clang__)
-static int16_t (*const be4da0_ce4a80)(wchar_t *needle) = (void *)ui_widget_find_localized_string_index;
-static void (*const be4da0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be4da0_exitfn)(int) = (void *)system_exit;
-static char (*const be4da0_ce4d40)(int16_t player_index) = (void *)ui_widget_player_prefers_metric_units;
-
-__attribute__((naked, noinline))
+/* remap_sticks_for_local_player (0xe4da0) — readable C lift.
+ * Jump-table on icon_type 0x10..0x1f: 0x10/0x1e and 0x11/0x1f remap by
+ * metric preference; other stick icons pass through. */
 int16_t remap_sticks_for_local_player(int16_t icon_type, int local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "addl $-0x10, %%ecx\n\t"
-      "cmpl $0xf, %%ecx\n\t"
-      "ja .Lremap_sticks_for_local_player_8\n\t"
-      "movzbl 0xe4eb8(%%ecx), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "jmp *.Lremap_sticks_for_local_player_jt(,%%ecx,4)\n\t"
-      ".Lremap_sticks_for_local_player_1:\n\t"
-      "movl $0x283038, %%ebx\n\t"
-      "call *%[ce4a80]\n\t"
-      "cmpw $0x10, %%ax\n\t"
-      "je .Lremap_sticks_for_local_player_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1093\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283698\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lremap_sticks_for_local_player_2:\n\t"
-      "movl $0x282f04, %%ebx\n\t"
-      "call *%[ce4a80]\n\t"
-      "cmpw $0x1e, %%ax\n\t"
-      "je .Lremap_sticks_for_local_player_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1094\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283678\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lremap_sticks_for_local_player_3:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "call *%[ce4d40]\n\t"
-      "negb %%al\n\t"
-      "popl %%ebx\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "negl %%eax\n\t"
-      "addl $0x10, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lremap_sticks_for_local_player_4:\n\t"
-      "movl $0x283020, %%ebx\n\t"
-      "call *%[ce4a80]\n\t"
-      "cmpw $0x11, %%ax\n\t"
-      "je .Lremap_sticks_for_local_player_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x109a\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283654\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lremap_sticks_for_local_player_5:\n\t"
-      "movl $0x282ef8, %%ebx\n\t"
-      "call *%[ce4a80]\n\t"
-      "cmpw $0x1f, %%ax\n\t"
-      "je .Lremap_sticks_for_local_player_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x109b\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283634\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lremap_sticks_for_local_player_6:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "call *%[ce4d40]\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $0x11, %%eax\n\t"
-      ".Lremap_sticks_for_local_player_7:\n\t"
-      "popl %%ebx\n\t"
-      ".Lremap_sticks_for_local_player_8:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lremap_sticks_for_local_player_jt:\n\t"
-      ".long .Lremap_sticks_for_local_player_1\n\t"
-      ".long .Lremap_sticks_for_local_player_4\n\t"
-      ".long .Lremap_sticks_for_local_player_7\n\t"
-      ".text\n\t"
-      :
-      : [ce4a80] "m"(be4da0_ce4a80), [assert] "m"(be4da0_assert), [exitfn] "m"(be4da0_exitfn), [ce4d40] "m"(be4da0_ce4d40)
-      : "memory");
+  int16_t index;
+  unsigned u = (unsigned)icon_type;
+
+  if (u < 0x10u || u > 0x1fu)
+    return icon_type;
+
+  switch (u) {
+  case 0x10:
+  case 0x1e:
+    index = ui_widget_find_localized_string_index((wchar_t *)0x283038);
+    if (index != 0x10) {
+      display_assert((char *)0x283698, (char *)0x283280, 0x1093, 1);
+      system_exit(-1);
+    }
+    index = ui_widget_find_localized_string_index((wchar_t *)0x282f04);
+    if (index != 0x1e) {
+      display_assert((char *)0x283678, (char *)0x283280, 0x1094, 1);
+      system_exit(-1);
+    }
+    if (ui_widget_player_prefers_metric_units((int16_t)local_player_index))
+      return 0x10;
+    return 0x11;
+  case 0x11:
+  case 0x1f:
+    index = ui_widget_find_localized_string_index((wchar_t *)0x283020);
+    if (index != 0x11) {
+      display_assert((char *)0x283654, (char *)0x283280, 0x109a, 1);
+      system_exit(-1);
+    }
+    index = ui_widget_find_localized_string_index((wchar_t *)0x282ef8);
+    if (index != 0x1f) {
+      display_assert((char *)0x283634, (char *)0x283280, 0x109b, 1);
+      system_exit(-1);
+    }
+    if (ui_widget_player_prefers_metric_units((int16_t)local_player_index))
+      return 0x11;
+    return 0x12;
+  default:
+    return icon_type;
+  }
 }
-#else
-#error "remap_sticks_for_local_player: clang naked draft required"
-#endif
 
 
 /* FUN_000e5180 (0xe5180) — readable C lift (restored pre-naked). */

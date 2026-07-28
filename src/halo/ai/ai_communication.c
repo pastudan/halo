@@ -529,8 +529,8 @@ void ai_communication_update_speech_timers(int unit, int16_t type, int a,
                                            int16_t dialogue_index,
                                            int16_t reply_index);
 int ai_communication_find_global_actor_to_talk(
-    int comm_type, int unit, int16_t subtype, int16_t index, int stack_a,
-    int stack_b, float max_dist, int mode);
+    int talker /*@<edi>*/, int16_t team /*@<bx>*/, int16_t mode, int target,
+    int p0, int p1, int p2, int p3, int p4, int p5, int p6);
 int FUN_00045830(int type, int actor, int target, int p0, int p1, int p2,
                  int p3, int p4, int p5, int p6);
 
@@ -2019,146 +2019,68 @@ int FUN_00045830(int type, int actor, int target, int p0, int p1, int p2,
 
 
 
-/* ai_communication_find_global_actor_to_talk (0x458f0) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static void (*const b458f0_c1a9200)(int object_handle, float *out_position) = unit_get_head_position;
-static void (*const b458f0_c59b10)(void *iter, char flag) = encounter_iterator_next;
-static int (*const b458f0_c59b50)(void *iter) = FUN_00059b50;
-static bool (*const b458f0_ca7a30)(int16_t team_a, int16_t team_b) = game_allegiance_get_team_is_friendly;
-static void (*const b458f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b458f0_exitfn)(int) = system_exit;
-static float (*const b458f0_c454a0)(int actor, int candidate, float *actor_pos, int target, float *target_pos, int p0, int p1, int p2, int p3, int p4, int p5, int p6) = FUN_000454a0;
-
-__attribute__((naked, noinline))
-int ai_communication_find_global_actor_to_talk(int comm_type __attribute__((unused)), int unit __attribute__((unused)), int16_t subtype __attribute__((unused)), int16_t index __attribute__((unused)), int stack_a __attribute__((unused)), int stack_b __attribute__((unused)), float max_dist __attribute__((unused)), int mode __attribute__((unused)))
+/* ai_communication_find_global_actor_to_talk (0x458f0) — readable C lift from XBE.
+ *
+ * ABI: talker @<edi>, team @<bx>; stack mode/target + 7 FUN_000454a0 args.
+ * Returns best-rated actor handle, or -1.
+ */
+int ai_communication_find_global_actor_to_talk(
+    int talker /*@<edi>*/, int16_t team /*@<bx>*/, int16_t mode, int target,
+    int p0, int p1, int p2, int p3, int p4, int p5, int p6)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x3c, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "orl $0xffffffff, %%esi\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_1\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a9200]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lai_communication_find_global_actor_to_talk_1:\n\t"
-      "cmpl %%esi, 0xc(%%ebp)\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_2\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a9200]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lai_communication_find_global_actor_to_talk_2:\n\t"
-      "leal -0x3c(%%ebp), %%edx\n\t"
-      "pushl $1\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59b10]\n\t"
-      "leal -0x3c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c59b50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_11\n\t"
-      ".Lai_communication_find_global_actor_to_talk_3:\n\t"
-      "cmpw $-1, %%bx\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_8\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x3e(%%esi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ca7a30]\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "subl $0, %%ecx\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_5\n\t"
-      "decl %%ecx\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_4\n\t"
-      "decl %%ecx\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0xdfd\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x255ee8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lai_communication_find_global_actor_to_talk_10\n\t"
-      ".Lai_communication_find_global_actor_to_talk_4:\n\t"
-      "testb %%al, %%al\n\t"
-      "jmp .Lai_communication_find_global_actor_to_talk_6\n\t"
-      ".Lai_communication_find_global_actor_to_talk_5:\n\t"
-      "cmpw %%bx, 0x3e(%%esi)\n\t"
-      ".Lai_communication_find_global_actor_to_talk_6:\n\t"
-      "sete %%al\n\t"
-      ".Lai_communication_find_global_actor_to_talk_7:\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_communication_find_global_actor_to_talk_10\n\t"
-      ".Lai_communication_find_global_actor_to_talk_8:\n\t"
-      "movl 0x28(%%ebp), %%edx\n\t"
-      "movl 0x24(%%ebp), %%eax\n\t"
-      "movl 0x20(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x28(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c454a0]\n\t"
-      "fcoms -0x8(%%ebp)\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lai_communication_find_global_actor_to_talk_9\n\t"
-      "movl -0x28(%%ebp), %%ecx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jmp .Lai_communication_find_global_actor_to_talk_10\n\t"
-      ".Lai_communication_find_global_actor_to_talk_9:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lai_communication_find_global_actor_to_talk_10:\n\t"
-      "leal -0x3c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c59b50]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .Lai_communication_find_global_actor_to_talk_3\n\t"
-      ".Lai_communication_find_global_actor_to_talk_11:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1a9200] "m"(b458f0_c1a9200), [c59b10] "m"(b458f0_c59b10), [c59b50] "m"(b458f0_c59b50), [ca7a30] "m"(b458f0_ca7a30), [assert] "m"(b458f0_assert), [exitfn] "m"(b458f0_exitfn), [c454a0] "m"(b458f0_c454a0)
-      : "memory");
+  char iter[0x3c];
+  float head[3];
+  float scratch_pos[3];
+  char *actor;
+  int best_handle;
+  float best_rating;
+  float rating;
+  char ok;
+  int candidate;
+
+  best_handle = -1;
+  best_rating = 0.0f;
+
+  if (talker != -1)
+    unit_get_head_position(talker, head);
+  if (target != -1)
+    unit_get_head_position(talker, head);
+
+  encounter_iterator_next(iter, 1);
+  actor = (char *)FUN_00059b50(iter);
+  while (actor != NULL) {
+    if (team != (int16_t)-1) {
+      ok = game_allegiance_get_team_is_friendly(team,
+                                               *(int16_t *)(actor + 0x3e));
+      if (mode == 0) {
+        ok = (char)(*(int16_t *)(actor + 0x3e) == team);
+      } else if (mode == 1) {
+        /* XBE: test al / sete al — invert friendly */
+        ok = (char)(ok == 0);
+      } else if (mode == 2) {
+        /* keep friendly in ok */
+      } else {
+        display_assert((const char *)0x255ee8, (const char *)0x2599b4, 0xdfd,
+                       1);
+        system_exit(-1);
+        goto next;
+      }
+      if (ok == 0)
+        goto next;
+    }
+
+    candidate = *(int *)(iter + 0x14);
+    rating = FUN_000454a0(talker, candidate, head, target, scratch_pos, p0, p1,
+                          p2, p3, p4, p5, p6);
+    if (!(rating <= best_rating)) {
+      best_rating = rating;
+      best_handle = candidate;
+    }
+  next:
+    actor = (char *)FUN_00059b50(iter);
+  }
+  return best_handle;
 }
-#else
-#error "ai_communication_find_global_actor_to_talk: clang naked draft required"
-#endif
 
 
 /* ai_conversation_begin (0x45a10) — XBE naked draft (batch 105). */
@@ -2845,7 +2767,7 @@ static float (*const b460e0_rmreal)(unsigned int *) = random_math_real;
 static short (*const b460e0_cfff80)(void) = game_connection;
 static void *(*const b460e0_get)(int, int) = object_get_and_verify_type;
 static void *(*const b460e0_tryget)(int, int) = object_try_and_get_and_verify_type;
-static int (*const b460e0_c458f0)(int comm_type, int unit, int16_t subtype, int16_t index, int stack_a, int stack_b, float max_dist, int mode) = ai_communication_find_global_actor_to_talk;
+static int (*const b460e0_c458f0)(int comm_type, int unit, int16_t subtype, int16_t index, int stack_a, int stack_b, float max_dist, int mode) = (void *)ai_communication_find_global_actor_to_talk;
 static char * (*const b460e0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
 static int (*const b460e0_c43270)(int actor) = actor_communication_team;
 static int (*const b460e0_gtime)(void) = game_time_get;
@@ -3334,7 +3256,7 @@ static int (*const b46f10_c41040)(short param_1) = ai_get_race_from_team_index;
 static void *(*const b46f10_dget)(void *, int) = (void *(*)(void *, int))datum_get;
 static int16_t (*const b46f10_c3a770)(int16_t actor_type) = FUN_0003a770;
 static bool (*const b46f10_ca7a90)(int16_t team_a, int16_t team_b) = game_team_is_ally;
-static int (*const b46f10_c458f0)(int comm_type, int unit, int16_t subtype, int16_t index, int stack_a, int stack_b, float max_dist, int mode) = ai_communication_find_global_actor_to_talk;
+static int (*const b46f10_c458f0)(int comm_type, int unit, int16_t subtype, int16_t index, int stack_a, int stack_b, float max_dist, int mode) = (void *)ai_communication_find_global_actor_to_talk;
 static void (*const b46f10_cff4d0)(int channel, const char *format, ...) = console_printf;
 static bool (*const b46f10_ca8040)(int16_t team_a, int16_t team_b, int16_t action, bool *out_changed) = game_allegiance_bump;
 static void (*const b46f10_c40150)(int16_t team_a, int16_t team_b, char print_message) = ai_handle_allegiance_broken_notification;

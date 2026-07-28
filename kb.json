@@ -2639,7 +2639,7 @@
         {
           "addr": "0x1bcd0",
           "decl": "char action_vehicle_setup_impromptu(int actor_handle, int vehicle_handle, float param_3, float param_4, void *out_state);",
-          "ported": false,
+          "ported": true,
           "name": "action_vehicle_setup_impromptu"
         },
         {
@@ -36087,8 +36087,8 @@
         },
         {
           "addr": "0x458f0",
-          "decl": "int ai_communication_find_global_actor_to_talk(int comm_type, int unit, int16_t subtype, int16_t index, int stack_a, int stack_b, float max_dist, int mode);",
-          "ported": false,
+          "decl": "int ai_communication_find_global_actor_to_talk(int talker @<edi>, int16_t team @<bx>, int16_t mode, int target, int p0, int p1, int p2, int p3, int p4, int p5, int p6);",
+          "ported": true,
           "name": "ai_communication_find_global_actor_to_talk"
         },
         {

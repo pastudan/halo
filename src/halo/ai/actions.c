@@ -2684,201 +2684,91 @@ void action_vehicle_perform(void)
 }
 
 
-/* action_vehicle_setup_impromptu (0x1bcd0) — XBE naked draft (batch 115). */
-#if defined(__clang__)
-static void *(*const b1bcd0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1bcd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bcd0_exitfn)(int) = system_exit;
-static void *(*const b1bcd0_memset)(void *, int, unsigned int) = csmemset;
-static void *(*const b1bcd0_get)(int, int) = object_get_and_verify_type;
-static vector3_t * (*const b1bcd0_c1412f0)(int object_handle, vector3_t *out_position) = object_get_world_position;
-static float (*const b1bcd0_c12170)(float *vector) = FUN_00012170;
-static int (*const b1bcd0_c1bba0)(int actor_handle, int vehicle_handle, float *out_attach0, float *out_attach1, float *out_attach2) = FUN_0001bba0;
-static char (*const b1bcd0_c1b0d00)(int unit_handle, int vehicle_handle, int16_t seat_index) = unit_has_animation_to_enter_seat;
-static char (*const b1bcd0_c1b280)(int actor_handle, int object_handle, float *in_attach0, float *in_attach1, float *in_attach2, int param_6, float *out_position, int *out_handle) = FUN_0001b280;
-static char (*const b1bcd0_c2d720)(int actor_handle, float *destination, int param_3, int param_4) = actor_move_to_point;
-
-__attribute__((naked, noinline))
-char action_vehicle_setup_impromptu(int actor_handle __attribute__((unused)), int vehicle_handle __attribute__((unused)), float param_3 __attribute__((unused)), float param_4 __attribute__((unused)), void *out_state __attribute__((unused)))
+/* action_vehicle_setup_impromptu (0x1bcd0) — readable C lift from XBE.
+ * Zero-fill out_state, gate on actor vehicle/status, then try seat entry + move.
+ */
+char action_vehicle_setup_impromptu(int actor_handle, int vehicle_handle,
+                                    float param_3, float param_4,
+                                    void *out_state)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x2c, %%esp\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jne .Laction_vehicle_setup_impromptu_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x38\n\t"
-      "pushl $0x253f50\n\t"
-      "pushl $0x25334c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Laction_vehicle_setup_impromptu_1:\n\t"
-      "pushl $0x4c\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%ecx, 0x20(%%esi)\n\t"
-      "movl %%edx, 0x24(%%esi)\n\t"
-      "movl 0x158(%%edi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Laction_vehicle_setup_impromptu_4\n\t"
-      "movb 0x6(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Laction_vehicle_setup_impromptu_4\n\t"
-      "cmpw $9, 0x6c(%%edi)\n\t"
-      "je .Laction_vehicle_setup_impromptu_4\n\t"
-      "movl 0x6325a4, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "call *%[get]\n\t"
-      "movb 0xb6(%%eax), %%cl\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testb $4, %%cl\n\t"
-      "movl %%eax, 0x18(%%ebp)\n\t"
-      "jne .Laction_vehicle_setup_impromptu_2\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1412f0]\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "fsubs 0x12c(%%eax)\n\t"
-      "addl $8, %%esp\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fsubs 0x130(%%eax)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs 0x134(%%eax)\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      "fld %%st(1)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x14(%%ebp)\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "fcompp\n\t"
-      "fstp %%st(0)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .Laction_vehicle_setup_impromptu_3\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "addl $0x18, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[c12170]\n\t"
-      "fcomps 0x253f2c\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Laction_vehicle_setup_impromptu_3\n\t"
-      ".Laction_vehicle_setup_impromptu_2:\n\t"
-      "xorb %%bl, %%bl\n\t"
-      ".Laction_vehicle_setup_impromptu_3:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "flds 0x38(%%eax)\n\t"
-      "fcomps 0x253398\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Laction_vehicle_setup_impromptu_4\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Laction_vehicle_setup_impromptu_4\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "call *%[c1bba0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "movw %%ax, 0x4(%%esi)\n\t"
-      "je .Laction_vehicle_setup_impromptu_4\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, 0x6(%%esi)\n\t"
-      "movl 0x18(%%edx), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1b0d00]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Laction_vehicle_setup_impromptu_4\n\t"
-      "leal 0x48(%%esi), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "addl $0x30, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "leal -0x20(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c1b280]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Laction_vehicle_setup_impromptu_4\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c2d720]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Laction_vehicle_setup_impromptu_4\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      ".Laction_vehicle_setup_impromptu_4:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1bcd0_dget), [assert] "m"(b1bcd0_assert), [exitfn] "m"(b1bcd0_exitfn), [memset] "m"(b1bcd0_memset), [get] "m"(b1bcd0_get), [c1412f0] "m"(b1bcd0_c1412f0), [c12170] "m"(b1bcd0_c12170), [c1bba0] "m"(b1bcd0_c1bba0), [c1b0d00] "m"(b1bcd0_c1b0d00), [c1b280] "m"(b1bcd0_c1b280), [c2d720] "m"(b1bcd0_c2d720)
-      : "memory");
+  char *actor;
+  char *actor2;
+  char *vehicle;
+  char *state;
+  char success;
+  char far_enough;
+  float world[3];
+  float attach0[3];
+  float attach1[3];
+  float attach2[3];
+  float dx, dy, dz;
+  float dist_sq;
+  float radius_sq;
+  int16_t seat;
+  float speed;
+
+  state = (char *)out_state;
+  actor = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  success = 0;
+  if (state == NULL) {
+    display_assert((const char *)0x25334c, (const char *)0x253f50, 0x38, 1);
+    system_exit(-1);
+  }
+
+  csmemset(state, 0, 0x4c);
+  *(float *)(state + 0x20) = param_3;
+  *(float *)(state + 0x24) = param_4;
+
+  if (*(int *)(actor + 0x158) != -1 || actor[6] != 0 ||
+      *(int16_t *)(actor + 0x6c) == 9)
+    return success;
+
+  actor2 = (char *)datum_get(*(data_t **)0x6325a4, actor_handle);
+  vehicle = (char *)object_get_and_verify_type(vehicle_handle, 3);
+  far_enough = 0;
+  if ((vehicle[0xb6] & 4) == 0) {
+    object_get_world_position(vehicle_handle, (vector3_t *)world);
+    dx = world[0] - *(float *)(actor2 + 0x12c);
+    dy = world[1] - *(float *)(actor2 + 0x130);
+    dz = world[2] - *(float *)(actor2 + 0x134);
+    dist_sq = dx * dx + dy * dy + dz * dz;
+    radius_sq = param_4 * param_4;
+    if (!(dist_sq <= radius_sq)) {
+      far_enough = 1;
+      if (!(FUN_00012170((float *)(vehicle + 0x18)) <= *(float *)0x253f2c))
+        far_enough = 0;
+    }
+  }
+
+  speed = *(float *)(vehicle + 0x38);
+  if (!(speed < *(float *)0x253398))
+    return success;
+  if (far_enough == 0)
+    return success;
+
+  *(int *)state = vehicle_handle;
+  seat = (int16_t)FUN_0001bba0(actor_handle, vehicle_handle, attach0, attach1,
+                               attach2);
+  *(int16_t *)(state + 4) = seat;
+  if (seat == (int16_t)-1)
+    return success;
+
+  state[6] = 1;
+  if (!unit_has_animation_to_enter_seat(*(int *)(actor + 0x18), vehicle_handle,
+                                        seat))
+    return success;
+
+  if (!FUN_0001b280(actor_handle, vehicle_handle, attach0, attach1, attach2, 0,
+                    (float *)(state + 0x30), (int *)(state + 0x48)))
+    return success;
+
+  if (!actor_move_to_point(actor_handle, (float *)(state + 0x30),
+                           *(int *)(state + 0x48), vehicle_handle))
+    return success;
+
+  success = 1;
+  return success;
 }
-#else
-#error "action_vehicle_setup_impromptu: clang naked draft required"
-#endif
 
 
 /* FUN_0001beb0 (0x1beb0) — readable C lift (restored pre-naked). */
