@@ -5011,7 +5011,7 @@
         {
           "addr": "0x7ea60",
           "decl": "void FUN_0007ea60(void *bitmap_cube, int mipmap, int face, void *bitmap_2d);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0007ea60"
         }
       ],
