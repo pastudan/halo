@@ -17825,7 +17825,7 @@
         {
           "addr": "0x8acb0",
           "decl": "void observer_set_camera(void);",
-          "ported": false,
+          "ported": true,
           "name": "observer_set_camera"
         },
         {
@@ -42599,7 +42599,7 @@
         {
           "addr": "0x8d410",
           "decl": "void FUN_0008d410(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0008d410"
         }
       ],
