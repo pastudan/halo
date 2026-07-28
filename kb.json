@@ -1712,7 +1712,7 @@
         },
         {
           "addr": "0x1df419",
-          "decl": "void __write(void);",
+          "decl": "int __write(int fd, const void *buf, unsigned int count);",
           "ported": false,
           "name": "__write"
         },
@@ -2023,7 +2023,7 @@
         },
         {
           "addr": "0x1e24d2",
-          "decl": "void __lseek(void);",
+          "decl": "int __lseek(int fd, long offset, int whence);",
           "ported": false,
           "name": "__lseek"
         },
@@ -38597,8 +38597,8 @@
         },
         {
           "addr": "0x6ed10",
-          "decl": "void FUN_0006ed10(void);",
-          "ported": false,
+          "decl": "int FUN_0006ed10(void *tif@<edi>, unsigned int row@<ebx>, unsigned int sample@<ecx>);",
+          "ported": true,
           "name": "FUN_0006ed10"
         },
         {
@@ -38609,8 +38609,8 @@
         },
         {
           "addr": "0x6eea0",
-          "decl": "void FUN_0006eea0(void);",
-          "ported": false,
+          "decl": "int FUN_0006eea0(void *tif, void *buf, unsigned int w, unsigned int h, unsigned int d, unsigned int samples);",
+          "ported": true,
           "name": "FUN_0006eea0"
         },
         {
@@ -38743,14 +38743,14 @@
         },
         {
           "addr": "0x6f9f0",
-          "decl": "void FUN_0006f9f0(void);",
-          "ported": false,
+          "decl": "int FUN_0006f9f0(void *tif@<esi>);",
+          "ported": true,
           "name": "FUN_0006f9f0"
         },
         {
           "addr": "0x6faf0",
-          "decl": "void FUN_0006faf0(void);",
-          "ported": false,
+          "decl": "int FUN_0006faf0(void *tif@<eax>, void *module@<edi>, unsigned int want_write@<ecx>);",
+          "ported": true,
           "name": "FUN_0006faf0"
         },
         {
@@ -38761,14 +38761,14 @@
         },
         {
           "addr": "0x6fc60",
-          "decl": "void FUN_0006fc60(void);",
-          "ported": false,
+          "decl": "int FUN_0006fc60(void *module, void *tif@<esi>, unsigned int grow_count@<edi>);",
+          "ported": true,
           "name": "FUN_0006fc60"
         },
         {
           "addr": "0x6fd30",
-          "decl": "void FUN_0006fd30(void);",
-          "ported": false,
+          "decl": "int FUN_0006fd30(void *buf, void *tif@<esi>, unsigned int index@<edi>, unsigned int nbytes@<ebx>);",
+          "ported": true,
           "name": "FUN_0006fd30"
         },
         {
