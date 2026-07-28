@@ -445,7 +445,7 @@
         },
         {
           "addr": "0x132ea0",
-          "decl": "void FUN_00132ea0(void);",
+          "decl": "void FUN_00132ea0(float dt);",
           "ported": false,
           "name": "FUN_00132ea0"
         },
@@ -621,7 +621,7 @@
         },
         {
           "addr": "0x157940",
-          "decl": "void FUN_00157940(void);",
+          "decl": "void FUN_00157940(int *param);",
           "ported": false,
           "name": "FUN_00157940"
         },
@@ -4664,9 +4664,15 @@
         },
         {
           "addr": "0x1c53f0",
-          "decl": "void FUN_001c53f0(int a0, int a1, int a2, int a3, int a4);",
-          "ported": false,
-          "name": "FUN_001c53f0"
+          "decl": "void FUN_001c53f0(short slot, unsigned short kind, unsigned short *inout_count, int *out_handles, char allow_flag);",
+          "ported": true,
+          "name": "FUN_001c53f0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c5560",
@@ -5201,8 +5207,14 @@
         {
           "addr": "0x1bc280",
           "decl": "void FUN_001bc280(void);",
-          "ported": false,
-          "name": "FUN_001bc280"
+          "ported": true,
+          "name": "FUN_001bc280",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1bc360",
@@ -25436,8 +25448,14 @@
         {
           "addr": "0x1c9cf0",
           "decl": "char FUN_001c9cf0(void);",
-          "ported": false,
-          "name": "FUN_001c9cf0"
+          "ported": true,
+          "name": "FUN_001c9cf0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c9e20",

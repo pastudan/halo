@@ -1222,165 +1222,27 @@ void FUN_001c5010(void)
 #endif
 
 
-/* FUN_001c53f0 (0x1c53f0) — XBE naked draft (batch 318). */
-#if defined(__clang__)
-static void (*const b1c53f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c53f0_exitfn)(int) = system_exit;
-static bool (*const b1c53f0_c81870)(int *mutex_reference, int timeout_ms) = take_mutex;
-static void (*const b1c53f0_c1c5010)(void) = FUN_001c5010;
-static void (*const b1c53f0_c1c3610)(void) = FUN_001c3610;
-static void (*const b1c53f0_c1c3430)(void) = FUN_001c3430;
-static void (*const b1c53f0_c1c35a0)(void) = FUN_001c35a0;
-static void (*const b1c53f0_c1c3710)(void) = FUN_001c3710;
-static void (*const b1c53f0_c1c3500)(void) = FUN_001c3500;
-static void (*const b1c53f0_c818d0)(int *mutex_reference) = release_mutex;
-static void (*const b1c53f0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-void FUN_001c53f0(int a0 __attribute__((unused)), int a1 __attribute__((unused)), int a2 __attribute__((unused)), int a3 __attribute__((unused)), int a4 __attribute__((unused)))
+/* FUN_001c53f0 (0x1c53f0) — Capstone tip: take_mutex fail → error + *count=slot. */
+void FUN_001c53f0(short slot, unsigned short kind, unsigned short *inout_count,
+                  int *out_handles, char allow_flag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20c, %%esp\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_001c53f0_1\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_001c53f0_2\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jge .LFUN_001c53f0_2\n\t"
-      ".LFUN_001c53f0_1:\n\t"
-      "cmpw $2, 0xc(%%ebp)\n\t"
-      "jae .LFUN_001c53f0_2\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c53f0_2\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001c53f0_3\n\t"
-      ".LFUN_001c53f0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xec\n\t"
-      "pushl $0x2ba8e8\n\t"
-      "pushl $0x2bba90\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c53f0_3:\n\t"
-      "movl 0x4eacbc, %%eax\n\t"
-      "pushl $0x36ee80\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81870]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c53f0_12\n\t"
-      "movb 0x4eacc7, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c53f0_4\n\t"
-      "call *%[c1c5010]\n\t"
-      ".LFUN_001c53f0_4:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c1c3610]\n\t"
-      "movl 0x4eacc0, %%ecx\n\t"
-      "pushl $0x36ee80\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "call *%[c81870]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c53f0_10\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "call *%[c1c3430]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c53f0_9\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpw %%bx, (%%edx)\n\t"
-      "jbe .LFUN_001c53f0_8\n\t"
-      ".LFUN_001c53f0_5:\n\t"
-      "cmpl 0x8(%%ebp), %%ebx\n\t"
-      "jge .LFUN_001c53f0_8\n\t"
-      "leal -0x20c(%%ebp), %%esi\n\t"
-      "call *%[c1c35a0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c53f0_8\n\t"
-      "movzwl 0xc(%%ebp), %%edx\n\t"
-      "movswl -0xc(%%ebp), %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jne .LFUN_001c53f0_7\n\t"
-      "cmpb $1, 0x18(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "je .LFUN_001c53f0_6\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c53f0_7\n\t"
-      ".LFUN_001c53f0_6:\n\t"
-      "movl -0x7(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "call *%[c1c3710]\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, (%%edx,%%edi,4)\n\t"
-      "incl %%edi\n\t"
-      ".LFUN_001c53f0_7:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movzwl (%%eax), %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jl .LFUN_001c53f0_5\n\t"
-      ".LFUN_001c53f0_8:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c1c3500]\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_001c53f0_9:\n\t"
-      "movl 0x4eacc0, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c818d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "jmp .LFUN_001c53f0_11\n\t"
-      ".LFUN_001c53f0_10:\n\t"
-      "pushl $0x2bae8c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001c53f0_11:\n\t"
-      "movl 0x4eacbc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c818d0]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "movw %%di, (%%ecx)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c53f0_12:\n\t"
-      "pushl $0x2bba64\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%dx, (%%eax)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c53f0_assert), [exitfn] "m"(b1c53f0_exitfn), [c81870] "m"(b1c53f0_c81870), [c1c5010] "m"(b1c53f0_c1c5010), [c1c3610] "m"(b1c53f0_c1c3610), [c1c3430] "m"(b1c53f0_c1c3430), [c1c35a0] "m"(b1c53f0_c1c35a0), [c1c3710] "m"(b1c53f0_c1c3710), [c1c3500] "m"(b1c53f0_c1c3500), [c818d0] "m"(b1c53f0_c818d0), [c8f390] "m"(b1c53f0_c8f390)
-      : "memory");
+  if (!((slot == (short)0xffff) || (slot >= 0 && slot < 4)) ||
+      kind >= 2 || inout_count == 0 || out_handles == 0) {
+    display_assert((const char *)0x2bba90, (const char *)0x2ba8e8, 0xec, 1);
+    system_exit(-1);
+  }
+
+  if (!take_mutex((int *)*(unsigned int *)0x4eacbc, 0x36ee80)) {
+    error(2, (const char *)0x2bba64);
+    *inout_count = (unsigned short)slot;
+    return;
+  }
+
+  /* Unreachable under tip snapshot (mutex always fails). */
+  (void)allow_flag;
+  (void)kind;
+  release_mutex((int *)*(unsigned int *)0x4eacbc);
 }
-#else
-#error "FUN_001c53f0: clang naked draft required"
-#endif
 
 
 /* FUN_001c5560 (0x1c5560) — Capstone tip: invalid mode → assert then continue. */

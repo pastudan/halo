@@ -1,0 +1,12 @@
+{
+  "description": "FUN_001c9cf0: CreateSoundBuffer hr<0 → log+return 0",
+  "regions": {
+    "0x50545c": "0030000000",
+    "0x30000000": "00000000000000000000000000000000"
+  },
+  "stub_returns": {
+    "IDirectSound_CreateSoundBuffer": -2147467259,
+    "csmemset": 805306368,
+    "sound_dsound_log_error": 0
+  }
+}

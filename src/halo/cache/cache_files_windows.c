@@ -1781,87 +1781,31 @@ void cache_file_open(void)
 
 /* --- cache_files_windows.obj orphan shells (2026-07-26) --- */
 
-/* FUN_001bc280 (0x1bc280) — XBE naked draft (batch 263). */
-#if defined(__clang__)
-static bool __stdcall (*const b1bc280_c1d33fb)(void *freq) = QueryPerformanceFrequency;
-static void (*const b1bc280_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bc280_exitfn)(int) = system_exit;
-static void * __stdcall (*const b1bc280_c1cfded)(void *security, int manual_reset, int initial_state, const char *name) = CreateEventA;
-static void * __stdcall (*const b1bc280_c1cfd8c)(void *security, int stack_size, void *func, void *param, int flags, int *thread_id) = CreateThread;
-
-__attribute__((naked, noinline))
+/* FUN_001bc280 (0x1bc280) — Capstone tip: QPF hi==0 then create cache events/thread. */
 void FUN_001bc280(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d33fb]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001bc280_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1e7\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8c54\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bc280_1:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "movl %%ecx, 0x32ea9c\n\t"
-      "call *%[c1cfded]\n\t"
-      "movl 0x32ea98, %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, 0x954(%%edx)\n\t"
-      "call *%[c1cfded]\n\t"
-      "movl 0x32ea98, %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, 0x94c(%%ecx)\n\t"
-      "call *%[c1cfded]\n\t"
-      "movl 0x32ea98, %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "movl %%eax, 0x950(%%edx)\n\t"
-      "call *%[c1cfded]\n\t"
-      "movl 0x32ea98, %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x1bbea0\n\t"
-      "movl %%eax, 0x958(%%ecx)\n\t"
-      "pushl $0x4000\n\t"
-      "movl $0x1ba660, 0x928(%%ecx)\n\t"
-      "pushl $0\n\t"
-      "movl $0x1ba6c0, 0x92c(%%ecx)\n\t"
-      "call *%[c1cfd8c]\n\t"
-      "movl 0x32ea98, %%ecx\n\t"
-      "movl %%eax, 0x95c(%%ecx)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d33fb] "m"(b1bc280_c1d33fb), [assert] "m"(b1bc280_assert), [exitfn] "m"(b1bc280_exitfn), [c1cfded] "m"(b1bc280_c1cfded), [c1cfd8c] "m"(b1bc280_c1cfd8c)
-      : "memory");
+  unsigned int freq[2];
+  void *ev;
+
+  QueryPerformanceFrequency(freq);
+  if (freq[1] != 0) {
+    display_assert((const char *)0x2b8c54, (const char *)0x2b839c, 0x1e7, 1);
+    system_exit(-1);
+  }
+  *(unsigned int *)0x32ea9c = freq[0];
+  ev = CreateEventA(0, 1, 1, 0);
+  *(void **)(*(unsigned int *)0x32ea98 + 0x954) = ev;
+  ev = CreateEventA(0, 0, 0, 0);
+  *(void **)(*(unsigned int *)0x32ea98 + 0x94c) = ev;
+  ev = CreateEventA(0, 0, 1, 0);
+  *(void **)(*(unsigned int *)0x32ea98 + 0x950) = ev;
+  ev = CreateEventA(0, 0, 1, 0);
+  *(void **)(*(unsigned int *)0x32ea98 + 0x958) = ev;
+  *(unsigned int *)(*(unsigned int *)0x32ea98 + 0x928) = 0x1ba660;
+  *(unsigned int *)(*(unsigned int *)0x32ea98 + 0x92c) = 0x1ba6c0;
+  ev = CreateThread(0, 0x4000, (void *)0x1bbea0, 0, 0, 0);
+  *(void **)(*(unsigned int *)0x32ea98 + 0x95c) = ev;
 }
-#else
-#error "FUN_001bc280: clang naked draft required"
-#endif
 
 
 /* FUN_001bc620 (0x1bc620) — readable C lift. */
