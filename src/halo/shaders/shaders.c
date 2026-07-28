@@ -134,140 +134,74 @@ void *FUN_001906b0(void *shader, int shader_type)
   return shader;
 }
 
-/* shader_get_vertex_shader_permutation (0x190710) — XBE naked draft (batch 250). */
-#if defined(__clang__)
-static void (*const b190710_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b190710_exitfn)(int) = system_exit;
-static void * (*const b190710_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-
-__attribute__((naked, noinline))
-int shader_get_vertex_shader_permutation(void *shader __attribute__((unused)))
+/* shader_get_vertex_shader_permutation (0x190710) — readable C lift. */
+unsigned short shader_get_vertex_shader_permutation(void *shader)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lshader_get_vertex_shader_permutation_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x14\n\t"
-      "pushl $0x2b2348\n\t"
-      "pushl $0x2a18b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Lshader_get_vertex_shader_permutation_2\n\t"
-      ".Lshader_get_vertex_shader_permutation_1:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Lshader_get_vertex_shader_permutation_9\n\t"
-      ".Lshader_get_vertex_shader_permutation_2:\n\t"
-      "movswl 0x24(%%edi), %%eax\n\t"
-      "decl %%eax\n\t"
-      "cmpl $5, %%eax\n\t"
-      "ja .Lshader_get_vertex_shader_permutation_9\n\t"
-      "jmp *.Lshader_get_vertex_shader_permutation_jt(,%%eax,4)\n\t"
-      ".Lshader_get_vertex_shader_permutation_3:\n\t"
-      "pushl $4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1906b0]\n\t"
-      "flds 0x38(%%eax)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lshader_get_vertex_shader_permutation_9\n\t"
-      "movl $1, %%esi\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lshader_get_vertex_shader_permutation_4:\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movl 0x58(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lshader_get_vertex_shader_permutation_9\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movw 0x5c(%%eax), %%si\n\t"
-      "addl $8, %%esp\n\t"
-      "incw %%si\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lshader_get_vertex_shader_permutation_5:\n\t"
-      "pushl $5\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movw 0x2a(%%eax), %%si\n\t"
-      "addl $8, %%esp\n\t"
-      "incw %%si\n\t"
-      "cmpw $1, %%si\n\t"
-      "jne .Lshader_get_vertex_shader_permutation_8\n\t"
-      "pushl $5\n\t"
-      "jmp .Lshader_get_vertex_shader_permutation_7\n\t"
-      ".Lshader_get_vertex_shader_permutation_6:\n\t"
-      "pushl $6\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movw 0x2a(%%eax), %%si\n\t"
-      "addl $8, %%esp\n\t"
-      "incw %%si\n\t"
-      "cmpw $1, %%si\n\t"
-      "jne .Lshader_get_vertex_shader_permutation_8\n\t"
-      "pushl $6\n\t"
-      ".Lshader_get_vertex_shader_permutation_7:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movb 0x29(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $8, %%cl\n\t"
-      "jne .Lshader_get_vertex_shader_permutation_8\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lshader_get_vertex_shader_permutation_8:\n\t"
-      "testb $4, (%%edi)\n\t"
-      "je .Lshader_get_vertex_shader_permutation_10\n\t"
-      "movl $5, %%esi\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lshader_get_vertex_shader_permutation_9:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".Lshader_get_vertex_shader_permutation_10:\n\t"
-      "popl %%edi\n\t"
-      "movw %%si, %%ax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Lshader_get_vertex_shader_permutation_jt:\n\t"
-      ".long .Lshader_get_vertex_shader_permutation_4\n\t"
-      ".long .Lshader_get_vertex_shader_permutation_9\n\t"
-      ".long .Lshader_get_vertex_shader_permutation_9\n\t"
-      ".long .Lshader_get_vertex_shader_permutation_3\n\t"
-      ".long .Lshader_get_vertex_shader_permutation_5\n\t"
-      ".long .Lshader_get_vertex_shader_permutation_6\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(b190710_assert), [exitfn] "m"(b190710_exitfn), [c1906b0] "m"(b190710_c1906b0)
-      : "memory");
+  short kind;
+  void *sub;
+  unsigned short result;
+
+  if (!shader) {
+    display_assert((const char *)0x2a18b8, (const char *)0x2b2348, 0x14, 1);
+    system_exit(-1);
+  }
+  if ((unsigned int)(uintptr_t)shader == 0xffffffffu)
+    return 0;
+
+  kind = (short)(*(short *)((char *)shader + 0x24) - 1);
+  if ((unsigned short)kind > 5u)
+    return 0;
+
+  switch (kind) {
+  case 0: /* type 1 */
+    sub = FUN_001906b0(shader, 1);
+    if (*(int *)((char *)sub + 0x58) == -1)
+      return 0;
+    sub = FUN_001906b0(shader, 1);
+    result = (unsigned short)(*(unsigned short *)((char *)sub + 0x5c) + 1);
+    return result;
+
+  case 1: /* type 2 */
+  case 2: /* type 3 */
+    return 0;
+
+  case 3: /* type 4 */
+    sub = FUN_001906b0(shader, 4);
+    {
+      float v = *(float *)((char *)sub + 0x38);
+      if (!(v > *(float *)0x2533c0)) /* test ah,0x41 → ZF|PF : not greater */
+        return 0;
+    }
+    return 1;
+
+  case 4: /* type 5 */
+    sub = FUN_001906b0(shader, 5);
+    result = (unsigned short)(*(unsigned short *)((char *)sub + 0x2a) + 1);
+    if (result == 1) {
+      sub = FUN_001906b0(shader, 5);
+      if ((*(unsigned char *)((char *)sub + 0x29) & 8) == 0)
+        result = 0;
+    }
+    if ((*(unsigned char *)shader & 4) != 0)
+      return 5;
+    return result;
+
+  case 5: /* type 6 */
+    sub = FUN_001906b0(shader, 6);
+    result = (unsigned short)(*(unsigned short *)((char *)sub + 0x2a) + 1);
+    if (result == 1) {
+      sub = FUN_001906b0(shader, 6);
+      if ((*(unsigned char *)((char *)sub + 0x29) & 8) == 0)
+        result = 0;
+    }
+    if ((*(unsigned char *)shader & 4) != 0)
+      return 5;
+    return result;
+
+  default:
+    return 0;
+  }
 }
-#else
-#error "shader_get_vertex_shader_permutation: clang naked draft required"
-#endif
-
-
 /* shader_is_mirror (0x190830) — readable C lift. */
 char shader_is_mirror(void *shader)
 {

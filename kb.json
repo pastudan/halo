@@ -24674,8 +24674,8 @@
         },
         {
           "addr": "0x190710",
-          "decl": "int shader_get_vertex_shader_permutation(void *shader);",
-          "ported": false,
+          "decl": "unsigned short shader_get_vertex_shader_permutation(void *shader);",
+          "ported": true,
           "name": "shader_get_vertex_shader_permutation"
         },
         {
