@@ -22271,7 +22271,7 @@
         {
           "addr": "0x155e80",
           "decl": "void rasterizer_set_texture(int stage, int a2, int bitmap_type, int bitmap_index, int frame_index);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_set_texture"
         },
         {
@@ -22283,7 +22283,7 @@
         {
           "addr": "0x1560a0",
           "decl": "void rasterizer_set_texture_non_blocking(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_set_texture_non_blocking"
         },
         {
