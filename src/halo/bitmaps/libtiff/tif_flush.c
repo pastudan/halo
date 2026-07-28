@@ -891,6 +891,7 @@ void FUN_00069200(unsigned int value, unsigned int nbits /*@<eax>*/,
 }
 
 
+
 /* FUN_00069310 (0x69310) — Capstone lift: emit CCITT code via FUN_00069200.
  * ABI: code@<eax>, tif@<ecx>, table@<ebx>. */
 void FUN_00069310(int code /*@<eax>*/, void *tif /*@<ecx>*/,
@@ -2167,6 +2168,291 @@ int FUN_0006a210(void *tif)
   }
   return TIFFFlushData1(tif);
 }
+
+
+
+/* FUN_0006a260 (0x6a260) — Capstone lift: flush + optional post-write. */
+int FUN_0006a260(void *tif)
+{
+  if (*(short *)((char *)tif + 6) == 0)
+    return 1;
+  if (((int (*)(void *))FUN_0006a210)(tif) == 0)
+    return 0;
+  if ((*(unsigned char *)((char *)tif + 0xa) & 2) == 0)
+    return 1;
+  if (((int (*)(void *))FUN_000680a0)(tif) == 0)
+    return 0;
+  return 1;
+}
+
+/* FUN_0006a2a0 (0x6a2a0) — readable C lift: validate 16-bit sample ranges. */
+int FUN_0006a2a0(unsigned short *a, unsigned short *b, unsigned short *c, int n)
+{
+  extern char DAT_002601f0[];
+
+  if (n > 0) {
+    while (n > 0) {
+      if (*b >= 0x100 || *a >= 0x100 || *c >= 0x100)
+        return 0x10;
+      b += 1;
+      a += 1;
+      c += 1;
+      n -= 1;
+    }
+  }
+  FUN_0006f9d0(*(void **)0x3340dc, DAT_002601f0);
+  return 8;
+}
+
+
+
+/* FUN_0006a310 (0x6a310) — Capstone lift: validate photometric via tag 0x112.
+ * Switch on DAT_003340f0 after FUN_00064ec0; may call FUN_0006f9d0. */
+int FUN_0006a310(void *tif, int v)
+{
+  extern unsigned short DAT_003340f0;
+  extern void *DAT_003340dc;
+  extern char DAT_00260224[];
+  extern char DAT_00260208[];
+  unsigned int mode;
+
+  ((int (*)(void *, int, void *))FUN_00064ec0)(tif, 0x112, &DAT_003340f0);
+  mode = (unsigned)DAT_003340f0;
+  switch (mode) {
+  case 1:
+    return v - 1;
+  case 4:
+    return 0;
+  case 3:
+  case 7:
+  case 8:
+    ((void (*)(void *, void *))FUN_0006f9d0)(DAT_003340dc, DAT_00260224);
+    DAT_003340f0 = 4;
+    return 0;
+  case 2:
+  case 5:
+  case 6:
+  default:
+    ((void (*)(void *, void *))FUN_0006f9d0)(DAT_003340dc, DAT_00260208);
+    DAT_003340f0 = 1;
+    return v - 1;
+  }
+}
+
+
+/* FUN_0006a3b0 (0x6a3b0) — XBE naked draft (batch 309). */
+#if defined(__clang__)
+static void * (*const b6a3b0_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
+static void (*const b6a3b0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
+
+__attribute__((naked, noinline))
+void FUN_0006a3b0(void)
+{
+  __asm__ volatile(
+      "movzwl 0x3340fc, %%ecx\n\t"
+      "movl $8, %%eax\n\t"
+      "cdq\n\t"
+      "idivl %%ecx\n\t"
+      "pushl $0x21a\n\t"
+      "pushl $0x260264\n\t"
+      "pushl $0\n\t"
+      "incl %%eax\n\t"
+      "shll $0xa, %%eax\n\t"
+      "pushl %%eax\n\t"
+      "call *%[c8ee60]\n\t"
+      "addl $0x10, %%esp\n\t"
+      "testl %%eax, %%eax\n\t"
+      "movl %%eax, 0x3340c8\n\t"
+      "jne .LFUN_0006a3b0_1\n\t"
+      "movl 0x3340dc, %%edx\n\t"
+      "pushl $0x260244\n\t"
+      "pushl %%edx\n\t"
+      "call *%[c68a30]\n\t"
+      "addl $8, %%esp\n\t"
+      "xorl %%eax, %%eax\n\t"
+      "ret\n\t"
+      ".LFUN_0006a3b0_1:\n\t"
+      "pushl %%ebx\n\t"
+      "leal 0x400(%%eax), %%ecx\n\t"
+      "xorl %%edx, %%edx\n\t"
+      "pushl %%edi\n\t"
+      ".LFUN_0006a3b0_2:\n\t"
+      "movl %%ecx, (%%eax,%%edx,4)\n\t"
+      "movzwl 0x3340fc, %%edi\n\t"
+      "decl %%edi\n\t"
+      "cmpl $7, %%edi\n\t"
+      "ja .LFUN_0006a3b0_8\n\t"
+      "jmp *.LFUN_0006a3b0_jt(,%%edi,4)\n\t"
+      ".LFUN_0006a3b0_3:\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $7, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $6, %%edi\n\t"
+      "andl $1, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $5, %%edi\n\t"
+      "andl $1, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $4, %%edi\n\t"
+      "andl $1, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $3, %%edi\n\t"
+      "andl $1, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $2, %%edi\n\t"
+      "andl $1, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $1, %%edi\n\t"
+      "andl $1, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "addl $4, %%ecx\n\t"
+      "andl $1, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "jmp .LFUN_0006a3b0_7\n\t"
+      ".LFUN_0006a3b0_4:\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $6, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $4, %%edi\n\t"
+      "andl $3, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, 0x4(%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $2, %%edi\n\t"
+      "andl $3, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "addl $4, %%ecx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "addl $4, %%ecx\n\t"
+      "andl $3, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "jmp .LFUN_0006a3b0_7\n\t"
+      ".LFUN_0006a3b0_5:\n\t"
+      "movl %%edx, %%edi\n\t"
+      "sarl $4, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "movl %%edx, %%edi\n\t"
+      "addl $4, %%ecx\n\t"
+      "andl $0xf, %%edi\n\t"
+      "movzbl (%%edi,%%esi,1), %%edi\n\t"
+      "jmp .LFUN_0006a3b0_7\n\t"
+      ".LFUN_0006a3b0_6:\n\t"
+      "movzbl (%%edx,%%esi,1), %%edi\n\t"
+      ".LFUN_0006a3b0_7:\n\t"
+      "movl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "shll $8, %%ebx\n\t"
+      "orl %%edi, %%ebx\n\t"
+      "movl %%ebx, (%%ecx)\n\t"
+      "addl $4, %%ecx\n\t"
+      ".LFUN_0006a3b0_8:\n\t"
+      "incl %%edx\n\t"
+      "cmpl $0x100, %%edx\n\t"
+      "jl .LFUN_0006a3b0_2\n\t"
+      "popl %%edi\n\t"
+      "movl $1, %%eax\n\t"
+      "popl %%ebx\n\t"
+      "ret\n\t"
+      "movl %%edi, %%edi\n\t"
+      ".section .rdata,\"dr\"\n\t"
+      ".LFUN_0006a3b0_jt:\n\t"
+      ".long .LFUN_0006a3b0_3\n\t"
+      ".long .LFUN_0006a3b0_4\n\t"
+      ".long .LFUN_0006a3b0_8\n\t"
+      ".long .LFUN_0006a3b0_5\n\t"
+      ".long .LFUN_0006a3b0_8\n\t"
+      ".long .LFUN_0006a3b0_8\n\t"
+      ".long .LFUN_0006a3b0_8\n\t"
+      ".long .LFUN_0006a3b0_6\n\t"
+      ".text\n\t"
+      :
+      : [c8ee60] "m"(b6a3b0_c8ee60), [c68a30] "m"(b6a3b0_c68a30)
+      : "memory");
+}
+#else
+#error "FUN_0006a3b0: clang naked draft required"
+#endif
 
 
 /* FUN_0006a5d0 (0x6a5d0) — XBE naked draft (batch 305). */
