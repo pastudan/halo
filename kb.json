@@ -25944,8 +25944,14 @@
         {
           "addr": "0x1cd690",
           "decl": "void FUN_001cd690(void);",
-          "ported": false,
-          "name": "FUN_001cd690"
+          "ported": true,
+          "name": "FUN_001cd690",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1cd8b0",
@@ -25980,8 +25986,14 @@
         {
           "addr": "0x1cf100",
           "decl": "void FUN_001cf100(void);",
-          "ported": false,
-          "name": "FUN_001cf100"
+          "ported": true,
+          "name": "FUN_001cf100",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1cf360",
