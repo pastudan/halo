@@ -4271,448 +4271,217 @@ int16_t FUN_00196fd0(int *out_buf, int16_t max_count, int unused_10,
   return (int16_t)out_count;
 }
 
-/* FUN_00195790 (0x195790) — XBE naked draft (batch 81). */
-#if defined(__clang__)
-static void * (*const b195790_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
-static void *(*const b195790_elem)(void *, int, int) = tag_block_get_element;
-static void * (*const b195790_c76ff0)(int tag_index, short bitmap_index) = FUN_00076ff0;
-static void *(*const b195790_tag)(int, int) = tag_get;
-static char (*const b195790_bsext)(short) = breakable_surface_extant;
-static char (*const b195790_c1909d0)(int16_t shader_type) = shader_type_is_transparent;
-static void (*const b195790_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b195790_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00195790(int *surface_material_offsets __attribute__((unused)), unsigned short surface_count __attribute__((unused)), int lightmap_pass_index __attribute__((unused)), void *material_begin_cb __attribute__((unused)), void *surface_draw_cb __attribute__((unused)), void *pass_end_cb __attribute__((unused)), int param_7 __attribute__((unused)))
+/* FUN_00195790 (0x195790) — readable C lift (restored pre-naked). */
+void FUN_00195790(int *surface_material_offsets /* @<eax> */,
+                  unsigned short surface_count, int lightmap_pass_index,
+                  void *material_begin_cb, void *surface_draw_cb,
+                  void *pass_end_cb, int param_7)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movswl 0x8(%%ebp), %%ecx\n\t"
-      "leal (%%ebx,%%ecx,4), %%edx\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "addl $0x104, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "cmpl %%ecx, (%%eax)\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "jle .LFUN_00195790_16\n\t"
-      ".LFUN_00195790_1:\n\t"
-      "cmpl -0x4(%%ebp), %%ebx\n\t"
-      "jae .LFUN_00195790_17\n\t"
-      "movswl -0x14(%%ebp), %%ecx\n\t"
-      "pushl $0x20\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%esi), %%edx\n\t"
-      "leal 0x14(%%esi), %%edi\n\t"
-      "pushl $0x100\n\t"
-      "decl %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edi, -0x20(%%ebp)\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x18(%%eax), %%ecx\n\t"
-      "movl 0x14(%%eax), %%edx\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .LFUN_00195790_15\n\t"
-      "movl -0x18(%%ebp), %%edx\n\t"
-      "movl 0xc(%%edx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .LFUN_00195790_2\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "jmp .LFUN_00195790_3\n\t"
-      ".LFUN_00195790_2:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw (%%esi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c76ff0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      ".LFUN_00195790_3:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00195790_4\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00195790_4:\n\t"
-      "cmpl $0, (%%edi)\n\t"
-      "movl $0, -0x10(%%ebp)\n\t"
-      "jle .LFUN_00195790_14\n\t"
-      "jmp .LFUN_00195790_5\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_00195790_5:\n\t"
-      "cmpl -0x4(%%ebp), %%ebx\n\t"
-      "jae .LFUN_00195790_14\n\t"
-      "movswl -0x10(%%ebp), %%eax\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%esi), %%ecx\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jge .LFUN_00195790_13\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x73686472\n\t"
-      "movl %%ebx, -0x1c(%%ebp)\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      ".LFUN_00195790_6:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $4, %%ebx\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jae .LFUN_00195790_7\n\t"
-      "movl 0x14(%%esi), %%eax\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "jl .LFUN_00195790_6\n\t"
-      ".LFUN_00195790_7:\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0xac(%%esi), %%cx\n\t"
-      "movl %%ebx, %%edi\n\t"
-      "subl %%edx, %%edi\n\t"
-      "sarl $2, %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[bsext]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00195790_12\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x24(%%edx), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1909d0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00195790_8\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00195790_12\n\t"
-      "leal 0xb0(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movswl %%di, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x10(%%esi), %%cx\n\t"
-      "pushl %%edx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "jmp .LFUN_00195790_12\n\t"
-      ".LFUN_00195790_8:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00195790_12\n\t"
-      "movw 0x12(%%esi), %%ax\n\t"
-      "testb $2, %%al\n\t"
-      "movl $0x4d8ebc, %%ecx\n\t"
-      "jne .LFUN_00195790_9\n\t"
-      "movl 0x31fc38, %%ecx\n\t"
-      ".LFUN_00195790_9:\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_00195790_10\n\t"
-      "leal 0x9c(%%esi), %%eax\n\t"
-      "jmp .LFUN_00195790_11\n\t"
-      ".LFUN_00195790_10:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_00195790_11:\n\t"
-      "pushl $0\n\t"
-      "leal 0x28(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x1c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "leal 0xb0(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movswl %%di, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x10(%%esi), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x1c(%%ebp)\n\t"
-      "addl $0x30, %%esp\n\t"
-      ".LFUN_00195790_12:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl %%di, %%edx\n\t"
-      "movl -0x20(%%ebp), %%edi\n\t"
-      "addl %%edx, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      ".LFUN_00195790_13:\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .LFUN_00195790_5\n\t"
-      ".LFUN_00195790_14:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00195790_15\n\t"
-      "call *%%eax\n\t"
-      ".LFUN_00195790_15:\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "movl 0x104(%%eax), %%edx\n\t"
-      "addl $0x104, %%eax\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jl .LFUN_00195790_1\n\t"
-      ".LFUN_00195790_16:\n\t"
-      "cmpl -0x4(%%ebp), %%ebx\n\t"
-      "jae .LFUN_00195790_17\n\t"
-      "pushl $1\n\t"
-      "pushl $0x257\n\t"
-      "pushl $0x2b347c\n\t"
-      "pushl $0x2b3518\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00195790_17:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b195790_c18e3c0), [elem] "m"(b195790_elem), [c76ff0] "m"(b195790_c76ff0), [tag] "m"(b195790_tag), [bsext] "m"(b195790_bsext), [c1909d0] "m"(b195790_c1909d0), [assert] "m"(b195790_assert), [exitfn] "m"(b195790_exitfn)
-      : "memory");
+  typedef void (*material_begin_fn)(void *);
+  typedef void (*surface_draw_fn)(void *, unsigned short, int, int, int, void *);
+  typedef void (*pass_end_fn)(void);
+  typedef void (*transparent_draw_fn)(void *, unsigned short, void *, int, int,
+                                      int, void *, void *, void *, void *,
+                                      void *, int);
+  void *scenario;
+  int *surf;     /* EBX: current surface offset cursor */
+  int *surf_end; /* [EBP-0x4] */
+  char *materials;
+  int mat_idx;   /* [EBP-0x14] */
+  int accum;     /* [EBP+0x8] running surface accumulator */
+  void *lightmap;/* [EBP-0x8] */
+
+  scenario = scenario_get();
+  surf = surface_material_offsets;
+  surf_end = surface_material_offsets + (short)surface_count;
+  materials = (char *)scenario + 0x104;
+  accum = 0;
+  mat_idx = 0;
+
+  if (*(int *)materials > 0) {
+    do {
+      char *mat;
+      int *submat_block;
+      void *last_sub;
+      if (surf_end <= surf) {
+        return;
+      }
+      mat = (char *)tag_block_get_element(materials, mat_idx, 0x20);
+      submat_block = (int *)(mat + 0x14);
+      last_sub = tag_block_get_element(submat_block, *submat_block - 1, 0x100);
+      if (*surf < *(int *)((char *)last_sub + 0x18) +
+                      *(int *)((char *)last_sub + 0x14)) {
+        int submat_idx;
+        if (*(int *)((char *)scenario + 0xc) == -1) {
+          lightmap = (void *)0;
+        } else {
+          lightmap = FUN_00076ff0(*(int *)((char *)scenario + 0xc),
+                                  *(short *)mat);
+        }
+        if (material_begin_cb != (void *)0) {
+          ((material_begin_fn)material_begin_cb)(lightmap);
+        }
+        submat_idx = 0;
+        if (*submat_block > 0) {
+          do {
+            char *sub;
+            if (surf_end <= surf) {
+              break;
+            }
+            sub = (char *)tag_block_get_element(submat_block, submat_idx, 0x100);
+            if (*surf < *(int *)(sub + 0x14) + *(int *)(sub + 0x18)) {
+              void *shader;
+              int *run_start;
+              short run_count;
+              run_start = surf;
+              shader = tag_get(0x73686472, *(int *)(sub + 0xc));
+              do {
+                surf = surf + 1;
+                if (surf_end <= surf) {
+                  break;
+                }
+              } while (*surf < *(int *)(sub + 0x14) + *(int *)(sub + 0x18));
+              run_count = (short)(surf - run_start);
+              if (breakable_surface_extant(*(short *)(sub + 0xac)) != '\0') {
+                if (shader_type_is_transparent(
+                        *(short *)((char *)shader + 0x24)) == '\0') {
+                  if (surface_draw_cb != (void *)0) {
+                    ((surface_draw_fn)surface_draw_cb)(
+                        shader, *(unsigned short *)(sub + 0x10),
+                        lightmap_pass_index, accum, run_count, sub + 0xb0);
+                  }
+                } else if (param_7 != 0) {
+                  void *xform;
+                  void *extra;
+                  unsigned short flags = *(unsigned short *)(sub + 0x12);
+                  if ((flags & 2) != 0) {
+                    xform = (void *)0x4d8ebc;
+                  } else {
+                    xform = *(void **)0x0031fc38;
+                  }
+                  if ((flags & 1) != 0) {
+                    extra = sub + 0x9c;
+                  } else {
+                    extra = (void *)0;
+                  }
+                  ((transparent_draw_fn)(unsigned int)param_7)(
+                      shader, *(unsigned short *)(sub + 0x10), lightmap,
+                      lightmap_pass_index, accum, run_count, sub + 0xb0,
+                      sub + 0x1c, extra, xform, sub + 0x28, 0);
+                }
+              }
+              accum = accum + run_count;
+            }
+            submat_idx = submat_idx + 1;
+          } while ((short)submat_idx < *submat_block);
+        }
+        if (pass_end_cb != (void *)0) {
+          ((pass_end_fn)pass_end_cb)();
+        }
+      }
+      mat_idx = mat_idx + 1;
+    } while ((short)mat_idx < *(int *)((char *)scenario + 0x104));
+  }
+
+  if (surf < surf_end) {
+    display_assert(
+        "there are more surfaces than materials that reference them, stupid.",
+        "c:\\halo\\SOURCE\\structures\\structure_render.c", 599, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "FUN_00195790: clang naked draft required"
-#endif
 
 
-/* FUN_00197130 (0x197130) — XBE naked draft (batch 82). */
-#if defined(__clang__)
-static void * (*const b197130_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
-static void *(*const b197130_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b197130_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b197130_exitfn)(int) = system_exit;
-static float * (*const b197130_c196eb0)(float *parent_bounds, unsigned char *fractions, float *out_bounds) = FUN_00196eb0;
-static int (*const b197130_c196a60)(float *cull_bounds, float *bounds) = FUN_00196a60;
-static int (*const b197130_c196b10)(float *bounds, int param_2, int param_3) = FUN_00196b10;
 
-__attribute__((naked, noinline))
-int FUN_00197130(float *bounds __attribute__((unused)), void *param_2 __attribute__((unused)), int *param_3 __attribute__((unused)), int count __attribute__((unused)), float *center __attribute__((unused)), float radius __attribute__((unused)), float *cull_bounds __attribute__((unused)), int param_8 __attribute__((unused)), int param_9 __attribute__((unused)), int intersection __attribute__((unused)), int leaf __attribute__((unused)))
+/* FUN_00197130 (0x197130) — readable C lift (restored pre-naked). */
+int FUN_00197130(float *bounds, void *param_2, int *param_3, int count,
+                 float *center, float radius, float *cull_bounds, int param_8,
+                 int param_9, int intersection, int leaf /* @<eax> */)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x2c(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl $0, 0x2c(%%ebp)\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "pushl $0x10\n\t"
-      "andl $0x7fffffff, %%esi\n\t"
-      "leal 0xe0(%%edi), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "jne .LFUN_00197130_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f0\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b3798\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00197130_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00197130_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f1\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b3788\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00197130_2:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00197130_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f2\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b3774\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00197130_3:\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00197130_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f3\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b3768\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00197130_4:\n\t"
-      "movw 0x8(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_00197130_5\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "cmpl 0x134(%%edi), %%ecx\n\t"
-      "jl .LFUN_00197130_6\n\t"
-      ".LFUN_00197130_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f4\n\t"
-      "pushl $0x2b36c8\n\t"
-      "pushl $0x2b3720\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00197130_6:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c196eb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $2, %%bx\n\t"
-      "je .LFUN_00197130_7\n\t"
-      "movl 0x20(%%ebp), %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "call *%[c196a60]\n\t"
-      "movl 0x28(%%ebp), %%ecx\n\t"
-      "movl 0x24(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "call *%[c196b10]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw %%ax, %%bx\n\t"
-      "jle .LFUN_00197130_7\n\t"
-      "movl %%eax, %%ebx\n\t"
-      ".LFUN_00197130_7:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "je .LFUN_00197130_10\n\t"
-      "movswl 0xa(%%esi), %%eax\n\t"
-      "movl 0xc(%%esi), %%ebx\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jge .LFUN_00197130_10\n\t"
-      "addl $0xec, %%edi\n\t"
-      "movl %%edi, 0x8(%%ebp)\n\t"
-      ".LFUN_00197130_8:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl $8\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%esi\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "sarl $5, %%eax\n\t"
-      "shll %%cl, %%edx\n\t"
-      "shll $2, %%eax\n\t"
-      "movl 0x5137d0(%%eax), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%ecx, %%edx\n\t"
-      "je .LFUN_00197130_9\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl (%%eax,%%ecx,1), %%ecx\n\t"
-      "testl %%ecx, %%edx\n\t"
-      "jne .LFUN_00197130_9\n\t"
-      "movw 0x14(%%ebp), %%di\n\t"
-      "cmpw %%di, 0x2c(%%ebp)\n\t"
-      "jge .LFUN_00197130_10\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%eax,%%edx,1)\n\t"
-      "movl 0x2c(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "incl %%eax\n\t"
-      "movl %%esi, (%%edx,%%ecx,4)\n\t"
-      "movl %%eax, 0x2c(%%ebp)\n\t"
-      ".LFUN_00197130_9:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movswl 0xa(%%eax), %%ecx\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "incl %%ebx\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jl .LFUN_00197130_8\n\t"
-      ".LFUN_00197130_10:\n\t"
-      "movw 0x2c(%%ebp), %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b197130_c18e3c0), [elem] "m"(b197130_elem), [assert] "m"(b197130_assert), [exitfn] "m"(b197130_exitfn), [c196eb0] "m"(b197130_c196eb0), [c196a60] "m"(b197130_c196a60), [c196b10] "m"(b197130_c196b10)
-      : "memory");
+  void *scenario;
+  char *leaf_element;
+  int accumulator;
+  int cull_result;
+  float local_20[6];
+
+  (void)radius;
+  accumulator = 0;
+  scenario = scenario_get();
+  leaf_element = (char *)tag_block_get_element((char *)scenario + 0xe0,
+                                               leaf & 0x7fffffff, 0x10);
+
+  if ((short)intersection == 0) {
+    display_assert("intersection",
+                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f0,
+                   true);
+    system_exit(-1);
+  }
+  if (bounds == (float *)0) {
+    display_assert("parent_bounds",
+                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f1,
+                   true);
+    system_exit(-1);
+  }
+  if (center == (float *)0) {
+    display_assert("cull_sphere_center",
+                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f2,
+                   true);
+    system_exit(-1);
+  }
+  if (cull_bounds == (float *)0) {
+    display_assert("cull_bounds",
+                   "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f3,
+                   true);
+    system_exit(-1);
+  }
+  if (*(short *)(leaf_element + 8) < 0 ||
+      *(int *)((char *)scenario + 0x134) <= (int)*(short *)(leaf_element + 8)) {
+    display_assert(
+        "leaf->cluster_index>=0 && leaf->cluster_index<structure->clusters.count",
+        "c:\\halo\\SOURCE\\structures\\structure_visibility.c", 0x2f4, true);
+    system_exit(-1);
+  }
+
+  FUN_00196eb0(bounds, (unsigned char *)leaf_element, local_20);
+
+  cull_result = (short)intersection;
+  if ((short)intersection != 2) {
+    int a = FUN_00196a60(cull_bounds, local_20);
+    int b = FUN_00196b10(local_20, param_8, param_9);
+    cull_result = a;
+    if ((short)b < (short)a) {
+      cull_result = b;
+    }
+  }
+
+  if ((short)cull_result != 0) {
+    int i;
+    int first = *(int *)(leaf_element + 0xc);
+    int end = (int)*(short *)(leaf_element + 0xa) + first;
+    char *surface_block = (char *)scenario + 0xec;
+    for (i = first; i < end; i++) {
+      int *elem = (int *)tag_block_get_element(surface_block, i, 8);
+      int cluster = *elem;
+      int word_off = (cluster >> 5) * 4;
+      unsigned int mask = 1u << (cluster & 0x1f);
+      if ((mask & *(unsigned int *)((char *)0x5137d0 + word_off)) != 0) {
+        unsigned int *per_call = (unsigned int *)((char *)param_2 + word_off);
+        if ((mask & *per_call) == 0) {
+          if ((short)count <= (short)accumulator) {
+            break;
+          }
+          *per_call |= mask;
+          param_3[(short)accumulator] = cluster;
+          accumulator = accumulator + 1;
+        }
+      }
+      end = (int)*(short *)(leaf_element + 0xa) + *(int *)(leaf_element + 0xc);
+    }
+  }
+
+  return accumulator;
 }
-#else
-#error "FUN_00197130: clang naked draft required"
-#endif
+
 
 
 /* FUN_00197310 (0x197310) — readable C lift (restored pre-naked). */
