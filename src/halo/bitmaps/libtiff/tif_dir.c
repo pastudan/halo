@@ -567,63 +567,53 @@ void FUN_00066550(void)
 #endif
 
 
-/* FUN_00066640 (0x66640) — XBE naked draft (batch 358). */
-#if defined(__clang__)
-static void (*const b66640_c6f1d0)(void) = (void *)FUN_0006f1d0;
-static void * (*const b66640_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
-static void (*const b66640_c66550)(void) = (void *)FUN_00066550;
-
-__attribute__((naked, noinline))
-void FUN_00066640(void)
+/* FUN_00066640 (0x66640) — readable C lift from XBE.
+ * ABI: entry@<eax>, tif@<ecx>, dest@<edi>. */
+int FUN_00066640(void *entry /*@<eax>*/, void *tif /*@<ecx>*/,
+                 void *dest /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl $4, 0x4(%%esi)\n\t"
-      "movl %%ecx, %%ebx\n\t"
-      "ja .LFUN_00066640_2\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "testb $0x10, 0xa(%%ebx)\n\t"
-      "je .LFUN_00066640_1\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c6f1d0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_00066640_1:\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00066640_2:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c66550]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f1d0] "m"(b66640_c6f1d0), [c8e0b0] "m"(b66640_c8e0b0), [c66550] "m"(b66640_c66550)
-      : "memory");
-}
+  unsigned int tmp;
+  unsigned int n;
+  unsigned int i;
+
+  n = *(unsigned int *)((char *)entry + 4);
+  if (n > 4) {
+    /* XBE calls FUN_00066550(dest) with eax still holding entry. */
+    int ret;
+#if defined(__clang__)
+    __asm__ __volatile__(
+        "pushl %[dest]\n\t"
+        "call _FUN_00066550\n\t"
+        "addl $4, %%esp"
+        : "=a"(ret)
+        : [dest] "r"(dest), "a"(entry)
+        : "memory");
 #else
-#error "FUN_00066640: clang naked draft required"
+    ret = ((int (*)(void *))(void *)FUN_00066550)(dest);
 #endif
+    return ret;
+  }
+
+  tmp = *(unsigned int *)((char *)entry + 8);
+  if ((*(unsigned char *)((char *)tif + 0xa) & 0x10) != 0) {
+#if defined(__clang__)
+    __asm__ __volatile__(
+        "pushl %[p]\n\t"
+        "call _FUN_0006f1d0\n\t"
+        "addl $4, %%esp"
+        :
+        : [p] "r"(&tmp)
+        : "eax", "memory");
+#else
+    FUN_0006f1d0((unsigned char *)&tmp);
+#endif
+  }
+  /* n <= 4: inline the csmemcpy */
+  for (i = 0; i < n; i++)
+    ((unsigned char *)dest)[i] = ((unsigned char *)&tmp)[i];
+  return 1;
+}
+
 
 
 /* FUN_000666a0 (0x666a0) — XBE naked draft (batch 370). */
@@ -747,65 +737,45 @@ void FUN_000667d0(void)
 }
 
 
-/* FUN_000668a0 (0x668a0) — XBE naked draft (batch 331). */
-#if defined(__clang__)
-static void (*const b668a0_c66550)(void) = (void (*)(void))FUN_00066550;
-
-__attribute__((naked, noinline))
-void FUN_000668a0(void)
+/* FUN_000668a0 (0x668a0) — readable C lift from XBE.
+ * ABI: entry@<eax>, tif@<edx>, out@<ecx>. Packs SHORT field with MM byte-swap. */
+int FUN_000668a0(void *entry /*@<eax>*/, void *tif /*@<edx>*/,
+                 unsigned short *out /*@<ecx>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "cmpl $2, %%eax\n\t"
-      "movl %%edx, %%ebx\n\t"
-      "ja .LFUN_000668a0_5\n\t"
-      "cmpw $0x4d4d, 0xc4(%%ebx)\n\t"
-      "jne .LFUN_000668a0_2\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_000668a0_1\n\t"
-      "decl %%eax\n\t"
-      "jne .LFUN_000668a0_4\n\t"
-      "movw 0x8(%%esi), %%ax\n\t"
-      "movw %%ax, 0x2(%%ecx)\n\t"
-      ".LFUN_000668a0_1:\n\t"
-      "movw 0xa(%%esi), %%dx\n\t"
-      "popl %%esi\n\t"
-      "movw %%dx, (%%ecx)\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_000668a0_2:\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_000668a0_3\n\t"
-      "decl %%eax\n\t"
-      "jne .LFUN_000668a0_4\n\t"
-      "movw 0xa(%%esi), %%ax\n\t"
-      "movw %%ax, 0x2(%%ecx)\n\t"
-      ".LFUN_000668a0_3:\n\t"
-      "movw 0x8(%%esi), %%dx\n\t"
-      "movw %%dx, (%%ecx)\n\t"
-      ".LFUN_000668a0_4:\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_000668a0_5:\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c66550]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c66550] "m"(b668a0_c66550)
-      : "memory");
-}
+  unsigned int sz = *(unsigned int *)((char *)entry + 4);
+
+  if (sz > 2) {
+    /* XBE calls FUN_00066550(out) with eax still holding sz; stubs may leave eax. */
+    int ret;
+#if defined(__clang__)
+    __asm__ __volatile__(
+        "pushl %[out]\n\t"
+        "call _FUN_00066550\n\t"
+        "addl $4, %%esp"
+        : "=a"(ret)
+        : [out] "r"(out), "a"(sz)
+        : "memory");
 #else
-#error "FUN_000668a0: clang naked draft required"
+    ret = ((int (*)(void *))(void *)FUN_00066550)(out);
 #endif
+    return ret;
+  }
+
+  if (*(unsigned short *)((char *)tif + 0xc4) == 0x4d4d) {
+    if (sz == 2)
+      out[1] = *(unsigned short *)((char *)entry + 8);
+    if (sz == 1 || sz == 2)
+      out[0] = *(unsigned short *)((char *)entry + 0xa);
+    return 1;
+  }
+
+  if (sz == 2)
+    out[1] = *(unsigned short *)((char *)entry + 0xa);
+  if (sz == 1 || sz == 2)
+    out[0] = *(unsigned short *)((char *)entry + 8);
+  return 1;
+}
+
 
 
 /* FUN_00066900 (0x66900) — readable C lift. */
@@ -950,7 +920,7 @@ void FUN_000669f0(void)
   /* test eax, eax -> jne 0x66b49 */
   ((void(*)(void))FUN_000663f0)();
   /* test edi, edi -> je 0x66b39 */
-  FUN_00066640();
+  ((void (*)(void))FUN_00066640)();
   /* test eax, eax -> jne 0x66b42 */
   TIFFSetField(0, 0, 0);
   /* test edi, edi -> je 0x66c5d */
@@ -961,7 +931,7 @@ void FUN_000669f0(void)
   TIFFSetField(0, 0, 0);
   ((void(*)(void))FUN_00066770)();
   TIFFSetField(0, 0, 0);
-  FUN_00066640();
+  ((void (*)(void))FUN_00066640)();
   TIFFSetField(0, 0, 0);
 
   (void)eax;

@@ -37873,8 +37873,8 @@
         },
         {
           "addr": "0x66640",
-          "decl": "void FUN_00066640(void);",
-          "ported": false,
+          "decl": "int FUN_00066640(void *entry @<eax>, void *tif @<ecx>, void *dest @<edi>);",
+          "ported": true,
           "name": "FUN_00066640"
         },
         {
@@ -37902,8 +37902,8 @@
         },
         {
           "addr": "0x668a0",
-          "decl": "void FUN_000668a0(void);",
-          "ported": false,
+          "decl": "int FUN_000668a0(void *entry @<eax>, void *tif @<edx>, unsigned short *out @<ecx>);",
+          "ported": true,
           "name": "FUN_000668a0"
         },
         {
@@ -38403,7 +38403,7 @@
         },
         {
           "addr": "0x6d140",
-          "decl": "void FUN_0006d140(unsigned char *tif, void *a1, void *a2, void *a3);",
+          "decl": "void FUN_0006d140(void);",
           "ported": false,
           "name": "FUN_0006d140"
         },
@@ -38561,7 +38561,7 @@
         },
         {
           "addr": "0x6e930",
-          "decl": "int FUN_0006e930(void *tif @<ecx>, unsigned int index @<esi>);",
+          "decl": "void FUN_0006e930(void);",
           "ported": false,
           "name": "FUN_0006e930"
         },
@@ -38803,8 +38803,8 @@
         },
         {
           "addr": "0x703f0",
-          "decl": "void FUN_000703f0(void);",
-          "ported": false,
+          "decl": "int FUN_000703f0(void *tif, unsigned int tile, void *data, int size);",
+          "ported": true,
           "name": "FUN_000703f0"
         },
         {
@@ -38902,8 +38902,8 @@
         },
         {
           "addr": "0x71cc0",
-          "decl": "void TIFFWriteRawTile(void);",
-          "ported": false,
+          "decl": "int TIFFWriteRawTile(unsigned char *src, unsigned short *dst);",
+          "ported": true,
           "name": "TIFFWriteRawTile"
         },
         {
