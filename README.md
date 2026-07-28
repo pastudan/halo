@@ -29,9 +29,9 @@ Game Code Progress
 
 Progress breakdown from the [Decompilation Progress Dashboard](https://pastudan.github.io/halo/):
 
-* **Ported Functions:** `6,339 / 6,820` (`92.95%`)
-  `[█████████████████████████████████████░░░] 92.95%`
-* **Ported Code Bytes:** `8,059,203 / 11,216,767` (`71.85%`)
+* **Ported Functions:** `6,340 / 6,820` (`92.96%`)
+  `[█████████████████████████████████████░░░] 92.96%`
+* **Ported Code Bytes:** `8,059,555 / 11,216,767` (`71.85%`)
   `[█████████████████████████████░░░░░░░░░░░] 71.85%`
 * **Average VC71 Match Accuracy:** `88.90%` (`3,780` scored functions, weighted: `64.30%`)
 * **Equivalence Verified:** `539` functions tested (`156` high confidence)
