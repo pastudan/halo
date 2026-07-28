@@ -2013,7 +2013,9 @@ int collision_bsp_test_sphere(int bsp, short flags, int breakable_surfaces,
 /* FUN_00147380 (0x147380) — readable C lift; thin wrapper (node_flags=-1). */
 int FUN_00147380(int a0, int a1, int a2, int a3, int a4, int a5, int a6)
 {
-  return FUN_001470b0(a0, a1, -1, a2, a3, a4, a5, a6);
+  return FUN_001470b0(a0, a1, (uint32_t)-1, (float *)(void *)a2, a3, (float)a4,
+                      (void (*)(float *, int, unsigned int, unsigned int, void *))(void *)a5,
+                      (void *)a6);
 }
 
 /* -------------------------------------------------------------------------
