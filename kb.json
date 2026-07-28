@@ -30646,7 +30646,7 @@
         {
           "addr": "0x1b69a0",
           "decl": "void FUN_001b69a0(int vehicle_handle, void *wheel_buffer, void *scratch_buffer);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001b69a0"
         },
         {
