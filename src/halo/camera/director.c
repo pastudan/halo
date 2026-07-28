@@ -1653,7 +1653,7 @@ void director_load_camera(void)
   _fscanf();
   _fscanf();
   crt_fclose((void *)(uintptr_t)esi);
-  FUN_00089350();
+  ((void(*)(void))FUN_00089350)();
   observer_up_from_forward((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax);
   FUN_0010c510((float *)(uintptr_t)eax, (float *)(uintptr_t)edx);
   /* test (char)eax, 0x41 -> jne 0x86a13 */
@@ -1677,13 +1677,13 @@ void FUN_00086a50(void)
   display_assert((char *)0x00266fc0, (char *)0x0026700c, 179, 0);
   system_exit(0);
   /* cmp eax, 4 -> ja 0x86b24 */
-  following_camera_new();
+  ((void(*)(void))following_camera_new)();
   FUN_000865a0(0x00089cd0, 0, 0);
-  FUN_0008cf10();
+  ((void(*)(void))FUN_0008cf10)();
   FUN_000865a0(0x0008cf30, 0, 0);
-  FUN_00089350();
+  ((void(*)(void))FUN_00089350)();
   FUN_000865a0(0x000893a0, 0, 0);
-  first_person_camera_new();
+  ((void(*)(void))first_person_camera_new)();
   FUN_000865a0(0x00089270, 0, 0);
   display_assert((char *)0, (char *)0x0026700c, 512, 0);
   system_exit(0);
@@ -1858,7 +1858,7 @@ static void (*const b87800_c10cc40)(float *out, float *angles) = angles_to_vecto
 static void (*const b87800_c89350)(void) = (void (*)(void))FUN_00089350;
 
 __attribute__((naked, noinline))
-void FUN_00087800(void)
+void FUN_00087800(float *target __attribute__((unused)), int16_t flag __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2023,7 +2023,7 @@ static void (*const b87b00_exitfn)(int) = system_exit;
 static void (*const b87b00_cff4d0)(int channel, const char *format, ...) = console_printf;
 
 __attribute__((naked, noinline))
-void editor_camera_set_mode(void)
+void editor_camera_set_mode(int16_t mode __attribute__((unused)))
 {
   __asm__ volatile(
       "pushl %%ebp\n\t"
@@ -2354,7 +2354,7 @@ void editor_camera_update(void)
   /* test (char)eax, (char)eax -> jne 0x87f81 */
   FUN_000853c0(0, (void *)(uintptr_t)edi, (void *)(uintptr_t)ecx);
   vector_to_angles((float *)(uintptr_t)eax, (float *)0);
-  FUN_00087eb0();
+  ((void(*)(void))FUN_00087eb0)();
   /* test (int16_t)eax, (int16_t)eax -> je 0x88014 */
   /* test ecx, ecx -> jne 0x87ffc */
   display_assert((char *)0x0026718c, (char *)0x00267120, 356, 0);
