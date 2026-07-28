@@ -175,92 +175,50 @@ void FUN_0006c400(void)
 #endif
 
 
-/* FUN_0006c5e0 (0x6c5e0) — XBE naked draft (batch 343). */
-#if defined(__clang__)
-static void (*const b6c5e0_c68a30)(int param_1, const char *format, ...) = (void (*)(int, const char *, ...))FUN_00068a30;
-static void (*const b6c5e0_c6f890)(void) = (void (*)(void))FUN_0006f890;
-static void (*const b6c5e0_c6d820)(void) = (void *)TIFFScanlineSize;
-
-__attribute__((naked, noinline))
-void FUN_0006c5e0(void)
+/* FUN_0006c5e0 (0x6c5e0) — Capstone lift: set predictor put fn by photometric/bits.
+ * ABI: tif@<eax>, sp@<esi>; stack: put8, put16. */
+int FUN_0006c5e0(void *tif /*@<eax>*/, void *sp /*@<esi>*/,
+                 void *put8, void *put16)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movzwl 0x46(%%eax), %%edx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "je .LFUN_0006c5e0_6\n\t"
-      "decl %%ecx\n\t"
-      "je .LFUN_0006c5e0_1\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x260480\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006c5e0_1:\n\t"
-      "cmpw $1, 0x5e(%%eax)\n\t"
-      "jne .LFUN_0006c5e0_2\n\t"
-      "movzwl 0x44(%%eax), %%ecx\n\t"
-      "jmp .LFUN_0006c5e0_3\n\t"
-      ".LFUN_0006c5e0_2:\n\t"
-      "movl $1, %%ecx\n\t"
-      ".LFUN_0006c5e0_3:\n\t"
-      "movw %%cx, 0x8(%%esi)\n\t"
-      "movzwl 0x36(%%eax), %%ecx\n\t"
-      "cmpl $8, %%ecx\n\t"
-      "je .LFUN_0006c5e0_5\n\t"
-      "cmpl $0x10, %%ecx\n\t"
-      "je .LFUN_0006c5e0_4\n\t"
-      "pushl %%ecx\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl $0x260438\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006c5e0_4:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl %%edx, 0xc(%%esi)\n\t"
-      "jmp .LFUN_0006c5e0_6\n\t"
-      ".LFUN_0006c5e0_5:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0xc(%%esi)\n\t"
-      ".LFUN_0006c5e0_6:\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LFUN_0006c5e0_8\n\t"
-      "movb 0xa(%%eax), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "pushl %%eax\n\t"
-      "jns .LFUN_0006c5e0_7\n\t"
-      "call *%[c6f890]\n\t"
-      "movw %%ax, 0xa(%%esi)\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006c5e0_7:\n\t"
-      "call *%[c6d820]\n\t"
-      "addl $4, %%esp\n\t"
-      "movw %%ax, 0xa(%%esi)\n\t"
-      ".LFUN_0006c5e0_8:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68a30] "m"(b6c5e0_c68a30), [c6f890] "m"(b6c5e0_c6f890), [c6d820] "m"(b6c5e0_c6d820)
-      : "memory");
+  unsigned short photo = *(unsigned short *)((char *)tif + 0x46);
+  unsigned short spp;
+  unsigned short bps;
+  void *put;
+
+  if (photo == 1) {
+    /* fall through to shared tail */
+  } else if (photo == 2) {
+    if (*(unsigned short *)((char *)tif + 0x5e) == 1)
+      spp = *(unsigned short *)((char *)tif + 0x44);
+    else
+      spp = 1;
+    *(unsigned short *)((char *)sp + 8) = spp;
+    bps = *(unsigned short *)((char *)tif + 0x36);
+    if (bps == 8) {
+      *(void **)((char *)sp + 0xc) = put8;
+    } else if (bps == 0x10) {
+      *(void **)((char *)sp + 0xc) = put16;
+    } else {
+      FUN_00068a30(*(void **)tif, (void *)0x00260438, (unsigned)bps);
+      return 0;
+    }
+  } else {
+    FUN_00068a30(*(void **)tif, (void *)0x00260480, (unsigned)photo);
+    return 0;
+  }
+
+  put = *(void **)((char *)sp + 0xc);
+  if (put == 0)
+    return 1;
+  if ((*(signed char *)((char *)tif + 0xa)) < 0) {
+    *(unsigned short *)((char *)sp + 0xa) =
+        (unsigned short)((unsigned (*)(void *))(void *)FUN_0006f890)(tif);
+  } else {
+    *(unsigned short *)((char *)sp + 0xa) =
+        (unsigned short)((unsigned (*)(void *))(void *)TIFFScanlineSize)(tif);
+  }
+  return 1;
 }
-#else
-#error "FUN_0006c5e0: clang naked draft required"
-#endif
 
 
 /* FUN_0006c680 (0x6c680) — Capstone lift: 8-bit horizontal accumulate (decode). */

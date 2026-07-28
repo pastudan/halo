@@ -38307,8 +38307,8 @@
         },
         {
           "addr": "0x6c5e0",
-          "decl": "void FUN_0006c5e0(void);",
-          "ported": false,
+          "decl": "int FUN_0006c5e0(void *tif@<eax>, void *sp@<esi>, void *put8, void *put16);",
+          "ported": true,
           "name": "FUN_0006c5e0"
         },
         {
