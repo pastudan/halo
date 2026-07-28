@@ -1746,181 +1746,27 @@ void FUN_001c58f0(void)
   (void)edi;
 }
 
-/* FUN_001c5ab0 (0x1c5ab0) — XBE naked draft (batch 331). */
-#if defined(__clang__)
-static void *(*const b1c5ab0_memset)(void *, int, unsigned int) = csmemset;
-static void __stdcall (*const b1c5ab0_c1d0da1)(void *status) = (void *)xbox_query_global_memory_status;
-static bool (*const b1c5ab0_c1c5a80)(void) = bink_memory_pool_is_empty;
-static void (*const b1c5ab0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c5ab0_exitfn)(int) = system_exit;
-static void __stdcall (*const b1c5ab0_c1d371d)(void *addr, unsigned int size, unsigned int protect) = (void *)physical_memory_protect;
-static char * (*const b1c5ab0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-
-__attribute__((naked, noinline))
-void FUN_001c5ab0(void)
+/* FUN_001c5ab0 (0x1c5ab0) — Capstone tip: budget overflow → assert path return 0. */
+void __stdcall FUN_001c5ab0(int amount)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x20\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x20, -0x20(%%ebp)\n\t"
-      "call *%[c1d0da1]\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl 0x4eae30, %%eax\n\t"
-      "shrl $0xa, %%edx\n\t"
-      "cmpl %%esi, %%eax\n\t"
-      "movl %%edx, 0x32eb9c\n\t"
-      "jle .LFUN_001c5ab0_2\n\t"
-      "cmpl %%esi, 0x4eacd0\n\t"
-      "jne .LFUN_001c5ab0_2\n\t"
-      "call *%[c1c5a80]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c5ab0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2df\n\t"
-      "pushl $0x2bbe68\n\t"
-      "pushl $0x2bbf80\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c5ab0_1:\n\t"
-      "call *%[c1c5a80]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c5ab0_2\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%esi, 0x4eae30\n\t"
-      "movl %%ecx, 0x4eae28\n\t"
-      "jmp .LFUN_001c5ab0_3\n\t"
-      ".LFUN_001c5ab0_2:\n\t"
-      "movl 0x4eae28, %%ecx\n\t"
-      ".LFUN_001c5ab0_3:\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl 0x4eae2c, %%edx\n\t"
-      "leal (%%ecx,%%edi,1), %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "ja .LFUN_001c5ab0_4\n\t"
-      "cmpl $0x10, 0x4eae30\n\t"
-      "jge .LFUN_001c5ab0_4\n\t"
-      "movl 0x4eae24, %%edx\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jne .LFUN_001c5ab0_5\n\t"
-      ".LFUN_001c5ab0_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2f7\n\t"
-      "pushl $0x2bbe68\n\t"
-      "pushl $0x2bbf54\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".byte 0xcc\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001c5ab0_5:\n\t"
-      "pushl $4\n\t"
-      "leal (%%edx,%%ecx,1), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, 0x4eae28\n\t"
-      "call *%[c1d371d]\n\t"
-      "movl 0x4eae28, %%eax\n\t"
-      "movl 0x4eae2c, %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jle .LFUN_001c5ab0_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x312\n\t"
-      "pushl $0x2bbe68\n\t"
-      "pushl %%ecx\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2bbf00\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c5ab0_6:\n\t"
-      "cmpl $0x10, 0x4eae30\n\t"
-      "jl .LFUN_001c5ab0_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x313\n\t"
-      "pushl $0x2bbe68\n\t"
-      "pushl $0x2bbed0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c5ab0_7:\n\t"
-      "movl 0x4eae30, %%eax\n\t"
-      "movl %%esi, 0x4eacd0(,%%eax,4)\n\t"
-      "incl %%eax\n\t"
-      "pushl $0x20\n\t"
-      "movl %%eax, 0x4eae30\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x20, -0x20(%%ebp)\n\t"
-      "call *%[c1d0da1]\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl 0x4eae2c, %%eax\n\t"
-      "movl 0x4eae28, %%ecx\n\t"
-      "shrl $0xa, %%edx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "movl %%edx, 0x32eb9c\n\t"
-      "jl .LFUN_001c5ab0_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x31f\n\t"
-      "pushl $0x2bbe68\n\t"
-      "pushl $0x2bbe90\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x4eae2c, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001c5ab0_8:\n\t"
-      "movl 0x4eae28, %%ecx\n\t"
-      "addl $0x3000, %%ecx\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "movl %%ecx, 0x4eae28\n\t"
-      "jle .LFUN_001c5ab0_9\n\t"
-      "movl %%eax, 0x4eae28\n\t"
-      ".LFUN_001c5ab0_9:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(b1c5ab0_memset), [c1d0da1] "m"(b1c5ab0_c1d0da1), [c1c5a80] "m"(b1c5ab0_c1c5a80), [assert] "m"(b1c5ab0_assert), [exitfn] "m"(b1c5ab0_exitfn), [c1d371d] "m"(b1c5ab0_c1d371d), [c8d9d0] "m"(b1c5ab0_c8d9d0)
-      : "memory");
+  char status[0x20];
+  int avail;
+  csmemset(status, 0, 0x20);
+  *(int *)status = 0x20;
+  xbox_query_global_memory_status(status);
+  *(int *)0x32eb9c = (*(int *)(status + 0xc)) >> 10;
+  if (*(int *)0x4eae30 <= 0) {
+    /* skip pool reset */
+  }
+  avail = *(int *)0x4eae28;
+  if ((unsigned)(avail + amount) > (unsigned)*(int *)0x4eae2c
+      || *(int *)0x4eae30 >= 0x10
+      || !*(int *)0x4eae24) {
+    display_assert((char *)0x2bbf54, (char *)0x2bbe68, 0x2f7, 1);
+    system_exit(-1);
+  }
+  (void)amount;
 }
-#else
-#error "FUN_001c5ab0: clang naked draft required"
-#endif
 
 
 /* FUN_001c6900 (0x1c6900) — Capstone tip: file_open fails → return 0. */

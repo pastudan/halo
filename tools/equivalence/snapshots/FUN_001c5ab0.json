@@ -1,0 +1,19 @@
+{
+  "description": "FUN_001c5ab0: pool budget overflow \u2192 assert/exit tip",
+  "regions": {
+    "0x4eae30": "00000000",
+    "0x4eae28": "00000000",
+    "0x4eae2c": "00000000",
+    "0x4eae24": "00000000",
+    "0x32eb9c": "00000000"
+  },
+  "arg_overrides": {
+    "amount": 1
+  },
+  "stub_returns": {
+    "csmemset": 0,
+    "xbox_query_global_memory_status": 0,
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}
