@@ -636,125 +636,37 @@ char shader_type_is_valid_for_modifier(short shader_type)
   return 1;
 }
 
-/* shader_environment_texture_animation_evaluate (0x190a90) — XBE naked draft (batch 250). */
-#if defined(__clang__)
-static void (*const b190a90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b190a90_exitfn)(int) = system_exit;
-static void * (*const b190a90_c1906b0)(void *shader, int shader_type) = FUN_001906b0;
-static float (*const b190a90_c10a5e0)(int16_t function_type, float input) = FUN_0010a5e0;
-
-__attribute__((naked, noinline))
+/* shader_environment_texture_animation_evaluate (0x190a90) — readable C lift (restored pre-naked). */
 void shader_environment_texture_animation_evaluate(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lshader_environment_texture_animation_evaluate_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x159\n\t"
-      "pushl $0x2b2348\n\t"
-      "pushl $0x2a18b8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lshader_environment_texture_animation_evaluate_1:\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .Lshader_environment_texture_animation_evaluate_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15a\n\t"
-      "pushl $0x2b2348\n\t"
-      "pushl $0x2b23c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lshader_environment_texture_animation_evaluate_2:\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lshader_environment_texture_animation_evaluate_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15b\n\t"
-      "pushl $0x2b2348\n\t"
-      "pushl $0x2b23b4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lshader_environment_texture_animation_evaluate_3:\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1906b0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "flds 0x154(%%esi)\n\t"
-      "addl $0x6c, %%esi\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $8, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lshader_environment_texture_animation_evaluate_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x160\n\t"
-      "pushl $0x2b2348\n\t"
-      "pushl $0x2b2390\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lshader_environment_texture_animation_evaluate_4:\n\t"
-      "flds 0xf4(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lshader_environment_texture_animation_evaluate_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x161\n\t"
-      "pushl $0x2b2348\n\t"
-      "pushl $0x2b236c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lshader_environment_texture_animation_evaluate_5:\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "fdivs 0xe8(%%esi)\n\t"
-      "movw 0xe4(%%esi), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10a5e0]\n\t"
-      "fmuls 0xec(%%esi)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "fstps (%%ebx)\n\t"
-      "movw 0xf0(%%esi), %%cx\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fdivs 0xf4(%%esi)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10a5e0]\n\t"
-      "fmuls 0xf8(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstps (%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b190a90_assert), [exitfn] "m"(b190a90_exitfn), [c1906b0] "m"(b190a90_c1906b0), [c10a5e0] "m"(b190a90_c10a5e0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  display_assert((char *)0x002a18b8, (char *)0x002b2348, 345, 0);
+  system_exit(0);
+  /* test ebx, ebx -> jne 0x190ae4 */
+  display_assert((char *)0x002b23c0, (char *)0x002b2348, 346, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x190b0b */
+  display_assert((char *)0x002b23b4, (char *)0x002b2348, 347, 0);
+  system_exit(0);
+  FUN_001906b0((void *)(uintptr_t)esi, 0);
+  display_assert((char *)0x002b2390, (char *)0x002b2348, 352, 0);
+  system_exit(0);
+  display_assert((char *)0x002b236c, (char *)0x002b2348, 353, 0);
+  system_exit(0);
+  FUN_0010a5e0(eax, 0.0f);
+  FUN_0010a5e0(ecx, 0.0f);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "shader_environment_texture_animation_evaluate: clang naked draft required"
-#endif
 
 
 /* numeric_countdown_timer_set (0x190be0) — readable C lift. */

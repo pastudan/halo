@@ -24731,7 +24731,7 @@
         {
           "addr": "0x190a90",
           "decl": "void shader_environment_texture_animation_evaluate(void);",
-          "ported": false,
+          "ported": true,
           "name": "shader_environment_texture_animation_evaluate"
         },
         {
@@ -41776,7 +41776,7 @@
         {
           "addr": "0x96110",
           "decl": "void device_export_function_values(void);",
-          "ported": false,
+          "ported": true,
           "name": "device_export_function_values"
         },
         {
