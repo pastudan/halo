@@ -34572,8 +34572,14 @@
         {
           "addr": "0x1d08aa",
           "decl": "unsigned int __stdcall GetTimeZoneInformation(void *tzinfo);",
-          "ported": false,
-          "name": "GetTimeZoneInformation"
+          "ported": true,
+          "name": "GetTimeZoneInformation",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1d0a06",
@@ -41438,7 +41444,7 @@
         },
         {
           "addr": "0x1d0447",
-          "decl": "void FUN_001d0447(void);",
+          "decl": "int __stdcall FUN_001d0447(void *tzinfo, unsigned int *out_flag);",
           "ported": false,
           "name": "FUN_001d0447"
         },

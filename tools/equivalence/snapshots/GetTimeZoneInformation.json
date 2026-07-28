@@ -1,0 +1,7 @@
+{
+  "description": "GetTimeZoneInformation: FUN_001d0447 fails \u2192 SetLastError \u2192 -1",
+  "stub_returns": {
+    "FUN_001d0447": 8,
+    "SetLastError": 0
+  }
+}
