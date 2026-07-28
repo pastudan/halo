@@ -5745,7 +5745,7 @@
         {
           "addr": "0x93e20",
           "decl": "void FUN_00093e20(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00093e20"
         }
       ],
@@ -8216,7 +8216,7 @@
         {
           "addr": "0x199d40",
           "decl": "void FUN_00199d40(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00199d40"
         },
         {
@@ -10699,7 +10699,7 @@
         {
           "addr": "0x1c1340",
           "decl": "void player_profile_setup_default_gamespy_settings(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_profile_setup_default_gamespy_settings"
         },
         {

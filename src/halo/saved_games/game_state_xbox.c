@@ -993,251 +993,61 @@ void game_state_read_from_persistent_storage(int mode)
 
 
 
-/* player_profile_setup_default_gamespy_settings (0x1c1340) — XBE naked draft (batch 244). */
-#if defined(__clang__)
-static void (*const b1c1340_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c1340_exitfn)(int) = system_exit;
-static void (*const b1c1340_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static bool (*const b1c1340_c81720)(void *thread_reference) = thread_is_done;
-static void (*const b1c1340_c81770)(void *thread_reference) = thread_close;
-static void (*const b1c1340_c1c2af0)(void) = (void *)saved_game_files_take_mutex;
-static void (*const b1c1340_c1c4850)(void) = (void *)FUN_001c4850;
-static bool (*const b1c1340_c19ab50)(file_ref_t *info, int size, void *buffer) = file_read;
-static void (*const b1c1340_c1c3160)(void) = (void *)saved_game_file_generate_checksum;
-static int (*const b1c1340_c8da40)(const void *a, const void *b, int size) = csmemcmp;
-static void * (*const b1c1340_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-static void (*const b1c1340_c1c2890)(void) = (void *)saved_game_file_close;
-static void (*const b1c1340_c1c2b10)(void) = (void *)saved_game_files_release_mutex;
-static void *(*const b1c1340_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b1c1340_c1c4600)(void) = (void *)saved_game_file_get_display_name;
-static wchar_t * (*const b1c1340_c19dc90)(wchar_t *dest, wchar_t *src, size_t count) = ustrncpy;
-
-__attribute__((naked, noinline))
+/* player_profile_setup_default_gamespy_settings (0x1c1340) — readable C lift (restored pre-naked). */
 void player_profile_setup_default_gamespy_settings(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x354, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "movb %%bl, -0x1(%%ebp)\n\t"
-      "jne .Lplayer_profile_setup_default_gamespy_settings_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x261\n\t"
-      "pushl $0x2b9f70\n\t"
-      "pushl $0x2829b0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_1:\n\t"
-      "cmpl %%ebx, 0x4eaa2c\n\t"
-      "je .Lplayer_profile_setup_default_gamespy_settings_3\n\t"
-      "pushl $0x2ba0f8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_2:\n\t"
-      "movl 0x4eaa2c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c81720]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_profile_setup_default_gamespy_settings_2\n\t"
-      "movl 0x4eaa2c, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c81770]\n\t"
-      "addl $4, %%esp\n\t"
-      "movl %%ebx, 0x4eaa2c\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_3:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jns .Lplayer_profile_setup_default_gamespy_settings_8\n\t"
-      "call *%[c1c2af0]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_profile_setup_default_gamespy_settings_7\n\t"
-      "leal -0x154(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c4850]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_profile_setup_default_gamespy_settings_6\n\t"
-      "leal -0x354(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x154(%%ebp), %%ecx\n\t"
-      "pushl $0x200\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19ab50]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_profile_setup_default_gamespy_settings_5\n\t"
-      "leal -0x48(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x354(%%ebp), %%eax\n\t"
-      "pushl $0x30\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c3160]\n\t"
-      "pushl $0x14\n\t"
-      "leal -0x324(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x48(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lplayer_profile_setup_default_gamespy_settings_4\n\t"
-      "pushl $0x30\n\t"
-      "leal -0x354(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "leal -0x154(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "call *%[c1c2890]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[c1c2b10]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_4:\n\t"
-      "pushl $0x2ba0a8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl $0x30\n\t"
-      "leal -0x34(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl $0xb\n\t"
-      "pushl %%edi\n\t"
-      "movw $0xffff, -0x1c(%%ebp)\n\t"
-      "movb $3, -0xa(%%ebp)\n\t"
-      "movb %%bl, -0x9(%%ebp)\n\t"
-      "movb %%bl, -0x7(%%ebp)\n\t"
-      "movb %%bl, -0x5(%%ebp)\n\t"
-      "movb %%bl, -0x8(%%ebp)\n\t"
-      "movw %%bx, -0xe(%%ebp)\n\t"
-      "movb %%bl, -0xc(%%ebp)\n\t"
-      "movb %%bl, -0xb(%%ebp)\n\t"
-      "movw %%bx, -0x1a(%%ebp)\n\t"
-      "call *%[c1c4600]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19dc90]\n\t"
-      "pushl $0x30\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movw %%bx, -0x1e(%%ebp)\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "leal -0x154(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "call *%[c1c2890]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[c1c2b10]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_5:\n\t"
-      "pushl $0x2ba080\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "leal -0x154(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c2890]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[c1c2b10]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_6:\n\t"
-      "pushl $0x2b9eec\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "call *%[c1c2b10]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_7:\n\t"
-      "pushl $0x2ba030\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_profile_setup_default_gamespy_settings_8:\n\t"
-      "pushl $0x2ba0a8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl $0x30\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl $0xb\n\t"
-      "pushl %%edi\n\t"
-      "movw $0xffff, -0x1c(%%ebp)\n\t"
-      "movb $3, -0xa(%%ebp)\n\t"
-      "movb %%bl, -0x9(%%ebp)\n\t"
-      "movb %%bl, -0x7(%%ebp)\n\t"
-      "movb %%bl, -0x5(%%ebp)\n\t"
-      "movb %%bl, -0x8(%%ebp)\n\t"
-      "movw %%bx, -0xe(%%ebp)\n\t"
-      "movb %%bl, -0xc(%%ebp)\n\t"
-      "movb %%bl, -0xb(%%ebp)\n\t"
-      "movw %%bx, -0x1a(%%ebp)\n\t"
-      "call *%[c1c4600]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19dc90]\n\t"
-      "pushl $0x30\n\t"
-      "leal -0x34(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movw %%bx, -0x1e(%%ebp)\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c1340_assert), [exitfn] "m"(b1c1340_exitfn), [c8f390] "m"(b1c1340_c8f390), [c81720] "m"(b1c1340_c81720), [c81770] "m"(b1c1340_c81770), [c1c2af0] "m"(b1c1340_c1c2af0), [c1c4850] "m"(b1c1340_c1c4850), [c19ab50] "m"(b1c1340_c19ab50), [c1c3160] "m"(b1c1340_c1c3160), [c8da40] "m"(b1c1340_c8da40), [c8e0b0] "m"(b1c1340_c8e0b0), [c1c2890] "m"(b1c1340_c1c2890), [c1c2b10] "m"(b1c1340_c1c2b10), [memset] "m"(b1c1340_memset), [c1c4600] "m"(b1c1340_c1c4600), [c19dc90] "m"(b1c1340_c19dc90)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  display_assert((char *)0x002829b0, (char *)0x002b9f70, 609, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [0x4eaa2c], ebx -> je 0x1c13b7 */
+  error(0, (char *)0x002ba0f8);
+  thread_is_done((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x1c1390 */
+  thread_close((void *)(uintptr_t)ecx);
+  /* mem[0x004eaa2c] = ebx */
+  saved_game_files_take_mutex();
+  /* test (char)eax, (char)eax -> je 0x1c1535 */
+  ((void(*)(void))FUN_001c4850)();
+  /* test (char)eax, (char)eax -> je 0x1c1519 */
+  file_read((void *)(uintptr_t)ecx, 512, (void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x1c14ed */
+  ((void(*)(void))saved_game_file_generate_checksum)();
+  csmemcmp((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, 20);
+  /* test eax, eax -> jne 0x1c1465 */
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)eax, 48);
+  ((void(*)(void))saved_game_file_close)();
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002ba0a8);
+  csmemset((void *)(uintptr_t)ecx, 0, 48);
+  ((void(*)(void))saved_game_file_get_display_name)();
+  ustrncpy((wchar_t *)(uintptr_t)edx, (wchar_t *)(uintptr_t)eax, 0);
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)eax, 48);
+  ((void(*)(void))saved_game_file_close)();
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002ba080);
+  ((void(*)(void))saved_game_file_close)();
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002b9eec);
+  saved_game_files_release_mutex();
+  error(0, (char *)0x002ba030);
+  error(0, (char *)0x002ba0a8);
+  csmemset((void *)(uintptr_t)edx, 0, 48);
+  ((void(*)(void))saved_game_file_get_display_name)();
+  ustrncpy((wchar_t *)(uintptr_t)eax, (wchar_t *)(uintptr_t)eax, 0);
+  csmemcpy((void *)(uintptr_t)esi, (void *)(uintptr_t)ecx, 48);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
-#else
-#error "player_profile_setup_default_gamespy_settings: clang naked draft required"
-#endif
+
 
 
 /* FUN_001c15c0 (0x1c15c0) — XBE naked draft (batch 249). */
