@@ -901,233 +901,96 @@ int16_t FUN_000dcdc0(int object_handle)
   return (int16_t)-1;
 }
 
-/* first_person_weapon_draw (0xdce80) — XBE naked draft (batch 234). */
-#if defined(__clang__)
-static void (*const bdce80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bdce80_exitfn)(int) = system_exit;
-static int (*const bdce80_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const bdce80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const bdce80_get)(int, int) = object_get_and_verify_type;
-static void *(*const bdce80_tag)(int, int) = tag_get;
-static void * (*const bdce80_c18e450)(void) = game_globals_get;
-static void *(*const bdce80_elem)(void *, int, int) = tag_block_get_element;
-static void * (*const bdce80_c18c0b0)(int object_handle, float lod) = scenario_leaf_index_from_point;
-static void (*const bdce80_cdcbd0)(int mode_tag_index, int fp_nodes, int antr_tag_index, int anim_nodes, int16_t *node_remap) = fp_anim_apply_node_remap;
-static void (*const bdce80_c123ed0)(int model_ref, float distance, void *node_matrices, void *arg4, void *node_transforms, void *node_matrices2, int lighting, void *position, int arg9, void *effect_record, int object_handle, int arg12, int render_flag) = FUN_00123ed0;
-
-__attribute__((naked, noinline))
+/* first_person_weapon_draw (0xdce80) — readable C lift (restored pre-naked). */
 void first_person_weapon_draw(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xd38, %%esp\n\t"
-      "movl 0x506548, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%edi\n\t"
-      "cmpw %%di, %%ax\n\t"
-      "je .Lfirst_person_weapon_draw_7\n\t"
-      "testw %%ax, %%ax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jl .Lfirst_person_weapon_draw_1\n\t"
-      "cmpw $4, %%ax\n\t"
-      "jl .Lfirst_person_weapon_draw_2\n\t"
-      ".Lfirst_person_weapon_draw_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x599\n\t"
-      "pushl $0x282294\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl %%edi\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x506548, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lfirst_person_weapon_draw_2:\n\t"
-      "movl 0x46bea8, %%ecx\n\t"
-      "movswl %%si, %%esi\n\t"
-      "imull $0x1ea0, %%esi, %%esi\n\t"
-      "pushl %%eax\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x506548, %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cba3c0]\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "cmpb $0, (%%esi)\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "cmpl %%edi, 0x4(%%esi)\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "cmpl %%edi, 0x8(%%esi)\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "pushl $4\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x478(%%edi), %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "pushl $0xc0\n\t"
-      "pushl $0\n\t"
-      "call *%[c18e450]\n\t"
-      "addl $0x17c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x478(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x616e7472\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[tag]\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "pushl $0x7f7fffff\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18c0b0]\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movb 0x1b4(%%ebx), %%al\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb $0x10, %%al\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "jne .Lfirst_person_weapon_draw_3\n\t"
-      "flds 0x32c(%%ebx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lfirst_person_weapon_draw_3\n\t"
-      "movw %%cx, -0x38(%%ebp)\n\t"
-      "jmp .Lfirst_person_weapon_draw_4\n\t"
-      ".Lfirst_person_weapon_draw_3:\n\t"
-      "movl 0x32c(%%ebx), %%eax\n\t"
-      "movl 0x330(%%ebx), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x34(%%ebp)\n\t"
-      "movl 0x506550, %%eax\n\t"
-      "movl %%ecx, -0x30(%%ebp)\n\t"
-      "movl 0x506554, %%ecx\n\t"
-      "movl %%edx, -0x2c(%%ebp)\n\t"
-      "movl 0x506558, %%edx\n\t"
-      "movw $1, -0x38(%%ebp)\n\t"
-      "movl %%eax, -0x28(%%ebp)\n\t"
-      "movl %%ecx, -0x24(%%ebp)\n\t"
-      "movl %%edx, -0x20(%%ebp)\n\t"
-      ".Lfirst_person_weapon_draw_4:\n\t"
-      "movb 0x1d8c(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lfirst_person_weapon_draw_5\n\t"
-      "movl 0x468(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lfirst_person_weapon_draw_5\n\t"
-      "leal 0x1d8e(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x478(%%edi), %%ecx\n\t"
-      "leal 0x108c(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xd38(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cdcbd0]\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl $8\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "leal -0x38(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl $0x506550\n\t"
-      "pushl %%edx\n\t"
-      "leal 0xe4(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x168, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x468(%%edi), %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0xd38(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c123ed0]\n\t"
-      "addl $0x44, %%esp\n\t"
-      ".Lfirst_person_weapon_draw_5:\n\t"
-      "movb 0x1e0e(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ecx), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lfirst_person_weapon_draw_6\n\t"
-      "leal 0x1e10(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x478(%%edi), %%edx\n\t"
-      "leal 0x108c(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0xd38(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cdcbd0]\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl $8\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0x506550\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "leal 0xe4(%%ebx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ecx), %%edx\n\t"
-      "addl $0x168, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0\n\t"
-      "leal -0xd38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c123ed0]\n\t"
-      "addl $0x44, %%esp\n\t"
-      ".Lfirst_person_weapon_draw_6:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".Lfirst_person_weapon_draw_7:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(bdce80_assert), [exitfn] "m"(bdce80_exitfn), [cba3c0] "m"(bdce80_cba3c0), [dget] "m"(bdce80_dget), [get] "m"(bdce80_get), [tag] "m"(bdce80_tag), [c18e450] "m"(bdce80_c18e450), [elem] "m"(bdce80_elem), [c18c0b0] "m"(bdce80_c18c0b0), [cdcbd0] "m"(bdce80_cdcbd0), [c123ed0] "m"(bdce80_c123ed0)
-      : "memory");
+  int16_t local_player;
+  char *fp;
+  char *unit;
+  char *weapon_obj;
+  char *weap;
+  char *globals_player;
+  void *leaf;
+  int player_index;
+  int unit_handle;
+  int mode_tag;
+  uint32_t lod_bits;
+  float lod;
+  char light_info[0x38];
+  char node_matrices[0xd00];
+
+  local_player = *(int16_t *)0x506548;
+  if (local_player == (int16_t)-1)
+    return;
+  if (local_player < 0 || local_player >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
+
+  fp = (char *)(*(int *)0x46bea8) + (int)local_player * 0x1ea0;
+  player_index = local_player_get_player_index(*(int *)0x506548);
+  if (player_index == -1)
+    return;
+  player_index =
+      local_player_get_player_index((int16_t)(*(uint16_t *)0x506548));
+  unit_handle =
+      *(int *)((char *)datum_get(*(data_t **)0x5aa6d4, player_index) + 0x34);
+  if (unit_handle == -1)
+    return;
+  if (fp[0] == 0 || *(int *)(fp + 4) == -1 || *(int *)(fp + 8) == -1)
+    return;
+
+  unit = (char *)object_get_and_verify_type(unit_handle, 3);
+  weapon_obj = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
+  weap = (char *)tag_get(0x77656170, *(int *)weapon_obj); /* 'weap' */
+  if (*(int *)(weap + 0x478) == -1)
+    return;
+
+  globals_player = (char *)tag_block_get_element(
+      (char *)game_globals_get() + 0x17c, 0, 0xc0);
+  (void)tag_get(0x616e7472, *(int *)(weap + 0x478)); /* 'antr' */
+  lod_bits = 0x7f7fffff;
+  lod = *(float *)&lod_bits;
+  leaf = scenario_leaf_index_from_point(unit_handle, lod);
+
+  csmemset(light_info, 0, sizeof(light_info));
+  if (((*(unsigned char *)(unit + 0x1b4) & 0x10) != 0) ||
+      (*(float *)(unit + 0x32c) > 0.0f)) {
+    *(int *)(light_info + 4) = *(int *)(unit + 0x32c);
+    *(int *)(light_info + 8) = *(int *)(unit + 0x330);
+    *(int *)(light_info + 0xc) = unit_handle;
+    *(int *)(light_info + 0x10) = *(int *)0x506550;
+    *(int *)(light_info + 0x14) = *(int *)0x506554;
+    *(int *)(light_info + 0x18) = *(int *)0x506558;
+    *(int16_t *)light_info = 1;
+  } else {
+    *(int16_t *)light_info = 0;
+  }
+
+  if (fp[0x1d8c] != 0) {
+    mode_tag = *(int *)(weap + 0x468);
+    if (mode_tag != -1) {
+      fp_anim_apply_node_remap(mode_tag, (int)node_matrices,
+                               *(int *)(weap + 0x478), (int)(fp + 0x108c),
+                               (int16_t *)(fp + 0x1d8e));
+      FUN_00123ed0(mode_tag, 0.0f, node_matrices, 0, weapon_obj + 0x168,
+                   weapon_obj + 0xe4, (int)leaf, (void *)0x506550, 0,
+                   light_info, *(int *)(fp + 8), 0, 8);
+    }
+  }
+
+  if (fp[0x1e0e] != 0) {
+    mode_tag = *(int *)(globals_player + 0xc);
+    if (mode_tag != -1) {
+      fp_anim_apply_node_remap(mode_tag, (int)node_matrices,
+                               *(int *)(weap + 0x478), (int)(fp + 0x108c),
+                               (int16_t *)(fp + 0x1e10));
+      FUN_00123ed0(mode_tag, 0.0f, node_matrices, 0, unit + 0x168, unit + 0xe4,
+                   (int)leaf, (void *)0x506550, 0, light_info, *(int *)(fp + 8),
+                   0, 8);
+    }
+  }
 }
-#else
-#error "first_person_weapon_draw: clang naked draft required"
-#endif
 
 
 /* first_person_weapon_get_marker_by_name (0xdd190) — readable C lift. */

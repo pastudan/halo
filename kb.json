@@ -7976,7 +7976,7 @@
         {
           "addr": "0xdaee0",
           "decl": "void FUN_000daee0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000daee0"
         },
         {
@@ -8454,7 +8454,7 @@
         {
           "addr": "0xdce80",
           "decl": "void first_person_weapon_draw(void);",
-          "ported": false,
+          "ported": true,
           "name": "first_person_weapon_draw"
         },
         {
