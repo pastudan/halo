@@ -20298,7 +20298,7 @@
         {
           "addr": "0x154a50",
           "decl": "int FUN_00154a50(int flags, int physics_tag_data, int *collision_location, int object_handle, float *position, float *velocity, float *force, float *collision_normal_out, int16_t *surface_index_out, float radius, float delta_time);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00154a50"
         }
       ],
