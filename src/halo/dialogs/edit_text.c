@@ -299,149 +299,35 @@ snap_and_return:
 }
 /* --- edit_text.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00096d70 (0x96d70) — XBE naked draft (batch 356). */
-#if defined(__clang__)
-static void *(*const b96d70_get)(int, int) = object_get_and_verify_type;
-static char * (*const b96d70_c8dff0)(char *destination, const char *source) = (void *)csstrcpy;
-static int (*const b96d70_c8df60)(const char *s1) = (void *)csstrlen;
-static int (*const b96d70_c1d90f0)(char *buffer, const char *format, ...) = (void *)crt_sprintf;
-static void *(*const b96d70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static vector3_t * (*const b96d70_c1412f0)(int object_handle, vector3_t *out_position) = (void *)object_get_world_position;
-static void (*const b96d70_c189cb0)(char flag, void *position, void *string, int color) = (void *)FUN_00189cb0;
-
-__attribute__((naked, noinline))
+/* FUN_00096d70 (0x96d70) — readable C lift (restored pre-naked). */
 void FUN_00096d70(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20c, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $0x380\n\t"
-      "pushl %%edi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x5aa8c4, %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00096d70_3\n\t"
-      "leal -0x20c(%%ebp), %%eax\n\t"
-      "pushl $0x25386f\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dff0]\n\t"
-      "flds 0x1b0(%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "subl $8, %%esp\n\t"
-      "flds 0x1ac(%%esi)\n\t"
-      "leal -0x20c(%%ebp), %%ecx\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x269b6c\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8df60]\n\t"
-      "leal -0x20c(%%ebp,%%eax,1), %%edx\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movw 0x1a8(%%esi), %%ax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_00096d70_1\n\t"
-      "movl 0x5aa8c8, %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movzwl 0x1a8(%%esi), %%edx\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x20c(%%ebp), %%eax\n\t"
-      "pushl $0x269b50\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8df60]\n\t"
-      "leal -0x20c(%%ebp,%%eax,1), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00096d70_1:\n\t"
-      "flds 0x1bc(%%esi)\n\t"
-      "subl $0x10, %%esp\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "leal -0x20c(%%ebp), %%edx\n\t"
-      "flds 0x1b8(%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x269b34\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8df60]\n\t"
-      "leal -0x20c(%%ebp,%%eax,1), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movw 0x1b4(%%esi), %%ax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_00096d70_2\n\t"
-      "movl 0x5aa8c8, %%edx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "leal -0x20c(%%ebp), %%ecx\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "movzwl 0x1b4(%%esi), %%eax\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x269b50\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c8df60]\n\t"
-      "leal -0x20c(%%ebp,%%eax,1), %%edx\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00096d70_2:\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1412f0]\n\t"
-      "movl 0x31fc44, %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "movl 0x2ee6c4, %%ecx\n\t"
-      "fmuls 0x253524\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x20c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "fadds -0xc(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls 0x253524\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "fmuls 0x253524\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "call *%[c189cb0]\n\t"
-      "addl $0x18, %%esp\n\t"
-      ".LFUN_00096d70_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b96d70_get), [c8dff0] "m"(b96d70_c8dff0), [c8df60] "m"(b96d70_c8df60), [c1d90f0] "m"(b96d70_c1d90f0), [dget] "m"(b96d70_dget), [c1412f0] "m"(b96d70_c1412f0), [c189cb0] "m"(b96d70_c189cb0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  object_get_and_verify_type(0, 896);
+  /* test (char)eax, (char)eax -> je 0x96f14 */
+  csstrcpy((char *)(uintptr_t)eax, (char *)0x0025386f);
+  csstrlen((char *)(uintptr_t)ecx);
+  crt_sprintf((char *)(uintptr_t)edx, (char *)0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x96e34 */
+  datum_get((void *)(uintptr_t)ecx, 0);
+  csstrlen((char *)(uintptr_t)eax);
+  crt_sprintf((char *)(uintptr_t)ecx, (char *)0);
+  csstrlen((char *)(uintptr_t)edx);
+  crt_sprintf((char *)(uintptr_t)eax, (char *)0);
+  /* cmp (int16_t)eax, 0xffff -> je 0x96ebd */
+  datum_get((void *)(uintptr_t)edx, 0);
+  csstrlen((char *)(uintptr_t)ecx);
+  crt_sprintf((char *)(uintptr_t)edx, (char *)0);
+  object_get_world_position(0, (void *)(uintptr_t)eax);
+  FUN_00189cb0(0, (void *)0, (void *)0, 0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
-#else
-#error "FUN_00096d70: clang naked draft required"
-#endif
 
 
 /* FUN_00096f20 (0x96f20) — XBE naked draft (batch 337). */

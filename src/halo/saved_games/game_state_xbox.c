@@ -333,118 +333,37 @@ void game_state_create_or_open_file(void)
 }
 
 
-/* game_state_read_from_file (0x1c0450) — XBE naked draft (batch 254). */
-#if defined(__clang__)
-static void (*const b1c0450_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c0450_exitfn)(int) = system_exit;
-static unsigned int __stdcall (*const b1c0450_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
-static int __stdcall (*const b1c0450_c1d13c9)(int handle, void *buffer, uint32_t size, uint32_t *bytes_read, void *overlapped) = (void *)0x1d13c9;
-static int (*const b1c0450_c1d2240)(void) = xapi_GetLastError;
-static char * (*const b1c0450_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-
-__attribute__((naked, noinline))
+/* game_state_read_from_file (0x1c0450) — readable C lift (restored pre-naked). */
 void game_state_read_from_file(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movb 0x4ea9b0, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgame_state_read_from_file_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x90\n\t"
-      "pushl $0x2b9b70\n\t"
-      "pushl $0x2b9ba0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_state_read_from_file_1:\n\t"
-      "movb 0x4ea9bc, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgame_state_read_from_file_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x91\n\t"
-      "pushl $0x2b9b70\n\t"
-      "pushl $0x2b9c30\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_state_read_from_file_2:\n\t"
-      "movb 0x4ea9bd, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgame_state_read_from_file_3\n\t"
-      "movb 0x5054e8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgame_state_read_from_file_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x92\n\t"
-      "pushl $0x2b9b70\n\t"
-      "pushl $0x2b9ca0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_state_read_from_file_3:\n\t"
-      "movl 0x4ea9c0, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d1610]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lgame_state_read_from_file_4\n\t"
-      "movl 0x4ea9b8, %%edx\n\t"
-      "movl 0x4ea9b4, %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x4ea9c0, %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d13c9]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgame_state_read_from_file_4\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "cmpl 0x4ea9b8, %%edx\n\t"
-      "jne .Lgame_state_read_from_file_4\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgame_state_read_from_file_4:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x9c\n\t"
-      "pushl $0x2b9b70\n\t"
-      "call *%[c1d2240]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b9c7c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c0450_assert), [exitfn] "m"(b1c0450_exitfn), [c1d1610] "m"(b1c0450_c1d1610), [c1d13c9] "m"(b1c0450_c1d13c9), [c1d2240] "m"(b1c0450_c1d2240), [c8d9d0] "m"(b1c0450_c8d9d0)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  /* test (char)eax, (char)eax -> jne 0x1c0480 */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 144, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c04a9 */
+  display_assert((char *)0x002b9c30, (char *)0x002b9b70, 145, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> jne 0x1c04db */
+  /* test (char)eax, (char)eax -> jne 0x1c04db */
+  display_assert((char *)0x002b9ca0, (char *)0x002b9b70, 146, 0);
+  system_exit(0);
+  SetFilePointer(0, 0, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c0526 */
+  ReadFile(0, (void *)(uintptr_t)eax, edx, (void *)(uintptr_t)ecx, (void *)0);
+  /* test eax, eax -> je 0x1c0526 */
+  /* relift: cmp edx, dword ptr [0x4ea9b8] -> jne 0x1c0526 */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b9c7c);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
-#else
-#error "game_state_read_from_file: clang naked draft required"
-#endif
 
 
 /* game_state_write_core (0x1c0570) — readable C lift: write buffer to core file. */

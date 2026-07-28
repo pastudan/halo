@@ -41862,7 +41862,7 @@
         {
           "addr": "0x96a90",
           "decl": "void FUN_00096a90(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00096a90"
         }
       ],

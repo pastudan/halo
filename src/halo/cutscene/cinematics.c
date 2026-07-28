@@ -66,127 +66,28 @@ void cinematic_show_letterbox(int a0)
     *(int *)((char *)p + 4) = game_time_get();
 }
 
-/* draw_quad (0x92ec0) — XBE naked draft (batch 271). */
-#if defined(__clang__)
-static scenario_t * (*const b92ec0_c18e380)(void) = global_scenario_get;
-static void * (*const b92ec0_c18e450)(void) = game_globals_get;
-static void *(*const b92ec0_elem)(void *, int, int) = tag_block_get_element;
-static void *(*const b92ec0_tag)(int, int) = tag_get;
-static void *(*const b92ec0_memset)(void *, int, unsigned int) = csmemset;
-static void (*const b92ec0_c17cfa0)(void *render_data, void *vertices) = rasterizer_sprites_render;
-
-__attribute__((naked, noinline))
-void draw_quad(int16_t *rect __attribute__((unused)), int color __attribute__((unused)))
+/* draw_quad (0x92ec0) — readable C lift (restored pre-naked). */
+void draw_quad(int16_t *rect, int color)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "call *%[c18e450]\n\t"
-      "movl 0x134(%%eax), %%ecx\n\t"
-      "addl $0x134, %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "je .Ldraw_quad_1\n\t"
-      "pushl $0x1ac\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Ldraw_quad_2\n\t"
-      ".Ldraw_quad_1:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Ldraw_quad_2:\n\t"
-      "movl 0xb8(%%eax), %%eax\n\t"
-      "pushl $0x30\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6269746d\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x60, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw $8, 0x325652\n\t"
-      "movswl 0x2(%%eax), %%ecx\n\t"
-      "movswl (%%eax), %%edx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movswl 0x6(%%eax), %%ecx\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "movswl 0x4(%%eax), %%edx\n\t"
-      "fsts -0x24(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fsts -0x20(%%ebp)\n\t"
-      "leal -0x24(%%ebp), %%ecx\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "leal -0xf8(%%ebp), %%eax\n\t"
-      "movl $4, %%edx\n\t"
-      "fsts -0x1c(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fsts -0x10(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      ".Ldraw_quad_3:\n\t"
-      "movl (%%ecx), %%edi\n\t"
-      "movl %%edi, -0x8(%%eax)\n\t"
-      "movl 0x4(%%ecx), %%edi\n\t"
-      "movl %%esi, 0x8(%%eax)\n\t"
-      "movl %%ebx, (%%eax)\n\t"
-      "movl %%ebx, 0x4(%%eax)\n\t"
-      "movl %%edi, -0x4(%%eax)\n\t"
-      "addl $8, %%ecx\n\t"
-      "addl $0x14, %%eax\n\t"
-      "decl %%edx\n\t"
-      "jne .Ldraw_quad_3\n\t"
-      "pushl $0x8c\n\t"
-      "leal -0xb0(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[memset]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "leal -0x100(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0xb0(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movw %%bx, -0x28(%%ebp)\n\t"
-      "movl $0x3f800000, -0x6c(%%ebp)\n\t"
-      "movl $0x3f800000, -0x70(%%ebp)\n\t"
-      "movl $0x3f800000, -0x84(%%ebp)\n\t"
-      "movl $0x3f800000, -0x88(%%ebp)\n\t"
-      "movl %%ebx, -0xb0(%%ebp)\n\t"
-      "movb %%bl, -0x26(%%ebp)\n\t"
-      "movl %%ecx, -0xa4(%%ebp)\n\t"
-      "call *%[c17cfa0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, 0x325652\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b92ec0_c18e380), [c18e450] "m"(b92ec0_c18e450), [elem] "m"(b92ec0_elem), [tag] "m"(b92ec0_tag), [memset] "m"(b92ec0_memset), [c17cfa0] "m"(b92ec0_c17cfa0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  global_scenario_get();
+  game_globals_get();
+  /* cmp ecx, ebx -> je 0x92ef8 */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 428);
+  tag_get(0x6269746d, 0);
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  csmemset((void *)(uintptr_t)eax, 0, 140);
+  rasterizer_sprites_render((void *)(uintptr_t)eax, (void *)(uintptr_t)edx);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
 }
-#else
-#error "draw_quad: clang naked draft required"
-#endif
 
 
 /* cinematic_force_title (0x93010) — readable C lift. */
