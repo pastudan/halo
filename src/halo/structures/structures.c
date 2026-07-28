@@ -1451,133 +1451,59 @@ float FUN_001057f0(float *param_1, float *param_2, float *param_3)
              param_2[2] * param_3[2])));
 }
 
-/* calculate_vertex (0x105830) — XBE naked draft (batch 85). */
-#if defined(__clang__)
-static void (*const b105830_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b105830_exitfn)(int) = system_exit;
-static float (*const b105830_norm)(float *) = normalize3d;
-
-__attribute__((naked, noinline))
-void calculate_vertex(short subdivision_index __attribute__((unused)), short subdivision_count __attribute__((unused)), short parent2 __attribute__((unused)), short parent1 __attribute__((unused)), void *sphere __attribute__((unused)), short new_vertex __attribute__((unused)))
+/* calculate_vertex (0x105830) — readable C lift (restored pre-naked). */
+void calculate_vertex(short subdivision_index /* @<eax> */,
+                      short subdivision_count /* @<ecx> */,
+                      short parent2 /* @<edx> */, short parent1 /* @<ebx> */,
+                      void *sphere /* @<edi> */, short new_vertex)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "pushl %%esi\n\t"
-      "movw %%dx, %%si\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "fidivl -0x8(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jle .Lcalculate_vertex_1\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "jl .Lcalculate_vertex_2\n\t"
-      ".Lcalculate_vertex_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13b\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28befc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcalculate_vertex_2:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jl .Lcalculate_vertex_3\n\t"
-      "cmpw 0xc(%%edi), %%bx\n\t"
-      "jle .Lcalculate_vertex_4\n\t"
-      ".Lcalculate_vertex_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13c\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28becc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcalculate_vertex_4:\n\t"
-      "testw %%si, %%si\n\t"
-      "jl .Lcalculate_vertex_5\n\t"
-      "cmpw 0xc(%%edi), %%si\n\t"
-      "jle .Lcalculate_vertex_6\n\t"
-      ".Lcalculate_vertex_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13d\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28be9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcalculate_vertex_6:\n\t"
-      "movw 0x8(%%ebp), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lcalculate_vertex_7\n\t"
-      "cmpw 0xc(%%edi), %%ax\n\t"
-      "jle .Lcalculate_vertex_8\n\t"
-      ".Lcalculate_vertex_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x13e\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28be64\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lcalculate_vertex_8:\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal (%%ecx,%%eax,4), %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "leal (%%ecx,%%eax,4), %%esi\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "leal (%%eax,%%eax,2), %%eax\n\t"
-      "fmuls 0x8(%%edx)\n\t"
-      "shll $2, %%eax\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x4(%%edx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls (%%edx)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps (%%eax,%%ecx,1)\n\t"
-      "fstps 0x4(%%eax,%%ecx,1)\n\t"
-      "fstps 0x8(%%eax,%%ecx,1)\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[norm]\n\t"
-      "fstp %%st(0)\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b105830_assert), [exitfn] "m"(b105830_exitfn), [norm] "m"(b105830_norm)
-      : "memory");
+  float frac;
+  float inv_frac;
+  int itmp;
+  float *verts;
+  float *vp1;
+  float *vp2;
+  float *vout;
+  short vertex_count;
+
+  itmp = subdivision_index;
+  frac = (float)itmp;
+  itmp = subdivision_count;
+  frac = frac / itmp;
+  inv_frac = *(float *)0x002533c8 - frac;
+
+  if (subdivision_index <= 0 || subdivision_index >= subdivision_count) {
+    display_assert(
+        "subdivision_index > 0 && subdivision_index < subdivision_count",
+        "c:\\halo\\SOURCE\\math\\geometry.c", 0x13b, true);
+    system_exit(-1);
+  }
+  vertex_count = *(short *)((char *)sphere + 0xc);
+  if (parent1 < 0 || parent1 > vertex_count) {
+    display_assert("parent1 >=0 && parent1 <= sphere->vertex_count",
+                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x13c, true);
+    system_exit(-1);
+  }
+  if (parent2 < 0 || parent2 > vertex_count) {
+    display_assert("parent2 >=0 && parent2 <= sphere->vertex_count",
+                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x13d, true);
+    system_exit(-1);
+  }
+  if (new_vertex < 0 || new_vertex > vertex_count) {
+    display_assert("new_vertex >=0 && new_vertex <= sphere->vertex_count",
+                   "c:\\halo\\SOURCE\\math\\geometry.c", 0x13e, true);
+    system_exit(-1);
+  }
+
+  verts = *(float **)((char *)sphere + 4);
+  vp1 = verts + (int)parent1 * 3;
+  vp2 = verts + (int)parent2 * 3;
+  vout = verts + (int)new_vertex * 3;
+  vout[0] = inv_frac * vp1[0] + frac * vp2[0];
+  vout[1] = frac * vp2[1] + inv_frac * vp1[1];
+  vout[2] = frac * vp2[2] + inv_frac * vp1[2];
+  normalize3d(vout);
 }
-#else
-#error "calculate_vertex: clang naked draft required"
-#endif
 
 
 /* 0x105980 — Build a ring/cylinder (torus-like) mesh.
@@ -3516,115 +3442,57 @@ void FUN_001954d0(void)
   build_structure_lens_flares(scenario_get());
 }
 
-/* FUN_00195550 (0x195550) — XBE naked draft (batch 86). */
-#if defined(__clang__)
-static void * (*const b195550_c18e3c0)(void) = (void *(*)(void))global_scenario_get;
-static void *(*const b195550_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b195550_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b195550_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void FUN_00195550(short surface_count __attribute__((unused)), int *out_indices __attribute__((unused)), unsigned int *mask __attribute__((unused)), int out_surfaces __attribute__((unused)))
+/* FUN_00195550 (0x195550) — readable C lift (restored pre-naked). */
+void FUN_00195550(short surface_count, int *out_indices, uint32_t *mask,
+                  int out_surfaces)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e3c0]\n\t"
-      "movl 0xf8(%%eax), %%ecx\n\t"
-      "addl $0xf8, %%eax\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jle .LFUN_00195550_8\n\t"
-      "pushl %%esi\n\t"
-      "jmp .LFUN_00195550_1\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00195550_1:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "cmpl $0, (%%ecx)\n\t"
-      "je .LFUN_00195550_6\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      ".LFUN_00195550_2:\n\t"
-      "cmpl (%%eax), %%edi\n\t"
-      "jge .LFUN_00195550_7\n\t"
-      "movb %%dl, %%cl\n\t"
-      "movl $1, %%esi\n\t"
-      "shll %%cl, %%esi\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "testl %%esi, (%%ecx)\n\t"
-      "je .LFUN_00195550_5\n\t"
-      "pushl $6\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "jl .LFUN_00195550_3\n\t"
-      "cmpw 0x8(%%ebp), %%bx\n\t"
-      "jl .LFUN_00195550_4\n\t"
-      ".LFUN_00195550_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a5\n\t"
-      "pushl $0x2b347c\n\t"
-      "pushl $0x2b34ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00195550_4:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%edi, (%%eax)\n\t"
-      "movw (%%esi), %%cx\n\t"
-      "addl $4, %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "leal (%%eax,%%eax,2), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "leal (%%eax,%%edx,2), %%eax\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "movw 0x2(%%esi), %%dx\n\t"
-      "movw %%dx, 0x2(%%eax)\n\t"
-      "movw 0x4(%%esi), %%cx\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movw %%cx, 0x4(%%eax)\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "incl %%ebx\n\t"
-      ".LFUN_00195550_5:\n\t"
-      "incl %%edx\n\t"
-      "incl %%edi\n\t"
-      "cmpw $0x20, %%dx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jl .LFUN_00195550_2\n\t"
-      "jmp .LFUN_00195550_7\n\t"
-      ".LFUN_00195550_6:\n\t"
-      "addl $0x20, %%edi\n\t"
-      ".LFUN_00195550_7:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "movl %%edx, 0x10(%%ebp)\n\t"
-      "jl .LFUN_00195550_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00195550_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e3c0] "m"(b195550_c18e3c0), [elem] "m"(b195550_elem), [assert] "m"(b195550_assert), [exitfn] "m"(b195550_exitfn)
-      : "memory");
+  int *block;
+  int scenario;
+  short bit;
+  short write_index;
+  int surface_index;
+  uint16_t *dst;
+  uint16_t *elem;
+
+  scenario = (int)scenario_get();
+  block = (int *)(scenario + 0xf8);
+  write_index = 0;
+  surface_index = 0;
+  if (0 < *(int *)(scenario + 0xf8)) {
+    do {
+      if (*mask == 0) {
+        surface_index = surface_index + 0x20;
+      } else {
+        bit = 0;
+        do {
+          if (*block <= surface_index)
+            break;
+          if ((*mask & 1 << ((uint8_t)bit & 0x1f)) != 0) {
+            elem = (uint16_t *)tag_block_get_element(block, surface_index, 6);
+            if ((write_index < 0) || (surface_count <= write_index)) {
+              display_assert(
+                "surface_index_index>=0 && surface_index_index<surface_count",
+                "c:\\halo\\SOURCE\\structures\\structure_render.c", 0x1a5,
+                true);
+              system_exit(-1);
+            }
+            *out_indices = surface_index;
+            out_indices = out_indices + 1;
+            dst = (uint16_t *)(out_surfaces + write_index * 6);
+            dst[0] = elem[0];
+            dst[1] = elem[1];
+            dst[2] = elem[2];
+            write_index = write_index + 1;
+          }
+          bit = bit + 1;
+          surface_index = surface_index + 1;
+        } while (bit < 0x20);
+      }
+      mask = mask + 1;
+    } while (surface_index < *block);
+  }
 }
-#else
-#error "FUN_00195550: clang naked draft required"
-#endif
+
 
 
 /* FUN_00195650 (0x195650) — readable C lift (restored pre-naked). */

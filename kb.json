@@ -26457,7 +26457,7 @@
         {
           "addr": "0x105830",
           "decl": "void calculate_vertex(short subdivision_index@<eax>, short subdivision_count@<ecx>, short parent2@<edx>, short parent1@<ebx>, void *sphere@<edi>, short new_vertex);",
-          "ported": false,
+          "ported": true,
           "name": "calculate_vertex"
         },
         {
@@ -26740,7 +26740,7 @@
         {
           "addr": "0x195550",
           "decl": "void FUN_00195550(short surface_count, int *out_indices, unsigned int *mask, int out_surfaces);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00195550"
         },
         {
