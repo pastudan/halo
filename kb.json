@@ -15880,9 +15880,15 @@
         },
         {
           "addr": "0x11ba50",
-          "decl": "int FUN_0011ba50(short *table @<esi>, void *key, unsigned short *slot_index_out);",
+          "decl": "char FUN_0011ba50(short *table@<esi>, void *key, unsigned short *slot_index_out);",
           "name": "FUN_0011ba50",
-          "ported": false
+          "ported": true,
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x11bb70",

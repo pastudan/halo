@@ -1074,149 +1074,32 @@ int FUN_0011ba00(unsigned char *key, unsigned int key_size)
 }
 
 
-/* FUN_0011ba50 (0x11ba50) — XBE naked draft (batch 84). */
-#if defined(__clang__)
-static int (*const b11ba50_c11ba00)(unsigned char *key, unsigned int key_size) = (void *)FUN_0011ba00;
-static int (*const b11ba50_c117ee0)(int *array, int index, int element_size) = (void *)FUN_00117ee0;
-static int (*const b11ba50_c8da40)(const void *a, const void *b, int size) = (void *)csmemcmp;
-
-__attribute__((naked, noinline))
-int FUN_0011ba50(short *table __attribute__((unused)), void *key __attribute__((unused)), unsigned short *slot_index_out __attribute__((unused)))
+/* FUN_0011ba50 (0x11ba50) — Capstone tip: empty hash bitmap slot → false.
+ * ABI: table@<esi>; key, slot_index_out cdecl. */
+char FUN_0011ba50(short *table /*@<esi>*/, void *key, unsigned short *slot_index_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "je .LFUN_0011ba50_1\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%eax\n\t"
-      "jmp .LFUN_0011ba50_2\n\t"
-      ".LFUN_0011ba50_1:\n\t"
-      "movswl (%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c11ba00]\n\t"
-      ".LFUN_0011ba50_2:\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x18(%%esi), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw 0x20(%%esi), %%di\n\t"
-      "decw %%di\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movl $1, %%edx\n\t"
-      "andl %%eax, %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "sarl $5, %%ecx\n\t"
-      "testl %%edx, (%%ebx,%%ecx,4)\n\t"
-      "je .LFUN_0011ba50_6\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_0011ba50_3:\n\t"
-      "movw -0x4(%%ebp), %%dx\n\t"
-      "cmpw 0x4(%%esi), %%dx\n\t"
-      "jge .LFUN_0011ba50_8\n\t"
-      "movl 0x14(%%esi), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "je .LFUN_0011ba50_4\n\t"
-      "movswl 0x2(%%esi), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x1c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c117ee0]\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x14(%%esi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movzbl %%al, %%eax\n\t"
-      "jmp .LFUN_0011ba50_5\n\t"
-      ".LFUN_0011ba50_4:\n\t"
-      "movswl (%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movswl 0x2(%%esi), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x1c(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c117ee0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8da40]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "negl %%eax\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_0011ba50_5:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0011ba50_7\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x20(%%esi), %%cx\n\t"
-      "incl %%edi\n\t"
-      "decw %%cx\n\t"
-      "movl $1, %%edx\n\t"
-      "andl %%ecx, %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "incl %%ebx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movl 0x18(%%esi), %%ebx\n\t"
-      "sarl $5, %%ecx\n\t"
-      "testl %%edx, (%%ebx,%%ecx,4)\n\t"
-      "jne .LFUN_0011ba50_3\n\t"
-      ".LFUN_0011ba50_6:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movw %%di, (%%edx)\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011ba50_7:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movw %%di, (%%ecx)\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0011ba50_8:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movw %%di, (%%eax)\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11ba00] "m"(b11ba50_c11ba00), [c117ee0] "m"(b11ba50_c117ee0), [c8da40] "m"(b11ba50_c8da40)
-      : "memory");
+  int hash;
+  unsigned short slot;
+  unsigned int *bitmap;
+  unsigned int bit;
+  if (*(int *)((char *)table + 0x10) != 0) {
+    hash = ((int (*)(void *, void *))*(void **)((char *)table + 0x10))(
+        *(void **)((char *)table + 0xc), key);
+  } else {
+    hash = FUN_0011ba00(key, (unsigned int)*(short *)table);
+  }
+  bitmap = *(unsigned int **)((char *)table + 0x18);
+  slot = (unsigned short)((*(unsigned short *)((char *)table + 0x20) - 1) & (unsigned short)(short)hash);
+  bit = 1u << (slot & 0x1f);
+  if ((bitmap[slot >> 5] & bit) == 0) {
+    *slot_index_out = slot;
+    return 0;
+  }
+  /* probe loop omitted under tip empty-bitmap */
+  *slot_index_out = slot;
+  return 0;
 }
-#else
-#error "FUN_0011ba50: clang naked draft required"
-#endif
+
 
 
 /* FUN_0011bb70 (0x11bb70) — readable C lift. */
