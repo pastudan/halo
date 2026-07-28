@@ -14427,7 +14427,7 @@
         {
           "addr": "0xf5fb0",
           "decl": "char FUN_000f5fb0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f5fb0"
         },
         {
