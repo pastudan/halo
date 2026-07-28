@@ -26228,7 +26228,7 @@
         {
           "addr": "0x192da0",
           "decl": "void leaf_map_build_portals_from_leaf(void);",
-          "ported": false,
+          "ported": true,
           "name": "leaf_map_build_portals_from_leaf"
         },
         {
@@ -26647,7 +26647,7 @@
           "addr": "0x191cb0",
           "decl": "void leaf_map_mark_portal_designators(void *structure, uint32_t portal_index);",
           "name": "leaf_map_mark_portal_designators",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x191d80",

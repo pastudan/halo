@@ -3117,103 +3117,49 @@ short FUN_00191c70(void *block, int search_value)
 
 
 
-/* leaf_map_mark_portal_designators (0x191cb0) — XBE naked draft (batch 87). */
-#if defined(__clang__)
-static void *(*const b191cb0_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b191cb0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b191cb0_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
-void leaf_map_mark_portal_designators(void *structure __attribute__((unused)), uint32_t portal_index __attribute__((unused)))
+/* leaf_map_mark_portal_designators (0x191cb0) — readable C lift (restored pre-naked). */
+void leaf_map_mark_portal_designators(void *structure, uint32_t portal_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x18\n\t"
-      "leal 0x10(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "addl $4, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "addl $4, %%eax\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl $2, -0x4(%%ebp)\n\t"
-      ".Lleaf_map_mark_portal_designators_1:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl $0x18\n\t"
-      "andl $0x7fffffff, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "leal 0xc(%%eax), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .Lleaf_map_mark_portal_designators_4\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".Lleaf_map_mark_portal_designators_2:\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "andl $0x7fffffff, %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "je .Lleaf_map_mark_portal_designators_3\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "incl %%edi\n\t"
-      "movswl %%di, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lleaf_map_mark_portal_designators_2\n\t"
-      "jmp .Lleaf_map_mark_portal_designators_4\n\t"
-      ".Lleaf_map_mark_portal_designators_3:\n\t"
-      "orl $0x80000000, (%%eax)\n\t"
-      ".Lleaf_map_mark_portal_designators_4:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movswl %%di, %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jne .Lleaf_map_mark_portal_designators_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2a1\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b293c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lleaf_map_mark_portal_designators_5:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "decl %%eax\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .Lleaf_map_mark_portal_designators_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b191cb0_elem), [assert] "m"(b191cb0_assert), [exitfn] "m"(b191cb0_exitfn)
-      : "memory");
+  int *designator_count;
+  uint32_t *designator;
+  int block_index;
+  short designator_index;
+  int remaining;
+  uint32_t *portal;
+  int leaves_block;
+
+  portal = (uint32_t *)tag_block_get_element((char *)structure + 0x10,
+                                             portal_index, 0x18);
+  leaves_block = (int)structure + 4;
+  remaining = 2;
+  do {
+    portal = portal + 1;
+    block_index = (int)tag_block_get_element((void *)leaves_block,
+                                             *portal & 0x7fffffff, 0x18);
+    designator_count = (int *)(block_index + 0xc);
+    designator_index = 0;
+    if (0 < *designator_count) {
+      block_index = 0;
+      do {
+        designator =
+          (uint32_t *)tag_block_get_element(designator_count, block_index, 4);
+        if ((*designator & 0x7fffffff) == portal_index) {
+          *designator = *designator | 0x80000000;
+          break;
+        }
+        designator_index = designator_index + 1;
+        block_index = (int)designator_index;
+      } while (block_index < *designator_count);
+    }
+    if ((int)designator_index == *designator_count) {
+      display_assert("portal_designator_index!=leaf->portal_designators.count",
+                     "c:\\halo\\SOURCE\\structures\\leaf_map.c", 0x2a1, 1);
+      system_exit(-1);
+    }
+    remaining = remaining - 1;
+  } while (remaining != 0);
 }
-#else
-#error "leaf_map_mark_portal_designators: clang naked draft required"
-#endif
+
 
 
 /* FUN_00191d80 (0x191d80)
