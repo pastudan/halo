@@ -253,6 +253,7 @@ def main() -> int:
     )
 
     proven: list[str] = []
+    proven_addrs: list[int] = []
     skipped_tus: set[str] = set()
     processed = 0
 
@@ -316,8 +317,12 @@ def main() -> int:
                 print(f"BLOCK_NAKED_FLIP revert {name}", flush=True)
                 full.write_text(backup, encoding="utf-8")
                 continue
+            # Re-load kb before flip so concurrent tip commits are not clobbered
+            # by a stale in-memory snapshot from wave start.
+            kb = json.loads((ROOT / "kb.json").read_text())
             if flip_kb(kb, addr):
                 proven.append(name)
+                proven_addrs.append(addr)
                 (ROOT / "kb.json").write_text(json.dumps(kb, indent=2) + "\n")
                 print(f"FLIP {name} n={len(proven)}", flush=True)
                 if args.commit_every and len(proven) % args.commit_every == 0:
@@ -339,9 +344,13 @@ def main() -> int:
             note_fail(fail_ledger, name, f"uni_{p}_{f}_{e}")
             full.write_text(backup, encoding="utf-8")
 
-    (ROOT / "kb.json").write_text(json.dumps(kb, indent=2) + "\n")
+    # Never rewrite kb from a stale snapshot when nothing proven — that race
+    # wiped concurrent tip-reprove flips (e.g. structures + volume_name).
     if proven:
-        files = ["kb.json"]
+        kb = json.loads((ROOT / "kb.json").read_text())
+        for a in proven_addrs:
+            flip_kb(kb, a)
+        (ROOT / "kb.json").write_text(json.dumps(kb, indent=2) + "\n")
         # stage any remaining modified sources for proven names
         subprocess.run(["git", "add", "-u", "src/halo", "kb.json"], cwd=ROOT, check=False)
         st = subprocess.run(["git", "diff", "--cached", "--quiet"], cwd=ROOT)
