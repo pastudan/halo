@@ -3500,63 +3500,40 @@ void FUN_0006ab10(void)
 #endif
 
 
-/* FUN_0006ac60 (0x6ac60) — XBE naked draft (batch 328). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006ac60(void)
+/* FUN_0006ac60 (0x6ac60) — readable C lift from XBE.
+ * Expand bytes through LUT @0x3340c8 → dest dwords (same shape as FUN_0006a910). */
+void FUN_0006ac60(unsigned int *dest, unsigned char *src, void *unused,
+                  unsigned int bit_count, unsigned int row_count, int src_pitch,
+                  int dest_extra)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jbe .LFUN_0006ac60_4\n\t"
-      "movl 0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x3340c8, %%esi\n\t"
-      "leal (,%%ecx,4), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, 0x18(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "jmp .LFUN_0006ac60_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0006ac60_1:\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jbe .LFUN_0006ac60_3\n\t"
-      ".LFUN_0006ac60_2:\n\t"
-      "movzbl (%%ecx), %%ebx\n\t"
-      "movl (%%esi,%%ebx,4), %%ebx\n\t"
-      "movl (%%ebx), %%ebx\n\t"
-      "movl %%ebx, (%%eax)\n\t"
-      "addl $4, %%eax\n\t"
-      "incl %%ecx\n\t"
-      "decl %%edx\n\t"
-      "jne .LFUN_0006ac60_2\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      ".LFUN_0006ac60_3:\n\t"
-      "addl 0x18(%%ebp), %%eax\n\t"
-      "addl 0x1c(%%ebp), %%ecx\n\t"
-      "decl %%edi\n\t"
-      "jne .LFUN_0006ac60_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_0006ac60_4:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int **lut;
+  unsigned int dest_pitch;
+  unsigned int *out;
+  unsigned char *in;
+  unsigned int x;
+
+  (void)unused;
+  if (row_count == 0)
+    return;
+  lut = *(unsigned int ***)0x3340c8;
+  dest_pitch = (unsigned)dest_extra * 4;
+  out = dest;
+  in = src;
+  do {
+    x = bit_count;
+    if (x > 0) {
+      do {
+        *out = *lut[*in];
+        out += 1;
+        in += 1;
+        x -= 1;
+      } while (x != 0);
+    }
+    out = (unsigned int *)((char *)out + (int)dest_pitch);
+    in += src_pitch;
+    row_count -= 1;
+  } while (row_count != 0);
 }
-#else
-#error "FUN_0006ac60: clang naked draft required"
-#endif
 
 
 /* FUN_0006acc0 (0x6acc0) — XBE naked draft (batch 303). */
