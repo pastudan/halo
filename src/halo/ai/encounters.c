@@ -8017,160 +8017,62 @@ void FUN_0005bbe0(int encounter_handle __attribute__((unused)))
 #endif
 
 
-/* encounter_get_actor_starting_location (0x5c3a0) — XBE naked draft (batch 232). */
-#if defined(__clang__)
-static scenario_t * (*const b5c3a0_c18e380)(void) = global_scenario_get;
-static void *(*const b5c3a0_elem)(void *, int, int) = tag_block_get_element;
-static char (*const b5c3a0_c5b790)(int encounter_handle, int16_t squad_index, int flag) = FUN_0005B790;
-static void *(*const b5c3a0_tag)(int, int) = tag_get;
-static void (*const b5c3a0_c3f850)(int16_t param_1, char *force_major, char *is_random, float *random_chance) = ai_get_major_upgrade_chance;
-static char (*const b5c3a0_c41250)(int encounter_handle, int16_t squad_index, float spawn_cost) = ai_consider_major_upgrade;
-static int (*const b5c3a0_c3f030)(int actv_tag_index, int encounter_index, int squad_index, void *starting_location, char use_major_variant, int16_t team) = FUN_0003f030;
-static void (*const b5c3a0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-char encounter_get_actor_starting_location(int16_t profile_index __attribute__((unused)), int delay __attribute__((unused)), int flag __attribute__((unused)), int encounter_handle /* */ __attribute__((unused)))
+char encounter_get_actor_starting_location(int16_t profile_index, int delay, int flag, int encounter_handle )
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x14, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "andl $0xffff, %%eax\n\t"
-      "pushl $0xb0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x42c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movswl 0x8(%%ebp), %%esi\n\t"
-      "pushl $0xe8\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "addl $0x80, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c5b790]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lencounter_get_actor_starting_location_4\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "pushl $0x1c\n\t"
-      "pushl %%edx\n\t"
-      "leal 0xd0(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x20(%%edi), %%cx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movw %%cx, -0xc(%%ebp)\n\t"
-      "call *%[c18e380]\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x18(%%edx), %%cx\n\t"
-      "cmpw $-1, %%cx\n\t"
-      "jne .Lencounter_get_actor_starting_location_1\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      ".Lencounter_get_actor_starting_location_1:\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jl .Lencounter_get_actor_starting_location_3\n\t"
-      "movl 0x420(%%eax), %%edx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jge .Lencounter_get_actor_starting_location_3\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x420, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lencounter_get_actor_starting_location_4\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x61637476\n\t"
-      "call *%[tag]\n\t"
-      "movb $0, -0x5(%%ebp)\n\t"
-      "movl 0x30(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "je .Lencounter_get_actor_starting_location_2\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x80(%%edi), %%ax\n\t"
-      "leal -0x1(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x5(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movl $0, -0xc(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c3f850]\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lencounter_get_actor_starting_location_2\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c41250]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movb %%al, -0x5(%%ebp)\n\t"
-      ".Lencounter_get_actor_starting_location_2:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl -0x5(%%ebp), %%ecx\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c3f030]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "popl %%edi\n\t"
-      "setne %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lencounter_get_actor_starting_location_3:\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x25dc18\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lencounter_get_actor_starting_location_4:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(b5c3a0_c18e380), [elem] "m"(b5c3a0_elem), [c5b790] "m"(b5c3a0_c5b790), [tag] "m"(b5c3a0_tag), [c3f850] "m"(b5c3a0_c3f850), [c41250] "m"(b5c3a0_c41250), [c3f030] "m"(b5c3a0_c3f030), [c8f390] "m"(b5c3a0_c8f390)
-      : "memory");
+  char *enc_def;
+  char *profile;
+  int16_t loc_index;
+  char *start_rec;
+  char *scenario;
+  char *bsp_elem;
+  int16_t bsp_index;
+  char major;
+
+  enc_def = (char *)tag_block_get_element((char *)global_scenario_get() + 0x42c,
+                                          encounter_handle & 0xffff, 0xb0);
+  profile = (char *)tag_block_get_element(enc_def + 0x80, (int)profile_index,
+                                          0xe8);
+  loc_index = (int16_t)FUN_0005B790(encounter_handle, profile_index, flag);
+  if (loc_index == -1)
+    return 0;
+
+  start_rec = (char *)tag_block_get_element(profile + 0xd0, (int)loc_index,
+                                            0x1c);
+  bsp_index = *(int16_t *)(start_rec + 0x18);
+  if (bsp_index == -1)
+    bsp_index = *(int16_t *)(profile + 0x20);
+  if (bsp_index < 0) {
+    error(2, (const char *)0x25dc18, profile, enc_def);
+    return 0;
+  }
+
+  scenario = (char *)global_scenario_get();
+  if (bsp_index >= *(int *)(scenario + 0x420))
+    return 0;
+
+  major = 0;
+  bsp_elem = (char *)tag_block_get_element(scenario + 0x420, (int)bsp_index,
+                                           0x10);
+  {
+    char force = 0;
+    char is_random = 0;
+    float random_chance = 0.0f;
+    char *actv_tag;
+
+    actv_tag = (char *)tag_get(*(int *)(bsp_elem + 0xc), 0x61637476);
+    if (*(int *)(actv_tag + 0x30) != -1) {
+      ai_get_major_upgrade_chance(*(int16_t *)(profile + 0x80), &force,
+                                  &is_random, &random_chance);
+      if (force)
+        major = ((char(__cdecl *)(int16_t, int16_t, int))0x41250)(
+            (int16_t)random_chance, profile_index, encounter_handle);
+    }
+  }
+
+  return (char)(FUN_0003f030(
+             *(int *)(bsp_elem + 0xc), encounter_handle, (int)profile_index,
+             start_rec, major, (int16_t)delay) != -1);
 }
-#else
-#error "encounter_get_actor_starting_location: clang naked draft required"
-#endif
 
 
 /* encounter_spawn_actor (0x5c510) — readable C lift from XBE leaf. */

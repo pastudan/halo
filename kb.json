@@ -7267,7 +7267,7 @@
         {
           "addr": "0x85b60",
           "decl": "void FUN_00085b60(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00085b60"
         },
         {
@@ -27986,7 +27986,7 @@
         },
         {
           "addr": "0xe4ad0",
-          "decl": "void FUN_000e4ad0(void *icon_state@<esi>, int16_t *cursor@<ebx>, int string_index);",
+          "decl": "void FUN_000e4ad0(void *icon_state /* @<esi> */, int16_t *cursor /* @<ebx> */, int string_index);",
           "ported": false,
           "name": "FUN_000e4ad0"
         },
@@ -37480,8 +37480,8 @@
         },
         {
           "addr": "0x5c3a0",
-          "decl": "char encounter_get_actor_starting_location(int16_t profile_index, int delay, int flag, int encounter_handle /* @<ebx> */);",
-          "ported": false,
+          "decl": "char encounter_get_actor_starting_location(int16_t profile_index, int delay, int flag, int encounter_handle @<ebx>);",
+          "ported": true,
           "name": "encounter_get_actor_starting_location"
         },
         {

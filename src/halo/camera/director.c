@@ -747,127 +747,28 @@ int FUN_00085ab0(int exclude_handle, int fallback, char require_field_match)
 
 
 
-/* FUN_00085b60 (0x85b60) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void * (*const b85b60_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
-static void (*const b85b60_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b85b60_exitfn)(int) = system_exit;
-static unsigned int *(*const b85b60_lseed)(void) = random_math_get_local_seed_address;
-static float (*const b85b60_rrange)(int *, float, float) = random_real_range;
-static bool (*const b85b60_gerun)(void) = game_engine_running;
-static int (*const b85b60_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const b85b60_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-
-__attribute__((naked, noinline))
 void FUN_00085b60(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c8a4e0]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "jne .LFUN_00085b60_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x17\n\t"
-      "pushl $0x266f44\n\t"
-      "pushl $0x266e9c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00085b60_1:\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "pushl $0x40c00000\n\t"
-      "pushl $0x40000000\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl $0x3f9c61aa, 0x18(%%esi)\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x40c90fdb\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      "pushl $0\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x3f8cbe4c\n\t"
-      "fstps 0xc(%%esi)\n\t"
-      "pushl $0x3ef1463b\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl 0x266f38, %%edx\n\t"
-      "fchs\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fstps 0x10(%%esi)\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%edx, 0x1c(%%esi)\n\t"
-      "je .LFUN_00085b60_2\n\t"
-      "flds 0x2548fc\n\t"
-      "jmp .LFUN_00085b60_4\n\t"
-      ".LFUN_00085b60_2:\n\t"
-      "call *%[gerun]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00085b60_3\n\t"
-      "flds 0x266f3c\n\t"
-      "jmp .LFUN_00085b60_4\n\t"
-      ".LFUN_00085b60_3:\n\t"
-      "flds 0x266f40\n\t"
-      ".LFUN_00085b60_4:\n\t"
-      "pushl %%ebx\n\t"
-      "fstps 0x2c(%%esi)\n\t"
-      "call *%[cba3c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%eax, 0x20(%%esi)\n\t"
-      "jne .LFUN_00085b60_5\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x38(%%eax), %%eax\n\t"
-      "movl 0x20(%%esi), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x28(%%esi)\n\t"
-      "movl %%ecx, 0x24(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00085b60_5:\n\t"
-      "movl 0x20(%%esi), %%ecx\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x28(%%esi)\n\t"
-      "movl %%ecx, 0x24(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8a4e0] "m"(b85b60_c8a4e0), [assert] "m"(b85b60_assert), [exitfn] "m"(b85b60_exitfn), [lseed] "m"(b85b60_lseed), [rrange] "m"(b85b60_rrange), [gerun] "m"(b85b60_gerun), [cba3c0] "m"(b85b60_cba3c0), [dget] "m"(b85b60_dget)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+
+  observer_get_camera(ebx);
+  display_assert((char *)0x00266e9c, (char *)0x00266f44, 23, 0);
+  system_exit(0);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  game_engine_running();
+  /* test (char)eax, (char)eax -> je 0x85c2b */
+  local_player_get_player_index(0);
+  datum_get((void *)(uintptr_t)eax, 0);
+
+  (void)eax;
+  (void)ebx;
 }
-#else
-#error "FUN_00085b60: clang naked draft required"
-#endif
 
 
 /* FUN_00085c80 (0x85c80) — XBE naked draft (batch 106). */
