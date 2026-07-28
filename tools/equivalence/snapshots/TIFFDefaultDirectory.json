@@ -1,0 +1,10 @@
+{
+  "description": "TIFFDefaultDirectory: cache hit at DAT_003340ac",
+  "regions": {
+    "0x3340ac": "00000030",
+    "0x30000000": "0001000000000000000000000000000000000000"
+  },
+  "arg_overrides": {
+    "tag": 256
+  }
+}

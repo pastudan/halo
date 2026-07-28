@@ -37850,8 +37850,8 @@
         },
         {
           "addr": "0x66380",
-          "decl": "void TIFFDefaultDirectory(void);",
-          "ported": false,
+          "decl": "void *TIFFDefaultDirectory(unsigned short tag);",
+          "ported": true,
           "name": "TIFFDefaultDirectory"
         },
         {
@@ -38385,8 +38385,8 @@
         },
         {
           "addr": "0x6cde0",
-          "decl": "void FUN_0006cde0(void);",
-          "ported": false,
+          "decl": "void FUN_0006cde0(void *tif@<edi>);",
+          "ported": true,
           "name": "FUN_0006cde0"
         },
         {
@@ -38519,8 +38519,8 @@
         },
         {
           "addr": "0x6dd00",
-          "decl": "void FUN_0006dd00(void);",
-          "ported": false,
+          "decl": "int FUN_0006dd00(void *tif, unsigned char *buf, int len_count, int arg3);",
+          "ported": true,
           "name": "FUN_0006dd00"
         },
         {

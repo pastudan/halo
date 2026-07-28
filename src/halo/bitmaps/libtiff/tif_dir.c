@@ -58,7 +58,7 @@ void FUN_00065af0(void)
   int esi = 0;
 
   /* cmp esi, 0x55 -> ja 0x65d36 */
-  TIFFDefaultDirectory();
+  ((void *(*)(unsigned short))TIFFDefaultDirectory)(0);
   FUN_00068a30(0x0025f6c4, (char *)0x0025f6d4);
   /* cmp (int16_t)ecx, 4 -> jne 0x65d79 */
 
@@ -357,61 +357,36 @@ void *FUN_00066320(unsigned short tag, int val)
 
 
 
-/* TIFFDefaultDirectory (0x66380) — XBE naked draft (batch 374). */
-#if defined(__clang__)
-static void (*const b66380_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b66380_c1d980b)(int param_1) = (void *)FUN_001d980b;
-
-__attribute__((naked, noinline))
-void TIFFDefaultDirectory(void)
+/* TIFFDefaultDirectory (0x66380) — Capstone lift: lookup tag info by tag id. */
+void *TIFFDefaultDirectory(unsigned short tag)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x3340ac, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movw 0x8(%%ebp), %%dx\n\t"
-      "je .LTIFFDefaultDirectory_1\n\t"
-      "cmpw %%dx, (%%eax)\n\t"
-      "je .LTIFFDefaultDirectory_4\n\t"
-      ".LTIFFDefaultDirectory_1:\n\t"
-      "movl 0x2c9a98, %%eax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movl $0x2c9a98, %%ecx\n\t"
-      "je .LTIFFDefaultDirectory_5\n\t"
-      ".LTIFFDefaultDirectory_2:\n\t"
-      "cmpw %%dx, %%ax\n\t"
-      "je .LTIFFDefaultDirectory_3\n\t"
-      "movw 0x14(%%ecx), %%ax\n\t"
-      "addl $0x14, %%ecx\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LTIFFDefaultDirectory_2\n\t"
-      "jmp .LTIFFDefaultDirectory_5\n\t"
-      ".LTIFFDefaultDirectory_3:\n\t"
-      "movl %%ecx, 0x3340ac\n\t"
-      "movl %%ecx, %%eax\n\t"
-      ".LTIFFDefaultDirectory_4:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LTIFFDefaultDirectory_6\n\t"
-      ".LTIFFDefaultDirectory_5:\n\t"
-      "movzwl %%dx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25fabc\n\t"
-      "pushl $0x25faa8\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $-1\n\t"
-      "call *%[c1d980b]\n\t"
-      ".LTIFFDefaultDirectory_6:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68a30] "m"(b66380_c68a30), [c1d980b] "m"(b66380_c1d980b)
-      : "memory");
+  void *cur = *(void **)0x003340ac;
+  unsigned char *p;
+  unsigned short key;
+
+  if (cur != 0 && *(unsigned short *)cur == tag)
+    return cur;
+
+  p = (unsigned char *)0x002c9a98;
+  key = *(unsigned short *)p;
+  if (key == 0)
+    goto fail;
+  while (1) {
+    if (key == tag) {
+      *(void **)0x003340ac = p;
+      return p;
+    }
+    p += 0x14;
+    key = *(unsigned short *)p;
+    if (key == 0)
+      break;
+  }
+fail:
+  FUN_00068a30((void *)0x0025faa8, (void *)0x0025fabc, (unsigned)tag);
+  ((void (*)(int))(void *)0x001d980b)(-1);
+  return 0;
 }
-#else
-#error "TIFFDefaultDirectory: clang naked draft required"
-#endif
+
 
 /* FUN_000663f0 (0x663f0) — readable C lift: alloc  tag dir entry buffer. */
 void *FUN_000663f0(void *tif, int arg, unsigned int size)

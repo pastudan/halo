@@ -1,0 +1,6 @@
+{
+  "description": "FUN_0006dd00: len_count<=0 early return 1",
+  "arg_overrides": {
+    "len_count": 0
+  }
+}

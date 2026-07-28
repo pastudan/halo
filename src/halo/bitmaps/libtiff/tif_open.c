@@ -910,64 +910,39 @@ int FUN_0006cda0(unsigned char *tif)
   return 1;
 }
 
-/* FUN_0006cde0 (0x6cde0) — XBE naked draft (batch 319). */
-#if defined(__clang__)
-static void (*const b6cde0_c6ca50)(void) = (void (*)(void))FUN_0006ca50;
-static void (*const b6cde0_c6c960)(void) = (void (*)(void))FUN_0006c960;
-
-__attribute__((naked, noinline))
-void FUN_0006cde0(void)
+/* FUN_0006cde0 (0x6cde0) — Capstone lift: LZW code-size bump / ClearCode emit.
+ * ABI: tif@<edi>. */
+void FUN_0006cde0(void *tif /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%esi\n\t"
-      "movl 0x120(%%edi), %%esi\n\t"
-      "movl 0x28(%%esi), %%eax\n\t"
-      "cmpl $0x7fffff, %%eax\n\t"
-      "leal 0x2710(%%eax), %%ecx\n\t"
-      "movl %%ecx, 0x20(%%esi)\n\t"
-      "jle .LFUN_0006cde0_2\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "sarl $8, %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jne .LFUN_0006cde0_1\n\t"
-      "movl $0x7fffffff, %%eax\n\t"
-      "jmp .LFUN_0006cde0_3\n\t"
-      ".LFUN_0006cde0_1:\n\t"
-      "cdq\n\t"
-      "idivl %%ecx\n\t"
-      "jmp .LFUN_0006cde0_3\n\t"
-      ".LFUN_0006cde0_2:\n\t"
-      "shll $8, %%eax\n\t"
-      "cdq\n\t"
-      "idivl 0x2c(%%esi)\n\t"
-      ".LFUN_0006cde0_3:\n\t"
-      "cmpl 0x24(%%esi), %%eax\n\t"
-      "jg .LFUN_0006cde0_4\n\t"
-      "call *%[c6ca50]\n\t"
-      "pushl $0x100\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c6c960]\n\t"
-      "movb 0x4(%%esi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $2, %%al\n\t"
-      "movw $9, 0x6(%%esi)\n\t"
-      "movl $0x1ff, 0x10(%%esi)\n\t"
-      "je .LFUN_0006cde0_5\n\t"
-      "movl $0x200, 0x10(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_0006cde0_4:\n\t"
-      "movl %%eax, 0x24(%%esi)\n\t"
-      ".LFUN_0006cde0_5:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      : [c6ca50] "m"(b6cde0_c6ca50), [c6c960] "m"(b6cde0_c6c960)
-      : "memory");
+  unsigned char *sp = *(unsigned char **)((char *)tif + 0x120);
+  int free_ent = *(int *)(sp + 0x28);
+  int maxcode;
+  int nbits_free;
+
+  nbits_free = free_ent + 0x2710;
+  *(int *)(sp + 0x20) = nbits_free;
+
+  if (free_ent > 0x7fffff) {
+    int denom = *(int *)(sp + 0x2c) >> 8;
+    if (denom == 0)
+      maxcode = 0x7fffffff;
+    else
+      maxcode = free_ent / denom;
+  } else {
+    maxcode = (free_ent << 8) / *(int *)(sp + 0x2c);
+  }
+
+  if (maxcode <= *(int *)(sp + 0x24)) {
+    ((void (*)(void *))(void *)FUN_0006ca50)(sp);
+    ((void (*)(void *, unsigned))(void *)FUN_0006c960)(tif, 0x100);
+    *(unsigned short *)(sp + 6) = 9;
+    *(unsigned int *)(sp + 0x10) = 0x1ff;
+    if ((sp[4] & 2) != 0)
+      *(unsigned int *)(sp + 0x10) = 0x200;
+    return;
+  }
+  *(int *)(sp + 0x24) = maxcode;
 }
-#else
-#error "FUN_0006cde0: clang naked draft required"
-#endif
 
 
 /* FUN_0006ce60 (0x6ce60) — XBE naked draft (batch 348). */
@@ -2375,62 +2350,27 @@ void FUN_0006dbf0(void)
 #endif
 
 
-/* FUN_0006dd00 (0x6dd00) — XBE naked draft (batch 328). */
-#if defined(__clang__)
-static void (*const b6dd00_c6d9c0)(void) = (void (*)(void))FUN_0006d9c0;
-
-__attribute__((naked, noinline))
-void FUN_0006dd00(void)
+/* FUN_0006dd00 (0x6dd00) — Capstone lift: write loop in scanline-sized chunks.
+ * Note: tif+0x120 holds chunk SIZE (int), not a codec state pointer, on this path. */
+int FUN_0006dd00(void *tif, unsigned char *buf, int len_count, int arg3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x120(%%eax), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jle .LFUN_0006dd00_2\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0006dd00_1:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c6d9c0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LFUN_0006dd00_3\n\t"
-      "subl %%esi, %%ebx\n\t"
-      "addl %%esi, %%edi\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jg .LFUN_0006dd00_1\n\t"
-      ".LFUN_0006dd00_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006dd00_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6d9c0] "m"(b6dd00_c6d9c0)
-      : "memory");
+  int chunk = *(int *)((char *)tif + 0x120);
+  int rem = len_count;
+  unsigned char *p = buf;
+  int r;
+
+  if (rem <= 0)
+    return 1;
+  do {
+    r = ((int (*)(void *, unsigned char *, int, int))(void *)FUN_0006d9c0)(
+        tif, p, chunk, arg3);
+    if (r < 0)
+      return -1;
+    rem -= chunk;
+    p += chunk;
+  } while (rem > 0);
+  return 1;
 }
-#else
-#error "FUN_0006dd00: clang naked draft required"
-#endif
 
 
 /* FUN_0006dd50 (0x6dd50) — readable C lift. */
