@@ -27438,7 +27438,7 @@
         {
           "addr": "0x81250",
           "decl": "void FUN_00081250(unsigned int *a, unsigned int *b, unsigned int *c, unsigned int *d);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00081250"
         },
         {
