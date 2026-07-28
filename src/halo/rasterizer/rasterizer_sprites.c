@@ -1108,283 +1108,80 @@ void FUN_0017e5b0(float *vert_ws, float *vert_offset, int transform_a, int trans
 
 
 
-/* FUN_0017e800 (0x17e800) — XBE naked draft (batch 304). */
-#if defined(__clang__)
-static void (*const b17e800_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b17e800_exitfn)(int) = system_exit;
-static void (*const b17e800_c17df10)(void) = FUN_0017df10;
-static unsigned int (*const b17e800_d1c90)(float *) = FUN_000d1c90;
-
-__attribute__((naked, noinline))
+/* FUN_0017e800 (0x17e800) — readable C lift (restored pre-naked). */
 void FUN_0017e800(int a0, int a1, int a2, int a3, int a4, int a5)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30, %%esp\n\t"
-      "movb 0x47e4d8, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0017e800_16\n\t"
-      "movb 0x3256dd, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0017e800_16\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0017e800_1\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017e800_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0017e800_1\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0017e800_2\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0017e800_2\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017e800_3\n\t"
-      "jmp .LFUN_0017e800_2\n\t"
-      ".LFUN_0017e800_1:\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      ".LFUN_0017e800_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe5\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0x2af6d0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017e800_3:\n\t"
-      "movl 0x47e4dc, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017e800_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe6\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0x2af524\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017e800_4:\n\t"
-      "movl 0x47e4e4, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017e800_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe7\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0x2af50c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017e800_5:\n\t"
-      "movl 0x47e4ec, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0017e800_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0xe8\n\t"
-      "pushl $0x2af4b8\n\t"
-      "pushl $0x2af4e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_0017e800_6:\n\t"
-      "flds (%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_0017e800_7\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_0017e800_7\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "flds (%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017e800_15\n\t"
-      ".LFUN_0017e800_7:\n\t"
-      "cmpl $0x3f800000, (%%esi)\n\t"
-      "jne .LFUN_0017e800_8\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "cmpl $0x3f800000, (%%edx)\n\t"
-      "jne .LFUN_0017e800_8\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "cmpl $0x3f800000, (%%eax)\n\t"
-      "jne .LFUN_0017e800_8\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "movl $0x47e4e0, %%eax\n\t"
-      "jmp .LFUN_0017e800_9\n\t"
-      ".LFUN_0017e800_8:\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "movl $0x47e4f0, %%eax\n\t"
-      ".LFUN_0017e800_9:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c17df10]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_0017e800_15\n\t"
-      "movb -0x1(%%ebp), %%cl\n\t"
-      "imull $0x3c, %%eax, %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "movl 0x47e4dc, %%ecx\n\t"
-      "jne .LFUN_0017e800_10\n\t"
-      "movl 0x47e4ec, %%ecx\n\t"
-      ".LFUN_0017e800_10:\n\t"
-      "flds 0x5a5bc8\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "fsubs (%%edi)\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "flds 0x5a5bcc\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fstps -0x2c(%%ebp)\n\t"
-      "flds 0x5a5bd0\n\t"
-      "fsubs 0x8(%%edi)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds 0x5a5bc8\n\t"
-      "fsubs (%%eax)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x5a5bcc\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x5a5bd0\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0x5a5bc8\n\t"
-      "fsubs (%%ebx)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "flds 0x5a5bcc\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds 0x5a5bd0\n\t"
-      "fsubs 0x8(%%ebx)\n\t"
-      "movw $3, 0x30(%%esi)\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "leal 0x10(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl (%%ebx), %%edx\n\t"
-      "leal 0x20(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%ebx), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebx), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "call *%[d1c90]\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, 0xc(%%esi)\n\t"
-      "call *%[d1c90]\n\t"
-      "movl 0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, 0x1c(%%esi)\n\t"
-      "call *%[d1c90]\n\t"
-      "movl %%eax, 0x2c(%%esi)\n\t"
-      "flds 0x5a5bdc\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5bd4\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5bdc\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls -0x20(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5bd4\n\t"
-      "fmuls -0x24(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fcoms -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017e800_11\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "jmp .LFUN_0017e800_12\n\t"
-      ".LFUN_0017e800_11:\n\t"
-      "fld %%st(0)\n\t"
-      ".LFUN_0017e800_12:\n\t"
-      "flds 0x5a5bdc\n\t"
-      "fmuls -0x28(%%ebp)\n\t"
-      "flds 0x5a5bd8\n\t"
-      "fmuls -0x2c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5bd4\n\t"
-      "fmuls -0x30(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017e800_13\n\t"
-      "fcoms -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017e800_14\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "fstps 0x34(%%esi)\n\t"
-      "movb %%al, 0x38(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017e800_13:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      ".LFUN_0017e800_14:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "fstps 0x34(%%esi)\n\t"
-      "movb %%al, 0x38(%%esi)\n\t"
-      ".LFUN_0017e800_15:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_0017e800_16:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b17e800_assert), [exitfn] "m"(b17e800_exitfn), [c17df10] "m"(b17e800_c17df10), [d1c90] "m"(b17e800_d1c90)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* relift: relift: mov (char)eax, byte ptr [0x47e4d8] */
+  /* test (char)eax, (char)eax -> je 0x17eb02 */
+  /* relift: relift: mov (char)eax, byte ptr [0x3256dd] */
+  /* test (char)eax, (char)eax -> je 0x17eb02 */
+  /* test edi, edi -> je 0x17e84f */
+  /* test eax, eax -> je 0x17e84f */
+  /* test ebx, ebx -> je 0x17e84f */
+  /* test esi, esi -> je 0x17e852 */
+  /* test eax, eax -> je 0x17e852 */
+  /* test eax, eax -> jne 0x17e872 */
+  display_assert((char *)0x002af6d0, (char *)0x002af4b8, 229, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x17e89b */
+  display_assert((char *)0x002af524, (char *)0x002af4b8, 230, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x17e8c4 */
+  display_assert((char *)0x002af50c, (char *)0x002af4b8, 231, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x17e8ed */
+  display_assert((char *)0x002af4e8, (char *)0x002af4b8, 232, 0);
+  system_exit(0);
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> je 0x17e924 */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> je 0x17e924 */
+  /* relift: relift: fcomp dword ptr [0x2533c0] */
+  /* test (char)eax, 0x41 -> jne 0x17eaff */
+  /* relift: cmp dword ptr [esi], 0x3f800000 -> jne 0x17e94d */
+  /* relift: cmp dword ptr [edx], 0x3f800000 -> jne 0x17e94d */
+  /* relift: cmp dword ptr [eax], 0x3f800000 -> jne 0x17e94d */
+  ((void(*)(void))FUN_0017df10)();
+  /* cmp eax, -1 -> je 0x17eaff */
+  /* relift: relift: fld dword ptr [0x5a5bc8] */
+  /* relift: relift: fld dword ptr [0x5a5bcc] */
+  /* relift: relift: fld dword ptr [0x5a5bd0] */
+  /* relift: relift: fld dword ptr [0x5a5bc8] */
+  /* relift: relift: fld dword ptr [0x5a5bcc] */
+  /* relift: relift: fld dword ptr [0x5a5bd0] */
+  /* relift: relift: fld dword ptr [0x5a5bc8] */
+  /* relift: relift: fld dword ptr [0x5a5bcc] */
+  /* relift: relift: fld dword ptr [0x5a5bd0] */
+  FUN_000d1c90((float *)(uintptr_t)eax);
+  FUN_000d1c90((float *)(uintptr_t)ecx);
+  FUN_000d1c90((float *)(uintptr_t)edx);
+  /* relift: relift: fld dword ptr [0x5a5bdc] */
+  /* relift: relift: fld dword ptr [0x5a5bd8] */
+  /* relift: relift: fld dword ptr [0x5a5bd4] */
+  /* relift: relift: fld dword ptr [0x5a5bdc] */
+  /* relift: relift: fld dword ptr [0x5a5bd8] */
+  /* relift: relift: fld dword ptr [0x5a5bd4] */
+  /* test (char)eax, 0x41 -> jne 0x17eaa3 */
+  /* relift: relift: fld dword ptr [0x5a5bdc] */
+  /* relift: relift: fld dword ptr [0x5a5bd8] */
+  /* relift: relift: fld dword ptr [0x5a5bd4] */
+  /* test (char)eax, 0x41 -> jne 0x17eaf1 */
+  /* test (char)eax, 0x41 -> jne 0x17eaf6 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_0017e800: clang naked draft required"
-#endif
 
 
 /* FUN_0017eb10 (0x17eb10) — readable C lift. */

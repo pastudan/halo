@@ -32239,7 +32239,7 @@
         {
           "addr": "0x17e800",
           "decl": "void FUN_0017e800(int a0, int a1, int a2, int a3, int a4, int a5);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017e800"
         },
         {
