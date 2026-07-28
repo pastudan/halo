@@ -8508,7 +8508,7 @@
         {
           "addr": "0xde3f0",
           "decl": "void FUN_000de3f0(int local_player_index@<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000de3f0"
         },
         {
@@ -27987,7 +27987,7 @@
         {
           "addr": "0xe4ad0",
           "decl": "void FUN_000e4ad0(void *icon_state /* @<esi> */, int16_t *cursor /* @<ebx> */, int string_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e4ad0"
         },
         {
@@ -28121,7 +28121,7 @@
         {
           "addr": "0xe6450",
           "decl": "void FUN_000e6450(void *draw_state@<esi>, void *widget, int param_3, int param_4);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e6450"
         },
         {
@@ -28247,7 +28247,7 @@
         {
           "addr": "0xe98c0",
           "decl": "char FUN_000e98c0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e98c0"
         },
         {
@@ -35435,7 +35435,7 @@
           "addr": "0x2bd80",
           "decl": "void FUN_0002bd80(int actor_handle @<ecx>, float *facing, float *vel_out, float *speed_out);",
           "name": "FUN_0002bd80",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x2a530",
@@ -35495,7 +35495,7 @@
         {
           "addr": "0x2b020",
           "decl": "short FUN_0002b020(float *avoidance_ray @<eax>, float *ray_origin @<ebx>, int avoidance_data @<esi>, float *ray_direction, float *collision_t, char *param_3);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002b020"
         },
         {
@@ -35519,7 +35519,7 @@
         {
           "addr": "0x2b830",
           "decl": "void FUN_0002b830(float *facing_basis @<ecx>, char use_3d, float *out_vector, short *out_index, float *in_vec @<eax>, float *weight_vec @<edi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0002b830"
         },
         {

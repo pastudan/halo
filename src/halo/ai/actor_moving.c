@@ -666,8 +666,9 @@ void FUN_0002ade0(int actor_handle)
 
 
 /* FUN_0002b020 (0x2b020) — readable C lift (restored pre-naked). */
-short FUN_0002b020(float *avoidance_ray, float *ray_origin, int avoidance_data,
-                   float *ray_direction, float *collision_t, char *param_3)
+short FUN_0002b020(float *avoidance_ray /* @<eax> */, float *ray_origin /* @<ebx> */,
+                   int avoidance_data /* @<esi> */, float *ray_direction,
+                   float *collision_t, char *param_3)
 {
   float *mtx;
   float obj_pos_t[3];

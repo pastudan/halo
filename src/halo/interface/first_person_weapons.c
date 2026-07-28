@@ -1420,140 +1420,79 @@ void first_person_weapon_message_from_unit(int unit_handle, int message_type)
 #if defined(__i386__) && defined(__GNUC__)
 __attribute__((regparm(1)))
 #endif
-/* FUN_000de3f0 (0xde3f0) — XBE naked draft (batch 2269). */
-#if defined(__clang__)
-static void (*const bde3f0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bde3f0_exitfn)(int) = system_exit;
-static void (*const bde3f0_cddbd0)(int local_player_index, int state, int param_3) = FUN_000ddbd0;
-static void *(*const bde3f0_get)(int, int) = object_get_and_verify_type;
-static void *(*const bde3f0_tag)(int, int) = tag_get;
-
-__attribute__((naked, noinline))
+/* FUN_000de3f0 (0xde3f0) — readable C lift (restored pre-naked). */
 void FUN_000de3f0(int local_player_index)
 {
-  __asm__ volatile(
-      "testw %%bx, %%bx\n\t"
-      "jl .LFUN_000de3f0_1\n\t"
-      "cmpw $4, %%bx\n\t"
-      "jl .LFUN_000de3f0_2\n\t"
-      ".LFUN_000de3f0_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x599\n\t"
-      "pushl $0x282294\n\t"
-      "pushl $0x266fc0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000de3f0_2:\n\t"
-      "movl 0x46bea8, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "movswl %%bx, %%esi\n\t"
-      "imull $0x1ea0, %%esi, %%esi\n\t"
-      "movswl 0xc(%%esi,%%edx,1), %%eax\n\t"
-      "addl %%edx, %%esi\n\t"
-      "cmpl $0x17, %%eax\n\t"
-      "ja .LFUN_000de3f0_9\n\t"
-      "movzbl 0xde548(%%eax), %%eax\n\t"
-      "jmp *.LFUN_000de3f0_jt(,%%eax,4)\n\t"
-      ".LFUN_000de3f0_3:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cddbd0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000de3f0_4:\n\t"
-      "movl $3, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cddbd0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000de3f0_5:\n\t"
-      "decw 0x18(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_000de3f0_6:\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "pushl $4\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $1, 0x4e2(%%eax)\n\t"
-      "jne .LFUN_000de3f0_3\n\t"
-      "cmpw $2, 0x1e94(%%esi)\n\t"
-      "jne .LFUN_000de3f0_3\n\t"
-      "jmp .LFUN_000de3f0_8\n\t"
-      ".LFUN_000de3f0_7:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "pushl $4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x77656170\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpw $1, 0x4e2(%%eax)\n\t"
-      "jne .LFUN_000de3f0_3\n\t"
-      "movw 0x1e94(%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_000de3f0_3\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_000de3f0_3\n\t"
-      "cmpw $2, %%ax\n\t"
-      "je .LFUN_000de3f0_8\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .LFUN_000de3f0_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0x31f\n\t"
-      "pushl $0x282294\n\t"
-      "pushl $0x2823e8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000de3f0_8:\n\t"
-      "movb 0x1e90(%%esi), %%al\n\t"
-      "negb %%al\n\t"
-      "sbbl %%eax, %%eax\n\t"
-      "addl $0x11, %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_000de3f0_9\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cddbd0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000de3f0_9:\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_000de3f0_jt:\n\t"
-      ".long .LFUN_000de3f0_3\n\t"
-      ".long .LFUN_000de3f0_4\n\t"
-      ".long .LFUN_000de3f0_7\n\t"
-      ".long .LFUN_000de3f0_6\n\t"
-      ".long .LFUN_000de3f0_5\n\t"
-      ".long .LFUN_000de3f0_9\n\t"
-      ".text\n\t"
-      :
-      : [assert] "m"(bde3f0_assert), [exitfn] "m"(bde3f0_exitfn), [cddbd0] "m"(bde3f0_cddbd0), [get] "m"(bde3f0_get), [tag] "m"(bde3f0_tag)
-      : "memory");
+  static const unsigned char state_to_case[0x18] = {
+      0, 1, 1, 5, 5, 0, 0, 0, 0, 0, 0, 0, 0,
+      2, 2, 3, 0, 0, 4, 0, 0, 1, 0, 1,
+  };
+  char *fp;
+  int16_t weapon_state;
+  int case_index;
+  char *unit;
+  char *paew;
+  int16_t dual_state;
+  int next_state;
+
+  if ((int16_t)local_player_index < 0 || (int16_t)local_player_index >= 4) {
+    display_assert((char *)0x00266fc0, (char *)0x00282294, 0x599, 1);
+    system_exit(-1);
+  }
+
+  fp = (char *)(*(int *)0x46bea8 +
+                (int)(int16_t)local_player_index * 0x1ea0);
+  weapon_state = *(int16_t *)(fp + 0xc);
+  if ((unsigned int)(unsigned short)weapon_state > 0x17u)
+    return;
+
+  case_index = state_to_case[(unsigned short)weapon_state];
+  switch (case_index) {
+  case 0:
+    FUN_000ddbd0(local_player_index, 0, 0);
+    return;
+  case 1:
+    FUN_000ddbd0(local_player_index, 3, 0);
+    return;
+  case 4:
+    *(int16_t *)(fp + 0x18) -= 1;
+    return;
+  case 5:
+    return;
+  case 3:
+    unit = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
+    paew = (char *)tag_get(0x77656170, *(int *)unit);
+    if (*(int16_t *)(paew + 0x4e2) != 1 ||
+        *(int16_t *)(fp + 0x1e94) != 2) {
+      FUN_000ddbd0(local_player_index, 0, 0);
+      return;
+    }
+    break;
+  case 2:
+    unit = (char *)object_get_and_verify_type(*(int *)(fp + 8), 4);
+    paew = (char *)tag_get(0x77656170, *(int *)unit);
+    if (*(int16_t *)(paew + 0x4e2) != 1) {
+      FUN_000ddbd0(local_player_index, 0, 0);
+      return;
+    }
+    dual_state = *(int16_t *)(fp + 0x1e94);
+    if (dual_state == 0 || dual_state == (int16_t)-1 || dual_state == 2) {
+      FUN_000ddbd0(local_player_index, 0, 0);
+      return;
+    }
+    if (dual_state != 1) {
+      display_assert((char *)0x002823e8, (char *)0x00282294, 0x31f, 1);
+      system_exit(-1);
+    }
+    break;
+  default:
+    return;
+  }
+
+  next_state = *(unsigned char *)(fp + 0x1e90) ? 16 : 17;
+  FUN_000ddbd0(local_player_index, next_state, 0);
 }
-#else
-#error "FUN_000de3f0: clang naked draft required"
-#endif
+
 
 
 /* 0xde560 — Per-frame first-person weapon animation and overlay update. */
