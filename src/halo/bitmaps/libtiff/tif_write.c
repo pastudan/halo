@@ -5196,54 +5196,18 @@ void FUN_000717b0(void)
 #endif
 
 
-/* FUN_00071840 (0x71840) — XBE naked draft (batch 364). */
-#if defined(__clang__)
-static void (*const b71840_c715c0)(void) = (void *)DecodeBlockRGB__single_pixel;
-
-__attribute__((naked, noinline))
-void FUN_00071840(void)
+/* FUN_00071840 (0x71840) — readable C lift: DecodeBlockRGB + nibble expand. */
+void FUN_00071840(void *block, unsigned char *out, unsigned char shift, short index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "addl $8, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c715c0]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movzwl (%%eax,%%edx,2), %%eax\n\t"
-      "movb %%bl, %%cl\n\t"
-      "shlb $2, %%cl\n\t"
-      "shrw %%cl, %%ax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "andl $0xf, %%eax\n\t"
-      "movb %%al, %%cl\n\t"
-      "shlb $4, %%cl\n\t"
-      "orb %%al, %%cl\n\t"
-      "movb %%cl, 0x3(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c715c0] "m"(b71840_c715c0)
-      : "memory");
-}
-#else
-#error "FUN_00071840: clang naked draft required"
-#endif
+  unsigned int nibble;
+  unsigned char v;
 
+  ((void (*)(void *, unsigned char *, unsigned char, short))DecodeBlockRGB__single_pixel)((char *)block + 8, out, shift, index);
+  nibble = *(unsigned short *)((char *)block + (int)index * 2);
+  nibble = (nibble >> (unsigned)(shift * 4)) & 0xf;
+  v = (unsigned char)((nibble << 4) | nibble);
+  out[3] = v;
+}
 
 /* FUN_00071890 (0x71890) — XBE naked draft (batch 306). */
 #if defined(__clang__)

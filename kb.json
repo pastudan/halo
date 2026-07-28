@@ -38014,7 +38014,7 @@
         {
           "addr": "0x68c40",
           "decl": "void FUN_00068c40(unsigned char value, void *dest@<edx>, int count@<ecx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00068c40"
         },
         {
@@ -38879,8 +38879,8 @@
         },
         {
           "addr": "0x71840",
-          "decl": "void FUN_00071840(void);",
-          "ported": false,
+          "decl": "void FUN_00071840(void *block, unsigned char *out, unsigned char shift, short index);",
+          "ported": true,
           "name": "FUN_00071840"
         },
         {

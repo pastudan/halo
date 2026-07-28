@@ -500,46 +500,19 @@ int FUN_00068bd0(unsigned char *tif)
   return mask;
 }
 
-/* FUN_00068c40 (0x68c40) — XBE naked draft (batch 346). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00068c40(unsigned char value __attribute__((unused)), void *dest __attribute__((unused)), int count __attribute__((unused)))
+/* FUN_00068c40 (0x68c40) — readable C lift: memset dest@<edx>, count@<ecx>, value stack. */
+void FUN_00068c40(unsigned char value, void *dest /*@<edx>*/, int count /*@<ecx>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00068c40_1\n\t"
-      "movb 0x8(%%ebp), %%al\n\t"
-      "pushl %%ebx\n\t"
-      "movb %%al, %%bl\n\t"
-      "movb %%bl, %%bh\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, %%edi\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "shrl $2, %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "shll $0x10, %%eax\n\t"
-      "movw %%bx, %%ax\n\t"
-      "rep stosl\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "andl $3, %%ecx\n\t"
-      "rep stosb\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00068c40_1:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_00068c40: clang naked draft required"
-#endif
+  unsigned char *p;
+  int n;
 
+  if (count <= 0)
+    return;
+  p = (unsigned char *)dest;
+  n = count;
+  while (n-- > 0)
+    *p++ = value;
+}
 
 /* FUN_00068c70 (0x68c70) — XBE naked draft (batch 333). */
 #if defined(__clang__)
