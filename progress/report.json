@@ -13,12 +13,12 @@
     },
     "functions": {
       "total": 6820,
-      "ported": 6339,
-      "percent": 92.95
+      "ported": 6340,
+      "percent": 92.96
     },
     "bytes": {
       "total": 11216767,
-      "ported": 8059203,
+      "ported": 8059555,
       "percent": 71.85
     },
     "match": {
@@ -40,14 +40,14 @@
     }
   },
   "meta": {
-    "timestamp": "2026-07-28T12:37:19.667816+00:00",
-    "commit": "7e885830",
-    "branch": "main",
+    "timestamp": "2026-07-28T12:43:10.060738+00:00",
+    "commit": "6bf71653",
+    "branch": "track-a-collision-bsp",
     "tool_version": "1.0.0"
   },
   "consistency": {
     "ported_source_of_truth": "kb.json",
-    "kb_ported_missing_meta": 4230,
+    "kb_ported_missing_meta": 4231,
     "meta_ported_missing_kb": 29
   },
   "units": [
@@ -159642,6 +159642,167 @@
       }
     },
     {
+      "name": "bsp3d",
+      "synthetic": false,
+      "source_path": "src/halo/physics/bsp3d.c",
+      "obj_path": "delinked/bsp3d.obj",
+      "functions": [
+        {
+          "address": "0x146be0",
+          "name": "FUN_00146be0",
+          "size": 352,
+          "status": "unknown",
+          "ported": true,
+          "match_percent": null,
+          "vc71_flagged": null,
+          "equiv_class": null,
+          "equiv_coverage": null,
+          "equiv_confidence": null,
+          "equiv_status": null,
+          "equiv_proven": false,
+          "equiv_reason": null,
+          "snapshot_passed": null,
+          "snapshot_coverage": null,
+          "snapshot_confidence": null,
+          "runtime_oracle_tested": null,
+          "runtime_oracle_passed": null,
+          "runtime_oracle_run_id": null,
+          "runtime_oracle_finished_utc": null,
+          "runtime_oracle_artifact": null,
+          "runtime_oracle_summary": null
+        },
+        {
+          "address": "0x146d40",
+          "name": "FUN_00146d40",
+          "size": 112,
+          "status": "unknown",
+          "ported": true,
+          "match_percent": null,
+          "vc71_flagged": null,
+          "equiv_class": null,
+          "equiv_coverage": null,
+          "equiv_confidence": null,
+          "equiv_status": null,
+          "equiv_proven": false,
+          "equiv_reason": null,
+          "snapshot_passed": null,
+          "snapshot_coverage": null,
+          "snapshot_confidence": null,
+          "runtime_oracle_tested": null,
+          "runtime_oracle_passed": null,
+          "runtime_oracle_run_id": null,
+          "runtime_oracle_finished_utc": null,
+          "runtime_oracle_artifact": null,
+          "runtime_oracle_summary": null
+        },
+        {
+          "address": "0x146db0",
+          "name": "bsp3d_find_leaf",
+          "size": 128,
+          "status": "ported",
+          "ported": true,
+          "match_percent": null,
+          "vc71_flagged": null,
+          "equiv_class": null,
+          "equiv_coverage": null,
+          "equiv_confidence": null,
+          "equiv_status": null,
+          "equiv_proven": false,
+          "equiv_reason": null,
+          "snapshot_passed": null,
+          "snapshot_coverage": null,
+          "snapshot_confidence": null,
+          "runtime_oracle_tested": null,
+          "runtime_oracle_passed": null,
+          "runtime_oracle_run_id": null,
+          "runtime_oracle_finished_utc": null,
+          "runtime_oracle_artifact": null,
+          "runtime_oracle_summary": null
+        },
+        {
+          "address": "0x146e30",
+          "name": "bsp3d_clip_line_to_leaves",
+          "size": 640,
+          "status": "ported",
+          "ported": false,
+          "match_percent": null,
+          "vc71_flagged": null,
+          "equiv_class": null,
+          "equiv_coverage": null,
+          "equiv_confidence": null,
+          "equiv_status": null,
+          "equiv_proven": false,
+          "equiv_reason": null,
+          "snapshot_passed": null,
+          "snapshot_coverage": null,
+          "snapshot_confidence": null,
+          "runtime_oracle_tested": null,
+          "runtime_oracle_passed": null,
+          "runtime_oracle_run_id": null,
+          "runtime_oracle_finished_utc": null,
+          "runtime_oracle_artifact": null,
+          "runtime_oracle_summary": null
+        },
+        {
+          "address": "0x1470b0",
+          "name": "FUN_001470b0",
+          "size": 0,
+          "status": "unknown",
+          "ported": true,
+          "match_percent": null,
+          "vc71_flagged": null,
+          "equiv_class": null,
+          "equiv_coverage": null,
+          "equiv_confidence": null,
+          "equiv_status": null,
+          "equiv_proven": false,
+          "equiv_reason": null,
+          "snapshot_passed": null,
+          "snapshot_coverage": null,
+          "snapshot_confidence": null,
+          "runtime_oracle_tested": null,
+          "runtime_oracle_passed": null,
+          "runtime_oracle_run_id": null,
+          "runtime_oracle_finished_utc": null,
+          "runtime_oracle_artifact": null,
+          "runtime_oracle_summary": null
+        }
+      ],
+      "data": [],
+      "summary": {
+        "total": 5,
+        "ported": 4,
+        "percent": 80.0,
+        "bytes_total": 1232,
+        "bytes_ported": 592,
+        "bytes_percent": 48.05,
+        "match_avg": null,
+        "match_weighted": null,
+        "has_delinked_ref": false
+      },
+      "data_summary": {
+        "total": 0
+      },
+      "equivalence": {
+        "tested": 0,
+        "high_confidence": 0,
+        "avg_coverage": null,
+        "classes": {
+          "uncached": 5
+        }
+      },
+      "snapshot": {
+        "tested": 0,
+        "passed": 0,
+        "avg_coverage": null,
+        "high_confidence": 0
+      },
+      "runtime_oracle": {
+        "tested": 0,
+        "passed": 0
+      }
+    },
+    {
       "name": "sound_dsound_xbox",
       "synthetic": false,
       "source_path": "src/halo/sound/sound_dsound_xbox.c",
@@ -169751,167 +169912,6 @@
         "classes": {
           "non_leaf": 2,
           "uncached": 8
-        }
-      },
-      "snapshot": {
-        "tested": 0,
-        "passed": 0,
-        "avg_coverage": null,
-        "high_confidence": 0
-      },
-      "runtime_oracle": {
-        "tested": 0,
-        "passed": 0
-      }
-    },
-    {
-      "name": "bsp3d",
-      "synthetic": false,
-      "source_path": "src/halo/physics/bsp3d.c",
-      "obj_path": "delinked/bsp3d.obj",
-      "functions": [
-        {
-          "address": "0x146be0",
-          "name": "FUN_00146be0",
-          "size": 352,
-          "status": "unknown",
-          "ported": false,
-          "match_percent": null,
-          "vc71_flagged": null,
-          "equiv_class": null,
-          "equiv_coverage": null,
-          "equiv_confidence": null,
-          "equiv_status": null,
-          "equiv_proven": false,
-          "equiv_reason": null,
-          "snapshot_passed": null,
-          "snapshot_coverage": null,
-          "snapshot_confidence": null,
-          "runtime_oracle_tested": null,
-          "runtime_oracle_passed": null,
-          "runtime_oracle_run_id": null,
-          "runtime_oracle_finished_utc": null,
-          "runtime_oracle_artifact": null,
-          "runtime_oracle_summary": null
-        },
-        {
-          "address": "0x146d40",
-          "name": "FUN_00146d40",
-          "size": 112,
-          "status": "unknown",
-          "ported": true,
-          "match_percent": null,
-          "vc71_flagged": null,
-          "equiv_class": null,
-          "equiv_coverage": null,
-          "equiv_confidence": null,
-          "equiv_status": null,
-          "equiv_proven": false,
-          "equiv_reason": null,
-          "snapshot_passed": null,
-          "snapshot_coverage": null,
-          "snapshot_confidence": null,
-          "runtime_oracle_tested": null,
-          "runtime_oracle_passed": null,
-          "runtime_oracle_run_id": null,
-          "runtime_oracle_finished_utc": null,
-          "runtime_oracle_artifact": null,
-          "runtime_oracle_summary": null
-        },
-        {
-          "address": "0x146db0",
-          "name": "bsp3d_find_leaf",
-          "size": 128,
-          "status": "ported",
-          "ported": true,
-          "match_percent": null,
-          "vc71_flagged": null,
-          "equiv_class": null,
-          "equiv_coverage": null,
-          "equiv_confidence": null,
-          "equiv_status": null,
-          "equiv_proven": false,
-          "equiv_reason": null,
-          "snapshot_passed": null,
-          "snapshot_coverage": null,
-          "snapshot_confidence": null,
-          "runtime_oracle_tested": null,
-          "runtime_oracle_passed": null,
-          "runtime_oracle_run_id": null,
-          "runtime_oracle_finished_utc": null,
-          "runtime_oracle_artifact": null,
-          "runtime_oracle_summary": null
-        },
-        {
-          "address": "0x146e30",
-          "name": "bsp3d_clip_line_to_leaves",
-          "size": 640,
-          "status": "ported",
-          "ported": false,
-          "match_percent": null,
-          "vc71_flagged": null,
-          "equiv_class": null,
-          "equiv_coverage": null,
-          "equiv_confidence": null,
-          "equiv_status": null,
-          "equiv_proven": false,
-          "equiv_reason": null,
-          "snapshot_passed": null,
-          "snapshot_coverage": null,
-          "snapshot_confidence": null,
-          "runtime_oracle_tested": null,
-          "runtime_oracle_passed": null,
-          "runtime_oracle_run_id": null,
-          "runtime_oracle_finished_utc": null,
-          "runtime_oracle_artifact": null,
-          "runtime_oracle_summary": null
-        },
-        {
-          "address": "0x1470b0",
-          "name": "FUN_001470b0",
-          "size": 0,
-          "status": "unknown",
-          "ported": true,
-          "match_percent": null,
-          "vc71_flagged": null,
-          "equiv_class": null,
-          "equiv_coverage": null,
-          "equiv_confidence": null,
-          "equiv_status": null,
-          "equiv_proven": false,
-          "equiv_reason": null,
-          "snapshot_passed": null,
-          "snapshot_coverage": null,
-          "snapshot_confidence": null,
-          "runtime_oracle_tested": null,
-          "runtime_oracle_passed": null,
-          "runtime_oracle_run_id": null,
-          "runtime_oracle_finished_utc": null,
-          "runtime_oracle_artifact": null,
-          "runtime_oracle_summary": null
-        }
-      ],
-      "data": [],
-      "summary": {
-        "total": 5,
-        "ported": 3,
-        "percent": 60.0,
-        "bytes_total": 1232,
-        "bytes_ported": 240,
-        "bytes_percent": 19.48,
-        "match_avg": null,
-        "match_weighted": null,
-        "has_delinked_ref": false
-      },
-      "data_summary": {
-        "total": 0
-      },
-      "equivalence": {
-        "tested": 0,
-        "high_confidence": 0,
-        "avg_coverage": null,
-        "classes": {
-          "uncached": 5
         }
       },
       "snapshot": {
