@@ -5377,7 +5377,13 @@
           "addr": "0x1bd020",
           "decl": "void cache_file_read_header_into_slot(short map_file_index);",
           "name": "cache_file_read_header_into_slot",
-          "ported": false
+          "ported": true,
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1bd1b0",

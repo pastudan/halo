@@ -1,0 +1,10 @@
+{
+  "description": "cache_file_read_header_into_slot: index>=6 \u2192 assert",
+  "arg_overrides": {
+    "map_file_index": 6
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}
