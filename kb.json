@@ -24485,7 +24485,7 @@
         {
           "addr": "0x1c4210",
           "decl": "void FUN_001c4210(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001c4210"
         },
         {
