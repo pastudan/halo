@@ -28384,8 +28384,14 @@
         {
           "addr": "0xe9a90",
           "decl": "char FUN_000e9a90(void *widget);",
-          "ported": false,
-          "name": "FUN_000e9a90"
+          "ported": true,
+          "name": "FUN_000e9a90",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0xe9bd0",

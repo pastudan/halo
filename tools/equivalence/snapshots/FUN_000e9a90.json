@@ -1,0 +1,14 @@
+{
+  "description": "FUN_000e9a90: kind=0, game_mode=0 \u2192 error path return 0",
+  "regions": {
+    "0x31fa94": "0000",
+    "0x30000000": "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "arg_overrides": {
+    "widget": 805306368
+  },
+  "stub_returns": {
+    "error": 0,
+    "ui_play_audio_feedback_sound": 0
+  }
+}

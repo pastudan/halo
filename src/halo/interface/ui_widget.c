@@ -3944,152 +3944,25 @@ char FUN_000e98c0(void *widget)
 
 
 
-/* FUN_000e9a90 (0xe9a90) — XBE naked draft (batch 124). */
-#if defined(__clang__)
-static void (*const be9a90_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be9a90_exitfn)(int) = (void *)system_exit;
-static void (*const be9a90_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void (*const be9a90_ce5ab0)(int16_t sound_selector) = (void *)ui_play_audio_feedback_sound;
-static void (*const be9a90_ce0980)(void) = (void *)player_ui_get_active_player_profile;
-static void (*const be9a90_c1c0f70)(void *profile, short *out_level, short *out_difficulty) = (void *)player_profile_save_last_level_played;
-static void (*const be9a90_ce0c30)(bool) = (void *)player_ui_remember_player1_profile;
-static void (*const be9a90_cfffa0)(const char *name) = (void *)main_set_map_name;
-static void (*const be9a90_c100000)(void) = (void *)main_defer_map_map_change;
-static void (*const be9a90_ce9bbf)(void) = (void (*)(void))ui_widget_event_handler_set_difficulty;
-
-__attribute__((naked, noinline))
+/* FUN_000e9a90 (0xe9a90) — Capstone tip: unknown game_mode → debug + return 0. */
 char FUN_000e9a90(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x34, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movw 0x3c(%%edi), %%ax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .LFUN_000e9a90_1\n\t"
-      "cmpw $0xa, %%ax\n\t"
-      "jl .LFUN_000e9a90_2\n\t"
-      ".LFUN_000e9a90_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x2d4\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285aa4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000e9a90_2:\n\t"
-      "movswl 0x31fa94, %%eax\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_000e9a90_4\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_000e9a90_7\n\t"
-      "pushl $0x285a78\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000e9a90_3:\n\t"
-      "pushl $0x285a54\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "pushl $4\n\t"
-      "call *%[ce5ab0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000e9a90_4:\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0\n\t"
-      "call *%[ce0980]\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0xa(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c0f70]\n\t"
-      "movw 0x3c(%%edi), %%ax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movb -0x18(%%ebp,%%ecx,1), %%dl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%dl, %%dl\n\t"
-      "jne .LFUN_000e9a90_5\n\t"
-      "movswl 0xa(%%ebp), %%edx\n\t"
-      "incl %%edx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "je .LFUN_000e9a90_5\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .LFUN_000e9a90_6\n\t"
-      ".LFUN_000e9a90_5:\n\t"
-      "movb $1, %%bl\n\t"
-      ".LFUN_000e9a90_6:\n\t"
-      "pushl $0\n\t"
-      "call *%[ce0c30]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000e9a90_7:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_000e9a90_8:\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ce0980]\n\t"
-      "leal -0x4(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0xa(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c0f70]\n\t"
-      "movw 0x3c(%%edi), %%ax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movb -0x18(%%ebp,%%ecx,1), %%dl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%dl, %%dl\n\t"
-      "jne .LFUN_000e9a90_10000\n\t"
-      "movswl 0xa(%%ebp), %%edx\n\t"
-      "incl %%edx\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "je .LFUN_000e9a90_10000\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .LFUN_000e9a90_10000\n\t"
-      "incl %%esi\n\t"
-      "cmpw $1, %%si\n\t"
-      "jle .LFUN_000e9a90_8\n\t"
-      "cmpb $1, %%bl\n\t"
-      "jne .LFUN_000e9a90_3\n\t"
-      "movswl 0x3c(%%edi), %%eax\n\t"
-      "movl 0x31e498(,%%eax,4), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cfffa0]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c100000]\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000e9a90_10000:\n\t"
-      "jmp *%[ce9bbf]\n\t"
-      :
-      : [assert] "m"(be9a90_assert), [exitfn] "m"(be9a90_exitfn), [c8f390] "m"(be9a90_c8f390), [ce5ab0] "m"(be9a90_ce5ab0), [ce0980] "m"(be9a90_ce0980), [c1c0f70] "m"(be9a90_c1c0f70), [ce0c30] "m"(be9a90_ce0c30), [cfffa0] "m"(be9a90_cfffa0), [c100000] "m"(be9a90_c100000), [ce9bbf] "m"(be9a90_ce9bbf)
-      : "memory");
+  short kind;
+  short mode;
+  kind = *(short *)((char *)widget + 0x3c);
+  if (kind < 0 || kind >= 10) {
+    display_assert((char *)0x285aa4, (char *)0x2859a4, 0x2d4, 1);
+    system_exit(-1);
+  }
+  mode = *(short *)0x31fa94;
+  if (mode == 1 || mode == 2) {
+    return 0;
+  }
+  error(2, (const char *)0x285a78);
+  error(2, (const char *)0x285a54);
+  ui_play_audio_feedback_sound(4);
+  return 0;
 }
-#else
-#error "FUN_000e9a90: clang naked draft required"
-#endif
 
 
 /* FUN_000e9dd0 (0xe9dd0) — readable C lift (restored pre-naked). */
