@@ -17746,7 +17746,7 @@
         {
           "addr": "0x89cd0",
           "decl": "void following_camera_update(void);",
-          "ported": false,
+          "ported": true,
           "name": "following_camera_update"
         },
         {
