@@ -4635,8 +4635,14 @@
         {
           "addr": "0x1c4da0",
           "decl": "char FUN_001c4da0(int profile_handle, void *out_path);",
-          "ported": false,
-          "name": "FUN_001c4da0"
+          "ported": true,
+          "name": "FUN_001c4da0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c4f30",

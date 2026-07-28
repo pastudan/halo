@@ -1,0 +1,6 @@
+{
+  "description": "FUN_001c4da0: valid out + handle==-1 \u2192 return 0",
+  "arg_overrides": {
+    "profile_handle": -1
+  }
+}
