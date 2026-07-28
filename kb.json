@@ -42055,13 +42055,13 @@
         {
           "addr": "0x149570",
           "decl": "char FUN_00149570(void *state, int node_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00149570"
         },
         {
           "addr": "0x149680",
           "decl": "char FUN_00149680(void *state, int node_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00149680"
         },
         {
