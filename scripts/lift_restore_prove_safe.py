@@ -67,10 +67,15 @@ def patch_zero_arg_calls(text: str) -> str:
     decls = {}
     for m in re.finditer(r"HFUNC\s+(.+?\))\s*;", decl_h):
         sig = m.group(1).strip()
-        nm = sig.rsplit(" ", 1)[-1]
-        if nm.startswith("("):
-            continue
         p0 = sig.find("(")
+        if p0 < 0:
+            continue
+        # Name is the last token of the declarator *before* '(', not the
+        # trailing "(params)" chunk from rsplit — that bug left decls empty
+        # for almost every symbol and disabled zero-arg casts.
+        nm = sig[:p0].rsplit(" ", 1)[-1].strip()
+        if not nm or nm.startswith("*") or nm.startswith("("):
+            continue
         params = sig[p0 + 1 : sig.rfind(")")].strip()
         decls[nm] = params
 
