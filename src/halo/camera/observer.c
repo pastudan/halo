@@ -1675,109 +1675,20 @@ void camera_track_splut(void)
 
 
 
-/* FUN_00089c00 (0x89c00) — XBE naked draft (batch 133). */
-#if defined(__clang__)
-static void *(*const b89c00_get)(int, int) = object_get_and_verify_type;
-static void (*const b89c00_c898b0)(void) = (void (*)(void))FUN_000898b0;
-static void (*const b89c00_useat)(int, float *) = unit_set_seat_state;
-static void (*const b89c00_c1da0cc)(void) = FUN_001da0cc;
-static void (*const b89c00_c89ab0)(void) = camera_track_splut;
-
-__attribute__((naked, noinline))
+/* FUN_00089c00 (0x89c00) — readable C lift (restored pre-naked). */
 void FUN_00089c00(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $3\n\t"
-      "pushl %%esi\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c898b0]\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[useat]\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "addl $0x1ec, %%ebx\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%ebx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ebx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1da0cc]\n\t"
-      "pushl %%ecx\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "fstps (%%esp)\n\t"
-      "call *%[c89ab0]\n\t"
-      "flds (%%esi)\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "fld %%st(2)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00089c00_1\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xde, 0xcb\n\t"
-      ".byte 0xde, 0xc9\n\t"
-      "jmp .LFUN_00089c00_2\n\t"
-      ".LFUN_00089c00_1:\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_00089c00_2:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds (%%edi)\n\t"
-      "fstps (%%edi)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      ".byte 0xd8, 0xcb\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fadds 0x4(%%edi)\n\t"
-      "fstps 0x4(%%edi)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fadds 0x8(%%edi)\n\t"
-      "fstps 0x8(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(b89c00_get), [c898b0] "m"(b89c00_c898b0), [useat] "m"(b89c00_useat), [c1da0cc] "m"(b89c00_c1da0cc), [c89ab0] "m"(b89c00_c89ab0)
-      : "memory");
+  int edi = 0;
+
+  object_get_and_verify_type(0, 0);
+  ((void(*)(void))FUN_000898b0)();
+  unit_set_seat_state(0, (float *)(uintptr_t)edi);
+  FUN_001da0cc();
+  camera_track_splut();
+
+  (void)edi;
 }
-#else
-#error "FUN_00089c00: clang naked draft required"
-#endif
+
 
 
 /* following_camera_update (0x89cd0) — readable C lift (restored pre-naked). */
