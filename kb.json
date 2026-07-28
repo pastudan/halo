@@ -33453,7 +33453,7 @@
         {
           "addr": "0x78c30",
           "decl": "void bitmap_2d_sharpen(void *bitmap, float amount, int positive_table);",
-          "ported": false,
+          "ported": true,
           "name": "bitmap_2d_sharpen"
         },
         {
