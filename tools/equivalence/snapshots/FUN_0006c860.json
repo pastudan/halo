@@ -1,0 +1,8 @@
+{
+  "description": "FUN_0006c860 stride>4 avoids JT DIR32; length multiple of stride (no below-buf walk)",
+  "regions": {},
+  "arg_overrides": {
+    "length_count": 64,
+    "stride_count": 8
+  }
+}

@@ -455,82 +455,72 @@ void FUN_0006c780(void)
 #endif
 
 
-/* FUN_0006c860 (0x6c860) — XBE naked draft (batch 324). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006c860(unsigned char *buf, int length, int stride)
+/* FUN_0006c860 (0x6c860) — Capstone lift: 8-bit horizontal difference (encode).
+ * Twin of FUN_0006c680 (accumulate/decode): walk backwards, cp[stride] -= *cp.
+ * XBE uses Duff/jumptable for stride 0..4; general path for stride>4. */
+void FUN_0006c860(unsigned char *buf, int length_count, int stride_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jle .LFUN_0006c860_9\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "subl %%ecx, %%edi\n\t"
-      "leal -0x1(%%eax,%%edi,1), %%eax\n\t"
-      "pushl %%esi\n\t"
-      ".LFUN_0006c860_1:\n\t"
-      "cmpl $4, %%ecx\n\t"
-      "ja .LFUN_0006c860_2\n\t"
-      "jmp *.LFUN_0006c860_jt(,%%ecx,4)\n\t"
-      ".LFUN_0006c860_2:\n\t"
-      "leal -0x4(%%ecx), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .LFUN_0006c860_4\n\t"
-      "jmp .LFUN_0006c860_3\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0006c860_3:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "subb %%dl, (%%eax,%%ecx,1)\n\t"
-      "decl %%eax\n\t"
-      "decl %%esi\n\t"
-      "jne .LFUN_0006c860_3\n\t"
-      ".LFUN_0006c860_4:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "subb %%dl, (%%eax,%%ecx,1)\n\t"
-      "decl %%eax\n\t"
-      ".LFUN_0006c860_5:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "subb %%dl, (%%eax,%%ecx,1)\n\t"
-      "decl %%eax\n\t"
-      ".LFUN_0006c860_6:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "subb %%dl, (%%eax,%%ecx,1)\n\t"
-      "decl %%eax\n\t"
-      ".LFUN_0006c860_7:\n\t"
-      "movb (%%eax), %%dl\n\t"
-      "subb %%dl, (%%eax,%%ecx,1)\n\t"
-      "decl %%eax\n\t"
-      ".LFUN_0006c860_8:\n\t"
-      "subl %%ecx, %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jg .LFUN_0006c860_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_0006c860_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0006c860_jt:\n\t"
-      ".long .LFUN_0006c860_8\n\t"
-      ".long .LFUN_0006c860_7\n\t"
-      ".long .LFUN_0006c860_6\n\t"
-      ".long .LFUN_0006c860_5\n\t"
-      ".long .LFUN_0006c860_4\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  int rem;
+  unsigned char *cp;
+  int n;
+  unsigned char v;
+
+  if (length_count <= stride_count)
+    return;
+
+  rem = length_count - stride_count;
+  cp = buf + rem - 1;
+  do {
+    if (stride_count > 4) {
+      n = stride_count - 4;
+      if (n > 0) {
+        do {
+          v = *cp;
+          cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+          cp--;
+        } while (--n != 0);
+      }
+      v = *cp;
+      cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+      cp--;
+      v = *cp;
+      cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+      cp--;
+      v = *cp;
+      cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+      cp--;
+      v = *cp;
+      cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+      cp--;
+    } else {
+      switch (stride_count) {
+      case 4:
+        v = *cp;
+        cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+        cp--;
+        /* fallthrough */
+      case 3:
+        v = *cp;
+        cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+        cp--;
+        /* fallthrough */
+      case 2:
+        v = *cp;
+        cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+        cp--;
+        /* fallthrough */
+      case 1:
+        v = *cp;
+        cp[stride_count] = (unsigned char)(cp[stride_count] - v);
+        cp--;
+        /* fallthrough */
+      case 0:
+        break;
+      }
+    }
+    rem -= stride_count;
+  } while (rem > 0);
 }
-#else
-#error "FUN_0006c860: clang naked draft required"
-#endif
 
 
 /* FUN_0006c8d0 (0x6c8d0) — XBE naked draft (batch 323). */

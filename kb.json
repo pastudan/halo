@@ -38331,8 +38331,8 @@
         },
         {
           "addr": "0x6c860",
-          "decl": "void FUN_0006c860(unsigned char *buf, int length, int stride);",
-          "ported": false,
+          "decl": "void FUN_0006c860(unsigned char *buf, int length_count, int stride_count);",
+          "ported": true,
           "name": "FUN_0006c860"
         },
         {
