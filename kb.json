@@ -21512,7 +21512,7 @@
         {
           "addr": "0x17b000",
           "decl": "void FUN_0017b000(int param_1, int param_2);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017b000"
         },
         {
