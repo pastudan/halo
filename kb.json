@@ -28115,7 +28115,7 @@
         {
           "addr": "0xe6140",
           "decl": "void FUN_000e6140(void *widget /* @<eax> */, void *draw_state /* @<ecx> */);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e6140"
         },
         {
