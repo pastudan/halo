@@ -91,6 +91,30 @@ def patch_zero_arg_calls(text: str) -> str:
 
     return ZERO_ARG_CALL.sub(repl, text)
 
+
+def align_sig_to_decl_h(body: str, name: str) -> str:
+    """Rewrite restored function signature to match decl.h (unlock arity conflicts)."""
+    decl_h = (ROOT / "build/generated/decl.h").read_text(errors="ignore")
+    m = re.search(rf"HFUNC\s+(.+?\b{re.escape(name)}\s*\([^;]*\))\s*;", decl_h)
+    if not m:
+        return body
+    good_sig = m.group(1).strip()
+    # Drop calling-convention keywords that confuse some restored bodies
+    good_sig = re.sub(r"\b__stdcall\b\s*", "", good_sig)
+    # Replace first definition signature for this name
+    pat = re.compile(
+        rf"(?m)^([\w\s\*]*?\b{re.escape(name)}\s*\([^;{{]*\))",
+    )
+    mm = pat.search(body)
+    if not mm:
+        return body
+    old = mm.group(1)
+    if old.replace(" ", "") == good_sig.replace(" ", ""):
+        return body
+    # Keep unused attributes on params if body had them — prefer decl.h clean
+    return body[: mm.start(1)] + good_sig + body[mm.end(1) :]
+
+
 SKIP_SUB = (
     "xdk",
     "libcmt",
@@ -263,6 +287,7 @@ def main() -> int:
         if not body:
             continue
         body = patch_zero_arg_calls(body)
+        body = align_sig_to_decl_h(body, name)
         restorable.append((name, addr, src, path, parent, body))
 
     def pref_rank(t):
