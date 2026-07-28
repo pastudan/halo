@@ -1351,19 +1351,23 @@ int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_
   float dot;
   float modifier;
   float delta[3];
+  float vision_a;
+  float vision_b;
 
+  /* Invalid los_result: oracle zeroes EAX and exits (does not passthrough). */
   if (los_result != 0 && los_result != 1)
-    return los_result;
+    return 0;
 
   actor = (char *)datum_get(actor_data, actor_handle);
-  encounter = (char *)tag_get('rtca', *(int *)(actor + 0x58));
+  encounter = (char *)tag_get(0x61637472, *(int *)(actor + 0x58)); /* 'actr' */
   variant = actor_combat_get_firing_variant_definition(actor_handle);
 
   range = *(float *)(encounter + 0x18);
-  if (*(float *)(variant + 0x150) <= *(float *)0x2533c0)
+  /* FPU ja-style: variant range only when strictly above DAT_002533c0. */
+  if (!(*(float *)(variant + 0x150) <= *(float *)0x2533c0))
     range = *(float *)(variant + 0x150);
 
-  switch (engagement) {
+  switch ((unsigned)engagement) {
   case 0:
     scale = *(float *)0x253524;
     break;
@@ -1389,7 +1393,8 @@ int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_
   delta[1] = head_pos[1] - out_pos[1];
   delta[2] = head_pos[2] - out_pos[2];
   dist_sq = delta[0] * delta[0] + delta[1] * delta[1] + delta[2] * delta[2];
-  if (dist_sq > range * range)
+  /* Oracle: early-out when dist_sq >= range^2 (test ah,5 / jp). */
+  if (!(dist_sq < range * range))
     return 0;
 
   modifier = 1.0f;
@@ -1400,18 +1405,19 @@ int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_
       modifier = 0.7f;
   }
 
-  dot = FUN_0018e690();
-  if (dot <= *(float *)0x2533f0) {
-    if (dot <= *(float *)0x2549d4)
+  /* out_pos+0x24 is the facing/basis field of the sense-position block. */
+  dot = FUN_0018e690((float *)((char *)out_pos + 0x24), out_pos, head_pos);
+  if (!(dot <= *(float *)0x2533f0)) {
+    modifier = 0.15f;
+  } else {
+    /* Scale modifier only when 0x2549d4 < dot <= 0x2533f0. */
+    if (!(dot <= *(float *)0x2549d4))
       modifier = (*(float *)0x2533f0 - dot) * modifier * *(float *)0x256144;
     if (modifier <= *(float *)0x256140)
       modifier = 0.15f;
-  } else {
-    modifier = 0.15f;
   }
 
-  range = modifier * range;
-
+  /* Profile stores pre-modifier range (oracle order). */
   if (flag != 0) {
     int profile = (actor_handle & 0xffff) * 0x657c + *(int *)0x331f58;
     *(int *)(profile + 0x656c) = game_time_get();
@@ -1419,11 +1425,17 @@ int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_
     *(float *)(profile + 0x6574) = modifier;
   }
 
+  range = modifier * range;
+  /* Second early-out against modifier-scaled range. */
+  if (!(dist_sq < range * range))
+    return 0;
+
   if (*(char *)(actor + 6) == 0 && param_7 != 0) {
     float facing;
     float lateral;
     float vertical;
     float angle;
+    float yaw;
 
     facing = delta[0] * *(float *)(actor + 0x18c) +
              delta[1] * *(float *)(actor + 0x190) +
@@ -1435,27 +1447,32 @@ int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_
                delta[1] * *(float *)(actor + 0x1a8) +
                delta[2] * *(float *)(actor + 0x1ac);
     angle = arctangent(sqrtf(lateral * lateral + vertical * vertical), facing);
-    if (angle > *(float *)0x25613c) {
-      if (angle <= *(float *)0x256138)
-        range = arctangent(vertical, lateral);
-      else
-        range = 0.0f;
+    /* Mid-band only: 0x256138 <= angle <= 0x25613c. */
+    if (!(angle <= *(float *)0x25613c) || angle < *(float *)0x256138) {
+      range = 0.0f;
     } else {
-      range = *(float *)0x2533c0;
+      yaw = arctangent(lateral, facing);
+      if (yaw < 0.0f)
+        yaw = -yaw;
+      actor_get_vision_distances(actor_handle, range, modifier, yaw, &vision_a,
+                                 &vision_b);
+      range = vision_a;
     }
   } else {
     range = *(float *)0x2533c4 * range;
   }
 
   if (los_result == 0) {
-    if (range * range >= dist_sq)
-      return 3;
-    if (dist_sq <= *(float *)0x255fd8 * *(float *)0x255fd8)
+    /* In-range (range^2 > dist_sq): 3 if dist < thresh, else 2. */
+    if (!(range * range <= dist_sq)) {
+      if (dist_sq < *(float *)0x255fd8)
+        return 3;
       return 2;
+    }
     return 0;
   }
 
-  if (range * range >= dist_sq)
+  if (dist_sq < range * range)
     return 1;
   return 0;
 }

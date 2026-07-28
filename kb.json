@@ -25057,7 +25057,7 @@
         },
         {
           "addr": "0x18e690",
-          "decl": "float FUN_0018e690(void);",
+          "decl": "float FUN_0018e690(float *facing, float *pos_a, float *pos_b);",
           "ported": true
         },
         {
@@ -35730,7 +35730,7 @@
           "decl": "int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_pos, char vis_type, int16_t los_result, char flag, int param_7, int16_t engagement);",
           "name": "actor_visibility_at_point",
           "source_path": "src/halo/ai/actor_perception.c",
-          "ported": false
+          "ported": true
         },
         {
           "addr": "0x31850",
