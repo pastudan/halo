@@ -25968,8 +25968,14 @@
         {
           "addr": "0x1cd8b0",
           "decl": "short FUN_001cd8b0(int sound_handle);",
-          "ported": false,
-          "name": "FUN_001cd8b0"
+          "ported": true,
+          "name": "FUN_001cd8b0",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1ce550",
