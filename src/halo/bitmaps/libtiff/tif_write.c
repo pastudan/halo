@@ -4149,146 +4149,86 @@ void FUN_00071fa0(void *out, const short *a, const short *b)
 }
 
 
-/* FUN_00072060 (0x72060) — XBE naked draft (batch 303). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00072060(void)
+/* FUN_00072060 (0x72060) — Capstone lift: Bresenham-ish stepper for bitmap blit. */
+unsigned char FUN_00072060(void *st, short mode)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "pushl %%edi\n\t"
-      "movw 0x2(%%ecx), %%di\n\t"
-      "cmpw %%di, %%si\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jle .LFUN_00072060_6\n\t"
-      "movw 0xe(%%ecx), %%ax\n\t"
-      "movw 0x12(%%ecx), %%bx\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "jne .LFUN_00072060_2\n\t"
-      ".LFUN_00072060_1:\n\t"
-      "popl %%edi\n\t"
-      "movb $1, -0x1(%%ebp)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00072060_2:\n\t"
-      "movswl 0xc(%%ebp), %%edx\n\t"
-      "subl $0, %%edx\n\t"
-      "je .LFUN_00072060_4\n\t"
-      "subl $2, %%edx\n\t"
-      "jne .LFUN_00072060_10\n\t"
-      "cmpw $0, 0xc(%%ecx)\n\t"
-      "jge .LFUN_00072060_10\n\t"
-      "jmp .LFUN_00072060_3\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".LFUN_00072060_3:\n\t"
-      "movw 0xe(%%ecx), %%dx\n\t"
-      "cmpw %%bx, %%dx\n\t"
-      "je .LFUN_00072060_10\n\t"
-      "movw 0x4(%%ecx), %%ax\n\t"
-      "addw %%di, 0xc(%%ecx)\n\t"
-      "addw %%dx, %%ax\n\t"
-      "movw %%ax, 0xe(%%ecx)\n\t"
-      "cmpw $0, 0xc(%%ecx)\n\t"
-      "jl .LFUN_00072060_3\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00072060_4:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0xc(%%ecx), %%dx\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jl .LFUN_00072060_5\n\t"
-      "movw 0x6(%%ecx), %%bx\n\t"
-      "addw %%bx, 0x10(%%ecx)\n\t"
-      "subl %%esi, %%edx\n\t"
-      "movw %%dx, 0xc(%%ecx)\n\t"
-      ".LFUN_00072060_5:\n\t"
-      "movw 0x4(%%ecx), %%dx\n\t"
-      "addw %%ax, %%dx\n\t"
-      "addw %%di, 0xc(%%ecx)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%dx, 0xe(%%ecx)\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00072060_6:\n\t"
-      "movw 0x10(%%ecx), %%ax\n\t"
-      "movw 0x14(%%ecx), %%bx\n\t"
-      "cmpw %%bx, %%ax\n\t"
-      "je .LFUN_00072060_1\n\t"
-      "movswl 0xc(%%ebp), %%edx\n\t"
-      "subl $0, %%edx\n\t"
-      "je .LFUN_00072060_8\n\t"
-      "decl %%edx\n\t"
-      "jne .LFUN_00072060_10\n\t"
-      "cmpw $0, 0xc(%%ecx)\n\t"
-      "jge .LFUN_00072060_10\n\t"
-      ".LFUN_00072060_7:\n\t"
-      "movw 0x10(%%ecx), %%dx\n\t"
-      "cmpw %%bx, %%dx\n\t"
-      "je .LFUN_00072060_10\n\t"
-      "movw 0x6(%%ecx), %%ax\n\t"
-      "addw %%si, 0xc(%%ecx)\n\t"
-      "addw %%dx, %%ax\n\t"
-      "movw %%ax, 0x10(%%ecx)\n\t"
-      "cmpw $0, 0xc(%%ecx)\n\t"
-      "jl .LFUN_00072060_7\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00072060_8:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0xc(%%ecx), %%dx\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jl .LFUN_00072060_9\n\t"
-      "movw 0x4(%%ecx), %%bx\n\t"
-      "addw %%bx, 0xe(%%ecx)\n\t"
-      "subl %%edi, %%edx\n\t"
-      "movw %%dx, 0xc(%%ecx)\n\t"
-      ".LFUN_00072060_9:\n\t"
-      "movw 0x6(%%ecx), %%dx\n\t"
-      "addw %%ax, %%dx\n\t"
-      "addw %%si, 0xc(%%ecx)\n\t"
-      "movw %%dx, 0x10(%%ecx)\n\t"
-      ".LFUN_00072060_10:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  short dx = *(short *)((char *)st + 0);
+  short dy = *(short *)((char *)st + 2);
+  unsigned char done = 0;
+
+  if (dx > dy) {
+    short cur = *(short *)((char *)st + 0xe);
+    short end = *(short *)((char *)st + 0x12);
+    if (cur == end) {
+      done = 1;
+      return done;
+    }
+    if (mode == 0) {
+      unsigned short err = *(unsigned short *)((char *)st + 0xc);
+      if ((short)err >= 0) {
+        *(short *)((char *)st + 0x10) += *(short *)((char *)st + 6);
+        err = (unsigned short)((short)err - dx);
+        *(short *)((char *)st + 0xc) = (short)err;
+      }
+      {
+        short nx = *(short *)((char *)st + 4) + cur;
+        *(short *)((char *)st + 0xc) += dy;
+        *(short *)((char *)st + 0xe) = nx;
+      }
+      return done;
+    }
+    if (mode == 2) {
+      if (*(short *)((char *)st + 0xc) >= 0)
+        return done;
+      while (*(short *)((char *)st + 0xe) != end) {
+        *(short *)((char *)st + 0xc) += dy;
+        *(short *)((char *)st + 0xe) =
+            (short)(*(short *)((char *)st + 4) + *(short *)((char *)st + 0xe));
+        if (*(short *)((char *)st + 0xc) >= 0)
+          break;
+      }
+      return done;
+    }
+    return done;
+  }
+
+  {
+    short cur = *(short *)((char *)st + 0x10);
+    short end = *(short *)((char *)st + 0x14);
+    if (cur == end) {
+      done = 1;
+      return done;
+    }
+    if (mode == 0) {
+      unsigned short err = *(unsigned short *)((char *)st + 0xc);
+      if ((short)err >= 0) {
+        *(short *)((char *)st + 0xe) += *(short *)((char *)st + 4);
+        err = (unsigned short)((short)err - dy);
+        *(short *)((char *)st + 0xc) = (short)err;
+      }
+      {
+        short ny = *(short *)((char *)st + 6) + cur;
+        *(short *)((char *)st + 0xc) += dx;
+        *(short *)((char *)st + 0x10) = ny;
+      }
+      return done;
+    }
+    if (mode == 1) {
+      if (*(short *)((char *)st + 0xc) >= 0)
+        return done;
+      while (*(short *)((char *)st + 0x10) != end) {
+        *(short *)((char *)st + 0xc) += dx;
+        *(short *)((char *)st + 0x10) =
+            (short)(*(short *)((char *)st + 6) + *(short *)((char *)st + 0x10));
+        if (*(short *)((char *)st + 0xc) >= 0)
+          break;
+      }
+      return done;
+    }
+    return done;
+  }
 }
-#else
-#error "FUN_00072060: clang naked draft required"
-#endif
+
 
 
 /* FUN_000721a0 (0x721a0) — XBE naked draft (batch 305). */

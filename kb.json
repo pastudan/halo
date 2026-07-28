@@ -34516,7 +34516,7 @@
         },
         {
           "addr": "0x1d0348",
-          "decl": "void FUN_001d0348(void);",
+          "decl": "int __stdcall FUN_001d0348(int nCount, void *handles, int waitAll, int timeout_ms);",
           "ported": true,
           "name": "FUN_001d0348"
         }
@@ -38920,7 +38920,7 @@
         },
         {
           "addr": "0x72060",
-          "decl": "void FUN_00072060(void);",
+          "decl": "unsigned char FUN_00072060(void *st, short mode);",
           "ported": false,
           "name": "FUN_00072060"
         },
