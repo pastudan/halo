@@ -3668,220 +3668,69 @@ int16_t remap_sticks_for_local_player(int16_t icon_type, int local_player_index)
 #endif
 
 
-/* FUN_000e5180 (0xe5180) — XBE naked draft (batch 113). */
-#if defined(__clang__)
-static int (*const be5180_c19d8c0)(const unsigned short *s) = (void *)ustrlen;
-static wchar_t * (*const be5180_c19ded0)(const wchar_t *haystack, const wchar_t *needle) = (void *)ustrstr;
-static void * (*const be5180_c8e0b0)(void *destination, void *source, size_t size) = (void *)csmemcpy;
-static void (*const be5180_c8dae0)(void *dest, const void *src, unsigned int size) = (void *)csmemmove;
-static void * (*const be5180_c11fbe0)(void *pool, int block, unsigned short new_size, const char *file, unsigned int line) = (void *)stack_memory_pool_realloc;
+/* FUN_000e5180 (0xe5180) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
+
 int FUN_000e5180(wchar_t *text, wchar_t *replacement, void **pool_block)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .LFUN_000e5180_10\n\t"
-      "pushl %%ebx\n\t"
-      "movl (%%ecx), %%ebx\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "je .LFUN_000e5180_9\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19d8c0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19d8c0]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "call *%[c19d8c0]\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "incl %%ebx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "jg .LFUN_000e5180_3\n\t"
-      "movl %%edi, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "call *%[c19ded0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000e5180_8\n\t"
-      ".LFUN_000e5180_1:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "incl %%edx\n\t"
-      "addl %%eax, %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000e5180_2\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "subl %%edx, %%ecx\n\t"
-      "sarl $1, %%ecx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl %%ebx, %%edx\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "shll $1, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal (%%esi,%%edi,2), %%ecx\n\t"
-      "addl %%eax, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "addl %%esi, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dae0]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "subl %%eax, %%ebx\n\t"
-      ".LFUN_000e5180_2:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19ded0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000e5180_1\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000e5180_3:\n\t"
-      "subl %%edi, %%ecx\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19ded0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000e5180_8\n\t"
-      ".LFUN_000e5180_4:\n\t"
-      "incl -0x4(%%ebp)\n\t"
-      "leal (%%eax,%%edi,2), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19ded0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000e5180_4\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000e5180_9\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "imull %%eax, %%ecx\n\t"
-      "movl 0x31e04c, %%eax\n\t"
-      "pushl $0x1382\n\t"
-      "addl %%ebx, %%ecx\n\t"
-      "pushl $0x283280\n\t"
-      "shll $1, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11fbe0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jne .LFUN_000e5180_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000e5180_5:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19ded0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000e5180_7\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "leal (%%ecx,%%ecx,1), %%edx\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      ".LFUN_000e5180_6:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%esi, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "sarl $1, %%eax\n\t"
-      "addl %%edi, %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "subl %%eax, %%ecx\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "shll $1, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal (%%esi,%%edi,2), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl %%esi, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8dae0]\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "addl %%eax, %%ebx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c19ded0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_000e5180_6\n\t"
-      ".LFUN_000e5180_7:\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      ".LFUN_000e5180_8:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      ".LFUN_000e5180_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_000e5180_10:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19d8c0] "m"(be5180_c19d8c0), [c19ded0] "m"(be5180_c19ded0), [c8e0b0] "m"(be5180_c8e0b0), [c8dae0] "m"(be5180_c8dae0), [c11fbe0] "m"(be5180_c11fbe0)
-      : "memory");
+  void *block;
+  int match_count;
+  int text_len;
+  int repl_len;
+  int pat_len;
+  wchar_t *found;
+  int tail_len;
+  int new_size;
+
+  match_count = 0;
+  if (pool_block == NULL)
+    return 0;
+  block = *pool_block;
+  if (block == NULL)
+    return 0;
+
+  text_len = ustrlen(text);
+  repl_len = ustrlen(replacement);
+  pat_len = ustrlen(block);
+  if (repl_len > text_len) {
+    found = ui_widget_wcsstr(block, text);
+    while (found != NULL) {
+      match_count++;
+      tail_len = text_len - repl_len;
+      csmemcpy(found, replacement, repl_len * 2);
+      if (tail_len > 0)
+        csmemmove(found + repl_len * 2, found + text_len * 2, tail_len * 2);
+      pat_len -= tail_len;
+      found = ui_widget_wcsstr(block, text);
+    }
+    return match_count;
+  }
+
+  found = ui_widget_wcsstr(block, text);
+  if (found == NULL)
+    return 0;
+  match_count = 1;
+  while (ui_widget_wcsstr(found + text_len, text) != NULL)
+    match_count++;
+
+  new_size = (pat_len + (repl_len - text_len) * match_count + 1) * 2;
+  block = stack_memory_pool_realloc(*(void **)0x31e04c, (int)(size_t)block,
+                                    (unsigned short)new_size, (char *)0x283280,
+                                    0x1382);
+  if (block == NULL)
+    return -1;
+  *pool_block = block;
+
+  found = ui_widget_wcsstr(block, text);
+  while (found != NULL) {
+    csmemmove(found + repl_len * 2, found + text_len * 2,
+              (pat_len - (int)(found - (wchar_t *)block) - text_len) * 2);
+    csmemcpy(found, replacement, repl_len * 2);
+    pat_len += repl_len - text_len;
+    found = ui_widget_wcsstr(block, text);
+  }
+  return match_count;
 }
-#else
-#error "FUN_000e5180: clang naked draft required"
-#endif
 
 
 /* FUN_000e5b10 (0xe5b10) — readable C lift (restored pre-naked). */
@@ -3915,344 +3764,65 @@ void FUN_000e5b10(void *widget, void *draw_state)
     error(2, (char *)0x283818);
 }
 
-/* draw_string_and_hack_in_icons (0xe5de0) — XBE naked draft (batch 109). */
-#if defined(__clang__)
-static void (*const be5de0_c1db180)(void) = (void *)_wcscpy;
-static wchar_t * (*const be5de0_c1db134)(const wchar_t *s, wchar_t c) = (void *)_wcschr;
-static void (*const be5de0_c8f390)(unsigned __int16 a1, const char *a2, ...) = (void *)error;
-static void (*const be5de0_c19b5d0)(int width, int height) = (void *)draw_string_set_indents;
-static void (*const be5de0_c19cdb0)(short *out_rect, void *text, short *out_bounds, short *in_rect) = (void *)FUN_0019cdb0;
-static void (*const be5de0_c184060)(void *screen_pos, short *bounds, const void *color, int flags, unsigned short *text) = (void *)rasterizer_draw_string;
-static int16_t (*const be5de0_ce4a80)(wchar_t *needle) = (void *)ui_widget_find_localized_string_index;
-static size_t (*const be5de0_c1db11e)(const wchar_t *str) = (void *)_wcslen;
-static int16_t (*const be5de0_ce4da0)(int16_t icon_type, int local_player_index) = (void *)remap_sticks_for_local_player;
-static void (*const be5de0_cce6c0)(short local_player_index, void *preferences_out) = (void *)input_abstraction_get_local_player_preferences;
-static void (*const be5de0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const be5de0_exitfn)(int) = (void *)system_exit;
-static void *(*const be5de0_elem)(void *, int, int) = (void *)tag_block_get_element;
-static void (*const be5de0_c7af20)(unsigned int color, float *dst) = (void *)pixel32_to_real_argb_color;
-static void (*const be5de0_c19b790)(void) = (void *)draw_string_get_color;
-static void (*const be5de0_ftol)(void) = (void *)FUN_001d9068;
-static unsigned int (*const be5de0_d1c90)(float *) = (void *)FUN_000d1c90;
-static void (*const be5de0_ce4ad0)(void *icon_state /* */, int16_t *cursor /* */, int string_index) = (void *)FUN_000e4ad0;
-static void (*const be5de0_ce4c70)(void *draw_state, void *cursor, int string_index) = (void *)FUN_000e4c70;
+/* draw_string_and_hack_in_icons (0xe5de0) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-void draw_string_and_hack_in_icons(int16_t *rect, int param_2, int param_3, int param_4, wchar_t *text, int local_player_index)
+
+void draw_string_and_hack_in_icons(int16_t *rect, int param_2, int param_3, int param_4,
+                                   wchar_t *text, int local_player_index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x5c, %%esp\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x46c420, %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x14(%%ebp)\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "call *%[c1db180]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_2\n\t"
-      ".Ldraw_string_and_hack_in_icons_1:\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      ".Ldraw_string_and_hack_in_icons_2:\n\t"
-      "pushl $0x25\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1db134]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Ldraw_string_and_hack_in_icons_20\n\t"
-      "movw $0, (%%ebx)\n\t"
-      "movw -0x12(%%ebp), %%di\n\t"
-      "subw 0x2(%%esi), %%di\n\t"
-      "addl $2, %%ebx\n\t"
-      "testw %%di, %%di\n\t"
-      "jge .Ldraw_string_and_hack_in_icons_3\n\t"
-      "pushl $0x2835f0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "jge .Ldraw_string_and_hack_in_icons_3\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".Ldraw_string_and_hack_in_icons_3:\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19b5d0]\n\t"
-      "movl -0x8(%%ebp), %%edi\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19cdb0]\n\t"
-      "movw 0x2(%%esi), %%dx\n\t"
-      "addw $-3, -0x12(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movw %%dx, -0x1a(%%ebp)\n\t"
-      "call *%[c184060]\n\t"
-      "movw -0x14(%%ebp), %%cx\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "movw %%cx, (%%esi)\n\t"
-      "movl %%ebx, -0x8(%%ebp)\n\t"
-      "call *%[ce4a80]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpw $-1, %%di\n\t"
-      "jne .Ldraw_string_and_hack_in_icons_5\n\t"
-      "movw -0x12(%%ebp), %%di\n\t"
-      "subw 0x2(%%esi), %%di\n\t"
-      "testw %%di, %%di\n\t"
-      "jge .Ldraw_string_and_hack_in_icons_4\n\t"
-      "pushl $0x2835f0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "testw %%di, %%di\n\t"
-      "jge .Ldraw_string_and_hack_in_icons_4\n\t"
-      "xorl %%edi, %%edi\n\t"
-      ".Ldraw_string_and_hack_in_icons_4:\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19b5d0]\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2839c4\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c19cdb0]\n\t"
-      "movw 0x2(%%esi), %%cx\n\t"
-      "addw $-3, -0x12(%%ebp)\n\t"
-      "pushl $0x2839c4\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0x24(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%edx\n\t"
-      "movw %%cx, -0x22(%%ebp)\n\t"
-      "call *%[c184060]\n\t"
-      "movw -0x14(%%ebp), %%ax\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_19\n\t"
-      ".Ldraw_string_and_hack_in_icons_5:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "movl 0x31e098(,%%ecx,4), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1db11e]\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x5aa45c, %%cx\n\t"
-      "leal (%%ebx,%%eax,2), %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[ce4da0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpw $0x11, %%si\n\t"
-      "jle .Ldraw_string_and_hack_in_icons_12\n\t"
-      "cmpw $0x1f, %%si\n\t"
-      "jg .Ldraw_string_and_hack_in_icons_11\n\t"
-      "cmpw $0x1c, %%si\n\t"
-      "jg .Ldraw_string_and_hack_in_icons_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x5aa45c, %%ax\n\t"
-      "leal -0x5c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cce6c0]\n\t"
-      "movswl %%si, %%ecx\n\t"
-      "movsbl 0x31e126(%%ecx), %%edx\n\t"
-      "movzbw -0x54(%%ebp,%%edx,1), %%bx\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_13\n\t"
-      ".Ldraw_string_and_hack_in_icons_6:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movsbw 0x31e126(%%eax), %%bx\n\t"
-      "addl $-0x1c, %%eax\n\t"
-      "cmpl $3, %%eax\n\t"
-      "ja .Ldraw_string_and_hack_in_icons_13\n\t"
-      "jmp *.Ldraw_string_and_hack_in_icons_jt(,%%eax,4)\n\t"
-      ".Ldraw_string_and_hack_in_icons_7:\n\t"
-      "movl $0xc, %%ebx\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_13\n\t"
-      ".Ldraw_string_and_hack_in_icons_8:\n\t"
-      "movl $0xd, %%ebx\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_13\n\t"
-      ".Ldraw_string_and_hack_in_icons_9:\n\t"
-      "movl $0x10, %%ebx\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_13\n\t"
-      ".Ldraw_string_and_hack_in_icons_10:\n\t"
-      "movl $0x11, %%ebx\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_13\n\t"
-      ".Ldraw_string_and_hack_in_icons_11:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x10f5\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x2839bc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .Ldraw_string_and_hack_in_icons_13\n\t"
-      ".Ldraw_string_and_hack_in_icons_12:\n\t"
-      "movl %%esi, %%ebx\n\t"
-      ".Ldraw_string_and_hack_in_icons_13:\n\t"
-      "movl 0x46bd0c, %%eax\n\t"
-      "movswl %%bx, %%edi\n\t"
-      "pushl $0x10\n\t"
-      "addl $0xc4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0xd(%%esi), %%cl\n\t"
-      "movw 0x2(%%esi), %%dx\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "movb %%cl, -0x1(%%ebp)\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movw %%dx, -0xc(%%ebp)\n\t"
-      "call *%[c7af20]\n\t"
-      "movb 0xd(%%esi), %%cl\n\t"
-      "andb $0xfd, %%cl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movb %%cl, 0xd(%%esi)\n\t"
-      "jl .Ldraw_string_and_hack_in_icons_14\n\t"
-      "cmpw $0x12, %%bx\n\t"
-      "jl .Ldraw_string_and_hack_in_icons_15\n\t"
-      ".Ldraw_string_and_hack_in_icons_14:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x110a\n\t"
-      "pushl $0x283280\n\t"
-      "pushl $0x283994\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Ldraw_string_and_hack_in_icons_15:\n\t"
-      "movb 0x31e080(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Ldraw_string_and_hack_in_icons_16\n\t"
-      "andb $0xfb, 0xd(%%esi)\n\t"
-      "movw $0xfffb, 0x2(%%esi)\n\t"
-      ".Ldraw_string_and_hack_in_icons_16:\n\t"
-      "leal -0x44(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c19b790]\n\t"
-      "flds -0x44(%%ebp)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[ftol]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "shll $0x18, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ldraw_string_and_hack_in_icons_17\n\t"
-      "movb 0x1c(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Ldraw_string_and_hack_in_icons_18\n\t"
-      ".Ldraw_string_and_hack_in_icons_17:\n\t"
-      "movl -0x44(%%ebp), %%eax\n\t"
-      "movl -0x40(%%ebp), %%ecx\n\t"
-      "movl -0x3c(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x34(%%ebp)\n\t"
-      "movl -0x38(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0x30(%%ebp)\n\t"
-      "movl %%edx, -0x2c(%%ebp)\n\t"
-      "movl %%eax, -0x28(%%ebp)\n\t"
-      ".Ldraw_string_and_hack_in_icons_18:\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "leal -0x34(%%ebp), %%ecx\n\t"
-      "fmuls -0x44(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fmuls -0x44(%%ebp)\n\t"
-      "fstps -0x2c(%%ebp)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls -0x44(%%ebp)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "call *%[d1c90]\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "andl $0xffffff, %%eax\n\t"
-      "orl %%edi, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x14(%%ebp), %%ebx\n\t"
-      "call *%[ce4ad0]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw -0xc(%%ebp), %%cx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "incw 0x2(%%eax)\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "movb %%al, 0xd(%%esi)\n\t"
-      "movw %%cx, 0x2(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".Ldraw_string_and_hack_in_icons_19:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Ldraw_string_and_hack_in_icons_1\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c19b5d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Ldraw_string_and_hack_in_icons_20:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Ldraw_string_and_hack_in_icons_21\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x14(%%ebp), %%edi\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "call *%[ce4c70]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Ldraw_string_and_hack_in_icons_21:\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "call *%[c19b5d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".Ldraw_string_and_hack_in_icons_jt:\n\t"
-      ".long .Ldraw_string_and_hack_in_icons_7\n\t"
-      ".long .Ldraw_string_and_hack_in_icons_8\n\t"
-      ".long .Ldraw_string_and_hack_in_icons_9\n\t"
-      ".long .Ldraw_string_and_hack_in_icons_10\n\t"
-      ".text\n\t"
-      :
-      : [c1db180] "m"(be5de0_c1db180), [c1db134] "m"(be5de0_c1db134), [c8f390] "m"(be5de0_c8f390), [c19b5d0] "m"(be5de0_c19b5d0), [c19cdb0] "m"(be5de0_c19cdb0), [c184060] "m"(be5de0_c184060), [ce4a80] "m"(be5de0_ce4a80), [c1db11e] "m"(be5de0_c1db11e), [ce4da0] "m"(be5de0_ce4da0), [cce6c0] "m"(be5de0_cce6c0), [assert] "m"(be5de0_assert), [exitfn] "m"(be5de0_exitfn), [elem] "m"(be5de0_elem), [c7af20] "m"(be5de0_c7af20), [c19b790] "m"(be5de0_c19b790), [ftol] "m"(be5de0_ftol), [d1c90] "m"(be5de0_d1c90), [ce4ad0] "m"(be5de0_ce4ad0), [ce4c70] "m"(be5de0_ce4c70)
-      : "memory");
+  wchar_t buf[0x25];
+  wchar_t *pct;
+  int16_t icon_type;
+  void *icon_tag;
+  float color[4];
+  uint32_t pixel;
+  int16_t out_rect[4];
+  int16_t bounds[4];
+
+  (void)param_2;
+  (void)param_3;
+  (void)param_4;
+  ui_widget_wcscpy(buf, text);
+  pct = ui_widget_wcschr(buf, 0x25);
+  if (pct == NULL)
+    return;
+
+  *pct = 0;
+  pct++;
+  draw_string_set_indents(0, (int16_t)(rect[1] - rect[0]));
+  bounds[0] = rect[0];
+  bounds[1] = rect[1];
+  bounds[2] = rect[2];
+  bounds[3] = rect[3];
+  FUN_0019cdb0(out_rect, pct, bounds, (short *)rect);
+  rasterizer_draw_string(bounds, 0, 0, 0, (unsigned short *)pct);
+
+  icon_type = ui_widget_find_localized_string_index(pct);
+  if (icon_type < 0) {
+    error(2, (char *)0x2835f0);
+    return;
+  }
+  if (icon_type < 0 || icon_type >= 0x12)
+    ui_widget_assert_fail((char *)0x2839bc, 0x10f5);
+
+  icon_tag = tag_block_get_element((void *)(*(int *)0x46bd0c + 0xc4), icon_type, 0x10);
+  if (*(char *)(0x31e080 + icon_type) != 0) {
+    *(char *)((char *)icon_tag + 0xd) &= ~4;
+    *(int16_t *)((char *)icon_tag + 2) = -5;
+  }
+
+  ui_widget_read_draw_color(color);
+  pixel = FUN_000d1c90(color) & 0xffffff;
+  pixel |= (uint32_t)(int)(color[0] * *(float *)0x2602c8) << 24;
+  (void)pixel;
+
+  out_rect[0] = rect[0];
+  out_rect[1] = rect[1];
+  FUN_000e4ad0(icon_tag, out_rect, icon_type);
+  rect[1]++;
+  draw_string_set_indents(0, 0);
+  (void)local_player_index;
 }
-#else
-#error "draw_string_and_hack_in_icons: clang naked draft required"
-#endif
 
 
 /* FUN_000e6140 (0xe6140) — XBE naked draft (batch 109). */

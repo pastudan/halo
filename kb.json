@@ -28027,7 +28027,7 @@
         {
           "addr": "0xe5180",
           "decl": "int FUN_000e5180(wchar_t *text, wchar_t *replacement, void **pool_block);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000e5180"
         },
         {
@@ -28109,7 +28109,7 @@
         {
           "addr": "0xe5de0",
           "decl": "void draw_string_and_hack_in_icons(int16_t *rect, int param_2, int param_3, int param_4, wchar_t *text, int local_player_index);",
-          "ported": false,
+          "ported": true,
           "name": "draw_string_and_hack_in_icons"
         },
         {
