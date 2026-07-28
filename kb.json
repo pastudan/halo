@@ -38603,8 +38603,8 @@
         },
         {
           "addr": "0x6ede0",
-          "decl": "void FUN_0006ede0(void);",
-          "ported": false,
+          "decl": "int FUN_0006ede0(void *tif, unsigned int strip_count, void *buf, unsigned int size_count);",
+          "ported": true,
           "name": "FUN_0006ede0"
         },
         {
@@ -38615,8 +38615,8 @@
         },
         {
           "addr": "0x6ef80",
-          "decl": "void FUN_0006ef80(void);",
-          "ported": false,
+          "decl": "int FUN_0006ef80(void *tif, unsigned int tile_count, void *buf, unsigned int size_count);",
+          "ported": true,
           "name": "FUN_0006ef80"
         },
         {

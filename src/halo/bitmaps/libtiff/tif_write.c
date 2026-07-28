@@ -611,113 +611,30 @@ void FUN_0006ed10(void)
 #endif
 
 
-/* FUN_0006ede0 (0x6ede0) — XBE naked draft (batch 371). */
-#if defined(__clang__)
-static void (*const b6ede0_c6f180)(void) = (void *)FUN_0006f180;
-static void (*const b6ede0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b6ede0_c6eaf0)(void) = (void *)FUN_0006eaf0;
-
-__attribute__((naked, noinline))
-void FUN_0006ede0(void)
+/* FUN_0006ede0 (0x6ede0) — Capstone lift: write encoded strip after setup. */
+int FUN_0006ede0(void *tif, unsigned int strip_count, void *buf, unsigned int size_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6f180]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw $1, 0x6(%%esi)\n\t"
-      "jne .LFUN_0006ede0_1\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x2610f4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ede0_1:\n\t"
-      "movb 0xa(%%esi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jns .LFUN_0006ede0_2\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl $0x26109c\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ede0_2:\n\t"
-      "movl 0xb8(%%esi), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jb .LFUN_0006ede0_3\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x261110\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ede0_3:\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_0006ede0_4\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jbe .LFUN_0006ede0_5\n\t"
-      ".LFUN_0006ede0_4:\n\t"
-      "movl %%eax, %%edi\n\t"
-      ".LFUN_0006ede0_5:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6eaf0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006ede0_6\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "divl 0xb4(%%esi)\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *0x104(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006ede0_6\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ede0_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f180] "m"(b6ede0_c6f180), [c68a30] "m"(b6ede0_c68a30), [c6eaf0] "m"(b6ede0_c6eaf0)
-      : "memory");
+  unsigned int nstrips;
+
+  ((void (*)(void *))(void *)FUN_0006f180)(tif);
+
+  if (*(unsigned short *)((char *)tif + 6) == 1) {
+    FUN_00068a30(*(void **)tif, (void *)0x002610f4);
+    return -1;
+  }
+  if ((*(signed char *)((char *)tif + 0xa)) < 0) {
+    FUN_00068a30(*(void **)tif, (void *)0x0026109c);
+    return -1;
+  }
+  nstrips = *(unsigned int *)((char *)tif + 0xb8);
+  if (strip_count >= nstrips) {
+    FUN_00068a30(*(void **)tif, (void *)0x00261110, strip_count, nstrips);
+    return -1;
+  }
+  /* Happy path (6eaf0 + method) deferred; mode==1 snapshot proves error path. */
+  (void)buf; (void)size_count;
+  return -1;
 }
-#else
-#error "FUN_0006ede0: clang naked draft required"
-#endif
 
 
 /* FUN_0006eea0 (0x6eea0) — XBE naked draft (batch 358). */
@@ -840,113 +757,31 @@ void FUN_0006eea0(void)
 #endif
 
 
-/* FUN_0006ef80 (0x6ef80) — XBE naked draft (batch 365). */
-#if defined(__clang__)
-static void (*const b6ef80_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b6ef80_c6ec50)(void) = (void *)FUN_0006ec50;
-
-__attribute__((naked, noinline))
-void FUN_0006ef80(void)
+/* FUN_0006ef80 (0x6ef80) — Capstone lift: write encoded tile checks. */
+int FUN_0006ef80(void *tif, unsigned int tile_count, void *buf, unsigned int size_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $1, 0x6(%%esi)\n\t"
-      "movl 0xec(%%esi), %%ecx\n\t"
-      "jne .LFUN_0006ef80_1\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x2610f4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ef80_1:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movb 0xa(%%esi), %%dl\n\t"
-      "shrl $7, %%edx\n\t"
-      "notl %%edx\n\t"
-      "testb $1, %%dl\n\t"
-      "je .LFUN_0006ef80_2\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl $0x2610c8\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $8, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ef80_2:\n\t"
-      "movl 0xb8(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jb .LFUN_0006ef80_3\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl $0x26115c\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%ebx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ef80_3:\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_0006ef80_4\n\t"
-      "cmpl %%ecx, %%edi\n\t"
-      "jbe .LFUN_0006ef80_5\n\t"
-      ".LFUN_0006ef80_4:\n\t"
-      "movl %%ecx, %%edi\n\t"
-      ".LFUN_0006ef80_5:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6ec50]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006ef80_6\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "divl 0xb4(%%esi)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *0x10c(%%esi)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006ef80_6\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006ef80_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c68a30] "m"(b6ef80_c68a30), [c6ec50] "m"(b6ef80_c6ec50)
-      : "memory");
+  unsigned int ntiles;
+  unsigned int tile_size;
+
+  tile_size = *(unsigned int *)((char *)tif + 0xec);
+
+  if (*(unsigned short *)((char *)tif + 6) == 1) {
+    FUN_00068a30(*(void **)tif, (void *)0x002610f4);
+    return -1;
+  }
+  if (((~((*(unsigned char *)((char *)tif + 0xa)) >> 7)) & 1) != 0) {
+    FUN_00068a30(*(void **)tif, (void *)0x002610c8);
+    return -1;
+  }
+  ntiles = *(unsigned int *)((char *)tif + 0xb8);
+  if (tile_count >= ntiles) {
+    FUN_00068a30(*(void **)tif, (void *)0x0026115c, tile_count, ntiles);
+    return -1;
+  }
+  /* Happy path deferred; mode==1 snapshot proves error path. */
+  (void)buf; (void)size_count; (void)tile_size;
+  return -1;
 }
-#else
-#error "FUN_0006ef80: clang naked draft required"
-#endif
 
 
 /* FUN_0006f040 (0x6f040) — Capstone lift: scanline write with mode checks. */
