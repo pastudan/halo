@@ -24654,7 +24654,7 @@
         {
           "addr": "0x190550",
           "decl": "char FUN_00190550(int *collision_location, float *position, float *wind_out, int flags);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00190550"
         },
         {
@@ -41782,7 +41782,7 @@
         {
           "addr": "0x96310",
           "decl": "void device_preprocess_node_orientations(void);",
-          "ported": false,
+          "ported": true,
           "name": "device_preprocess_node_orientations"
         },
         {
