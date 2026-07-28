@@ -717,547 +717,255 @@ delete_particle:
   return 0;
 }
 
-/* particle_new (0xa1fd0) — XBE naked draft (batch 105). */
-#if defined(__clang__)
-static int (*const ba1fd0_c84a10)(float *vector) = real_vector3d_valid;
-static char * (*const ba1fd0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const ba1fd0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba1fd0_exitfn)(int) = system_exit;
-static bool (*const ba1fd0_ca16b0)(float *point) = valid_real_point3d;
-static bool (*const ba1fd0_ca1710)(float *color) = valid_real_argb_color;
-static void *(*const ba1fd0_tag)(int, int) = tag_get;
-static void * (*const ba1fd0_cdd410)(int marker_index, int node_index) = first_person_weapon_get_node_matrix;
-static void (*const ba1fd0_xfrmpt)(float *, float *, float *) = matrix_transform_point;
-static void *(*const ba1fd0_onode)(int, short) = object_get_node_matrix;
-static void (*const ba1fd0_c18f180)(void *location_out, void *point) = scenario_location_from_point;
-static bool (*const ba1fd0_c18e910)(void *location) = scenario_location_potentially_visible_local;
-static int (*const ba1fd0_c119610)(data_t *data) = data_new_at_index;
-static void *(*const ba1fd0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static uint16_t (*const ba1fd0_c8e7c0)(void) = FUN_0008e7c0;
-static unsigned int *(*const ba1fd0_lseed)(void) = random_math_get_local_seed_address;
-static float (*const ba1fd0_rrange)(int *, float, float) = random_real_range;
-static __int16 (*const ba1fd0_cba4b0)(void) = local_player_count;
-static float (*const ba1fd0_c849f0)(float min, float max) = FUN_000849f0;
-static float (*const ba1fd0_ca1670)(int datum_handle) = particle_get_radius;
-static float (*const ba1fd0_c1548a0)(int tag_data, float scale) = point_physics_definition_get_mass;
-static void (*const ba1fd0_c139480)(void *position, void *tint_color, void *out_color, char use_lightmap) = FUN_00139480;
-static bool (*const ba1fd0_c7b020)(float *rgb) = valid_real_rgb_color;
-static bool (*const ba1fd0_ca1910)(int datum_handle) = FUN_000a1910;
-static void *(*const ba1fd0_elem)(void *, int, int) = tag_block_get_element;
-static int16_t (*const ba1fd0_c97c80)(int16_t min, int16_t max) = local_random_range;
-
-__attribute__((naked, noinline))
-void particle_new(void *spawn_params __attribute__((unused)))
+/* particle_new (0xa1fd0) — readable C lift (restored pre-naked). */
+void particle_new(void *spawn_params)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x38, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal 0x28(%%edi), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c84a10]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lparticle_new_1\n\t"
-      "flds 0x30(%%edi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6d\n\t"
-      "pushl $0x26ad88\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x2c(%%edi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x26ae6c\n\t"
-      "pushl $0x26ae40\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lparticle_new_1:\n\t"
-      "leal 0x10(%%edi), %%esi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca16b0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lparticle_new_2\n\t"
-      "flds 0x18(%%edi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6e\n\t"
-      "pushl $0x26ad88\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x14(%%edi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%esi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x26ae30\n\t"
-      "pushl $0x26ae04\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lparticle_new_2:\n\t"
-      "leal 0x4c(%%edi), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ca1710]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lparticle_new_3\n\t"
-      "flds 0x58(%%edi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6f\n\t"
-      "pushl $0x26ad88\n\t"
-      "subl $0x20, %%esp\n\t"
-      "fstpl 0x18(%%esp)\n\t"
-      "flds 0x54(%%edi)\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x50(%%edi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%ebx)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x26adf4\n\t"
-      "pushl $0x26adc0\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lparticle_new_3:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lparticle_new_28\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x70617274\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lparticle_new_5\n\t"
-      "movb 0xc(%%edi), %%cl\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lparticle_new_4\n\t"
-      "movw 0xa(%%edi), %%dx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x8(%%edi), %%cx\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cdd410]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[xfrmpt]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lparticle_new_6\n\t"
-      ".Lparticle_new_4:\n\t"
-      "movw 0x8(%%edi), %%dx\n\t"
-      "leal -0x38(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[onode]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[xfrmpt]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .Lparticle_new_6\n\t"
-      ".Lparticle_new_5:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "movl %%eax, -0x38(%%ebp)\n\t"
-      "movl %%ecx, -0x34(%%ebp)\n\t"
-      "movl %%edx, -0x30(%%ebp)\n\t"
-      ".Lparticle_new_6:\n\t"
-      "leal -0x38(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c18f180]\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lparticle_new_28\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18e910]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lparticle_new_28\n\t"
-      "movl 0x5aa8a0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .Lparticle_new_28\n\t"
-      "movl 0x5aa8a0, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movw $0, 0x2(%%esi)\n\t"
-      "movb (%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb $1, %%cl\n\t"
-      "je .Lparticle_new_7\n\t"
-      "call *%[c8e7c0]\n\t"
-      "andl $1, %%eax\n\t"
-      "orw %%ax, 0x2(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".Lparticle_new_7:\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "testb $4, %%ch\n\t"
-      "je .Lparticle_new_8\n\t"
-      "call *%[c8e7c0]\n\t"
-      "andl $4, %%eax\n\t"
-      "orw %%ax, 0x2(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".Lparticle_new_8:\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "testb $8, %%ch\n\t"
-      "je .Lparticle_new_9\n\t"
-      "call *%[c8e7c0]\n\t"
-      "andl $8, %%eax\n\t"
-      "orw %%ax, 0x2(%%esi)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".Lparticle_new_9:\n\t"
-      "movb 0xd(%%edi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lparticle_new_10\n\t"
-      "orb $0x10, 0x2(%%esi)\n\t"
-      "jmp .Lparticle_new_11\n\t"
-      ".Lparticle_new_10:\n\t"
-      "andb $0xef, 0x2(%%esi)\n\t"
-      ".Lparticle_new_11:\n\t"
-      "movb 0xe(%%edi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lparticle_new_12\n\t"
-      "orb $0x20, 0x2(%%esi)\n\t"
-      "jmp .Lparticle_new_13\n\t"
-      ".Lparticle_new_12:\n\t"
-      "andb $0xdf, 0x2(%%esi)\n\t"
-      ".Lparticle_new_13:\n\t"
-      "movb 0xc(%%edi), %%cl\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lparticle_new_14\n\t"
-      "orb $0x40, 0x2(%%esi)\n\t"
-      "jmp .Lparticle_new_15\n\t"
-      ".Lparticle_new_14:\n\t"
-      "andb $0xbf, 0x2(%%esi)\n\t"
-      ".Lparticle_new_15:\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "movb 0xa(%%edi), %%cl\n\t"
-      "movb %%cl, 0xf(%%esi)\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%esi)\n\t"
-      "movw 0x8(%%edi), %%cx\n\t"
-      "movw %%cx, 0xc(%%esi)\n\t"
-      "movb $0, 0xe(%%esi)\n\t"
-      "movl 0x506540, %%edx\n\t"
-      "movl %%edx, 0x10(%%esi)\n\t"
-      "movl 0x3c(%%eax), %%ecx\n\t"
-      "movl 0x38(%%eax), %%edx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fcoms 0x2533c4\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fsts 0x18(%%esi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lparticle_new_16\n\t"
-      "fsubs 0x2533c4\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "call *%[cba4b0]\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fdivrs -0x8(%%ebp)\n\t"
-      "fadds 0x2533c4\n\t"
-      "fstps 0x18(%%esi)\n\t"
-      "jmp .Lparticle_new_17\n\t"
-      ".Lparticle_new_16:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lparticle_new_17:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds 0x84(%%ecx)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lparticle_new_18\n\t"
-      "movl 0x84(%%ecx), %%eax\n\t"
-      "movl 0x80(%%ecx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c849f0]\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .Lparticle_new_19\n\t"
-      ".Lparticle_new_18:\n\t"
-      "flds 0x2548fc\n\t"
-      ".Lparticle_new_19:\n\t"
-      "fstps 0x20(%%esi)\n\t"
-      "movl $0xbf800000, 0x1c(%%esi)\n\t"
-      "movl -0x14(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x28(%%esi)\n\t"
-      "movl -0x10(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x2c(%%esi)\n\t"
-      "movl 0x10(%%edi), %%edx\n\t"
-      "leal 0x30(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x14(%%edi), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "movl 0x18(%%edi), %%edx\n\t"
-      "movl %%edx, 0x8(%%ecx)\n\t"
-      "leal 0x1c(%%edi), %%eax\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "leal 0x3c(%%esi), %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%edx, 0x4(%%ecx)\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, 0x8(%%ecx)\n\t"
-      "movl 0x40(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x54(%%esi)\n\t"
-      "movl 0x48(%%edi), %%edx\n\t"
-      "movl %%edx, 0x5c(%%esi)\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "leal 0x60(%%esi), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x4(%%ebx), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x8(%%ebx), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl 0xc(%%ebx), %%edx\n\t"
-      "movl %%edx, 0xc(%%eax)\n\t"
-      "movl 0x28(%%edi), %%ecx\n\t"
-      "leal 0x48(%%esi), %%ebx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x2c(%%edi), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl 0x30(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "cmpl $-1, 0x8(%%esi)\n\t"
-      "jne .Lparticle_new_20\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ca1670]\n\t"
-      "fstps (%%esp)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x20(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x70706879\n\t"
-      "call *%[tag]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1548a0]\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x34(%%edi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fadds (%%ebx)\n\t"
-      "fstps (%%ebx)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x38(%%edi)\n\t"
-      "fadds 0x4c(%%esi)\n\t"
-      "fstps 0x4c(%%esi)\n\t"
-      "fmuls 0x3c(%%edi)\n\t"
-      "fadds 0x50(%%esi)\n\t"
-      "fstps 0x50(%%esi)\n\t"
-      ".Lparticle_new_20:\n\t"
-      "movl 0x44(%%edi), %%edx\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl %%edx, 0x58(%%esi)\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "testb $2, %%ah\n\t"
-      "je .Lparticle_new_21\n\t"
-      "testb $0x40, %%al\n\t"
-      "je .Lparticle_new_25\n\t"
-      ".Lparticle_new_21:\n\t"
-      "pushl $0\n\t"
-      "leal -0x2c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x38(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c139480]\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c7b020]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lparticle_new_22\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "pushl $1\n\t"
-      "pushl $0xcf\n\t"
-      "pushl $0x26ad88\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x26adb8\n\t"
-      "pushl $0x26488c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lparticle_new_22:\n\t"
-      "leal -0x2c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c7b020]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lparticle_new_23\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "pushl $1\n\t"
-      "pushl $0xd0\n\t"
-      "pushl $0x26ad88\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x26adac\n\t"
-      "pushl $0x26488c\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lparticle_new_23:\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "testb $2, %%ah\n\t"
-      "jne .Lparticle_new_24\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fmuls 0x64(%%esi)\n\t"
-      "fstps 0x64(%%esi)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls 0x68(%%esi)\n\t"
-      "fstps 0x68(%%esi)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls 0x6c(%%esi)\n\t"
-      "fstps 0x6c(%%esi)\n\t"
-      ".Lparticle_new_24:\n\t"
-      "testb $0x40, (%%edi)\n\t"
-      "je .Lparticle_new_25\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fmuls 0x64(%%esi)\n\t"
-      "fstps 0x64(%%esi)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls 0x68(%%esi)\n\t"
-      "fstps 0x68(%%esi)\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fmuls 0x6c(%%esi)\n\t"
-      "fstps 0x6c(%%esi)\n\t"
-      ".Lparticle_new_25:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[ca1910]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lparticle_new_28\n\t"
-      "movl 0x10(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x6269746d\n\t"
-      "call *%[tag]\n\t"
-      "movswl 0x24(%%esi), %%ecx\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x54, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movb (%%edi), %%cl\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb $4, %%cl\n\t"
-      "je .Lparticle_new_26\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x34(%%eax), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "call *%[c97c80]\n\t"
-      "movb 0x2(%%esi), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "andb $1, %%cl\n\t"
-      "negb %%cl\n\t"
-      "popl %%edi\n\t"
-      "sbbl %%ecx, %%ecx\n\t"
-      "andl $2, %%ecx\n\t"
-      "decl %%ecx\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movw %%ax, 0x26(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lparticle_new_26:\n\t"
-      "testb $1, 0x2(%%esi)\n\t"
-      "je .Lparticle_new_27\n\t"
-      "movw 0x34(%%eax), %%dx\n\t"
-      "popl %%edi\n\t"
-      "movw %%dx, 0x26(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lparticle_new_27:\n\t"
-      "movw $0xffff, 0x26(%%esi)\n\t"
-      ".Lparticle_new_28:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c84a10] "m"(ba1fd0_c84a10), [c8d9d0] "m"(ba1fd0_c8d9d0), [assert] "m"(ba1fd0_assert), [exitfn] "m"(ba1fd0_exitfn), [ca16b0] "m"(ba1fd0_ca16b0), [ca1710] "m"(ba1fd0_ca1710), [tag] "m"(ba1fd0_tag), [cdd410] "m"(ba1fd0_cdd410), [xfrmpt] "m"(ba1fd0_xfrmpt), [onode] "m"(ba1fd0_onode), [c18f180] "m"(ba1fd0_c18f180), [c18e910] "m"(ba1fd0_c18e910), [c119610] "m"(ba1fd0_c119610), [dget] "m"(ba1fd0_dget), [c8e7c0] "m"(ba1fd0_c8e7c0), [lseed] "m"(ba1fd0_lseed), [rrange] "m"(ba1fd0_rrange), [cba4b0] "m"(ba1fd0_cba4b0), [c849f0] "m"(ba1fd0_c849f0), [ca1670] "m"(ba1fd0_ca1670), [c1548a0] "m"(ba1fd0_c1548a0), [c139480] "m"(ba1fd0_c139480), [c7b020] "m"(ba1fd0_c7b020), [ca1910] "m"(ba1fd0_ca1910), [elem] "m"(ba1fd0_elem), [c97c80] "m"(ba1fd0_c97c80)
-      : "memory");
+  char *sp = (char *)spawn_params;
+  float *velocity = (float *)(sp + 0x28);
+  float *position = (float *)(sp + 0x10);
+  float *color = (float *)(sp + 0x4c);
+  float local_position[3];
+  char location[8];
+  int datum_handle;
+  char *datum;
+  uint32_t *tag;
+  float light[3];
+  float diffuse[3];
+
+  /* assert velocity is valid */
+  if (!real_vector3d_valid(velocity)) {
+    csprintf((char *)0x5ab100, "%s: assert_valid_real_vector2d(%f, %f, %f)",
+             "&data->velocity", (double)velocity[0], (double)velocity[1],
+             (double)velocity[2]);
+    display_assert((char *)0x5ab100, "c:\\halo\\SOURCE\\effects\\particles.c",
+                   0x6d, 1);
+    system_exit(-1);
+  }
+
+  /* assert position is valid */
+  if (!valid_real_point3d(position)) {
+    csprintf((char *)0x5ab100, "%s: assert_valid_real_point3d(%f, %f, %f)",
+             "&data->position", (double)position[0], (double)position[1],
+             (double)position[2]);
+    display_assert((char *)0x5ab100, "c:\\halo\\SOURCE\\effects\\particles.c",
+                   0x6e, 1);
+    system_exit(-1);
+  }
+
+  /* assert color is valid */
+  if (!valid_real_argb_color(color)) {
+    csprintf((char *)0x5ab100,
+             "%s: assert_valid_real_argb_color(%f, %f, %f, %f)", "&data->color",
+             (double)color[0], (double)color[1], (double)color[2],
+             (double)color[3]);
+    display_assert((char *)0x5ab100, "c:\\halo\\SOURCE\\effects\\particles.c",
+                   0x6f, 1);
+    system_exit(-1);
+  }
+
+  if (*(int *)(sp + 0x00) == -1)
+    return;
+
+  tag = (uint32_t *)tag_get(0x70617274, *(int *)(sp + 0x00));
+
+  if (*(int *)(sp + 0x04) == -1) {
+    /* no parent object — use position directly */
+    local_position[0] = position[0];
+    local_position[1] = position[1];
+    local_position[2] = position[2];
+  } else if (*(uint8_t *)(sp + 0x0c) == 0) {
+    /* attached to object — transform through object node matrix */
+    float *matrix = (float *)object_get_node_matrix(*(int *)(sp + 0x04),
+                                                    *(uint16_t *)(sp + 0x08));
+    matrix_transform_point(matrix, position, local_position);
+  } else {
+    /* first-person weapon — transform through FP weapon node matrix */
+    float *matrix = (float *)first_person_weapon_get_node_matrix(
+      *(uint16_t *)(sp + 0x0a), *(uint16_t *)(sp + 0x08));
+    matrix_transform_point(matrix, position, local_position);
+  }
+
+  scenario_location_from_point(location, local_position);
+
+  if (*(int *)location == -1)
+    return;
+
+  if (!scenario_location_potentially_visible_local(location))
+    return;
+
+  datum_handle = data_new_at_index(particle_data);
+  if (datum_handle == -1)
+    return;
+
+  datum = (char *)datum_get(particle_data, datum_handle);
+
+  /* flags word */
+  *(uint16_t *)(datum + 0x02) = 0;
+  if (*tag & 0x1) {
+    uint16_t rval = FUN_0008e7c0();
+    *(uint16_t *)(datum + 0x02) |= rval & 1;
+  }
+  if (*tag & 0x400) {
+    uint16_t rval = FUN_0008e7c0();
+    *(uint16_t *)(datum + 0x02) |= rval & 4;
+  }
+  if (*tag & 0x800) {
+    uint16_t rval = FUN_0008e7c0();
+    *(uint16_t *)(datum + 0x02) |= rval & 8;
+  }
+
+  if (*(uint8_t *)(sp + 0x0d) != 0)
+    *(uint8_t *)(datum + 0x02) |= 0x10;
+  else
+    *(uint8_t *)(datum + 0x02) &= ~0x10;
+
+  if (*(uint8_t *)(sp + 0x0e) != 0)
+    *(uint8_t *)(datum + 0x02) |= 0x20;
+  else
+    *(uint8_t *)(datum + 0x02) &= ~0x20;
+
+  if (*(uint8_t *)(sp + 0x0c) != 0)
+    *(uint8_t *)(datum + 0x02) |= 0x40;
+  else
+    *(uint8_t *)(datum + 0x02) &= ~0x40;
+
+  /* tag index, marker, object handle, node, animation phase */
+  *(int *)(datum + 0x04) = *(int *)(sp + 0x00);
+  *(uint8_t *)(datum + 0x0f) = *(uint8_t *)(sp + 0x0a);
+  *(int *)(datum + 0x08) = *(int *)(sp + 0x04);
+  *(int16_t *)(datum + 0x0c) = (int16_t) * (uint16_t *)(sp + 0x08);
+  *(uint8_t *)(datum + 0x0e) = 0;
+  *(int *)(datum + 0x10) = render;
+
+  /* lifetime: random range from tag fields [0x38..0x3c] */
+  {
+    float lifetime;
+    unsigned int *seed = random_math_get_local_seed_address();
+    lifetime = random_real_range((int *)seed, *(float *)((char *)tag + 0x38),
+                                 *(float *)((char *)tag + 0x3c));
+    *(float *)(datum + 0x18) = lifetime;
+    if (lifetime > 0.7f) {
+      float excess = lifetime - 0.7f;
+      int16_t player_count = local_player_count();
+      *(float *)(datum + 0x18) = excess / (float)(int)player_count + 0.7f;
+    }
+  }
+
+  /* animation rate */
+  if (*(float *)((char *)tag + 0x84) == 0.0f) {
+    *(float *)(datum + 0x20) = *(float *)0x2548fc; /* FLT_MAX */
+  } else {
+    float anim_rate = FUN_000849f0(*(float *)((char *)tag + 0x80),
+                                   *(float *)((char *)tag + 0x84));
+    *(float *)(datum + 0x20) = 1.0f / anim_rate;
+  }
+
+  *(float *)(datum + 0x1c) = -1.0f;
+
+  /* scenario location */
+  *(int *)(datum + 0x28) = *(int *)(location + 0);
+  *(int *)(datum + 0x2c) = *(int *)(location + 4);
+
+  /* position (from spawn_params) */
+  *(float *)(datum + 0x30) = *(float *)(sp + 0x10);
+  *(float *)(datum + 0x34) = *(float *)(sp + 0x14);
+  *(float *)(datum + 0x38) = *(float *)(sp + 0x18);
+
+  /* direction (from spawn_params) */
+  *(float *)(datum + 0x3c) = *(float *)(sp + 0x1c);
+  *(float *)(datum + 0x40) = *(float *)(sp + 0x20);
+  *(float *)(datum + 0x44) = *(float *)(sp + 0x24);
+
+  /* rotation */
+  *(float *)(datum + 0x54) = *(float *)(sp + 0x40);
+
+  /* size */
+  *(float *)(datum + 0x5c) = *(float *)(sp + 0x48);
+
+  /* color (argb from spawn_params) */
+  *(float *)(datum + 0x60) = *(float *)(sp + 0x4c);
+  *(float *)(datum + 0x64) = *(float *)(sp + 0x50);
+  *(float *)(datum + 0x68) = *(float *)(sp + 0x54);
+  *(float *)(datum + 0x6c) = *(float *)(sp + 0x58);
+
+  /* velocity (from spawn_params) */
+  *(float *)(datum + 0x48) = *(float *)(sp + 0x28);
+  *(float *)(datum + 0x4c) = *(float *)(sp + 0x2c);
+  *(float *)(datum + 0x50) = *(float *)(sp + 0x30);
+
+  /* apply physics velocity if no parent object */
+  if (*(int *)(datum + 0x08) == -1) {
+    float phys_scale = particle_get_radius(datum_handle);
+    float *phys_tag =
+      (float *)tag_get(0x70706879, *(int *)((char *)tag + 0x20));
+    float phys_vel =
+      point_physics_definition_get_mass((int)phys_tag, phys_scale);
+    *(float *)(datum + 0x48) += phys_vel * *(float *)(sp + 0x34);
+    *(float *)(datum + 0x4c) += phys_vel * *(float *)(sp + 0x38);
+    *(float *)(datum + 0x50) += phys_vel * *(float *)(sp + 0x3c);
+  }
+
+  /* scale */
+  *(float *)(datum + 0x58) = *(float *)(sp + 0x44);
+
+  /* sample lighting and apply to color channels */
+  if ((*tag & 0x200) == 0 || (*tag & 0x40) != 0) {
+    FUN_00139480(local_position, light, diffuse, 0);
+
+    if (!valid_real_rgb_color(light)) {
+      csprintf((char *)0x5ab100, "%s: assert_valid_real_rgb_color(%f, %f, %f)",
+               "&light", (double)light[0], (double)light[1], (double)light[2]);
+      display_assert((char *)0x5ab100, "c:\\halo\\SOURCE\\effects\\particles.c",
+                     0xcf, 1);
+      system_exit(-1);
+    }
+
+    if (!valid_real_rgb_color(diffuse)) {
+      csprintf((char *)0x5ab100, "%s: assert_valid_real_rgb_color(%f, %f, %f)",
+               "&diffuse", (double)diffuse[0], (double)diffuse[1],
+               (double)diffuse[2]);
+      display_assert((char *)0x5ab100, "c:\\halo\\SOURCE\\effects\\particles.c",
+                     0xd0, 1);
+      system_exit(-1);
+    }
+
+    if ((*tag & 0x200) == 0) {
+      *(float *)(datum + 0x64) *= light[0];
+      *(float *)(datum + 0x68) *= light[1];
+      *(float *)(datum + 0x6c) *= light[2];
+    }
+
+    if ((*tag & 0x40) != 0) {
+      *(float *)(datum + 0x64) *= diffuse[0];
+      *(float *)(datum + 0x68) *= diffuse[1];
+      *(float *)(datum + 0x6c) *= diffuse[2];
+    }
+  }
+
+  /* bitmap sprite setup */
+  if (FUN_000a1910(datum_handle)) {
+    char *bitmap_tag =
+      (char *)tag_get(0x6269746d, *(int *)((char *)tag + 0x10));
+    char *seq_element = (char *)tag_block_get_element(
+      bitmap_tag + 0x54, (int)*(int16_t *)(datum + 0x24), 0x40);
+
+    if (*tag & 0x4) {
+      /* randomized animated sprite */
+      int16_t frame_count =
+        local_random_range(0, *(uint16_t *)(seq_element + 0x34));
+      int16_t direction = (*(uint8_t *)(datum + 0x02) & 1) ? 1 : -1;
+      *(int16_t *)(datum + 0x26) = frame_count + direction;
+      return;
+    }
+
+    if (*(uint8_t *)(datum + 0x02) & 1) {
+      *(int16_t *)(datum + 0x26) = *(int16_t *)(seq_element + 0x34);
+      return;
+    }
+
+    *(int16_t *)(datum + 0x26) = -1;
+  }
 }
-#else
-#error "particle_new: clang naked draft required"
-#endif
 
 
 void particles_update(float delta_time)

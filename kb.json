@@ -18060,7 +18060,7 @@
         {
           "addr": "0xa1fd0",
           "decl": "void particle_new(void *spawn_params);",
-          "ported": false,
+          "ported": true,
           "name": "particle_new"
         },
         {
