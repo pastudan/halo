@@ -28508,8 +28508,14 @@
         {
           "addr": "0xeb150",
           "decl": "char FUN_000eb150(void *widget);",
-          "ported": false,
-          "name": "FUN_000eb150"
+          "ported": true,
+          "name": "FUN_000eb150",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0xeb4f0",

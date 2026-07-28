@@ -1,0 +1,7 @@
+{
+  "description": "FUN_000eb150: player_ui_get_edit_playlist_profile NULL \u2192 return 1",
+  "stub_returns": {
+    "player_ui_get_edit_playlist_profile": 0,
+    "error": 0
+  }
+}
