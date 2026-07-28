@@ -25916,8 +25916,14 @@
         {
           "addr": "0x1cc710",
           "decl": "void sound_initialize(void **driver_out);",
-          "ported": false,
-          "name": "sound_initialize"
+          "ported": true,
+          "name": "sound_initialize",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1cce80",

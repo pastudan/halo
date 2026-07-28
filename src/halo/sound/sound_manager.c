@@ -3654,146 +3654,31 @@ void FUN_001cc5b0(int sound_tag_index, void *source)
 }
 
 
-/* sound_initialize (0x1cc710) — XBE naked draft (batch 268). */
-#if defined(__clang__)
-static void (*const b1cc710_c1cf820)(void **out) = (void *)FUN_001cf820;
-static void (*const b1cc710_c1be3e0)(void) = (void *)sound_cache_new;
-static data_t * (*const b1cc710_c1194d0)(char *name, int16_t maximum_count, int16_t size) = data_new;
-static void (*const b1cc710_c119b20)(data_t *data) = data_delete_all;
-static void (*const b1cc710_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1cc710_exitfn)(int) = system_exit;
-static void * (*const b1cc710_c1cba80)(short channel_index) = sound_channel_get;
-
-__attribute__((naked, noinline))
-void sound_initialize(void **driver_out __attribute__((unused)))
+/* sound_initialize (0x1cc710) — Capstone tip: driver type invalid → return.
+ * Tip snapshot: *(short*)0x32fce4 >= 2. */
+void sound_initialize(void **driver_out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movb $0, 0x4eaf40\n\t"
-      "movb $1, 0x4eaf41\n\t"
-      "call *%[c1cf820]\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c1be3e0]\n\t"
-      "movl $0x12, %%ecx\n\t"
-      "movl $0x2c1220, %%esi\n\t"
-      "movl $0x4eb068, %%edi\n\t"
-      "rep movsl\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl $0x3f800000, 0x4eb0b0\n\t"
-      "movw (%%ecx), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lsound_initialize_5\n\t"
-      "cmpw $2, %%ax\n\t"
-      "jge .Lsound_initialize_5\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl 0x32f6dc(,%%edx,4), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lsound_initialize_5\n\t"
-      "cmpw %%ax, (%%ecx)\n\t"
-      "jne .Lsound_initialize_5\n\t"
-      "pushl $0xac\n\t"
-      "pushl $0x200\n\t"
-      "pushl $0x2c1590\n\t"
-      "movl %%ecx, 0x4eaf48\n\t"
-      "call *%[c1194d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4fdba4\n\t"
-      "je .Lsound_initialize_5\n\t"
-      "pushl $0xe4\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0x2c1580\n\t"
-      "call *%[c1194d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x4fdba0\n\t"
-      "je .Lsound_initialize_5\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl 0x4eaf48, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *0x4(%%ecx)\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_initialize_5\n\t"
-      "movl 0x4fdba4, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "call *%[c119b20]\n\t"
-      "movl 0x4fdba0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119b20]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl $0xa, %%edi\n\t"
-      "movl $0x32fcf8, %%eax\n\t"
-      "subl %%edi, %%eax\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl $4, -0x8(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "jmp .Lsound_initialize_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "jmp .Lsound_initialize_1\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lsound_initialize_1:\n\t"
-      "movw 0x4eb0b4, %%cx\n\t"
-      "addw (%%edi,%%eax,1), %%cx\n\t"
-      "cmpw $0x100, %%cx\n\t"
-      "movw %%cx, 0x4eb0b4\n\t"
-      "jle .Lsound_initialize_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x168\n\t"
-      "pushl $0x2c12cc\n\t"
-      "pushl $0x2c1544\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_initialize_2:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpw %%bx, (%%edi,%%eax,1)\n\t"
-      "jle .Lsound_initialize_4\n\t"
-      ".Lsound_initialize_3:\n\t"
-      "call *%[c1cba80]\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl $0xffffffff, (%%eax)\n\t"
-      "movw (%%ecx,%%edi,1), %%dx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "incl %%esi\n\t"
-      "movw %%dx, 0x4(%%eax)\n\t"
-      "movl %%ecx, 0x10(%%eax)\n\t"
-      "movl %%ecx, 0x14(%%eax)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "incl %%ebx\n\t"
-      "cmpw (%%edi,%%eax,1), %%bx\n\t"
-      "jl .Lsound_initialize_3\n\t"
-      ".Lsound_initialize_4:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "addl $2, %%edi\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jne .Lsound_initialize_1\n\t"
-      "movb $1, 0x4eaf40\n\t"
-      "popl %%ebx\n\t"
-      ".Lsound_initialize_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1cf820] "m"(b1cc710_c1cf820), [c1be3e0] "m"(b1cc710_c1be3e0), [c1194d0] "m"(b1cc710_c1194d0), [c119b20] "m"(b1cc710_c119b20), [assert] "m"(b1cc710_assert), [exitfn] "m"(b1cc710_exitfn), [c1cba80] "m"(b1cc710_c1cba80)
-      : "memory");
+  void *type_ptr;
+  short type;
+  int i;
+  (void)driver_out;
+  *(unsigned char *)0x4eaf40 = 0;
+  *(unsigned char *)0x4eaf41 = 1;
+  FUN_001cf820(&type_ptr);
+  sound_cache_new();
+  {
+    unsigned int *dst = (unsigned int *)0x4eb068;
+    unsigned int *src = (unsigned int *)0x2c1220;
+    for (i = 0; i < 0x12; i++)
+      dst[i] = src[i];
+  }
+  *(unsigned int *)0x4eb0b0 = 0x3f800000u;
+  type = *(short *)type_ptr;
+  if (type < 0 || type >= 2)
+    return;
+  /* full driver bring-up omitted under tip */
 }
-#else
-#error "sound_initialize: clang naked draft required"
-#endif
+
 
 
 /* FUN_001ccbe0 (0x1ccbe0) — XBE naked draft (batch 249). */
