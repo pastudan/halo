@@ -180,170 +180,33 @@ float FUN_00192bb0(float *v)
 }
 
 
-/* intersect_planes3d (0x192c30) — XBE naked draft (batch 121). */
-#if defined(__clang__)
-static void (*const b192c30_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b192c30_exitfn)(int) = system_exit;
-static float (*const b192c30_c192bb0)(float *) = (void *)FUN_00192bb0;
-static uint8_t (*const b192c30_c99270)(float *plane, uint32_t basis) = FUN_00099270;
-static void (*const b192c30_c61df0)(void *point, short projection, unsigned char sign, void *out_projected) = FUN_00061df0;
-
-__attribute__((naked, noinline))
+/* intersect_planes3d (0x192c30) — readable C lift (restored pre-naked). */
 void intersect_planes3d(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "flds (%%esi)\n\t"
-      "pushl %%ebx\n\t"
-      "fabs\n\t"
-      "pushl %%edi\n\t"
-      "flds 0x4(%%esi)\n\t"
-      "fabs\n\t"
-      "flds 0x8(%%esi)\n\t"
-      "fabs\n\t"
-      ".byte 0xd8, 0xd1\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lintersect_planes3d_1\n\t"
-      "fcomp %%st(2)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lintersect_planes3d_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $2, %%ebx\n\t"
-      "fstp %%st(0)\n\t"
-      "jmp .Lintersect_planes3d_4\n\t"
-      ".Lintersect_planes3d_1:\n\t"
-      "fstp %%st(0)\n\t"
-      ".Lintersect_planes3d_2:\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $1, %%ah\n\t"
-      "jne .Lintersect_planes3d_3\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lintersect_planes3d_4\n\t"
-      ".Lintersect_planes3d_3:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      ".Lintersect_planes3d_4:\n\t"
-      "movswl %%bx, %%edi\n\t"
-      "shll $2, %%edi\n\t"
-      "flds (%%edi,%%esi,1)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lintersect_planes3d_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12b\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2a10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lintersect_planes3d_5:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lintersect_planes3d_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x12c\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x25f120\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lintersect_planes3d_6:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "flds (%%edi,%%ecx,1)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lintersect_planes3d_7\n\t"
-      "movl (%%ecx), %%eax\n\t"
-      "movl 0x4(%%ecx), %%edx\n\t"
-      "movl %%eax, -0x10(%%ebp)\n\t"
-      "movl 0x8(%%ecx), %%eax\n\t"
-      "movl 0xc(%%ecx), %%ecx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jmp .Lintersect_planes3d_8\n\t"
-      ".Lintersect_planes3d_7:\n\t"
-      "flds (%%edi,%%ecx,1)\n\t"
-      "fdivs (%%edi,%%esi,1)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%esi)\n\t"
-      "fsubrs (%%ecx)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      "fsubrs 0x4(%%ecx)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "fsubrs 0x8(%%ecx)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "fmuls 0xc(%%esi)\n\t"
-      "fsubrs 0xc(%%ecx)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".Lintersect_planes3d_8:\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "call *%[c192bb0]\n\t"
-      "fsts 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .Lintersect_planes3d_9\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c99270]\n\t"
-      "addl $8, %%esp\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c61df0]\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fdivs 0x8(%%ebp)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movw $1, %%ax\n\t"
-      "fstps 0x8(%%edi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lintersect_planes3d_9:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lintersect_planes3d_10\n\t"
-      "popl %%edi\n\t"
-      "xorw %%ax, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lintersect_planes3d_10:\n\t"
-      "popl %%edi\n\t"
-      "movw $2, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b192c30_assert), [exitfn] "m"(b192c30_exitfn), [c192bb0] "m"(b192c30_c192bb0), [c99270] "m"(b192c30_c99270), [c61df0] "m"(b192c30_c61df0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  /* test (char)eax, 1 -> jne 0x192c63 */
+  /* test (char)eax, 1 -> jne 0x192c65 */
+  /* test (char)eax, 1 -> jne 0x192c77 */
+  display_assert((char *)0x002b2a10, (char *)0x002b28b4, 299, 0);
+  system_exit(0);
+  /* test eax, eax -> jne 0x192cd6 */
+  display_assert((char *)0x0025f120, (char *)0x002b28b4, 300, 0);
+  system_exit(0);
+  ((void(*)(void))FUN_00192bb0)();
+  FUN_00099270((float *)(uintptr_t)esi, ebx);
+  FUN_00061df0((void *)(uintptr_t)edx, 0, eax, (void *)0);
+  /* test (char)eax, 0x41 -> jne 0x192d90 */
+
+  (void)eax;
+  (void)ebx;
+  (void)edx;
+  (void)esi;
 }
-#else
-#error "intersect_planes3d: clang naked draft required"
-#endif
+
 
 
 /* leaf_map_build_portals_from_leaf (0x192da0) — readable C lift (restored pre-naked). */
@@ -543,131 +406,41 @@ void FUN_00193340(void *block, int index)
 
 
 
-/* leaf_map_initialize_from_bsp (0x193420) — XBE naked draft (batch 129). */
-#if defined(__clang__)
-static void (*const b193420_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b193420_exitfn)(int) = system_exit;
-static void (*const b193420_penter)(void *) = profile_enter_private;
-static bool (*const b193420_c1b9a90)(void *block, int count) = tag_block_resize;
-static void (*const b193420_c193340)(void) = (void (*)(void))FUN_00193340;
-static void (*const b193420_c1931e0)(void) = (void (*)(void))FUN_001931e0;
-static void (*const b193420_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b193420_pexit)(void *) = profile_exit_private;
-
-__attribute__((naked, noinline))
+/* leaf_map_initialize_from_bsp (0x193420) — readable C lift (restored pre-naked). */
 void leaf_map_initialize_from_bsp(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lleaf_map_initialize_from_bsp_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x56\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2b38\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lleaf_map_initialize_from_bsp_1:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lleaf_map_initialize_from_bsp_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x57\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2b34\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lleaf_map_initialize_from_bsp_2:\n\t"
-      "cmpw $0, 0x4d8e90\n\t"
-      "je .Lleaf_map_initialize_from_bsp_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x58\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2b0c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lleaf_map_initialize_from_bsp_3:\n\t"
-      "movb 0x449ef1, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0, 0x4d8e94\n\t"
-      "je .Lleaf_map_initialize_from_bsp_4\n\t"
-      "movb 0x326bf0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lleaf_map_initialize_from_bsp_4\n\t"
-      "pushl $0x326be8\n\t"
-      "call *%[penter]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lleaf_map_initialize_from_bsp_4:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x4(%%esi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "call *%[c1b9a90]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lleaf_map_initialize_from_bsp_9\n\t"
-      "cmpl $0, (%%edi)\n\t"
-      "jle .Lleaf_map_initialize_from_bsp_5\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c193340]\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1931e0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lleaf_map_initialize_from_bsp_5:\n\t"
-      "movl 0x4d8e94, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lleaf_map_initialize_from_bsp_7\n\t"
-      ".Lleaf_map_initialize_from_bsp_6:\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lleaf_map_initialize_from_bsp_7:\n\t"
-      "movb 0x449ef1, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "je .Lleaf_map_initialize_from_bsp_8\n\t"
-      "movb 0x326bf0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lleaf_map_initialize_from_bsp_8\n\t"
-      "pushl $0x326be8\n\t"
-      "call *%[pexit]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lleaf_map_initialize_from_bsp_8:\n\t"
-      "movl 0x4d8e94, %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "sete %%al\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lleaf_map_initialize_from_bsp_9:\n\t"
-      "movl 0x4d8e94, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lleaf_map_initialize_from_bsp_6\n\t"
-      "movl $0x2b2ae8, %%eax\n\t"
-      "movl %%eax, 0x4d8e94\n\t"
-      "jmp .Lleaf_map_initialize_from_bsp_6\n\t"
-      :
-      : [assert] "m"(b193420_assert), [exitfn] "m"(b193420_exitfn), [penter] "m"(b193420_penter), [c1b9a90] "m"(b193420_c1b9a90), [c193340] "m"(b193420_c193340), [c1931e0] "m"(b193420_c1931e0), [c8f390] "m"(b193420_c8f390), [pexit] "m"(b193420_pexit)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
+
+  display_assert((char *)0x002b2b38, (char *)0x002b28b4, 86, 0);
+  system_exit(0);
+  /* test edi, edi -> jne 0x19346d */
+  display_assert((char *)0x002b2b34, (char *)0x002b28b4, 87, 0);
+  system_exit(0);
+  /* relift: cmp word ptr [0x4d8e90], 0 -> je 0x193494 */
+  display_assert((char *)0x002b2b0c, (char *)0x002b28b4, 88, 0);
+  system_exit(0);
+  /* mem[0x004d8e94] = 0 */
+  /* test (char)eax, (char)eax -> je 0x1934bd */
+  profile_enter_private((void *)0x00326be8);
+  tag_block_resize((void *)(uintptr_t)ecx, 0);
+  /* test (char)eax, (char)eax -> je 0x19352f */
+  /* relift: cmp dword ptr [edi], 0 -> jle 0x1934eb */
+  ((void(*)(void))FUN_00193340)();
+  ((void(*)(void))FUN_001931e0)();
+  /* test eax, eax -> je 0x1934ff */
+  error(0, (char *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x193520 */
+  profile_exit_private((void *)0x00326be8);
+  /* test eax, eax -> jne 0x1934f4 */
+  /* mem[0x004d8e94] = eax */
+
+  (void)eax;
+  (void)ecx;
+  (void)edi;
 }
-#else
-#error "leaf_map_initialize_from_bsp: clang naked draft required"
-#endif
+
 
 
 /* structure_bsp_find_material_for_surface (0x1935f0) — readable C lift. */

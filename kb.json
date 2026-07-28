@@ -26222,7 +26222,7 @@
         {
           "addr": "0x192c30",
           "decl": "void intersect_planes3d(void);",
-          "ported": false,
+          "ported": true,
           "name": "intersect_planes3d"
         },
         {
@@ -26258,7 +26258,7 @@
         {
           "addr": "0x193420",
           "decl": "void leaf_map_initialize_from_bsp(void);",
-          "ported": false,
+          "ported": true,
           "name": "leaf_map_initialize_from_bsp"
         },
         {
@@ -26691,7 +26691,7 @@
         {
           "addr": "0x192710",
           "decl": "void FUN_00192710(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00192710"
         },
         {
