@@ -40363,7 +40363,7 @@
         {
           "addr": "0x166890",
           "decl": "void FUN_00166890(int pass_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00166890"
         },
         {
