@@ -35734,8 +35734,8 @@
         },
         {
           "addr": "0x31850",
-          "decl": "int actor_audibility_at_point(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags);",
-          "ported": false,
+          "decl": "int16_t actor_audibility_at_point(int actor_handle, void *input_block, float *position, void *location, short volume, int range_scale, short flags);",
+          "ported": true,
           "name": "actor_audibility_at_point"
         },
         {

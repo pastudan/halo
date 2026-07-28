@@ -1478,7 +1478,7 @@ int16_t actor_visibility_at_point(int actor_handle, float *out_pos, float *head_
 }
 /* actor_audibility_at_point (0x31850) — readable C lift (restored pre-naked). */
 
-int actor_audibility_at_point(int actor_handle, void *input_block,
+int16_t actor_audibility_at_point(int actor_handle, void *input_block,
                               float *position, void *location, short volume,
                               int range_scale, short flags)
 {
