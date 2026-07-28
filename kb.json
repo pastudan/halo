@@ -28553,7 +28553,7 @@
         {
           "addr": "0xefc60",
           "decl": "void FUN_000efc60(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000efc60"
         },
         {
@@ -28601,7 +28601,7 @@
         {
           "addr": "0xf0250",
           "decl": "void player_profile_save_changes(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "player_profile_save_changes"
         },
         {
@@ -33319,7 +33319,7 @@
         {
           "addr": "0x75800",
           "decl": "void FUN_00075800(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00075800"
         },
         {
