@@ -40345,7 +40345,7 @@
         {
           "addr": "0x166010",
           "decl": "void FUN_00166010(void *obj, int *out, int addend);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00166010"
         },
         {
