@@ -1893,82 +1893,37 @@ void *FUN_0018e420(void)
   return *(void **)0x5064d8;
 }
 
-/* reference_list_remove (0x1913c0) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void *(*const b1913c0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const b1913c0_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const b1913c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1913c0_exitfn)(int) = system_exit;
-static void (*const b1913c0_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
-void reference_list_remove(data_t *data __attribute__((unused)), int *head __attribute__((unused)), int value __attribute__((unused)))
+/* reference_list_remove (0x1913c0) — Capstone lift: unlink value from handle list. */
+void reference_list_remove(data_t *data, int *head, int value)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "cmpl $-1, (%%esi)\n\t"
-      "pushl %%edi\n\t"
-      "je .Lreference_list_remove_2\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      ".Lreference_list_remove_1:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%eax, %%ecx\n\t"
-      "je .Lreference_list_remove_3\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "leal 0x8(%%edi), %%esi\n\t"
-      "jne .Lreference_list_remove_1\n\t"
-      ".Lreference_list_remove_2:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $0x6d\n\t"
-      "pushl $0x2b25a0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2b2564\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lreference_list_remove_3:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1196d0]\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1913c0_dget), [c8d9d0] "m"(b1913c0_c8d9d0), [assert] "m"(b1913c0_assert), [exitfn] "m"(b1913c0_exitfn), [c1196d0] "m"(b1913c0_c1196d0)
-      : "memory");
+  int *link;
+  void *node;
+  int next;
+
+  link = head;
+  if (*link == -1)
+    goto fail;
+
+  for (;;) {
+    node = datum_get(data, *link);
+    if (*(int *)((char *)node + 4) == value) {
+      next = *link;
+      datum_delete(data, next);
+      *link = *(int *)((char *)node + 8);
+      return;
+    }
+    next = *(int *)((char *)node + 8);
+    if (next == -1)
+      break;
+    link = (int *)((char *)node + 8);
+  }
+
+fail:
+  display_assert(csprintf((char *)0x5ab100, (const char *)0x2b2564, value),
+                 (const char *)0x2b25a0, 0x6d, 1);
+  system_exit(-1);
 }
-#else
-#error "reference_list_remove: clang naked draft required"
-#endif
+
 
 
 /* reference_list_copy (0x191440) — XBE naked draft (batch 89). */

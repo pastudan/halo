@@ -1,0 +1,11 @@
+{
+  "description": "reference_list_remove: empty list assert+exit",
+  "arg_overrides": {
+    "head": "ffffffff"
+  },
+  "stub_returns": {
+    "system_exit": 0,
+    "display_assert": 0,
+    "csprintf": 5943552
+  }
+}
