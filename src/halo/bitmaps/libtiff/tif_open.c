@@ -791,59 +791,36 @@ void FUN_0006c960(void)
 #endif
 
 
-/* FUN_0006ca50 (0x6ca50) — XBE naked draft (batch 311). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006ca50(void)
+/* FUN_0006ca50 (0x6ca50) — readable C lift: fill LZW code tables with -1.
+ * ABI: state@<esi>. */
+void FUN_0006ca50(void *state /*@<esi>*/)
 {
-  __asm__ volatile(
-      "leal 0x4e5c(%%esi), %%eax\n\t"
-      "movl $0x138, %%edx\n\t"
-      "orl $0xffffffff, %%ecx\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".LFUN_0006ca50_1:\n\t"
-      "movl %%ecx, -0x40(%%eax)\n\t"
-      "movl %%ecx, -0x3c(%%eax)\n\t"
-      "movl %%ecx, -0x38(%%eax)\n\t"
-      "movl %%ecx, -0x34(%%eax)\n\t"
-      "movl %%ecx, -0x30(%%eax)\n\t"
-      "movl %%ecx, -0x2c(%%eax)\n\t"
-      "movl %%ecx, -0x28(%%eax)\n\t"
-      "movl %%ecx, -0x24(%%eax)\n\t"
-      "movl %%ecx, -0x20(%%eax)\n\t"
-      "movl %%ecx, -0x1c(%%eax)\n\t"
-      "movl %%ecx, -0x18(%%eax)\n\t"
-      "movl %%ecx, -0x14(%%eax)\n\t"
-      "movl %%ecx, -0x10(%%eax)\n\t"
-      "movl %%ecx, -0xc(%%eax)\n\t"
-      "movl %%ecx, -0x8(%%eax)\n\t"
-      "movl %%ecx, -0x4(%%eax)\n\t"
-      "addl $-0x40, %%eax\n\t"
-      "decl %%edx\n\t"
-      "jne .LFUN_0006ca50_1\n\t"
-      "movl $0xb, %%edx\n\t"
-      "jmp .LFUN_0006ca50_2\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0006ca50_2:\n\t"
-      "subl $4, %%eax\n\t"
-      "decl %%edx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "jne .LFUN_0006ca50_2\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, 0x24(%%esi)\n\t"
-      "movl %%eax, 0x28(%%esi)\n\t"
-      "movl %%eax, 0x2c(%%esi)\n\t"
-      "movl $0x102, 0x1c(%%esi)\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
-}
-#else
-#error "FUN_0006ca50: clang naked draft required"
+  unsigned int *p;
+  unsigned int i;
+  unsigned int j;
+
+  p = (unsigned int *)((char *)state + 0x4e5c);
+  for (i = 0; i < 0x138u; i++) {
+    for (j = 16; j > 0; j--)
+      p[-((int)j)] = 0xffffffffu;
+    p -= 16;
+  }
+  for (i = 0; i < 0xbu; i++) {
+    p -= 1;
+    *p = 0xffffffffu;
+  }
+  /* XBE: xor eax,eax then store EAX to +0x24/+0x28/+0x2c; mov imm to +0x1c. */
+  {
+    unsigned int z = 0;
+    *(unsigned int *)((char *)state + 0x24) = z;
+    *(unsigned int *)((char *)state + 0x28) = z;
+    *(unsigned int *)((char *)state + 0x2c) = z;
+    *(unsigned int *)((char *)state + 0x1c) = 0x102;
+#if defined(__clang__)
+    __asm__ __volatile__("xorl %%eax, %%eax" : : : "eax");
 #endif
+  }
+}
 
 
 /* FUN_0006cac0 (0x6cac0) — readable C lift. */
