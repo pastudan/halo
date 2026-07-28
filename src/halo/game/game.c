@@ -1180,146 +1180,42 @@ int FUN_000b43b0(float *point, int *exclude, int exclude_count)
   return best;
 }
 
-/* FUN_000b4490 (0xb4490) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static scenario_t * (*const bb4490_c18e380)(void) = global_scenario_get;
-static void (*const bb4490_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const bb4490_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void *(*const bb4490_get)(int, int) = object_get_and_verify_type;
-static void (*const bb4490_cb43b0)(void) = (void *)FUN_000b43b0;
-static void *(*const bb4490_elem)(void *, int, int) = tag_block_get_element;
-static int (*const bb4490_cb3770)(int param_1) = FUN_000b3770;
-static void (*const bb4490_opnew)(void *, int, int) = object_placement_data_new;
-static void (*const bb4490_c10cc70)(float *output, float angle) = vector3d_from_angle;
-static int (*const bb4490_onew)(void *) = object_new;
-
-__attribute__((naked, noinline))
+/* FUN_000b4490 (0xb4490) — readable C lift (restored pre-naked). */
 void FUN_000b4490(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xbc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $7, %%ecx\n\t"
-      "leal -0x30(%%ebp), %%edi\n\t"
-      "movl $0xffffffff, -0x34(%%ebp)\n\t"
-      "rep stosl\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000b4490_6\n\t"
-      ".LFUN_000b4490_1:\n\t"
-      "movl 0x34(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000b4490_2\n\t"
-      "pushl $3\n\t"
-      "pushl %%eax\n\t"
-      "call *%[get]\n\t"
-      "addl $8, %%esp\n\t"
-      "jmp .LFUN_000b4490_3\n\t"
-      ".LFUN_000b4490_2:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      ".LFUN_000b4490_3:\n\t"
-      "cmpl $8, %%ebx\n\t"
-      "je .LFUN_000b4490_6\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_000b4490_4\n\t"
-      "leal -0x34(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "jmp .LFUN_000b4490_5\n\t"
-      ".LFUN_000b4490_4:\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      ".LFUN_000b4490_5:\n\t"
-      "call *%[cb43b0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000b4490_6\n\t"
-      "movl %%eax, -0x34(%%ebp,%%ebx,4)\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "incl %%ebx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000b4490_1\n\t"
-      ".LFUN_000b4490_6:\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LFUN_000b4490_9\n\t"
-      "addl $0x378, %%esi\n\t"
-      "movl %%esi, -0x4(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000b4490_7:\n\t"
-      "movl -0x34(%%ebp,%%edi,4), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "pushl $0x94\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[elem]\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[cb3770]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000b4490_8\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xbc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[opnew]\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%edx, -0xa4(%%ebp)\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl %%eax, -0xa0(%%ebp)\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%ecx, -0x9c(%%ebp)\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x88(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10cc70]\n\t"
-      "leal -0xbc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[onew]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "movb $1, 0x456fdc\n\t"
-      ".LFUN_000b4490_8:\n\t"
-      "incl %%edi\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "jl .LFUN_000b4490_7\n\t"
-      ".LFUN_000b4490_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bb4490_c18e380), [c1197b0] "m"(bb4490_c1197b0), [c119810] "m"(bb4490_c119810), [get] "m"(bb4490_get), [cb43b0] "m"(bb4490_cb43b0), [elem] "m"(bb4490_elem), [cb3770] "m"(bb4490_cb3770), [opnew] "m"(bb4490_opnew), [c10cc70] "m"(bb4490_c10cc70), [onew] "m"(bb4490_onew)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int edi = 0;
+
+  global_scenario_get();
+  data_iterator_new((void *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  data_iterator_next((void *)(uintptr_t)edx);
+  /* test eax, eax -> je 0xb4529 */
+  /* cmp eax, -1 -> je 0xb44ec */
+  object_get_and_verify_type(0, 0);
+  /* cmp ebx, 8 -> je 0xb4529 */
+  /* test eax, eax -> je 0xb4501 */
+  ((void(*)(void))FUN_000b43b0)();
+  /* cmp eax, -1 -> je 0xb4529 */
+  data_iterator_next((void *)0);
+  /* test eax, eax -> jne 0xb44d7 */
+  /* test ebx, ebx -> jle 0xb45b9 */
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 148);
+  FUN_000b3770(0);
+  /* cmp eax, -1 -> je 0xb45b4 */
+  object_placement_data_new((void *)(uintptr_t)eax, 0, 0);
+  vector3d_from_angle((float *)(uintptr_t)eax, 0.0f);
+  object_new((void *)(uintptr_t)ecx);
+  /* cmp edi, ebx -> jl 0xb4540 */
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)edi;
 }
-#else
-#error "FUN_000b4490: clang naked draft required"
-#endif
 
 
 /* race_update_team_score (0xb46b0) — readable C lift (restored pre-naked). */

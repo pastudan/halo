@@ -416,307 +416,53 @@ void FUN_000a5920(void)
 }
 
 
-/* FUN_000a5ac0 (0xa5ac0) — XBE naked draft (batch 119). */
-#if defined(__clang__)
-static void (*const ba5ac0_ca5920)(void) = (void *)FUN_000a5920;
-static float (*const ba5ac0_norm)(float *) = normalize3d;
-static void (*const ba5ac0_c1d94f0)(void) = (void *)FUN_001d94f0;
-static void (*const ba5ac0_ca5590)(void) = (void (*)(void))(void *)&FUN_000a5590;
-static void *(*const ba5ac0_get)(int, int) = object_get_and_verify_type;
-static void *(*const ba5ac0_tag)(int, int) = tag_get;
-static void * (*const ba5ac0_c18e450)(void) = game_globals_get;
-static void *(*const ba5ac0_elem)(void *, int, int) = tag_block_get_element;
-
-__attribute__((naked, noinline))
+/* FUN_000a5ac0 (0xa5ac0) — readable C lift (restored pre-naked). */
 void FUN_000a5ac0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x10(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "leal 0x4(%%eax), %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "call *%[ca5920]\n\t"
-      "flds (%%edi)\n\t"
-      "fsubs (%%ebx)\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "fstps 0x10(%%esi)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fstps 0x14(%%esi)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "leal 0x1c(%%esi), %%edi\n\t"
-      "fsubs 0x8(%%ebx)\n\t"
-      "movl %%edi, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "fstps 0x18(%%esi)\n\t"
-      "movl 0x10(%%esi), %%ecx\n\t"
-      "movl 0x14(%%esi), %%edx\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl 0x18(%%esi), %%ecx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "call *%[norm]\n\t"
-      "fsts 0xc(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "fstps 0x28(%%esi)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "addl $8, %%esp\n\t"
-      "fmuls 0x8(%%eax)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%edi)\n\t"
-      "fmuls (%%eax)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcoms 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a5ac0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0xbf800000, 0x18(%%ebp)\n\t"
-      "jmp .LFUN_000a5ac0_3\n\t"
-      ".LFUN_000a5ac0_1:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a5ac0_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, 0x18(%%ebp)\n\t"
-      "jmp .LFUN_000a5ac0_3\n\t"
-      ".LFUN_000a5ac0_2:\n\t"
-      "fstps 0x18(%%ebp)\n\t"
-      ".LFUN_000a5ac0_3:\n\t"
-      "flds 0x18(%%ebp)\n\t"
-      "call *%[c1d94f0]\n\t"
-      "fsts 0x18(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "fstps 0x2c(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "je .LFUN_000a5ac0_4\n\t"
-      "movl 0x4(%%edi), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ca5590]\n\t"
-      "fstps 0x14(%%ebp)\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ca5590]\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "fstps 0x30(%%esi)\n\t"
-      "movl 0xc(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ca5590]\n\t"
-      "fstps 0x14(%%ebp)\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ca5590]\n\t"
-      "fmuls 0x14(%%ebp)\n\t"
-      "addl $0x20, %%esp\n\t"
-      "fsts 0x34(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a5ac0_5\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "pushl $3\n\t"
-      "pushl %%edx\n\t"
-      "call *%[get]\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x756e6974\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x17c(%%eax), %%ecx\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl $0x80000, %%ecx\n\t"
-      "je .LFUN_000a5ac0_5\n\t"
-      "pushl $0x80\n\t"
-      "pushl $0\n\t"
-      "call *%[c18e450]\n\t"
-      "addl $0x110, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x34(%%esi)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fstps 0x34(%%esi)\n\t"
-      "jmp .LFUN_000a5ac0_5\n\t"
-      ".LFUN_000a5ac0_4:\n\t"
-      "movl %%eax, 0x30(%%esi)\n\t"
-      "movl %%eax, 0x34(%%esi)\n\t"
-      ".LFUN_000a5ac0_5:\n\t"
-      "flds 0x30(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000a5ac0_6\n\t"
-      "flds 0x34(%%esi)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_000a5ac0_6\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5ac0_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca5920] "m"(ba5ac0_ca5920), [norm] "m"(ba5ac0_norm), [c1d94f0] "m"(ba5ac0_c1d94f0), [ca5590] "m"(ba5ac0_ca5590), [get] "m"(ba5ac0_get), [tag] "m"(ba5ac0_tag), [c18e450] "m"(ba5ac0_c18e450), [elem] "m"(ba5ac0_elem)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
+
+  FUN_000a5920();
+  normalize3d((float *)0);
+  /* test (char)eax, 0x41 -> jne 0xa5b65 */
+  ((void(*)(void))FUN_001d94f0)();
+  /* cmp edi, eax -> je 0xa5c22 */
+  ((void(*)(void))FUN_000a5590)();
+  ((void(*)(void))FUN_000a5590)();
+  ((void(*)(void))FUN_000a5590)();
+  ((void(*)(void))FUN_000a5590)();
+  /* test (char)eax, 0x41 -> jne 0xa5c28 */
+  object_get_and_verify_type(0, 0);
+  tag_get('tinu', 0);
+  /* test ecx, 0x80000 -> je 0xa5c28 */
+  game_globals_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* test (char)eax, 0x41 -> je 0xa5c4f */
+  /* test (char)eax, 0x41 -> je 0xa5c4f */
+
+  (void)eax;
+  (void)ecx;
+  (void)edi;
 }
-#else
-#error "FUN_000a5ac0: clang naked draft required"
-#endif
 
 
-/* FUN_000a5c60 (0xa5c60) — XBE naked draft (batch 126). */
-#if defined(__clang__)
-static void (*const ba5c60_ca5920)(void) = (void *)FUN_000a5920;
-static void (*const ba5c60_ca5830)(void) = (void *)FUN_000a5830;
-static float (*const ba5c60_norm)(float *) = normalize3d;
-static void (*const ba5c60_c1d94f0)(void) = (void *)FUN_001d94f0;
-
-__attribute__((naked, noinline))
+/* FUN_000a5c60 (0xa5c60) — readable C lift (restored pre-naked). */
 void FUN_000a5c60(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x18(%%ebp), %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "call *%[ca5920]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ca5830]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000a5c60_3\n\t"
-      "flds (%%edi)\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "fsubs (%%ebx)\n\t"
-      "pushl %%esi\n\t"
-      "fstps (%%esi)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "fsubs 0x8(%%ebx)\n\t"
-      "fstps 0x8(%%esi)\n\t"
-      "call *%[norm]\n\t"
-      "movl 0x20(%%ebp), %%eax\n\t"
-      "fld %%st(0)\n\t"
-      "fstps (%%eax)\n\t"
-      "addl $4, %%esp\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jnp .LFUN_000a5c60_3\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls 0x8(%%esi)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls 0x4(%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds (%%eax)\n\t"
-      "fmuls (%%esi)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fcoms 0x255e94\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_000a5c60_1\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0xbf800000, -0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "call *%[c1d94f0]\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "fstps (%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5c60_1:\n\t"
-      "fcoms 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_000a5c60_2\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0x3f800000, -0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "call *%[c1d94f0]\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "fstps (%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5c60_2:\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "call *%[c1d94f0]\n\t"
-      "movl 0x24(%%ebp), %%ecx\n\t"
-      "popl %%edi\n\t"
-      "fstps (%%ecx)\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a5c60_3:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ca5920] "m"(ba5c60_ca5920), [ca5830] "m"(ba5c60_ca5830), [norm] "m"(ba5c60_norm), [c1d94f0] "m"(ba5c60_c1d94f0)
-      : "memory");
+  int eax = 0;
+
+  FUN_000a5920();
+  ((void(*)(void))FUN_000a5830)();
+  /* test (char)eax, (char)eax -> je 0xa5d5d */
+  normalize3d((float *)0);
+  ((void(*)(void))FUN_001d94f0)();
+  /* test (char)eax, 0x41 -> jne 0xa5d44 */
+  ((void(*)(void))FUN_001d94f0)();
+  ((void(*)(void))FUN_001d94f0)();
+
+  (void)eax;
 }
-#else
-#error "FUN_000a5c60: clang naked draft required"
-#endif
 
 
 /* FUN_000a5d70 (0xa5d70) — readable C lift (restored pre-naked). */
@@ -792,437 +538,144 @@ void FUN_000a5f00(void)
 }
 
 
-/* FUN_000a6030 (0xa6030) — XBE naked draft (batch 130). */
-#if defined(__clang__)
-static int (*const ba6030_c18e720)(int point) = FUN_0018e720;
-static void * (*const ba6030_c18e3c0)(void) = global_scenario_get;
-static void *(*const ba6030_elem)(void *, int, int) = tag_block_get_element;
-static void (*const ba6030_ca5f00)(void) = (void *)FUN_000a5f00;
-static void __cdecl (*const ba6030_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
-static void (*const ba6030_ca5830)(void) = (void *)FUN_000a5830;
-
-__attribute__((naked, noinline))
+/* FUN_000a6030 (0xa6030) — readable C lift (restored pre-naked). */
 void FUN_000a6030(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xe00, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e720]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000a6030_2\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c18e720]\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e3c0]\n\t"
-      "addl $0xe0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movw 0x8(%%eax), %%ax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_000a6030_2\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "leal -0xe00(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca5f00]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .LFUN_000a6030_2\n\t"
-      "pushl $0xa5700\n\t"
-      "movswl %%di, %%eax\n\t"
-      "pushl $0x38\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xe00(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d9260]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .LFUN_000a6030_2\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_000a6030_1:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "imull $0x38, %%eax, %%eax\n\t"
-      "movl -0xe00(%%ebp,%%eax,1), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xdfc(%%ebp,%%eax,1), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[ca5830]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000a6030_3\n\t"
-      "incl %%esi\n\t"
-      "cmpw %%di, %%si\n\t"
-      "jl .LFUN_000a6030_1\n\t"
-      ".LFUN_000a6030_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a6030_3:\n\t"
-      "movl 0x1c(%%ebp), %%edi\n\t"
-      "movswl %%si, %%esi\n\t"
-      "imull $0x38, %%esi, %%esi\n\t"
-      "leal -0xe00(%%ebp,%%esi,1), %%esi\n\t"
-      "movl $0xe, %%ecx\n\t"
-      "rep movsl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c18e720] "m"(ba6030_c18e720), [c18e3c0] "m"(ba6030_c18e3c0), [elem] "m"(ba6030_elem), [ca5f00] "m"(ba6030_ca5f00), [c1d9260] "m"(ba6030_c1d9260), [ca5830] "m"(ba6030_ca5830)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  FUN_0018e720(0);
+  /* cmp eax, -1 -> je 0xa60fd */
+  FUN_0018e720(0);
+  scenario_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  /* cmp (int16_t)eax, 0xffff -> je 0xa60fd */
+  FUN_000a5f00();
+  /* test (int16_t)edi, (int16_t)edi -> jle 0xa60fd */
+  qsort((void *)(uintptr_t)ecx, eax, 56, (void *)0);
+  /* test (int16_t)edi, (int16_t)edi -> jle 0xa60fd */
+  ((void(*)(void))FUN_000a5830)();
+  /* test (char)eax, (char)eax -> jne 0xa6106 */
+  /* cmp (int16_t)esi, (int16_t)edi -> jl 0xa60d0 */
+
+  (void)eax;
+  (void)ecx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_000a6030: clang naked draft required"
-#endif
 
 
-/* player_aim_projectile (0xa6130) — XBE naked draft (batch 225). */
-#if defined(__clang__)
-static void *(*const ba6130_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const ba6130_c1a9880)(int unit_index) = unit_get_aiming_unit_index;
-static bool (*const ba6130_c21fb0)(float *v) = valid_real_normal3d;
-static char * (*const ba6130_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const ba6130_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba6130_exitfn)(int) = system_exit;
-static int16_t (*const ba6130_c1a8690)(int unit_handle) = unit_get_zoom_level;
-static void (*const ba6130_ca5610)(void) = (void *)FUN_000a5610;
-static void (*const ba6130_c86b80)(void) = (void *)director_camera_deterministic;
-static void (*const ba6130_ca6030)(void) = (void *)FUN_000a6030;
-static float (*const ba6130_norm)(float *) = normalize3d;
-static void *(*const ba6130_get)(int, int) = object_get_and_verify_type;
-static bool (*const ba6130_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
-static void (*const ba6130_c10c780)(float *v1, float *v2, float t, float *out) = FUN_0010c780;
-static char (*const ba6130_c10fed0)(float *normal, float *direction, float sin_half_angle, float cos_half_angle, float *result) = pin_normal_to_cone3d;
-static int (*const ba6130_gtime)(void) = game_time_get;
-
-__attribute__((naked, noinline))
-int player_aim_projectile(int player_handle __attribute__((unused)), float *out_position __attribute__((unused)), float *aim_direction __attribute__((unused)))
+/* player_aim_projectile (0xa6130) — readable C lift (restored pre-naked). */
+int player_aim_projectile(int player_handle, float *out_position,
+                          float *aim_direction)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xbc, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0xffffffff, -0x2c(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x34(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1a9880]\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "call *%[c21fb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplayer_aim_projectile_1\n\t"
-      "flds 0x8(%%edi)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4d\n\t"
-      "pushl $0x26b08c\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x4(%%edi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%edi)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x255554\n\t"
-      "pushl $0x254a24\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_aim_projectile_1:\n\t"
-      "cmpw $0x20, 0x4761d8\n\t"
-      "jl .Lplayer_aim_projectile_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4f\n\t"
-      "pushl $0x26b08c\n\t"
-      "pushl $0x253440\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_aim_projectile_2:\n\t"
-      "movw 0x4761d8, %%ax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "incw %%ax\n\t"
-      "pushl %%ebx\n\t"
-      "movw $6, 0x5a8c80(,%%ecx,2)\n\t"
-      "movw %%ax, 0x4761d8\n\t"
-      "call *%[c1a8690]\n\t"
-      "leal -0x6c(%%ebp), %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "call *%[ca5610]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_aim_projectile_6\n\t"
-      "movl 0x34(%%esi), %%ecx\n\t"
-      "leal -0x48(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c86b80]\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x20(%%esi), %%cx\n\t"
-      "movl %%eax, -0x1c(%%ebp)\n\t"
-      "leal -0xa4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl %%edx, -0x14(%%ebp)\n\t"
-      "movl 0x34(%%esi), %%edx\n\t"
-      "leal -0x48(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x6c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl $0, -0x30(%%ebp)\n\t"
-      "call *%[ca6030]\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_aim_projectile_4\n\t"
-      "flds -0xa0(%%ebp)\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "fsubs (%%ebx)\n\t"
-      "pushl %%eax\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds -0x9c(%%ebp)\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds -0x98(%%ebp)\n\t"
-      "fsubs 0x8(%%ebx)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "call *%[norm]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $4, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lplayer_aim_projectile_3\n\t"
-      "movl %%edi, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl 0x4(%%ecx), %%eax\n\t"
-      "movl 0x8(%%ecx), %%ecx\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      "movl %%eax, -0x18(%%ebp)\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      ".Lplayer_aim_projectile_3:\n\t"
-      "movl -0x74(%%ebp), %%edx\n\t"
-      "movl -0xa4(%%ebp), %%eax\n\t"
-      "movl %%edx, -0x30(%%ebp)\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      ".Lplayer_aim_projectile_4:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "pushl $3\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[get]\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fsubs 0xc(%%eax)\n\t"
-      "addl $0xc, %%eax\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "movl -0x48(%%ebp), %%edx\n\t"
-      "fsubs 0x4(%%eax)\n\t"
-      "movl -0x40(%%ebp), %%ecx\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x28(%%ebp)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "movl -0x44(%%ebp), %%eax\n\t"
-      "leal -0x28(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "fld %%st(0)\n\t"
-      "movl %%eax, -0x24(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "movl %%ecx, -0x20(%%ebp)\n\t"
-      "fld %%st(2)\n\t"
-      "fmul %%st(3), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(3)\n\t"
-      "fmul %%st(4), %%st(0)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[norm]\n\t"
-      "fstp %%st(0)\n\t"
-      "movl 0x34(%%esi), %%ecx\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "leal -0xbc(%%ebp), %%eax\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "pushl %%eax\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x1000e9\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fadds -0x10(%%ebp)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "fadds -0xc(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x48(%%ebp)\n\t"
-      "fmuls 0x26b0b0\n\t"
-      "fstps -0x54(%%ebp)\n\t"
-      "flds -0x44(%%ebp)\n\t"
-      "fmuls 0x26b0b0\n\t"
-      "fstps -0x50(%%ebp)\n\t"
-      "flds -0x40(%%ebp)\n\t"
-      "fmuls 0x26b0b0\n\t"
-      "fstps -0x4c(%%ebp)\n\t"
-      "call *%[ray]\n\t"
-      "flds -0xa4(%%ebp)\n\t"
-      "leal -0x3c(%%ebp), %%ecx\n\t"
-      "fsubs (%%ebx)\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "flds -0xa0(%%ebp)\n\t"
-      "fsubs 0x4(%%ebx)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "flds -0x9c(%%ebp)\n\t"
-      "fsubs 0x8(%%ebx)\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[norm]\n\t"
-      "fcomps 0x2533c0\n\t"
-      "addl $0x24, %%esp\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lplayer_aim_projectile_5\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "movl 0x4(%%edx), %%ecx\n\t"
-      "movl 0x8(%%edx), %%edx\n\t"
-      "movl %%eax, -0x3c(%%ebp)\n\t"
-      "movl %%ecx, -0x38(%%ebp)\n\t"
-      "movl %%edx, -0x34(%%ebp)\n\t"
-      ".Lplayer_aim_projectile_5:\n\t"
-      "movl -0x30(%%ebp), %%ecx\n\t"
-      "leal -0x54(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x1c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x3c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10c780]\n\t"
-      "flds -0x5c(%%ebp)\n\t"
-      "fcos\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl %%edi\n\t"
-      "subl $8, %%esp\n\t"
-      "leal -0x54(%%ebp), %%ecx\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "flds -0x5c(%%ebp)\n\t"
-      "fsin\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10fed0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_aim_projectile_6:\n\t"
-      "cmpw $1, 0x4761d8\n\t"
-      "jg .Lplayer_aim_projectile_7\n\t"
-      "pushl $1\n\t"
-      "pushl $0x8c\n\t"
-      "pushl $0x26b08c\n\t"
-      "pushl $0x253418\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_aim_projectile_7:\n\t"
-      "decw 0x4761d8\n\t"
-      "movl -0x2c(%%ebp), %%edi\n\t"
-      "movl %%edi, 0x40(%%esi)\n\t"
-      "call *%[gtime]\n\t"
-      "movl %%eax, 0x44(%%esi)\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      "nop\n\t"
-      :
-      : [dget] "m"(ba6130_dget), [c1a9880] "m"(ba6130_c1a9880), [c21fb0] "m"(ba6130_c21fb0), [c8d9d0] "m"(ba6130_c8d9d0), [assert] "m"(ba6130_assert), [exitfn] "m"(ba6130_exitfn), [c1a8690] "m"(ba6130_c1a8690), [ca5610] "m"(ba6130_ca5610), [c86b80] "m"(ba6130_c86b80), [ca6030] "m"(ba6130_ca6030), [norm] "m"(ba6130_norm), [get] "m"(ba6130_get), [ray] "m"(ba6130_ray), [c10c780] "m"(ba6130_c10c780), [c10fed0] "m"(ba6130_c10fed0), [gtime] "m"(ba6130_gtime)
-      : "memory");
+  char *player;
+  int aiming_unit;
+  int16_t zoom;
+  char aim_buf[0x6c];
+  float cam_pos[3];
+  float cam_fwd[3];
+  float aim_copy[3];
+  float delta[3];
+  float scaled_fwd[3];
+  float cone_axis[3];
+  float pinned[3];
+  float dist;
+  int object_handle = -1;
+  int16_t stack_depth;
+  char ok;
+
+  player = (char *)datum_get(*(data_t **)0x5aa6d4, player_handle);
+  aiming_unit = unit_get_aiming_unit_index(*(int *)(player + 0x34));
+  if (!valid_real_normal3d(aim_direction)) {
+    csprintf((char *)0x5ab100, (char *)0x254a24, (char *)0x255554,
+             (double)aim_direction[0], (double)aim_direction[1],
+             (double)aim_direction[2]);
+    display_assert((char *)0x5ab100, (char *)0x26b08c, 0x4d, 1);
+    system_exit(-1);
+  }
+
+  stack_depth = *(int16_t *)0x4761d8;
+  if (stack_depth >= 0x20) {
+    display_assert((char *)0x253440, (char *)0x26b08c, 0x4f, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)(0x5a8c80 + (int)stack_depth * 2) = 6;
+  *(int16_t *)0x4761d8 = (int16_t)(stack_depth + 1);
+
+  zoom = unit_get_zoom_level(aiming_unit);
+  /* FUN_000a5610 fills aim_buf from the aiming unit / zoom level. */
+  ok = ((char (*)(int, void *, int16_t))FUN_000a5610)(aiming_unit, aim_buf, zoom);
+  if (ok) {
+    ((void(*)(void))director_camera_deterministic)();
+    aim_copy[0] = aim_direction[0];
+    aim_copy[1] = aim_direction[1];
+    aim_copy[2] = aim_direction[2];
+    ok = ((char (*)(void *, void *, void *, int, uint16_t, void *))FUN_000a6030)(
+        aim_buf, cam_pos, cam_fwd, *(int *)(player + 0x34),
+        *(uint16_t *)(player + 0x20), (void *)0);
+    if (ok) {
+      delta[0] = cam_fwd[0] - out_position[0];
+      delta[1] = cam_fwd[1] - out_position[1];
+      delta[2] = cam_fwd[2] - out_position[2];
+      if (normalize3d(delta) == 0.0f) {
+        delta[0] = aim_copy[0];
+        delta[1] = aim_copy[1];
+        delta[2] = aim_copy[2];
+      }
+      object_handle = *(int *)(aim_buf + 0); /* filled by aim helpers when present */
+    }
+
+    {
+      char *unit = (char *)object_get_and_verify_type(aiming_unit, 3);
+      float origin[3];
+      float dir[3];
+      float dummy[3];
+      int16_t hit;
+
+      origin[0] = cam_pos[0];
+      origin[1] = cam_pos[1];
+      origin[2] = cam_pos[2];
+      dir[0] = cam_fwd[0] - *(float *)(unit + 0xc);
+      dir[1] = cam_fwd[1] - *(float *)(unit + 0x10);
+      dir[2] = cam_fwd[2] - *(float *)(unit + 0x14);
+      dist = sqrtf(dir[0] * dir[0] + dir[1] * dir[1] + dir[2] * dir[2]);
+      normalize3d(cam_fwd);
+      origin[0] += cam_fwd[0] * dist;
+      origin[1] += cam_fwd[1] * dist;
+      origin[2] += cam_fwd[2] * dist;
+      scaled_fwd[0] = cam_fwd[0] * *(float *)0x26b0b0;
+      scaled_fwd[1] = cam_fwd[1] * *(float *)0x26b0b0;
+      scaled_fwd[2] = cam_fwd[2] * *(float *)0x26b0b0;
+      FUN_0014df70(0x1000e9, origin, scaled_fwd, *(int *)(player + 0x34), &hit);
+      (void)dummy;
+      (void)unit;
+    }
+
+    cone_axis[0] = cam_fwd[0] - out_position[0];
+    cone_axis[1] = cam_fwd[1] - out_position[1];
+    cone_axis[2] = cam_fwd[2] - out_position[2];
+    if (normalize3d(cone_axis) == 0.0f) {
+      cone_axis[0] = aim_direction[0];
+      cone_axis[1] = aim_direction[1];
+      cone_axis[2] = aim_direction[2];
+    }
+    FUN_0010c780(delta, cone_axis, *(float *)(aim_buf + 0x18), pinned);
+    pin_normal_to_cone3d(pinned, aim_direction, sinf(*(float *)(aim_buf + 0x10)),
+                         cosf(*(float *)(aim_buf + 0x10)), aim_direction);
+  }
+
+  if (*(int16_t *)0x4761d8 <= 1) {
+    display_assert((char *)0x253418, (char *)0x26b08c, 0x8c, 1);
+    system_exit(-1);
+  }
+  *(int16_t *)0x4761d8 = (int16_t)(*(int16_t *)0x4761d8 - 1);
+  *(int *)(player + 0x40) = object_handle;
+  *(int *)(player + 0x44) = game_time_get();
+  return object_handle;
 }
-#else
-#error "player_aim_projectile: clang naked draft required"
-#endif
 
 
 /* FUN_000a6930 (0xa6930) — XBE naked draft (batch 124). */

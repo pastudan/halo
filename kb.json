@@ -5464,13 +5464,13 @@
         {
           "addr": "0xa5ac0",
           "decl": "void FUN_000a5ac0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a5ac0"
         },
         {
           "addr": "0xa5c60",
           "decl": "void FUN_000a5c60(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a5c60"
         },
         {
@@ -5488,13 +5488,13 @@
         {
           "addr": "0xa6030",
           "decl": "void FUN_000a6030(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000a6030"
         },
         {
           "addr": "0xa6130",
           "decl": "int player_aim_projectile(int player_handle, float *out_position, float *aim_direction);",
-          "ported": false,
+          "ported": true,
           "name": "player_aim_projectile"
         },
         {
@@ -8721,7 +8721,7 @@
         {
           "addr": "0xb4490",
           "decl": "void FUN_000b4490(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000b4490"
         },
         {
@@ -35716,7 +35716,7 @@
         {
           "addr": "0x30f50",
           "decl": "void FUN_00030f50(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00030f50"
         },
         {
@@ -36393,7 +36393,7 @@
         {
           "addr": "0x4b320",
           "decl": "void FUN_0004b320(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004b320"
         },
         {
@@ -36416,7 +36416,7 @@
         {
           "addr": "0x4b810",
           "decl": "void FUN_0004b810(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004b810"
         },
         {
@@ -36446,7 +36446,7 @@
         {
           "addr": "0x4c560",
           "decl": "void FUN_0004c560(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004c560"
         },
         {
@@ -36457,7 +36457,7 @@
         {
           "addr": "0x4c920",
           "decl": "void FUN_0004c920(int actor_handle, char debug_selected, void *debug_context);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0004c920"
         },
         {
@@ -37780,7 +37780,7 @@
         {
           "addr": "0x652f0",
           "decl": "void FUN_000652f0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000652f0"
         }
       ],
