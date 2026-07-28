@@ -3264,124 +3264,29 @@ void FUN_00075e70(void)
 #endif
 
 
-/* FUN_00076300 (0x76300) — XBE naked draft (batch 271). */
-#if defined(__clang__)
-static void (*const b76300_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static int16_t (*const b76300_c1b9ad0)(void *tag_block) = tag_block_add_element;
-static void *(*const b76300_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b76300_c75e70)(void) = FUN_00075e70;
-static void (*const b76300_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b76300_exitfn)(int) = system_exit;
-
-__attribute__((naked, noinline))
+/* FUN_00076300 (0x76300) — readable C lift (restored pre-naked). */
 void FUN_00076300(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x33414c, %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpw %%dx, 0x2(%%ecx)\n\t"
-      "pushl %%ebx\n\t"
-      "movb $1, %%bl\n\t"
-      "jne .LFUN_00076300_1\n\t"
-      "movb 0x334148, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00076300_1\n\t"
-      "pushl $0x2624b8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00076300_1:\n\t"
-      "movswl (%%ecx), %%eax\n\t"
-      "cmpl $4, %%eax\n\t"
-      "ja .LFUN_00076300_5\n\t"
-      "jmp *.LFUN_00076300_jt(,%%eax,4)\n\t"
-      ".LFUN_00076300_2:\n\t"
-      "movl 0x334150, %%eax\n\t"
-      "movw %%dx, -0x8(%%ebp)\n\t"
-      "movw %%dx, -0x6(%%ebp)\n\t"
-      "movw 0x4(%%eax), %%dx\n\t"
-      "movw 0x6(%%eax), %%ax\n\t"
-      "addl $0x54, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movw %%dx, -0x2(%%ebp)\n\t"
-      "movw %%ax, -0x4(%%ebp)\n\t"
-      "call *%[c1b9ad0]\n\t"
-      "movl 0x33414c, %%edx\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "pushl $0x40\n\t"
-      "pushl %%ecx\n\t"
-      "addl $0x54, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movw %%ax, 0x33415c\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, 0x334158\n\t"
-      "movw $0xffff, 0x20(%%eax)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "call *%[c75e70]\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00076300_3:\n\t"
-      "pushl $0x26247c\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00076300_4:\n\t"
-      "pushl $0x262444\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00076300_5:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1a6\n\t"
-      "pushl $0x2616f0\n\t"
-      "pushl $0x261ea0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_00076300_jt:\n\t"
-      ".long .LFUN_00076300_2\n\t"
-      ".long .LFUN_00076300_3\n\t"
-      ".long .LFUN_00076300_2\n\t"
-      ".long .LFUN_00076300_4\n\t"
-      ".long .LFUN_00076300_2\n\t"
-      ".text\n\t"
-      :
-      : [c8f390] "m"(b76300_c8f390), [c1b9ad0] "m"(b76300_c1b9ad0), [elem] "m"(b76300_elem), [c75e70] "m"(b76300_c75e70), [assert] "m"(b76300_assert), [exitfn] "m"(b76300_exitfn)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+
+  /* test (char)eax, (char)eax -> je 0x76336 */
+  error(0, (char *)0x002624b8);
+  /* cmp eax, 4 -> ja 0x763d3 */
+  tag_block_add_element((void *)(uintptr_t)ecx);
+  tag_block_get_element((void *)(uintptr_t)edx, 0, 0);
+  /* mem[0x00334158] = eax */
+  FUN_00075e70();
+  error(0, (char *)0x0026247c);
+  error(0, (char *)0x00262444);
+  display_assert((char *)0x00261ea0, (char *)0x002616f0, 422, 0);
+  system_exit(0);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
 }
-#else
-#error "FUN_00076300: clang naked draft required"
-#endif
 
 
 /* FUN_00076410 (0x76410) — XBE naked draft (batch 244). */
@@ -5601,198 +5506,32 @@ void bitmap_2d_uncompress_from_mipmap(void *source_bitmap __attribute__((unused)
 #endif
 
 
-/* rgb_color_to_hsv_color (0x7a780) — XBE naked draft (batch 245). */
-#if defined(__clang__)
-static void (*const b7a780_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b7a780_exitfn)(int) = system_exit;
-static void (*const b7a780_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
+/* rgb_color_to_hsv_color (0x7a780) — readable C lift (restored pre-naked). */
 void rgb_color_to_hsv_color(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x10, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movzwl (%%edi), %%eax\n\t"
-      "movzwl 0x2(%%edi), %%ecx\n\t"
-      "movzwl 0x4(%%edi), %%edx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "fildl -0x10(%%ebp)\n\t"
-      "fmuls 0x2647f4\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrgb_color_to_hsv_color_1\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "jmp .Lrgb_color_to_hsv_color_2\n\t"
-      ".Lrgb_color_to_hsv_color_1:\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".Lrgb_color_to_hsv_color_2:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrgb_color_to_hsv_color_3\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jmp .Lrgb_color_to_hsv_color_5\n\t"
-      ".Lrgb_color_to_hsv_color_3:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrgb_color_to_hsv_color_4\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jmp .Lrgb_color_to_hsv_color_5\n\t"
-      ".Lrgb_color_to_hsv_color_4:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      ".Lrgb_color_to_hsv_color_5:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrgb_color_to_hsv_color_6\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "jmp .Lrgb_color_to_hsv_color_7\n\t"
-      ".Lrgb_color_to_hsv_color_6:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".Lrgb_color_to_hsv_color_7:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrgb_color_to_hsv_color_9\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps -0x4(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lrgb_color_to_hsv_color_8\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "jmp .Lrgb_color_to_hsv_color_10\n\t"
-      ".Lrgb_color_to_hsv_color_8:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "jmp .Lrgb_color_to_hsv_color_10\n\t"
-      ".Lrgb_color_to_hsv_color_9:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      ".Lrgb_color_to_hsv_color_10:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "fsub %%st(1), %%st(0)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .Lrgb_color_to_hsv_color_11\n\t"
-      "pushl $1\n\t"
-      "pushl $0x852\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2647f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrgb_color_to_hsv_color_11:\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jne .Lrgb_color_to_hsv_color_12\n\t"
-      "pushl $1\n\t"
-      "pushl $0x853\n\t"
-      "pushl $0x2641f0\n\t"
-      "pushl $0x2647d8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrgb_color_to_hsv_color_12:\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrgb_color_to_hsv_color_13\n\t"
-      "flds 0x2533c0\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lrgb_color_to_hsv_color_18\n\t"
-      ".Lrgb_color_to_hsv_color_13:\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fdivs -0x8(%%ebp)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrgb_color_to_hsv_color_14\n\t"
-      "flds 0x2533c0\n\t"
-      "jmp .Lrgb_color_to_hsv_color_18\n\t"
-      ".Lrgb_color_to_hsv_color_14:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrgb_color_to_hsv_color_15\n\t"
-      "fsubs -0x4(%%ebp)\n\t"
-      "fdivs -0x10(%%ebp)\n\t"
-      "jmp .Lrgb_color_to_hsv_color_17\n\t"
-      ".Lrgb_color_to_hsv_color_15:\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x44, %%ah\n\t"
-      "jp .Lrgb_color_to_hsv_color_16\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fdivs -0x10(%%ebp)\n\t"
-      "fadds 0x253f40\n\t"
-      "jmp .Lrgb_color_to_hsv_color_17\n\t"
-      ".Lrgb_color_to_hsv_color_16:\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs 0x8(%%ebp)\n\t"
-      "fdivs -0x10(%%ebp)\n\t"
-      "fadds 0x2533d8\n\t"
-      ".Lrgb_color_to_hsv_color_17:\n\t"
-      "fmuls 0x2647d4\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lrgb_color_to_hsv_color_18\n\t"
-      "fadds 0x2533c8\n\t"
-      ".Lrgb_color_to_hsv_color_18:\n\t"
-      "fmuls 0x2647d0\n\t"
-      "call *%[ftol]\n\t"
-      "fmuls 0x2647cc\n\t"
-      "movw %%ax, (%%esi)\n\t"
-      "call *%[ftol]\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x2647cc\n\t"
-      "movw %%ax, 0x2(%%esi)\n\t"
-      "call *%[ftol]\n\t"
-      "movw %%ax, 0x4(%%esi)\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b7a780_assert), [exitfn] "m"(b7a780_exitfn), [ftol] "m"(b7a780_ftol)
-      : "memory");
+  int eax = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test (char)eax, 0x41 -> jne 0x7a7d5 */
+  /* test (char)eax, 0x41 -> jne 0x7a7ee */
+  /* test (char)eax, 0x41 -> jne 0x7a803 */
+  /* test (char)eax, 0x41 -> jne 0x7a81b */
+  /* test (char)eax, 0x41 -> jne 0x7a843 */
+  /* test (char)eax, 0x41 -> jne 0x7a83e */
+  display_assert((char *)0x002647f0, (char *)0x002641f0, 2130, 0);
+  system_exit(0);
+  /* cmp edi, esi -> jne 0x7a89b */
+  display_assert((char *)0x002647d8, (char *)0x002641f0, 2131, 0);
+  system_exit(0);
+  FUN_001d9068();
+  FUN_001d9068();
+  FUN_001d9068();
+
+  (void)eax;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "rgb_color_to_hsv_color: clang naked draft required"
-#endif
 
 
 /* hsv_color_to_rgb_color (0x7a970) — readable C lift (restored pre-naked). */

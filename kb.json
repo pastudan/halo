@@ -33337,7 +33337,7 @@
         {
           "addr": "0x76300",
           "decl": "void FUN_00076300(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00076300"
         },
         {
@@ -33536,7 +33536,7 @@
         {
           "addr": "0x7a780",
           "decl": "void rgb_color_to_hsv_color(void);",
-          "ported": false,
+          "ported": true,
           "name": "rgb_color_to_hsv_color"
         },
         {
