@@ -22307,13 +22307,13 @@
         {
           "addr": "0x156710",
           "decl": "void rasterizer_set_model_skinning(void *a1);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_set_model_skinning"
         },
         {
           "addr": "0x156850",
           "decl": "void rasterizer_set_model_lighting_point_light(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_set_model_lighting_point_light"
         },
         {
