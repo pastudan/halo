@@ -29,6 +29,36 @@ os.environ.setdefault("BIPED_SIBLING_RESOLVE", "1")
 NAKED_RE = re.compile(r"__attribute__\s*\(\s*\(\s*naked\b")
 RESULTS_RE = re.compile(r"(\d+) passed, (\d+) failed, (\d+) errors")
 ZERO_ARG_CALL = re.compile(r"\b([A-Za-z_][A-Za-z0-9_]*)\s*\(\s*\)\s*;")
+FAIL_LEDGER = ROOT / "artifacts" / "grind" / "restore_fail_ledger.json"
+# Skip recently-failed restores so waves don't burn 90s×N on known near-misses.
+FAIL_SKIP_HOURS = 12
+
+
+def load_fail_ledger() -> dict:
+    if not FAIL_LEDGER.exists():
+        return {}
+    try:
+        return json.loads(FAIL_LEDGER.read_text())
+    except Exception:
+        return {}
+
+
+def note_fail(ledger: dict, name: str, kind: str) -> None:
+    import time
+
+    ledger[name] = {"kind": kind, "ts": time.time()}
+    FAIL_LEDGER.parent.mkdir(parents=True, exist_ok=True)
+    FAIL_LEDGER.write_text(json.dumps(ledger, indent=2) + "\n")
+
+
+def should_skip_failed(ledger: dict, name: str) -> bool:
+    import time
+
+    ent = ledger.get(name)
+    if not ent:
+        return False
+    age_h = (time.time() - float(ent.get("ts") or 0)) / 3600.0
+    return age_h < FAIL_SKIP_HOURS
 
 
 def patch_zero_arg_calls(text: str) -> str:
@@ -212,8 +242,15 @@ def main() -> int:
         base = domain_rank(src, len(body), addr)
         return (pref_i, *base)
 
+    fail_ledger = load_fail_ledger()
+    skipped_recent = sum(1 for t in restorable if should_skip_failed(fail_ledger, t[0]))
+    restorable = [t for t in restorable if not should_skip_failed(fail_ledger, t[0])]
     restorable = sorted(restorable, key=pref_rank)
-    print(f"restorable={len(restorable)} (processing up to {args.limit})", flush=True)
+    print(
+        f"restorable={len(restorable)} (skipped_recent_fail={skipped_recent}; "
+        f"processing up to {args.limit})",
+        flush=True,
+    )
 
     proven: list[str] = []
     skipped_tus: set[str] = set()
@@ -262,12 +299,14 @@ def main() -> int:
             # Revert and keep trying other symbols in this TU. A single bad
             # extract must not blacklist the whole file for the rest of the run.
             print(f"COMPILE_FAIL revert {name} ({src})", flush=True)
+            note_fail(fail_ledger, name, "compile")
             full.write_text(backup, encoding="utf-8")
             continue
 
         res = uni(name, addr, args.seeds, args.timeout)
         if res is None:
             print(f"UNI_FAIL/timeout revert {name}", flush=True)
+            note_fail(fail_ledger, name, "timeout")
             full.write_text(backup, encoding="utf-8")
             continue
         p, f, e = res
@@ -297,6 +336,7 @@ def main() -> int:
         else:
             # Revert non-perfect to keep tree healthy for next candidates
             print(f"REVERT nonperfect {name}", flush=True)
+            note_fail(fail_ledger, name, f"uni_{p}_{f}_{e}")
             full.write_text(backup, encoding="utf-8")
 
     (ROOT / "kb.json").write_text(json.dumps(kb, indent=2) + "\n")
