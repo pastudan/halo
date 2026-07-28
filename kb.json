@@ -21277,7 +21277,7 @@
         {
           "addr": "0x170440",
           "decl": "void FUN_00170440(void *params@<eax>, short pass, short pass_count);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00170440"
         },
         {
@@ -21320,7 +21320,7 @@
         {
           "addr": "0x172730",
           "decl": "void FUN_00172730(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00172730"
         },
         {
@@ -21535,7 +21535,7 @@
         {
           "addr": "0x17b5c0",
           "decl": "void FUN_0017b5c0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017b5c0"
         },
         {
@@ -32227,7 +32227,7 @@
         {
           "addr": "0x17e190",
           "decl": "void FUN_0017e190(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017e190"
         },
         {
@@ -32294,7 +32294,7 @@
         {
           "addr": "0x17ef00",
           "decl": "void FUN_0017ef00(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0017ef00"
         }
       ],
