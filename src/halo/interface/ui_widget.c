@@ -4387,147 +4387,63 @@ char display_scenario_help(void *widget)
 #endif
 
 
-/* network_game_server_list_initialize (0xea3e0) — XBE naked draft (batch 125). */
-#if defined(__clang__)
-static void *(*const bea3e0_memset)(void *, int, unsigned int) = (void *)csmemset;
-static void *(*const bea3e0_tag)(int, int) = (void *)tag_get;
-static void (*const bea3e0_assert)(const char *, const char *, int, bool) = (void *)display_assert;
-static void (*const bea3e0_exitfn)(int) = (void *)system_exit;
-static void * (*const bea3e0_ce3d20)(int a1, unsigned short a2, const char *a3, unsigned int a4) = (void *)ui_widget_realloc;
-static void (*const bea3e0_c1c26b0)(void) = (void *)FUN_001c26b0;
-static void (*const bea3e0_c1c2ed0)(void) = (void *)saved_game_file_retrieve_last_used_multiplayer_variant_directory;
-static void (*const bea3e0_c1c38d0)(void) = (void *)saved_game_file_find_profile_index_for_directory_path;
-
-__attribute__((naked, noinline))
+/* network_game_server_list_initialize (0xea3e0) — readable C lift (Capstone hand-lift).
+ * Reset server-list widget state, realloc slot array, seed from last-used
+ * multiplayer variant profile. Capstone on XBE 0xea3e0..0xea533. */
 char network_game_server_list_initialize(void *widget)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x144\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x5aa260\n\t"
-      "movl $0xffffffff, 0x31e494\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x44654c61\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x14, %%esp\n\t"
-      "cmpw $2, (%%esi)\n\t"
-      "je .Lnetwork_game_server_list_initialize_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x568\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285f48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_server_list_initialize_1:\n\t"
-      "cmpl $3, 0x3e0(%%esi)\n\t"
-      "je .Lnetwork_game_server_list_initialize_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x569\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x285f08\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lnetwork_game_server_list_initialize_2:\n\t"
-      "movl 0x40(%%edi), %%ecx\n\t"
-      "pushl $0x56e\n\t"
-      "pushl $0x2859a4\n\t"
-      "pushl $0x190\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[ce3d20]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "movl %%esi, 0x40(%%edi)\n\t"
-      "je .Lnetwork_game_server_list_initialize_7\n\t"
-      "pushl %%esi\n\t"
-      "leal 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "movl $0x64, 0x8(%%ebp)\n\t"
-      "call *%[c1c26b0]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $3, %%ax\n\t"
-      "jae .Lnetwork_game_server_list_initialize_4\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "movl $3, %%edx\n\t"
-      "subl %%eax, %%edx\n\t"
-      "leal (%%esi,%%ecx,4), %%ecx\n\t"
-      "movzwl %%dx, %%edx\n\t"
-      ".Lnetwork_game_server_list_initialize_3:\n\t"
-      "movl $0xffffffff, (%%ecx)\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "incl %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "decl %%edx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "jne .Lnetwork_game_server_list_initialize_3\n\t"
-      ".Lnetwork_game_server_list_initialize_4:\n\t"
-      "movw %%ax, 0x44(%%edi)\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c2ed0]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lnetwork_game_server_list_initialize_7\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c38d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lnetwork_game_server_list_initialize_7\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "testw %%dx, %%dx\n\t"
-      "jbe .Lnetwork_game_server_list_initialize_7\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Lnetwork_game_server_list_initialize_5:\n\t"
-      "movzwl %%cx, %%ebx\n\t"
-      "cmpl %%eax, (%%esi,%%ebx,4)\n\t"
-      "je .Lnetwork_game_server_list_initialize_6\n\t"
-      "incl %%ecx\n\t"
-      "cmpw %%dx, %%cx\n\t"
-      "jb .Lnetwork_game_server_list_initialize_5\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lnetwork_game_server_list_initialize_6:\n\t"
-      "movw %%cx, 0x3c(%%edi)\n\t"
-      ".Lnetwork_game_server_list_initialize_7:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [memset] "m"(bea3e0_memset), [tag] "m"(bea3e0_tag), [assert] "m"(bea3e0_assert), [exitfn] "m"(bea3e0_exitfn), [ce3d20] "m"(bea3e0_ce3d20), [c1c26b0] "m"(bea3e0_c1c26b0), [c1c2ed0] "m"(bea3e0_c1c2ed0), [c1c38d0] "m"(bea3e0_c1c38d0)
-      : "memory");
-}
-#else
-#error "network_game_server_list_initialize: clang naked draft required"
-#endif
+  char *w;
+  void *tag;
+  void *slots;
+  char pathbuf[0x100];
+  int count;
+  int profile;
+  uint16_t i;
+  uint16_t n;
 
+  w = (char *)widget;
+  *(int *)0x31e494 = -1;
+  csmemset((void *)0x5aa260, -1, 0x144);
+
+  tag = tag_get(0x44654c61, *(int *)w);
+  if (*(int16_t *)tag != 2) {
+    display_assert((const char *)0x285f48, (const char *)0x2859a4, 0x568, 1);
+    system_exit(-1);
+  }
+  if (*(int *)((char *)tag + 0x3e0) != 3) {
+    display_assert((const char *)0x285f08, (const char *)0x2859a4, 0x569, 1);
+    system_exit(-1);
+  }
+
+  slots = ui_widget_realloc(*(int *)(w + 0x40), 0x190, (const char *)0x2859a4, 0x56e);
+  *(void **)(w + 0x40) = slots;
+  if (slots != 0) {
+    count = 0x64;
+    FUN_001c26b0(0, (int)&count, (int)slots);
+    n = (uint16_t)count;
+    if (n < 3) {
+      for (i = n; i < 3; i++)
+        *((int *)slots + i) = -1;
+      n = 3;
+      count = 3;
+    }
+    *(uint16_t *)(w + 0x44) = n;
+
+    if (saved_game_file_retrieve_last_used_multiplayer_variant_directory(pathbuf)) {
+      profile = saved_game_file_find_profile_index_for_directory_path(pathbuf, 1);
+      if (profile != -1) {
+        n = (uint16_t)count;
+        for (i = 0; i < n; i++) {
+          if (*((int *)slots + i) == profile) {
+            *(uint16_t *)(w + 0x3c) = i;
+            break;
+          }
+        }
+      }
+    }
+  }
+  return 1;
+}
 
 /* network_game_join_game_from_server_list (0xea570) — XBE naked draft (batch 113). */
 #if defined(__clang__)
