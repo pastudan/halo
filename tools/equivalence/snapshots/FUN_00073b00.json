@@ -1,0 +1,10 @@
+{
+  "description": "FUN_00073b00: width%4!=0 \u2192 error return 0",
+  "arg_overrides": {
+    "bm": "00000000020002000000000000000000"
+  },
+  "stub_returns": {
+    "bitmap_verify": 1,
+    "error": 0
+  }
+}

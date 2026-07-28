@@ -38974,8 +38974,8 @@
         },
         {
           "addr": "0x73b00",
-          "decl": "void FUN_00073b00(void);",
-          "ported": false,
+          "decl": "unsigned char FUN_00073b00(void *bm);",
+          "ported": true,
           "name": "FUN_00073b00"
         },
         {
@@ -39007,8 +39007,8 @@
         },
         {
           "addr": "0x747d0",
-          "decl": "void FUN_000747d0(void);",
-          "ported": false,
+          "decl": "void FUN_000747d0(void **list, short *out_count);",
+          "ported": true,
           "name": "FUN_000747d0"
         },
         {
