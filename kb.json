@@ -25436,8 +25436,14 @@
         {
           "addr": "0x1c9e20",
           "decl": "void FUN_001c9e20(void);",
-          "ported": false,
-          "name": "FUN_001c9e20"
+          "ported": true,
+          "name": "FUN_001c9e20",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1ca130",
