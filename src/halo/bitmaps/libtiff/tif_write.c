@@ -2,152 +2,64 @@
 
 /* --- tif_write.obj batch drafts (2026-07-26) --- */
 
-/* FUN_0006e740 (0x6e740) — XBE naked draft (batch 365). */
-#if defined(__clang__)
-static void (*const b6e740_c1e24d2)(void) = (void *)__lseek;
-static void (*const b6e740_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b6e740_c1e209e)(void) = (void *)__read;
-
-__attribute__((naked, noinline))
-void FUN_0006e740(void)
+/* FUN_0006e740 (0x6e740) — Capstone lift: lseek+read strip payload.
+ * ABI: buf/module stack; tif@<esi>, strip_count@<edi>, size_count@<ebx>. */
+int FUN_0006e740(void *buf, void *module, void *tif /*@<esi>*/,
+                 unsigned int strip_count /*@<edi>*/,
+                 unsigned int size_count /*@<ebx>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xbc(%%esi), %%eax\n\t"
-      "movl (%%eax,%%edi,4), %%ecx\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1e24d2]\n\t"
-      "movl 0xbc(%%esi), %%ecx\n\t"
-      "movl (%%ecx,%%edi,4), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .LFUN_0006e740_1\n\t"
-      "movl 0xd4(%%esi), %%edx\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x260fcc\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006e740_1:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movswl 0x4(%%esi), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1e209e]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .LFUN_0006e740_2\n\t"
-      "movl 0xd4(%%esi), %%ecx\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x260fac\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006e740_2:\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1e24d2] "m"(b6e740_c1e24d2), [c68a30] "m"(b6e740_c68a30), [c1e209e] "m"(b6e740_c1e209e)
-      : "memory");
+  unsigned int *offs;
+  int fd;
+  int got;
+
+  offs = *(unsigned int **)((char *)tif + 0xbc);
+  fd = (int)*(short *)((char *)tif + 4);
+  got = ((int (*)(int, unsigned int, int))(void *)__lseek)(fd, offs[strip_count], 0);
+  if (got != (int)offs[strip_count]) {
+    FUN_00068a30(module, (void *)0x00260fcc, *(void **)tif,
+                 *(void **)((char *)tif + 0xd4), strip_count);
+    return -1;
+  }
+  got = ((int (*)(int, void *, unsigned int))(void *)__read)(fd, buf, size_count);
+  if (got != (int)size_count) {
+    FUN_00068a30(module, (void *)0x00260fac, *(void **)tif,
+                 *(void **)((char *)tif + 0xd4));
+    return -1;
+  }
+  return (int)size_count;
 }
-#else
-#error "FUN_0006e740: clang naked draft required"
-#endif
 
 
-/* FUN_0006e7d0 (0x6e7d0) — XBE naked draft (batch 363). */
-#if defined(__clang__)
-static void (*const b6e7d0_c1e24d2)(void) = (void *)__lseek;
-static void (*const b6e7d0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-static void (*const b6e7d0_c1e209e)(void) = (void *)__read;
 
-__attribute__((naked, noinline))
-void FUN_0006e7d0(void)
+/* FUN_0006e7d0 (0x6e7d0) — Capstone lift: lseek+read tile payload.
+ * ABI: buf/module stack; tif@<esi>, tile_count@<edi>, size_count@<ebx>. */
+int FUN_0006e7d0(void *buf, void *module, void *tif /*@<esi>*/,
+                 unsigned int tile_count /*@<edi>*/,
+                 unsigned int size_count /*@<ebx>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xbc(%%esi), %%eax\n\t"
-      "movl (%%eax,%%edi,4), %%ecx\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1e24d2]\n\t"
-      "movl 0xbc(%%esi), %%ecx\n\t"
-      "movl (%%ecx,%%edi,4), %%edx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "je .LFUN_0006e7d0_1\n\t"
-      "movl 0xe4(%%esi), %%edx\n\t"
-      "movl 0xd4(%%esi), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x261018\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006e7d0_1:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl 0x4(%%esi), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e209e]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "je .LFUN_0006e7d0_2\n\t"
-      "movl 0xe4(%%esi), %%edx\n\t"
-      "movl 0xd4(%%esi), %%eax\n\t"
-      "movl (%%esi), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x260ff4\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006e7d0_2:\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1e24d2] "m"(b6e7d0_c1e24d2), [c68a30] "m"(b6e7d0_c68a30), [c1e209e] "m"(b6e7d0_c1e209e)
-      : "memory");
+  unsigned int *offs;
+  int fd;
+  int got;
+
+  offs = *(unsigned int **)((char *)tif + 0xbc);
+  fd = (int)*(short *)((char *)tif + 4);
+  got = ((int (*)(int, unsigned int, int))(void *)__lseek)(fd, offs[tile_count], 0);
+  if (got != (int)offs[tile_count]) {
+    FUN_00068a30(module, (void *)0x00261018, *(void **)tif,
+                 *(void **)((char *)tif + 0xd4),
+                 *(void **)((char *)tif + 0xe4), tile_count);
+    return -1;
+  }
+  got = ((int (*)(int, void *, unsigned int))(void *)__read)(fd, buf, size_count);
+  if (got != (int)size_count) {
+    FUN_00068a30(module, (void *)0x00260ff4, *(void **)tif,
+                 *(void **)((char *)tif + 0xd4),
+                 *(void **)((char *)tif + 0xe4));
+    return -1;
+  }
+  return (int)size_count;
 }
-#else
-#error "FUN_0006e7d0: clang naked draft required"
-#endif
+
 
 
 /* FUN_0006e870 (0x6e870) — Capstone lift: (re)allocate TIFF strip/tile buffer. */
@@ -210,63 +122,38 @@ int FUN_0006e930(void *tif /*@<ecx>*/, unsigned int strip /*@<esi>*/)
 }
 
 
-/* FUN_0006e980 (0x6e980) — XBE naked draft (batch 335). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006e980(void)
+/* FUN_0006e980 (0x6e980) — Capstone lift: select tile buffer setup.
+ * ABI: tif@<ecx>, tile@<esi>. Mirror of FUN_0006e930 for tiles. */
+int FUN_0006e980(void *tif /*@<ecx>*/, unsigned int tile /*@<esi>*/)
 {
-  __asm__ volatile(
-      "xorl %%edx, %%edx\n\t"
-      "movl %%esi, 0xe8(%%ecx)\n\t"
-      "movl 0x1c(%%ecx), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x28(%%ecx), %%edi\n\t"
-      "leal -0x1(%%eax,%%edi,1), %%eax\n\t"
-      "divl %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "divl %%edi\n\t"
-      "imull 0x2c(%%ecx), %%edx\n\t"
-      "movl %%edx, 0xd4(%%ecx)\n\t"
-      "movl 0x2c(%%ecx), %%edi\n\t"
-      "movl 0x20(%%ecx), %%edx\n\t"
-      "leal -0x1(%%edx,%%edi,1), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "divl %%edi\n\t"
-      "movl 0x12c(%%ecx), %%eax\n\t"
-      "popl %%edi\n\t"
-      "imull 0x28(%%ecx), %%edx\n\t"
-      "movl %%eax, 0x134(%%ecx)\n\t"
-      "movl %%edx, 0xe4(%%ecx)\n\t"
-      "movl 0xc0(%%ecx), %%edx\n\t"
-      "movl (%%edx,%%esi,4), %%eax\n\t"
-      "movl %%eax, 0x138(%%ecx)\n\t"
-      "movl 0xf0(%%ecx), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006e980_1\n\t"
-      "pushl %%ecx\n\t"
-      "call *%%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_0006e980_1\n\t"
-      "ret\n\t"
-      ".LFUN_0006e980_1:\n\t"
-      "movl $1, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int tw, tl, tiles_across, tiles_down, rem;
+  unsigned int *offs;
+  int (*cb)(void *);
+
+  *(unsigned int *)((char *)tif + 0xe8) = tile;
+
+  tw = *(unsigned int *)((char *)tif + 0x28);
+  tiles_across = (*(unsigned int *)((char *)tif + 0x1c) + tw - 1u) / tw;
+  rem = tile % tiles_across;
+  *(unsigned int *)((char *)tif + 0xd4) =
+      rem * *(unsigned int *)((char *)tif + 0x2c);
+
+  tl = *(unsigned int *)((char *)tif + 0x2c);
+  tiles_down = (*(unsigned int *)((char *)tif + 0x20) + tl - 1u) / tl;
+  rem = tile % tiles_down;
+  *(void **)((char *)tif + 0x134) = *(void **)((char *)tif + 0x12c);
+  *(unsigned int *)((char *)tif + 0xe4) =
+      rem * *(unsigned int *)((char *)tif + 0x28);
+
+  offs = *(unsigned int **)((char *)tif + 0xc0);
+  *(unsigned int *)((char *)tif + 0x138) = offs[tile];
+
+  cb = *(int (**)(void *))((char *)tif + 0xf0);
+  if (cb != 0 && cb(tif) == 0)
+    return 0;
+  return 1;
 }
-#else
-#error "FUN_0006e980: clang naked draft required"
-#endif
+
 
 
 /* FUN_0006ea50 (0x6ea50) — Capstone lift: TIFFWriteEncodedStrip-ish checks. */
@@ -1125,120 +1012,46 @@ int FUN_0006f670(void *tif)
   return 1;
 }
 
-/* FUN_0006f690 (0x6f690) — XBE naked draft (batch 306). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006f690(void)
+/* FUN_0006f690 (0x6f690) — Capstone lift: compute strip/tile index from xyz+sample. */
+unsigned int FUN_0006f690(void *tif, unsigned int x, unsigned int y, unsigned int z,
+                          unsigned int sample)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl 0x24(%%ecx), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x28(%%ecx), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x30(%%ecx), %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x2c(%%ecx), %%edi\n\t"
-      "movl %%ebx, 0x8(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "jne .LFUN_0006f690_1\n\t"
-      "movl $0, 0x18(%%ebp)\n\t"
-      ".LFUN_0006f690_1:\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "jne .LFUN_0006f690_2\n\t"
-      "movl 0x1c(%%ecx), %%ebx\n\t"
-      "movl %%ebx, 0x8(%%ebp)\n\t"
-      ".LFUN_0006f690_2:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .LFUN_0006f690_3\n\t"
-      "movl 0x20(%%ecx), %%edi\n\t"
-      ".LFUN_0006f690_3:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "jne .LFUN_0006f690_4\n\t"
-      "movl %%edx, %%esi\n\t"
-      ".LFUN_0006f690_4:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .LFUN_0006f690_6\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .LFUN_0006f690_6\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_0006f690_6\n\t"
-      "movl 0x1c(%%ecx), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "leal -0x1(%%eax,%%ebx,1), %%eax\n\t"
-      "divl 0x8(%%ebp)\n\t"
-      "movl 0x20(%%ecx), %%edx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "leal -0x1(%%edx,%%edi,1), %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "cmpw $2, 0x5e(%%ecx)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .LFUN_0006f690_5\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "leal -0x1(%%eax,%%esi,1), %%eax\n\t"
-      "divl %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "imull 0x14(%%ebp), %%ecx\n\t"
-      "divl %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "imull -0x4(%%ebp), %%ecx\n\t"
-      "divl %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "imull %%ebx, %%ecx\n\t"
-      "divl 0x8(%%ebp)\n\t"
-      "popl %%ebx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006f690_5:\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "divl %%esi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "imull -0x4(%%ebp), %%ecx\n\t"
-      "divl %%edi\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "imull %%ebx, %%ecx\n\t"
-      "divl 0x8(%%ebp)\n\t"
-      "movl 0x14(%%ebp), %%edx\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      ".LFUN_0006f690_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned int dx = *(unsigned int *)((char *)tif + 0x24);
+  unsigned int tw = *(unsigned int *)((char *)tif + 0x28);
+  unsigned int td = *(unsigned int *)((char *)tif + 0x30);
+  unsigned int th = *(unsigned int *)((char *)tif + 0x2c);
+  unsigned int depth_save = dx;
+  unsigned int tiles_across, tiles_down, tiles_depth;
+  unsigned int acc;
+
+  if (dx == 1u)
+    sample = 0;
+
+  if (tw == 0xffffffffu)
+    tw = *(unsigned int *)((char *)tif + 0x1c);
+  if (th == 0xffffffffu)
+    th = *(unsigned int *)((char *)tif + 0x20);
+  if (td == 0xffffffffu)
+    td = depth_save;
+
+  if (tw == 0 || th == 0 || td == 0)
+    return 1;
+
+  tiles_across = (*(unsigned int *)((char *)tif + 0x1c) + tw - 1u) / tw;
+  tiles_down = (*(unsigned int *)((char *)tif + 0x20) + th - 1u) / th;
+
+  if (*(unsigned short *)((char *)tif + 0x5e) == 2) {
+    tiles_depth = (depth_save + td - 1u) / td;
+    acc = tiles_depth * z + (sample / td);
+    acc = acc * tiles_down + (y / th);
+    return acc * tiles_across + (x / tw);
+  }
+
+  acc = (sample / td) * tiles_down + (y / th);
+  acc = acc * tiles_across;
+  return (x / tw) + z + acc;
 }
-#else
-#error "FUN_0006f690: clang naked draft required"
-#endif
+
 
 
 /* FUN_0006f780 (0x6f780) — readable C lift: TIFF dimension bounds checks. */
@@ -2469,70 +2282,20 @@ int FUN_000703f0(void *tif, unsigned int tile, void *data, int size)
 
 
 
-/* FUN_00070460 (0x70460) — XBE naked draft (batch 377). */
-#if defined(__clang__)
-static void (*const b70460_c6f780)(void) = (void *)FUN_0006f780;
-static void (*const b70460_c6f690)(void) = (void *)FUN_0006f690;
-static void (*const b70460_c70260)(void) = (void *)TIFFWriteEncodedTile;
-
-__attribute__((naked, noinline))
-void FUN_00070460(void)
+/* FUN_00070460 (0x70460) — Capstone lift: setup tile dims then WriteEncodedTile. */
+int FUN_00070460(void *tif, void *data, unsigned int w, unsigned int h,
+                 unsigned int d, unsigned int samples_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x1c(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6f780]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00070460_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00070460_1:\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c6f690]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c70260]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c6f780] "m"(b70460_c6f780), [c6f690] "m"(b70460_c6f690), [c70260] "m"(b70460_c70260)
-      : "memory");
+  unsigned int tile;
+
+  if (FUN_0006f780(tif, w, h, d, samples_count) == 0)
+    return -1;
+  tile = ((unsigned int (*)(void *, unsigned int, unsigned int, unsigned int,
+                            unsigned int, void *, int))(void *)FUN_0006f690)(
+      tif, w, h, d, samples_count, data, -1);
+  return ((int (*)(void *, unsigned int, void *, int))(void *)TIFFWriteEncodedTile)(
+      tif, tile, data, -1);
 }
-#else
-#error "FUN_00070460: clang naked draft required"
-#endif
 
 
 

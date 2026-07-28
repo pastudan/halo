@@ -1,0 +1,23 @@
+{
+  "description": "TIFFFdOpen: invalid mode early close/NULL",
+  "arg_overrides": {
+    "mode": "78000000",
+    "fd": 3
+  },
+  "stub_returns": {
+    "fun_00068a30": 0,
+    "__close": 0,
+    "csstrlen": 4,
+    "debug_malloc": 0,
+    "csmemset": 0,
+    "csstrcpy": 0,
+    "__read": 8,
+    "__write": 8,
+    "fun_0006d500": 0,
+    "fun_00066190": 1,
+    "fun_0006f1b0": 0,
+    "fun_0006f1d0": 0,
+    "fun_00066e70": 1,
+    "fun_00064ee0": 0
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "description": "FUN_00070460: stub FUN_0006f780 fail → -1",
+  "arg_overrides": {},
+  "stub_returns": {"fun_0006f780": 0}
+}

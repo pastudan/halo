@@ -38391,8 +38391,8 @@
         },
         {
           "addr": "0x6ce60",
-          "decl": "void FUN_0006ce60(void);",
-          "ported": false,
+          "decl": "int FUN_0006ce60(void *tif);",
+          "ported": true,
           "name": "FUN_0006ce60"
         },
         {
@@ -38415,8 +38415,8 @@
         },
         {
           "addr": "0x6d1e0",
-          "decl": "void FUN_0006d1e0(void);",
-          "ported": false,
+          "decl": "int FUN_0006d1e0(void *tif);",
+          "ported": true,
           "name": "FUN_0006d1e0"
         },
         {
@@ -38444,8 +38444,8 @@
         },
         {
           "addr": "0x6d590",
-          "decl": "void TIFFFdOpen(void);",
-          "ported": false,
+          "decl": "void *TIFFFdOpen(int fd, const char *name, const char *mode);",
+          "ported": true,
           "name": "TIFFFdOpen"
         },
         {
@@ -38513,8 +38513,8 @@
         },
         {
           "addr": "0x6dbf0",
-          "decl": "void FUN_0006dbf0(void);",
-          "ported": false,
+          "decl": "int FUN_0006dbf0(void *tif, unsigned char *out, int out_count);",
+          "ported": true,
           "name": "FUN_0006dbf0"
         },
         {
@@ -38543,14 +38543,14 @@
       "functions": [
         {
           "addr": "0x6e740",
-          "decl": "void FUN_0006e740(void);",
-          "ported": false,
+          "decl": "int FUN_0006e740(void *buf, void *module, void *tif@<esi>, unsigned int strip_count@<edi>, unsigned int size_count@<ebx>);",
+          "ported": true,
           "name": "FUN_0006e740"
         },
         {
           "addr": "0x6e7d0",
-          "decl": "void FUN_0006e7d0(void);",
-          "ported": false,
+          "decl": "int FUN_0006e7d0(void *buf, void *module, void *tif@<esi>, unsigned int tile_count@<edi>, unsigned int size_count@<ebx>);",
+          "ported": true,
           "name": "FUN_0006e7d0"
         },
         {
@@ -38567,8 +38567,8 @@
         },
         {
           "addr": "0x6e980",
-          "decl": "void FUN_0006e980(void);",
-          "ported": false,
+          "decl": "int FUN_0006e980(void *tif@<ecx>, unsigned int tile@<esi>);",
+          "ported": true,
           "name": "FUN_0006e980"
         },
         {
@@ -38695,8 +38695,8 @@
         },
         {
           "addr": "0x6f690",
-          "decl": "void FUN_0006f690(void);",
-          "ported": false,
+          "decl": "unsigned int FUN_0006f690(void *tif, unsigned int x, unsigned int y, unsigned int z, unsigned int sample);",
+          "ported": true,
           "name": "FUN_0006f690"
         },
         {
@@ -38809,8 +38809,8 @@
         },
         {
           "addr": "0x70460",
-          "decl": "void FUN_00070460(void);",
-          "ported": false,
+          "decl": "int FUN_00070460(void *tif, void *data, unsigned int w, unsigned int h, unsigned int d, unsigned int samples_count);",
+          "ported": true,
           "name": "FUN_00070460"
         },
         {
