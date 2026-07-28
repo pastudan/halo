@@ -150,82 +150,42 @@ void FUN_0006e7d0(void)
 #endif
 
 
-/* FUN_0006e870 (0x6e870) — XBE naked draft (batch 368). */
-#if defined(__clang__)
-static void (*const b6e870_c8ef70)(void *ptr, const char *file, int line) = (void *)debug_free;
-static void * (*const b6e870_c8ee60)(uint32_t size, bool zero, const char *file, int line) = (void *)debug_malloc;
-static void (*const b6e870_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-
-__attribute__((naked, noinline))
-void FUN_0006e870(void)
+/* FUN_0006e870 (0x6e870) — Capstone lift: (re)allocate TIFF strip/tile buffer. */
+int FUN_0006e870(void *tif, void *existing, unsigned size)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x12c(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006e870_2\n\t"
-      "testb $0x40, 0xa(%%esi)\n\t"
-      "je .LFUN_0006e870_1\n\t"
-      "pushl $0x203\n\t"
-      "pushl $0x261070\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ef70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_0006e870_1:\n\t"
-      "movl $0, 0x12c(%%esi)\n\t"
-      ".LFUN_0006e870_2:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_0006e870_3\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "andb $0xbf, 0xa(%%esi)\n\t"
-      "movl %%ecx, 0x130(%%esi)\n\t"
-      "jmp .LFUN_0006e870_4\n\t"
-      ".LFUN_0006e870_3:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "addl $0x3ff, %%eax\n\t"
-      "pushl $0x20c\n\t"
-      "shrl $0xa, %%eax\n\t"
-      "pushl $0x261070\n\t"
-      "shll $0xa, %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl %%eax, 0x130(%%esi)\n\t"
-      "call *%[c8ee60]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "orb $0x40, 0xa(%%esi)\n\t"
-      ".LFUN_0006e870_4:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x12c(%%esi)\n\t"
-      "jne .LFUN_0006e870_5\n\t"
-      "movl 0xd4(%%esi), %%edx\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x261044\n\t"
-      "pushl $0x2ecb1c\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl $0, 0x130(%%esi)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0006e870_5:\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c8ef70] "m"(b6e870_c8ef70), [c8ee60] "m"(b6e870_c8ee60), [c68a30] "m"(b6e870_c68a30)
-      : "memory");
+  extern char DAT_00261070[];
+  extern char DAT_00261044[];
+  extern unsigned char DAT_002ecb1c[];
+  void *buf;
+  void *p;
+  unsigned aligned;
+
+  buf = *(void **)((char *)tif + 0x12c);
+  if (buf != 0) {
+    if ((*(unsigned char *)((char *)tif + 0xa) & 0x40) != 0)
+      debug_free(buf, DAT_00261070, 0x203);
+    *(void **)((char *)tif + 0x12c) = 0;
+  }
+  if (existing != 0) {
+    *(unsigned char *)((char *)tif + 0xa) =
+        (unsigned char)(*(unsigned char *)((char *)tif + 0xa) & 0xbf);
+    *(unsigned *)((char *)tif + 0x130) = size;
+    p = existing;
+  } else {
+    aligned = ((size + 0x3ffu) >> 10) << 10;
+    *(unsigned *)((char *)tif + 0x130) = aligned;
+    p = debug_malloc(aligned, 0, DAT_00261070, 0x20c);
+    *(unsigned char *)((char *)tif + 0xa) =
+        (unsigned char)(*(unsigned char *)((char *)tif + 0xa) | 0x40);
+  }
+  *(void **)((char *)tif + 0x12c) = p;
+  if (p != 0)
+    return 1;
+  FUN_00068a30((void *)DAT_002ecb1c, DAT_00261044, *(void **)tif,
+               *(void **)((char *)tif + 0xd4));
+  *(unsigned *)((char *)tif + 0x130) = 0;
+  return 0;
 }
-#else
-#error "FUN_0006e870: clang naked draft required"
-#endif
 
 
 /* FUN_0006e930 (0x6e930) — XBE naked draft (batch 321). */

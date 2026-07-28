@@ -38555,8 +38555,8 @@
         },
         {
           "addr": "0x6e870",
-          "decl": "void FUN_0006e870(void);",
-          "ported": false,
+          "decl": "int FUN_0006e870(void *tif, void *existing, unsigned size);",
+          "ported": true,
           "name": "FUN_0006e870"
         },
         {
