@@ -559,279 +559,47 @@ void texture_cache_close(void)
   data_make_invalid(*(data_t **)0x4ea978);
 }
 
-/* texture_cache_debug_render (0x1bf260) — XBE naked draft (batch 244). */
-#if defined(__clang__)
-static void (*const b1bf260_c11da60)(void *cache, unsigned char *usage) = lruv_cache_get_page_usage;
-static void (*const b1bf260_c1bef80)(void) = (void *)FUN_001bef80_lift;
-static void (*const b1bf260_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-static void (*const b1bf260_c1197b0)(data_iter_t *iter, data_t *data) = data_iterator_new;
-static void * (*const b1bf260_c119810)(data_iter_t *iterator) = data_iterator_next;
-static void (*const b1bf260_c91ef0)(int *keys, int count, int (*cmp)(int, int)) = (void *)FUN_00091ef0;
-static int (*const b1bf260_cdeca0)(int interface_tag_index) = interface_get_tag_index;
-static void (*const b1bf260_c19b560)(void *stops, short count) = draw_string_set_tab_stops;
-static void (*const b1bf260_c19b7e0)(void) = (void *)FUN_0019B7E0;
-static bool (*const b1bf260_c11da30)(void *lruv, int block_index) = lruv_block_touched;
-static const char * (*const b1bf260_c1ba1f0)(int tag_index) = tag_get_name;
-static int (*const b1bf260_c183290)(void *bitmap) = FUN_00183290;
-static int (*const b1bf260_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static void (*const b1bf260_c19b640)(const void *color) = draw_string_set_color;
-static void (*const b1bf260_c183e60)(void *screen_pos, short *bounds, const void *color, int flags, const char *text) = rasterizer_text_draw;
-
-__attribute__((naked, noinline))
+/* texture_cache_debug_render (0x1bf260) — readable C lift (restored pre-naked). */
 void texture_cache_debug_render(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x5e0, %%esp\n\t"
-      "movb 0x4ea988, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Ltexture_cache_debug_render_5\n\t"
-      "movl 0x2ee6d4, %%ecx\n\t"
-      "movl 0x2ee6d8, %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x50658a, %%ax\n\t"
-      "subw 0x506586, %%ax\n\t"
-      "movl %%ecx, -0x30(%%ebp)\n\t"
-      "movl 0x4ea980, %%ecx\n\t"
-      "movl %%edx, -0x2c(%%ebp)\n\t"
-      "movl $0, -0x28(%%ebp)\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "movl 0x2ee6d0, %%eax\n\t"
-      "movl %%eax, -0x34(%%ebp)\n\t"
-      "leal -0x5e0(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c11da60]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jmp .Ltexture_cache_debug_render_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Ltexture_cache_debug_render_1:\n\t"
-      "movl 0x506584, %%esi\n\t"
-      "movl 0x50657c, %%edx\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "movw 0x506586, %%di\n\t"
-      "subw 0x50657e, %%di\n\t"
-      "subl %%edx, %%esi\n\t"
-      "shll $2, %%esi\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movl %%edi, -0x38(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".Ltexture_cache_debug_render_2:\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movb -0x5e0(%%ebp,%%eax,1), %%cl\n\t"
-      "testb %%dl, %%cl\n\t"
-      "je .Ltexture_cache_debug_render_4\n\t"
-      "movswl -0x20(%%ebp), %%ecx\n\t"
-      "cdq\n\t"
-      "idivl %%ecx\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "leal -0x48(%%ebp), %%edi\n\t"
-      "leal (%%ebx,%%eax,4), %%eax\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "leal (%%eax,%%eax,4), %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "leal (%%eax,%%edx,2), %%eax\n\t"
-      "leal -0x58(%%ebp), %%esi\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "addl $0xa, %%eax\n\t"
-      "fsts -0x48(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fstps -0x44(%%ebp)\n\t"
-      "fstps -0x40(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl $2, -0x4(%%ebp)\n\t"
-      "fstps -0x3c(%%ebp)\n\t"
-      "flds 0x50658c\n\t"
-      "fadds 0x255ef8\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Ltexture_cache_debug_render_3:\n\t"
-      "leal -0x8(%%esi), %%eax\n\t"
-      "leal -0x1c(%%ebp), %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "call *%[c1bef80]\n\t"
-      "flds 0x506564\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "addl $8, %%edi\n\t"
-      "flds 0x506560\n\t"
-      "addl $0xc, %%esi\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x50655c\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fdivrs -0x24(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds (%%eax)\n\t"
-      "fstps (%%eax)\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "decl %%eax\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fadds -0x10(%%esi)\n\t"
-      "fstps -0x10(%%esi)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds -0xc(%%esi)\n\t"
-      "fstps -0xc(%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .Ltexture_cache_debug_render_3\n\t"
-      "movl -0x34(%%ebp,%%ebx,4), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x60(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl -0x38(%%ebp), %%edi\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Ltexture_cache_debug_render_4:\n\t"
-      "incl %%ebx\n\t"
-      "cmpl $3, %%ebx\n\t"
-      "jl .Ltexture_cache_debug_render_2\n\t"
-      "incl %%eax\n\t"
-      "cmpl $0x580, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "jl .Ltexture_cache_debug_render_1\n\t"
-      ".Ltexture_cache_debug_render_5:\n\t"
-      "movb 0x4ea989, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Ltexture_cache_debug_render_12\n\t"
-      "movl 0x4ea978, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "call *%[c1197b0]\n\t"
-      "leal -0x34(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119810]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Ltexture_cache_debug_render_8\n\t"
-      ".Ltexture_cache_debug_render_6:\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "cmpl $-1, 0x20(%%eax)\n\t"
-      "je .Ltexture_cache_debug_render_7\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "movl %%eax, 0x4e9378(,%%ecx,4)\n\t"
-      "incl %%ebx\n\t"
-      ".Ltexture_cache_debug_render_7:\n\t"
-      "leal -0x34(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c119810]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Ltexture_cache_debug_render_6\n\t"
-      ".Ltexture_cache_debug_render_8:\n\t"
-      "movswl %%bx, %%esi\n\t"
-      "pushl $0x1becc0\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x4e9378\n\t"
-      "call *%[c91ef0]\n\t"
-      "pushl $1\n\t"
-      "call *%[cdeca0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movw 0x32565e, %%ax\n\t"
-      "movw %%ax, -0x8(%%ebp)\n\t"
-      "addw $0x6e, %%ax\n\t"
-      "movw %%ax, -0x6(%%ebp)\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl $2\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c19b560]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .Ltexture_cache_debug_render_9\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19b7e0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Ltexture_cache_debug_render_9:\n\t"
-      "decl %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jl .Ltexture_cache_debug_render_12\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".Ltexture_cache_debug_render_10:\n\t"
-      "movl 0x4e9378(,%%esi,4), %%ecx\n\t"
-      "movl 0x24(%%ecx), %%edx\n\t"
-      "movl 0x4ea980, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11da30]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x25386f, %%edi\n\t"
-      "jne .Ltexture_cache_debug_render_11\n\t"
-      "movl $0x2686f4, %%edi\n\t"
-      ".Ltexture_cache_debug_render_11:\n\t"
-      "movl 0x4e9378(,%%esi,4), %%ecx\n\t"
-      "movl 0x20(%%ecx), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1ba1f0]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4e9378(,%%esi,4), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c183290]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x460(%%ebp), %%ecx\n\t"
-      "pushl $0x2b9874\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x2ee6e0, %%ecx\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "subl %%esi, %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%edx\n\t"
-      "leal 0x23(%%edx,%%edx,1), %%eax\n\t"
-      "movw %%ax, -0x10(%%ebp)\n\t"
-      "movl $0x7fff, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "movw $0xa, -0xe(%%ebp)\n\t"
-      "movw %%ax, -0xa(%%ebp)\n\t"
-      "movw %%ax, -0xc(%%ebp)\n\t"
-      "call *%[c19b640]\n\t"
-      "leal -0x460(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "leal -0x10(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c183e60]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "decl %%esi\n\t"
-      "jns .Ltexture_cache_debug_render_10\n\t"
-      ".Ltexture_cache_debug_render_12:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11da60] "m"(b1bf260_c11da60), [c1bef80] "m"(b1bf260_c1bef80), [c189270] "m"(b1bf260_c189270), [c1197b0] "m"(b1bf260_c1197b0), [c119810] "m"(b1bf260_c119810), [c91ef0] "m"(b1bf260_c91ef0), [cdeca0] "m"(b1bf260_cdeca0), [c19b560] "m"(b1bf260_c19b560), [c19b7e0] "m"(b1bf260_c19b7e0), [c11da30] "m"(b1bf260_c11da30), [c1ba1f0] "m"(b1bf260_c1ba1f0), [c183290] "m"(b1bf260_c183290), [c1d90f0] "m"(b1bf260_c1d90f0), [c19b640] "m"(b1bf260_c19b640), [c183e60] "m"(b1bf260_c183e60)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  lruv_cache_get_page_usage((void *)(uintptr_t)ecx, (unsigned char *)(uintptr_t)eax);
+  /* test (char)ecx, dl -> je 0x1bf3ef */
+  FUN_001bef80();
+  FUN_00189270(0, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  /* cmp ebx, 3 -> jl 0x1bf300 */
+  /* test (char)eax, (char)eax -> je 0x1bf55c */
+  data_iterator_new((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  data_iterator_next((void *)(uintptr_t)eax);
+  /* test eax, eax -> je 0x1bf45b */
+  /* relift: cmp dword ptr [eax + 0x20], -1 -> je 0x1bf44b */
+  data_iterator_next((void *)(uintptr_t)edx);
+  /* test eax, eax -> jne 0x1bf437 */
+  FUN_00091ef0((void *)0x004e9378, 0, (void *)0x001becc0);
+  interface_get_tag_index(0);
+  draw_string_set_tab_stops((void *)(uintptr_t)eax, 0);
+  /* cmp edi, -1 -> je 0x1bf4a5 */
+  ((void(*)(void))FUN_0019B7E0)();
+  /* test esi, esi -> jl 0x1bf55c */
+  lruv_block_touched((void *)(uintptr_t)eax, 0);
+  tag_get_name(0);
+  FUN_00183290((void *)(uintptr_t)eax);
+  crt_sprintf((char *)(uintptr_t)ecx, (char *)0x002b9874);
+  draw_string_set_color((void *)(uintptr_t)ecx);
+  rasterizer_text_draw((void *)(uintptr_t)eax, (void *)0, (void *)0, 0, (char *)(uintptr_t)edx);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "texture_cache_debug_render: clang naked draft required"
-#endif
+
 

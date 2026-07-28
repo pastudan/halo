@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* --- xbox_sound_cache.obj batch drafts (2026-07-26) --- */
 
 /* xbox_sound_cache_idle (0x1bded0) — readable C lift. */
@@ -352,145 +353,54 @@ void FUN_001be6b0(float *out_a, float *out_c, float *uv)
   out_c[2] = pz - out_a[2];
 }
 
-/* FUN_001be7b0 (0x1be7b0) — XBE naked draft (batch 247). */
-#if defined(__clang__)
-static void (*const b1be7b0_c11da60)(void *cache, unsigned char *usage) = lruv_cache_get_page_usage;
-static void (*const b1be7b0_c1be6b0)(void) = (void *)FUN_001be6b0;
-static void (*const b1be7b0_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-
-__attribute__((naked, noinline))
+/* FUN_001be7b0 (0x1be7b0) — readable C lift (restored pre-naked). */
 void FUN_001be7b0(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x454, %%esp\n\t"
-      "movb 0x5054e9, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001be7b0_5\n\t"
-      "movl 0x2ee6d4, %%ecx\n\t"
-      "movl 0x2ee6d8, %%edx\n\t"
-      "movl 0x2ee6d0, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ecx, -0x28(%%ebp)\n\t"
-      "pushl %%edi\n\t"
-      "leal -0x454(%%ebp), %%ecx\n\t"
-      "movl %%edx, -0x24(%%ebp)\n\t"
-      "movl 0x4e9370, %%edx\n\t"
-      "movl %%eax, -0x2c(%%ebp)\n\t"
-      "movl 0x2ee6e0, %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "call *%[c11da60]\n\t"
-      "addl $8, %%esp\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "jmp .LFUN_001be7b0_1\n\t"
-      "leal (%%esp), %%esp\n\t"
-      "nop\n\t"
-      ".LFUN_001be7b0_1:\n\t"
-      "movswl %%si, %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "leal -0x454(%%ebp,%%eax,1), %%edx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      ".LFUN_001be7b0_2:\n\t"
-      "movl -0x1c(%%ebp), %%edx\n\t"
-      "movb (%%edx), %%dl\n\t"
-      "movl $1, %%eax\n\t"
-      "shll %%cl, %%eax\n\t"
-      "testb %%al, %%dl\n\t"
-      "je .LFUN_001be7b0_4\n\t"
-      "movl %%esi, %%eax\n\t"
-      "cdq\n\t"
-      "movl $0x280, %%esi\n\t"
-      "idivl %%esi\n\t"
-      "leal -0x3c(%%ebp), %%edi\n\t"
-      "leal -0x4c(%%ebp), %%esi\n\t"
-      "movl $2, %%ebx\n\t"
-      "leal (%%ecx,%%eax,4), %%eax\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "leal (%%eax,%%eax,4), %%eax\n\t"
-      "shll $1, %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fsts -0x3c(%%ebp)\n\t"
-      "addl $0xa, %%eax\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "flds 0x50658c\n\t"
-      "fadds 0x255ef8\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".LFUN_001be7b0_3:\n\t"
-      "leal -0x8(%%esi), %%eax\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "call *%[c1be6b0]\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls 0x506564\n\t"
-      "addl $8, %%edi\n\t"
-      "flds 0x506560\n\t"
-      "addl $0xc, %%esi\n\t"
-      "decl %%ebx\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x50655c\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fdivrs -0x4(%%ebp)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds (%%eax)\n\t"
-      "fstps (%%eax)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds -0x10(%%esi)\n\t"
-      "fstps -0x10(%%esi)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fadds -0xc(%%esi)\n\t"
-      "fstps -0xc(%%esi)\n\t"
-      "fstp %%st(0)\n\t"
-      "jne .LFUN_001be7b0_3\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl -0x2c(%%ebp,%%eax,4), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x48(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x54(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_001be7b0_4:\n\t"
-      "incl %%ecx\n\t"
-      "cmpl $4, %%ecx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jl .LFUN_001be7b0_2\n\t"
-      "incl %%esi\n\t"
-      "cmpl $0x280, %%esi\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "jl .LFUN_001be7b0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_001be7b0_5:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11da60] "m"(b1be7b0_c11da60), [c1be6b0] "m"(b1be7b0_c1be6b0), [c189270] "m"(b1be7b0_c189270)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  /* test (char)eax, (char)eax -> je 0x1be91c */
+  lruv_cache_get_page_usage((void *)(uintptr_t)edx, (unsigned char *)(uintptr_t)ecx);
+  /* test dl, (char)eax -> je 0x1be8fc */
+  ((void(*)(void))FUN_001be6b0)();
+  FUN_00189270(0, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  data_dispose((void *)(uintptr_t)eax);
+  lruv_cache_dispose((void *)(uintptr_t)ecx);
+  data_delete_all((void *)(uintptr_t)eax);
+  lruv_idle((void *)(uintptr_t)eax);
+  display_assert((char *)0x002b96a8, (char *)0x002b96d8, 157, 0);
+  system_exit(0);
+  tag_get('mtib', 0);
+  bitmap_get_pixel_data_size((void *)(uintptr_t)esi);
+  /* cmp eax, -1 -> je 0x1bea15 */
+  lruv_block_delete((void *)(uintptr_t)eax, 0);
+  FUN_001bdd60();
+  display_assert((char *)0x002b9730, (char *)0x002b96d8, 319, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x1beab7 */
+  display_assert((char *)0x002b9704, (char *)0x002b96d8, 320, 0);
+  system_exit(0);
+  lruv_resize((void *)(uintptr_t)edx, 0);
+  physical_memory_protect((void *)(uintptr_t)esi, esi, 0);
+  physical_memory_protect((void *)(uintptr_t)ebx, 0x00104000, 0);
+  physical_memory_protect((void *)(uintptr_t)eax, 0x00104000, 0);
+  /* test (char)eax, (char)eax -> jne 0x1beb39 */
+  display_assert((char *)0x002b9748, (char *)0x002b96d8, 345, 0);
+  system_exit(0);
+  lruv_resize((void *)(uintptr_t)eax, 1408);
+  FUN_001bdd60();
+  physical_memory_protect((void *)(uintptr_t)eax, 0, 0);
+  datum_get((void *)(uintptr_t)ecx, 0);
+  tag_get_name(0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
-#else
-#error "FUN_001be7b0: clang naked draft required"
-#endif
+
 

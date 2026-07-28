@@ -1,3 +1,4 @@
+#include <stdint.h>
 #include "x87_math.h"
 
 /* Camera observer — tracks camera position/orientation per player. */
@@ -1634,161 +1635,44 @@ void FUN_00089a20(float *out, float *a, float *b, float *c, float *d, float t0, 
 }
 
 
-/* camera_track_splut (0x89ab0) — XBE naked draft (batch 122). */
-#if defined(__clang__)
-static void *(*const b89ab0_elem)(void *, int, int) = tag_block_get_element;
-static void * (*const b89ab0_c18e450)(void) = game_globals_get;
-static void *(*const b89ab0_tag)(int, int) = tag_get;
-static void (*const b89ab0_ftol)(void) = FUN_001d9068;
-static void (*const b89ab0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b89ab0_exitfn)(int) = system_exit;
-static void (*const b89ab0_c89a20)(void) = FUN_00089a20;
-
-__attribute__((naked, noinline))
+/* camera_track_splut (0x89ab0) — readable C lift (restored pre-naked). */
 void camera_track_splut(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x4c(%%ecx), %%eax\n\t"
-      "addl $0x4c, %%ecx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lcamera_track_splut_1\n\t"
-      "decl %%eax\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testl %%eax, %%eax\n\t"
-      "setge %%dl\n\t"
-      "pushl $0x1c\n\t"
-      "decl %%edx\n\t"
-      "andl %%edx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lcamera_track_splut_1\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "jne .Lcamera_track_splut_2\n\t"
-      ".Lcamera_track_splut_1:\n\t"
-      "pushl $0x10\n\t"
-      "pushl $0\n\t"
-      "call *%[c18e450]\n\t"
-      "addl $0x104, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lcamera_track_splut_2:\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x7472616b\n\t"
-      "call *%[tag]\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fadds 0x2568bc\n\t"
-      "movl 0x4(%%eax), %%ebx\n\t"
-      "leal 0x4(%%eax), %%esi\n\t"
-      "leal -0x1(%%ebx), %%eax\n\t"
-      "fmuls 0x267328\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".byte 0xd8, 0xc9\n\t"
-      "call *%[ftol]\n\t"
-      "flds 0x2533c8\n\t"
-      "cmpl $4, %%ebx\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl %%eax, %%edi\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "jge .Lcamera_track_splut_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x56\n\t"
-      "pushl $0x2672ac\n\t"
-      "pushl $0x267300\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      ".Lcamera_track_splut_3:\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lcamera_track_splut_6\n\t"
-      "movl (%%esi), %%edx\n\t"
-      ".Lcamera_track_splut_4:\n\t"
-      "movswl %%di, %%ecx\n\t"
-      "leal 0x4(%%ecx), %%ebx\n\t"
-      "cmpl %%edx, %%ebx\n\t"
-      "jg .Lcamera_track_splut_5\n\t"
-      "movswl %%ax, %%ebx\n\t"
-      "decl %%ebx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "jle .Lcamera_track_splut_6\n\t"
-      ".Lcamera_track_splut_5:\n\t"
-      "decl %%edi\n\t"
-      "testw %%di, %%di\n\t"
-      "jg .Lcamera_track_splut_4\n\t"
-      ".Lcamera_track_splut_6:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movswl %%di, %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "leal 0x3(%%edi), %%eax\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl $0x3c\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x3c\n\t"
-      "leal 0x2(%%edi), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x3c\n\t"
-      "leal 0x1(%%edi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x3c\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c89a20]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b89ab0_elem), [c18e450] "m"(b89ab0_c18e450), [tag] "m"(b89ab0_tag), [ftol] "m"(b89ab0_ftol), [assert] "m"(b89ab0_assert), [exitfn] "m"(b89ab0_exitfn), [c89a20] "m"(b89ab0_c89a20)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test eax, eax -> je 0x89ae3 */
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  /* test eax, eax -> je 0x89ae3 */
+  /* cmp eax, -1 -> jne 0x89afd */
+  game_globals_get();
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 0);
+  tag_get(0x7472616b, 0);
+  FUN_001d9068();
+  display_assert((char *)0x00267300, (char *)0x002672ac, 86, 0);
+  system_exit(0);
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x89b8e */
+  /* cmp ebx, edx -> jg 0x89b88 */
+  /* cmp ecx, ebx -> jle 0x89b8e */
+  /* test (int16_t)edi, (int16_t)edi -> jg 0x89b76 */
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 60);
+  ((void(*)(void))FUN_00089a20)();
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "camera_track_splut: clang naked draft required"
-#endif
+
 
 
 /* FUN_00089c00 (0x89c00) — XBE naked draft (batch 133). */

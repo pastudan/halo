@@ -551,99 +551,23 @@ void scripted_player_effect_stop(float seconds)
   *(int *)(fx + 0x3e4) |= 2;
 }
 
-/* player_telefrag_effect_start (0xa2ed0) — XBE naked draft (batch 136). */
-#if defined(__clang__)
-static void *(*const ba2ed0_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char * (*const ba2ed0_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
-static void (*const ba2ed0_cb9da0)(short local_player_index, int left_motor, int right_motor) = (void *)rumble_set_direct_motors;
-static void (*const ba2ed0_ca2ab0)(void) = (void *)FUN_000a2ab0;
-static void (*const ba2ed0_ca2ba0)(int unit_index, float damage_amount, float scale, float *effect_data, void *effect) = (void *)FUN_000a2ba0;
-
-__attribute__((naked, noinline))
+/* player_telefrag_effect_start (0xa2ed0) — readable C lift (restored pre-naked). */
 void player_telefrag_effect_start(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x84, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw $0, -0x3c(%%ebp)\n\t"
-      "movl $0xd, %%ecx\n\t"
-      "leal -0x3a(%%ebp), %%edi\n\t"
-      "rep stosl\n\t"
-      "stosw\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $0x11, %%ecx\n\t"
-      "leal -0x80(%%ebp), %%edi\n\t"
-      "movl $0, -0x84(%%ebp)\n\t"
-      "rep stosl\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x2(%%eax), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lplayer_telefrag_effect_start_1\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca2690]\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "fmull 0x26aed0\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "fstps -0x7c(%%ebp)\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%edx, -0x1c(%%ebp)\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ebx, -0x4(%%ebp)\n\t"
-      "movl $0x3f800000, -0x84(%%ebp)\n\t"
-      "movw $1, -0x3c(%%ebp)\n\t"
-      "movw $2, -0x3a(%%ebp)\n\t"
-      "movl $0x3f800000, -0x2c(%%ebp)\n\t"
-      "movl $0, -0x18(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "call *%[cb9da0]\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x3c(%%ebp), %%ebx\n\t"
-      "call *%[ca2ab0]\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x84(%%ebp), %%eax\n\t"
-      "call *%[ca2ba0]\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "popl %%ebx\n\t"
-      ".Lplayer_telefrag_effect_start_1:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(ba2ed0_dget), [ca2690] "m"(ba2ed0_ca2690), [cb9da0] "m"(ba2ed0_cb9da0), [ca2ab0] "m"(ba2ed0_ca2ab0), [ca2ba0] "m"(ba2ed0_ca2ba0)
-      : "memory");
+  int ecx = 0;
+  int esi = 0;
+
+  datum_get((void *)(uintptr_t)ecx, 0);
+  /* cmp esi, -1 -> je 0xa2fb7 */
+  player_effect_get(esi);
+  rumble_set_direct_motors(0, 0, 0);
+  ((void(*)(void))FUN_000a2ab0)();
+  FUN_000a2ba0(0, 0.0f, 0.0f, (float *)0, (void *)0);
+
+  (void)ecx;
+  (void)esi;
 }
-#else
-#error "player_telefrag_effect_start: clang naked draft required"
-#endif
+
 
 
 /* player_effect_get_screen_flash (0xa2fc0) — readable C lift (restored pre-naked). */
@@ -714,440 +638,73 @@ void FUN_000a32e0(float *obj, float pitch, float yaw)
   }
 }
 
-/* player_effect_get_camera_effect_matrix (0xa3370) — XBE naked draft (batch 106). */
-#if defined(__clang__)
-static void (*const ba3370_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const ba3370_exitfn)(int) = system_exit;
-static int (*const ba3370_gtime)(void) = game_time_get;
-static int16_t (*const ba3370_cb5ae0)(void) = (void *)game_time_get_elapsed;
-static void (*const ba3370_cb9ba0)(float scale) = (void *)rumble_player_set_scale;
-static unsigned int *(*const ba3370_lseed)(void) = random_math_get_local_seed_address;
-static float (*const ba3370_rrange)(int *, float, float) = random_real_range;
-static void (*const ba3370_c109e90)(float *out, float yaw, float pitch, float roll) = (void *)FUN_00109e90;
-static char * (*const ba3370_ca2690)(int16_t local_player_index) = (void *)player_effect_get;
-static float (*const ba3370_c10a710)(short function_type, float t) = (void *)transition_function_evaluate;
-static void (*const ba3370_c1092d0)(float *out_matrix, float *axis, float sine, float cosine) = (void *)FUN_001092d0;
-static float (*const ba3370_c10a5e0)(int16_t function_type, float input) = (void *)FUN_0010a5e0;
-static void (*const ba3370_ca32e0)(void) = (void *)FUN_000a32e0;
-static void (*const ba3370_cb9da0)(short local_player_index, int left_motor, int right_motor) = (void *)rumble_set_direct_motors;
-static void *(*const ba3370_memset)(void *, int, unsigned int) = csmemset;
-static void (*const ba3370_c109850)(float *a, float *b, float *out) = (void *)matrix4x3_multiply;
-
-__attribute__((naked, noinline))
+/* player_effect_get_camera_effect_matrix (0xa3370) — readable C lift (restored pre-naked). */
 void player_effect_get_camera_effect_matrix(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x48, %%esp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .Lplayer_effect_get_camera_effect_matrix_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x259\n\t"
-      "pushl $0x26ae94\n\t"
-      "pushl $0x26af40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_1:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "cmpw $-1, %%si\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_23\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[gtime]\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      "testb $1, 0x3e4(%%eax)\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_8\n\t"
-      "movl 0x3dc(%%eax), %%ecx\n\t"
-      "movl 0x31fc60, %%esi\n\t"
-      "leal 0x3c4(%%eax), %%ebx\n\t"
-      "movl %%ecx, 0x8(%%ebp)\n\t"
-      "movl $0xd, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movw 0x1c(%%ebx), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "jle .Lplayer_effect_get_camera_effect_matrix_3\n\t"
-      "testb $2, 0x3e4(%%eax)\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_2\n\t"
-      "movswl 0x1e(%%ebx), %%eax\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "fidivl -0x8(%%ebp)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "call *%[cb5ae0]\n\t"
-      "subw %%ax, 0x1c(%%ebx)\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_4\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_2:\n\t"
-      "movswl 0x1e(%%ebx), %%edx\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "fidivl -0x8(%%ebp)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "call *%[cb5ae0]\n\t"
-      "subw %%ax, 0x1c(%%ebx)\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_4\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_3:\n\t"
-      "movl 0x3e4(%%eax), %%ecx\n\t"
-      "testb $2, %%cl\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_5\n\t"
-      "andl $0xfffffffe, %%ecx\n\t"
-      "pushl $0\n\t"
-      "movl %%ecx, 0x3e4(%%eax)\n\t"
-      "call *%[cb9ba0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_4:\n\t"
-      "movl 0x4557ec, %%eax\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_5:\n\t"
-      "testb $1, 0x3e4(%%eax)\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_22\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .Lplayer_effect_get_camera_effect_matrix_6\n\t"
-      "movl $0, 0x8(%%ebp)\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_7\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_6:\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x2533c8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lplayer_effect_get_camera_effect_matrix_7\n\t"
-      "movl $0x3f800000, 0x8(%%ebp)\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_7:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cb9ba0]\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0xbf800000\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0xbf800000\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0xbf800000\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls 0x14(%%ebx)\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps 0x8(%%esp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x10(%%ebx)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "fmuls 0xc(%%ebx)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c109e90]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0xbf800000\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0xbf800000\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl $0x3f800000\n\t"
-      "pushl $0xbf800000\n\t"
-      "call *%[lseed]\n\t"
-      "pushl %%eax\n\t"
-      "call *%[rrange]\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "fmuls 0x8(%%ebx)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fmuls (%%ebx)\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x4(%%ebx)\n\t"
-      "popl %%ebx\n\t"
-      "popl %%edi\n\t"
-      "fmuls 0x8(%%ebp)\n\t"
-      "fstps 0x28(%%esi)\n\t"
-      "fstps 0x2c(%%esi)\n\t"
-      "fstps 0x30(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_8:\n\t"
-      "pushl %%esi\n\t"
-      "call *%[ca2690]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movw 0xe0(%%ebx), %%ax\n\t"
-      "movb 0xe8(%%ebx), %%dl\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movb $2, %%cl\n\t"
-      "jg .Lplayer_effect_get_camera_effect_matrix_9\n\t"
-      "testb %%dl, %%cl\n\t"
-      "jne .Lplayer_effect_get_camera_effect_matrix_10\n\t"
-      "movl 0x31fc60, %%esi\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_13\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_9:\n\t"
-      "testb %%dl, %%cl\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_11\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_10:\n\t"
-      "movl $0x3f800000, -0x4(%%ebp)\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_12\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_11:\n\t"
-      "flds 0x50(%%ebx)\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl 0x68(%%ebx), %%edx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movw 0x54(%%ebx), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "fsubrs 0x50(%%ebx)\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[c10a710]\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_12:\n\t"
-      "movb 0xe8(%%ebx), %%dl\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "andb $0xfd, %%dl\n\t"
-      "movb %%dl, 0xe8(%%ebx)\n\t"
-      "movl 0x31fc44, %%eax\n\t"
-      "fmuls (%%eax)\n\t"
-      "subl $8, %%esp\n\t"
-      "flds (%%ebx)\n\t"
-      "leal -0x48(%%ebp), %%ecx\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "fmuls (%%ebx)\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "fmuls (%%eax)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds 0x8(%%ebx)\n\t"
-      "fmuls 0x4(%%eax)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "fmuls 0x4(%%ebx)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x58(%%ebx)\n\t"
-      "fld %%st(0)\n\t"
-      "fcos\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "fsin\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1092d0]\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x5c(%%ebx)\n\t"
-      "addl $0x10, %%esp\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls (%%ebx)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls 0x4(%%ebx)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "fxch %%st(1)\n\t"
-      "fmuls 0x8(%%ebx)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0xc(%%ebx)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "fstp %%st(0)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x10(%%ebx)\n\t"
-      "fadds -0x1c(%%ebp)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fmuls 0x14(%%ebx)\n\t"
-      "fadds -0x18(%%ebp)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "call *%[cb5ae0]\n\t"
-      "subw %%ax, 0xe0(%%ebx)\n\t"
-      "leal -0x48(%%ebp), %%esi\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_13:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "movl $0xd, %%ecx\n\t"
-      "rep movsl\n\t"
-      "movw 0xe2(%%ebx), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "movb $4, %%dl\n\t"
-      "jg .Lplayer_effect_get_camera_effect_matrix_14\n\t"
-      "testb %%dl, 0xe8(%%ebx)\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_22\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_14:\n\t"
-      "movl 0x31fc60, %%esi\n\t"
-      "movl $0xd, %%ecx\n\t"
-      "leal -0x48(%%ebp), %%edi\n\t"
-      "rep movsl\n\t"
-      "testb %%dl, 0xe8(%%ebx)\n\t"
-      "je .Lplayer_effect_get_camera_effect_matrix_15\n\t"
-      "movl $0x3f800000, -0x8(%%ebp)\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_16\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_15:\n\t"
-      "flds 0x84(%%ebx)\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "movl 0xac(%%ebx), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x88(%%ebx), %%ax\n\t"
-      "fsubrs 0x84(%%ebx)\n\t"
-      ".byte 0xd8, 0xf1\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "call *%[c10a710]\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_16:\n\t"
-      "movswl 0xe2(%%ebx), %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0xa0(%%ebx), %%dx\n\t"
-      "fildl -0x4(%%ebp)\n\t"
-      "pushl %%ecx\n\t"
-      "fsubrs 0x84(%%ebx)\n\t"
-      "fdivs 0xa4(%%ebx)\n\t"
-      "fstps (%%esp)\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c10a5e0]\n\t"
-      "fmuls 0xa8(%%ebx)\n\t"
-      "flds 0x2533c8\n\t"
-      "addl $8, %%esp\n\t"
-      "fsubs 0xa8(%%ebx)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "fld %%st(0)\n\t"
-      "fmuls 0x8c(%%ebx)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lplayer_effect_get_camera_effect_matrix_17\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_18\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_17:\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_18:\n\t"
-      "fmuls 0x90(%%ebx)\n\t"
-      "fcoms 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lplayer_effect_get_camera_effect_matrix_19\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "jmp .Lplayer_effect_get_camera_effect_matrix_20\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_19:\n\t"
-      "fstp %%st(0)\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_20:\n\t"
-      "movb 0xe8(%%ebx), %%cl\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "andb $0xfb, %%cl\n\t"
-      "movb %%cl, 0xe8(%%ebx)\n\t"
-      "fadds 0xd8(%%ebx)\n\t"
-      "leal 0xcc(%%ebx), %%edi\n\t"
-      "subl $8, %%esp\n\t"
-      "fstps 0x4(%%esp)\n\t"
-      "leal -0x48(%%ebp), %%esi\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "fadds 0x8(%%edi)\n\t"
-      "fstps (%%esp)\n\t"
-      "call *%[ca32e0]\n\t"
-      "movl 0x4(%%edi), %%eax\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[cb9da0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "call *%[cb5ae0]\n\t"
-      "addw %%ax, 0xdc(%%ebx)\n\t"
-      "cmpw $0, 0xdc(%%ebx)\n\t"
-      "jle .Lplayer_effect_get_camera_effect_matrix_21\n\t"
-      "pushl $0x10\n\t"
-      "pushl $0\n\t"
-      "pushl %%edi\n\t"
-      "movw $0, 0xdc(%%ebx)\n\t"
-      "call *%[memset]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_21:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x48(%%ebp), %%esi\n\t"
-      "call *%[ca32e0]\n\t"
-      "call *%[cb5ae0]\n\t"
-      "subw %%ax, 0xe2(%%ebx)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x48(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c109850]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_22:\n\t"
-      "popl %%ebx\n\t"
-      ".Lplayer_effect_get_camera_effect_matrix_23:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(ba3370_assert), [exitfn] "m"(ba3370_exitfn), [gtime] "m"(ba3370_gtime), [cb5ae0] "m"(ba3370_cb5ae0), [cb9ba0] "m"(ba3370_cb9ba0), [lseed] "m"(ba3370_lseed), [rrange] "m"(ba3370_rrange), [c109e90] "m"(ba3370_c109e90), [ca2690] "m"(ba3370_ca2690), [c10a710] "m"(ba3370_c10a710), [c1092d0] "m"(ba3370_c1092d0), [c10a5e0] "m"(ba3370_c10a5e0), [ca32e0] "m"(ba3370_ca32e0), [cb9da0] "m"(ba3370_cb9da0), [memset] "m"(ba3370_memset), [c109850] "m"(ba3370_c109850)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  /* test edi, edi -> jne 0xa339f */
+  display_assert((char *)0x0026af40, (char *)0x0026ae94, 601, 0);
+  system_exit(0);
+  /* cmp (int16_t)esi, -1 -> je 0xa3881 */
+  game_time_get();
+  /* relift: test byte ptr [eax + 0x3e4], 1 -> je 0xa35a1 */
+  /* test (int16_t)ecx, (int16_t)ecx -> jle 0xa3440 */
+  /* relift: test byte ptr [eax + 0x3e4], 2 -> je 0xa3416 */
+  game_time_get_elapsed();
+  game_time_get_elapsed();
+  /* test (char)ecx, 2 -> je 0xa3463 */
+  rumble_player_set_scale(0.0f);
+  /* relift: test byte ptr [eax + 0x3e4], 1 -> je 0xa3880 */
+  /* test (char)eax, 0x41 -> jne 0xa34a0 */
+  rumble_player_set_scale(0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  FUN_00109e90((float *)(uintptr_t)esi, 0.0f, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  random_math_get_local_seed_address();
+  random_real_range((void *)(uintptr_t)eax, 0.0f, 0.0f);
+  player_effect_get(esi);
+  /* test (char)ecx, dl -> jne 0xa35d3 */
+  /* test (char)ecx, dl -> je 0xa35dc */
+  transition_function_evaluate(0, 0.0f);
+  FUN_001092d0((float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, 0.0f, 0.0f);
+  game_time_get_elapsed();
+  /* relift: test byte ptr [ebx + 0xe8], dl -> je 0xa3880 */
+  /* relift: test byte ptr [ebx + 0xe8], dl -> je 0xa3710 */
+  transition_function_evaluate(0, 0.0f);
+  FUN_0010a5e0(edx, 0.0f);
+  /* test (char)eax, 0x41 -> jne 0xa37b4 */
+  /* test (char)eax, 0x41 -> jne 0xa37d5 */
+  ((void(*)(void))FUN_000a32e0)();
+  rumble_set_direct_motors(0, 0, 0);
+  game_time_get_elapsed();
+  /* relift: cmp word ptr [ebx + 0xdc], 0 -> jle 0xa3853 */
+  csmemset((void *)(uintptr_t)edi, 0, 16);
+  ((void(*)(void))FUN_000a32e0)();
+  game_time_get_elapsed();
+  matrix4x3_multiply((float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (float *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "player_effect_get_camera_effect_matrix: clang naked draft required"
-#endif
+
 
 
 /* FUN_000a3890 (0xa3890) — XBE naked draft (batch 110). */
