@@ -452,7 +452,7 @@
         {
           "addr": "0x132fb0",
           "decl": "void FUN_00132fb0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00132fb0"
         },
         {
@@ -486,13 +486,13 @@
         {
           "addr": "0x133520",
           "decl": "void FUN_00133520(int object_handle, int widget_datum);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00133520"
         },
         {
           "addr": "0x1337c0",
           "decl": "int glow_normal_particle_new(int glow_widget_ptr, short index, short count);",
-          "ported": false,
+          "ported": true,
           "name": "glow_normal_particle_new"
         },
         {
@@ -568,13 +568,13 @@
         {
           "addr": "0x150c80",
           "decl": "void compute_ground_plane(void);",
-          "ported": false,
+          "ported": true,
           "name": "compute_ground_plane"
         },
         {
           "addr": "0x150dd0",
           "decl": "void friction_evaluate(void);",
-          "ported": false,
+          "ported": true,
           "name": "friction_evaluate"
         },
         {
@@ -586,31 +586,31 @@
         {
           "addr": "0x151a50",
           "decl": "char physics_compute_biped_collision(void *physics_ctx, int biped_handle);",
-          "ported": false,
+          "ported": true,
           "name": "physics_compute_biped_collision"
         },
         {
           "addr": "0x151ec0",
           "decl": "void FUN_00151ec0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00151ec0"
         },
         {
           "addr": "0x152350",
           "decl": "void physics_compute_unit_collisions(void);",
-          "ported": false,
+          "ported": true,
           "name": "physics_compute_unit_collisions"
         },
         {
           "addr": "0x1524d0",
           "decl": "void physics_compute_vehicle_collision(void);",
-          "ported": false,
+          "ported": true,
           "name": "physics_compute_vehicle_collision"
         },
         {
           "addr": "0x152680",
           "decl": "void FUN_00152680(void *phys_state, void *buffer_a, void *buffer_b, float *force, float *aux);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00152680"
         },
         {
@@ -651,13 +651,13 @@
         {
           "addr": "0x16dee0",
           "decl": "void FUN_0016dee0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0016dee0"
         },
         {
           "addr": "0x16e160",
           "decl": "void FUN_0016e160(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0016e160"
         },
         {
@@ -669,7 +669,7 @@
         {
           "addr": "0x196c90",
           "decl": "short FUN_00196c90(int out_handles, short max_count, void *iter_first, void *iter_next, void *get_bounds, void *needs_update, void *mark);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00196c90"
         },
         {
@@ -699,7 +699,7 @@
         {
           "addr": "0x1a5300",
           "decl": "void FUN_001a5300(int unit_handle, unsigned char *state);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a5300"
         },
         {
@@ -717,7 +717,7 @@
         {
           "addr": "0x1bb430",
           "decl": "void FUN_001bb430(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001bb430"
         },
         {
@@ -747,7 +747,7 @@
         {
           "addr": "0x1e67e7",
           "decl": "void FUN_001e67e7(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001e67e7"
         },
         {
@@ -768,7 +768,7 @@
         {
           "addr": "0x1e68bb",
           "decl": "void ___loctotime_t(void);",
-          "ported": false,
+          "ported": true,
           "name": "___loctotime_t"
         }
       ],
