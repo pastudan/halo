@@ -40086,7 +40086,7 @@
         {
           "addr": "0x15f8e0",
           "decl": "void FUN_0015f8e0(void *render_data, void *vertices);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015f8e0"
         },
         {
@@ -40282,7 +40282,7 @@
         {
           "addr": "0x165420",
           "decl": "void FUN_00165420(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00165420"
         },
         {
@@ -40535,7 +40535,7 @@
         {
           "addr": "0x169fd0",
           "decl": "void FUN_00169fd0(int *param_1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00169fd0"
         },
         {
