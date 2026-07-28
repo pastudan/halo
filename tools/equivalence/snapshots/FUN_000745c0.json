@@ -1,0 +1,16 @@
+{
+  "description": "FUN_000745c0: level0 match, 0 pixels early return",
+  "arg_overrides": {
+    "src": "0000000004000400010000000000000000000000000000000000000000000000",
+    "dst": "0000000004000400010000000000000000000000000000000000000000000000",
+    "level": 0
+  },
+  "stub_returns": {
+    "bitmap_verify": 1,
+    "bitmap_mipmap_address": 805306624,
+    "bitmap_get_pixel_count": 0
+  },
+  "regions": {
+    "0x30000100": "00000000"
+  }
+}

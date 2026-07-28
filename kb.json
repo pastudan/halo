@@ -39001,8 +39001,8 @@
         },
         {
           "addr": "0x745c0",
-          "decl": "void FUN_000745c0(void);",
-          "ported": false,
+          "decl": "void FUN_000745c0(void *src, void *dst@<ecx>, short level@<ax>);",
+          "ported": true,
           "name": "FUN_000745c0"
         },
         {
@@ -39013,8 +39013,8 @@
         },
         {
           "addr": "0x74a30",
-          "decl": "void FUN_00074a30(void);",
-          "ported": false,
+          "decl": "void *FUN_00074a30(void *bm, unsigned char flag);",
+          "ported": true,
           "name": "FUN_00074a30"
         }
       ],
