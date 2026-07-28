@@ -38573,8 +38573,8 @@
         },
         {
           "addr": "0x6ea50",
-          "decl": "void FUN_0006ea50(void);",
-          "ported": false,
+          "decl": "int FUN_0006ea50(void *tif, unsigned int strip_count, void *stream, unsigned int size_count);",
+          "ported": true,
           "name": "FUN_0006ea50"
         },
         {
@@ -38585,8 +38585,8 @@
         },
         {
           "addr": "0x6ebb0",
-          "decl": "void FUN_0006ebb0(void);",
-          "ported": false,
+          "decl": "int FUN_0006ebb0(void *tif, unsigned int tile_count, void *stream, unsigned int size_count);",
+          "ported": true,
           "name": "FUN_0006ebb0"
         },
         {
@@ -38621,8 +38621,8 @@
         },
         {
           "addr": "0x6f040",
-          "decl": "void FUN_0006f040(void);",
-          "ported": false,
+          "decl": "int FUN_0006f040(void *tif, void *buf, void *arg2, void *arg3);",
+          "ported": true,
           "name": "FUN_0006f040"
         },
         {
