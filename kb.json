@@ -14315,13 +14315,13 @@
         {
           "addr": "0xf4210",
           "decl": "void multiplayer_settings_select_list_update_item(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "multiplayer_settings_select_list_update_item"
         },
         {
           "addr": "0xf46e0",
           "decl": "void FUN_000f46e0(void *widget);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000f46e0"
         },
         {
