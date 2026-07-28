@@ -30635,7 +30635,7 @@
         {
           "addr": "0x1b6250",
           "decl": "void FUN_001b6250(int vehicle_handle, void *physics_buffer, void *wheel_state@<esi>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001b6250"
         },
         {
