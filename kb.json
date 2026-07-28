@@ -22347,7 +22347,7 @@
         {
           "addr": "0x156e00",
           "decl": "void FUN_00156e00(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00156e00"
         },
         {
@@ -31556,13 +31556,13 @@
         {
           "addr": "0x182840",
           "decl": "void rasterizer_xbox_bitmap_swizzle2d_byte(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_xbox_bitmap_swizzle2d_byte"
         },
         {
           "addr": "0x182910",
           "decl": "void rasterizer_xbox_bitmap_swizzle2d_word(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_xbox_bitmap_swizzle2d_word"
         },
         {

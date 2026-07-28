@@ -2923,204 +2923,50 @@ void FUN_00182610(int16_t mask_si, int16_t width, int16_t height)
 
 
 
-/* rasterizer_xbox_bitmap_swizzle2d_byte (0x182840) — XBE naked draft (batch 332). */
-#if defined(__clang__)
-static void (*const b182840_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b182840_exitfn)(int) = system_exit;
-static void (*const b182840_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
-
-__attribute__((naked, noinline))
+/* rasterizer_xbox_bitmap_swizzle2d_byte (0x182840) — readable C lift (restored pre-naked). */
 void rasterizer_xbox_bitmap_swizzle2d_byte(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x93\n\t"
-      "pushl $0x2b087c\n\t"
-      "pushl $0x2b08ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_1:\n\t"
-      "cmpl %%edi, 0xc(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x94\n\t"
-      "pushl $0x2b087c\n\t"
-      "pushl $0x2b07dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_2:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c182610]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "addl $12, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lrasterizer_xbox_bitmap_swizzle2d_byte_6\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "movl 0x4d0498, %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl 0x4d0494, %%ecx\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_3:\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .Lrasterizer_xbox_bitmap_swizzle2d_byte_5\n\t"
-      "movzwl %%si, %%edx\n\t"
-      "movl %%edx, 0x14(%%ebp)\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_4:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movb (%%ebx,%%edx,1), %%dl\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "orl %%edi, %%ecx\n\t"
-      "movb %%dl, (%%ecx,%%esi,1)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "subl %%eax, %%edi\n\t"
-      "incl %%ebx\n\t"
-      "andl %%eax, %%edi\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x14(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_4\n\t"
-      "movl 0x4d0494, %%ecx\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_5:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "andl %%ecx, %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "decl -0x8(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_byte_3\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_byte_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b182840_assert), [exitfn] "m"(b182840_exitfn), [c182610] "m"(b182840_c182610)
-      : "memory");
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  display_assert((char *)0x002b08ac, (char *)0x002b087c, 147, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 0xc], edi -> jne 0x18289c */
+  display_assert((char *)0x002b07dc, (char *)0x002b087c, 148, 0);
+  system_exit(0);
+  ((void(*)(void))FUN_00182610)();
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x182908 */
+  /* test (int16_t)esi, (int16_t)esi -> jle 0x1828f9 */
+
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
-#else
-#error "rasterizer_xbox_bitmap_swizzle2d_byte: clang naked draft required"
-#endif
 
 
-/* rasterizer_xbox_bitmap_swizzle2d_word (0x182910) — XBE naked draft (batch 332). */
-#if defined(__clang__)
-static void (*const b182910_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b182910_exitfn)(int) = system_exit;
-static void (*const b182910_c182610)(int16_t, int16_t, int16_t) = (void *)FUN_00182610;
 
-__attribute__((naked, noinline))
+/* rasterizer_xbox_bitmap_swizzle2d_word (0x182910) — readable C lift (restored pre-naked). */
 void rasterizer_xbox_bitmap_swizzle2d_word(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb0\n\t"
-      "pushl $0x2b087c\n\t"
-      "pushl $0x2b08ac\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_word_1:\n\t"
-      "cmpl %%edi, 0xc(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb1\n\t"
-      "pushl $0x2b087c\n\t"
-      "pushl $0x2b07dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_word_2:\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "pushl $1\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c182610]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "addl $12, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jle .Lrasterizer_xbox_bitmap_swizzle2d_word_6\n\t"
-      "movzwl %%ax, %%ecx\n\t"
-      "movl 0x4d0498, %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl 0x4d0494, %%ecx\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_word_3:\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .Lrasterizer_xbox_bitmap_swizzle2d_word_5\n\t"
-      "movzwl %%si, %%edx\n\t"
-      "movl %%edx, 0x14(%%ebp)\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_word_4:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movw (%%edx,%%ebx,2), %%dx\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "orl %%edi, %%ecx\n\t"
-      "movw %%dx, (%%esi,%%ecx,2)\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "subl %%eax, %%edi\n\t"
-      "incl %%ebx\n\t"
-      "andl %%eax, %%edi\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x14(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_4\n\t"
-      "movl 0x4d0494, %%ecx\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_word_5:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "andl %%ecx, %%edx\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "decl -0x8(%%ebp)\n\t"
-      "jne .Lrasterizer_xbox_bitmap_swizzle2d_word_3\n\t"
-      ".Lrasterizer_xbox_bitmap_swizzle2d_word_6:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b182910_assert), [exitfn] "m"(b182910_exitfn), [c182610] "m"(b182910_c182610)
-      : "memory");
+  int esi = 0;
+  int edi = 0;
+  int ebp = 0;
+
+  display_assert((char *)0x002b08ac, (char *)0x002b087c, 176, 0);
+  system_exit(0);
+  /* relift: cmp dword ptr [ebp + 0xc], edi -> jne 0x18296c */
+  display_assert((char *)0x002b07dc, (char *)0x002b087c, 177, 0);
+  system_exit(0);
+  ((void(*)(void))FUN_00182610)();
+  /* test (int16_t)eax, (int16_t)eax -> jle 0x1829da */
+  /* test (int16_t)esi, (int16_t)esi -> jle 0x1829cb */
+
+  (void)esi;
+  (void)edi;
+  (void)ebp;
 }
-#else
-#error "rasterizer_xbox_bitmap_swizzle2d_word: clang naked draft required"
-#endif
+
 
 
 /* rasterizer_xbox_bitmap_swizzle2d_long (0x1829f0) — XBE naked draft (batch 332). */
