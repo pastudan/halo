@@ -453,229 +453,47 @@ void FUN_00062cf0(float *corner, float *packed_b, float *a, float scale, float *
   out[1] = dy * scale + packed_b[1];
 }
 
-/* FUN_00062e10 (0x62e10) — XBE naked draft (batch 230). */
-#if defined(__clang__)
-static void (*const b62e10_c10c3c0)(void) = FUN_0010c3c0;
-
-__attribute__((naked, noinline))
-char FUN_00062e10(float *work __attribute__((unused)), float *prev_step __attribute__((unused)), float *next_step __attribute__((unused)), float *turn_a __attribute__((unused)), float *turn_b __attribute__((unused)), float *out __attribute__((unused)))
+char FUN_00062e10(float *work, float *prev_step, float *next_step, float *turn_a, float *turn_b, float *out)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x38, %%esp\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "fsts -0x24(%%ebp)\n\t"
-      "fmuls -0x24(%%ebp)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls -0x28(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062e10_1\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x28(%%ebp)\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x24(%%ebp)\n\t"
-      ".LFUN_00062e10_1:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%edx)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "fsts -0xc(%%ebp)\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062e10_2\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      ".LFUN_00062e10_2:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%ebx)\n\t"
-      "fsubs (%%esi)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fsubs 0x4(%%esi)\n\t"
-      "fsts -0x1c(%%ebp)\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fmuls -0x20(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062e10_3\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x20(%%ebp)\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      ".LFUN_00062e10_3:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%ecx)\n\t"
-      "fsubs (%%edi)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "flds 0x4(%%ecx)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fsts -0x34(%%ebp)\n\t"
-      "fmuls -0x34(%%ebp)\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      "fmuls -0x38(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062e10_4\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "flds -0x38(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x38(%%ebp)\n\t"
-      "flds -0x34(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x34(%%ebp)\n\t"
-      ".LFUN_00062e10_4:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%edx)\n\t"
-      "fsubs (%%edi)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x4(%%edx)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fsts -0x14(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062e10_5\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      ".LFUN_00062e10_5:\n\t"
-      "fstp %%st(0)\n\t"
-      "flds (%%ebx)\n\t"
-      "fsubs (%%edi)\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "flds 0x4(%%ebx)\n\t"
-      "fsubs 0x4(%%edi)\n\t"
-      "fsts -0x2c(%%ebp)\n\t"
-      "fmuls -0x2c(%%ebp)\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fmuls -0x30(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fsqrt\n\t"
-      "fld %%st(0)\n\t"
-      "fabs\n\t"
-      "fcompl 0x2533d0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .LFUN_00062e10_6\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x30(%%ebp)\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fstps -0x2c(%%ebp)\n\t"
-      ".LFUN_00062e10_6:\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "fstp %%st(0)\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10c3c0]\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "leal -0x10(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x28(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c10c3c0]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "leal -0x30(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c10c3c0]\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x38(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c10c3c0]\n\t"
-      "fadds -0x4(%%ebp)\n\t"
-      "addl $0x20, %%esp\n\t"
-      "fchs\n\t"
-      "fcomps -0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "jp .LFUN_00062e10_7\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00062e10_7:\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl 0x4(%%edi), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%eax)\n\t"
-      "xorb %%al, %%al\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c10c3c0] "m"(b62e10_c10c3c0)
-      : "memory");
+  float v_wp[2];
+  float v_np[2];
+  float v_tb_p[2];
+  float v_wa[2];
+  float v_na[2];
+  float v_tb_a[2];
+  float sum_a;
+  float sum_b;
+
+  v_wp[0] = work[0] - prev_step[0];
+  v_wp[1] = work[1] - prev_step[1];
+  path_normalize2d(v_wp);
+  v_np[0] = next_step[0] - prev_step[0];
+  v_np[1] = next_step[1] - prev_step[1];
+  path_normalize2d(v_np);
+  v_tb_p[0] = turn_b[0] - prev_step[0];
+  v_tb_p[1] = turn_b[1] - prev_step[1];
+  path_normalize2d(v_tb_p);
+  v_wa[0] = work[0] - turn_a[0];
+  v_wa[1] = work[1] - turn_a[1];
+  path_normalize2d(v_wa);
+  v_na[0] = next_step[0] - turn_a[0];
+  v_na[1] = next_step[1] - turn_a[1];
+  path_normalize2d(v_na);
+  v_tb_a[0] = turn_b[0] - turn_a[0];
+  v_tb_a[1] = turn_b[1] - turn_a[1];
+  path_normalize2d(v_tb_a);
+
+  sum_a = path_dot2d(v_tb_p, v_np) + path_dot2d(v_wp, v_np);
+  sum_b = path_dot2d(v_tb_a, v_na) + path_dot2d(v_wa, v_na);
+  if (-sum_b > sum_a) {
+    out[0] = prev_step[0];
+    out[1] = prev_step[1];
+    return 1;
+  }
+  out[0] = turn_a[0];
+  out[1] = turn_a[1];
+  return 0;
 }
-#else
-#error "FUN_00062e10: clang naked draft required"
-#endif
 
 
 /* find_turning_point (0x63030) — XBE naked draft (batch 223). */
