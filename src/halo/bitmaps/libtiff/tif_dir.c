@@ -453,118 +453,63 @@ void FUN_00066430(void)
 }
 
 
-/* FUN_00066550 (0x66550) — XBE naked draft (batch 348). */
-#if defined(__clang__)
-static void (*const b66550_c1e24d2)(void) = (void (*)(void))__lseek;
-static void (*const b66550_c1e209e)(void) = (void (*)(void))__read;
-static void (*const b66550_c66380)(void) = TIFFDefaultDirectory;
-static void (*const b66550_c68a30)(int param_1, const char *format, ...) = (void (*)(int param_1, const char *format, ...))FUN_00068a30;
-static void (*const b66550_c6f1f0)(void) = (void *)FUN_0006f1f0;
-static void (*const b66550_c6f220)(void) = (void *)FUN_0006f220;
-
-__attribute__((naked, noinline))
-void FUN_00066550(void)
+/* FUN_00066550 (0x66550) — Capstone lift: fetch TIFF dir entry payload.
+ * ABI: dest stack; entry@<esi>; tif@<ebx>. */
+int FUN_00066550(void *dest, void *entry /*@<esi>*/, void *tif /*@<ebx>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movzwl 0x2(%%esi), %%eax\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "movswl 0x4(%%ebx), %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x2ca024(,%%eax,4), %%edi\n\t"
-      "imull 0x4(%%esi), %%edi\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1e24d2]\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jne .LFUN_00066550_1\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movswl 0x4(%%ebx), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1e209e]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "je .LFUN_00066550_2\n\t"
-      ".LFUN_00066550_1:\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw (%%esi), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c66380]\n\t"
-      "movl 0x10(%%eax), %%eax\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x25fb68\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00066550_2:\n\t"
-      "testb $0x10, 0xa(%%ebx)\n\t"
-      "je .LFUN_00066550_6\n\t"
-      "movzwl 0x2(%%esi), %%eax\n\t"
-      "addl $-3, %%eax\n\t"
-      "cmpl $8, %%eax\n\t"
-      "ja .LFUN_00066550_6\n\t"
-      "movzbl 0x66628(%%eax), %%edx\n\t"
-      "jmp *.LFUN_00066550_jt(,%%edx,4)\n\t"
-      ".LFUN_00066550_3:\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c6f1f0]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00066550_4:\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c6f220]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00066550_5:\n\t"
-      "movl 0x4(%%esi), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "shll $1, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c6f220]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00066550_6:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_00066550_jt:\n\t"
-      ".long .LFUN_00066550_3\n\t"
-      ".long .LFUN_00066550_4\n\t"
-      ".long .LFUN_00066550_5\n\t"
-      ".long .LFUN_00066550_6\n\t"
-      ".text\n\t"
-      :
-      : [c1e24d2] "m"(b66550_c1e24d2), [c1e209e] "m"(b66550_c1e209e), [c66380] "m"(b66550_c66380), [c68a30] "m"(b66550_c68a30), [c6f1f0] "m"(b66550_c6f1f0), [c6f220] "m"(b66550_c6f220)
-      : "memory");
+  unsigned int type;
+  unsigned int count;
+  int offset;
+  int fd;
+  int nbytes;
+  int got;
+  void *def_tif;
+  unsigned int *type_sizes = (unsigned int *)0x002ca024;
+  int kind;
+
+  type = *(unsigned short *)((char *)entry + 2);
+  count = *(unsigned int *)((char *)entry + 4);
+  offset = *(int *)((char *)entry + 8);
+  fd = *(short *)((char *)tif + 4);
+  nbytes = (int)(type_sizes[type] * count);
+
+  got = ((long (*)(int, long, int))(void *)__lseek)(fd, offset, 0);
+  if (got != offset)
+    goto fail;
+  got = ((int (*)(int, void *, unsigned))(void *)__read)(fd, dest, (unsigned)nbytes);
+  if (got != nbytes)
+    goto fail;
+
+  if ((*(unsigned char *)((char *)tif + 0xa) & 0x10) != 0) {
+    type = *(unsigned short *)((char *)entry + 2);
+    kind = (int)type - 3;
+    if ((unsigned)kind <= 8u) {
+      /* byte map at 0x66628 */
+      static const unsigned char type_map[9] = {0, 1, 2, 3, 3, 0, 1, 2, 1};
+      switch (type_map[kind]) {
+      case 0:
+        FUN_0006f1f0((unsigned char *)dest, (int)count);
+        break;
+      case 1:
+        FUN_0006f220((unsigned char *)dest, (int)count);
+        break;
+      case 2:
+        FUN_0006f220((unsigned char *)dest, (int)(count << 1));
+        break;
+      default:
+        break;
+      }
+    }
+  }
+  return nbytes;
+
+fail:
+  def_tif = ((void *(*)(unsigned int))(void *)TIFFDefaultDirectory)(
+      *(unsigned short *)entry);
+  FUN_00068a30(*(void **)tif, (void *)0x0025fb68,
+               *(void **)((char *)def_tif + 0x10));
+  return 0;
 }
-#else
-#error "FUN_00066550: clang naked draft required"
-#endif
 
 
 /* FUN_00066640 (0x66640) — readable C lift from XBE.
@@ -676,7 +621,7 @@ void FUN_00066720(void)
 {
   int eax = 0;
 
-  FUN_00066550();
+  ((int (*)(void *, void *, void *))FUN_00066550)(0, 0, 0);
   /* test eax, eax -> je 0x6675f */
   ((void (*)(void))FUN_000666a0)();
   /* test eax, eax -> je 0x6675f */
@@ -717,7 +662,7 @@ void FUN_000667d0(void)
   /* relift: cmp word ptr [ebx + 0xc4], 0x4d4d -> jne 0x6682b */
   /* cmp ecx, 3 -> ja 0x66860 */
   /* cmp ecx, 3 -> ja 0x66860 */
-  FUN_00066550();
+  ((int (*)(void *, void *, void *))FUN_00066550)(0, 0, 0);
 
   (void)ebx;
   (void)ecx;
@@ -859,7 +804,7 @@ void FUN_000669f0(void)
   /* test eax, eax -> jne 0x66b49 */
   ((void(*)(void))FUN_000663f0)();
   /* test edi, edi -> je 0x66b0e */
-  FUN_00066550();
+  ((int (*)(void *, void *, void *))FUN_00066550)(0, 0, 0);
   /* test eax, eax -> jne 0x66b49 */
   ((void(*)(void))FUN_000663f0)();
   /* test edi, edi -> je 0x66b39 */
@@ -974,7 +919,7 @@ void FUN_00066d40(void)
   /* test esi, esi -> je 0x66dee */
   debug_free((void *)(uintptr_t)ebx, (char *)0x0025faec, 1022);
   /* relift: cmp dword ptr [esi + 4], 1 -> jne 0x66e1f */
-  FUN_00066550();
+  ((int (*)(void *, void *, void *))FUN_00066550)(0, 0, 0);
   /* relift: cmp dword ptr [ecx + 4], 1 -> je 0x66e59 */
   FUN_00068a30(0, (char *)0x0025fc3c);
   TIFFSetField(0, 32995, 0);

@@ -37867,8 +37867,8 @@
         },
         {
           "addr": "0x66550",
-          "decl": "void FUN_00066550(void);",
-          "ported": false,
+          "decl": "int FUN_00066550(void *dest, void *entry@<esi>, void *tif@<ebx>);",
+          "ported": true,
           "name": "FUN_00066550"
         },
         {
@@ -38325,8 +38325,8 @@
         },
         {
           "addr": "0x6c780",
-          "decl": "void FUN_0006c780(void);",
-          "ported": false,
+          "decl": "unsigned int FUN_0006c780(void *tif@<ecx>);",
+          "ported": true,
           "name": "FUN_0006c780"
         },
         {
@@ -38343,8 +38343,8 @@
         },
         {
           "addr": "0x6c960",
-          "decl": "void FUN_0006c960(void);",
-          "ported": false,
+          "decl": "void FUN_0006c960(void *tif, unsigned int bits);",
+          "ported": true,
           "name": "FUN_0006c960"
         },
         {
@@ -38367,8 +38367,8 @@
         },
         {
           "addr": "0x6ccf0",
-          "decl": "void FUN_0006ccf0(void);",
-          "ported": false,
+          "decl": "int FUN_0006ccf0(void *tif, void *buf, int cc, int arg3);",
+          "ported": true,
           "name": "FUN_0006ccf0"
         },
         {
@@ -38403,14 +38403,14 @@
         },
         {
           "addr": "0x6d140",
-          "decl": "void FUN_0006d140(void);",
-          "ported": false,
+          "decl": "void FUN_0006d140(void *tif, void *buf, int cc, int arg3);",
+          "ported": true,
           "name": "FUN_0006d140"
         },
         {
           "addr": "0x6d180",
-          "decl": "void FUN_0006d180(void);",
-          "ported": false,
+          "decl": "void FUN_0006d180(void *tif, unsigned char *buf, int cc_count, int arg3);",
+          "ported": true,
           "name": "FUN_0006d180"
         },
         {
@@ -38421,8 +38421,8 @@
         },
         {
           "addr": "0x6d2d0",
-          "decl": "void FUN_0006d2d0(void);",
-          "ported": false,
+          "decl": "int FUN_0006d2d0(void *tif);",
+          "ported": true,
           "name": "FUN_0006d2d0"
         },
         {

@@ -1,0 +1,8 @@
+{
+  "description": "FUN_0006ccf0: stub cb00 fail \u2192 early return 0 (skip put cb)",
+  "regions": {},
+  "arg_overrides": {},
+  "stub_returns": {
+    "fun_0006cb00": 0
+  }
+}
