@@ -35945,7 +35945,7 @@
         {
           "addr": "0x430d0",
           "decl": "int16_t ai_communication_consider_speech(void *packet /* @<ecx> */, int unit /* @<eax> */, int param /* @<edx> */, int stack_a, int16_t dialogue_type, int16_t start_tick, int stack_b, char flag, float *timer, char *out_buf);",
-          "ported": false,
+          "ported": true,
           "name": "ai_communication_consider_speech"
         },
         {

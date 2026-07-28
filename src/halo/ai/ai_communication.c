@@ -534,182 +534,59 @@ int ai_communication_find_global_actor_to_talk(
 int FUN_00045830(int type, int actor, int target, int p0, int p1, int p2,
                  int p3, int p4, int p5, int p6);
 
-/* ai_communication_consider_speech (0x430d0) — XBE naked draft (batch 119). */
-#if defined(__clang__)
-static void (*const b430d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b430d0_exitfn)(int) = system_exit;
-static short (*const b430d0_c1a68d0)(int unit_handle, short priority, char param_3, char param_4, int *param_5, short *vocalization_type_ref, int *sound_definition_index_ref) = FUN_001a68d0;
-static char * (*const b430d0_c1a6ca0)(short param_1) = FUN_001a6ca0;
-static int (*const b430d0_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static short (*const b430d0_cfff80)(void) = game_connection;
-static int (*const b430d0_gtime)(void) = game_time_get;
-static void (*const b430d0_ftol)(void) = FUN_001d9068;
-
-__attribute__((naked, noinline))
-int16_t ai_communication_consider_speech(void *packet /* */ __attribute__((unused)), int unit /* */ __attribute__((unused)), int param /* */ __attribute__((unused)), int stack_a __attribute__((unused)), int16_t dialogue_type __attribute__((unused)), int16_t start_tick __attribute__((unused)), int stack_b __attribute__((unused)), char flag __attribute__((unused)), float *timer __attribute__((unused)), char *out_buf __attribute__((unused)))
+/* ai_communication_consider_speech (0x430d0) — readable C lift (restored pre-naked). */
+int16_t ai_communication_consider_speech(void *packet /*  */, int unit /*  */, int param /*  */, int stack_a, int16_t dialogue_type, int16_t start_tick, int stack_b, char flag, float *timer, char *out_buf)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl %%edx, %%edi\n\t"
-      "je .Lai_communication_consider_speech_1\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "je .Lai_communication_consider_speech_1\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lai_communication_consider_speech_2\n\t"
-      ".Lai_communication_consider_speech_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc1a\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x259a60\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_communication_consider_speech_2:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x4(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1a68d0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "testw %%bx, %%bx\n\t"
-      "jne .Lai_communication_consider_speech_3\n\t"
-      "movl 0x20(%%ebp), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .Lai_communication_consider_speech_4\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1a6ca0]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x259a50\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "jmp .Lai_communication_consider_speech_4\n\t"
-      ".Lai_communication_consider_speech_3:\n\t"
-      "cmpw $1, %%bx\n\t"
-      "jne .Lai_communication_consider_speech_4\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "fmuls 0x2533e4\n\t"
-      "fstps (%%eax)\n\t"
-      ".Lai_communication_consider_speech_4:\n\t"
-      "call *%[cfff80]\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jne .Lai_communication_consider_speech_5\n\t"
-      "movb 0x5aca47, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lai_communication_consider_speech_7\n\t"
-      ".Lai_communication_consider_speech_5:\n\t"
-      "movb 0x18(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lai_communication_consider_speech_7\n\t"
-      "cmpw $5, 0xc(%%ebp)\n\t"
-      "jge .Lai_communication_consider_speech_7\n\t"
-      "cmpl $-1, -0x4(%%ebp)\n\t"
-      "je .Lai_communication_consider_speech_7\n\t"
-      "call *%[gtime]\n\t"
-      "subl -0x4(%%ebp), %%eax\n\t"
-      "movswl 0x10(%%ebp), %%edi\n\t"
-      "movl $0, %%ecx\n\t"
-      "sets %%cl\n\t"
-      "movl %%edi, -0x8(%%ebp)\n\t"
-      "decl %%ecx\n\t"
-      "andl %%eax, %%ecx\n\t"
-      "movswl 0xc(%%ebp), %%eax\n\t"
-      "leal (%%eax,%%eax,4), %%edx\n\t"
-      "movl %%ecx, %%esi\n\t"
-      "flds 0x257cd8(,%%edx,8)\n\t"
-      "fmuls 0x253394\n\t"
-      "fiaddl -0x8(%%ebp)\n\t"
-      "call *%[ftol]\n\t"
-      "cmpw %%ax, %%si\n\t"
-      "jg .Lai_communication_consider_speech_6\n\t"
-      "movl 0x1c(%%ebp), %%ecx\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "movl %%ebx, (%%ecx)\n\t"
-      "movl 0x20(%%ebp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .Lai_communication_consider_speech_8\n\t"
-      "movswl %%ax, %%edx\n\t"
-      "subl %%edi, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x259a40\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1d90f0]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lai_communication_consider_speech_6:\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "movswl %%si, %%eax\n\t"
-      "leal 0x3c(%%ecx), %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jge .Lai_communication_consider_speech_7\n\t"
-      "subl %%ecx, %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "fildl -0x8(%%ebp)\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "fmuls (%%eax)\n\t"
-      "fmuls 0x25634c\n\t"
-      "fstps (%%eax)\n\t"
-      ".Lai_communication_consider_speech_7:\n\t"
-      "testw %%bx, %%bx\n\t"
-      "je .Lai_communication_consider_speech_8\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "flds (%%eax)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lai_communication_consider_speech_8\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc49\n\t"
-      "pushl $0x2599b4\n\t"
-      "pushl $0x259a04\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lai_communication_consider_speech_8:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movw %%bx, %%ax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b430d0_assert), [exitfn] "m"(b430d0_exitfn), [c1a68d0] "m"(b430d0_c1a68d0), [c1a6ca0] "m"(b430d0_c1a6ca0), [c1d90f0] "m"(b430d0_c1d90f0), [cfff80] "m"(b430d0_cfff80), [gtime] "m"(b430d0_gtime), [ftol] "m"(b430d0_ftol)
-      : "memory");
+  int tick_out;
+  short anim_result;
+  int16_t result = 0;
+
+  if (!packet || !unit) {
+    display_assert((char *)0x259a60, "c:\\halo\\SOURCE\\ai\\ai_communication.c",
+                   0xc1a, 1);
+    system_exit(-1);
+  }
+  anim_result = FUN_001a68d0(unit, 1, (char)stack_b, 0, &tick_out, NULL, NULL);
+  if (anim_result == 0 && out_buf) {
+    if (timer) {
+      char *name = FUN_001a6ca0((short)param);
+      crt_sprintf(out_buf, (char *)0x259a50, name);
+    }
+  } else if (anim_result == 1 && timer) {
+    *(float *)timer *= *(float *)0x2533e4;
+  }
+  if (game_connection() || *(char *)0x5aca47) {
+    if (flag && dialogue_type < 5 && tick_out != -1) {
+      int now = game_time_get();
+      int elapsed = now - tick_out;
+      int16_t end_tick =
+          ftol2((float)start_tick +
+                *(float *)(0x257cd8 + (int)dialogue_type * 0x28) *
+                    *(float *)0x253394);
+      if (elapsed <= end_tick) {
+        if (timer)
+          *(float *)timer = 0.0f;
+        if (out_buf) {
+          crt_sprintf(out_buf, (char *)0x259a40, (int)(end_tick - start_tick),
+                      (int)start_tick, (int)elapsed);
+        }
+        return 0;
+      }
+      if (elapsed < end_tick + 0x3c) {
+        if (timer)
+          *(float *)timer =
+              (float)(elapsed - end_tick) * *(float *)timer * *(float *)0x25634c;
+      }
+    }
+    if (anim_result != 0 && timer &&
+        *(float *)timer > *(float *)0x2533c0) {
+      display_assert((char *)0x259a04,
+                     "c:\\halo\\SOURCE\\ai\\ai_communication.c", 0xc49, 1);
+      system_exit(-1);
+    }
+  }
+  return result;
 }
-#else
-#error "ai_communication_consider_speech: clang naked draft required"
-#endif
-
-
 /* FUN_000432b0 (0x432b0) — readable C lift.
  * unit@ebx actor@eax target@edi; stack: look_arg, priority. */
 void FUN_000432b0(int look_arg, short priority, int unit, int actor, int target)
@@ -2059,6 +1936,7 @@ void ai_conversation_unit_died(int unit_handle __attribute__((unused)), char par
 #else
 #error "ai_conversation_unit_died: clang naked draft required"
 #endif
+
 
 
 
