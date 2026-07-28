@@ -4159,117 +4159,52 @@ float FUN_001ccca0(int channel_index __attribute__((unused)), void *source __att
 #endif
 
 
-/* sound_update_time (0x1cce80) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static void *(*const b1cce80_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b1cce80_tag)(int, int) = tag_get;
-static void (*const b1cce80_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1cce80_exitfn)(int) = system_exit;
-static void * (*const b1cce80_c1c88c0)(short class_index) = sound_class_get_definition;
-static float (*const b1cce80_c1ccbe0)(int channel_index, void *source) = FUN_001ccbe0;
-
-__attribute__((naked, noinline))
-char sound_update_time(int sound_a __attribute__((unused)), int sound_b __attribute__((unused)), float threshold __attribute__((unused)))
+/* sound_update_time (0x1cce80) — readable C lift matching delinked 001cce80.
+ * sound_a @<eax>, sound_b @<ecx>, threshold @ stack.
+ * Asm does datum/tag for ecx (B) first, then eax (A). Equal-handle assert+exit
+ * falls through (exit stubbed in Unicorn). Return 1 if priority(B)>priority(A),
+ * or equal priority and dist(A)>threshold. */
+char sound_update_time(int sound_a /* @<eax> */, int sound_b /* @<ecx> */,
+                       float threshold)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%ecx, %%edi\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x4fdba4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "movl 0x4fdba4, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "movl 0x8(%%ebx), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x736e6421\n\t"
-      "call *%[tag]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "jne .Lsound_update_time_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x763\n\t"
-      "pushl $0x2c12cc\n\t"
-      "pushl $0x2c1648\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_update_time_1:\n\t"
-      "movl -0x8(%%ebp), %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x4(%%esi), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c88c0]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movl %%eax, %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%edx), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c88c0]\n\t"
-      "movw 0xa(%%edi), %%cx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw 0xa(%%eax), %%cx\n\t"
-      "jg .Lsound_update_time_3\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%esi), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c88c0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw 0x4(%%eax), %%cx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c88c0]\n\t"
-      "movw 0xa(%%esi), %%dx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw 0xa(%%eax), %%dx\n\t"
-      "jne .Lsound_update_time_2\n\t"
-      "movw 0x6(%%ebx), %%ax\n\t"
-      "leal 0x14(%%ebx), %%edi\n\t"
-      "call *%[c1ccbe0]\n\t"
-      "fcomps 0x8(%%ebp)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .Lsound_update_time_3\n\t"
-      ".Lsound_update_time_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_update_time_3:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1cce80_dget), [tag] "m"(b1cce80_tag), [assert] "m"(b1cce80_assert), [exitfn] "m"(b1cce80_exitfn), [c1c88c0] "m"(b1cce80_c1c88c0), [c1ccbe0] "m"(b1cce80_c1ccbe0)
-      : "memory");
+  char *entry_b;
+  char *entry_a;
+  void *tag_b;
+  void *tag_a;
+  void *class_b;
+  void *class_a;
+  float dist;
+
+  entry_b = (char *)datum_get(*(data_t **)0x4fdba4, sound_b);
+  tag_b = tag_get(0x736e6421, *(int *)(entry_b + 8));
+  entry_a = (char *)datum_get(*(data_t **)0x4fdba4, sound_a);
+  tag_a = tag_get(0x736e6421, *(int *)(entry_a + 8));
+
+  if (sound_b == sound_a) {
+    display_assert((char *)0x2c1648, (char *)0x2c12cc, 0x763, 1);
+    /* Call via ptr so clang won't treat system_exit as noreturn and
+     * delete the asm fallthrough that Unicorn's exit stub relies on. */
+    ((void (*)(int))system_exit)(-1);
+  }
+
+  class_b = sound_class_get_definition(*(unsigned short *)((char *)tag_b + 4));
+  class_a = sound_class_get_definition(*(unsigned short *)((char *)tag_a + 4));
+  if (*(short *)((char *)class_b + 0xa) > *(short *)((char *)class_a + 0xa)) {
+    return 1;
+  }
+
+  class_b = sound_class_get_definition(*(unsigned short *)((char *)tag_b + 4));
+  class_a = sound_class_get_definition(*(unsigned short *)((char *)tag_a + 4));
+  if (*(short *)((char *)class_b + 0xa) != *(short *)((char *)class_a + 0xa)) {
+    return 0;
+  }
+
+  dist = FUN_001ccbe0(*(short *)(entry_a + 6), entry_a + 0x14);
+  if (dist > threshold) {
+    return 1;
+  }
+  return 0;
 }
-#else
-#error "sound_update_time: clang naked draft required"
-#endif
 
 
 

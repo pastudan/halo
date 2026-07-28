@@ -25843,8 +25843,8 @@
         },
         {
           "addr": "0x1cce80",
-          "decl": "char sound_update_time(int sound_a@<eax>, int sound_b@<edi>, float threshold);",
-          "ported": false,
+          "decl": "char sound_update_time(int sound_a@<eax>, int sound_b@<ecx>, float threshold);",
+          "ported": true,
           "name": "sound_update_time"
         },
         {
