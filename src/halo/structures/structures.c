@@ -1,3 +1,4 @@
+#include <stdint.h>
 /* 0x18e3c0 is structure-BSP getter; Capstone named it scenario_get (see decl.h). */
 
 #include "x87_math.h" /* x87_fatan2f: inline FPATAN atan2, matches original */
@@ -5707,87 +5708,35 @@ int16_t structure_find_in_cluster(uint16_t cluster_count, float *position,
  */
 #define file_location_volume_names ((char *)0x505500)
 
-/* set_file_location_volume_name (0x199360) — XBE naked draft (batch 90). */
-#if defined(__clang__)
-static void (*const b199360_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b199360_exitfn)(int) = system_exit;
-static int (*const b199360_c8df60)(const char *s1) = csstrlen;
-static void * (*const b199360_c8de70)(char *destination, const char *source, size_t size) = csstrncpy;
-
-__attribute__((naked, noinline))
-void set_file_location_volume_name(int16_t location __attribute__((unused)), const char *volume_name __attribute__((unused)))
+/* set_file_location_volume_name (0x199360) — readable C lift from XBE leaf. */
+void set_file_location_volume_name(int16_t location, const char *volume_name)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "pushl %%edi\n\t"
-      "jle .Lset_file_location_volume_name_1\n\t"
-      "cmpw $2, %%si\n\t"
-      "jl .Lset_file_location_volume_name_2\n\t"
-      ".Lset_file_location_volume_name_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4b\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3a70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lset_file_location_volume_name_2:\n\t"
-      "movswl %%si, %%esi\n\t"
-      "shll $8, %%esi\n\t"
-      "leal 0x505500(%%esi), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lset_file_location_volume_name_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4c\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3a40\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lset_file_location_volume_name_3:\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c8df60]\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $0xff, %%eax\n\t"
-      "jbe .Lset_file_location_volume_name_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x4d\n\t"
-      "pushl $0x2b3aac\n\t"
-      "pushl $0x2b3a10\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lset_file_location_volume_name_4:\n\t"
-      "pushl $0xff\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c8de70]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movb $0, 0x5055ff(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b199360_assert), [exitfn] "m"(b199360_exitfn), [c8df60] "m"(b199360_c8df60), [c8de70] "m"(b199360_c8de70)
-      : "memory");
+  char *slot;
+  int idx;
+
+  if (location <= 0 || location >= 2) {
+    display_assert("location>0 && location<NUMBER_OF_FILE_REFERENCE_LOCATIONS",
+                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4b, true);
+    system_exit(-1);
+  }
+
+  idx = (int)location << 8;
+  slot = (char *)(0x505500 + idx);
+  if (csstrlen(slot) != 0) {
+    display_assert("strlen(file_location_volume_names[location])==0",
+                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4c, true);
+    system_exit(-1);
+  }
+  if (csstrlen(volume_name) > 0xff) {
+    display_assert("strlen(volume_name)<=MAXIMUM_FILENAME_LENGTH",
+                   "c:\\halo\\SOURCE\\tag_files\\files.c", 0x4d, true);
+    system_exit(-1);
+  }
+  csstrncpy(slot, volume_name, 0xff);
+  slot[0xff] = 0;
 }
-#else
-#error "set_file_location_volume_name: clang naked draft required"
-#endif
+
+
 
 /* --- structures.obj batch drafts (2026-07-26) --- */
 
