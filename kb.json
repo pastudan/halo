@@ -37879,8 +37879,8 @@
         },
         {
           "addr": "0x666a0",
-          "decl": "void FUN_000666a0(void);",
-          "ported": false,
+          "decl": "int FUN_000666a0(void *module, int numer, int denom, unsigned short *typeinfo @<edx>, float *out @<esi>);",
+          "ported": true,
           "name": "FUN_000666a0"
         },
         {
@@ -37974,7 +37974,7 @@
         },
         {
           "addr": "0x68970",
-          "decl": "void FUN_00068970(void);",
+          "decl": "int FUN_00068970(void *tif);",
           "ported": false,
           "name": "FUN_00068970"
         },
@@ -38073,8 +38073,8 @@
         },
         {
           "addr": "0x693b0",
-          "decl": "void FUN_000693b0(void);",
-          "ported": false,
+          "decl": "void FUN_000693b0(void *tif);",
+          "ported": true,
           "name": "FUN_000693b0"
         },
         {
@@ -38103,7 +38103,7 @@
         },
         {
           "addr": "0x69600",
-          "decl": "int FUN_00069600(unsigned char **pptr, unsigned bit_index@<ecx>, unsigned end_index@<edx>, const unsigned char *table@<ebx>);",
+          "decl": "int FUN_00069600(unsigned char **pp, int bitpos@<ecx>, int endbit@<edx>, const unsigned char *table@<ebx>);",
           "ported": false,
           "name": "FUN_00069600"
         },
@@ -38158,7 +38158,7 @@
         {
           "addr": "0x6a260",
           "decl": "int FUN_0006a260(void *tif);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0006a260"
         },
         {
@@ -38187,8 +38187,8 @@
         },
         {
           "addr": "0x6a910",
-          "decl": "void FUN_0006a910(void);",
-          "ported": false,
+          "decl": "void FUN_0006a910(unsigned int *dest, unsigned char *src, void *unused, unsigned int bit_count, unsigned int row_count, int src_pitch, int dest_extra);",
+          "ported": true,
           "name": "FUN_0006a910"
         },
         {
@@ -38755,8 +38755,8 @@
         },
         {
           "addr": "0x6fbd0",
-          "decl": "void FUN_0006fbd0(void);",
-          "ported": false,
+          "decl": "int FUN_0006fbd0(void *module, void *tif @<esi>);",
+          "ported": true,
           "name": "FUN_0006fbd0"
         },
         {

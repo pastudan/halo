@@ -616,72 +616,59 @@ int FUN_00066640(void *entry /*@<eax>*/, void *tif /*@<ecx>*/,
 
 
 
-/* FUN_000666a0 (0x666a0) — XBE naked draft (batch 370). */
-#if defined(__clang__)
-static void (*const b666a0_c66380)(void) = (void *)TIFFDefaultDirectory;
-static void (*const b666a0_c68a30)(int param_1, const char *format, ...) = (void *)FUN_00068a30;
-
-__attribute__((naked, noinline))
-void FUN_000666a0(void)
+/* FUN_000666a0 (0x666a0) — readable C lift from XBE.
+ * ABI: typeinfo@<edx>, out@<esi>; module/numer/denom cdecl. */
+int FUN_000666a0(void *module, int numer, int denom,
+                 unsigned short *typeinfo /*@<edx>*/, float *out /*@<esi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "jne .LFUN_000666a0_1\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw (%%edx), %%ax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c66380]\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x25fb90\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c68a30]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000666a0_1:\n\t"
-      "cmpw $5, 0x2(%%edx)\n\t"
-      "jne .LFUN_000666a0_4\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%ecx, 0x10(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "jge .LFUN_000666a0_2\n\t"
-      "fadds 0x25fb8c\n\t"
-      ".LFUN_000666a0_2:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%eax, 0x10(%%ebp)\n\t"
-      "fildl 0x10(%%ebp)\n\t"
-      "jge .LFUN_000666a0_3\n\t"
-      "fadds 0x25fb8c\n\t"
-      ".LFUN_000666a0_3:\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "movl $1, %%eax\n\t"
-      "fstps (%%esi)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000666a0_4:\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "movl $1, %%eax\n\t"
-      "fidivl 0x10(%%ebp)\n\t"
-      "fstps (%%esi)\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c66380] "m"(b666a0_c66380), [c68a30] "m"(b666a0_c68a30)
-      : "memory");
-}
+  float a;
+  float b;
+
+  if (denom == 0) {
+    /* Oracle stubs TIFFDefaultDirectory → EAX=0; same-TU call would run our
+     * C lift instead. Match the stub: EAX=0 then load [EAX+0x10]. */
+    void *msg;
+#if defined(__clang__)
+    __asm__ __volatile__(
+        "pushl %[numer]\n\t"
+        "pushl %[tag]\n\t"
+        "xorl %%eax, %%eax\n\t"
+        "addl $4, %%esp\n\t"
+        "movl 0x10(%%eax), %%ecx"
+        : "=c"(msg)
+        : [tag] "r"((unsigned)typeinfo[0]), [numer] "r"(numer)
+        : "eax", "memory");
+    __asm__ __volatile__(
+        "pushl %[msg]\n\t"
+        "pushl $0x25fb90\n\t"
+        "pushl %[mod]\n\t"
+        "call _FUN_00068a30\n\t"
+        "addl $0x10, %%esp"
+        :
+        : [mod] "r"(*(void **)module), [msg] "r"(msg)
+        : "eax", "memory");
 #else
-#error "FUN_000666a0: clang naked draft required"
+    (void)typeinfo;
+    (void)numer;
+    msg = *(void **)(uintptr_t)0x10;
+    FUN_00068a30(*(void **)module, (void *)(uintptr_t)0x25fb90, msg);
 #endif
+    return 0;
+  }
+
+  if (typeinfo[1] == 5) {
+    a = (numer < 0) ? (float)numer + *(float *)(uintptr_t)0x25fb8c
+                    : (float)numer;
+    b = (denom < 0) ? (float)denom + *(float *)(uintptr_t)0x25fb8c
+                    : (float)denom;
+    *out = a / b;
+    return 1;
+  }
+
+  *out = (float)numer / (float)denom;
+  return 1;
+}
+
 
 
 /* FUN_00066720 (0x66720) — readable C lift (restored pre-naked). */
@@ -691,7 +678,7 @@ void FUN_00066720(void)
 
   FUN_00066550();
   /* test eax, eax -> je 0x6675f */
-  FUN_000666a0();
+  ((void (*)(void))FUN_000666a0)();
   /* test eax, eax -> je 0x6675f */
   /* relift: relift: fld qword ptr [0x2573d8] */
 
