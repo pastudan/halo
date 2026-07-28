@@ -38205,8 +38205,8 @@
         },
         {
           "addr": "0x6ab10",
-          "decl": "void FUN_0006ab10(void);",
-          "ported": false,
+          "decl": "void FUN_0006ab10(unsigned int *dst, unsigned char *src, void *unused, int count, int num_rows, int skip_src_words, int skip_dst);",
+          "ported": true,
           "name": "FUN_0006ab10"
         },
         {

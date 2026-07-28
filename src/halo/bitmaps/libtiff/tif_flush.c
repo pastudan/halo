@@ -3296,158 +3296,52 @@ void FUN_0006aa40(unsigned int *dst, unsigned char *src, void *unused,
 }
 
 
-/* FUN_0006ab10 (0x6ab10) — XBE naked draft (batch 303). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006ab10(void)
+/* FUN_0006ab10 (0x6ab10) — Capstone lift: 8->32bpp×8 expand via *DAT_003340c4. */
+void FUN_0006ab10(unsigned int *dst, unsigned char *src, void *unused,
+                  int count, int num_rows, int skip_src_words, int skip_dst)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "cdq\n\t"
-      "andl $7, %%edx\n\t"
-      "addl %%edx, %%eax\n\t"
-      "sarl $3, %%eax\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl %%eax, 0x1c(%%ebp)\n\t"
-      "jbe .LFUN_0006ab10_12\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "shll $2, %%edx\n\t"
-      "movl %%ecx, 0x18(%%ebp)\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      ".LFUN_0006ab10_1:\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "cmpl $8, %%edi\n\t"
-      "jb .LFUN_0006ab10_3\n\t"
-      "movl %%edi, %%ebx\n\t"
-      "shrl $3, %%ebx\n\t"
-      ".LFUN_0006ab10_2:\n\t"
-      "movzbl (%%esi), %%eax\n\t"
-      "movl 0x3340c4, %%edx\n\t"
-      "movl (%%edx,%%eax,4), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "addl $4, %%edx\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "addl $4, %%edx\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "addl $4, %%edx\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "movl %%eax, 0x4(%%ecx)\n\t"
-      "addl $4, %%edx\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      "addl $4, %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%eax\n\t"
-      "addl $4, %%edx\n\t"
-      "addl $4, %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x4(%%edx), %%edx\n\t"
-      "addl $4, %%ecx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "incl %%esi\n\t"
-      "addl $4, %%ecx\n\t"
-      "subl $8, %%edi\n\t"
-      "decl %%ebx\n\t"
-      "jne .LFUN_0006ab10_2\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      ".LFUN_0006ab10_3:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jbe .LFUN_0006ab10_11\n\t"
-      "movzbl (%%esi), %%edx\n\t"
-      "movl 0x3340c4, %%ebx\n\t"
-      "movl (%%ebx,%%edx,4), %%edx\n\t"
-      "incl %%esi\n\t"
-      "decl %%edi\n\t"
-      "cmpl $6, %%edi\n\t"
-      "ja .LFUN_0006ab10_11\n\t"
-      "jmp *.LFUN_0006ab10_jt(,%%edi,4)\n\t"
-      ".LFUN_0006ab10_4:\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      ".LFUN_0006ab10_5:\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      ".LFUN_0006ab10_6:\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      ".LFUN_0006ab10_7:\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      ".LFUN_0006ab10_8:\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      ".LFUN_0006ab10_9:\n\t"
-      "movl (%%edx), %%edi\n\t"
-      "movl %%edi, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      "addl $4, %%edx\n\t"
-      ".LFUN_0006ab10_10:\n\t"
-      "movl (%%edx), %%edx\n\t"
-      "movl %%edx, (%%ecx)\n\t"
-      "addl $4, %%ecx\n\t"
-      ".LFUN_0006ab10_11:\n\t"
-      "movl -0x4(%%ebp), %%ebx\n\t"
-      "movl 0x18(%%ebp), %%edx\n\t"
-      "addl %%ebx, %%ecx\n\t"
-      "addl %%eax, %%esi\n\t"
-      "decl %%edx\n\t"
-      "movl %%edx, 0x18(%%ebp)\n\t"
-      "jne .LFUN_0006ab10_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_0006ab10_12:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "nop\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0006ab10_jt:\n\t"
-      ".long .LFUN_0006ab10_10\n\t"
-      ".long .LFUN_0006ab10_9\n\t"
-      ".long .LFUN_0006ab10_8\n\t"
-      ".long .LFUN_0006ab10_7\n\t"
-      ".long .LFUN_0006ab10_6\n\t"
-      ".long .LFUN_0006ab10_5\n\t"
-      ".long .LFUN_0006ab10_4\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  extern unsigned int *DAT_003340c4;
+  unsigned int *table;
+  int pitch;
+  int rows;
+  int src_skip;
+  unsigned int *d;
+  unsigned char *s;
+  int rem;
+  int t;
+  int i;
+
+  (void)unused;
+  t = skip_src_words;
+  src_skip = (t + ((t >> 31) & 7)) >> 3;
+  if ((unsigned)num_rows == 0u)
+    return;
+  table = DAT_003340c4;
+  pitch = skip_dst << 2;
+  rows = num_rows;
+  d = dst;
+  s = src;
+  do {
+    rem = count;
+    if ((unsigned)rem >= 8u) {
+      unsigned octs = (unsigned)rem >> 3;
+      do {
+        unsigned int *p = (unsigned int *)table[*s++];
+        for (i = 0; i < 8; i++)
+          *d++ = p[i];
+        rem -= 8;
+      } while (--octs != 0);
+    }
+    if (rem != 0) {
+      unsigned int *p = (unsigned int *)table[*s++];
+      /* duff remainder 1..7 via jumptable — copy rem dwords */
+      for (i = 0; i < rem; i++)
+        *d++ = p[i];
+    }
+    d = (unsigned int *)((char *)d + pitch);
+    s += src_skip;
+  } while (--rows != 0);
 }
-#else
-#error "FUN_0006ab10: clang naked draft required"
-#endif
 
 
 /* FUN_0006ac60 (0x6ac60) — readable C lift from XBE.
