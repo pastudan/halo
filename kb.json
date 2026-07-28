@@ -26590,7 +26590,7 @@
           "comment": "Find clusters overlapping position+radius and add the object to both per-object and per-cluster reference lists.",
           "decl": "void cluster_partition_add_object(void *partition, int object_handle, void *first_cluster_ref, void *position, uint32_t radius_fp, void *location);",
           "name": "cluster_partition_add_object",
-          "ported": false,
+          "ported": true,
           "source_path": "src/halo/structures/structures.c"
         },
         {
@@ -26673,7 +26673,7 @@
         {
           "addr": "0x192050",
           "decl": "void leaf_map_build_portal_from_leaves(void);",
-          "ported": false,
+          "ported": true,
           "name": "leaf_map_build_portal_from_leaves"
         },
         {
