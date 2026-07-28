@@ -40,9 +40,9 @@
     }
   },
   "meta": {
-    "timestamp": "2026-07-28T05:39:27.392696+00:00",
+    "timestamp": "2026-07-28T05:40:06.606995+00:00",
     "commit": "50256151",
-    "branch": "main",
+    "branch": "track-a-collision-bsp",
     "tool_version": "1.0.0"
   },
   "consistency": {
