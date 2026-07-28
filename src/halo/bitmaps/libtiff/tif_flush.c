@@ -1030,58 +1030,41 @@ void FUN_00069020(void)
 #endif
 
 
-/* FUN_00069180 (0x69180) — XBE naked draft (batch 333). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_00069180(void)
+/* FUN_00069180 (0x69180) — Capstone lift: LZW next-code from stream.
+ * ABI: tif@<edx>. Returns next code, or 0xd on underrun. */
+int FUN_00069180(void *tif /*@<edx>*/)
 {
-  __asm__ volatile(
-      "movl 0x120(%%edx), %%eax\n\t"
-      "pushl %%esi\n\t"
-      ".LFUN_00069180_1:\n\t"
-      "movw 0x2(%%eax), %%cx\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .LFUN_00069180_2\n\t"
-      "cmpw $7, %%cx\n\t"
-      "jle .LFUN_00069180_3\n\t"
-      ".LFUN_00069180_2:\n\t"
-      "movl 0x138(%%edx), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jle .LFUN_00069180_4\n\t"
-      "decl %%ecx\n\t"
-      "movl %%ecx, 0x138(%%edx)\n\t"
-      "movl 0x134(%%edx), %%ecx\n\t"
-      "movzbl (%%ecx), %%ecx\n\t"
-      "movl 0x14(%%eax), %%esi\n\t"
-      "movzbw (%%esi,%%ecx,1), %%cx\n\t"
-      "movw %%cx, (%%eax)\n\t"
-      "incl 0x134(%%edx)\n\t"
-      ".LFUN_00069180_3:\n\t"
-      "movswl 0x2(%%eax), %%ecx\n\t"
-      "movswl (%%eax), %%esi\n\t"
-      "shll $8, %%ecx\n\t"
-      "addl %%esi, %%ecx\n\t"
-      "movzbw 0x2ccf70(%%ecx), %%si\n\t"
-      "testw %%si, %%si\n\t"
-      "movzbw 0x2ce370(%%ecx), %%cx\n\t"
-      "movw %%cx, 0x2(%%eax)\n\t"
-      "je .LFUN_00069180_1\n\t"
-      "movswl %%si, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      ".LFUN_00069180_4:\n\t"
-      "movl $0xd, %%eax\n\t"
-      "popl %%esi\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *state;
+  unsigned short bits;
+  int rem;
+  unsigned char *buf;
+  unsigned char *map;
+  unsigned short code;
+  unsigned short next_bits;
+  unsigned idx;
+
+  state = *(unsigned char **)((char *)tif + 0x120);
+  for (;;) {
+    bits = *(unsigned short *)(state + 2);
+    if (bits == 0 || (short)bits > 7) {
+      rem = *(int *)((char *)tif + 0x138);
+      if (rem <= 0)
+        return 0xd;
+      *(int *)((char *)tif + 0x138) = rem - 1;
+      buf = *(unsigned char **)((char *)tif + 0x134);
+      map = *(unsigned char **)(state + 0x14);
+      *(unsigned short *)state = map[*buf];
+      *(int *)((char *)tif + 0x134) = *(int *)((char *)tif + 0x134) + 1;
+    }
+    idx = ((unsigned)(*(short *)(state + 2)) << 8) + (unsigned)(*(short *)state);
+    next_bits = *(unsigned char *)(0x2ccf70u + idx);
+    code = *(unsigned char *)(0x2ce370u + idx);
+    *(unsigned short *)(state + 2) = code;
+    if (next_bits != 0)
+      return (int)(short)next_bits;
+  }
 }
-#else
-#error "FUN_00069180: clang naked draft required"
-#endif
+
 
 
 /* FUN_00069200 (0x69200) — XBE naked draft (batch 311). */

@@ -38055,8 +38055,8 @@
         },
         {
           "addr": "0x69180",
-          "decl": "void FUN_00069180(void);",
-          "ported": false,
+          "decl": "int FUN_00069180(void *tif /*@<edx>*/);",
+          "ported": true,
           "name": "FUN_00069180"
         },
         {
