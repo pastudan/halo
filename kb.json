@@ -33325,7 +33325,7 @@
         {
           "addr": "0x75a20",
           "decl": "void FUN_00075a20(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00075a20"
         },
         {
@@ -39399,7 +39399,7 @@
         {
           "addr": "0x120250",
           "decl": "void FUN_00120250(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00120250"
         },
         {

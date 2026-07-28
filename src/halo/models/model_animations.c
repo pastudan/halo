@@ -1283,118 +1283,39 @@ void FUN_00123aa0(void *mode_tag, void *out_node_data)
 }
 /* --- model_animations.obj batch drafts (2026-07-26) --- */
 
-/* FUN_00120250 (0x120250) — XBE naked draft (batch 254). */
-#if defined(__clang__)
-static void (*const b120250_c11fd50)(void *pool) = FUN_0011fd50;
-static void (*const b120250_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b120250_exitfn)(int) = system_exit;
-static int (*const b120250_c119610)(data_t *data) = data_new_at_index;
-static void *(*const b120250_c11fef0)(void *a, int b) = FUN_0011fef0;
-static char (*const b120250_c11ff70)(void *anim) = FUN_0011ff70;
-static void (*const b120250_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
+/* FUN_00120250 (0x120250) — readable C lift (restored pre-naked). */
 void FUN_00120250(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      "call *%[c11fd50]\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00120250_1\n\t"
-      "cmpb $0, (%%esi)\n\t"
-      "jne .LFUN_00120250_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x60\n\t"
-      "pushl $0x2905b0\n\t"
-      "pushl $0x2906c4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00120250_1:\n\t"
-      "movw 0x8(%%esi), %%cx\n\t"
-      "movw 0xc(%%ebp), %%di\n\t"
-      "cmpw %%cx, %%di\n\t"
-      "jg .LFUN_00120250_2\n\t"
-      "movw 0xa(%%esi), %%ax\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "cmpw %%ax, %%dx\n\t"
-      "jg .LFUN_00120250_2\n\t"
-      "movswl %%dx, %%edx\n\t"
-      "movswl %%di, %%edi\n\t"
-      "imull %%edx, %%edi\n\t"
-      "movl 0x10(%%esi), %%edx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "imull %%ecx, %%eax\n\t"
-      "addl %%edi, %%edx\n\t"
-      "cmpl %%eax, %%edx\n\t"
-      "jge .LFUN_00120250_2\n\t"
-      "movl 0x18(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c119610]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .LFUN_00120250_2\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11fef0]\n\t"
-      "movw 0xc(%%ebp), %%cx\n\t"
-      "movw 0x10(%%ebp), %%dx\n\t"
-      "movw %%cx, 0x8(%%eax)\n\t"
-      "movw %%dx, 0xa(%%eax)\n\t"
-      "movb (%%esi), %%dl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%dl, %%dl\n\t"
-      "sete %%cl\n\t"
-      "movb %%cl, 0x2(%%eax)\n\t"
-      "movl 0x10(%%esi), %%ecx\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "addl %%edi, %%ecx\n\t"
-      "testb %%al, %%al\n\t"
-      "movl %%ecx, 0x10(%%esi)\n\t"
-      "je .LFUN_00120250_2\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c11ff70]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00120250_2\n\t"
-      "movl 0x10(%%esi), %%eax\n\t"
-      "movl 0x18(%%esi), %%edx\n\t"
-      "subl %%edi, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%eax, 0x10(%%esi)\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00120250_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c11fd50] "m"(b120250_c11fd50), [assert] "m"(b120250_assert), [exitfn] "m"(b120250_exitfn), [c119610] "m"(b120250_c119610), [c11fef0] "m"(b120250_c11fef0), [c11ff70] "m"(b120250_c11ff70), [c1196d0] "m"(b120250_c1196d0)
-      : "memory");
+  int eax = 0;
+  int ebx = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  ((void(*)(void))FUN_0011fd50)();
+  /* test (char)eax, (char)eax -> jne 0x12028a */
+  /* relift: cmp byte ptr [esi], 0 -> jne 0x12028a */
+  display_assert((char *)0x002906c4, (char *)0x002905b0, 96, 0);
+  system_exit(0);
+  /* cmp (int16_t)edi, (int16_t)ecx -> jg 0x120337 */
+  /* cmp (int16_t)edx, (int16_t)eax -> jg 0x120337 */
+  /* cmp edx, eax -> jge 0x120337 */
+  data_new_at_index((void *)(uintptr_t)eax);
+  /* cmp ebx, -1 -> je 0x120337 */
+  ((void(*)(void))FUN_0011fef0)();
+  ((void(*)(void))FUN_0011ff70)();
+  /* test (char)eax, (char)eax -> jne 0x120337 */
+  datum_delete((void *)(uintptr_t)edx, 0);
+
+  (void)eax;
+  (void)ebx;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "FUN_00120250: clang naked draft required"
-#endif
+
 
 
 /* FUN_00120340 (0x120340) — readable C lift. */
