@@ -10576,7 +10576,7 @@
         {
           "addr": "0x1c0260",
           "decl": "void game_state_create_or_open_file(void);",
-          "ported": false,
+          "ported": true,
           "name": "game_state_create_or_open_file"
         },
         {
@@ -34817,7 +34817,7 @@
         {
           "addr": "0x19cec0",
           "decl": "void FUN_0019cec0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0019cec0"
         },
         {

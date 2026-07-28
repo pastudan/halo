@@ -307,92 +307,30 @@ void FUN_001c0d70(int param_1)
 }
 /* --- game_state_xbox.obj batch drafts (2026-07-26) --- */
 
-/* game_state_create_or_open_file (0x1c0260) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static void (*const b1c0260_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1c0260_exitfn)(int) = system_exit;
-static int __stdcall (*const b1c0260_c1d1d85)(const char *, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t, uint32_t) = (void *)0x1d1d85;
-static unsigned int __stdcall (*const b1c0260_c1d1610)(int handle, int distance, int *distance_high, unsigned int method) = SetFilePointer;
-static bool __stdcall (*const b1c0260_c1d158c)(int handle) = SetEndOfFile;
-static int (*const b1c0260_c1d2240)(void) = xapi_GetLastError;
-static char * (*const b1c0260_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-
-__attribute__((naked, noinline))
+/* game_state_create_or_open_file (0x1c0260) — readable C lift (restored pre-naked). */
 void game_state_create_or_open_file(void)
 {
-  __asm__ volatile(
-      "movb 0x4ea9b0, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgame_state_create_or_open_file_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x56\n\t"
-      "pushl $0x2b9b70\n\t"
-      "pushl $0x2b9ba0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_state_create_or_open_file_1:\n\t"
-      "movb 0x4ea9bc, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lgame_state_create_or_open_file_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x57\n\t"
-      "pushl $0x2b9b70\n\t"
-      "pushl $0x2b9c0c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgame_state_create_or_open_file_2:\n\t"
-      "pushl $0\n\t"
-      "pushl $0x28000000\n\t"
-      "pushl $4\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0xc0000000\n\t"
-      "pushl $0x2b9bfc\n\t"
-      "call *%[c1d1d85]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, 0x4ea9c0\n\t"
-      "je .Lgame_state_create_or_open_file_3\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x380000\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d1610]\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lgame_state_create_or_open_file_3\n\t"
-      "movl 0x4ea9c0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d158c]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgame_state_create_or_open_file_3\n\t"
-      "movb $1, 0x4ea9bc\n\t"
-      "ret\n\t"
-      ".Lgame_state_create_or_open_file_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x61\n\t"
-      "pushl $0x2b9b70\n\t"
-      "call *%[c1d2240]\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x2b9bcc\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1c0260_assert), [exitfn] "m"(b1c0260_exitfn), [c1d1d85] "m"(b1c0260_c1d1d85), [c1d1610] "m"(b1c0260_c1d1610), [c1d158c] "m"(b1c0260_c1d158c), [c1d2240] "m"(b1c0260_c1d2240), [c8d9d0] "m"(b1c0260_c8d9d0)
-      : "memory");
+  int eax = 0;
+
+  /* test (char)eax, (char)eax -> jne 0x1c0286 */
+  display_assert((char *)0x002b9ba0, (char *)0x002b9b70, 86, 0);
+  system_exit(0);
+  /* test (char)eax, (char)eax -> je 0x1c02ac */
+  display_assert((char *)0x002b9c0c, (char *)0x002b9b70, 87, 0);
+  system_exit(0);
+  CreateFileA((char *)0x002b9bfc, 0xc0000000, 0, 0, 0, 0x28000000, 0);
+  /* mem[0x004ea9c0] = eax */
+  SetFilePointer(0, 0x00380000, (void *)0, 0);
+  /* cmp eax, -1 -> je 0x1c02fd */
+  SetEndOfFile(0);
+  /* test eax, eax -> je 0x1c02fd */
+  xapi_GetLastError();
+  csprintf((char *)0x005ab100, (char *)0x002b9bcc);
+  display_assert((char *)(uintptr_t)eax, (char *)0, 0, 0);
+  system_exit(0);
+
+  (void)eax;
 }
-#else
-#error "game_state_create_or_open_file: clang naked draft required"
-#endif
 
 
 /* game_state_read_from_file (0x1c0450) — XBE naked draft (batch 254). */
