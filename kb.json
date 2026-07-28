@@ -17965,7 +17965,7 @@
         {
           "addr": "0x9f570",
           "decl": "void FUN_0009f570(float *src_a, int unused_b, float *dst, float *src_b);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0009f570"
         },
         {

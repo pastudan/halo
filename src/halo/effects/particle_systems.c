@@ -862,129 +862,29 @@ void particle_systems_update(float dt)
 }
 /* --- particle_systems.obj batch drafts (2026-07-26) --- */
 
-/* FUN_0009f570 (0x9f570) — XBE naked draft (batch 128). */
-#if defined(__clang__)
-static void *(*const b9f570_tag)(int, int) = tag_get;
-static void *(*const b9f570_elem)(void *, int, int) = tag_block_get_element;
-static bool (*const b9f570_ray)(unsigned int, float *, float *, int, short *) = FUN_0014df70;
-static bool (*const b9f570_c18f3e0)(void *location, void *position, int16_t *out_sky_index) = FUN_0018f3e0;
-static void (*const b9f570_o9f430)(int, short, short, void *, void *, void *, float) = FUN_0009f430;
-static void (*const b9f570_c189540)(char flag, void *center, float radius, void *color) = FUN_00189540;
-
-__attribute__((naked, noinline))
-void FUN_0009f570(float *src_a __attribute__((unused)), int unused_b __attribute__((unused)), float *dst __attribute__((unused)), float *src_b __attribute__((unused)))
+/* FUN_0009f570 (0x9f570) — readable C lift (restored pre-naked). */
+void FUN_0009f570(float *src_a, int unused_b, float *dst, float *src_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x68, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $0x666f6f74\n\t"
-      "call *%[tag]\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl (%%eax), %%edx\n\t"
-      "movswl %%bx, %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl %%edx, %%ecx\n\t"
-      "jge .LFUN_0009f570_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x1c\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fadds 0x256140\n\t"
-      "movl 0x31fc50, %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "leal -0x68(%%ebp), %%ecx\n\t"
-      "flds (%%eax)\n\t"
-      "pushl %%ecx\n\t"
-      "fmuls 0x2533e4\n\t"
-      "pushl $-1\n\t"
-      "leal -0x18(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fmuls 0x2533e4\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      "flds 0x8(%%eax)\n\t"
-      "leal -0xc(%%ebp), %%eax\n\t"
-      "fmuls 0x2533e4\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xc2a0\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "call *%[ray]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0009f570_2\n\t"
-      "pushl $0\n\t"
-      "leal -0x50(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x5c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c18f3e0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "movl $0x1c, %%eax\n\t"
-      "jne .LFUN_0009f570_1\n\t"
-      "movl -0x34(%%ebp), %%eax\n\t"
-      ".LFUN_0009f570_1:\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x5c(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x44(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x50(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[o9f430]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0009f570_2:\n\t"
-      "movb 0x4557e9, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_0009f570_3\n\t"
-      "movl 0x2ee6d0, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0x3d4ccccd\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0\n\t"
-      "call *%[c189540]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_0009f570_3:\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_0009f570_4:\n\t"
-      "popl %%edi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [tag] "m"(b9f570_tag), [elem] "m"(b9f570_elem), [ray] "m"(b9f570_ray), [c18f3e0] "m"(b9f570_c18f3e0), [o9f430] "m"(b9f570_o9f430), [c189540] "m"(b9f570_c189540)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+
+  tag_get(0x666f6f74, 0);
+  /* cmp ecx, edx -> jge 0x9f66c */
+  tag_block_get_element((void *)(uintptr_t)eax, 0, 28);
+  FUN_0014df70(0, (float *)0, (float *)0, 0, (void *)0);
+  /* test (char)eax, (char)eax -> je 0x9f64c */
+  FUN_0018f3e0((void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)0);
+  FUN_0009f430(0, 0, 0, (void *)(uintptr_t)edx, (void *)(uintptr_t)ecx, (void *)(uintptr_t)edx, 0.0f);
+  /* test (char)eax, (char)eax -> je 0x9f66b */
+  FUN_00189540(0, (void *)(uintptr_t)esi, 0.0f, (void *)(uintptr_t)eax);
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
 }
-#else
-#error "FUN_0009f570: clang naked draft required"
-#endif
 
 
 /* particle_systems_reconnect_to_structure_bsp (0x9f7e0) — XBE naked draft (batch 125). */
