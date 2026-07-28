@@ -33513,7 +33513,7 @@
         {
           "addr": "0x79e70",
           "decl": "void FUN_00079e70(void *source_bitmap, void *destination_bitmap, short source_mipmap_index);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00079e70"
         },
         {
