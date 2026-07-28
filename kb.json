@@ -31422,7 +31422,7 @@
         {
           "addr": "0x180b10",
           "decl": "unsigned int FUN_00180b10(float *param_1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00180b10"
         },
         {
@@ -31479,7 +31479,7 @@
         {
           "addr": "0x181670",
           "decl": "void FUN_00181670(int *params);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00181670"
         },
         {
