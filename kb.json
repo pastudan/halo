@@ -12467,7 +12467,7 @@
         {
           "addr": "0xc7f70",
           "decl": "char hs_parse_begin(int16_t function_index, int root_datum);",
-          "ported": false,
+          "ported": true,
           "name": "hs_parse_begin"
         },
         {
@@ -12484,7 +12484,7 @@
         {
           "addr": "0xc8380",
           "decl": "char hs_parse_set(int16_t function_index, int root_datum);",
-          "ported": false,
+          "ported": true,
           "name": "hs_parse_set"
         },
         {

@@ -2287,182 +2287,75 @@ char hs_macro_function_parse(int16_t function_index, int root_datum)
 }
 
 
-/* hs_parse_begin (0xc7f70) — XBE naked draft (batch 119). */
-#if defined(__clang__)
-static void *(*const bc7f70_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const bc7f70_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc7f70_exitfn)(int) = system_exit;
-static bool (*const bc7f70_cc7d80)(int datum_index, int16_t check_type) = hs_type_check;
-static void * (*const bc7f70_cc3d00)(int16_t function_index) = hs_function_table_get;
-static int (*const bc7f70_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-
-__attribute__((naked, noinline))
-char hs_parse_begin(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
+/* hs_parse_begin (0xc7f70) — readable C lift (restored pre-naked). */
+char hs_parse_begin(int16_t function_index, int root_datum)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movb $1, %%bl\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%edx\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%esi\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testw %%ax, %%ax\n\t"
-      "je .Lhs_parse_begin_1\n\t"
-      "cmpw $1, %%ax\n\t"
-      "je .Lhs_parse_begin_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x15\n\t"
-      "pushl $0x27cdc0\n\t"
-      "pushl $0x27cd70\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_parse_begin_1:\n\t"
-      "movl $0, -0x8(%%ebp)\n\t"
-      "jmp .Lhs_parse_begin_3\n\t"
-      ".Lhs_parse_begin_2:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      ".Lhs_parse_begin_3:\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lhs_parse_begin_10\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpw $0, 0x8(%%ebp)\n\t"
-      "jne .Lhs_parse_begin_6\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .Lhs_parse_begin_4\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "movw 0x4(%%edx), %%ax\n\t"
-      "jmp .Lhs_parse_begin_5\n\t"
-      ".Lhs_parse_begin_4:\n\t"
-      "movl $4, %%eax\n\t"
-      ".Lhs_parse_begin_5:\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cc7d80]\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movb %%al, %%bl\n\t"
-      "jne .Lhs_parse_begin_8\n\t"
-      "jmp .Lhs_parse_begin_7\n\t"
-      ".Lhs_parse_begin_6:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x4(%%ecx), %%dx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[cc7d80]\n\t"
-      "addl $8, %%esp\n\t"
-      "movb %%al, %%bl\n\t"
-      ".Lhs_parse_begin_7:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpw $0, 0x4(%%eax)\n\t"
-      "jne .Lhs_parse_begin_8\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lhs_parse_begin_8\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movw 0x4(%%eax), %%dx\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "movw %%dx, 0x4(%%eax)\n\t"
-      ".Lhs_parse_begin_8:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "incl %%ecx\n\t"
-      "testb %%bl, %%bl\n\t"
-      "movl %%edi, %%esi\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jne .Lhs_parse_begin_2\n\t"
-      ".Lhs_parse_begin_9:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_parse_begin_10:\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lhs_parse_begin_9\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jge .Lhs_parse_begin_11\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cc3d00]\n\t"
-      "movl 0x4(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x27cd34\n\t"
-      "pushl $0x46b704\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x46b704, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "addl $0x18, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_parse_begin_11:\n\t"
-      "cmpw $0x20, %%ax\n\t"
-      "jle .Lhs_parse_begin_9\n\t"
-      "cmpw $1, 0x8(%%ebp)\n\t"
-      "jne .Lhs_parse_begin_9\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%edx\n\t"
-      "movl $0x27cce8, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bc7f70_dget), [assert] "m"(bc7f70_assert), [exitfn] "m"(bc7f70_exitfn), [cc7d80] "m"(bc7f70_cc7d80), [cc3d00] "m"(bc7f70_cc3d00), [c1d90f0] "m"(bc7f70_c1d90f0)
-      : "memory");
+  char *expr;
+  char *head;
+  char ok;
+  int link;
+  int depth;
+  int16_t check_type;
+  void *entry;
+
+  if (function_index != 0 && function_index != 1) {
+    display_assert("function_index==_hs_function_begin || "
+                   "function_index==_hs_function_begin_random",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x15, 1);
+    system_exit(-1);
+  }
+
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
+  link = *(int *)(head + 0x8);
+  ok = 1;
+  depth = 0;
+
+  while (link != -1) {
+    head = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    if (function_index == 0) {
+      if (*(int *)(head + 0x8) == -1)
+        check_type = *(int16_t *)(expr + 0x4);
+      else
+        check_type = 4;
+    } else {
+      check_type = *(int16_t *)(expr + 0x4);
+    }
+
+    ok = hs_type_check(link, check_type);
+    if (*(int16_t *)(expr + 0x4) == 0 && ok) {
+      head = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+      *(int16_t *)(expr + 0x4) = *(int16_t *)(head + 0x4);
+    }
+
+    head = (char *)datum_get(*(data_t **)0x5aa6c8, link);
+    link = *(int *)(head + 0x8);
+    depth++;
+    if (!ok)
+      break;
+  }
+
+  if (!ok)
+    return 0;
+
+  if (depth >= 1) {
+    if (depth <= 0x20 || function_index != 1)
+      return 1;
+    expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+    *(const char **)0x46b6fc = (const char *)0x27cce8;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  entry = hs_function_table_get(function_index);
+  crt_sprintf((char *)0x46b704, "too few arguments to function `%s`",
+              *(const char **)((char *)entry + 4));
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  *(const char **)0x46b6fc = (const char *)0x46b704;
+  *(int *)0x46b700 = *(int *)(expr + 0xc);
+  return 0;
 }
-#else
-#error "hs_parse_begin: clang naked draft required"
-#endif
 
 
 /* hs_parse_if (0xc8120) — readable C lift (restored pre-naked). */
@@ -2561,224 +2454,80 @@ char hs_parse_cond(int16_t function_index, int root_datum)
   *(short *)root = saved_flags;
   return hs_type_check(root_datum, saved_type) ? 1 : 0;
 }
-/* hs_parse_set (0xc8380) — XBE naked draft (batch 114). */
-#if defined(__clang__)
-static void *(*const bc8380_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int16_t (*const bc8380_cc3ee0)(const char *name) = hs_find_global_by_name;
-static int16_t (*const bc8380_cc3e60)(uint16_t script_ref) = hs_global_get_type;
-static bool (*const bc8380_ccb070)(int16_t actual_type, int16_t desired_type) = hs_types_compatible;
-static int (*const bc8380_c1d90f0)(char *buffer, const char *format, ...) = crt_sprintf;
-static bool (*const bc8380_cc5840)(int datum_index) = FUN_000c5840;
-static void (*const bc8380_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bc8380_exitfn)(int) = system_exit;
-static bool (*const bc8380_cc7d80)(int datum_index, int16_t check_type) = hs_type_check;
-
-__attribute__((naked, noinline))
-char hs_parse_set(int16_t function_index __attribute__((unused)), int root_datum __attribute__((unused)))
+/* hs_parse_set (0xc8380) — readable C lift (restored pre-naked). */
+char hs_parse_set(int16_t function_index, int root_datum)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x10(%%eax), %%ecx\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%edi\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "je .Lhs_parse_set_8\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "movl %%esi, -0x8(%%ebp)\n\t"
-      "je .Lhs_parse_set_7\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%ecx\n\t"
-      "jne .Lhs_parse_set_6\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x46b6e8, %%edx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0xc(%%esi), %%ecx\n\t"
-      "addl %%edx, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cc3ee0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .Lhs_parse_set_4\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cc3e60]\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movw %%ax, 0x4(%%esi)\n\t"
-      "movw 0x4(%%edx), %%cx\n\t"
-      "addl $4, %%esp\n\t"
-      "testw %%cx, %%cx\n\t"
-      "je .Lhs_parse_set_1\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ccb070]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lhs_parse_set_1\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movswl 0x4(%%eax), %%ecx\n\t"
-      "movswl 0x4(%%esi), %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x27cee0\n\t"
-      "pushl $0x46b704\n\t"
-      "call *%[c1d90f0]\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x46b704, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "addl $0x20, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_parse_set_1:\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[cc5840]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lhs_parse_set_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x126\n\t"
-      "pushl $0x27cdc0\n\t"
-      "pushl $0x27ced4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lhs_parse_set_2:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "cmpw $0, 0x4(%%eax)\n\t"
-      "jne .Lhs_parse_set_3\n\t"
-      "movw 0x4(%%esi), %%dx\n\t"
-      "movw %%dx, 0x4(%%eax)\n\t"
-      ".Lhs_parse_set_3:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movw 0x4(%%esi), %%ax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[cc7d80]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lhs_parse_set_5\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_parse_set_4:\n\t"
-      "movl $0x27ceac, 0x46b6fc\n\t"
-      "movl 0xc(%%esi), %%edx\n\t"
-      "movl %%edx, 0x46b700\n\t"
-      ".Lhs_parse_set_5:\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_parse_set_6:\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x27ce8c, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl 0x5aa6c8, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "movl %%eax, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_parse_set_7:\n\t"
-      "movl 0x5aa6c8, %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%ecx\n\t"
-      "movl $0x27ce6c, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%edx\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lhs_parse_set_8:\n\t"
-      "movl 0x5aa6c8, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movl $0x27ce40, 0x46b6fc\n\t"
-      "call *%[dget]\n\t"
-      "movl 0xc(%%eax), %%ecx\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "movl %%ecx, 0x46b700\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(bc8380_dget), [cc3ee0] "m"(bc8380_cc3ee0), [cc3e60] "m"(bc8380_cc3e60), [ccb070] "m"(bc8380_ccb070), [c1d90f0] "m"(bc8380_c1d90f0), [cc5840] "m"(bc8380_cc5840), [assert] "m"(bc8380_assert), [exitfn] "m"(bc8380_exitfn), [cc7d80] "m"(bc8380_cc7d80)
-      : "memory");
+  char *expr;
+  char *head;
+  char *var_node;
+  char *value_node;
+  int var_arg;
+  int value_arg;
+  int16_t global_idx;
+  int16_t global_type;
+
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(expr + 0x10));
+  var_arg = *(int *)(head + 0x8);
+  expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+
+  if (var_arg == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27ce40;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, var_arg);
+  value_arg = *(int *)(head + 0x8);
+  if (value_arg == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27ce6c;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  head = (char *)datum_get(*(data_t **)0x5aa6c8, value_arg);
+  if (*(int *)(head + 0x8) != -1) {
+    head = (char *)datum_get(*(data_t **)0x5aa6c8, *(int *)(head + 0x8));
+    *(const char **)0x46b6fc = (const char *)0x27ce8c;
+    *(int *)0x46b700 = *(int *)(head + 0xc);
+    return 0;
+  }
+
+  var_node = (char *)datum_get(*(data_t **)0x5aa6c8, var_arg);
+  global_idx = hs_find_global_by_name(
+    (const char *)(*(int *)(var_node + 0xc) + *(int *)0x46b6e8));
+  if (global_idx == -1) {
+    *(const char **)0x46b6fc = (const char *)0x27ceac;
+    *(int *)0x46b700 = *(int *)(var_node + 0xc);
+    return 0;
+  }
+
+  global_type = hs_global_get_type((uint16_t)global_idx);
+  *(int16_t *)(var_node + 0x4) = global_type;
+  if (*(int16_t *)(expr + 0x4) != 0 &&
+      !hs_types_compatible(global_type, *(int16_t *)(expr + 0x4))) {
+    crt_sprintf((char *)0x46b704,
+                "i expected a %s, but the variable has type %s",
+                ((const char **)0x2f14a8)[(int)*(int16_t *)(expr + 0x4)],
+                ((const char **)0x2f14a8)[(int)global_type]);
+    expr = (char *)datum_get(*(data_t **)0x5aa6c8, root_datum);
+    *(const char **)0x46b6fc = (const char *)0x46b704;
+    *(int *)0x46b700 = *(int *)(expr + 0xc);
+    return 0;
+  }
+
+  if (!FUN_000c5840(var_arg)) {
+    display_assert("hs_parse_set: global variable reference",
+                   "c:\\halo\\SOURCE\\hs\\hs_compile.c", 0x126, 1);
+    system_exit(-1);
+  }
+
+  if (*(int16_t *)(expr + 0x4) == 0)
+    *(int16_t *)(expr + 0x4) = global_type;
+
+  value_node = (char *)datum_get(*(data_t **)0x5aa6c8, value_arg);
+  return hs_type_check(value_arg, *(int16_t *)(value_node + 0x4));
 }
-#else
-#error "hs_parse_set: clang naked draft required"
-#endif
 
 
 /* FUN_000c85b0 (0xc85b0) — readable C lift (restored pre-naked). */
