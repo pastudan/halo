@@ -3805,176 +3805,90 @@ void FUN_0006b2d0(unsigned int *dst, unsigned short *src_r, unsigned short *src_
 }
 
 
-/* FUN_0006b440 (0x6b440) — XBE naked draft (batch 299). */
-#if defined(__clang__)
-static void (*const b6b440_ftol)(void) = (void (*)(void))FUN_001d9068;
-
-__attribute__((naked, noinline))
-void FUN_0006b440(void)
+/* FUN_0006b440 (0x6b440) — Capstone lift: YUV tile → BGRX via *DAT_003340cc.
+ * ABI: src@<eax>, uv_offset@<ecx>, num_rows@<edx>; dest/count/pitches cdecl. */
+void FUN_0006b440(unsigned char *src /*@<eax>*/, int uv_offset /*@<ecx>*/,
+                  int num_rows /*@<edx>*/, unsigned int *dest, int count,
+                  int dest_pitch_add, int src_row_skip, int dest_pitch_base)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x20, %%esp\n\t"
-      "testl %%edx, %%edx\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movzbl (%%edi,%%ecx,1), %%esi\n\t"
-      "movl 0x3340cc, %%eax\n\t"
-      "movl %%esi, -0xc(%%ebp)\n\t"
-      "movzbl 0x1(%%edi,%%ecx,1), %%ecx\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      "fmuls 0x2602cc\n\t"
-      "flds 0xc(%%eax)\n\t"
-      "fsubs 0x8(%%eax)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "fildl -0xc(%%ebp)\n\t"
-      "fsubs 0x10(%%eax)\n\t"
-      "fmuls 0x2602cc\n\t"
-      "flds 0x14(%%eax)\n\t"
-      "fsubs 0x10(%%eax)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "jle .LFUN_0006b440_10\n\t"
-      "movl 0x18(%%ebp), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%esi\n\t"
-      "addl %%esi, %%ecx\n\t"
-      "shll $2, %%ecx\n\t"
-      "movl %%ecx, -0x20(%%ebp)\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_0006b440_1:\n\t"
-      "xorl %%esi, %%esi\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jle .LFUN_0006b440_9\n\t"
-      "flds 0x3340c0\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "flds 0x3340b8\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds 0x3340b4\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "flds 0x3340bc\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "fstps -0x14(%%ebp)\n\t"
-      ".LFUN_0006b440_2:\n\t"
-      "movzbl (%%edi), %%edx\n\t"
-      "movl %%edx, -0x10(%%ebp)\n\t"
-      "incl %%edi\n\t"
-      "fildl -0x10(%%ebp)\n\t"
-      "fsubs (%%eax)\n\t"
-      "fmuls 0x2602c8\n\t"
-      "flds 0x4(%%eax)\n\t"
-      "fsubs (%%eax)\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fld %%st(3)\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "fld %%st(2)\n\t"
-      "fadd %%st(1), %%st(0)\n\t"
-      "fstps -0x1c(%%ebp)\n\t"
-      "fsub %%st(1), %%st(0)\n\t"
-      "fsubs -0x14(%%ebp)\n\t"
-      "fstps -0x18(%%ebp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "faddl 0x25fea8\n\t"
-      "fcoml 0x2602c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0006b440_3\n\t"
-      "fstp %%st(0)\n\t"
-      "fldl 0x2602c0\n\t"
-      "jmp .LFUN_0006b440_4\n\t"
-      ".LFUN_0006b440_3:\n\t"
-      "fcoml 0x2602b8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0006b440_4\n\t"
-      "fstp %%st(0)\n\t"
-      "fldl 0x2602b8\n\t"
-      ".LFUN_0006b440_4:\n\t"
-      "flds -0x18(%%ebp)\n\t"
-      "faddl 0x25fea8\n\t"
-      "fcoml 0x2602c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0006b440_5\n\t"
-      "fstp %%st(0)\n\t"
-      "fldl 0x2602c0\n\t"
-      "jmp .LFUN_0006b440_6\n\t"
-      ".LFUN_0006b440_5:\n\t"
-      "fcoml 0x2602b8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0006b440_6\n\t"
-      "fstp %%st(0)\n\t"
-      "fldl 0x2602b8\n\t"
-      ".LFUN_0006b440_6:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "faddl 0x25fea8\n\t"
-      "fcoml 0x2602c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_0006b440_7\n\t"
-      "fstp %%st(0)\n\t"
-      "fldl 0x2602c0\n\t"
-      "jmp .LFUN_0006b440_8\n\t"
-      ".LFUN_0006b440_7:\n\t"
-      "fcoml 0x2602b8\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0006b440_8\n\t"
-      "fstp %%st(0)\n\t"
-      "fldl 0x2602b8\n\t"
-      ".LFUN_0006b440_8:\n\t"
-      "call *%[ftol]\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "shll $8, %%ebx\n\t"
-      "call *%[ftol]\n\t"
-      "orl %%eax, %%ebx\n\t"
-      "shll $8, %%ebx\n\t"
-      "call *%[ftol]\n\t"
-      "orl %%eax, %%ebx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%ebx, (%%eax,%%esi,4)\n\t"
-      "movl 0xc(%%ebp), %%ebx\n\t"
-      "movl 0x3340cc, %%eax\n\t"
-      "incl %%esi\n\t"
-      "cmpl %%ebx, %%esi\n\t"
-      "jl .LFUN_0006b440_2\n\t"
-      "movl -0x20(%%ebp), %%ecx\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      ".LFUN_0006b440_9:\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "addl %%ecx, %%edx\n\t"
-      "movl %%edx, 0x8(%%ebp)\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "addl %%esi, %%edi\n\t"
-      "decl %%edx\n\t"
-      "movl %%edx, -0xc(%%ebp)\n\t"
-      "jne .LFUN_0006b440_1\n\t"
-      ".LFUN_0006b440_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [ftol] "m"(b6b440_ftol)
-      : "memory");
+  float *table;
+  float su;
+  float sv;
+  long double c0_sv;
+  long double b8_su;
+  long double b4_su;
+  float bc_sv;
+  int row_bytes;
+  int rows;
+  int col;
+  unsigned char *s;
+  unsigned int *d;
+  long double t;
+  float r;
+  float g;
+  float b;
+  double vr;
+  double vg;
+  double vb;
+  unsigned int pixel;
+
+  table = *(float **)0x3340cc;
+  su = ((float)(int)src[uv_offset] - table[2]) * *(float *)0x2602cc /
+       (table[3] - table[2]);
+  sv = ((float)(int)src[uv_offset + 1] - table[4]) * *(float *)0x2602cc /
+       (table[5] - table[4]);
+  if (num_rows <= 0)
+    return;
+
+  row_bytes = (dest_pitch_base + dest_pitch_add) << 2;
+  rows = num_rows;
+  s = src;
+  d = dest;
+  do {
+    col = 0;
+    if (count > 0) {
+      c0_sv = (long double)*(float *)0x3340c0 * (long double)sv;
+      b8_su = (long double)*(float *)0x3340b8 * (long double)su;
+      b4_su = (long double)*(float *)0x3340b4 * (long double)su;
+      bc_sv = *(float *)0x3340bc * sv;
+      do {
+        t = ((long double)(int)*s++ - (long double)table[0]) *
+            (long double)*(float *)0x2602c8 /
+            ((long double)table[1] - (long double)table[0]);
+        r = (float)(t + c0_sv);
+        b = (float)(t + b8_su);
+        g = (float)(t - b4_su - (long double)bc_sv);
+
+        vr = (double)r + *(double *)0x25fea8;
+        if (vr < *(double *)0x2602c0)
+          vr = *(double *)0x2602c0;
+        else if (vr > *(double *)0x2602b8)
+          vr = *(double *)0x2602b8;
+
+        vg = (double)g + *(double *)0x25fea8;
+        if (vg < *(double *)0x2602c0)
+          vg = *(double *)0x2602c0;
+        else if (vg > *(double *)0x2602b8)
+          vg = *(double *)0x2602b8;
+
+        vb = (double)b + *(double *)0x25fea8;
+        if (vb < *(double *)0x2602c0)
+          vb = *(double *)0x2602c0;
+        else if (vb > *(double *)0x2602b8)
+          vb = *(double *)0x2602b8;
+
+        /* ftol order: B, G, R → pixel = B<<16 | G<<8 | R */
+        pixel = ((unsigned int)(int)vb << 16) | ((unsigned int)(int)vg << 8) |
+                (unsigned int)(int)vr;
+        d[col] = pixel;
+        table = *(float **)0x3340cc;
+        col++;
+      } while (col < count);
+    }
+    d = (unsigned int *)((char *)d + row_bytes);
+    s += src_row_skip;
+  } while (--rows != 0);
 }
-#else
-#error "FUN_0006b440: clang naked draft required"
-#endif
 
 
 /* FUN_0006b610 (0x6b610) — Capstone lift: tile blit dispatcher via FUN_0006b440.

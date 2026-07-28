@@ -1,0 +1,30 @@
+{
+  "description": "YUV tile: clamp rows/count to avoid INSN-LIMIT",
+  "regions": {},
+  "arg_overrides": {
+    "num_rows": [
+      0,
+      4
+    ],
+    "count": [
+      0,
+      16
+    ],
+    "dest_pitch_add": [
+      0,
+      4
+    ],
+    "src_row_skip": [
+      0,
+      8
+    ],
+    "dest_pitch_base": [
+      0,
+      4
+    ],
+    "uv_offset": [
+      0,
+      8
+    ]
+  }
+}

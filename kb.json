@@ -38264,8 +38264,8 @@
         },
         {
           "addr": "0x6b440",
-          "decl": "void FUN_0006b440(void);",
-          "ported": false,
+          "decl": "void FUN_0006b440(unsigned char *src@<eax>, int uv_offset@<ecx>, int num_rows@<edx>, unsigned int *dest, int count, int dest_pitch_add, int src_row_skip, int dest_pitch_base);",
+          "ported": true,
           "name": "FUN_0006b440"
         },
         {
