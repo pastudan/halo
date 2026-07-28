@@ -32170,7 +32170,7 @@
         {
           "addr": "0x17db40",
           "decl": "void rasterizer_screen_effect_set_video(int a0, float a1);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_screen_effect_set_video"
         },
         {
@@ -32288,7 +32288,7 @@
         {
           "addr": "0x17edd0",
           "decl": "void rasterizer_frame_statistics_count_static_vertices(void);",
-          "ported": false,
+          "ported": true,
           "name": "rasterizer_frame_statistics_count_static_vertices"
         },
         {
