@@ -38104,7 +38104,7 @@
         {
           "addr": "0x69600",
           "decl": "int FUN_00069600(unsigned char **pp, int bitpos@<ecx>, int endbit@<edx>, const unsigned char *table@<ebx>);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00069600"
         },
         {
