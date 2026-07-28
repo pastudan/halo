@@ -38175,8 +38175,8 @@
         },
         {
           "addr": "0x6a3b0",
-          "decl": "void FUN_0006a3b0(void);",
-          "ported": false,
+          "decl": "int FUN_0006a3b0(void);",
+          "ported": true,
           "name": "FUN_0006a3b0"
         },
         {
