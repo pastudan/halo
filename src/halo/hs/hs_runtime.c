@@ -4399,281 +4399,100 @@ char FUN_000ca0f0(int16_t game_flag, int list_handle)
   return FUN_000c9650(game_flag, list_handle, 0);
 }
 
-/* FUN_000ca160 (0xca160) — XBE naked draft (batch 112). */
-#if defined(__clang__)
-static void *(*const bca160_get)(int, int) = object_get_and_verify_type;
-static scenario_t * (*const bca160_c18e380)(void) = global_scenario_get;
-static void *(*const bca160_elem)(void *, int, int) = tag_block_get_element;
-static bool (*const bca160_ca16b0)(float *point) = valid_real_point3d;
-static char * (*const bca160_c8d9d0)(char *buffer, const char *format, ...) = csprintf;
-static void (*const bca160_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const bca160_exitfn)(int) = system_exit;
-static void *(*const bca160_tryget)(int, int) = object_try_and_get_and_verify_type;
-static void (*const bca160_c1b2dd0)(int unit_handle) = unit_exit_seat_end;
-static void (*const bca160_c1411c0)(int object_handle) = object_detach_from_parent;
-static void (*const bca160_c10cc40)(float *out, float *angles) = angles_to_vector;
-static bool (*const bca160_c21fb0)(float *v) = valid_real_normal3d;
-static void (*const bca160_c13fbc0)(int object_handle) = object_reset;
-static int (*const bca160_cba500)(int) = player_index_from_unit_index;
-static void *(*const bca160_onode)(int, short) = object_get_node_matrix;
-static void (*const bca160_c109150)(float *src, float *dst) = matrix_inverse;
-static void (*const bca160_c109680)(float *matrix, float *in, float *out) = matrix_transform_vector;
-static void *(*const bca160_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static char (*const bca160_cbbb80)(int player_handle, void *a, void *b) = player_teleport;
-static void (*const bca160_cb6ea0)(uint16_t local_player_index, float *direction) = player_control_set_facing;
-static void (*const bca160_c143ae0)(int object_handle, float *position, float *forward, float *up) = object_set_position;
+/* FUN_000ca160 (0xca160) — readable C lift (restored pre-naked). */
 
-__attribute__((naked, noinline))
-void FUN_000ca160(int16_t scenario_index __attribute__((unused)), char teleport_flag __attribute__((unused)), char facing_flag __attribute__((unused)), int object_handle __attribute__((unused)))
+
+void FUN_000ca160(int16_t scenario_index, char teleport_flag, char facing_flag,
+                  int object_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x54, %%esp\n\t"
-      "cmpl $-1, %%ebx\n\t"
-      "je .LFUN_000ca160_14\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[get]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movswl 0x8(%%ebp), %%eax\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl $0x5c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c18e380]\n\t"
-      "addl $0x4e4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "leal 0x24(%%esi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl $0, -0x4(%%ebp)\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[ca16b0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000ca160_1\n\t"
-      "flds 0x2c(%%esi)\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1cc\n\t"
-      "pushl $0x280408\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds 0x28(%%esi)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds (%%ecx)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x280450\n\t"
-      "pushl $0x26ae04\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ca160_1:\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ca160_4\n\t"
-      "cmpl $-1, 0xcc(%%edi)\n\t"
-      "je .LFUN_000ca160_4\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[tryget]\n\t"
-      "addl $8, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "je .LFUN_000ca160_2\n\t"
-      "call *%[c1b2dd0]\n\t"
-      "jmp .LFUN_000ca160_3\n\t"
-      ".LFUN_000ca160_2:\n\t"
-      "call *%[c1411c0]\n\t"
-      ".LFUN_000ca160_3:\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_000ca160_4:\n\t"
-      "addl $0x30, %%esi\n\t"
-      "leal -0x14(%%ebp), %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c10cc40]\n\t"
-      "leal -0x14(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c21fb0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_000ca160_5\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1df\n\t"
-      "pushl $0x280408\n\t"
-      "subl $0x18, %%esp\n\t"
-      "fstpl 0x10(%%esp)\n\t"
-      "flds -0x10(%%ebp)\n\t"
-      "fstpl 0x8(%%esp)\n\t"
-      "flds -0x14(%%ebp)\n\t"
-      "fstpl (%%esp)\n\t"
-      "pushl $0x26a9c0\n\t"
-      "pushl $0x254a24\n\t"
-      "pushl $0x5ab100\n\t"
-      "call *%[c8d9d0]\n\t"
-      "addl $0x24, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_000ca160_5:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c13fbc0]\n\t"
-      "pushl $3\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[tryget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%esi, %%esi\n\t"
-      "je .LFUN_000ca160_10\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cba500]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movl 0xcc(%%esi), %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .LFUN_000ca160_6\n\t"
-      "movsbw 0xd0(%%esi), %%dx\n\t"
-      "leal -0x54(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[onode]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c109150]\n\t"
-      "leal -0x20(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x54(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c109680]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "jmp .LFUN_000ca160_7\n\t"
-      ".LFUN_000ca160_6:\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl -0xc(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x20(%%ebp)\n\t"
-      "movl %%ecx, -0x1c(%%ebp)\n\t"
-      "movl %%edx, -0x18(%%ebp)\n\t"
-      ".LFUN_000ca160_7:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ca160_8\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "leal 0x1d4(%%esi), %%eax\n\t"
-      "movl %%ecx, (%%eax)\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x4(%%eax)\n\t"
-      "movl -0xc(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl -0x14(%%ebp), %%eax\n\t"
-      "leal 0x1e0(%%esi), %%edx\n\t"
-      "movl %%eax, (%%edx)\n\t"
-      "movl -0x10(%%ebp), %%ecx\n\t"
-      "movl %%ecx, 0x4(%%edx)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x8(%%edx)\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "addl $0x204, %%esi\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "movl %%edx, 0x4(%%esi)\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, 0x8(%%esi)\n\t"
-      ".LFUN_000ca160_8:\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_000ca160_10\n\t"
-      "movl 0x5aa6d4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ca160_9\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $-1\n\t"
-      "pushl %%edi\n\t"
-      "call *%[cbbb80]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_000ca160_9:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ca160_11\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "movswl 0x2(%%eax), %%eax\n\t"
-      "cmpw $0xffff, %%ax\n\t"
-      "je .LFUN_000ca160_10\n\t"
-      "leal -0x20(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[cb6ea0]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_000ca160_10:\n\t"
-      "movb 0x10(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000ca160_11\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000ca160_11\n\t"
-      "leal -0x14(%%ebp), %%ecx\n\t"
-      "jmp .LFUN_000ca160_12\n\t"
-      ".LFUN_000ca160_11:\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      ".LFUN_000ca160_12:\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "je .LFUN_000ca160_13\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_000ca160_13\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c143ae0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000ca160_13:\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c143ae0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".LFUN_000ca160_14:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [get] "m"(bca160_get), [c18e380] "m"(bca160_c18e380), [elem] "m"(bca160_elem), [ca16b0] "m"(bca160_ca16b0), [c8d9d0] "m"(bca160_c8d9d0), [assert] "m"(bca160_assert), [exitfn] "m"(bca160_exitfn), [tryget] "m"(bca160_tryget), [c1b2dd0] "m"(bca160_c1b2dd0), [c1411c0] "m"(bca160_c1411c0), [c10cc40] "m"(bca160_c10cc40), [c21fb0] "m"(bca160_c21fb0), [c13fbc0] "m"(bca160_c13fbc0), [cba500] "m"(bca160_cba500), [onode] "m"(bca160_onode), [c109150] "m"(bca160_c109150), [c109680] "m"(bca160_c109680), [dget] "m"(bca160_dget), [cbbb80] "m"(bca160_cbbb80), [cb6ea0] "m"(bca160_cb6ea0), [c143ae0] "m"(bca160_c143ae0)
-      : "memory");
+  char *obj;
+  void *scenario_elem;
+  float *position_ptr;
+  float facing[3];
+  float matrix[0x10];
+  float transformed[3];
+  char *unit;
+  int player_index;
+  char *thread;
+  void *vehicle_matrix;
+  float *facing_out;
+
+  if (object_handle == -1)
+    return;
+
+  obj = (char *)object_get_and_verify_type(object_handle, -1);
+  scenario_elem = tag_block_get_element((char *)global_scenario_get() + 0x4e4,
+                                          scenario_index, 0x5c);
+  position_ptr = (float *)((char *)scenario_elem + 0x24);
+  if (!valid_real_point3d(position_ptr)) {
+    display_assert((const char *)0x280408, (const char *)0x280450, 0x1cc, 1);
+    system_exit(-1);
+  }
+
+  if (teleport_flag && *(int *)(obj + 0xcc) != -1) {
+    if (object_try_and_get_and_verify_type(object_handle, 3))
+      unit_exit_seat_end(object_handle);
+    else
+      object_detach_from_parent(object_handle);
+  }
+
+  angles_to_vector((float *)((char *)scenario_elem + 0x30), facing);
+  if (!valid_real_normal3d(facing)) {
+    display_assert((const char *)0x280408, (const char *)0x26a9c0, 0x1df, 1);
+    system_exit(-1);
+  }
+
+  object_reset(object_handle);
+  unit = (char *)object_try_and_get_and_verify_type(object_handle, 3);
+  player_index = player_index_from_unit_index(object_handle);
+  thread = 0;
+  facing_out = 0;
+
+  if (unit) {
+    if (*(int *)(unit + 0xcc) != -1) {
+      vehicle_matrix = object_get_node_matrix(*(int *)(unit + 0xcc),
+                                              *(int16_t *)(unit + 0xd0));
+      matrix_inverse(matrix, vehicle_matrix);
+      matrix_transform_vector(transformed, facing, matrix);
+    } else {
+      transformed[0] = facing[0];
+      transformed[1] = facing[1];
+      transformed[2] = facing[2];
+    }
+
+    if (facing_flag) {
+      *(float *)(unit + 0x1d4) = facing[0];
+      *(float *)(unit + 0x1d8) = facing[1];
+      *(float *)(unit + 0x1dc) = facing[2];
+      *(float *)(unit + 0x1e0) = facing[0];
+      *(float *)(unit + 0x1e4) = facing[1];
+      *(float *)(unit + 0x1e8) = facing[2];
+      *(float *)(unit + 0x204) = facing[0];
+      *(float *)(unit + 0x208) = facing[1];
+      *(float *)(unit + 0x20c) = facing[2];
+    }
+
+    if (player_index != -1) {
+      thread = (char *)datum_get(*(data_t **)0x5aa6d4, player_index);
+      if (teleport_flag)
+        player_teleport(player_index, (void *)-1, position_ptr);
+      if (facing_flag && *(int16_t *)(thread + 2) != (int16_t)-1)
+        player_control_set_facing(*(int16_t *)(thread + 2), transformed);
+    }
+
+    if (facing_flag && thread == 0)
+      facing_out = facing;
+  }
+
+  if (teleport_flag) {
+    if (thread != 0)
+      return;
+    object_set_position(object_handle, 0, facing_out, position_ptr);
+    return;
+  }
+
+  object_set_position(object_handle, 0, facing_flag ? facing : 0, 0);
 }
-#else
-#error "FUN_000ca160: clang naked draft required"
-#endif
 
 
 /* FUN_000ca3f0 (0xca3f0) — readable C lift. */
