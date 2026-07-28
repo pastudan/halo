@@ -1,0 +1,23 @@
+{
+  "description": "planar 16-bit RGB pack: lut=NULL + clamped dims (LUT path tip-checked separately)",
+  "regions": {},
+  "arg_overrides": {
+    "lut": null,
+    "count": [
+      0,
+      32
+    ],
+    "num_rows": [
+      0,
+      8
+    ],
+    "skip_src_count": [
+      0,
+      8
+    ],
+    "skip_dst_count": [
+      0,
+      8
+    ]
+  }
+}
