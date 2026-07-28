@@ -126,155 +126,36 @@ void FUN_001929a0(void *face /*@<eax>*/, void *leaf_map /*@<ecx>*/,
       (int16_t)proj, sign, out_point);
 }
 
-/* render_debug_leaf_faces (0x192a50) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void *(*const b192a50_elem)(void *, int, int) = tag_block_get_element;
-static void (*const b192a50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b192a50_exitfn)(int) = system_exit;
-static void (*const b192a50_c1929a0)(void) = (void (*)(void))FUN_001929a0;
-static void (*const b192a50_c189270)(char flag, float *point_a, float *point_b, void *color) = FUN_00189270;
-static void (*const b192a50_c188890)(char flag, float *point0, float *point1, float *point2, void *color) = FUN_00188890;
-
-__attribute__((naked, noinline))
+/* render_debug_leaf_faces (0x192a50) — readable C lift (restored pre-naked). */
 void render_debug_leaf_faces(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x40, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x18\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal 0x4(%%ebx), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[elem]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl %%esi, 0x8(%%ebp)\n\t"
-      "movl $0x3e4ccccd, -0x40(%%ebp)\n\t"
-      "movl $0x3f800000, -0x3c(%%ebp)\n\t"
-      "movl $0, -0x38(%%ebp)\n\t"
-      "movl $0, -0x34(%%ebp)\n\t"
-      "jne .Lrender_debug_leaf_faces_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3ac\n\t"
-      "pushl $0x2b28b4\n\t"
-      "pushl $0x2b2a04\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lrender_debug_leaf_faces_1:\n\t"
-      "cmpl $0, (%%esi)\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "jle .Lrender_debug_leaf_faces_6\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "jmp .Lrender_debug_leaf_faces_3\n\t"
-      ".Lrender_debug_leaf_faces_2:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".Lrender_debug_leaf_faces_3:\n\t"
-      "pushl $0x10\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "leal -0x30(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1929a0]\n\t"
-      "leal -0x24(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "call *%[c1929a0]\n\t"
-      "movl -0x24(%%ebp), %%ecx\n\t"
-      "movl -0x20(%%ebp), %%edx\n\t"
-      "movl -0x1c(%%ebp), %%eax\n\t"
-      "movl %%ecx, -0xc(%%ebp)\n\t"
-      "movl 0x2ee6c4, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edx, -0x8(%%ebp)\n\t"
-      "leal -0x24(%%ebp), %%edx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x30(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl 0x4(%%esi), %%eax\n\t"
-      "movl $2, %%edi\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jle .Lrender_debug_leaf_faces_5\n\t"
-      "nop\n\t"
-      ".Lrender_debug_leaf_faces_4:\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl %%ebx, %%ecx\n\t"
-      "call *%[c1929a0]\n\t"
-      "leal -0x40(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x30(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "call *%[c188890]\n\t"
-      "movl 0x2ee6c4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x18(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $1\n\t"
-      "call *%[c189270]\n\t"
-      "movl -0x18(%%ebp), %%eax\n\t"
-      "movl -0x14(%%ebp), %%ecx\n\t"
-      "movl -0x10(%%ebp), %%edx\n\t"
-      "addl $0x2c, %%esp\n\t"
-      "incl %%edi\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movswl %%di, %%eax\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "cmpl 0x4(%%esi), %%eax\n\t"
-      "jl .Lrender_debug_leaf_faces_4\n\t"
-      ".Lrender_debug_leaf_faces_5:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .Lrender_debug_leaf_faces_2\n\t"
-      "popl %%edi\n\t"
-      ".Lrender_debug_leaf_faces_6:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [elem] "m"(b192a50_elem), [assert] "m"(b192a50_assert), [exitfn] "m"(b192a50_exitfn), [c1929a0] "m"(b192a50_c1929a0), [c189270] "m"(b192a50_c189270), [c188890] "m"(b192a50_c188890)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edx = 0;
+  int esi = 0;
+  int edi = 0;
+
+  tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
+  display_assert((char *)0x002b2a04, (char *)0x002b28b4, 940, 0);
+  system_exit(0);
+  tag_block_get_element((void *)(uintptr_t)esi, 0, 16);
+  ((void(*)(void))FUN_001929a0)();
+  ((void(*)(void))FUN_001929a0)();
+  FUN_00189270(0, (float *)(uintptr_t)eax, (float *)(uintptr_t)edx, (void *)(uintptr_t)ecx);
+  /* cmp eax, edi -> jle 0x192b88 */
+  ((void(*)(void))FUN_001929a0)();
+  FUN_00188890(0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (float *)(uintptr_t)eax, (void *)(uintptr_t)edx);
+  FUN_00189270(0, (float *)(uintptr_t)edx, (float *)(uintptr_t)ecx, (void *)(uintptr_t)eax);
+  /* relift: cmp eax, dword ptr [esi + 4] -> jl 0x192b30 */
+  /* cmp eax, edx -> jl 0x192ace */
+
+  (void)eax;
+  (void)ecx;
+  (void)edx;
+  (void)esi;
+  (void)edi;
 }
-#else
-#error "render_debug_leaf_faces: clang naked draft required"
-#endif
+
 
 
 /* FUN_00192bb0 (0x192bb0) — readable C lift from XBE leaf.

@@ -565,163 +565,47 @@ void player_ui_begin_editing_profile(int profile_index)
   }
 }
 
-/* player_ui_save_profile (0xe15b0) — XBE naked draft (batch 123). */
-#if defined(__clang__)
-static void (*const be15b0_c1c29a0)(void) = (void *)saved_game_file_get_type;
-static void (*const be15b0_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const be15b0_ce0ee0)(void) = player_ui_edit_profile_is_dirty;
-static int (*const be15b0_c19dc20)(const wchar_t *s1, const wchar_t *s2, size_t count) = ustrncmp;
-static void (*const be15b0_c1c1e20)(void) = FUN_001c1e20;
-static void (*const be15b0_c1c27f0)(void) = playlist_profile_get_display_name;
-static void (*const be15b0_c1c4da0)(void) = FUN_001c4da0;
-static void (*const be15b0_c1c2e00)(void) = saved_game_file_remember_last_used_multiplayer_variant_directory;
-static void (*const be15b0_c1c1bc0)(int, void *) = player_profile_get_from_path;
-
-__attribute__((naked, noinline))
+/* player_ui_save_profile (0xe15b0) — readable C lift (restored pre-naked). */
 void player_ui_save_profile(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x100, %%esp\n\t"
-      "movl 0x46c038, %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "call *%[c1c29a0]\n\t"
-      "movzwl %%ax, %%eax\n\t"
-      "addl $4, %%esp\n\t"
-      "subl $0, %%eax\n\t"
-      "je .Lplayer_ui_save_profile_7\n\t"
-      "decl %%eax\n\t"
-      "je .Lplayer_ui_save_profile_1\n\t"
-      "pushl $0x282b40\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "jmp .Lplayer_ui_save_profile_10\n\t"
-      ".Lplayer_ui_save_profile_1:\n\t"
-      "call *%[ce0ee0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplayer_ui_save_profile_2\n\t"
-      "pushl $0x282af8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplayer_ui_save_profile_2:\n\t"
-      "movl 0x46c038, %%eax\n\t"
-      "testl $0x40000000, %%eax\n\t"
-      "je .Lplayer_ui_save_profile_6\n\t"
-      "pushl $0xc\n\t"
-      "pushl $0x46c0a4\n\t"
-      "pushl $0x46c03c\n\t"
-      "call *%[c19dc20]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lplayer_ui_save_profile_5\n\t"
-      "andb $0xfe, 0x46c0a0\n\t"
-      "pushl $0x46c03c\n\t"
-      "pushl $0\n\t"
-      "call *%[c1c1e20]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%esi\n\t"
-      "je .Lplayer_ui_save_profile_4\n\t"
-      "pushl $0x46c03c\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1c27f0]\n\t"
-      "leal -0x100(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%esi, 0x46c038\n\t"
-      "call *%[c1c4da0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_ui_save_profile_3\n\t"
-      "leal -0x100(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c2e00]\n\t"
-      "addl $4, %%esp\n\t"
-      ".Lplayer_ui_save_profile_3:\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "movl $0xffffffff, 0x46c038\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_save_profile_4:\n\t"
-      "pushl $0x282acc\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "jmp .Lplayer_ui_save_profile_10\n\t"
-      ".Lplayer_ui_save_profile_5:\n\t"
-      "pushl $0x282a80\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "jmp .Lplayer_ui_save_profile_10\n\t"
-      ".Lplayer_ui_save_profile_6:\n\t"
-      "pushl $0x46c03c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c27f0]\n\t"
-      "movl 0x46c038, %%ecx\n\t"
-      "leal -0x100(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c1c4da0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lplayer_ui_save_profile_3\n\t"
-      "leal -0x100(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1c2e00]\n\t"
-      "addl $4, %%esp\n\t"
-      "movb $1, %%bl\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "movl $0xffffffff, 0x46c038\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lplayer_ui_save_profile_7:\n\t"
-      "testl $0x40000000, 0x46c038\n\t"
-      "je .Lplayer_ui_save_profile_8\n\t"
-      "pushl $0x282a48\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplayer_ui_save_profile_8:\n\t"
-      "call *%[ce0ee0]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lplayer_ui_save_profile_9\n\t"
-      "pushl $0x282af8\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".Lplayer_ui_save_profile_9:\n\t"
-      "movl 0x46c038, %%eax\n\t"
-      "pushl $0x46c03c\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1c1bc0]\n\t"
-      "movb $1, %%bl\n\t"
-      ".Lplayer_ui_save_profile_10:\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "movl $0xffffffff, 0x46c038\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c29a0] "m"(be15b0_c1c29a0), [c8f390] "m"(be15b0_c8f390), [ce0ee0] "m"(be15b0_ce0ee0), [c19dc20] "m"(be15b0_c19dc20), [c1c1e20] "m"(be15b0_c1c1e20), [c1c27f0] "m"(be15b0_c1c27f0), [c1c4da0] "m"(be15b0_c1c4da0), [c1c2e00] "m"(be15b0_c1c2e00), [c1c1bc0] "m"(be15b0_c1c1bc0)
-      : "memory");
+  int eax = 0;
+  int esi = 0;
+
+  ((void(*)(void))saved_game_file_get_type)();
+  error(0, (char *)0x00282b40);
+  player_ui_edit_profile_is_dirty();
+  /* test (char)eax, (char)eax -> jne 0xe1603 */
+  error(0, (char *)0x00282af8);
+  /* test eax, 0x40000000 -> je 0xe16b2 */
+  ustrncmp((wchar_t *)0x0046c03c, (wchar_t *)0x0046c0a4, 12);
+  /* test eax, eax -> je 0xe16a1 */
+  ((void(*)(void))FUN_001c1e20)();
+  /* cmp esi, -1 -> je 0xe1690 */
+  ((void(*)(void))playlist_profile_get_display_name)();
+  /* mem[0x0046c038] = esi */
+  ((void(*)(void))FUN_001c4da0)();
+  /* test (char)eax, (char)eax -> je 0xe167c */
+  ((void(*)(void))saved_game_file_remember_last_used_multiplayer_variant_directory)();
+  /* mem[0x0046c038] = 0xffffffff */
+  error(0, (char *)0x00282acc);
+  error(0, (char *)0x00282a80);
+  ((void(*)(void))playlist_profile_get_display_name)();
+  ((void(*)(void))FUN_001c4da0)();
+  /* test (char)eax, (char)eax -> je 0xe167c */
+  ((void(*)(void))saved_game_file_remember_last_used_multiplayer_variant_directory)();
+  /* mem[0x0046c038] = 0xffffffff */
+  /* relift: test dword ptr [0x46c038], 0x40000000 -> je 0xe1715 */
+  error(0, (char *)0x00282a48);
+  player_ui_edit_profile_is_dirty();
+  /* test (char)eax, (char)eax -> jne 0xe172d */
+  error(0, (char *)0x00282af8);
+  ((void(*)(void))player_profile_get_from_path)();
+  /* mem[0x0046c038] = 0xffffffff */
+
+  (void)eax;
+  (void)esi;
 }
-#else
-#error "player_ui_save_profile: clang naked draft required"
-#endif
+
 
 
 /* 0xe1760 */

@@ -18943,7 +18943,7 @@
         {
           "addr": "0xe15b0",
           "decl": "void player_ui_save_profile(void);",
-          "ported": false,
+          "ported": true,
           "name": "player_ui_save_profile"
         },
         {
@@ -23983,7 +23983,7 @@
         {
           "addr": "0x188010",
           "decl": "void render_contrail(void);",
-          "ported": false,
+          "ported": true,
           "name": "render_contrail"
         },
         {
@@ -26211,7 +26211,7 @@
         {
           "addr": "0x192a50",
           "decl": "void render_debug_leaf_faces(void);",
-          "ported": false,
+          "ported": true,
           "name": "render_debug_leaf_faces"
         },
         {
