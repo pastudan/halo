@@ -38938,8 +38938,8 @@
         },
         {
           "addr": "0x72f70",
-          "decl": "void FUN_00072f70(void);",
-          "ported": false,
+          "decl": "void FUN_00072f70(void *bitmap, unsigned int color, short level, short *rect, void *clip, void *a5, void *a6, unsigned int mask);",
+          "ported": true,
           "name": "FUN_00072f70"
         },
         {
