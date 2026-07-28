@@ -30703,7 +30703,7 @@
         {
           "addr": "0x1b8570",
           "decl": "void FUN_001b8570(int object_handle, float dt, void *contact_buf, void *wheel_buf);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001b8570"
         }
       ],
