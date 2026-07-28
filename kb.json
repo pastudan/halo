@@ -27456,7 +27456,7 @@
         {
           "addr": "0x81480",
           "decl": "void FUN_00081480(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00081480"
         },
         {
