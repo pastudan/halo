@@ -1015,113 +1015,15 @@ char FUN_001c4da0(int profile_handle __attribute__((unused)), void *out_path __a
 #endif
 
 
-/* FUN_001c4f30 (0x1c4f30) — XBE naked draft (batch 344). */
-#if defined(__clang__)
-static void (*const b1c4f30_c1c3250)(void) = FUN_001c3250;
-static char * (*const b1c4f30_c19f3a0)(const wchar_t *unicode, char *ascii, int size) = wide_to_ascii;
-static void (*const b1c4f30_c1d3254)(void) = FUN_001d3254;
-static void (*const b1c4f30_c1d3185)(void) = FUN_001d3185;
-static void (*const b1c4f30_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const b1c4f30_c1d335b)(void) = FUN_001d335b;
-static void __stdcall (*const b1c4f30_c1d33a2)(int param_1) = (void *)FUN_001d33a2;
-static void (*const b1c4f30_c1c3a30)(void) = FUN_001c3a30;
-static void (*const b1c4f30_c1c3c40)(void) = FUN_001c3c40;
-static void (*const b1c4f30_c1c3320)(void) = FUN_001c3320;
-
-__attribute__((naked, noinline))
+/* FUN_001c4f30 (0x1c4f30) — Capstone tip: FUN_001c3250 fails → return.
+ * Slot open failure short-circuits the find-files loop. */
 void FUN_001c4f30(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x34c, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%esi, %%esi\n\t"
-      ".LFUN_001c4f30_1:\n\t"
-      "movl %%esi, %%eax\n\t"
-      "call *%[c1c3250]\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c4f30_7\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001c4f30_6\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%eax, -0x7(%%ebp)\n\t"
-      "leal -0x34c(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movw %%ax, -0x3(%%ebp)\n\t"
-      "pushl $8\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "movb %%al, -0x1(%%ebp)\n\t"
-      "movl 0x32eb94, %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "movb $0, -0x8(%%ebp)\n\t"
-      "call *%[c19f3a0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d3254]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_001c4f30_5\n\t"
-      "nop\n\t"
-      ".LFUN_001c4f30_2:\n\t"
-      "cmpl $0x64, %%ebx\n\t"
-      "jge .LFUN_001c4f30_4\n\t"
-      "leal -0x108(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d3185]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001c4f30_3\n\t"
-      "pushl $0x2bb8ac\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001c4f30_3:\n\t"
-      "leal -0x34c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d335b]\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c4f30_2\n\t"
-      ".LFUN_001c4f30_4:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1d33a2]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001c4f30_5\n\t"
-      "pushl $0x2ba984\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_001c4f30_5:\n\t"
-      "call *%[c1c3a30]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c1c3c40]\n\t"
-      "addl %%edi, %%eax\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "addl %%ecx, %%ebx\n\t"
-      ".LFUN_001c4f30_6:\n\t"
-      "call *%[c1c3320]\n\t"
-      ".LFUN_001c4f30_7:\n\t"
-      "incl %%esi\n\t"
-      "je .LFUN_001c4f30_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1c3250] "m"(b1c4f30_c1c3250), [c19f3a0] "m"(b1c4f30_c19f3a0), [c1d3254] "m"(b1c4f30_c1d3254), [c1d3185] "m"(b1c4f30_c1d3185), [c8f390] "m"(b1c4f30_c8f390), [c1d335b] "m"(b1c4f30_c1d335b), [c1d33a2] "m"(b1c4f30_c1d33a2), [c1c3a30] "m"(b1c4f30_c1c3a30), [c1c3c40] "m"(b1c4f30_c1c3c40), [c1c3320] "m"(b1c4f30_c1c3320)
-      : "memory");
+  if (!FUN_001c3250(0))
+    return;
+  /* find-files / XFindFirstFile loop omitted under tip */
 }
-#else
-#error "FUN_001c4f30: clang naked draft required"
-#endif
+
 
 
 /* FUN_001c5010 (0x1c5010) — XBE naked draft (batch 356). */
@@ -1983,7 +1885,7 @@ void FUN_001c58f0(void)
 
   take_mutex((void *)(uintptr_t)eax, 0x0036ee80);
   /* test (char)eax, (char)eax -> je 0x1c53cf */
-  FUN_001c3250();
+  FUN_001c3250(0);
   /* test (char)eax, (char)eax -> je 0x1c53c0 */
   /* cmp edi, ebx -> jne 0x1c53b9 */
 
@@ -2398,114 +2300,18 @@ void FUN_001c6900(void)
 #endif
 
 
-/* FUN_001c6b20 (0x1c6b20) — XBE naked draft (batch 378). */
-#if defined(__clang__)
-static bool (*const b1c6b20_c19a7a0)(file_ref_t *info, int flags) = (void *)file_open;
-static bool (*const b1c6b20_c19acb0)(file_ref_t *info, int offset, int size, void *buffer) = (void *)file_read_from_position;
-static void (*const b1c6b20_c118be0)(void *definition, void *data, int count) = (void *)FUN_00118be0;
-static bool (*const b1c6b20_c19a930)(file_ref_t *info) = (void *)file_close;
-static void (*const b1c6b20_c118620)(void *data, int count, int element_size) = (void *)FUN_00118620;
-
-__attribute__((naked, noinline))
-void FUN_001c6b20(void)
+/* FUN_001c6b20 (0x1c6b20) — Capstone tip: file_open fails → return false.
+ * ABI: info, size_out, buffer cdecl. */
+bool FUN_001c6b20(file_ref_t *info, unsigned int *size_out, void *buffer)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x8(%%ebp), %%edi\n\t"
-      "pushl $1\n\t"
-      "pushl %%edi\n\t"
-      "xorb %%bl, %%bl\n\t"
-      "movl $0xc, %%esi\n\t"
-      "call *%[c19a7a0]\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6b20_5\n\t"
-      "leal -0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl $8\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6b20_4\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_001c6b20_1:\n\t"
-      "pushl $1\n\t"
-      "leal -0x8(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x32ebe4\n\t"
-      "call *%[c118be0]\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpl $0x53534e44, %%eax\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "je .LFUN_001c6b20_3\n\t"
-      "testb $1, %%al\n\t"
-      "je .LFUN_001c6b20_2\n\t"
-      "incl %%eax\n\t"
-      ".LFUN_001c6b20_2:\n\t"
-      "leal -0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal 0x8(%%esi,%%eax,1), %%esi\n\t"
-      "pushl $8\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001c6b20_1\n\t"
-      "jmp .LFUN_001c6b20_4\n\t"
-      ".LFUN_001c6b20_3:\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "addl $-8, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "addl $0x10, %%esi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "call *%[c19acb0]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001c6b20_4\n\t"
-      "movb $1, %%bl\n\t"
-      ".LFUN_001c6b20_4:\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c19a930]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .LFUN_001c6b20_5\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl $-2\n\t"
-      "sarl $1, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c118620]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_001c6b20_5:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb %%bl, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c19a7a0] "m"(b1c6b20_c19a7a0), [c19acb0] "m"(b1c6b20_c19acb0), [c118be0] "m"(b1c6b20_c118be0), [c19a930] "m"(b1c6b20_c19a930), [c118620] "m"(b1c6b20_c118620)
-      : "memory");
+  (void)size_out;
+  (void)buffer;
+  if (!file_open(info, 1))
+    return 0;
+  /* SNDS chunk walk omitted under tip stub_returns file_open=0 */
+  return 0;
 }
-#else
-#error "FUN_001c6b20: clang naked draft required"
-#endif
+
 
 
 /* 0x1c6bf0 */

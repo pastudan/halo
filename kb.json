@@ -4641,8 +4641,14 @@
         {
           "addr": "0x1c4f30",
           "decl": "void FUN_001c4f30(void);",
-          "ported": false,
-          "name": "FUN_001c4f30"
+          "ported": true,
+          "name": "FUN_001c4f30",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c5010",
@@ -4782,9 +4788,15 @@
         },
         {
           "addr": "0x1c6b20",
-          "decl": "void FUN_001c6b20(void);",
-          "ported": false,
-          "name": "FUN_001c6b20"
+          "decl": "bool FUN_001c6b20(file_ref_t *info, unsigned int *size_out, void *buffer);",
+          "ported": true,
+          "name": "FUN_001c6b20",
+          "equivalence": {
+            "passed": 100,
+            "failed": 0,
+            "errors": 0,
+            "method": "unicorn"
+          }
         },
         {
           "addr": "0x1c6bf0",

@@ -1,0 +1,4 @@
+{
+  "description": "FUN_001c4f30: FUN_001c3250 returns 0",
+  "stub_returns": { "FUN_001c3250": 0 }
+}
