@@ -31416,7 +31416,7 @@
         {
           "addr": "0x1808f0",
           "decl": "unsigned int FUN_001808f0(float *param_1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001808f0"
         },
         {
@@ -31428,7 +31428,7 @@
         {
           "addr": "0x180d10",
           "decl": "void FUN_00180d10(short type, int count, int compressed_out, int compressed_size, void *uncompressed, int uncompressed_size);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00180d10"
         },
         {
