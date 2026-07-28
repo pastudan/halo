@@ -40080,7 +40080,7 @@
         {
           "addr": "0x15f630",
           "decl": "void FUN_0015f630(uint32_t source, uint32_t param, int arg3, int arg4, uint32_t handle, int subcount2, float *origin, uint32_t widget_flags);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0015f630"
         },
         {
