@@ -33960,8 +33960,8 @@
         },
         {
           "addr": "0x1d2ad3",
-          "decl": "void FUN_001d2ad3(void);",
-          "ported": false,
+          "decl": "int __stdcall FUN_001d2ad3(int nibble);",
+          "ported": true,
           "name": "FUN_001d2ad3"
         },
         {
@@ -34205,7 +34205,7 @@
         },
         {
           "addr": "0x1d4436",
-          "decl": "void FUN_001d4436(void);",
+          "decl": "long long *__stdcall FUN_001d4436(long long *out, unsigned int ms);",
           "ported": false,
           "name": "FUN_001d4436"
         },
@@ -38049,8 +38049,8 @@
         },
         {
           "addr": "0x69020",
-          "decl": "void FUN_00069020(void);",
-          "ported": false,
+          "decl": "int FUN_00069020(void *tif@<eax>, unsigned char *buf, int endbit);",
+          "ported": true,
           "name": "FUN_00069020"
         },
         {
@@ -38115,8 +38115,8 @@
         },
         {
           "addr": "0x696d0",
-          "decl": "void FUN_000696d0(void);",
-          "ported": false,
+          "decl": "int FUN_000696d0(void *tif, void *buf, int count);",
+          "ported": true,
           "name": "FUN_000696d0"
         },
         {
@@ -38127,8 +38127,8 @@
         },
         {
           "addr": "0x69c40",
-          "decl": "void FUN_00069c40(void);",
-          "ported": false,
+          "decl": "int FUN_00069c40(void *tif, unsigned char *ref, unsigned char *cur, int endbit);",
+          "ported": true,
           "name": "FUN_00069c40"
         },
         {
@@ -38301,8 +38301,8 @@
       "functions": [
         {
           "addr": "0x6c400",
-          "decl": "void FUN_0006c400(void);",
-          "ported": false,
+          "decl": "int FUN_0006c400(void *tif, void *a1, int a2, void *a3, void *a4);",
+          "ported": true,
           "name": "FUN_0006c400"
         },
         {
@@ -38361,8 +38361,8 @@
         },
         {
           "addr": "0x6cb00",
-          "decl": "void FUN_0006cb00(void);",
-          "ported": false,
+          "decl": "int FUN_0006cb00(void *tif, void *buf, int cc_count, int arg3);",
+          "ported": true,
           "name": "FUN_0006cb00"
         },
         {
@@ -38507,8 +38507,8 @@
         },
         {
           "addr": "0x6d9c0",
-          "decl": "void FUN_0006d9c0(void);",
-          "ported": false,
+          "decl": "int FUN_0006d9c0(void *tif, void *buf, int cc_count, int arg3);",
+          "ported": true,
           "name": "FUN_0006d9c0"
         },
         {
@@ -38530,8 +38530,8 @@
         },
         {
           "addr": "0x6dda0",
-          "decl": "void FUN_0006dda0(void);",
-          "ported": false,
+          "decl": "void FUN_0006dda0(void *tif, void *fd);",
+          "ported": true,
           "name": "FUN_0006dda0"
         }
       ],

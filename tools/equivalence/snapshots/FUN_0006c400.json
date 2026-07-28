@@ -1,0 +1,6 @@
+{
+  "description": "FUN_0006c400: predictor=3 invalid \u2192 0",
+  "regions": {
+    "0x3340fc": "0300"
+  }
+}
