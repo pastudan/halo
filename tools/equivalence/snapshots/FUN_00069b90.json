@@ -1,0 +1,10 @@
+{
+  "description": "CCITT 1D decode: clamp endbit; stub 69600 run advances",
+  "regions": {},
+  "arg_overrides": {
+    "endbit": [0, 64]
+  },
+  "stub_returns": {
+    "fun_00069600": 8
+  }
+}

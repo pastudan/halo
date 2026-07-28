@@ -1,0 +1,8 @@
+{
+  "description": "FUN_0006c8d0 stride>4; length/2 multiple of stride (backward walk)",
+  "regions": {},
+  "arg_overrides": {
+    "length_count": 64,
+    "stride_count": 8
+  }
+}

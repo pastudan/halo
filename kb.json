@@ -38121,8 +38121,8 @@
         },
         {
           "addr": "0x69b90",
-          "decl": "void FUN_00069b90(void);",
-          "ported": false,
+          "decl": "int FUN_00069b90(void *tif, unsigned char *bp, int endbit@<edi>);",
+          "ported": true,
           "name": "FUN_00069b90"
         },
         {
@@ -38337,8 +38337,8 @@
         },
         {
           "addr": "0x6c8d0",
-          "decl": "void FUN_0006c8d0(void);",
-          "ported": false,
+          "decl": "void FUN_0006c8d0(unsigned short *buf, int length_count, int stride_count);",
+          "ported": true,
           "name": "FUN_0006c8d0"
         },
         {

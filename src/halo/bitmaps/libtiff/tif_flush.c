@@ -1810,82 +1810,107 @@ void FUN_000696d0(void)
 #endif
 
 
-/* FUN_00069b90 (0x69b90) — XBE naked draft (batch 335). */
-#if defined(__clang__)
-static void (*const b69b90_c69600)(void) = (void (*)(void))FUN_00069600;
-static void (*const b69b90_c69310)(void) = (void (*)(void))FUN_00069310;
-
-__attribute__((naked, noinline))
-void FUN_00069b90(void)
+/* FUN_00069b90 (0x69b90) — Capstone lift: 1D CCITT white/black run decode.
+ * ABI: tif/bp stack; endbit@<edi>.
+ * Calls FUN_00069600 (pp stack, bit@ecx, end@edx, table@ebx) and
+ * FUN_00069310 (code@eax, tif@ecx, table@ebx) via in-body register ABI asm
+ * (Unicorn extracts only this symbol — no static helpers). */
+int FUN_00069b90(void *tif, unsigned char *bp, int endbit /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $8, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl 0x120(%%eax), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x1c(%%eax), %%ebx\n\t"
-      "leal 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "call *%[c69600]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
+  unsigned char *state;
+  const unsigned char *table;
+  void *codes;
+  unsigned char **pp;
+  int bit;
+  int n;
+  int zero;
+
+  state = *(unsigned char **)((char *)tif + 0x120);
+  pp = &bp;
+  zero = 0;
+  table = *(const unsigned char **)(state + 0x1c);
+  codes = (void *)0x2ca250u;
+#if defined(__clang__)
+  __asm__ __volatile__(
+      "pushl %[pp]\n\t"
+      "movl %[bit], %%ecx\n\t"
+      "movl %[end], %%edx\n\t"
+      "movl %[table], %%ebx\n\t"
+      "call _FUN_00069600\n\t"
       "addl $4, %%esp\n\t"
-      "movl $0x2ca250, %%ebx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c69310]\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jge .LFUN_00069b90_2\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00069b90_1:\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "movl 0x20(%%eax), %%ebx\n\t"
-      "leal 0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c69600]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0x2ca4e0, %%ebx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[c69310]\n\t"
-      "addl -0x4(%%ebp), %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jge .LFUN_00069b90_2\n\t"
-      "movl -0x8(%%ebp), %%edx\n\t"
-      "movl 0x1c(%%edx), %%ebx\n\t"
-      "leal 0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%edi, %%edx\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "call *%[c69600]\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "addl $4, %%esp\n\t"
-      "movl $0x2ca250, %%ebx\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "call *%[c69310]\n\t"
-      "addl -0x4(%%ebp), %%esi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jl .LFUN_00069b90_1\n\t"
-      ".LFUN_00069b90_2:\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
+      : "=a"(n)
+      : [pp] "m"(pp), [bit] "m"(zero), [end] "m"(endbit), [table] "m"(table)
+      : "ecx", "edx", "ebx", "memory");
+  __asm__ __volatile__(
+      "movl %[tif], %%ecx\n\t"
+      "movl %[codes], %%ebx\n\t"
+      "call _FUN_00069310\n\t"
       :
-      : [c69600] "m"(b69b90_c69600), [c69310] "m"(b69b90_c69310)
-      : "memory");
-}
+      : "a"(n), [tif] "m"(tif), [codes] "m"(codes)
+      : "ecx", "ebx", "edx", "memory");
 #else
-#error "FUN_00069b90: clang naked draft required"
+  n = FUN_00069600(&bp, 0, endbit, table);
+  ((void (*)(int, void *, void *))FUN_00069310)(n, tif, codes);
 #endif
+  bit = n;
+  if (bit < endbit) {
+    do {
+      table = *(const unsigned char **)(state + 0x20);
+      codes = (void *)0x2ca4e0u;
+#if defined(__clang__)
+      __asm__ __volatile__(
+          "pushl %[pp]\n\t"
+          "movl %[bit], %%ecx\n\t"
+          "movl %[end], %%edx\n\t"
+          "movl %[table], %%ebx\n\t"
+          "call _FUN_00069600\n\t"
+          "addl $4, %%esp\n\t"
+          : "=a"(n)
+          : [pp] "m"(pp), [bit] "m"(bit), [end] "m"(endbit), [table] "m"(table)
+          : "ecx", "edx", "ebx", "memory");
+      __asm__ __volatile__(
+          "movl %[tif], %%ecx\n\t"
+          "movl %[codes], %%ebx\n\t"
+          "call _FUN_00069310\n\t"
+          :
+          : "a"(n), [tif] "m"(tif), [codes] "m"(codes)
+          : "ecx", "ebx", "edx", "memory");
+#else
+      n = FUN_00069600(&bp, bit, endbit, table);
+      ((void (*)(int, void *, void *))FUN_00069310)(n, tif, codes);
+#endif
+      bit += n;
+      if (bit >= endbit)
+        break;
+      table = *(const unsigned char **)(state + 0x1c);
+      codes = (void *)0x2ca250u;
+#if defined(__clang__)
+      __asm__ __volatile__(
+          "pushl %[pp]\n\t"
+          "movl %[bit], %%ecx\n\t"
+          "movl %[end], %%edx\n\t"
+          "movl %[table], %%ebx\n\t"
+          "call _FUN_00069600\n\t"
+          "addl $4, %%esp\n\t"
+          : "=a"(n)
+          : [pp] "m"(pp), [bit] "m"(bit), [end] "m"(endbit), [table] "m"(table)
+          : "ecx", "edx", "ebx", "memory");
+      __asm__ __volatile__(
+          "movl %[tif], %%ecx\n\t"
+          "movl %[codes], %%ebx\n\t"
+          "call _FUN_00069310\n\t"
+          :
+          : "a"(n), [tif] "m"(tif), [codes] "m"(codes)
+          : "ecx", "ebx", "edx", "memory");
+#else
+      n = FUN_00069600(&bp, bit, endbit, table);
+      ((void (*)(int, void *, void *))FUN_00069310)(n, tif, codes);
+#endif
+      bit += n;
+    } while (bit < endbit);
+  }
+  return 1;
+}
 
 
 /* FUN_00069c40 (0x69c40) — XBE naked draft (batch 299). */

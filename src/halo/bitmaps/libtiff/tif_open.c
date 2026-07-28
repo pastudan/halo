@@ -523,84 +523,70 @@ void FUN_0006c860(unsigned char *buf, int length_count, int stride_count)
 }
 
 
-/* FUN_0006c8d0 (0x6c8d0) — XBE naked draft (batch 323). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_0006c8d0(void)
+/* FUN_0006c8d0 (0x6c8d0) — Capstone lift: 16-bit horizontal difference (encode).
+ * Walks backwards from end; jumptable for stride 0..4. */
+void FUN_0006c8d0(unsigned short *buf, int length_count, int stride_count)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cdq\n\t"
-      "subl %%edx, %%eax\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "sarl $1, %%eax\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jle .LFUN_0006c8d0_9\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "subl %%edx, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "leal -0x2(%%ecx,%%eax,2), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".LFUN_0006c8d0_1:\n\t"
-      "cmpl $4, %%edx\n\t"
-      "ja .LFUN_0006c8d0_2\n\t"
-      "jmp *.LFUN_0006c8d0_jt(,%%edx,4)\n\t"
-      ".LFUN_0006c8d0_2:\n\t"
-      "leal -0x4(%%edx), %%esi\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jle .LFUN_0006c8d0_4\n\t"
-      ".LFUN_0006c8d0_3:\n\t"
-      "movw (%%ecx), %%di\n\t"
-      "subw %%di, (%%ecx,%%edx,2)\n\t"
-      "subl $2, %%ecx\n\t"
-      "decl %%esi\n\t"
-      "jne .LFUN_0006c8d0_3\n\t"
-      ".LFUN_0006c8d0_4:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "subw %%si, (%%ecx,%%edx,2)\n\t"
-      "subl $2, %%ecx\n\t"
-      ".LFUN_0006c8d0_5:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "subw %%si, (%%ecx,%%edx,2)\n\t"
-      "subl $2, %%ecx\n\t"
-      ".LFUN_0006c8d0_6:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "subw %%si, (%%ecx,%%edx,2)\n\t"
-      "subl $2, %%ecx\n\t"
-      ".LFUN_0006c8d0_7:\n\t"
-      "movw (%%ecx), %%si\n\t"
-      "subw %%si, (%%ecx,%%edx,2)\n\t"
-      "subl $2, %%ecx\n\t"
-      ".LFUN_0006c8d0_8:\n\t"
-      "subl %%edx, %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jg .LFUN_0006c8d0_1\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_0006c8d0_9:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      "movl %%edi, %%edi\n\t"
-      ".section .rdata,\"dr\"\n\t"
-      ".LFUN_0006c8d0_jt:\n\t"
-      ".long .LFUN_0006c8d0_8\n\t"
-      ".long .LFUN_0006c8d0_7\n\t"
-      ".long .LFUN_0006c8d0_6\n\t"
-      ".long .LFUN_0006c8d0_5\n\t"
-      ".long .LFUN_0006c8d0_4\n\t"
-      ".text\n\t"
-      :
-      :
-      : "memory");
+  int rem;
+  unsigned short *p;
+  int n;
+  unsigned short v;
+
+  rem = (length_count / 2) - stride_count;
+  if (rem <= 0)
+    return;
+  p = buf + rem - 1;
+  do {
+    if (stride_count > 4) {
+      n = stride_count - 4;
+      if (n > 0) {
+        do {
+          v = *p;
+          p[stride_count] = (unsigned short)(p[stride_count] - v);
+          p--;
+        } while (--n != 0);
+      }
+      v = *p;
+      p[stride_count] = (unsigned short)(p[stride_count] - v);
+      p--;
+      v = *p;
+      p[stride_count] = (unsigned short)(p[stride_count] - v);
+      p--;
+      v = *p;
+      p[stride_count] = (unsigned short)(p[stride_count] - v);
+      p--;
+      v = *p;
+      p[stride_count] = (unsigned short)(p[stride_count] - v);
+      p--;
+    } else {
+      switch (stride_count) {
+      case 4:
+        v = *p;
+        p[stride_count] = (unsigned short)(p[stride_count] - v);
+        p--;
+        /* fallthrough */
+      case 3:
+        v = *p;
+        p[stride_count] = (unsigned short)(p[stride_count] - v);
+        p--;
+        /* fallthrough */
+      case 2:
+        v = *p;
+        p[stride_count] = (unsigned short)(p[stride_count] - v);
+        p--;
+        /* fallthrough */
+      case 1:
+        v = *p;
+        p[stride_count] = (unsigned short)(p[stride_count] - v);
+        p--;
+        /* fallthrough */
+      case 0:
+        break;
+      }
+    }
+    rem -= stride_count;
+  } while (rem > 0);
 }
-#else
-#error "FUN_0006c8d0: clang naked draft required"
-#endif
 
 
 /* FUN_0006c960 (0x6c960) — XBE naked draft (batch 307). */
