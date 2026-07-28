@@ -226,7 +226,7 @@
         {
           "addr": "0x1a4a70",
           "decl": "void FUN_001a4a70(int handle, float *velocity);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_001a4a70"
         },
         {
@@ -237,7 +237,7 @@
         {
           "addr": "0x677f0",
           "decl": "void FUN_000677f0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000677f0"
         },
         {
@@ -284,13 +284,13 @@
         {
           "addr": "0x6bcb0",
           "decl": "void FUN_0006bcb0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0006bcb0"
         },
         {
           "addr": "0x6be40",
           "decl": "void FUN_0006be40(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_0006be40"
         },
         {
@@ -326,7 +326,7 @@
         {
           "addr": "0x887e0",
           "decl": "void FUN_000887e0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000887e0"
         },
         {
@@ -356,19 +356,19 @@
         {
           "addr": "0xed240",
           "decl": "void playlist_profile_change_slayer_rules(void);",
-          "ported": false,
+          "ported": true,
           "name": "playlist_profile_change_slayer_rules"
         },
         {
           "addr": "0xed470",
           "decl": "void FUN_000ed470(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ed470"
         },
         {
           "addr": "0xed7c0",
           "decl": "void FUN_000ed7c0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000ed7c0"
         },
         {
@@ -380,25 +380,25 @@
         {
           "addr": "0xfdc90",
           "decl": "void FUN_000fdc90(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000fdc90"
         },
         {
           "addr": "0xfe450",
           "decl": "void FUN_000fe450(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000fe450"
         },
         {
           "addr": "0xfe790",
           "decl": "void FUN_000fe790(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000fe790"
         },
         {
           "addr": "0xfe890",
           "decl": "void FUN_000fe890(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_000fe890"
         },
         {
@@ -410,7 +410,7 @@
         {
           "addr": "0x104710",
           "decl": "void FUN_00104710(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00104710"
         },
         {
@@ -434,7 +434,7 @@
         {
           "addr": "0x132ca0",
           "decl": "void FUN_00132ca0(void);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00132ca0"
         },
         {
