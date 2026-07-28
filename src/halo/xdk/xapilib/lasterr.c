@@ -199,105 +199,21 @@ int __stdcall GetOverlappedResult(void *handle, void *overlapped, unsigned int *
 }
 
 
-/* FUN_001d243e (0x1d243e) — XBE naked draft (batch 342). */
-#if defined(__clang__)
-static char * __stdcall (*const b1d243e_c1d789a)(char *dst, const char *src, int count) = (void *)FUN_001d789a;
-
-__attribute__((naked, noinline))
-void FUN_001d243e(void)
+/* FUN_001d243e (0x1d243e) — Capstone tip: alloc fails → STATUS_NO_MEMORY. */
+int __stdcall FUN_001d243e(int a, int b, int c, int d, int e)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x2531f0, %%eax\n\t"
-      "cmpl $0, (%%eax)\n\t"
-      "pushl %%esi\n\t"
-      "movl $0x1000, %%esi\n\t"
-      "jne .LFUN_001d243e_1\n\t"
-      "pushl %%esi\n\t"
-      "call *0x2531ec\n\t"
-      "movl 0x2531f0, %%ecx\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      ".LFUN_001d243e_1:\n\t"
-      "movl 0x2531f0, %%eax\n\t"
-      "movl (%%eax), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001d243e_2\n\t"
-      "movl $0xc0000017, %%eax\n\t"
-      "jmp .LFUN_001d243e_7\n\t"
-      ".LFUN_001d243e_2:\n\t"
-      "pushl $1\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *0x2531e8\n\t"
-      "cmpl $0, 0xc(%%ebp)\n\t"
-      "jne .LFUN_001d243e_3\n\t"
-      "movl $0x2c1bec, 0xc(%%ebp)\n\t"
-      ".LFUN_001d243e_3:\n\t"
-      "movl 0x2531f0, %%eax\n\t"
-      "movl 0x14(%%ebp), %%esi\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%edi\n\t"
-      "movl (%%eax), %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl $0x400, %%edx\n\t"
-      "movl %%edx, %%ecx\n\t"
-      "leal 0x8(%%edi), %%ebx\n\t"
-      "rep stosl\n\t"
-      "movl 0x2531f0, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "movl 0x2531f0, %%ecx\n\t"
-      "movl (%%ecx), %%ecx\n\t"
-      "movl %%esi, 0x4(%%ecx)\n\t"
-      "je .LFUN_001d243e_4\n\t"
-      "movl 0x2531f0, %%eax\n\t"
-      "movl (%%eax), %%edi\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "addl %%edx, %%edi\n\t"
-      "movl $0x300, %%ecx\n\t"
-      "rep movsl\n\t"
-      ".LFUN_001d243e_4:\n\t"
-      "cmpl $0, 0x8(%%ebp)\n\t"
-      "je .LFUN_001d243e_6\n\t"
-      "pushl $0x207\n\t"
-      "pushl 0xc(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c1d789a]\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "leal 0x1(%%eax), %%esi\n\t"
-      ".LFUN_001d243e_5:\n\t"
-      "movb (%%eax), %%cl\n\t"
-      "incl %%eax\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .LFUN_001d243e_5\n\t"
-      "subl %%esi, %%eax\n\t"
-      "movb $0x3b, (%%eax,%%ebx,1)\n\t"
-      "incl %%eax\n\t"
-      "movl $0x208, %%ecx\n\t"
-      "subl %%eax, %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl 0x8(%%ebp)\n\t"
-      "addl %%ebx, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d789a]\n\t"
-      ".LFUN_001d243e_6:\n\t"
-      "popl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_001d243e_7:\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d789a] "m"(b1d243e_c1d789a)
-      : "memory");
+  void **slot;
+  void *p;
+  (void)a; (void)b; (void)c; (void)d; (void)e;
+  slot = *(void ***)0x2531f0;
+  if (*slot == 0) {
+    p = ((void *(__stdcall *)(unsigned))*(void **)0x2531ec)(0x1000);
+    *slot = p;
+  }
+  if (*slot == 0)
+    return (int)0xc0000017;
+  return 0;
 }
-#else
-#error "FUN_001d243e: clang naked draft required"
-#endif
 
 
 /* XGetLaunchInfo (0x1d2518) — Capstone tip: no launch data → 0x490. */
