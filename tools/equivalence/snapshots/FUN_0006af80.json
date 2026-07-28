@@ -1,0 +1,24 @@
+{
+  "description": "TIFF RGB pack: spp=3, clamped dims",
+  "regions": {
+    "0x3340f8": "0300"
+  },
+  "arg_overrides": {
+    "count": [
+      0,
+      32
+    ],
+    "num_rows": [
+      0,
+      8
+    ],
+    "skip_src": [
+      0,
+      8
+    ],
+    "skip_dst": [
+      0,
+      8
+    ]
+  }
+}
