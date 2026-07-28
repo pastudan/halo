@@ -41984,7 +41984,7 @@
         {
           "addr": "0x148440",
           "decl": "char FUN_00148440(void *state, int node_index, float t0, float t1);",
-          "ported": false,
+          "ported": true,
           "name": "FUN_00148440"
         },
         {
@@ -42023,7 +42023,7 @@
         {
           "addr": "0x148b90",
           "decl": "void bsp3d_test_sphere_recursive(void *state, int node_index);",
-          "ported": false,
+          "ported": true,
           "name": "bsp3d_test_sphere_recursive"
         },
         {
