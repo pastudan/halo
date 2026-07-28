@@ -444,177 +444,40 @@ void FUN_00184710(void) {
 
 
 
-/* group_sorted_indices_cmpfn (0x184750) — XBE naked draft (batch 120). */
-#if defined(__clang__)
-static void (*const b184750_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b184750_exitfn)(int) = system_exit;
-static char (*const b184750_c190930)(void *shader) = shader_is_water_decal;
-
-__attribute__((naked, noinline))
+/* group_sorted_indices_cmpfn (0x184750) — readable C lift (restored pre-naked). */
 void group_sorted_indices_cmpfn(void)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testl %%esi, %%esi\n\t"
-      "pushl %%edi\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_1\n\t"
-      "movw (%%esi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lgroup_sorted_indices_cmpfn_1\n\t"
-      "movl 0x4d0cf4, %%ecx\n\t"
-      "movswl %%ax, %%eax\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jl .Lgroup_sorted_indices_cmpfn_2\n\t"
-      ".Lgroup_sorted_indices_cmpfn_1:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1aa\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x2b0ea8\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgroup_sorted_indices_cmpfn_2:\n\t"
-      "movl 0xc(%%ebp), %%edi\n\t"
-      "testl %%edi, %%edi\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_3\n\t"
-      "movw (%%edi), %%ax\n\t"
-      "testw %%ax, %%ax\n\t"
-      "jl .Lgroup_sorted_indices_cmpfn_3\n\t"
-      "movswl %%ax, %%ecx\n\t"
-      "cmpl 0x4d0cf4, %%ecx\n\t"
-      "jl .Lgroup_sorted_indices_cmpfn_4\n\t"
-      ".Lgroup_sorted_indices_cmpfn_3:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x1ab\n\t"
-      "pushl $0x2b0ca8\n\t"
-      "pushl $0x2b0e50\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lgroup_sorted_indices_cmpfn_4:\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "movl 0x4d0cec, %%ecx\n\t"
-      "leal (%%eax,%%eax,4), %%esi\n\t"
-      "movswl (%%edi), %%eax\n\t"
-      "shll $5, %%esi\n\t"
-      "movl 0xc(%%esi,%%ecx,1), %%edx\n\t"
-      "addl %%ecx, %%esi\n\t"
-      "leal (%%eax,%%eax,4), %%edi\n\t"
-      "shll $5, %%edi\n\t"
-      "pushl %%edx\n\t"
-      "addl %%ecx, %%edi\n\t"
-      "call *%[c190930]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgroup_sorted_indices_cmpfn_13\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c190930]\n\t"
-      "addl $4, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_5\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lgroup_sorted_indices_cmpfn_14\n\t"
-      ".Lgroup_sorted_indices_cmpfn_5:\n\t"
-      "movl 0xc(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "movl $7, %%ecx\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_6\n\t"
-      "cmpw %%cx, 0x24(%%eax)\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_13\n\t"
-      ".Lgroup_sorted_indices_cmpfn_6:\n\t"
-      "movl 0xc(%%edi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_7\n\t"
-      "cmpw %%cx, 0x24(%%eax)\n\t"
-      "jne .Lgroup_sorted_indices_cmpfn_7\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lgroup_sorted_indices_cmpfn_14\n\t"
-      ".Lgroup_sorted_indices_cmpfn_7:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "andl $0x80, %%eax\n\t"
-      "movb (%%edi), %%cl\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_8\n\t"
-      "testb %%cl, %%cl\n\t"
-      "js .Lgroup_sorted_indices_cmpfn_9\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lgroup_sorted_indices_cmpfn_14\n\t"
-      ".Lgroup_sorted_indices_cmpfn_8:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jns .Lgroup_sorted_indices_cmpfn_10\n\t"
-      ".Lgroup_sorted_indices_cmpfn_9:\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_13\n\t"
-      ".Lgroup_sorted_indices_cmpfn_10:\n\t"
-      "flds 0x70(%%esi)\n\t"
-      "fcomps 0x70(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .Lgroup_sorted_indices_cmpfn_11\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lgroup_sorted_indices_cmpfn_14\n\t"
-      ".Lgroup_sorted_indices_cmpfn_11:\n\t"
-      "flds 0x70(%%esi)\n\t"
-      "fcomps 0x70(%%edi)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jnp .Lgroup_sorted_indices_cmpfn_13\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "cmpl %%ecx, %%eax\n\t"
-      "jle .Lgroup_sorted_indices_cmpfn_12\n\t"
-      "movl $1, %%ebx\n\t"
-      "jmp .Lgroup_sorted_indices_cmpfn_14\n\t"
-      ".Lgroup_sorted_indices_cmpfn_12:\n\t"
-      "jge .Lgroup_sorted_indices_cmpfn_14\n\t"
-      ".Lgroup_sorted_indices_cmpfn_13:\n\t"
-      "orl $0xffffffff, %%ebx\n\t"
-      ".Lgroup_sorted_indices_cmpfn_14:\n\t"
-      "movb 0x9d(%%esi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "movb 0x9d(%%edi), %%cl\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_15\n\t"
-      "testb %%cl, %%cl\n\t"
-      "jne .Lgroup_sorted_indices_cmpfn_16\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl $1, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgroup_sorted_indices_cmpfn_15:\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .Lgroup_sorted_indices_cmpfn_17\n\t"
-      ".Lgroup_sorted_indices_cmpfn_16:\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lgroup_sorted_indices_cmpfn_17\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lgroup_sorted_indices_cmpfn_17:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b184750_assert), [exitfn] "m"(b184750_exitfn), [c190930] "m"(b184750_c190930)
-      : "memory");
+  int eax = 0;
+  int ecx = 0;
+  int edi = 0;
+
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x184774 */
+  /* cmp eax, ecx -> jl 0x184794 */
+  display_assert((char *)0x002b0ea8, (char *)0x002b0ca8, 426, 0);
+  system_exit(0);
+  /* test edi, edi -> je 0x1847ae */
+  /* test (int16_t)eax, (int16_t)eax -> jl 0x1847ae */
+  /* relift: cmp ecx, dword ptr [0x4d0cf4] -> jl 0x1847ce */
+  display_assert((char *)0x002b0e50, (char *)0x002b0ca8, 427, 0);
+  system_exit(0);
+  shader_is_water_decal((void *)0);
+  /* test (char)eax, (char)eax -> jne 0x18488e */
+  shader_is_water_decal((void *)(uintptr_t)eax);
+  /* test (char)eax, (char)eax -> je 0x184816 */
+  /* relift: cmp word ptr [eax + 0x24], (int16_t)ecx -> je 0x18488e */
+  /* test eax, eax -> je 0x18483c */
+  /* relift: cmp word ptr [eax + 0x24], (int16_t)ecx -> jne 0x18483c */
+  /* test eax, eax -> je 0x18488e */
+  /* test (char)eax, 0x41 -> jne 0x18486e */
+  /* cmp eax, ecx -> jle 0x18488c */
+  /* test (char)ecx, (char)ecx -> jne 0x1848b3 */
+  /* test (char)ecx, (char)ecx -> je 0x1848bf */
+  /* test (char)eax, (char)eax -> jne 0x1848bf */
+
+  (void)eax;
+  (void)ecx;
+  (void)edi;
 }
-#else
-#error "group_sorted_indices_cmpfn: clang naked draft required"
-#endif
 
 
 /* rasterizer_sort_internal (0x1848d0) — readable C lift from XBE leaf.

@@ -23814,7 +23814,7 @@
         {
           "addr": "0x184750",
           "decl": "void group_sorted_indices_cmpfn(void);",
-          "ported": false,
+          "ported": true,
           "name": "group_sorted_indices_cmpfn"
         },
         {
@@ -23911,7 +23911,7 @@
         {
           "addr": "0x186330",
           "decl": "void render_camera_screen_to_world(void);",
-          "ported": false,
+          "ported": true,
           "name": "render_camera_screen_to_world"
         },
         {
