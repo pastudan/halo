@@ -1,0 +1,7 @@
+{
+  "description": "NtRemoveIoCompletion: IAT jmp [0x2531dc] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531dc": "00000060"
+  }
+}

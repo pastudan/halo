@@ -1,0 +1,6 @@
+{
+  "description": "BinkNextFrame: null handle → return",
+  "arg_overrides": {
+    "bink_handle": null
+  }
+}

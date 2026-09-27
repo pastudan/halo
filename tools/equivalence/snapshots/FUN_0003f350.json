@@ -1,0 +1,4 @@
+{
+  "description": "FUN_0003f350: spawn_tag==-1 → return 0",
+  "arg_overrides": { "spawn_tag": -1 }
+}

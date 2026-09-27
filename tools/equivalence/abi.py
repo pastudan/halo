@@ -195,7 +195,8 @@ SCRATCH_BASE = 0x10000000   # base address of scratch buffer (mapped externally)
 SCRATCH_SIZE  = 0x10000     # 64 KB
 
 # Slot size inside scratch buffer per pointer argument
-POINTER_SLOT = 0x400  # 1 KB per pointer param — enough for 256 floats
+import os as _os
+POINTER_SLOT = int(_os.environ.get("HALO_EQUIV_POINTER_SLOT", "0x400"), 0)
 
 
 def setup_args(uc, abi: dict, arg_values: list, scratch_writes: dict,

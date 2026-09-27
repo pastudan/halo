@@ -1,0 +1,7 @@
+{
+  "description": "NtSetTimerEx: IAT jmp [0x253124] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253124": "00000060"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "CloseHandle: NtClose IAT xor-ret → success 1",
+  "regions": {
+    "0x60000000": "31c0c20400",
+    "0x00253090": "00000060"
+  }
+}

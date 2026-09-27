@@ -1,0 +1,10 @@
+{
+  "description": "FUN_001c5010: take_mutex fail → clear 0x4eacc7 + return",
+  "regions": {
+    "0x4eacbc": "00000030",
+    "0x4eacc7": "01"
+  },
+  "stub_returns": {
+    "take_mutex": 0
+  }
+}

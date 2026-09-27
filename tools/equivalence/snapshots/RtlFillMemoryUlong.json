@@ -1,0 +1,7 @@
+{
+  "description": "RtlFillMemoryUlong: IAT jmp [0x253244] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253244": "00000060"
+  }
+}

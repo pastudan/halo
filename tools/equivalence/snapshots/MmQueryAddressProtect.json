@@ -1,0 +1,10 @@
+{
+  "description": "MmQueryAddressProtect: IAT jmp [0x253218] xor-ret stdcall1",
+  "regions": {
+    "0x60000000": "31c0c20400",
+    "0x00253218": "00000060"
+  },
+  "arg_overrides": {
+    "virtual_address": null
+  }
+}

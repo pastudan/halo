@@ -1,0 +1,9 @@
+{
+  "description": "FUN_001c2120 tip: tag_loaded==-1 \u2192 error return",
+  "arg_overrides": {},
+  "regions": {},
+  "stub_returns": {
+    "tag_loaded": -1,
+    "error": 0
+  }
+}

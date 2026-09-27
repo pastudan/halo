@@ -1,0 +1,17 @@
+{
+  "description": "game_engine_player_killed: dead_handle==-1 \u2192 assert",
+  "regions": {
+    "0x5aa6d4": "00000030"
+  },
+  "arg_overrides": {
+    "killer_handle": 0,
+    "kill_object_handle": 0,
+    "dead_handle": -1,
+    "betrayal": 0
+  },
+  "stub_returns": {
+    "datum_get": 0,
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

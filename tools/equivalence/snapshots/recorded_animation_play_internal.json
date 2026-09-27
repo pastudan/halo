@@ -1,0 +1,14 @@
+{
+  "description": "recorded_animation_play_internal tip: unit NONE \u2192 error return 0",
+  "arg_overrides": {
+    "unit": -1,
+    "anim": 0,
+    "flags": 0
+  },
+  "regions": {},
+  "stub_returns": {
+    "error": [
+      0
+    ]
+  }
+}

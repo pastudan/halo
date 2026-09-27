@@ -1,0 +1,18 @@
+{
+  "description": "objects_dump_memory: empty iterator + fopen NULL \u2192 return",
+  "arg_overrides": {},
+  "regions": {
+    "0x5a8d50": "00000000",
+    "0x267f84": "6465616400",
+    "0x29be40": "7700"
+  },
+  "stub_returns": {
+    "FUN_001d90e0": 0,
+    "csmemset": 0,
+    "data_verify": 0,
+    "object_iterator_next": 0,
+    "sort_dumps": 0,
+    "qsort": 0,
+    "crt_fopen": 0
+  }
+}

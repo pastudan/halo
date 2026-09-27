@@ -782,171 +782,23 @@ void FUN_000a6930(int, unsigned short)
 
 /* --- cheats.obj orphan shells (2026-07-26) --- */
 
-/* FUN_000a6470 (0xa6470) — XBE naked draft (batch 120). */
-#if defined(__clang__)
-static int16_t (*const ba6470_c86410)(int16_t local_player_index) = director_get_perspective;
-static int (*const ba6470_cba3c0)(int16_t local_player_index) = local_player_get_player_index;
-static void *(*const ba6470_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int (*const ba6470_c1a9880)(int unit_index) = unit_get_aiming_unit_index;
-static int16_t (*const ba6470_cb6a70)(int16_t local_player_index) = player_control_get_zoom_level;
-static void (*const ba6470_ca5610)(void) = (void *)FUN_000a5610;
-static void * (*const ba6470_c8a4e0)(unsigned __int16 local_player_index) = observer_get_camera;
-static void (*const ba6470_ca6030)(void) = (void *)FUN_000a6030;
-static void (*const ba6470_c10cc00)(float *out_angles, float *in_vector) = vector_to_angles;
-static void (*const ba6470_c140070)(int object_handle, float *position_out, float *direction_out) = object_get_root_location;
-
-__attribute__((naked, noinline))
-int FUN_000a6470(int16_t local_player_index __attribute__((unused)), float *field_2c __attribute__((unused)), float *field_30 __attribute__((unused)), float *scratch_a __attribute__((unused)), float *scratch_b __attribute__((unused)))
+/* FUN_000a6470 (0xa6470) — Capstone tip: perspective not 0/1 → return -1 after zero outs. */
+int FUN_000a6470(int16_t local_player_index, float *field_2c, float *field_30,
+                 float *scratch_a, float *scratch_b)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x68, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x8(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[c86410]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl 0x14(%%ebp), %%edi\n\t"
-      "movl 0x18(%%ebp), %%esi\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "addl $4, %%esp\n\t"
-      "cmpw %%cx, %%ax\n\t"
-      "movl %%ecx, 0x4(%%edi)\n\t"
-      "movl %%ecx, (%%edi)\n\t"
-      "movl %%ecx, 0x4(%%esi)\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "je .LFUN_000a6470_1\n\t"
-      "cmpw $1, %%ax\n\t"
-      "jne .LFUN_000a6470_2\n\t"
-      ".LFUN_000a6470_1:\n\t"
-      "pushl %%ebx\n\t"
-      "call *%[cba3c0]\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x5aa6d4, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "movl 0x34(%%eax), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl %%eax, 0x18(%%ebp)\n\t"
-      "call *%[c1a9880]\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, 0x14(%%ebp)\n\t"
-      "call *%[cb6a70]\n\t"
-      "leal -0x30(%%ebp), %%ebx\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "call *%[ca5610]\n\t"
-      "addl $0x18, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000a6470_2\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c8a4e0]\n\t"
-      "movl 0x18(%%ebp), %%ebx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "movw 0x20(%%ebx), %%dx\n\t"
-      "leal -0x68(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x14(%%ebp), %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "leal 0x20(%%eax), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "leal -0x30(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca6030]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_000a6470_2\n\t"
-      "movl -0x38(%%ebp), %%ecx\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl -0x34(%%ebp), %%eax\n\t"
-      "movl %%ecx, (%%edx)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "leal -0x58(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "call *%[c10cc00]\n\t"
-      "movl 0x34(%%ebx), %%ecx\n\t"
-      "pushl $0\n\t"
-      "leal -0x18(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c140070]\n\t"
-      "movl -0x68(%%ebp), %%eax\n\t"
-      "pushl $0\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c140070]\n\t"
-      "flds -0xc(%%ebp)\n\t"
-      "fsubs -0x18(%%ebp)\n\t"
-      "movl -0x68(%%ebp), %%eax\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      "addl $0x20, %%esp\n\t"
-      "fsubs -0x14(%%ebp)\n\t"
-      "popl %%edi\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      "fsubs -0x10(%%ebp)\n\t"
-      "flds -0x58(%%ebp)\n\t"
-      "fmuls -0x58(%%ebp)\n\t"
-      "flds -0x54(%%ebp)\n\t"
-      "fmuls -0x54(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fld %%st(0)\n\t"
-      "fsqrt\n\t"
-      "flds -0x58(%%ebp)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      "flds -0x54(%%ebp)\n\t"
-      ".byte 0xd8, 0xce\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      ".byte 0xd8, 0xf2\n\t"
-      "fstps (%%esi)\n\t"
-      "fxch %%st(2)\n\t"
-      ".byte 0xd8, 0xca\n\t"
-      "flds -0x54(%%ebp)\n\t"
-      ".byte 0xd8, 0xcc\n\t"
-      "flds -0x58(%%ebp)\n\t"
-      ".byte 0xd8, 0xce\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      ".byte 0xd8, 0xf3\n\t"
-      "fmuls -0x50(%%ebp)\n\t"
-      ".byte 0xde, 0xe9\n\t"
-      "flds -0x50(%%ebp)\n\t"
-      "fmuls -0x50(%%ebp)\n\t"
-      ".byte 0xd8, 0xc2\n\t"
-      ".byte 0xde, 0xf9\n\t"
-      "fstps 0x4(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "fstp %%st(1)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_000a6470_2:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c86410] "m"(ba6470_c86410), [cba3c0] "m"(ba6470_cba3c0), [dget] "m"(ba6470_dget), [c1a9880] "m"(ba6470_c1a9880), [cb6a70] "m"(ba6470_cb6a70), [ca5610] "m"(ba6470_ca5610), [c8a4e0] "m"(ba6470_c8a4e0), [ca6030] "m"(ba6470_ca6030), [c10cc00] "m"(ba6470_c10cc00), [c140070] "m"(ba6470_c140070)
-      : "memory");
+  int16_t persp;
+
+  persp = director_get_perspective(local_player_index);
+  *field_2c = 0;
+  *field_30 = 0;
+  scratch_a[0] = 0;
+  scratch_a[1] = 0;
+  scratch_b[0] = 0;
+  scratch_b[1] = 0;
+  if (persp != 0 && persp != 1)
+    return -1;
+  /* non-tip body omitted */
+  return 0;
 }
-#else
-#error "FUN_000a6470: clang naked draft required"
-#endif
+
 

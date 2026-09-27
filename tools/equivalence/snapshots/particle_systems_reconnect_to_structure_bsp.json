@@ -1,0 +1,9 @@
+{
+  "description": "particle_systems_reconnect: data_next_index \u2192 -1",
+  "regions": {
+    "0x5aa8a8": "0030000000"
+  },
+  "stub_returns": {
+    "data_next_index": -1
+  }
+}

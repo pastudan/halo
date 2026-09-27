@@ -1,0 +1,7 @@
+{
+  "description": "IoStartNextPacket: IAT jmp [0x253260] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253260": "00000060"
+  }
+}

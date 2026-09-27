@@ -1,0 +1,7 @@
+{
+  "description": "NtWaitForMultipleObjectsEx: IAT jmp [0x253114] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253114": "00000060"
+  }
+}

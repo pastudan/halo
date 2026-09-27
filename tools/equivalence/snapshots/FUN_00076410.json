@@ -1,0 +1,15 @@
+{
+  "description": "empty rows \u2192 return 1",
+  "regions": {
+    "0x30000000": "000000000000ff7f0000000000000000",
+    "0x334150": "00000030"
+  },
+  "arg_overrides": {
+    "param_1": 0,
+    "param_2": 0
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

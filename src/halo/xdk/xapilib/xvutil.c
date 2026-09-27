@@ -230,8 +230,8 @@ void *__stdcall FUN_001d0b31(unsigned int flags, unsigned int size_min,
   }
   if (size_min > sz)
     sz = size_min;
-  p = ((void *(*)(unsigned, unsigned, unsigned, unsigned, unsigned, unsigned))
-           FUN_001d5842)(fl, 0, sz, size_min, 0, 0);
+  p = ((void *(__stdcall *)(unsigned, unsigned, unsigned, unsigned, unsigned,
+                              unsigned))FUN_001d5842)(fl, 0, sz, size_min, 0, 0);
   if (p == 0)
     SetLastError(8);
   return p;

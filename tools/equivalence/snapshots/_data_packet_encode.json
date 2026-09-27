@@ -1,0 +1,12 @@
+{
+  "description": "_data_packet_encode: field type == 9 \u2192 return",
+  "arg_overrides": {
+    "param_1": 0,
+    "param_2": null,
+    "param_3": 0,
+    "param_4": null,
+    "decoded_size_out": null,
+    "field_defs": "0900",
+    "field_count_out": null
+  }
+}

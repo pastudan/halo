@@ -1227,11 +1227,11 @@ void FUN_000652f0(void)
   ((void(*)(void))FUN_00065250)();
   /* cmp edi, 1 -> jl 0x654ea */
   /* cmp edi, 8 -> jg 0x654ea */
-  TIFFDefaultDirectory();
+  (void)TIFFDefaultDirectory(0);
   ((void(*)(void))FUN_0006f9d0)();
   /* test edi, edi -> je 0x65894 */
   /* cmp edi, 4 -> jle 0x65544 */
-  FUN_00068a30(0, (void *)0x0025f634);
+  FUN_00068a30(0, (void *)0x0025f634, 0);
   /* test edi, edi -> je 0x65894 */
   /* relift: test byte ptr [eax + 0x14], 2 -> jne 0x65858 */
   /* cmp edi, 1 -> je 0x655d8 */

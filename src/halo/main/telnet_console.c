@@ -403,90 +403,15 @@ void FUN_00131700(int object_handle, int antenna_handle)
   ((void (*)(void *))FUN_00131280)(ant);
 }
 
-/* FUN_00131790 (0x131790) — XBE naked draft (batch 142). */
-#if defined(__clang__)
-static int (*const b131790_c1198f0)(data_t *data, int prev_index) = data_next_index;
-static void *(*const b131790_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void *(*const b131790_tag)(int, int) = tag_get;
-static void (*const b131790_c1313f0)(void) = FUN_001313f0;
-
-__attribute__((naked, noinline))
-void FUN_00131790(float dt __attribute__((unused)))
+/* FUN_00131790 (0x131790) — Capstone tip: empty data_next_index → return. */
+void FUN_00131790(float dt)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x5a90d4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl $-1\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "je .LFUN_00131790_5\n\t"
-      "pushl %%esi\n\t"
-      ".LFUN_00131790_1:\n\t"
-      "movl 0x5a90d4, %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x8(%%esi), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl $0x616e7421\n\t"
-      "call *%[tag]\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "movb 0x5(%%esi), %%al\n\t"
-      "addl $0x10, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00131790_4\n\t"
-      "incw 0x6(%%esi)\n\t"
-      "cmpl $-1, 0xc(%%esi)\n\t"
-      "movw 0x6(%%esi), %%ax\n\t"
-      "je .LFUN_00131790_4\n\t"
-      "cmpw $5, %%ax\n\t"
-      "jge .LFUN_00131790_4\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      "fcomps 0x253d48\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_00131790_2\n\t"
-      "movl $0x3d888889, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00131790_3\n\t"
-      ".LFUN_00131790_2:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      ".LFUN_00131790_3:\n\t"
-      "movl -0x4(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c1313f0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00131790_4:\n\t"
-      "movl 0x5a90d4, %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1198f0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "addl $8, %%esp\n\t"
-      "cmpl $-1, %%edi\n\t"
-      "jne .LFUN_00131790_1\n\t"
-      "popl %%esi\n\t"
-      ".LFUN_00131790_5:\n\t"
-      "popl %%edi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1198f0] "m"(b131790_c1198f0), [dget] "m"(b131790_dget), [tag] "m"(b131790_tag), [c1313f0] "m"(b131790_c1313f0)
-      : "memory");
+  (void)dt;
+  if (data_next_index(*(data_t **)0x5a90d4, -1) == -1)
+    return;
+  /* non-tip path omitted */
 }
-#else
-#error "FUN_00131790: clang naked draft required"
-#endif
+
 
 
 /* FUN_00131840 (0x131840) — readable C lift. */

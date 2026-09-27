@@ -1,0 +1,17 @@
+{
+  "description": "FUN_000f39c0: UI tag type \u2260 2 \u2192 assert",
+  "arg_overrides": {
+    "widget": 805306368
+  },
+  "regions": {
+    "0x30000000": "00000130",
+    "0x30000100": "0000"
+  },
+  "stub_returns": {
+    "player_ui_get_active_player_profile": 0,
+    "player_profile_save_last_level_played": 0,
+    "tag_get": 805306624,
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

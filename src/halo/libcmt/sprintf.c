@@ -2,61 +2,61 @@
 
 /* --- LIBCMT:sprintf.obj batch drafts (2026-07-26) --- */
 
-/* 0x1d8ebe */
+/* DbgPrint (0x1d8ebe) — Capstone tip: IAT jmp [0x2532bc]. */
 void DbgPrint(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532bc)();
 }
 
-/* 0x1d8f06 */
+
+/* XcRC4Crypt (0x1d8f06) — Capstone tip: IAT jmp [0x2532ec]. */
 void XcRC4Crypt(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532ec)();
 }
 
-/* 0x1d8f0c */
+
+/* XcRC4Key (0x1d8f0c) — Capstone tip: IAT jmp [0x2532f0]. */
 void XcRC4Key(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532f0)();
 }
 
-/* 0x1d8f18 */
+
+/* XcBlockCryptCBC (0x1d8f18) — Capstone tip: IAT jmp [0x2532f8]. */
 void XcBlockCryptCBC(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532f8)();
 }
 
-/* 0x1d8f1e */
+
+/* XcKeyTable (0x1d8f1e) — Capstone tip: IAT jmp [0x2532fc]. */
 void XcKeyTable(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532fc)();
 }
 
-/* 0x1d8f24 */
+
+/* XcDESKeyParity (0x1d8f24) — Capstone tip: IAT jmp [0x253300]. */
 void XcDESKeyParity(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253300)();
 }
 
-/* 0x1d8f2a */
+
+/* XcHMAC (0x1d8f2a) — Capstone tip: IAT jmp [0x253304]. */
 void XcHMAC(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253304)();
 }
 
-/* 0x1d8f30 */
+
+/* XcModExp (0x1d8f30) — Capstone tip: IAT jmp [0x253308]. */
 void XcModExp(void)
 {
-  /* relift: FUN_001d8b2e(0, 0); */
-  /* relift: FUN_001d8b49(0, 0); */
+  ((void (*)(void))*(void **)0x253308)();
 }
+
 
 /* 0x1d8ff0 */
 void FUN_001d8ff0(void)

@@ -1,0 +1,14 @@
+{
+  "description": "FUN_000922a0: skip==0 \u2192 *count=0",
+  "arg_overrides": {
+    "skip": 0,
+    "frames": null,
+    "max": 0,
+    "count": 805306368
+  },
+  "regions": {
+    "0x449ef8": "00000000",
+    "0x449efc": "00000000",
+    "0x30000000": "00000000"
+  }
+}

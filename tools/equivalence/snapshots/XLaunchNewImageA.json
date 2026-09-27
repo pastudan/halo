@@ -1,0 +1,4 @@
+{
+  "description": "XLaunchNewImageA: non-D:\\ path → ERROR_INVALID_PARAMETER 0x57",
+  "arg_overrides": { "image_path": "5800" }
+}

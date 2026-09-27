@@ -2,285 +2,6 @@
 
 /* --- XNET:wsock.obj batch drafts (2026-07-26) --- */
 
-/* 0x222df7 */
-int FUN_00222df7(void *key)
-{
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-  int lift_a1 = 0;
-
-  /* test ecx, ecx -> jne 0x222e09 */
-  /* test ecx, ecx -> jne 0x222e1f */
-  /* relift: FUN_002262c4(0, 0); */
-  /* test ecx, ecx -> jne 0x222e43 */
-  /* cmp eax, 0xa -> jb 0x222e8c */
-  /* cmp eax, 0x64 -> jb 0x222e7e */
-  /* cmp esi, eax -> jb 0x222e62 */
-  /* cmp ebx, 0x10 -> jae 0x222ec6 */
-  /* test ebx, ebx -> jle 0x222ec6 */
-  /* test ecx, ecx -> jne 0x222edf */
-  /* test ecx, ecx -> jne 0x222ef4 */
-  /* test edx, edx -> je 0x222f48 */
-  /* relift: cmp dword ptr [esp + 4], 0 -> je 0x222f5a */
-  /* relift: FUN_0024ba93(0, 0, 0, 0x00222f6c); */
-  /* test edx, edx -> je 0x222fcf */
-  /* relift: cmp dword ptr [esp + 4], 0 -> je 0x222fe1 */
-  /* test ecx, ecx -> jne 0x223036 */
-  /* relift: FUN_0024ba93(0, 24, 64, 0x00222f79); */
-  /* relift: FUN_0024ba93(0, 24, 64, 0x00222f79); */
-  /* relift: FUN_0024ba93(0, 0, 0, 0x00222f6c); */
-  /* relift: FUN_0024ba93(0, 24, 64, 0x00222f79); */
-  /* relift: FUN_0024ba93(0, 0, 0, 0x00222f6c); */
-  /* cmp eax, ebx -> je 0x22310e */
-  FUN_001d0362();
-  /* cmp eax, ebx -> jne 0x2231bb */
-  /* cmp esi, ebx -> je 0x223176 */
-  /* relift: FUN_0024ba93(0, 24); */
-  /* relift: FUN_0024ba93(0, 0, 0, 0x00222f6c); */
-  /* mem[0x004ee4b0] = ecx */
-  /* relift: FUN_00223676(0); */
-  /* cmp esi, ebx -> jge 0x2231ad */
-  /* relift: FUN_00225c89(0, 0); */
-  /* mem[0x004ee4b0] = ebx */
-  /* relift: FUN_00228a69(0, 0); */
-  /* cmp eax, ebx -> je 0x2231ce */
-  /* relift: cmp dword ptr [ebp + 0xc], ebx -> je 0x2231c8 */
-  /* mem[0x004ee4b4] = ebx */
-  /* test esi, esi -> je 0x2231f2 */
-  /* relift: FUN_002230e5(0, 0); */
-  /* relift: FUN_002230e5(0, 0, 0); */
-  /* cmp eax, ebx -> jne 0x223244 */
-  /* cmp eax, esi -> je 0x22326c */
-  FUN_001d0362();
-  /* cmp eax, esi -> je 0x2232a4 */
-  /* relift: cmp dword ptr [esp + 0xc], esi -> je 0x22329c */
-  /* relift: cmp dword ptr [ecx], esi -> je 0x2232a4 */
-  /* relift: cmp dword ptr [eax + 0x964], esi -> jne 0x2232bc */
-  /* relift: FUN_00225ad7(0, 0); */
-  /* relift: cmp dword ptr [eax + 0x960], esi -> jne 0x2232b6 */
-  /* mem[0x004ee4b4] = esi */
-  /* relift: FUN_00225c89(0, 0); */
-  /* cmp eax, esi -> je 0x2232e5 */
-  /* mem[0x004ee4b0] = esi */
-  /* relift: FUN_00223248(0); */
-  /* relift: FUN_00223248(0); */
-  /* test eax, eax -> je 0x223309 */
-  SetLastError(eax);
-  /* test eax, eax -> je 0x2233b3 */
-  /* test ecx, ecx -> je 0x2233b3 */
-  /* cmp ecx, 0xffff -> ja 0x2233b3 */
-  /* relift: cmp dword ptr [eax], 0 -> je 0x2233a7 */
-  /* relift: cmp dword ptr [eax + 4], 0 -> je 0x2233b3 */
-  /* test ecx, ecx -> jne 0x22339b */
-  /* test edx, edx -> je 0x2233ce */
-  /* relift: cmp byte ptr [eax], 0x20 -> je 0x2233e0 */
-  /* cmp edi, 4 -> jae 0x2234ac */
-  /* test (char)ecx, (char)ecx -> je 0x2234b9 */
-  /* cmp (char)ecx, 0x30 -> jne 0x223473 */
-  /* cmp dl, 0x78 -> je 0x22340d */
-  /* cmp dl, 0x58 -> jne 0x22345d */
-  /* cmp (char)ecx, 0x30 -> jb 0x22342a */
-  /* cmp (char)ecx, 0x39 -> ja 0x22342a */
-  /* cmp (char)ecx, 0x61 -> jb 0x223440 */
-  /* cmp (char)ecx, 0x66 -> ja 0x223440 */
-  /* cmp (char)ecx, 0x41 -> jb 0x223457 */
-  /* cmp (char)ecx, 0x46 -> ja 0x223457 */
-  /* cmp edx, eax -> je 0x2234b1 */
-  /* cmp (char)ecx, 0x30 -> jb 0x223497 */
-  /* cmp (char)ecx, 0x37 -> jbe 0x22345d */
-  /* cmp (char)ecx, 0x31 -> jb 0x2234ac */
-  /* cmp (char)ecx, 0x39 -> ja 0x2234ac */
-  /* cmp (char)ecx, 0x30 -> jb 0x223497 */
-  /* cmp (char)ecx, 0x39 -> jbe 0x22347d */
-  /* relift: cmp byte ptr [eax], 0x20 -> je 0x223496 */
-  /* relift: cmp byte ptr [eax], 0x2e -> jne 0x2234a2 */
-  /* relift: cmp byte ptr [eax], 0 -> je 0x2234b9 */
-  CreateEventA((void *)(uintptr_t)eax, 0, 0, (char *)(uintptr_t)eax);
-  /* relift: cmp edx, dword ptr [esp + 4] -> je 0x223619 */
-  /* test eax, eax -> jne 0x223604 */
-  /* test esi, esi -> je 0x223664 */
-  /* cmp esi, -1 -> je 0x223664 */
-  /* cmp eax, 0x2b434f53 -> jne 0x22364f */
-  SetLastError(eax);
-  /* relift: FUN_0022724d(0, 0); */
-  /* test eax, eax -> jl 0x2236ba */
-  /* relift: FUN_0022955c(0x02000000); */
-  /* cmp eax, esi -> jne 0x2236c8 */
-  /* relift: cmp dword ptr [ebp + 8], 0 -> je 0x22371b */
-  /* test eax, eax -> jne 0x22371b */
-  __allmul();
-  /* relift: FUN_002236be(0, 0); */
-  /* relift: FUN_002236be(0); */
-  /* relift: FUN_002236be(0); */
-  /* test eax, eax -> jne 0x223919 */
-  /* relift: test byte ptr [ecx + 0xc], 2 -> jne 0x223972 */
-  /* relift: FUN_0022a8d5(0, 0); */
-  /* test eax, eax -> je 0x223a51 */
-  /* relift: FUN_00226412(0); */
-  /* relift: FUN_00226045(0); */
-  /* relift: cmp dword ptr [esi], esi -> jne 0x223b29 */
-  /* test edi, edi -> je 0x223b5b */
-  /* relift: cmp dword ptr [edi + 0x964], 0 -> jg 0x223b6a */
-  SetLastError(10093);
-  /* relift: FUN_0022361e(0, 0); */
-  /* test esi, esi -> jne 0x223b7f */
-  /* relift: FUN_0022c3f4(0, 0); */
-  /* test (char)eax, 0x20 -> jne 0x223bb3 */
-  /* relift: FUN_0022b513(0, 0, 0); */
-  /* test eax, eax -> jl 0x223bc6 */
-  SetLastError(eax);
-  /* cmp ecx, ebx -> je 0x223bf9 */
-  /* relift: cmp dword ptr [ecx + 0x964], ebx -> jg 0x223c0b */
-  SetLastError(10093);
-  /* relift: FUN_0022361e(0, 0); */
-  /* cmp esi, ebx -> jne 0x223c22 */
-  /* relift: cmp dword ptr [ebp + 0xc], 0x8004667e -> je 0x223c72 */
-  /* relift: cmp dword ptr [ebp + 0xc], 0x4004667f -> je 0x223c3b */
-  /* relift: test byte ptr [esi + 0xc], 2 -> jne 0x223c5f */
-  /* cmp edi, edx -> jne 0x223c55 */
-  /* test edx, edx -> jne 0x223c62 */
-  /* relift: FUN_002236be(0xfffdffff, 0); */
-  SetLastError(ebx);
-  /* cmp esi, eax -> jle 0x223cc3 */
-  /* test esi, esi -> jg 0x223cca */
-  /* cmp edx, eax -> jle 0x223cdd */
-  /* test edx, edx -> jg 0x223ce3 */
-  /* relift: cmp byte ptr [ecx + 0x7c], 1 -> jbe 0x223d04 */
-  /* relift: cmp edx, dword ptr [ecx + 0x5c] -> jge 0x223d04 */
-  /* test ecx, ecx -> je 0x223d6c */
-  /* relift: cmp dword ptr [ecx + 0x964], 0 -> jle 0x223d6c */
-  /* relift: FUN_0022361e(0, 0); */
-  /* test edx, edx -> je 0x223dec */
-  /* relift: cmp dword ptr [ebp + 0xc], 0xffff -> je 0x223d73 */
-  /* cmp ecx, eax -> jg 0x223e40 */
-  /* cmp ecx, 0xffffff7f -> je 0x223e27 */
-  /* cmp ecx, -5 -> je 0x223e1f */
-  /* cmp ecx, ebx -> je 0x223e12 */
-  /* cmp ecx, edi -> je 0x223e07 */
-  /* cmp ecx, 0x20 -> je 0x223df4 */
-  /* cmp ecx, 0x80 -> jne 0x223e8d */
-  /* relift: test byte ptr [edx + 0xc], (char)ebx -> je 0x223e8d */
-  SetLastError(0);
-  /* test (char)ebx, (char)eax -> jne 0x223e8d */
-  /* relift: test byte ptr [edx + 0xc], (char)ebx -> je 0x223e8d */
-  /* relift: test byte ptr [edx + 0xc], 2 -> je 0x223e8d */
-  /* test (char)eax, 2 -> je 0x223e8d */
-  /* relift: cmp dword ptr [esi], edi -> jae 0x223dc9 */
-  /* test ecx, ecx -> je 0x223eca */
-  /* relift: cmp dword ptr [ecx + 0x964], 0 -> jg 0x223ed1 */
-  /* relift: FUN_0022361e(0); */
-  /* test edx, edx -> je 0x223f29 */
-  /* relift: test byte ptr [edx + 0xc], 0x10 -> jne 0x223eed */
-  SetLastError(eax);
-  /* test ecx, ecx -> je 0x223f40 */
-  /* relift: cmp dword ptr [ecx + 0x964], 0 -> jg 0x223f47 */
-  /* relift: FUN_0022361e(0); */
-  /* test edx, edx -> je 0x223fa0 */
-  /* relift: test byte ptr [edx + 0xc], 0x20 -> jne 0x223f63 */
-  SetLastError(eax);
-  /* test eax, eax -> jle 0x22401f */
-  /* relift: cmp dword ptr [eax], 0x1387 -> jb 0x224013 */
-  /* test esi, esi -> je 0x2240ab */
-  /* test (char)eax, 0x10 -> je 0x22406b */
-  /* test (char)ecx, 1 -> jne 0x224068 */
-  /* relift: cmp (int16_t)ecx, word ptr [ebp + 0xc] -> jne 0x224068 */
-  /* test ecx, eax -> jne 0x224083 */
-  /* test ecx, edi -> jne 0x224083 */
-  /* test edi, 0x40000 -> je 0x224083 */
-  /* test esi, esi -> je 0x2240ab */
-  /* relift: cmp dword ptr [ebp - 4], 0 -> jg 0x223ff3 */
-  /* relift: FUN_002236be(0, 16); */
-  /* test edi, edi -> je 0x2240d3 */
-  /* relift: cmp dword ptr [edi + 0x964], 0 -> jg 0x2240e2 */
-  SetLastError(10093);
-  /* relift: FUN_0022361e(0, 0); */
-  /* test esi, esi -> jne 0x2240f7 */
-  /* test (char)eax, 0x20 -> je 0x224105 */
-  /* test (char)eax, 0x10 -> jne 0x224110 */
-  /* relift: FUN_0022a590(0, 0); */
-  /* test eax, eax -> jl 0x224124 */
-  SetLastError(eax);
-  /* test edx, edx -> je 0x22415e */
-  /* relift: cmp dword ptr [ebx], eax -> je 0x2241c4 */
-  /* relift: cmp edx, dword ptr [ebp + 0x10] -> jl 0x2241b3 */
-  /* relift: cmp edx, dword ptr [ebp + 0x10] -> jne 0x2241e6 */
-  /* relift: FUN_0022361e(0); */
-  xapi_GetLastError();
-  /* relift: cmp eax, dword ptr [ebp - 0x10] -> jl 0x224194 */
-  /* test (char)eax, 2 -> je 0x2242d2 */
-  /* relift: cmp dword ptr [esi + 0x40], 0 -> jge 0x22425e */
-  /* cmp ebx, ecx -> jne 0x224257 */
-  /* relift: FUN_0022a8d5(0, 0); */
-  /* test (char)ecx, 0x20 -> je 0x2242f3 */
-  /* relift: cmp eax, dword ptr [esi + 0x58] -> jae 0x2242ad */
-  /* test eax, ebx -> je 0x2242f3 */
-  /* relift: cmp dword ptr [ebp + 0x10], 0 -> jl 0x2242f3 */
-  /* relift: FUN_002236be(0, 128); */
-  /* relift: cmp dword ptr [ebp + 0x10], 0 -> je 0x224314 */
-  /* relift: FUN_002236be(0xffff03ff, 0); */
-  /* relift: FUN_00224223(0, lift_a1, 0, 0); */
-  /* test eax, eax -> je 0x224347 */
-  __allmul();
-  /* relift: FUN_002236be(0, 0); */
-  /* test esi, esi -> jl 0x22439e */
-  /* relift: cmp edx, dword ptr [ebp + 0x14] -> jne 0x224415 */
-  /* relift: cmp (int16_t)edx, word ptr [ebp + 8] -> jne 0x224415 */
-  /* relift: cmp edx, dword ptr [ebp + 0xc] -> je 0x2243f9 */
-  /* test edx, edx -> jne 0x224415 */
-  /* relift: cmp (int16_t)edx, word ptr [ebp + 0x10] -> je 0x224409 */
-  /* test (int16_t)edx, (int16_t)edx -> jne 0x224415 */
-  /* test edi, edi -> je 0x224427 */
-  /* cmp edi, ebx -> jae 0x224415 */
-  /* test edx, edx -> je 0x224464 */
-  /* relift: cmp dword ptr [esp + 4], 0 -> je 0x224476 */
-  /* cmp (char)ecx, 0xe0 -> jne 0x224490 */
-  /* cmp eax, -1 -> je 0x224490 */
-  /* relift: cmp dword ptr [ecx + 0x968], edx -> jb 0x2244cf */
-  /* relift: FUN_00226013(0, 0); */
-  /* cmp edx, ebx -> je 0x2245fe */
-  /* cmp edx, ebx -> je 0x2245fe */
-  /* relift: cmp dword ptr [ebp + 8], ebx -> je 0x2245e7 */
-  /* relift: FUN_00226045(0, 0); */
-  /* relift: cmp dword ptr [ecx + 0x964], 0 -> jle 0x22466e */
-  /* relift: FUN_0022361e(0, 0); */
-  /* test edi, edi -> jne 0x224680 */
-  SetLastError(10093);
-  /* relift: cmp dword ptr [ebp + 0xc], 6 -> je 0x22480a */
-  /* relift: cmp dword ptr [ebp + 0xc], 0xffff -> jne 0x224801 */
-  /* cmp ecx, 0xffffff7f -> je 0x22477a */
-  /* cmp ecx, -5 -> je 0x224755 */
-  /* cmp ecx, 4 -> je 0x224737 */
-  /* cmp ecx, 0x20 -> je 0x224711 */
-  /* cmp ecx, 0x80 -> jne 0x2247ae */
-  /* relift: test byte ptr [edi + 0xc], 2 -> je 0x2247ae */
-  /* relift: test byte ptr [edi + 0xc], 2 -> jne 0x2247ae */
-  /* relift: FUN_002236be(0xfffeffff, 0); */
-  /* relift: test dword ptr [edi + 0xc], eax -> je 0x224745 */
-  /* test esi, esi -> jne 0x224763 */
-  /* relift: test dword ptr [edi + 0xc], eax -> je 0x22476a */
-  /* test esi, esi -> je 0x22476a */
-  /* relift: test byte ptr [edi + 0xc], 2 -> je 0x2247ae */
-  /* relift: FUN_00223caf(0, *(int *)((char *)edi + 0x58), 0); */
-  /* relift: test byte ptr [edi + 0xc], 2 -> je 0x224816 */
-  /* relift: FUN_002236be(0xffefffff, 0); */
-  SetLastError(0);
-  return 0;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
-  (void)lift_a1;
-}
-
 /* 0x22486b */
 int xnet_getpeername(int socket, void *name, int *namelen)
 {
@@ -679,3 +400,52 @@ int xnet_recvfrom(int socket, void *buf, int len, int flags, void *from, int *fr
   (void)esi;
   (void)edi;
 }
+
+/* FUN_00222de0 (0x222de0) — Capstone tip: xnet not inited → WSAENETDOWN 0x276d. */
+int __stdcall FUN_00222de0(void *a, void *b)
+{
+  (void)a; (void)b;
+  if (*(void **)0x4ee4b0 == 0)
+    return 0x276d;
+  *(volatile int *)0 = 0;
+  return 0;
+}
+
+/* FUN_00222df7 (0x222df7) — Capstone tip: xnet not inited → 0x276d. */
+int __stdcall FUN_00222df7(void *key)
+{
+  (void)key;
+  if (*(void **)0x4ee4b0 == 0)
+    return 0x276d;
+  *(volatile int *)0 = 0;
+  return 0;
+}
+
+/* xnet_xnaddr_to_inaddr (0x222e31) — Capstone tip: xnet not inited → 0x276d. */
+int __stdcall xnet_xnaddr_to_inaddr(void *xnaddr, void *key, unsigned *in_addr)
+{
+  (void)xnaddr; (void)key; (void)in_addr;
+  if (*(void **)0x4ee4b0 == 0)
+    return 0x276d;
+  *(volatile int *)0 = 0;
+  return 0;
+}
+
+/* xnet_fd_isset (0x2235f3) — Capstone tip: scan fd_set bits. */
+int __stdcall xnet_fd_isset(int fd, void *fds_v)
+{
+  unsigned *fds = (unsigned *)fds_v;
+  unsigned n = fds[0] & 0xffff;
+  unsigned *p;
+  if (n == 0)
+    return 0;
+  p = fds + n; /* &fds[n] then -1 in loop start: lea ecx,[ecx+eax*4+4]; sub ecx,4 */
+  while (n) {
+    if (*p == (unsigned)fd)
+      return 1;
+    p--;
+    n--;
+  }
+  return 0;
+}
+

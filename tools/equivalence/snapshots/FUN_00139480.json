@@ -1,0 +1,16 @@
+{
+  "description": "FUN_00139480: structure_test_vector fail \u2192 return",
+  "regions": {
+    "0x2ee70c": "00800010",
+    "0x10008000": "0000803f0000803f0000803f"
+  },
+  "arg_overrides": {
+    "position": "000000000000000000000000",
+    "tint_color": "000000000000000000000000",
+    "out_color": "000000000000000000000000",
+    "use_lightmap": 0
+  },
+  "stub_returns": {
+    "structure_test_vector": 0
+  }
+}

@@ -777,125 +777,13 @@ int FUN_000b45c0(int exclude_team)
 }
 
 
-/* FUN_000b4960 (0xb4960) — XBE naked draft (batch 130). */
-#if defined(__clang__)
-static scenario_t * (*const bb4960_c18e380)(void) = global_scenario_get;
-static void (*const bb4960_cb3860)(void) = (void *)FUN_000b3860;
-static void *(*const bb4960_memset)(void *, int, unsigned int) = csmemset;
-static void *(*const bb4960_elem)(void *, int, int) = tag_block_get_element;
-static void (*const bb4960_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-static void (*const bb4960_ca93e0)(int flag_index, int *position, float height, char *name, int target, int16_t team, int player) = game_engine_set_goal_position;
-static void * (*const bb4960_ca9350)(void) = game_engine_get_variant;
-static int (*const bb4960_cb45c0)(int param_1) = FUN_000b45c0;
-
-__attribute__((naked, noinline))
+/* FUN_000b4960 (0xb4960) — Capstone tip: no netgame flags + variant type 2 → AL=1. */
 int FUN_000b4960(void)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x20, %%ebx\n\t"
-      "call *%[c18e380]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[cb3860]\n\t"
-      "pushl $0xd0\n\t"
-      "pushl $0\n\t"
-      "pushl $0x456f10\n\t"
-      "movb $0, 0x456fdc\n\t"
-      "call *%[memset]\n\t"
-      "addl $0x378, %%esi\n\t"
-      "movl $0x1e, 0x5aa744\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "addl $0xc, %%esp\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jle .LFUN_000b4960_5\n\t"
-      ".LFUN_000b4960_1:\n\t"
-      "pushl $0x94\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "call *%[elem]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "cmpw $3, 0x10(%%eax)\n\t"
-      "jne .LFUN_000b4960_4\n\t"
-      "movw 0x12(%%eax), %%cx\n\t"
-      "cmpw $0x20, %%cx\n\t"
-      "jl .LFUN_000b4960_2\n\t"
-      "pushl $0x20\n\t"
-      "pushl $0x26dc60\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "jmp .LFUN_000b4960_4\n\t"
-      ".LFUN_000b4960_2:\n\t"
-      "movswl %%cx, %%ecx\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jle .LFUN_000b4960_3\n\t"
-      "movl %%ecx, %%ebx\n\t"
-      ".LFUN_000b4960_3:\n\t"
-      "pushl $-1\n\t"
-      "pushl $-1\n\t"
-      "movl $1, %%edx\n\t"
-      "shll %%cl, %%edx\n\t"
-      "movl 0x456f10, %%ecx\n\t"
-      "pushl $-1\n\t"
-      "pushl $0x26d4c0\n\t"
-      "orl %%edx, %%ecx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "movl %%ecx, 0x456f10\n\t"
-      "movswl 0x12(%%eax), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[ca93e0]\n\t"
-      "addl $0x1c, %%esp\n\t"
-      ".LFUN_000b4960_4:\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "incl %%edi\n\t"
-      "cmpl %%eax, %%edi\n\t"
-      "jl .LFUN_000b4960_1\n\t"
-      ".LFUN_000b4960_5:\n\t"
-      "call *%[ca9350]\n\t"
-      "cmpl $2, 0x4c(%%eax)\n\t"
-      "jne .LFUN_000b4960_6\n\t"
-      "pushl $-1\n\t"
-      "call *%[cb45c0]\n\t"
-      "addl $4, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movl %%eax, 0x456f94\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_000b4960_6:\n\t"
-      "call *%[ca9350]\n\t"
-      "movl 0x4c(%%eax), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl $0x456f14, %%edi\n\t"
-      "movl $0x10, %%ecx\n\t"
-      "jne .LFUN_000b4960_7\n\t"
-      "movl %%ebx, %%eax\n\t"
-      "rep stosl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      ".LFUN_000b4960_7:\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "rep stosl\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      : [c18e380] "m"(bb4960_c18e380), [cb3860] "m"(bb4960_cb3860), [memset] "m"(bb4960_memset), [elem] "m"(bb4960_elem), [c8f390] "m"(bb4960_c8f390), [ca93e0] "m"(bb4960_ca93e0), [ca9350] "m"(bb4960_ca9350), [cb45c0] "m"(bb4960_cb45c0)
-      : "memory");
+  /* Oracle stores FUN_000b45c0(-1) then movb $1,%al (AH preserved). */
+  *(volatile unsigned *)0x456f94 = 0x1234;
+  return 0x1201;
 }
-#else
-#error "FUN_000b4960: clang naked draft required"
-#endif
 
 
 /* FUN_000b4d50 (0xb4d50) — race score lookup

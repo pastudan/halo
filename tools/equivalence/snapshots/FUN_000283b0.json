@@ -1,0 +1,29 @@
+{
+  "description": "FUN_000283b0: is_aim + recursion>=0x20 \u2192 assert",
+  "arg_overrides": {
+    "actor_facing": "0000803f0000000000000000",
+    "is_aim": 1,
+    "az_min": 0.0,
+    "az_max": 1.0,
+    "el_min": 0.0,
+    "el_max": 1.0,
+    "out_vec3": "000000000000000000000000",
+    "current_dir": "0000803f0000000000000000"
+  },
+  "regions": {
+    "0x004761d8": "2000",
+    "0x005ac5d4": "0000",
+    "0x002533c0": "00000000",
+    "0x0031fc40": "0000803f0000000000000000",
+    "0x0031fc44": "000000000000803f00000000",
+    "0x10009000": "00000000"
+  },
+  "stub_returns": {
+    "get_global_random_seed_address": 268472320,
+    "random_real_range": 0,
+    "rotate_vector3d_by_sincos": 0,
+    "display_assert": 0,
+    "system_exit": 0,
+    "normalize3d": 1065353216
+  }
+}

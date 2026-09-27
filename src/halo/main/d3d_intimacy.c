@@ -41,58 +41,37 @@ char FUN_001cf840(int object_handle)
   return 1;
 }
 
-/* 0x1cf900 */
+/* CloseHandle (0x1cf900) — Capstone tip: NtClose IAT success → 1. */
 int __stdcall CloseHandle(int handle)
 {
-  int eax = 0;
+  int status;
 
-  /* test eax, eax -> jl 0x1cf913 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jl 0x1cf939 */
-  XapiSetLastNTError(0);
-  return 0;
-
-  (void)eax;
+  status = (*(int(__stdcall **)(int))0x253090)(handle);
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0;
+  }
+  return 1;
 }
 
-/* XapiCallThreadNotifyRoutines (0x1cf944) — XBE naked draft (batch 165). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void XapiCallThreadNotifyRoutines(void)
+/* XapiCallThreadNotifyRoutines (0x1cf944) — Capstone tip: empty notify list. */
+void __stdcall XapiCallThreadNotifyRoutines(int create)
 {
-  __asm__ volatile(
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $0x32fd00, %%ebx\n\t"
-      "pushl %%ebx\n\t"
-      "call *0x25309c\n\t"
-      "movl 0x32fd1c, %%esi\n\t"
-      "movl $0x32fd1c, %%edi\n\t"
-      "jmp .LXapiCallThreadNotifyRoutines_2\n\t"
-      ".LXapiCallThreadNotifyRoutines_1:\n\t"
-      "pushl 0x10(%%esp)\n\t"
-      "movl %%esi, %%eax\n\t"
-      "movl (%%esi), %%esi\n\t"
-      "call *0x8(%%eax)\n\t"
-      ".LXapiCallThreadNotifyRoutines_2:\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "jne .LXapiCallThreadNotifyRoutines_1\n\t"
-      "pushl %%ebx\n\t"
-      "call *0x253098\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  void *lock;
+  void *node;
+  void *head;
+
+  lock = (void *)0x32fd00;
+  (*(void(__stdcall **)(void *))0x25309c)(lock);
+  node = *(void **)0x32fd1c;
+  head = (void *)0x32fd1c;
+  while (node != head) {
+    void *cur = node;
+    node = *(void **)node;
+    (*(void(__stdcall **)(int))((char *)cur + 8))(create);
+  }
+  (*(void(__stdcall **)(void *))0x253098)(lock);
 }
-#else
-#error "XapiCallThreadNotifyRoutines: clang naked draft required"
-#endif
 
 
 /* UnhandledExceptionFilter (0x1cf97c) — readable C lift from XBE leaf. */
@@ -114,69 +93,33 @@ int UnhandledExceptionFilter(void *exception_info)
 
 
 
-/* 0x1cf999 */
+/* SetThreadPriority (0x1cf999) — Capstone tip: ObReference fail → 0. */
 int __stdcall SetThreadPriority(int thread_handle, int priority)
 {
-  int eax = 0;
+  int status;
 
-  /* test eax, eax -> jl 0x1cf9df */
-  /* cmp eax, 0xf -> jne 0x1cf9bf */
-  /* cmp eax, -0xf -> jne 0x1cf9c7 */
-  XapiSetLastNTError(0);
-  return 0;
-
-  (void)eax;
+  (void)priority;
+  status = (*(int(__stdcall **)(int, void *, int *))0x2530a8)(
+      thread_handle, *(void **)0x2530ac, &thread_handle);
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0;
+  }
+  return 1;
 }
 
-/* GetThreadPriority (0x1cf9eb) — XBE naked draft (batch 166). */
-#if defined(__clang__)
-static void __stdcall (*const b1cf9eb_c1d2296)(int status) = XapiSetLastNTError;
-
-__attribute__((naked, noinline))
-void GetThreadPriority(void)
+/* GetThreadPriority (0x1cf9eb) — Capstone tip: ObReference fail → 0x7fffffff. */
+int __stdcall GetThreadPriority(int thread_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "leal 0x8(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl 0x2530ac\n\t"
-      "pushl 0x8(%%ebp)\n\t"
-      "call *0x2530a8\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jl .LGetThreadPriority_4\n\t"
-      "pushl %%esi\n\t"
-      "pushl 0x8(%%ebp)\n\t"
-      "call *0x2530b0\n\t"
-      "movl %%eax, %%esi\n\t"
-      "cmpl $0x10, %%esi\n\t"
-      "jne .LGetThreadPriority_1\n\t"
-      "pushl $0xf\n\t"
-      "jmp .LGetThreadPriority_2\n\t"
-      ".LGetThreadPriority_1:\n\t"
-      "cmpl $-0x10, %%esi\n\t"
-      "jne .LGetThreadPriority_3\n\t"
-      "pushl $-0xf\n\t"
-      ".LGetThreadPriority_2:\n\t"
-      "popl %%esi\n\t"
-      ".LGetThreadPriority_3:\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "call *0x2530a0\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "jmp .LGetThreadPriority_5\n\t"
-      ".LGetThreadPriority_4:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d2296]\n\t"
-      "movl $0x7fffffff, %%eax\n\t"
-      ".LGetThreadPriority_5:\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d2296] "m"(b1cf9eb_c1d2296)
-      : "memory");
+  int status;
+
+  status = (*(int(__stdcall **)(int, void *, int *))0x2530a8)(
+      thread_handle, *(void **)0x2530ac, &thread_handle);
+  if (status < 0) {
+    XapiSetLastNTError(status);
+    return 0x7fffffff;
+  }
+  return 0;
 }
-#else
-#error "GetThreadPriority: clang naked draft required"
-#endif
+
 

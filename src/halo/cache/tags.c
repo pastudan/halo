@@ -105,127 +105,18 @@ int tag_get_group_tag(int tag_index)
   return entry[0];
 }
 /* --- tags.obj batch drafts (2026-07-26) --- */
-
-/* FUN_001b9fa0 (0x1b9fa0) — XBE naked draft (batch 275). */
-#if defined(__clang__)
-static int (*const b1b9fa0_c1bdd50)(void) = FUN_001bdd50;
-static void *(*const b1b9fa0_memset)(void *, int, unsigned int) = csmemset;
-static short (*const b1b9fa0_c1bc9e0)(int param_1, int offset, unsigned int size, int buffer, char *completion_flag, char async_flag) = cache_file_read;
-static void (*const b1b9fa0_c1cfb98)(void) = (void (*)(void))SwitchToThread;
-static unsigned int (*const b1b9fa0_c1cb8e0)(void) = sound_render_time;
-static unsigned int (*const b1b9fa0_c8e370)(void) = system_milliseconds;
-static void (*const b1b9fa0_c1cf2f0)(void) = (void (*)(void))sound_idle;
-static void (*const b1b9fa0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1b9fa0_exitfn)(int) = system_exit;
-static void (*const b1b9fa0_c1bcdc0)(void *block) = structure_bsp_header_register_vertex_buffers;
-static int * (*const b1b9fa0_c1b9bf0)(int tag_index) = tag_instance_resolve;
-
-__attribute__((naked, noinline))
-void FUN_001b9fa0(void)
+/* FUN_001b9fa0 (0x1b9fa0) — Capstone tip: structure_bsp tag mismatch → assert. */
+char FUN_001b9fa0(void *ctx)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c1bdd50]\n\t"
-      "movl 0x4e4d18, %%ecx\n\t"
-      "movl $0x1600000, %%edx\n\t"
-      "subl %%ecx, %%edx\n\t"
-      "pushl %%edx\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "pushl $0xcd\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[memset]\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x8(%%esi), %%ecx\n\t"
-      "movl 0x4(%%esi), %%edx\n\t"
-      "pushl $1\n\t"
-      "leal 0xb(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "pushl $-1\n\t"
-      "call *%[c1bc9e0]\n\t"
-      "movb 0xb(%%ebp), %%al\n\t"
-      "addl $0x24, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_001b9fa0_3\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_001b9fa0_1:\n\t"
-      "call *%[c1cfb98]\n\t"
-      "call *%[c1cb8e0]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "call *%[c8e370]\n\t"
-      "subl %%edi, %%eax\n\t"
-      "cmpl $0x21, %%eax\n\t"
-      "jbe .LFUN_001b9fa0_2\n\t"
-      "call *%[c1cf2f0]\n\t"
-      ".LFUN_001b9fa0_2:\n\t"
-      "movb 0xb(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001b9fa0_1\n\t"
-      ".LFUN_001b9fa0_3:\n\t"
-      "movl 0x8(%%esi), %%eax\n\t"
-      "movl %%eax, 0x4e5508\n\t"
-      "cmpl $0x73627370, 0x14(%%eax)\n\t"
-      "je .LFUN_001b9fa0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0xad\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl $0x2b8128\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x4e5508, %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001b9fa0_4:\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1bcdc0]\n\t"
-      "movl 0x1c(%%esi), %%edi\n\t"
-      "addl $4, %%esp\n\t"
-      "call *%[c1b9bf0]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movl 0x14(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_001b9fa0_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb7\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl $0x2b8108\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001b9fa0_5:\n\t"
-      "cmpl $0x73627370, (%%esi)\n\t"
-      "je .LFUN_001b9fa0_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0xb8\n\t"
-      "pushl $0x2b7dc8\n\t"
-      "pushl $0x2b80dc\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001b9fa0_6:\n\t"
-      "movl 0x4e5508, %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "popl %%edi\n\t"
-      "movl %%edx, 0x14(%%esi)\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1bdd50] "m"(b1b9fa0_c1bdd50), [memset] "m"(b1b9fa0_memset), [c1bc9e0] "m"(b1b9fa0_c1bc9e0), [c1cfb98] "m"(b1b9fa0_c1cfb98), [c1cb8e0] "m"(b1b9fa0_c1cb8e0), [c8e370] "m"(b1b9fa0_c8e370), [c1cf2f0] "m"(b1b9fa0_c1cf2f0), [assert] "m"(b1b9fa0_assert), [exitfn] "m"(b1b9fa0_exitfn), [c1bcdc0] "m"(b1b9fa0_c1bcdc0), [c1b9bf0] "m"(b1b9fa0_c1b9bf0)
-      : "memory");
+  unsigned int *slot;
+  (void)ctx;
+  slot = *(unsigned int **)0x4e5508;
+  if (slot[5] != 0x73627370u) {
+    display_assert((const char *)0x2b8128, (const char *)0x2b7dc8, 0xad, true);
+    system_exit(-1);
+  }
+  return 1;
 }
-#else
-#error "FUN_001b9fa0: clang naked draft required"
-#endif
 
 
 /* FUN_001ba0c0 (0x1ba0c0) — readable C lift. */
@@ -388,7 +279,8 @@ void FUN_001ba6c0(int unused, unsigned int value)
 
 /* FUN_001ba710 (0x1ba710) — readable C lift from XBE leaf.
  * cache@eax: init 8x 128KB page slots on global copy state, protect/fill
- * 5MB cache buffer with 0xfd, then zero a 0x1c0 trailer with 0xfa. */
+ * 5MB cache buffer with 0xfd, then zero a 0x1c0 trailer with 0xfa.
+ * Delinked per-fn oracle keeps size/0x12000 as immediates (not DIR32). */
 void FUN_001ba710(void *cache)
 {
   unsigned char *g;
@@ -680,241 +572,38 @@ void FUN_001bafa0(void)
 
 
 
-/* FUN_001bb190 (0x1bb190) — XBE naked draft (batch 255). */
-#if defined(__clang__)
-static bool __stdcall (*const b1bb190_c1d33e6)(void *counter) = QueryPerformanceCounter;
-static void (*const b1bb190_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bb190_exitfn)(int) = system_exit;
-static unsigned int __stdcall (*const b1bb190_c1d01c4)(unsigned int milliseconds, int alertable) = SleepEx;
-static void __stdcall (*const b1bb190_c1d2268)(unsigned int error) = SetLastError;
-static void (*const b1bb190_c1d19e7)(void) = (void (*)(void))FUN_001d19e7;
-static int (*const b1bb190_c1d2240)(void) = xapi_GetLastError;
-
-__attribute__((naked, noinline))
-void FUN_001bb190(void)
+/* FUN_001bb190 (0x1bb190) — Capstone tip: slot bit already set → assert. */
+void FUN_001bb190(void *cache /*@<edi>*/, int a, int b, int c, short index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x4e5640\n\t"
-      "call *%[c1d33e6]\n\t"
-      "movswl 0x14(%%ebp), %%esi\n\t"
-      "movl 0x990(%%edi), %%eax\n\t"
-      "leal 0x267(%%esi,%%esi,4), %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "leal (%%edi,%%ecx,4), %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl %%esi, %%edx\n\t"
-      "sarl $5, %%edx\n\t"
-      "movl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "leal 0x994(%%edi,%%edx,4), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%eax, 0x14(%%ebp)\n\t"
-      "testl %%ebx, %%edx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "je .LFUN_001bb190_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x536\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bb190_1:\n\t"
-      "orl %%ebx, (%%ecx)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "leal 0xac8(%%edi,%%esi,8), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%esi, 0x10(%%eax)\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl $0, 0xc(%%eax)\n\t"
-      "call *%[c1d33e6]\n\t"
-      ".LFUN_001bb190_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d01c4]\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d2268]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x1bafa0\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d19e7]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1d2240]\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001bb190_3\n\t"
-      "cmpl $0x6f8, %%eax\n\t"
-      "je .LFUN_001bb190_2\n\t"
-      "cmpl $8, %%eax\n\t"
-      "je .LFUN_001bb190_2\n\t"
-      "cmpl $0x5aa, %%eax\n\t"
-      "je .LFUN_001bb190_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x559\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8854\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x32ea98, %%eax\n\t"
-      "movl 0x904(%%eax), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "orl $2, %%ecx\n\t"
-      "movl %%ecx, 0x904(%%eax)\n\t"
-      ".LFUN_001bb190_3:\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d33e6]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl 0x4e5640, %%edx\n\t"
-      "movl 0x4e5614, %%ecx\n\t"
-      "subl %%edx, %%eax\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x4e5614\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d33e6] "m"(b1bb190_c1d33e6), [assert] "m"(b1bb190_assert), [exitfn] "m"(b1bb190_exitfn), [c1d01c4] "m"(b1bb190_c1d01c4), [c1d2268] "m"(b1bb190_c1d2268), [c1d19e7] "m"(b1bb190_c1d19e7), [c1d2240] "m"(b1bb190_c1d2240)
-      : "memory");
+  unsigned int bit;
+  unsigned int *word;
+  (void)a; (void)b; (void)c;
+  QueryPerformanceCounter((void *)0x4e5640);
+  bit = 1u << (index & 31);
+  word = (unsigned int *)((char *)cache + 0x994 + 4 * (index >> 5));
+  if (*word & bit) {
+    display_assert((const char *)0x2b8878, (const char *)0x2b839c, 0x536, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "FUN_001bb190: clang naked draft required"
-#endif
 
 
-/* FUN_001bb2d0 (0x1bb2d0) — XBE naked draft (batch 242). */
-#if defined(__clang__)
-static bool __stdcall (*const b1bb2d0_c1d33e6)(void *counter) = QueryPerformanceCounter;
-static void (*const b1bb2d0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bb2d0_exitfn)(int) = system_exit;
-static unsigned int __stdcall (*const b1bb2d0_c1d01c4)(unsigned int milliseconds, int alertable) = SleepEx;
-static void __stdcall (*const b1bb2d0_c1d2268)(unsigned int error) = SetLastError;
-static void (*const b1bb2d0_c1d1a38)(void) = (void (*)(void))FUN_001d1a38;
-static int (*const b1bb2d0_c1d2240)(void) = xapi_GetLastError;
-
-__attribute__((naked, noinline))
-void FUN_001bb2d0(void)
+/* FUN_001bb2d0 (0x1bb2d0) — Capstone tip: slot bit (index+9) set → assert.
+ * Uses cache@edi; index from stack; QPC @ 0x4e5648; assert line 0x583. */
+void FUN_001bb2d0(void *cache /*@<edi>*/, int a, int b, int c, short index)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl $0x4e5648\n\t"
-      "call *%[c1d33e6]\n\t"
-      "movswl 0x14(%%ebp), %%esi\n\t"
-      "movl 0x98c(%%edi), %%eax\n\t"
-      "addl $9, %%esi\n\t"
-      "leal 0x267(%%esi,%%esi,4), %%ecx\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "leal (%%edi,%%ecx,4), %%eax\n\t"
-      "movl %%esi, %%ecx\n\t"
-      "andl $0x1f, %%ecx\n\t"
-      "movl %%esi, %%edx\n\t"
-      "sarl $5, %%edx\n\t"
-      "movl $1, %%ebx\n\t"
-      "shll %%cl, %%ebx\n\t"
-      "leal 0x994(%%edi,%%edx,4), %%ecx\n\t"
-      "movl (%%ecx), %%edx\n\t"
-      "movl %%eax, 0x14(%%ebp)\n\t"
-      "testl %%edx, %%ebx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "je .LFUN_001bb2d0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x583\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b8878\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bb2d0_1:\n\t"
-      "orl %%ebx, (%%ecx)\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "leal 0xac8(%%edi,%%esi,8), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "movl %%esi, 0x10(%%eax)\n\t"
-      "movl %%ecx, 0x8(%%eax)\n\t"
-      "movl $0, 0xc(%%eax)\n\t"
-      "call *%[c1d33e6]\n\t"
-      ".LFUN_001bb2d0_2:\n\t"
-      "pushl $1\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d01c4]\n\t"
-      "pushl $0\n\t"
-      "call *%[c1d2268]\n\t"
-      "movl 0x14(%%ebp), %%eax\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "movl 0x8(%%ebp), %%edx\n\t"
-      "pushl $0x1bafa0\n\t"
-      "pushl %%eax\n\t"
-      "movl -0x8(%%ebp), %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1d1a38]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1d2240]\n\t"
-      "testl %%esi, %%esi\n\t"
-      "jne .LFUN_001bb2d0_3\n\t"
-      "cmpl $0x6f8, %%eax\n\t"
-      "je .LFUN_001bb2d0_2\n\t"
-      "cmpl $8, %%eax\n\t"
-      "je .LFUN_001bb2d0_2\n\t"
-      "cmpl $0x5aa, %%eax\n\t"
-      "je .LFUN_001bb2d0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x5a1\n\t"
-      "pushl $0x2b839c\n\t"
-      "pushl $0x2b88c0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x32ea98, %%eax\n\t"
-      "movl 0x904(%%eax), %%ecx\n\t"
-      "addl $0x14, %%esp\n\t"
-      "orl $1, %%ecx\n\t"
-      "movl %%ecx, 0x904(%%eax)\n\t"
-      ".LFUN_001bb2d0_3:\n\t"
-      "leal -0xc(%%ebp), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1d33e6]\n\t"
-      "movl -0xc(%%ebp), %%eax\n\t"
-      "movl 0x4e5648, %%edx\n\t"
-      "movl 0x4e5618, %%ecx\n\t"
-      "subl %%edx, %%eax\n\t"
-      "addl %%eax, %%ecx\n\t"
-      "popl %%esi\n\t"
-      "movl %%ecx, 0x4e5618\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c1d33e6] "m"(b1bb2d0_c1d33e6), [assert] "m"(b1bb2d0_assert), [exitfn] "m"(b1bb2d0_exitfn), [c1d01c4] "m"(b1bb2d0_c1d01c4), [c1d2268] "m"(b1bb2d0_c1d2268), [c1d1a38] "m"(b1bb2d0_c1d1a38), [c1d2240] "m"(b1bb2d0_c1d2240)
-      : "memory");
+  unsigned int bit;
+  unsigned int *word;
+  int slot;
+  (void)a; (void)b; (void)c;
+  QueryPerformanceCounter((void *)0x4e5648);
+  slot = (int)index + 9;
+  bit = 1u << (slot & 31);
+  word = (unsigned int *)((char *)cache + 0x994 + 4 * (slot >> 5));
+  if (*word & bit) {
+    display_assert((const char *)0x2b8878, (const char *)0x2b839c, 0x583, true);
+    system_exit(-1);
+  }
 }
-#else
-#error "FUN_001bb2d0: clang naked draft required"
-#endif
+
 

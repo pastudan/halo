@@ -1,0 +1,7 @@
+{
+  "description": "AvSetDisplayMode: IAT jmp [0x2532b4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532b4": "00000060"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "XcHMAC: IAT jmp [0x253304] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253304": "00000060"
+  }
+}

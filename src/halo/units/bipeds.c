@@ -5411,3 +5411,152 @@ void FUN_001a4a50(int unit_handle)
   FUN_001a2800(unit_handle, (const char *)0x2b5160);
 }
 
+/* biped_limp_noodle_valid_joint_rotation (0x19f540) — Capstone readable C;
+ * candidate_pos arrives in ESI (see kb @<esi>). Moved from text/unicode.c. */
+char biped_limp_noodle_valid_joint_rotation(int unit_handle, int16_t node_index,
+                                            void *node_block, float *out_pos,
+                                            unsigned int *visited_bits,
+                                            float *candidate_pos /*@<esi>*/)
+{
+  char *unit;
+  char *bipd;
+  char *antr;
+  char *node_def;
+  char *parent_def;
+  char *parent_node;
+  char *node;
+  float frame_scale;
+  float *node_pos;
+  float *parent_pos;
+  int16_t parent_index;
+  float bone[3];
+  float cand[3];
+  float axis[3];
+  float dot;
+  float angle;
+  float inv_parent[12];
+  float inv_node[12];
+  float local_axis[3];
+  float local_dir[3];
+  float plane[4];
+  float snapped[3];
+  float delta[3];
+  float rotated[3];
+  char changed;
+  unsigned int tiny = 0x3cf5c28fu;
+
+  changed = 0;
+  unit = (char *)object_get_and_verify_type(unit_handle, 1);
+  bipd = (char *)tag_get(0x62697064, *(int *)unit);
+  antr = (char *)tag_get(0x616e7472, *(int *)(bipd + 0x44));
+  node_def = (char *)tag_block_get_element((void *)(antr + 0x68), node_index, 0x40);
+  parent_index = *(int16_t *)(node_def + 0x24);
+  parent_def =
+      (char *)tag_block_get_element((void *)(antr + 0x68), parent_index, 0x40);
+  frame_scale = *(float *)(antr + 0x60);
+  if (!(fabsf(frame_scale) > *(double *)0x2533d0) || frame_scale < *(float *)0x2533c0 ||
+      !(frame_scale <= *(float *)0x2b4b74))
+    frame_scale = *(float *)&tiny;
+
+  if (parent_index == 0 || (*(unsigned char *)(parent_def + 0x28) & 4) != 0)
+    goto inherit_check;
+
+  node = (char *)node_block + (int)node_index * 0x34;
+  parent_node = (char *)node_block + (int)parent_index * 0x34;
+  node_pos = (float *)(node + 0x28);
+  parent_pos = (float *)(parent_node + 0x28);
+
+  bone[0] = node_pos[0] - parent_pos[0];
+  bone[1] = node_pos[1] - parent_pos[1];
+  bone[2] = node_pos[2] - parent_pos[2];
+  cand[0] = candidate_pos[0] - parent_pos[0];
+  cand[1] = candidate_pos[1] - parent_pos[1];
+  cand[2] = candidate_pos[2] - parent_pos[2];
+  normalize3d(bone);
+  normalize3d(cand);
+  axis[0] = cand[2] * bone[1] - cand[1] * bone[2];
+  axis[1] = bone[2] * cand[0] - cand[2] * bone[0];
+  axis[2] = cand[1] * bone[0] - bone[1] * cand[0];
+  normalize3d(axis);
+  dot = cand[0] * bone[0] + cand[1] * bone[1] + cand[2] * bone[2];
+  if (fabsf(dot - *(float *)0x2533c8) > *(double *)0x2533d0)
+    goto inherit_check;
+  angle = FUN_001d94f0(dot); /* acos */
+
+  matrix_inverse((float *)parent_node, inv_parent);
+  matrix_inverse((float *)((char *)node_block +
+                           (int)*(int16_t *)(parent_def + 0x24) * 0x34),
+                 inv_node);
+  matrix_scale_transform_vector(inv_parent, axis, local_axis);
+  local_dir[0] = *(float *)(node + 4);
+  local_dir[1] = *(float *)(node + 8);
+  local_dir[2] = *(float *)(node + 0xc);
+  matrix_scale_transform_vector(inv_node, local_dir, local_dir);
+
+  if ((*(unsigned char *)(parent_def + 0x28) & 2) != 0) {
+    float dist;
+    FUN_00099490(plane, (float *)(parent_node + 0x28),
+                 (float *)(parent_node + 0x1c));
+    dist = (plane[0] * candidate_pos[0] + plane[1] * candidate_pos[1] +
+            plane[2] * candidate_pos[2] - plane[3]) *
+           *(float *)0x255e94;
+    snapped[0] = candidate_pos[0] + plane[0] * dist;
+    snapped[1] = candidate_pos[1] + plane[1] * dist;
+    snapped[2] = candidate_pos[2] + plane[2] * dist;
+    if (fabsf(plane[0] * snapped[0] + plane[1] * snapped[1] +
+              plane[2] * snapped[2] - plane[3]) > *(double *)0x2533d0) {
+      display_assert((char *)0x2b4b00, (char *)0x2b4b48, 0xe7, 1);
+      system_exit(-1);
+    }
+    delta[0] = snapped[0] - parent_pos[0];
+    delta[1] = snapped[1] - parent_pos[1];
+    delta[2] = snapped[2] - parent_pos[2];
+    normalize3d(delta);
+    matrix_scale_transform_vector(inv_parent, delta, rotated);
+    if (fabsf(rotated[0] * local_dir[0] + rotated[1] * local_dir[1] +
+              rotated[2] * local_dir[2] - *(float *)0x2533c8) >
+        *(double *)0x2533d0)
+      goto inherit_check;
+    visited_bits[node_index >> 5] |= 1u << (node_index & 31);
+    if (!(out_pos[2] < snapped[2]) &&
+        !FUN_0014dab0((int)(uintptr_t)snapped, *(int *)&frame_scale)) {
+      out_pos[0] = snapped[0];
+      out_pos[1] = snapped[1];
+      out_pos[2] = snapped[2];
+    }
+    changed = 1;
+  } else {
+    /* XBE: fsin(angle) + pass prior unit-dot as cos. */
+    rotate_vector3d_by_sincos(local_dir, local_axis, sinf(angle), dot);
+    dot = local_dir[0] * *(float *)(parent_def + 0x2c) +
+          local_dir[1] * *(float *)(parent_def + 0x30) +
+          local_dir[2] * *(float *)(parent_def + 0x34);
+    if (fabsf(dot - *(float *)0x2533c8) > *(double *)0x2533d0)
+      goto inherit_check;
+    if (!(fabsf(FUN_001d94f0(dot)) < *(float *)(parent_def + 0x38)))
+      goto inherit_check;
+    if (!(out_pos[2] > candidate_pos[2]))
+      goto inherit_check;
+    visited_bits[node_index >> 5] |= 1u << (node_index & 31);
+    out_pos[0] = candidate_pos[0];
+    out_pos[1] = candidate_pos[1];
+    out_pos[2] = candidate_pos[2];
+    changed = 1;
+  }
+
+inherit_check:
+  if ((*(unsigned char *)(parent_def + 0x28) & 4) == 0 && changed)
+    return 1;
+  {
+    int16_t p = *(int16_t *)(node_def + 0x24);
+    if ((visited_bits[p >> 5] & (1u << (p & 31))) != 0 &&
+        out_pos[2] > candidate_pos[2]) {
+      visited_bits[node_index >> 5] |= 1u << (node_index & 31);
+      out_pos[0] = candidate_pos[0];
+      out_pos[1] = candidate_pos[1];
+      out_pos[2] = candidate_pos[2];
+      return 1;
+    }
+  }
+  return changed;
+}

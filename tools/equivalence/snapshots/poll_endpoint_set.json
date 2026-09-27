@@ -1,0 +1,11 @@
+{
+  "description": "poll_endpoint_set: endpoint_set==0 \u2192 assert",
+  "arg_overrides": {
+    "endpoint_set": 0,
+    "timeout": 0
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

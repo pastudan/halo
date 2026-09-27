@@ -1,0 +1,7 @@
+{
+  "description": "NtQueryFullAttributesFile: IAT jmp [0x253164] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253164": "00000060"
+  }
+}

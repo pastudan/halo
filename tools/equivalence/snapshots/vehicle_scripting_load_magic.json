@@ -1,0 +1,10 @@
+{
+  "description": "vehicle_scripting_load_magic tip: vehicle_handle==NONE \u2192 0",
+  "arg_overrides": {
+    "vehicle_handle": -1,
+    "seat_substring": 0,
+    "group_handle": 0
+  },
+  "regions": {},
+  "stub_returns": {}
+}

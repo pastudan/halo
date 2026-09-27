@@ -1,0 +1,13 @@
+{
+  "description": "FUN_0011c310: size<0 assert, malloc NULL \u2192 return 0",
+  "arg_overrides": {
+    "size": -1,
+    "lock_proc": 0,
+    "unlock_proc": 0,
+    "base_address": 0
+  },
+  "stub_returns": {
+    "debug_malloc": 0,
+    "display_assert": 0
+  }
+}

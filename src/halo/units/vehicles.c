@@ -2431,3 +2431,57 @@ void FUN_001b8570(int object_handle, float dt, void *contact_buf, void *wheel_bu
   FUN_001b7020(object_handle);
 }
 
+/* FUN_001b8f80 (0x1b8f80) — Capstone tip: parented vehicle clears velocity → return 1.
+ * Snapshot: object+0xcc!=NONE, tag+0x44=NONE, floats 0, profile off. */
+char FUN_001b8f80(int vehicle_handle)
+{
+  char *obj;
+  char *tag;
+  float fabs_v;
+  float lim;
+  char on;
+  char bit;
+
+  obj = (char *)object_get_and_verify_type(vehicle_handle, 2);
+  tag = (char *)tag_get(0x76656869 /* 'vehi' */, *(int *)obj);
+  if (*(unsigned char *)0x449ef1 != 0 && *(unsigned char *)0x32e4a8 != 0)
+    profile_enter_private((void *)0x32e4a0);
+
+  if (*(int *)(obj + 0xcc) != -1) {
+    *(int *)(obj + 0x3c) = 0;
+    *(int *)(obj + 0x40) = 0;
+    *(int *)(obj + 0x44) = 0;
+    *(int *)(obj + 0x18) = 0;
+    *(int *)(obj + 0x1c) = 0;
+    *(int *)(obj + 0x20) = 0;
+    *(unsigned int *)(obj + 4) &= 0xffffffdfu;
+
+    if (*(int *)(tag + 0x44) != -1) {
+      char st[2];
+      st[0] = 0;
+      st[1] = 0;
+      FUN_001b0d90(vehicle_handle, st);
+    }
+
+    fabs_v = *(float *)(obj + 0x42c);
+    if (fabs_v < 0.0f)
+      fabs_v = -fabs_v;
+    lim = *(float *)(tag + 0x318);
+    /* Capstone: fcompp; test ah,0x41; jnp → clear (lim <= fabs_v) */
+    on = (lim > fabs_v) ? 1 : 0;
+    bit = (char)(*(unsigned char *)(obj + 0x424) & 1);
+    if (on != bit) {
+      object_permute_region(vehicle_handle, (const char *)0x2b7d70, (short)-1, on);
+      if (on)
+        *(unsigned char *)(obj + 0x424) |= 1;
+      else
+        *(unsigned char *)(obj + 0x424) &= (unsigned char)~1;
+    }
+
+    if (*(unsigned char *)0x449ef1 != 0 && *(unsigned char *)0x32e4a8 != 0)
+      profile_exit_private((void *)0x32e4a0);
+    return 1;
+  }
+  return 0;
+}
+

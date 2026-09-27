@@ -1,0 +1,7 @@
+{
+  "description": "NtAllocateVirtualMemory: IAT jmp [0x253148] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253148": "00000060"
+  }
+}

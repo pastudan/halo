@@ -1,0 +1,10 @@
+{
+  "description": "FUN_001d8368: NtCreate IAT fails → return 0",
+  "regions": {
+    "0x60000000": "b8ffffffffc21800",
+    "0x00253160": "00000060"
+  },
+  "stub_returns": {
+    "XapiSetLastNTError": 0
+  }
+}

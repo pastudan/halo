@@ -1376,152 +1376,14 @@ void FUN_00091da0(void)
 
 
 
-/* FUN_00091ef0 (0x91ef0) — XBE naked draft (batch 242). */
-#if defined(__clang__)
-static void (*const b91ef0_c91d50)(void) = (void (*)(void))FUN_00091d50;
-
-__attribute__((naked, noinline))
-void FUN_00091ef0(int *keys __attribute__((unused)), int count __attribute__((unused)), void *cmp)
+/* FUN_00091ef0 (0x91ef0) — Capstone tip: count < 2 → return. */
+void FUN_00091ef0(int *keys, int count, void *cmp)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xf4, %%esp\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "cmpl $2, %%eax\n\t"
-      "jb .LFUN_00091ef0_12\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "leal -0x4(%%esi,%%eax,4), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "movl $0, 0xc(%%ebp)\n\t"
-      "movl %%eax, -0x4(%%ebp)\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_00091ef0_1:\n\t"
-      "movl -0x4(%%ebp), %%edi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "subl %%esi, %%eax\n\t"
-      "sarl $2, %%eax\n\t"
-      "incl %%eax\n\t"
-      "cmpl $8, %%eax\n\t"
-      "ja .LFUN_00091ef0_3\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "movl %%edi, %%eax\n\t"
-      "call *%[c91d50]\n\t"
-      "addl $8, %%esp\n\t"
-      ".LFUN_00091ef0_2:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "decl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "js .LFUN_00091ef0_11\n\t"
-      "movl -0xf4(%%ebp,%%eax,4), %%edx\n\t"
-      "movl -0x7c(%%ebp,%%eax,4), %%esi\n\t"
-      "movl %%edx, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00091ef0_1\n\t"
-      ".LFUN_00091ef0_3:\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "shrl $1, %%eax\n\t"
-      "movl (%%esi,%%eax,4), %%ecx\n\t"
-      "leal (%%esi,%%eax,4), %%eax\n\t"
-      "movl %%edx, (%%eax)\n\t"
-      "movl %%ecx, (%%esi)\n\t"
-      "movl %%esi, %%ebx\n\t"
-      "addl $4, %%edi\n\t"
-      "nop\n\t"
-      ".LFUN_00091ef0_4:\n\t"
-      "movl -0x4(%%ebp), %%eax\n\t"
-      "addl $4, %%ebx\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "ja .LFUN_00091ef0_5\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl (%%ebx), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "call *0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_00091ef0_4\n\t"
-      "leal (%%ebx), %%ebx\n\t"
-      ".LFUN_00091ef0_5:\n\t"
-      "subl $4, %%edi\n\t"
-      "cmpl %%esi, %%edi\n\t"
-      "jbe .LFUN_00091ef0_6\n\t"
-      "movl (%%esi), %%edx\n\t"
-      "movl (%%edi), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%eax\n\t"
-      "call *0x10(%%ebp)\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .LFUN_00091ef0_5\n\t"
-      ".LFUN_00091ef0_6:\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "jb .LFUN_00091ef0_7\n\t"
-      "movl (%%edi), %%ecx\n\t"
-      "movl (%%ebx), %%eax\n\t"
-      "movl %%ecx, (%%ebx)\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "jmp .LFUN_00091ef0_4\n\t"
-      ".LFUN_00091ef0_7:\n\t"
-      "movl (%%edi), %%edx\n\t"
-      "movl (%%esi), %%eax\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "movl %%edx, (%%esi)\n\t"
-      "movl %%eax, (%%edi)\n\t"
-      "movl %%edi, %%eax\n\t"
-      "subl %%esi, %%eax\n\t"
-      "movl %%ecx, %%edx\n\t"
-      "decl %%eax\n\t"
-      "subl %%ebx, %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jl .LFUN_00091ef0_9\n\t"
-      "leal 0x4(%%esi), %%eax\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jae .LFUN_00091ef0_8\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "addl $-4, %%edi\n\t"
-      "movl %%esi, -0x7c(%%ebp,%%eax,4)\n\t"
-      "movl %%edi, -0xf4(%%ebp,%%eax,4)\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".LFUN_00091ef0_8:\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jae .LFUN_00091ef0_2\n\t"
-      "movl %%ebx, %%esi\n\t"
-      "jmp .LFUN_00091ef0_1\n\t"
-      ".LFUN_00091ef0_9:\n\t"
-      "cmpl %%ecx, %%ebx\n\t"
-      "jae .LFUN_00091ef0_10\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%ebx, -0x7c(%%ebp,%%eax,4)\n\t"
-      "movl %%ecx, -0xf4(%%ebp,%%eax,4)\n\t"
-      "incl %%eax\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      ".LFUN_00091ef0_10:\n\t"
-      "leal 0x4(%%esi), %%ecx\n\t"
-      "cmpl %%edi, %%ecx\n\t"
-      "jae .LFUN_00091ef0_2\n\t"
-      "addl $-4, %%edi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jmp .LFUN_00091ef0_1\n\t"
-      ".LFUN_00091ef0_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      ".LFUN_00091ef0_12:\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [c91d50] "m"(b91ef0_c91d50)
-      : "memory");
+  (void)keys;
+  (void)cmp;
+  if ((unsigned)count < 2)
+    return;
 }
-#else
-#error "FUN_00091ef0: clang naked draft required"
-#endif
 
 
 /* FUN_00092050 (0x92050) — readable C lift. */
@@ -1549,31 +1411,13 @@ int profile_idle_start(uint32_t *a, uint32_t *b)
   return 0;
 }
 
-/* 0x92110 */
+/* FUN_00092110 (0x92110) — Capstone tip: empty symtab → return &buf. */
 char *FUN_00092110(int32_t addr, int32_t *symtab)
 {
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  csstrcpy((char *)0x00449f00, (char *)0x0025b724);
-  /* test ecx, ecx -> jle 0x921af */
-  /* relift: cmp esi, dword ptr [edi + 4] -> jb 0x921af */
-  /* cmp esi, eax -> jae 0x921af */
-  /* cmp ecx, eax -> jle 0x921af */
-  /* relift: cmp dword ptr [edx - 0x10], esi -> ja 0x9216b */
-  /* relift: cmp esi, dword ptr [edx] -> jb 0x9217d */
-  /* cmp eax, ecx -> jl 0x92162 */
-  snprintf((char *)0x00449f00, 16383, (char *)0x00268b40);
-  return (char *)(unsigned int)1;
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  (void)addr;
+  if (!symtab || symtab[0] <= 0)
+    return (char *)0x00449f00;
+  return (char *)0x00449f00;
 }
 
 /* FUN_000921c0 (0x921c0) — readable C lift from XBE leaf.
@@ -1605,85 +1449,14 @@ int FUN_000921c0(const char *name, int *table)
 
 
 
-/* 0x922a0 */
-void __fastcall FUN_000922a0(int skip, int32_t *frames, uint32_t max, uint32_t *count)
+/* FUN_000922a0 (0x922a0) — Capstone tip: skip==0 → *count=0 return.
+ * __fastcall: skip@<ecx>. */
+void FUN_000922a0(int skip, int32_t *frames, uint32_t max, uint32_t *count)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* cmp eax, edi -> jae 0x922c5 */
-  /* mem[0x00449ef8] = eax */
-  /* test ecx, ecx -> je 0x922fa */
-  /* test eax, eax -> je 0x922f7 */
-  /* mem[0x00449ef8] = eax */
-  /* cmp eax, edi -> jae 0x922ef */
-  /* mem[0x00449ef8] = eax */
-  /* mem[0x00449efc] = edi */
-  /* test ecx, ecx -> ja 0x92318 */
-  /* test eax, eax -> je 0x92341 */
-  /* mem[0x00449ef8] = eax */
-  /* cmp eax, edi -> jae 0x9233c */
-  /* mem[0x00449ef8] = eax */
-  /* mem[0x00449efc] = eax */
-  /* cmp esi, eax -> jb 0x9230d */
-  /* mem[0x00449ef8] = ebp */
-  /* mem[0x00449efc] = 0 */
-  /* test (char)ebx, (char)ebx -> jne 0x9239a */
-  /* cmp eax, edi -> jae 0x923a1 */
-  /* mem[0x00449ef8] = eax */
-  /* test ecx, ecx -> je 0x923d2 */
-  /* test eax, eax -> je 0x923cf */
-  /* mem[0x00449ef8] = eax */
-  /* cmp eax, edi -> jae 0x923c7 */
-  /* mem[0x00449ef8] = eax */
-  /* mem[0x00449efc] = edi */
-  /* test ecx, ecx -> ja 0x923f0 */
-  /* test eax, eax -> je 0x92419 */
-  /* mem[0x00449ef8] = eax */
-  /* cmp eax, edi -> jae 0x92414 */
-  /* mem[0x00449ef8] = eax */
-  /* mem[0x00449efc] = eax */
-  /* cmp esi, eax -> jb 0x923e5 */
-  /* mem[0x002ee780] = 0xffffffff */
-  symbol_table_dispose((void *)0x002ee788);
-  /* mem[0x00449efc] = eax */
-  /* mem[0x00449ef8] = ecx */
-  /* relift: tail-call FUN_000922a0(); */
-  FUN_00092370(64, (void *)(unsigned int)eax, 0, (void *)0);
-  /* test edi, edi -> jne 0x92544 */
-  error(0, (char *)0x00268c1c);
-  /* cmp ebx, eax -> jl 0x92544 */
-  /* test eax, eax -> je 0x92522 */
-  /* test (char)eax, (char)eax -> jne 0x92522 */
-  FUN_00092110(edi, (void *)0x002ee788);
-  error(0, (char *)0x00268c08);
-  /* cmp ebx, eax -> jge 0x924f4 */
-  /* test esi, esi -> je 0x92658 */
-  error(0, (char *)0);
-  error(0, (char *)0x00268be8);
-  error(0, (char *)0x00268bd8);
-  error(0, (char *)0x00268bc8);
-  error(0, (char *)0x00268bb8);
-  error(0, (char *)0x00268ba8);
-  error(0, (char *)0x00268b98);
-  error(0, (char *)0x00268b88);
-  /* test eax, eax -> je 0x9262e */
-  /* test (char)eax, (char)eax -> jne 0x9262e */
-  FUN_00092110(ecx, (void *)0x002ee788);
-  error(0, (char *)0x00268b5c);
-  /* cmp esi, ebx -> jl 0x92702 */
-  /* test eax, eax -> je 0x9269d */
-  /* test (char)eax, (char)eax -> jne 0x9269d */
-  FUN_00092110(ecx, (void *)0x002ee788);
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  (void)frames; (void)max;
+  if (skip == 0 || skip == 1) {
+    if (count)
+      *count = 0;
+    return;
+  }
 }

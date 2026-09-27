@@ -1,0 +1,15 @@
+{
+  "description": "actor_perception_refresh_test_object: unit_handle NONE → return after datum_get",
+  "arg_overrides": {
+    "actor_handle": 1,
+    "unit_handle": -1,
+    "primary_list": null,
+    "secondary_list": null
+  },
+  "regions": {
+    "0x6325a4": "00000030"
+  },
+  "stub_returns": {
+    "datum_get": 805306368
+  }
+}

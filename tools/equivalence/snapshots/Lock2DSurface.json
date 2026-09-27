@@ -1,0 +1,15 @@
+{
+  "description": "Lock2DSurface: flags|0x20, rect NULL \u2192 store zero pitch/bits",
+  "arg_overrides": {
+    "texture": "0000000000000000000000000000000000000000000000000000000000000000",
+    "face": 0,
+    "level": 0,
+    "locked_rect": "0000000000000000",
+    "rect": null,
+    "flags": 32
+  },
+  "stub_returns": {
+    "FUN_001f4270": 0,
+    "D3D_BlockOnResource": 0
+  }
+}

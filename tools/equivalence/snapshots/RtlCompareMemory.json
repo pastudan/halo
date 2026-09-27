@@ -1,0 +1,7 @@
+{
+  "description": "RtlCompareMemory: IAT jmp [0x25324c] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x0025324c": "00000060"
+  }
+}

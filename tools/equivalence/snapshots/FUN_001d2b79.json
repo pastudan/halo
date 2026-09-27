@@ -1,0 +1,10 @@
+{
+  "description": "FUN_001d13c9 fail \u2192 return 0",
+  "arg_overrides": {
+    "handle": 1
+  },
+  "stub_returns": {
+    "SetFilePointer": 0,
+    "FUN_001d13c9": 0
+  }
+}

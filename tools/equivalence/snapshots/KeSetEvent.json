@@ -1,0 +1,7 @@
+{
+  "description": "KeSetEvent: IAT jmp [0x2531c0] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531c0": "00000060"
+  }
+}

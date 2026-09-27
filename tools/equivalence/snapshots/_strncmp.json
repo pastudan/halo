@@ -1,0 +1,7 @@
+{
+  "description": "_strncmp count0",
+  "regions": {},
+  "arg_overrides": {
+    "count": 0
+  }
+}

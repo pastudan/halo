@@ -1,0 +1,7 @@
+{
+  "description": "NtReleaseSemaphore: IAT jmp [0x2530fc] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530fc": "00000060"
+  }
+}

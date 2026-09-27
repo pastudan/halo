@@ -290,7 +290,7 @@ void D3DDevice_InsertCallback(uint32_t type, void *callback, uint32_t context);
 void CDevice_KickOff(void);
 void D3D_SetFence(void);
 void CDevice_MakeSpace(void);
-void D3D_BlockOnResource(void);
+void __stdcall D3D_BlockOnResource(void *resource);
 void XMETAL_StartPush(void);
 void D3D_UpdateProjectionViewportTransform(void);
 void D3D_LazySetPointParams(void);
@@ -577,6 +577,7 @@ void QueueUserAPC(void)
 #endif
 
 
+
 /* ExitThread (0x1cfbab) — XBE naked draft (batch 347). */
 #if defined(__clang__)
 static void (*const b1cfbab_c1cf944)(void) = XapiCallThreadNotifyRoutines;
@@ -765,1792 +766,866 @@ void PulseEvent(void)
 #endif
 
 
-/* 0x001d3717 */
+/* MmQueryAllocationSize (0x1d3717) — Capstone tip: IAT jmp [0x253210]. */
 void MmQueryAllocationSize(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp dword ptr [esp + 8], 0 -> je 0x1d372a */
-  /* test eax, eax -> jge 0x1d37a0 */
-  XapiSetLastNTError(0);
-  xapi_GetLastError();
-  /* cmp eax, 2 -> jne 0x1d3799 */
-  SetLastError(0);
-  /* test esi, esi -> jge 0x1d37cf */
-  XapiSetLastNTError(0);
-  __allmul();
-  __allmul();
-  /* test ecx, ecx -> je 0x1d3808 */
-  /* test ecx, ecx -> je 0x1d3814 */
-  /* test eax, eax -> je 0x1d3823 */
-  FUN_001dd5c8();
-  /* cmp eax, ebx -> jge 0x1d38a4 */
-  XapiSetLastNTError(0);
-  /* relift: cmp dword ptr [ebp + 0xc], ebx -> jne 0x1d38b3 */
-  /* relift: cmp dword ptr [ebp + 0x14], ebx -> je 0x1d38e3 */
-  /* relift: cmp dword ptr [ebp + 0xc], ebx -> je 0x1d38bb */
-  FUN_001d5c66();
-  /* cmp eax, ebx -> jne 0x1d38e3 */
-  /* relift: cmp dword ptr [ebp + 0x20], ebx -> jne 0x1d38f7 */
-  /* relift: cmp dword ptr [ebp + 0x18], ebx -> jne 0x1d38f2 */
-  /* relift: cmp dword ptr [ebp + 0x1c], ebx -> je 0x1d3941 */
-  /* relift: cmp dword ptr [ebp + 0x20], ebx -> je 0x1d38ff */
-  FUN_001d5c66();
-  /* cmp edi, ebx -> jne 0x1d3944 */
-  /* relift: cmp dword ptr [ebp - 0x38], ebx -> je 0x1d3937 */
-  FUN_001d6ca8();
-  /* relift: cmp dword ptr [ebp - 0x38], ebx -> je 0x1d3968 */
-  /* cmp eax, ebx -> jl 0x1d3984 */
-  /* cmp edi, ebx -> je 0x1d3992 */
-  /* cmp eax, ebx -> jge 0x1d3992 */
-  XapiSetLastNTError(0);
-  /* cmp esi, ebx -> je 0x1d39c2 */
-  /* relift: cmp eax, dword ptr [ebp + 0x10] -> jae 0x1d39de */
-  memmove((void *)(uintptr_t)esi, (void *)(uintptr_t)ecx, 0);
-  /* cmp eax, ebx -> je 0x1d39d1 */
-  /* relift: cmp dword ptr [ebp + 0x20], ebx -> je 0x1d3a06 */
-  /* relift: cmp eax, dword ptr [ebp + 0x24] -> jb 0x1d39ed */
-  SetLastError(24);
-  memmove((void *)(uintptr_t)0, (void *)(uintptr_t)eax, eax);
-  /* cmp eax, ebx -> je 0x1d3a12 */
-  /* cmp eax, ebx -> je 0x1d3a1d */
-  /* relift: FUN_001d3a62(0, 0); */
-  __SEH_epilog();
-  XapiSetLastNTError(0xc0000005);
-  __local_unwind2();
-  /* relift: cmp dword ptr [ebp - 0x38], ebx -> je 0x1d3a7f */
-  FUN_001d6ca8();
-  /* cmp edi, ebx -> je 0x1d3a90 */
-  FUN_001d6ca8();
-  /* relift: cmp dword ptr [ebp - 0x34], esi -> jne 0x1d3b43 */
-  /* relift: cmp dword ptr [ebp - 0x228], ebx -> je 0x1d3b63 */
-  /* cmp eax, 0x29 -> jbe 0x1d3b7b */
-  /* test eax, eax -> jbe 0x1d3ba0 */
-  /* relift: cmp ebx, dword ptr [edx] -> jne 0x1d3b98 */
-  /* relift: cmp dword ptr [edx + 8], 0 -> jne 0x1d3c75 */
-  /* cmp ecx, eax -> jb 0x1d3b87 */
-  /* test eax, eax -> jbe 0x1d3bd3 */
-  /* relift: cmp dword ptr [ecx + 4], 0 -> je 0x1d3bbb */
-  /* relift: cmp dword ptr [ecx], esi -> je 0x1d3bc3 */
-  /* cmp edx, eax -> jb 0x1d3bb1 */
-  /* cmp edx, eax -> jne 0x1d3bca */
-  /* cmp esi, eax -> jb 0x1d3ba9 */
-  /* test edi, edi -> jne 0x1d3be0 */
-  /* cmp edi, ecx -> jb 0x1d3bea */
-  /* test ebx, ebx -> je 0x1d3c20 */
-  memmove((void *)(uintptr_t)eax, (void *)(uintptr_t)eax, eax);
-  XapiSelectCachePartition();
-  /* test eax, eax -> jl 0x1d3d6f */
-  /* relift: cmp dword ptr [ebp + 8], 0 -> jne 0x1d3cc9 */
-  /* relift: cmp dword ptr [ebp - 0xc], 0 -> jne 0x1d3cc9 */
-  snprintf((char *)(uintptr_t)eax, 260, (char *)0x002c1de8);
-  /* test ebx, ebx -> je 0x1d3d1f */
-  XapiFormatFATVolume(0);
-  /* test esi, esi -> je 0x1d3d77 */
-  FUN_001d7d21((void *)(uintptr_t)eax);
-  /* test edi, edi -> jge 0x1d3d4e */
-  /* test ebx, ebx -> jne 0x1d3d4a */
-  XapiFormatFATVolume(0);
-  /* test eax, eax -> je 0x1d3d4a */
-  FUN_001d7d21((void *)(uintptr_t)eax);
-  /* test edi, edi -> jl 0x1d3d5f */
-  /* test esi, esi -> jne 0x1d3d77 */
-  XapiSetLastNTError(0);
-  /* test edx, edx -> je 0x1d3dcd */
-  /* relift: cmp dword ptr [ebp + 0xc], edx -> je 0x1d3dbe */
-  /* cmp edi, 0x10 -> jb 0x1d3daa */
-  /* cmp edi, esi -> jb 0x1d3dd5 */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e30);
-  /* cmp eax, edi -> jge 0x1d3e2a */
-  /* cmp esi, edi -> jge 0x1d3e5c */
-  /* cmp eax, 9 -> jb 0x1d3edb */
-  /* relift: cmp byte ptr [ebp + eax - 0x241], 0x5c -> jne 0x1d3edb */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e28);
-  XapiMapLetterToDirectory();
-  /* cmp eax, edi -> jl 0x1d3e1e */
-  /* cmp (char)ebx, 0x55 -> je 0x1d3e1e */
-  /* relift: relift: mov byte ptr [0x4ee168], (char)ebx */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e30);
-  /* relift: cmp byte ptr [ebp + 8], 0x58 -> jne 0x1d3f37 */
-  /* test eax, eax -> jl 0x1d3f37 */
-  /* test eax, eax -> jge 0x1d3fa6 */
-  XapiSetLastNTError(0);
-  xapi_GetLastError();
-  /* cmp eax, 2 -> jne 0x1d3fa2 */
-  SetLastError(0);
-  /* test esi, esi -> jge 0x1d3fd5 */
-  XapiSetLastNTError(0);
-  /* test eax, eax -> jge 0x1d4045 */
-  XapiSetLastNTError(0);
-  xapi_GetLastError();
-  /* cmp eax, 2 -> jne 0x1d4041 */
-  SetLastError(0);
-  /* test esi, esi -> jge 0x1d4074 */
-  XapiSetLastNTError(0);
-  /* relift: test dword ptr [0x4ee16c], edx -> jne 0x1d409e */
-  crt_sprintf((char *)(uintptr_t)eax, (char *)0x002c1e30);
-  /* cmp eax, 0x20 -> jb 0x1d4132 */
-  FUN_001d7a59();
-  /* relift: cmp dword ptr [ebp + 0xc], 0x40 -> jbe 0x1d416a */
-  /* cmp eax, 0x10 -> jb 0x1d4191 */
-  XcSHAInit(0);
-  XcSHAUpdate(0, 0, 64);
-  /* relift: cmp dword ptr [ebp + 0x10], eax -> jbe 0x1d41cf */
-  /* cmp eax, 0x10 -> jb 0x1d41f4 */
-  XcSHAFinal(0, 0);
-  XcSHAInit(0);
-  XcSHAUpdate(0, 0, 84);
-  XcSHAFinal(0, 0);
-  FUN_001d4157();
-  XcSHAUpdate(0, 0, 20);
-  FUN_001d41be();
-  FUN_001d0bb9(0, 124);
-  /* test esi, esi -> jne 0x1d4287 */
-  SetLastError(0);
-  FUN_001d4157();
-  XcSHAUpdate(0, 0, 0);
-  /* test eax, eax -> je 0x1d4306 */
-  /* test esi, esi -> je 0x1d42e4 */
-  FUN_001d41be();
-  /* test esi, esi -> je 0x1d4306 */
-  FUN_001d4230();
-  LocalFree((void *)(uintptr_t)edi);
-  xapi_GetLastError();
-  /* test eax, eax -> je 0x1d4342 */
-  XapiInitProcess();
-  /* test eax, eax -> je 0x1d435f */
-  /* test ecx, ecx -> je 0x1d438c */
-  _rtinit();
-  _cinit();
-  main(0, (const char **)(uintptr_t)0, (const char **)(uintptr_t)0);
-  XapiBootToDash();
-  /* mem[0x00632a30] = eax */
-  CreateThread((void *)(uintptr_t)esi, 0, (void *)0x001d4345, (void *)(uintptr_t)esi, 0, (void *)(uintptr_t)esi);
-  /* cmp edi, esi -> jne 0x1d4405 */
-  XapiBootToDash();
-  CloseHandle(0);
-  /* cmp eax, -1 -> jne 0x1d4443 */
-  ExQueryNonVolatileSetting(0, 0, 0, 0);
-  ExQueryNonVolatileSetting(0, 0, 0, 0);
-  /* test eax, eax -> jl 0x1d44a7 */
-  ExQueryNonVolatileSetting(259, 0, 0, 0);
-  /* test eax, eax -> jl 0x1d44d8 */
-  ExQueryNonVolatileSetting(0, 0, 0, 0);
-  /* test eax, eax -> jl 0x1d4503 */
-  ExQueryNonVolatileSetting(0, 0, 0, 0);
-  /* test eax, eax -> jge 0x1d4527 */
-  /* cmp eax, 3 -> je 0x1d453f */
-  /* cmp eax, 6 -> jne 0x1d4546 */
-  ExQueryNonVolatileSetting(10, 0, 0, 0);
-  /* test eax, eax -> jl 0x1d456c */
-  ExQueryNonVolatileSetting(260, 0, 0, 0);
-  /* test eax, eax -> jl 0x1d4594 */
-  FUN_001dd5c8();
-  /* test (char)eax, 1 -> jne 0x1d45d0 */
-  /* relift: cmp dword ptr [ebp - 0x28], 0x40 -> jae 0x1d4675 */
-  /* test edi, edi -> je 0x1d4656 */
-  /* relift: cmp esi, dword ptr [edi + 0x2c] -> jae 0x1d4656 */
-  /* relift: test byte ptr [esi + 5], 1 -> jne 0x1d4628 */
-  /* relift: test byte ptr [esi + 5], 0x10 -> je 0x1d4652 */
-  /* test ebx, ebx -> jne 0x1d4642 */
-  /* relift: FUN_001d468d(0, 0); */
-  __SEH_epilog();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d46a2 */
-  /* relift: cmp eax, dword ptr [ecx + 4] -> je 0x1d470f */
-  /* test eax, eax -> jge 0x1d46fe */
-  /* test eax, eax -> jl 0x1d46f7 */
-  /* test eax, eax -> jge 0x1d4764 */
-  /* cmp edx, ecx -> jb 0x1d47a3 */
-  /* cmp edx, ecx -> ja 0x1d485c */
-  /* relift: cmp ecx, dword ptr [ebp + 0xc] -> jne 0x1d4829 */
-  FUN_001d47c3();
-  /* relift: cmp edi, dword ptr [esi + 0x1c] -> jbe 0x1d482b */
-  /* test eax, eax -> jne 0x1d47f5 */
-  FUN_001d46a3();
-  /* test eax, eax -> je 0x1d4855 */
-  /* relift: cmp edi, dword ptr [esi + 0x1c] -> jb 0x1d4855 */
-  /* relift: cmp edx, dword ptr [eax + 4] -> jne 0x1d4831 */
-  /* relift: cmp eax, dword ptr [esi + 0x1c] -> jbe 0x1d4855 */
-  /* relift: cmp dword ptr [esi + 8], eax -> jb 0x1d48a8 */
-  /* test ecx, ecx -> je 0x1d48bd */
-  /* relift: cmp dword ptr [esi + 4], ecx -> je 0x1d48bd */
-  /* test esi, esi -> jne 0x1d489a */
-  /* test eax, eax -> je 0x1d48da */
-  /* test eax, eax -> jl 0x1d48b4 */
-  /* relift: cmp eax, dword ptr [esi + 8] -> jne 0x1d4906 */
-  /* relift: cmp ecx, dword ptr [esi + 4] -> je 0x1d4969 */
-  /* test ecx, ecx -> jne 0x1d492e */
-  /* relift: test byte ptr [ebx + 5], 0x10 -> jne 0x1d4969 */
-  /* cmp ebx, ecx -> jae 0x1d495d */
-  /* relift: cmp word ptr [ebx], 0 -> je 0x1d495d */
-  /* relift: test byte ptr [ebx + 5], 0x10 -> je 0x1d4940 */
-  /* relift: cmp ebx, dword ptr [ebp + 0xc] -> jne 0x1d48b4 */
-  /* relift: cmp ecx, dword ptr [edi + 0x2c] -> jne 0x1d498a */
-  FUN_001d47c3();
-  /* relift: cmp dword ptr [edi + 0x1c], 0 -> jne 0x1d48b6 */
-  /* relift: cmp edx, dword ptr [edi + 0x1c] -> jb 0x1d49f7 */
-  /* test ecx, ecx -> jne 0x1d49ec */
-  /* relift: test byte ptr [eax + 0x14], 1 -> jne 0x1d4a2e */
-  /* cmp esi, edi -> je 0x1d4b8c */
-  /* relift: test byte ptr [esi + 5], 1 -> jne 0x1d4b8c */
-  /* cmp ecx, 0xff00 -> ja 0x1d4b8f */
-  /* relift: cmp byte ptr [ebp + 0x14], 0 -> je 0x1d4ae6 */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d4aab */
-  /* test (char)ecx, 4 -> je 0x1d4adc */
-  /* test (char)ecx, 2 -> je 0x1d4ac9 */
-  /* cmp eax, 4 -> jbe 0x1d4ac9 */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d4b1a */
-  /* test (char)ecx, 4 -> je 0x1d4b4b */
-  /* test (char)ecx, 2 -> je 0x1d4b38 */
-  /* cmp eax, 4 -> jbe 0x1d4b38 */
-  /* relift: test byte ptr [edi + 5], 0x10 -> jne 0x1d4cd0 */
-  /* relift: test byte ptr [esi + 5], 1 -> jne 0x1d4cd0 */
-  /* cmp edx, 0xff00 -> ja 0x1d4cd0 */
-  /* relift: cmp byte ptr [ebp + 0x14], 0 -> je 0x1d4c2e */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d4bf7 */
-  /* test (char)ecx, 4 -> je 0x1d4c28 */
-  /* test (char)ecx, 2 -> je 0x1d4c15 */
-  /* cmp eax, 4 -> jbe 0x1d4c15 */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d4c7b */
-  /* test (char)ecx, 4 -> je 0x1d4cac */
-  /* test (char)ecx, 2 -> je 0x1d4c99 */
-  /* cmp eax, 4 -> jbe 0x1d4c99 */
-  /* cmp ecx, 0xff00 -> jbe 0x1d4d35 */
-  /* relift: cmp dword ptr [esi], esi -> jne 0x1d4d93 */
-  /* relift: cmp (int16_t)ebx, word ptr [esi - 8] -> jbe 0x1d4d93 */
-  /* cmp ecx, esi -> jne 0x1d4d87 */
-  /* relift: cmp dword ptr [ebp + 0x10], 0 -> jne 0x1d4d11 */
-  /* relift: test byte ptr [ebp + 0xf], 0x10 -> jne 0x1d4dcc */
-  /* relift: test byte ptr [eax + 5], 8 -> je 0x1d4de2 */
-  /* relift: test byte ptr [ecx + 5], 8 -> je 0x1d4e10 */
-  /* test edi, edi -> je 0x1d4ebf */
-  /* cmp ebx, esi -> jne 0x1d4e4c */
-  /* relift: test byte ptr [edi + 0x14], 1 -> jne 0x1d4e79 */
-  /* test esi, esi -> jne 0x1d4e82 */
-  /* test eax, eax -> je 0x1d4eba */
-  FUN_001d4a02();
-  /* relift: cmp edx, dword ptr [ebx + 0x1c] -> jbe 0x1d4edf */
-  FUN_001d4877();
-  /* test eax, eax -> jne 0x1d4f2b */
-  FUN_001d4a34();
-  /* relift: cmp edx, dword ptr [ebp + 0x18] -> jae 0x1d4f5c */
-  FUN_001d4cd9();
-  /* cmp (int16_t)eax, 0x80 -> jae 0x1d4fb6 */
-  /* test (char)ecx, 4 -> je 0x1d4fe7 */
-  /* test (char)ecx, 2 -> je 0x1d4fd4 */
-  /* cmp eax, 4 -> jbe 0x1d4fd4 */
-  /* relift: test byte ptr [ebp - 2], 2 -> je 0x1d502f */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d50de */
-  /* relift: cmp dword ptr [edx], edx -> jne 0x1d50f4 */
-  /* relift: cmp (int16_t)ecx, word ptr [edx - 8] -> jbe 0x1d50f4 */
-  /* cmp eax, edx -> jne 0x1d50e8 */
-  /* test (char)eax, 1 -> je 0x1d5194 */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d5175 */
-  /* relift: cmp dword ptr [edi], edi -> jne 0x1d525b */
-  /* relift: cmp (int16_t)ecx, word ptr [edi - 8] -> jbe 0x1d525b */
-  /* cmp eax, edi -> jne 0x1d517f */
-  /* cmp (int16_t)eax, 0x80 -> jae 0x1d51c7 */
-  /* test (char)ecx, 4 -> je 0x1d51f5 */
-  /* test (char)ecx, 2 -> je 0x1d51e5 */
-  /* cmp eax, 4 -> jbe 0x1d51e5 */
-  /* cmp eax, 0xff00 -> ja 0x1d5273 */
-  /* cmp (int16_t)ecx, 0x80 -> jb 0x1d5146 */
-  /* relift: cmp (int16_t)ecx, word ptr [edi - 8] -> jbe 0x1d525b */
-  /* cmp eax, edi -> jne 0x1d524f */
-  FUN_001d4cd9();
-  /* test dl, 8 -> je 0x1d52a9 */
-  /* cmp ecx, esi -> jbe 0x1d52a9 */
-  /* test (char)eax, 1 -> jne 0x1d52d4 */
-  /* test (char)eax, 8 -> je 0x1d52e3 */
-  /* relift: cmp eax, dword ptr [ebp + 0x18] -> jne 0x1d5329 */
-  /* cmp eax, ecx -> jb 0x1d5377 */
-  /* relift: cmp eax, dword ptr [ebp + 0x20] -> jae 0x1d5367 */
-  /* test eax, eax -> jge 0x1d536e */
-  FUN_001d47e4();
-  FUN_001d4cd9();
-  /* relift: cmp esi, dword ptr [ecx + 0x30] -> ja 0x1d5478 */
-  /* relift: cmp eax, dword ptr [ecx + 0x1c] -> ja 0x1d5478 */
-  FUN_001d4877();
-  /* test eax, eax -> jne 0x1d555b */
-  /* relift: cmp byte ptr [ebp - 0xc], 0x40 -> jne 0x1d5478 */
-  /* relift: cmp byte ptr [ebp + 0xf], 0x40 -> jb 0x1d5439 */
-  /* relift: cmp byte ptr [ebp - 0xc], 0x40 -> je 0x1d558f */
-  /* relift: test byte ptr [edi + 0x14], 2 -> je 0x1d558f */
-  /* test eax, eax -> jge 0x1d54fb */
-  /* relift: cmp dword ptr [ebp + 8], ecx -> je 0x1d54f3 */
-  /* relift: cmp dword ptr [ebp + 8], ecx -> jae 0x1d54e0 */
-  /* test eax, eax -> jl 0x1d54cd */
-  /* test eax, eax -> jl 0x1d558f */
-  /* test esi, esi -> jl 0x1d557c */
-  FUN_001d52f3();
-  /* test (char)eax, (char)eax -> jne 0x1d554f */
-  /* test esi, esi -> jl 0x1d557c */
-  FUN_001d4a34();
-  FUN_001d4cd9();
-  /* relift: cmp dword ptr [ebx + 0x584], 0 -> je 0x1d55bc */
-  FUN_001d4cd9();
-  /* test (int16_t)ecx, (int16_t)ecx -> je 0x1d561d */
-  /* cmp eax, esi -> jne 0x1d561d */
-  /* test (int16_t)ecx, (int16_t)ecx -> jne 0x1d5662 */
-  /* relift: test byte ptr [esi + 5], 0x10 -> jne 0x1d5662 */
-  /* relift: cmp dword ptr [ebp + 0xc], 0 -> je 0x1d5831 */
-  FUN_001d46a3();
-  FUN_001d47c3();
-  /* relift: cmp dword ptr [ebp - 0x20], 0 -> jl 0x1d5831 */
-  FUN_001d47e4();
-  /* test (int16_t)ecx, (int16_t)ecx -> je 0x1d577b */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d5737 */
-  /* relift: cmp (int16_t)ecx, word ptr [eax - 8] -> jbe 0x1d5757 */
-  /* cmp ecx, eax -> jne 0x1d5741 */
-  /* test eax, eax -> je 0x1d5788 */
-  /* cmp eax, ecx -> jb 0x1d57a1 */
-  /* cmp eax, esi -> jae 0x1d57a1 */
-  /* test (int16_t)eax, (int16_t)eax -> je 0x1d5823 */
-  /* cmp (int16_t)eax, 0x80 -> jae 0x1d57f5 */
-  /* relift: cmp dword ptr [esi], esi -> jne 0x1d580b */
-  /* relift: cmp (int16_t)eax, word ptr [esi - 8] -> jbe 0x1d580b */
-  /* cmp ecx, esi -> jne 0x1d57ff */
-  /* test eax, eax -> je 0x1d583b */
-  FUN_001d4cd9();
-  FUN_001dd5c8();
-  /* cmp eax, esi -> je 0x1d58a5 */
-  /* relift: cmp dword ptr [eax], 0x30 -> jne 0x1d587d */
-  memmove((void *)(uintptr_t)eax, (void *)(uintptr_t)eax, 48);
-  /* cmp ebx, esi -> jl 0x1d5bed */
-  /* relift: test byte ptr [0x632a22], 0x20 -> je 0x1d58b2 */
-  /* relift: cmp dword ptr [ebp - 0x48], esi -> jne 0x1d58bf */
-  /* relift: cmp dword ptr [ebp - 0x44], esi -> jne 0x1d58cc */
-  /* relift: cmp dword ptr [ebp - 0x40], esi -> jne 0x1d58d9 */
-  /* relift: cmp dword ptr [ebp - 0x3c], esi -> jne 0x1d58e6 */
-  /* relift: cmp dword ptr [ebp - 0x38], esi -> jne 0x1d58f2 */
-  /* relift: cmp dword ptr [ebp - 0x34], esi -> je 0x1d5900 */
-  /* relift: cmp dword ptr [ebp - 0x34], 0xff000 -> jbe 0x1d5907 */
-  /* cmp eax, esi -> jne 0x1d5934 */
-  /* cmp eax, esi -> jne 0x1d5925 */
-  /* cmp edx, esi -> jne 0x1d5956 */
-  /* relift: test byte ptr [ebp + 8], 1 -> jne 0x1d5986 */
-  /* relift: cmp dword ptr [ebp + 0x18], esi -> je 0x1d5979 */
-  /* relift: cmp dword ptr [ebp + 0x18], esi -> jne 0x1d5bed */
-  /* cmp edi, esi -> je 0x1d5a64 */
-  /* relift: cmp dword ptr [ebp - 0x28], esi -> je 0x1d59da */
-  /* cmp ebx, esi -> je 0x1d5bed */
-  /* cmp eax, esi -> je 0x1d5bed */
-  /* cmp ebx, eax -> ja 0x1d5bed */
-  /* relift: test byte ptr [ebp + 8], 2 -> jne 0x1d5bed */
-  /* test eax, eax -> jl 0x1d5bed */
-  /* relift: cmp edi, dword ptr [ebp + 0xc] -> jne 0x1d5bed */
-  /* relift: cmp dword ptr [ebp - 0x64], 0x10000 -> je 0x1d5bed */
-  /* relift: cmp dword ptr [ebp - 0x64], eax -> jne 0x1d5a50 */
-  /* test eax, eax -> jl 0x1d5a55 */
-  /* relift: cmp dword ptr [ebp - 0x64], 0x2000 -> jne 0x1d5a55 */
-  /* relift: cmp dword ptr [ebp - 0x28], esi -> jne 0x1d5bed */
-  /* test eax, eax -> jl 0x1d5bed */
-  /* relift: cmp dword ptr [ebp + 0x14], esi -> jne 0x1d5a9a */
-  /* relift: cmp dword ptr [ebp - 0x58], ebx -> jne 0x1d5ae5 */
-  /* test eax, eax -> jge 0x1d5ae2 */
-  /* relift: cmp dword ptr [ebp + 0xc], 0 -> jne 0x1d5bed */
-  /* relift: test byte ptr [0x632a21], 8 -> je 0x1d5b3a */
-  /* cmp edi, -1 -> jne 0x1d5bc4 */
-  FUN_001d52f3();
-  /* test (char)eax, (char)eax -> jne 0x1d5bf1 */
-  __SEH_epilog();
-  FUN_001dd5c8();
-  /* test eax, eax -> jne 0x1d5c92 */
-  /* test (char)ecx, 1 -> jne 0x1d5cbc */
-  /* cmp edi, 0x80 -> jae 0x1d5e34 */
-  /* relift: cmp dword ptr [eax], eax -> je 0x1d5d4b */
-  /* cmp ecx, edi -> jne 0x1d5d27 */
-  /* test eax, eax -> je 0x1d5d95 */
-  /* test eax, eax -> je 0x1d5dac */
-  /* test eax, eax -> je 0x1d5dc3 */
-  /* test eax, eax -> je 0x1d5e3d */
-  FUN_001d8750(0);
-  /* cmp ecx, edx -> jne 0x1d5eac */
-  /* relift: cmp edi, dword ptr [esi + 0x1c] -> ja 0x1d629d */
-  /* cmp edx, eax -> je 0x1d5e87 */
-  /* relift: cmp eax, dword ptr [ebp - 0x28] -> jb 0x1d5e87 */
-  /* cmp edx, ecx -> je 0x1d5e87 */
-  /* relift: cmp esi, dword ptr [ebp - 0x28] -> jb 0x1d5e83 */
-  FUN_001d5411();
-  /* test eax, eax -> je 0x1d628e */
-  /* test edx, edx -> je 0x1d6238 */
-  /* cmp edx, 1 -> jne 0x1d5f00 */
-  /* test (char)ecx, 0x10 -> je 0x1d5ff2 */
-  /* cmp (int16_t)edx, 0x80 -> jae 0x1d5fa4 */
-  /* relift: cmp dword ptr [edi], edi -> jne 0x1d5f90 */
-  /* cmp ecx, eax -> je 0x1d5fce */
-  /* relift: cmp (int16_t)edx, word ptr [edi] -> jbe 0x1d5fce */
-  /* test (char)ecx, 1 -> je 0x1d60c3 */
-  /* cmp (int16_t)edx, 0x80 -> jae 0x1d6085 */
-  /* relift: cmp dword ptr [edi], edi -> jne 0x1d6071 */
-  /* cmp ecx, eax -> je 0x1d60af */
-  /* relift: cmp (int16_t)edx, word ptr [edi] -> jbe 0x1d60af */
-  /* cmp ecx, edi -> jne 0x1d6127 */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d6127 */
-  /* cmp edx, 0xff00 -> ja 0x1d6215 */
-  /* relift: test byte ptr [esi + 5], 0x10 -> jne 0x1d6154 */
-  /* cmp (int16_t)edx, 0x80 -> jae 0x1d61d7 */
-  /* relift: cmp dword ptr [edi], edi -> jne 0x1d61b6 */
-  /* cmp ecx, eax -> je 0x1d6201 */
-  /* relift: cmp (int16_t)edx, word ptr [edi] -> jbe 0x1d6201 */
-  FUN_001d4cd9();
-  /* relift: test byte ptr [esi + 5], 0x10 -> je 0x1d6238 */
-  /* relift: test byte ptr [ebp - 0x31], 0x10 -> je 0x1d624a */
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d626c */
-  /* relift: test byte ptr [ebp + 0xc], 8 -> je 0x1d63bb */
-  /* relift: test byte ptr [esi + 0x14], 2 -> je 0x1d636c */
-  /* test eax, eax -> jl 0x1d6376 */
-  /* relift: test byte ptr [ebp + 0xc], 4 -> je 0x1d63b4 */
-  FUN_001d63d5();
-  __SEH_epilog();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d63e7 */
-  FUN_001dd5c8();
-  /* cmp eax, 0x7fffffff -> jbe 0x1d641a */
-  /* cmp eax, edi -> jne 0x1d6421 */
-  /* relift: test dword ptr [ebp + 0xc], 0x3c000100 -> jne 0x1d644a */
-  /* relift: cmp dword ptr [esi + 0x17c], edi -> je 0x1d6455 */
-  /* relift: test byte ptr [ebp + 0xc], 1 -> jne 0x1d6474 */
-  /* cmp ebx, 0x80 -> jae 0x1d668c */
-  /* cmp eax, edi -> je 0x1d6541 */
-  /* cmp eax, ecx -> jne 0x1d64ea */
-  /* cmp (int16_t)eax, 0x80 -> jae 0x1d64ea */
-  /* test (char)ecx, 4 -> je 0x1d6521 */
-  /* test (char)ecx, 2 -> je 0x1d650e */
-  /* cmp eax, 4 -> jbe 0x1d650e */
-  /* cmp ebx, 0x20 -> jae 0x1d65b4 */
-  /* test edx, edx -> jne 0x1d65d6 */
-  /* test ecx, ecx -> jne 0x1d6644 */
-  /* test ecx, ecx -> jne 0x1d65ff */
-  /* test ecx, ecx -> je 0x1d6695 */
-  FUN_001d8750(0);
-  /* cmp ebx, 0x40 -> jae 0x1d6613 */
-  /* test edx, edx -> je 0x1d65dd */
-  /* test ecx, ecx -> jne 0x1d6644 */
-  /* test ecx, ecx -> je 0x1d6695 */
-  FUN_001d8750(0);
-  /* cmp ebx, 0x60 -> jae 0x1d6658 */
-  /* test eax, eax -> jne 0x1d6672 */
-  /* test ecx, ecx -> je 0x1d6695 */
-  FUN_001d8750(0);
-  /* test eax, eax -> je 0x1d6695 */
-  FUN_001d8750(0);
-  /* relift: cmp ebx, dword ptr [esi + 0x1c] -> ja 0x1d6b4e */
-  /* cmp esi, eax -> je 0x1d66b8 */
-  /* cmp ecx, ebx -> jae 0x1d66d0 */
-  FUN_001d5411();
-  /* test edi, edi -> je 0x1d6b3d */
-  /* cmp eax, ecx -> jne 0x1d671c */
-  /* cmp (int16_t)eax, 0x80 -> jae 0x1d671c */
-  /* test (char)ecx, 4 -> je 0x1d6756 */
-  /* test (char)ecx, 2 -> je 0x1d6740 */
-  /* cmp eax, 4 -> jbe 0x1d6740 */
-  /* test ebx, ebx -> je 0x1d6aef */
-  /* cmp ebx, 1 -> jne 0x1d67a8 */
-  /* test dl, 0x10 -> je 0x1d6887 */
-  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6833 */
-  /* relift: cmp dword ptr [edi], edi -> jne 0x1d6863 */
-  /* cmp edx, edi -> je 0x1d685d */
-  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d685d */
-  /* test (char)ecx, 1 -> je 0x1d694a */
-  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6906 */
-  /* relift: cmp dword ptr [edi], edi -> jne 0x1d6936 */
-  /* cmp edx, edi -> je 0x1d6930 */
-  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d6930 */
-  /* cmp ecx, edx -> jne 0x1d69ae */
-  /* cmp (int16_t)ecx, 0x80 -> jae 0x1d69ae */
-  /* test (char)ecx, 4 -> je 0x1d69f1 */
-  /* test (char)ecx, 2 -> je 0x1d69d8 */
-  /* cmp eax, 4 -> jbe 0x1d69d8 */
-  /* cmp ebx, 0xff00 -> ja 0x1d6ac7 */
-  /* relift: test byte ptr [esi + 5], 0x10 -> jne 0x1d6a21 */
-  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6a83 */
-  /* relift: cmp dword ptr [edi], edi -> jne 0x1d6ab3 */
-  /* cmp edx, edi -> je 0x1d6aad */
-  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d6aad */
-  FUN_001d4cd9();
-  /* relift: test byte ptr [esi + 5], 0x10 -> je 0x1d6aef */
-  /* relift: test byte ptr [ebp - 0x3d], 0x10 -> je 0x1d6b01 */
-  /* relift: test byte ptr [ebp + 0xc], 8 -> je 0x1d6b16 */
-  /* relift: test byte ptr [edi + 5], 2 -> je 0x1d6c60 */
-  FUN_001d4dd3();
-  /* relift: test byte ptr [esi + 0x14], 2 -> je 0x1d6c01 */
-  /* cmp eax, edi -> jl 0x1d6c0b */
-  /* relift: test byte ptr [ebp + 0xc], 4 -> je 0x1d6c60 */
-  /* test ecx, ecx -> je 0x1d6c7e */
-  /* relift: FUN_001d6c92(0, 0); */
-  __SEH_epilog();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d6ca7 */
-  FUN_001dd5c8();
-  /* test ecx, ecx -> jne 0x1d6cd2 */
-  /* test (char)eax, 1 -> jne 0x1d6cf3 */
-  /* relift: test byte ptr [edi + 5], 8 -> jne 0x1d6e00 */
-  FUN_001d4a34();
-  /* cmp ecx, 0x80 -> jae 0x1d6d84 */
-  /* relift: cmp dword ptr [edx], edx -> jne 0x1d6d63 */
-  /* relift: cmp ecx, dword ptr [esi + 0x28] -> jb 0x1d6da0 */
-  /* relift: cmp edx, dword ptr [esi + 0x2c] -> jb 0x1d6da0 */
-  FUN_001d5598();
-  /* cmp ecx, 0xff00 -> ja 0x1d6df6 */
-  /* cmp esi, ecx -> je 0x1d6dd8 */
-  /* relift: cmp (int16_t)edi, word ptr [edx] -> jbe 0x1d6dd8 */
-  FUN_001d4cd9();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d6e2c */
-  /* test eax, eax -> jge 0x1d6e4e */
-  FUN_001d6e65();
-  __SEH_epilog();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d6e77 */
-  FUN_001dd5c8();
-  /* relift: test byte ptr [ebp + 0xc], 1 -> jne 0x1d6ead */
-  /* test dl, 1 -> je 0x1d6ff9 */
-  /* test (char)ecx, 7 -> jne 0x1d6ff9 */
-  /* relift: cmp byte ptr [eax + 4], 0x40 -> jae 0x1d6ff9 */
-  /* test dl, 8 -> je 0x1d6f1d */
-  /* cmp eax, edi -> jl 0x1d6ff9 */
-  FUN_001d4a34();
-  /* relift: cmp ecx, dword ptr [esi + 0x28] -> jb 0x1d6f51 */
-  /* relift: cmp edx, dword ptr [esi + 0x2c] -> jb 0x1d6f51 */
-  FUN_001d5598();
-  /* cmp ecx, 0xff00 -> ja 0x1d6fed */
-  /* cmp (int16_t)ebx, 0x80 -> jae 0x1d6fab */
-  /* relift: cmp dword ptr [edx], edx -> jne 0x1d6fcf */
-  /* cmp edi, edx -> je 0x1d6fcc */
-  /* relift: cmp (int16_t)ebx, word ptr [ecx] -> jbe 0x1d6fcc */
-  FUN_001d4cd9();
-  /* relift: FUN_001d7028(0, 0); */
-  __SEH_epilog();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d703a */
-  FUN_001dd5c8();
-  /* test esi, esi -> je 0x1d706c */
-  /* cmp edx, 0x7fffffff -> jbe 0x1d7073 */
-  /* test edx, edx -> jne 0x1d7078 */
-  /* relift: test dword ptr [ebp + 0xc], 0x3c000100 -> jne 0x1d709b */
-  /* relift: cmp dword ptr [eax + 0x17c], 0 -> jne 0x1d709b */
-  /* relift: test byte ptr [esi - 0xb], 2 -> je 0x1d70a1 */
-  /* relift: test byte ptr [ebp + 0xc], 1 -> jne 0x1d70bf */
-  /* test (char)eax, 1 -> je 0x1d76e4 */
-  /* cmp edi, edx -> ja 0x1d7525 */
-  /* cmp edi, edx -> jne 0x1d7143 */
-  /* test (char)ecx, (char)ecx -> je 0x1d7152 */
-  /* relift: test byte ptr [ebx + 5], 2 -> je 0x1d7175 */
-  /* cmp ecx, esi -> jbe 0x1d71a5 */
-  /* relift: test byte ptr [ebp + 0xc], 8 -> je 0x1d71a5 */
-  /* cmp ecx, edx -> je 0x1d7683 */
-  /* test (char)eax, 8 -> je 0x1d71ff */
-  /* test eax, eax -> jl 0x1d7683 */
-  /* test (char)eax, 0x10 -> je 0x1d72c3 */
-  /* cmp (int16_t)edi, 0x80 -> jae 0x1d7291 */
-  /* relift: cmp dword ptr [eax], eax -> jne 0x1d72b5 */
-  /* cmp edx, eax -> je 0x1d72b2 */
-  /* relift: cmp (int16_t)edi, word ptr [ecx] -> jbe 0x1d72b2 */
-  /* test (char)eax, 1 -> je 0x1d737d */
-  /* cmp (int16_t)edi, 0x80 -> jae 0x1d7336 */
-  /* relift: cmp dword ptr [eax], eax -> jne 0x1d7369 */
-  /* cmp edx, eax -> je 0x1d7363 */
-  /* relift: cmp (int16_t)edi, word ptr [ecx] -> jbe 0x1d7363 */
-  /* cmp eax, ecx -> jne 0x1d73e3 */
-  /* cmp (int16_t)eax, 0x80 -> jae 0x1d73e3 */
-  /* test (char)ecx, 4 -> je 0x1d7429 */
-  /* test (char)ecx, 2 -> je 0x1d7410 */
-  /* cmp eax, 4 -> jbe 0x1d7410 */
-  /* cmp edi, 0xff00 -> ja 0x1d7516 */
-  /* relift: test byte ptr [esi + 5], 0x10 -> jne 0x1d7458 */
-  /* cmp (int16_t)edi, 0x80 -> jae 0x1d74bf */
-  /* relift: cmp dword ptr [eax], eax -> jne 0x1d74ef */
-  /* cmp edx, eax -> je 0x1d74e9 */
-  /* relift: cmp (int16_t)edi, word ptr [ecx] -> jbe 0x1d74e9 */
-  FUN_001d4cd9();
-  /* test (char)ecx, (char)ecx -> jne 0x1d7544 */
-  FUN_001d4ec6();
-  /* test (char)eax, (char)eax -> jne 0x1d7683 */
-  /* relift: test byte ptr [ebp + 0xc], 0x10 -> je 0x1d7553 */
-  /* test (char)eax, 2 -> je 0x1d75c1 */
-  FUN_001d4dd3();
-  /* test (int16_t)eax, (int16_t)eax -> je 0x1d759a */
-  /* test (char)eax, (char)eax -> je 0x1d75d1 */
-  FUN_001d5c66();
-  /* test eax, eax -> je 0x1d7680 */
-  /* relift: test byte ptr [eax + 5], 2 -> je 0x1d7628 */
-  FUN_001d4dd3();
-  /* relift: test byte ptr [ebx + 5], 2 -> je 0x1d7622 */
-  FUN_001d4dd3();
-  /* cmp eax, esi -> jb 0x1d7631 */
-  memmove((void *)0, (void *)(uintptr_t)0, eax);
-  /* relift: cmp dword ptr [ebp + 0x14], esi -> jbe 0x1d766c */
-  /* relift: test byte ptr [ebp + 0xc], 8 -> je 0x1d766c */
-  FUN_001d6ca8();
-  /* relift: cmp dword ptr [ebp + 0x10], 0 -> jne 0x1d76e4 */
-  /* relift: test byte ptr [ebp + 0xc], 4 -> je 0x1d76e4 */
-  FUN_001d76fc();
-  __SEH_epilog();
-  /* relift: cmp byte ptr [ebp - 0x1d], 0 -> je 0x1d7711 */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  ((void (*)(void))*(void **)0x253210)();
 }
 
-/* 0x001d8bd0 */
+
+/* NtDuplicateObject (0x1d8bd0) — Capstone tip: IAT jmp [0x253094]. */
 void NtDuplicateObject(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253094)();
 }
 
-/* 0x001d8bd6 */
+
+/* RtlLeaveCriticalSection (0x1d8bd6) — Capstone tip: IAT jmp [0x253098]. */
 void RtlLeaveCriticalSection(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253098)();
 }
 
-/* 0x001d8bdc */
+
+/* RtlEnterCriticalSection (0x1d8bdc) — Capstone tip: IAT jmp [0x25309c]. */
 void RtlEnterCriticalSection(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25309c)();
 }
 
-/* 0x001d8be2 */
+
+/* ObfDereferenceObject (0x1d8be2) — Capstone tip: IAT jmp [0x2530a0]. */
 void ObfDereferenceObject(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530a0)();
 }
 
-/* 0x001d8be8 */
+
+/* KeSetBasePriorityThread (0x1d8be8) — Capstone tip: IAT jmp [0x2530a4]. */
 void KeSetBasePriorityThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530a4)();
 }
 
-/* 0x001d8bee */
+
+/* ObReferenceObjectByHandle (0x1d8bee) — Capstone tip: IAT jmp [0x2530a8]. */
 void ObReferenceObjectByHandle(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530a8)();
 }
 
-/* 0x001d8bf4 */
+
+/* KeQueryBasePriorityThread (0x1d8bf4) — Capstone tip: IAT jmp [0x2530b0]. */
 void KeQueryBasePriorityThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530b0)();
 }
 
-/* 0x001d8bfa */
+
+/* KeSetDisableBoostThread (0x1d8bfa) — Capstone tip: IAT jmp [0x2530b4]. */
 void KeSetDisableBoostThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530b4)();
 }
 
-/* 0x001d8c00 */
+
+/* NtSuspendThread (0x1d8c00) — Capstone tip: IAT jmp [0x2530b8]. */
 void NtSuspendThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530b8)();
 }
 
-/* 0x001d8c06 */
+
+/* NtResumeThread (0x1d8c06) — Capstone tip: IAT jmp [0x2530bc]. */
 void NtResumeThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530bc)();
 }
 
-/* 0x001d8c0c */
+
+/* RtlRaiseException (0x1d8c0c) — Capstone tip: IAT jmp [0x2530c0]. */
 void RtlRaiseException(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530c0)();
 }
 
-/* 0x001d8c12 */
+
+/* NtQueueApcThread (0x1d8c12) — Capstone tip: IAT jmp [0x2530c4]. */
 void NtQueueApcThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530c4)();
 }
 
-/* 0x001d8c18 */
+
+/* NtYieldExecution (0x1d8c18) — Capstone tip: IAT jmp [0x2530c8]. */
 void NtYieldExecution(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530c8)();
 }
 
-/* 0x001d8c1e */
+
+/* PsTerminateSystemThread (0x1d8c1e) — Capstone tip: IAT jmp [0x2530cc]. */
 void PsTerminateSystemThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530cc)();
 }
 
-/* 0x001d8c24 */
+
+/* PsCreateSystemThreadEx (0x1d8c24) — Capstone tip: IAT jmp [0x2530d4]. */
 void PsCreateSystemThreadEx(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530d4)();
 }
 
-/* 0x001d8c2a */
+
+/* NtCreateEvent (0x1d8c2a) — Capstone tip: IAT jmp [0x2530d8]. */
 void NtCreateEvent(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530d8)();
 }
 
-/* 0x001d8c30 */
+
+/* ObOpenObjectByName (0x1d8c30) — Capstone tip: IAT jmp [0x2530dc]. */
 void ObOpenObjectByName(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530dc)();
 }
 
-/* 0x001d8c3c */
+
+/* NtSetEvent (0x1d8c3c) — Capstone tip: IAT jmp [0x2530e8]. */
 void NtSetEvent(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530e8)();
 }
 
-/* 0x001d8c42 */
+
+/* NtClearEvent (0x1d8c42) — Capstone tip: IAT jmp [0x2530ec]. */
 void NtClearEvent(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530ec)();
 }
 
-/* 0x001d8c48 */
+
+/* NtPulseEvent (0x1d8c48) — Capstone tip: IAT jmp [0x2530f0]. */
 void NtPulseEvent(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530f0)();
 }
 
-/* 0x001d8c4e */
+
+/* NtCreateSemaphore (0x1d8c4e) — Capstone tip: IAT jmp [0x2530f4]. */
 void NtCreateSemaphore(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530f4)();
 }
 
-/* 0x001d8c54 */
+
+/* NtReleaseSemaphore (0x1d8c54) — Capstone tip: IAT jmp [0x2530fc]. */
 void NtReleaseSemaphore(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2530fc)();
 }
 
-/* 0x001d8c5a */
+
+/* NtCreateMutant (0x1d8c5a) — Capstone tip: IAT jmp [0x253100]. */
 void NtCreateMutant(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253100)();
 }
 
-/* 0x001d8c60 */
+
+/* NtReleaseMutant (0x1d8c60) — Capstone tip: IAT jmp [0x253108]. */
 void NtReleaseMutant(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253108)();
 }
 
-/* 0x001d8c66 */
+
+/* NtWaitForSingleObjectEx (0x1d8c66) — Capstone tip: IAT jmp [0x25310c]. */
 void NtWaitForSingleObjectEx(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25310c)();
 }
 
-/* 0x001d8c6c */
+
+/* NtSignalAndWaitForSingleObjectEx (0x1d8c6c) — Capstone tip: IAT jmp [0x253110]. */
 void NtSignalAndWaitForSingleObjectEx(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253110)();
 }
 
-/* 0x001d8c72 */
+
+/* NtWaitForMultipleObjectsEx (0x1d8c72) — Capstone tip: IAT jmp [0x253114]. */
 void NtWaitForMultipleObjectsEx(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253114)();
 }
 
-/* 0x001d8c78 */
+
+/* KeDelayExecutionThread (0x1d8c78) — Capstone tip: IAT jmp [0x253118]. */
 void KeDelayExecutionThread(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253118)();
 }
 
-/* 0x001d8c7e */
+
+/* NtCreateTimer (0x1d8c7e) — Capstone tip: IAT jmp [0x25311c]. */
 void NtCreateTimer(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25311c)();
 }
 
-/* 0x001d8c84 */
+
+/* NtSetTimerEx (0x1d8c84) — Capstone tip: IAT jmp [0x253124]. */
 void NtSetTimerEx(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253124)();
 }
 
-/* 0x001d8c8a */
+
+/* NtCancelTimer (0x1d8c8a) — Capstone tip: IAT jmp [0x253128]. */
 void NtCancelTimer(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253128)();
 }
 
-/* 0x001d8c90 */
+
+/* RtlFreeAnsiString (0x1d8c90) — Capstone tip: IAT jmp [0x25312c]. */
 void RtlFreeAnsiString(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25312c)();
 }
 
-/* 0x001d8c96 */
+
+/* RtlUnicodeStringToAnsiString (0x1d8c96) — Capstone tip: IAT jmp [0x253130]. */
 void RtlUnicodeStringToAnsiString(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253130)();
 }
 
-/* 0x001d8c9c */
+
+/* RtlInitUnicodeString (0x1d8c9c) — Capstone tip: IAT jmp [0x253134]. */
 void RtlInitUnicodeString(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253134)();
 }
 
-/* 0x001d8ca2 */
+
+/* RtlTimeToTimeFields (0x1d8ca2) — Capstone tip: IAT jmp [0x253138]. */
 void RtlTimeToTimeFields(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253138)();
 }
 
-/* 0x001d8cae */
+
+/* RtlTimeFieldsToTime (0x1d8cae) — Capstone tip: IAT jmp [0x253144]. */
 void RtlTimeFieldsToTime(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253144)();
 }
 
-/* 0x001d8cb4 */
+
+/* NtAllocateVirtualMemory (0x1d8cb4) — Capstone tip: IAT jmp [0x253148]. */
 void NtAllocateVirtualMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253148)();
 }
 
-/* 0x001d8cba */
+
+/* NtFreeVirtualMemory (0x1d8cba) — Capstone tip: IAT jmp [0x25314c]. */
 void NtFreeVirtualMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25314c)();
 }
 
-/* 0x001d8cc0 */
+
+/* NtProtectVirtualMemory (0x1d8cc0) — Capstone tip: IAT jmp [0x253150]. */
 void NtProtectVirtualMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253150)();
 }
 
-/* 0x001d8cc6 */
+
+/* NtQueryVirtualMemory (0x1d8cc6) — Capstone tip: IAT jmp [0x253154]. */
 void NtQueryVirtualMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253154)();
 }
 
-/* 0x001d8ccc */
+
+/* MmQueryStatistics (0x1d8ccc) — Capstone tip: IAT jmp [0x253158]. */
 void MmQueryStatistics(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253158)();
 }
 
-/* 0x001d8cd2 */
+
+/* NtSetInformationFile (0x1d8cd2) — Capstone tip: IAT jmp [0x25315c]. */
 void NtSetInformationFile(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25315c)();
 }
 
-/* 0x001d8cde */
+
+/* NtQueryFullAttributesFile (0x1d8cde) — Capstone tip: IAT jmp [0x253164]. */
 void NtQueryFullAttributesFile(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253164)();
 }
 
-/* 0x001d8ce4 */
+
+/* FscSetCacheSize (0x1d8ce4) — Capstone tip: IAT jmp [0x253168]. */
 void FscSetCacheSize(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253168)();
 }
 
-/* 0x001d8cea */
+
+/* FscGetCacheSize (0x1d8cea) — Capstone tip: IAT jmp [0x25316c]. */
 void FscGetCacheSize(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25316c)();
 }
 
-/* 0x001d8cf0 */
+
+/* NtQueryDirectoryFile (0x1d8cf0) — Capstone tip: IAT jmp [0x253170]. */
 void NtQueryDirectoryFile(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253170)();
 }
 
-/* 0x001d8cf6 */
+
+/* NtWaitForSingleObject (0x1d8cf6) — Capstone tip: IAT jmp [0x253174]. */
 void NtWaitForSingleObject(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253174)();
 }
 
-/* 0x001d8cfc */
+
+/* NtReadFile (0x1d8cfc) — Capstone tip: IAT jmp [0x253178]. */
 void NtReadFile(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253178)();
 }
 
-/* 0x001d8d08 */
+
+/* NtQueryInformationFile (0x1d8d08) — Capstone tip: IAT jmp [0x253180]. */
 void NtQueryInformationFile(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253180)();
 }
 
-/* 0x001d8d14 */
+
+/* NtFlushBuffersFile (0x1d8d14) — Capstone tip: IAT jmp [0x253188]. */
 void NtFlushBuffersFile(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253188)();
 }
 
-/* 0x001d8d1a */
+
+/* NtUserIoApcDispatcher (0x1d8d1a) — Capstone tip: IAT jmp [0x25318c]. */
 void NtUserIoApcDispatcher(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25318c)();
 }
 
-/* 0x001d8d2c */
+
+/* NtReadFileScatter (0x1d8d2c) — Capstone tip: IAT jmp [0x253198]. */
 void NtReadFileScatter(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253198)();
 }
 
-/* 0x001d8d38 */
+
+/* NtCreateFile (0x1d8d38) — Capstone tip: IAT jmp [0x2531a0]. */
 void NtCreateFile(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531a0)();
 }
 
-/* 0x001d8d3e */
+
+/* MmFreeSystemMemory (0x1d8d3e) — Capstone tip: IAT jmp [0x2531a4]. */
 void MmFreeSystemMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531a4)();
 }
 
-/* 0x001d8d44 */
+
+/* MmAllocateSystemMemory (0x1d8d44) — Capstone tip: IAT jmp [0x2531a8]. */
 void MmAllocateSystemMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531a8)();
 }
 
-/* 0x001d8d4a */
+
+/* KeWaitForSingleObject (0x1d8d4a) — Capstone tip: IAT jmp [0x2531ac]. */
 void KeWaitForSingleObject(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531ac)();
 }
 
-/* 0x001d8d50 */
+
+/* KfLowerIrql (0x1d8d50) — Capstone tip: IAT jmp [0x2531b0]. */
 void KfLowerIrql(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531b0)();
 }
 
-/* 0x001d8d56 */
+
+/* KeRaiseIrqlToDpcLevel (0x1d8d56) — Capstone tip: IAT jmp [0x2531b4]. */
 void KeRaiseIrqlToDpcLevel(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531b4)();
 }
 
-/* 0x001d8d5c */
+
+/* IoCreateDevice (0x1d8d5c) — Capstone tip: IAT jmp [0x2531b8]. */
 void IoCreateDevice(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531b8)();
 }
 
-/* 0x001d8d62 */
+
+/* ExAllocatePool (0x1d8d62) — Capstone tip: IAT jmp [0x2531bc]. */
 void ExAllocatePool(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531bc)();
 }
 
-/* 0x001d8d68 */
+
+/* KeSetEvent (0x1d8d68) — Capstone tip: IAT jmp [0x2531c0]. */
 void KeSetEvent(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531c0)();
 }
 
-/* 0x001d8d6e */
+
+/* KeInitializeTimerEx (0x1d8d6e) — Capstone tip: IAT jmp [0x2531c4]. */
 void KeInitializeTimerEx(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531c4)();
 }
 
-/* 0x001d8d74 */
+
+/* KeInitializeDpc (0x1d8d74) — Capstone tip: IAT jmp [0x2531c8]. */
 void KeInitializeDpc(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531c8)();
 }
 
-/* 0x001d8d7a */
+
+/* IoInvalidDeviceRequest (0x1d8d7a) — Capstone tip: IAT jmp [0x2531cc]. */
 void IoInvalidDeviceRequest(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531cc)();
 }
 
-/* 0x001d8d80 */
+
+/* RtlNtStatusToDosError (0x1d8d80) — Capstone tip: IAT jmp [0x2531d0]. */
 void RtlNtStatusToDosError(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531d0)();
 }
 
-/* 0x001d8d86 */
+
+/* NtCreateIoCompletion (0x1d8d86) — Capstone tip: IAT jmp [0x2531d4]. */
 void NtCreateIoCompletion(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531d4)();
 }
 
-/* 0x001d8d8c */
+
+/* NtSetIoCompletion (0x1d8d8c) — Capstone tip: IAT jmp [0x2531d8]. */
 void NtSetIoCompletion(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531d8)();
 }
 
-/* 0x001d8d92 */
+
+/* NtRemoveIoCompletion (0x1d8d92) — Capstone tip: IAT jmp [0x2531dc]. */
 void NtRemoveIoCompletion(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531dc)();
 }
 
-/* 0x001d8d98 */
+
+/* KeSetTimer (0x1d8d98) — Capstone tip: IAT jmp [0x2531e0]. */
 void KeSetTimer(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531e0)();
 }
 
-/* 0x001d8d9e */
+
+/* KeCancelTimer (0x1d8d9e) — Capstone tip: IAT jmp [0x2531e4]. */
 void KeCancelTimer(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531e4)();
 }
 
-/* 0x001d8da4 */
+
+/* MmPersistContiguousMemory (0x1d8da4) — Capstone tip: IAT jmp [0x2531e8]. */
 void MmPersistContiguousMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531e8)();
 }
 
-/* 0x001d8daa */
+
+/* MmAllocateContiguousMemory (0x1d8daa) — Capstone tip: IAT jmp [0x2531ec]. */
 void MmAllocateContiguousMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531ec)();
 }
 
-/* 0x001d8db6 */
+
+/* HalReturnToFirmware (0x1d8db6) — Capstone tip: IAT jmp [0x2531f8]. */
 void HalReturnToFirmware(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531f8)();
 }
 
-/* 0x001d8dbc */
+
+/* NtQuerySymbolicLinkObject (0x1d8dbc) — Capstone tip: IAT jmp [0x2531fc]. */
 void NtQuerySymbolicLinkObject(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2531fc)();
 }
 
-/* 0x001d8dc2 */
+
+/* NtOpenSymbolicLinkObject (0x1d8dc2) — Capstone tip: IAT jmp [0x253200]. */
 void NtOpenSymbolicLinkObject(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253200)();
 }
 
-/* 0x001d8dc8 */
+
+/* KeQueryPerformanceCounter (0x1d8dc8) — Capstone tip: IAT jmp [0x253204]. */
 void KeQueryPerformanceCounter(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253204)();
 }
 
-/* 0x001d8dce */
+
+/* KeQueryPerformanceFrequency (0x1d8dce) — Capstone tip: IAT jmp [0x253208]. */
 void KeQueryPerformanceFrequency(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253208)();
 }
 
-/* 0x001d8dd4 */
+
+/* MmAllocateContiguousMemoryEx (0x1d8dd4) — Capstone tip: IAT jmp [0x25320c]. */
 void MmAllocateContiguousMemoryEx(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25320c)();
 }
 
-/* 0x001d8de0 */
+
+/* MmSetAddressProtect (0x1d8de0) — Capstone tip: IAT jmp [0x253214]. */
 void MmSetAddressProtect(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253214)();
 }
 
-/* 0x001d8dec */
+
+/* IoCreateSymbolicLink (0x1d8dec) — Capstone tip: IAT jmp [0x253220]. */
 void IoCreateSymbolicLink(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253220)();
 }
 
-/* 0x001d8df2 */
+
+/* IoDeleteSymbolicLink (0x1d8df2) — Capstone tip: IAT jmp [0x253224]. */
 void IoDeleteSymbolicLink(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253224)();
 }
 
-/* 0x001d8e10 */
+
+/* RtlFillMemoryUlong (0x1d8e10) — Capstone tip: IAT jmp [0x253244]. */
 void RtlFillMemoryUlong(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253244)();
 }
 
-/* 0x001d8e16 */
+
+/* RtlCompareMemoryUlong (0x1d8e16) — Capstone tip: IAT jmp [0x253248]. */
 void RtlCompareMemoryUlong(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253248)();
 }
 
-/* 0x001d8e1c */
+
+/* RtlCompareMemory (0x1d8e1c) — Capstone tip: IAT jmp [0x25324c]. */
 void RtlCompareMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25324c)();
 }
 
-/* 0x001d8e22 */
+
+/* RtlInitializeCriticalSection (0x1d8e22) — Capstone tip: IAT jmp [0x253250]. */
 void RtlInitializeCriticalSection(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253250)();
 }
 
-/* 0x001d8e28 */
+
+/* IoStartPacket (0x1d8e28) — Capstone tip: IAT jmp [0x253258]. */
 void IoStartPacket(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253258)();
 }
 
-/* 0x001d8e2e */
+
+/* IofCompleteRequest (0x1d8e2e) — Capstone tip: IAT jmp [0x25325c]. */
 void IofCompleteRequest(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25325c)();
 }
 
-/* 0x001d8e34 */
+
+/* IoStartNextPacket (0x1d8e34) — Capstone tip: IAT jmp [0x253260]. */
 void IoStartNextPacket(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253260)();
 }
 
-/* 0x001d8e3a */
+
+/* ExFreePool (0x1d8e3a) — Capstone tip: IAT jmp [0x253264]. */
 void ExFreePool(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253264)();
 }
 
-/* 0x001d8e40 */
+
+/* IoMarkIrpMustComplete (0x1d8e40) — Capstone tip: IAT jmp [0x253268]. */
 void IoMarkIrpMustComplete(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253268)();
 }
 
-/* 0x001d8e46 */
+
+/* HalIsResetOrShutdownPending (0x1d8e46) — Capstone tip: IAT jmp [0x25326c]. */
 void HalIsResetOrShutdownPending(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25326c)();
 }
 
-/* 0x001d8e4c */
+
+/* KeQueryInterruptTime (0x1d8e4c) — Capstone tip: IAT jmp [0x253270]. */
 void KeQueryInterruptTime(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253270)();
 }
 
-/* 0x001d8e52 */
+
+/* HalInitiateShutdown (0x1d8e52) — Capstone tip: IAT jmp [0x253274]. */
 void HalInitiateShutdown(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253274)();
 }
 
-/* 0x001d8e58 */
+
+/* HalGetInterruptVector (0x1d8e58) — Capstone tip: IAT jmp [0x253278]. */
 void HalGetInterruptVector(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253278)();
 }
 
-/* 0x001d8e5e */
+
+/* KfRaiseIrql (0x1d8e5e) — Capstone tip: IAT jmp [0x25327c]. */
 void KfRaiseIrql(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25327c)();
 }
 
-/* 0x001d8e64 */
+
+/* HalRegisterShutdownNotification (0x1d8e64) — Capstone tip: IAT jmp [0x253280]. */
 void HalRegisterShutdownNotification(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253280)();
 }
 
-/* 0x001d8e6a */
+
+/* KeConnectInterrupt (0x1d8e6a) — Capstone tip: IAT jmp [0x253284]. */
 void KeConnectInterrupt(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253284)();
 }
 
-/* 0x001d8e70 */
+
+/* KeInitializeInterrupt (0x1d8e70) — Capstone tip: IAT jmp [0x253288]. */
 void KeInitializeInterrupt(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253288)();
 }
 
-/* 0x001d8e76 */
+
+/* KeStallExecutionProcessor (0x1d8e76) — Capstone tip: IAT jmp [0x25328c]. */
 void KeStallExecutionProcessor(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25328c)();
 }
 
-/* 0x001d8e7c */
+
+/* RtlEqualString (0x1d8e7c) — Capstone tip: IAT jmp [0x253290]. */
 void RtlEqualString(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253290)();
 }
 
-/* 0x001d8e82 */
+
+/* XeLoadSection (0x1d8e82) — Capstone tip: IAT jmp [0x253294]. */
 void XeLoadSection(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253294)();
 }
 
-/* 0x001d8e88 */
+
+/* XeUnloadSection (0x1d8e88) — Capstone tip: IAT jmp [0x253298]. */
 void XeUnloadSection(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253298)();
 }
 
-/* 0x001d8e8e */
+
+/* MmGetPhysicalAddress (0x1d8e8e) — Capstone tip: IAT jmp [0x25329c]. */
 void MmGetPhysicalAddress(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x25329c)();
 }
 
-/* 0x001d8e94 */
+
+/* MmLockUnlockBufferPages (0x1d8e94) — Capstone tip: IAT jmp [0x2532a0]. */
 void MmLockUnlockBufferPages(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532a0)();
 }
 
-/* 0x001d8e9a */
+
+/* KeInsertQueueDpc (0x1d8e9a) — Capstone tip: IAT jmp [0x2532a4]. */
 void KeInsertQueueDpc(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532a4)();
 }
 
-/* 0x001d8ea0 */
+
+/* MmLockUnlockPhysicalPage (0x1d8ea0) — Capstone tip: IAT jmp [0x2532a8]. */
 void MmLockUnlockPhysicalPage(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532a8)();
 }
 
-/* 0x001d8ea6 */
+
+/* AvGetSavedDataAddress (0x1d8ea6) — Capstone tip: IAT jmp [0x2532ac]. */
 void AvGetSavedDataAddress(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532ac)();
 }
 
-/* 0x001d8eac */
+
+/* AvSendTVEncoderOption (0x1d8eac) — Capstone tip: IAT jmp [0x2532b0]. */
 void AvSendTVEncoderOption(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532b0)();
 }
 
-/* 0x001d8eb2 */
+
+/* AvSetDisplayMode (0x1d8eb2) — Capstone tip: IAT jmp [0x2532b4]. */
 void AvSetDisplayMode(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532b4)();
 }
 
-/* 0x001d8eb8 */
+
+/* AvSetSavedDataAddress (0x1d8eb8) — Capstone tip: IAT jmp [0x2532b8]. */
 void AvSetSavedDataAddress(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532b8)();
 }
 
-/* 0x001d8ec4 */
+
+/* KeDisconnectInterrupt (0x1d8ec4) — Capstone tip: IAT jmp [0x2532c0]. */
 void KeDisconnectInterrupt(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532c0)();
 }
 
-/* 0x001d8eca */
+
+/* MmClaimGpuInstanceMemory (0x1d8eca) — Capstone tip: IAT jmp [0x2532c4]. */
 void MmClaimGpuInstanceMemory(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532c4)();
 }
 
-/* 0x001d8ed0 */
+
+/* ExQueryPoolBlockSize (0x1d8ed0) — Capstone tip: IAT jmp [0x2532c8]. */
 void ExQueryPoolBlockSize(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532c8)();
 }
 
-/* 0x001d8ed6 */
+
+/* ExAllocatePoolWithTag (0x1d8ed6) — Capstone tip: IAT jmp [0x2532cc]. */
 void ExAllocatePoolWithTag(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532cc)();
 }
 
-/* 0x001d8edc */
+
+/* KeRemoveQueueDpc (0x1d8edc) — Capstone tip: IAT jmp [0x2532d0]. */
 void KeRemoveQueueDpc(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532d0)();
 }
 
-/* 0x001d8ee2 */
+
+/* KeSynchronizeExecution (0x1d8ee2) — Capstone tip: IAT jmp [0x2532d4]. */
 void KeSynchronizeExecution(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532d4)();
 }
 
-/* 0x001d8ee8 */
+
+/* KeSaveFloatingPointState (0x1d8ee8) — Capstone tip: IAT jmp [0x2532d8]. */
 void KeSaveFloatingPointState(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532d8)();
 }
 
-/* 0x001d8eee */
+
+/* KeRestoreFloatingPointState (0x1d8eee) — Capstone tip: IAT jmp [0x2532dc]. */
 void KeRestoreFloatingPointState(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532dc)();
 }
 
-/* 0x001d8ef4 */
+
+/* PhyGetLinkState (0x1d8ef4) — Capstone tip: IAT jmp [0x2532e0]. */
 void PhyGetLinkState(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532e0)();
 }
 
-/* 0x001d8efa */
+
+/* PhyInitialize (0x1d8efa) — Capstone tip: IAT jmp [0x2532e4]. */
 void PhyInitialize(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532e4)();
 }
 
-/* 0x001d8f00 */
+
+/* KeWaitForMultipleObjects (0x1d8f00) — Capstone tip: IAT jmp [0x2532e8]. */
 void KeWaitForMultipleObjects(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x2532e8)();
 }
 
-/* 0x001d8f12 */
+
+/* KeSetTimerEx (0x1d8f12) — Capstone tip: IAT jmp [0x2532f4]. */
 void KeSetTimerEx(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: FUN_001d8b2e(0, 0); */
-  /* relift: FUN_001d8b49(0, 0); */
-  /* test eax, eax -> jge 0x1d8ffc */
-  /* mem[0x003314a0] = eax */
-  /* mem[0x003314a4] = 0x1dded4 */
-  /* mem[0x003314a8] = 0x1ddf39 */
-  /* mem[0x003314ac] = 0x1dde7c */
-  /* mem[0x003314b0] = 0x1ddf1f */
-  /* mem[0x003314b4] = eax */
-  /* mem[0x004fc000] = ecx */
-  FUN_001d9011();
-  FUN_001de27a();
-  /* test eax, eax -> je 0x1d90c7 */
-  /* test edx, 0x7fffffff -> jne 0x1d908b */
-  /* test eax, eax -> je 0x1d90ef */
-  FUN_001de452();
-  __flsbuf();
-  FUN_001de452();
-  FUN_001de452();
-  __flsbuf();
-  /* test esi, esi -> je 0x1d91ee */
-  /* cmp edi, ecx -> jbe 0x1d925a */
-  /* test eax, eax -> jle 0x1d921f */
-  /* cmp esi, edi -> jbe 0x1d9210 */
-  /* test ebp, ebp -> je 0x1d9252 */
-  /* cmp edi, ecx -> ja 0x1d9202 */
-  /* cmp eax, 2 -> jb 0x1d94dc */
-  /* cmp eax, 8 -> ja 0x1d92ef */
-  _shortsort();
-  /* test eax, eax -> jle 0x1d932a */
-  /* test eax, eax -> jle 0x1d935c */
-  /* test eax, eax -> jle 0x1d938a */
-  /* cmp edi, ebx -> jbe 0x1d93b0 */
-  /* cmp ebx, edi -> jae 0x1d93b0 */
-  /* test eax, eax -> jle 0x1d9394 */
-  /* cmp edi, ebx -> ja 0x1d93d0 */
-  /* cmp ebx, eax -> ja 0x1d93d0 */
-  /* test eax, eax -> jle 0x1d93b0 */
-  /* cmp esi, edi -> jbe 0x1d93e6 */
-  /* test eax, eax -> jg 0x1d93d0 */
-  /* cmp ebx, esi -> ja 0x1d942c */
-  /* cmp edi, esi -> jne 0x1d9390 */
-  /* cmp edi, esi -> jae 0x1d9450 */
-  /* cmp esi, edi -> jbe 0x1d9450 */
-  /* test eax, eax -> je 0x1d9432 */
-  /* cmp edi, esi -> jb 0x1d946a */
-  /* cmp esi, eax -> jbe 0x1d946e */
-  /* test eax, eax -> je 0x1d9450 */
-  /* cmp edi, ecx -> jl 0x1d94ab */
-  /* cmp eax, esi -> jae 0x1d9496 */
-  /* cmp ebx, edx -> jae 0x1d92c7 */
-  /* cmp ebx, edx -> jae 0x1d94c3 */
-  /* cmp eax, esi -> jae 0x1d92c7 */
-  FUN_001dee48();
-  FUN_001d950d();
-  __fload_withFB();
-  /* relift: cmp word ptr [esp], 0x27f -> je 0x1d9521 */
-  FUN_001dedd5();
-  /* cmp eax, 0x3ff00000 -> jae 0x1d9555 */
-  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
-  FUN_001dedec();
-  /* test eax, 0xfffff -> jne 0x1d957a */
-  /* relift: cmp dword ptr [esp + 8], 0 -> jne 0x1d957a */
-  /* relift: relift: fld xword ptr [0x3314b8] */
-  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
-  __startOneArgErrorHandling();
-  /* test edx, 3 -> je 0x1d95fb */
-  /* cmp (char)ecx, (char)ebx -> je 0x1d95c0 */
-  /* test (char)ecx, (char)ecx -> je 0x1d9644 */
-  /* test edx, 3 -> jne 0x1d95e8 */
-  /* cmp (char)eax, (char)ebx -> je 0x1d9685 */
-  /* test (char)eax, (char)eax -> je 0x1d9642 */
-  /* cmp (char)eax, (char)ebx -> je 0x1d967e */
-  /* test (char)eax, (char)eax -> je 0x1d9642 */
-  /* cmp (char)eax, (char)ebx -> je 0x1d9677 */
-  /* test (char)eax, (char)eax -> je 0x1d9642 */
-  /* cmp (char)eax, (char)ebx -> je 0x1d9670 */
-  /* test (char)eax, (char)eax -> je 0x1d9642 */
-  /* test dl, dl -> je 0x1d970a */
-  /* test (char)edx, (char)edx -> je 0x1d96f7 */
-  /* cmp (char)eax, dl -> je 0x1d96ca */
-  /* test (char)eax, (char)eax -> je 0x1d96c4 */
-  /* cmp (char)eax, dl -> je 0x1d96ca */
-  /* test (char)eax, (char)eax -> jne 0x1d96b9 */
-  /* cmp (char)eax, (char)edx -> jne 0x1d96bc */
-  /* test (char)eax, (char)eax -> je 0x1d9703 */
-  /* cmp (char)eax, (char)eax -> jne 0x1d96a8 */
-  /* test (char)eax, (char)eax -> je 0x1d9703 */
-  /* cmp (char)eax, (char)eax -> je 0x1d96d4 */
-  /* relift: cmp byte ptr [edi], (char)eax -> je 0x1d9731 */
-  FUN_001df055();
-  FUN_001defb3();
-  /* test eax, eax -> je 0x1d9756 */
-  /* relift: cmp esi, dword ptr [esp + 8] -> jb 0x1d974e */
-  FUN_001df055();
-  /* mem[0x004fc010] = 1 */
-  /* relift: relift: mov byte ptr [0x4fc00c], (char)ebx */
-  /* test ecx, ecx -> je 0x1d97b5 */
-  /* test eax, eax -> je 0x1d97a0 */
-  /* mem[0x00632dcc] = eax */
-  /* cmp eax, edi -> jae 0x1d97d4 */
-  /* test eax, eax -> je 0x1d97cd */
-  /* cmp esi, edi -> jb 0x1d97c5 */
-  /* cmp eax, edi -> jae 0x1d97f3 */
-  /* test eax, eax -> je 0x1d97ec */
-  /* cmp esi, edi -> jb 0x1d97e4 */
-  FUN_001defb3();
-  FUN_001d9761();
-  FUN_001d9761();
-  FUN_001d9761();
-  FUN_001d9761();
-  FUN_001dd5c8();
-  __lock_file();
-  __stbuf();
-  FUN_001de452();
-  __ftbuf();
-  FUN_001d98a3();
-  __SEH_epilog();
-  __unlock_file();
-  FUN_001dd5c8();
-  __lock_file();
-  __stbuf();
-  FUN_001de452();
-  __ftbuf();
-  FUN_001d9901();
-  __SEH_epilog();
-  __unlock_file();
-  /* cmp eax, esi -> jge 0x1d9930 */
-  /* mem[0x00632dc4] = eax */
-  FUN_001df1bd();
-  /* mem[0x00632dc0] = eax */
-  /* mem[0x00632dc4] = esi */
-  FUN_001df1bd();
-  /* mem[0x00632dc0] = eax */
-  /* cmp ecx, 0x3312b0 -> jl 0x1d996a */
-  /* cmp eax, -1 -> je 0x1d99a7 */
-  /* test eax, eax -> jne 0x1d99aa */
-  /* cmp edx, 0x3310a0 -> jl 0x1d9987 */
-  __flushall();
-  /* relift: cmp byte ptr [0x4fc00c], 0 -> je 0x1d99cd */
-  /* cmp eax, ecx -> jb 0x1d99f2 */
-  /* cmp eax, 0x331290 -> ja 0x1d99f2 */
-  FUN_001df055();
-  /* cmp eax, 0x14 -> jge 0x1d9a11 */
-  FUN_001df055();
-  /* cmp eax, ecx -> jb 0x1d9a44 */
-  /* cmp eax, 0x331290 -> ja 0x1d9a44 */
-  FUN_001defb3();
-  /* cmp eax, 0x14 -> jge 0x1d9a63 */
-  FUN_001defb3();
-  /* cmp (char)ecx, 2 -> jne 0x1d9ac1 */
-  /* test (int16_t)eax, 0x108 -> je 0x1d9ac1 */
-  /* test edi, edi -> jle 0x1d9ac0 */
-  __write();
-  /* cmp eax, edi -> jne 0x1d9ab9 */
-  __flush();
-  /* relift: test byte ptr [esi + 0xd], 0x40 -> je 0x1d9af9 */
-  FUN_001df4c4();
-  FUN_001dd5c8();
-  FUN_001df055();
-  /* relift: cmp esi, dword ptr [0x632dc4] -> jge 0x1d9bae */
-  /* cmp eax, edi -> je 0x1d9b95 */
-  /* relift: test byte ptr [eax + 0xc], 0x83 -> je 0x1d9b95 */
-  __lock_file2();
-  /* test (char)ecx, 0x83 -> je 0x1d9b8d */
-  /* relift: cmp dword ptr [ebp + 8], edx -> jne 0x1d9b74 */
-  __fflush_lk();
-  /* cmp eax, -1 -> je 0x1d9b8d */
-  /* relift: cmp dword ptr [ebp + 8], edi -> jne 0x1d9b8d */
-  /* test (char)ecx, 2 -> je 0x1d9b8d */
-  __fflush_lk();
-  /* cmp eax, -1 -> jne 0x1d9b8d */
-  FUN_001d9b9d();
-  __unlock_file2();
-  FUN_001d9bc9();
-  __SEH_epilog();
-  FUN_001defb3();
-  FUN_001dd5c8();
-  /* relift: cmp dword ptr [ebp + 8], esi -> jne 0x1d9bee */
-  _flsall();
-  __lock_file();
-  __fflush_lk();
-  FUN_001d9c18();
-  __SEH_epilog();
-  __unlock_file();
-  _flsall();
-  __ctrlfp();
-  __sptype();
-  /* cmp eax, 2 -> jle 0x1d9c86 */
-  /* cmp eax, 3 -> jne 0x1d9c94 */
-  __handle_qnan1();
-  __ctrlfp();
-  FUN_001dfd23();
-  __ctrlfp();
-  /* test (char)ebx, 0x20 -> jne 0x1d9cc5 */
-  FUN_001dfbd2();
-  FUN_001dff91();
-  FUN_001dff91();
-  /* relift: FUN_001e64ec(0, 0, 0, 0); */
-  __aulldiv();
-  /* test ecx, ecx -> je 0x1d9d5e */
-  /* relift: test byte ptr [esi + 0xc], 0x83 -> je 0x1d9da3 */
-  __flush();
-  __freebuf();
-  __close(*(int *)((char *)esi + 0x10));
-  /* test eax, eax -> jge 0x1d9d91 */
-  /* test eax, eax -> je 0x1d9da3 */
-  FUN_001dde24();
-  FUN_001dd5c8();
-  /* relift: test byte ptr [esi + 0xc], 0x40 -> je 0x1d9dd2 */
-  __SEH_epilog();
-  __lock_file();
-  __fclose_lk();
-  FUN_001d9df5();
-  __unlock_file();
-  FUN_001dd5c8();
-  __getstream();
-  /* test eax, eax -> jne 0x1d9e24 */
-  FUN_001db777();
-  __openfile();
-  FUN_001d9e4f();
-  __SEH_epilog();
-  __unlock_file();
-  __fsopen();
-  FUN_001d9e94();
-  __fload_withFB();
-  /* relift: cmp word ptr [esp], 0x27f -> je 0x1d9ea8 */
-  FUN_001dedd5();
-  /* cmp ecx, 0x7ff00000 -> je 0x1d9f5b */
-  __fload_withFB();
-  /* test eax, 0x7ff00000 -> je 0x1d9fca */
-  FUN_001dedc0();
-  /* cmp (char)ecx, 1 -> jne 0x1d9eef */
-  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
-  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
-  FUN_001ded6c();
-  __fload_withFB();
-  /* relift: test byte ptr [esp + 0x16], 8 -> jne 0x1d9f3e */
-  /* relift: test byte ptr [esp + 0xe], 8 -> jne 0x1d9f3e */
-  __fload_withFB();
-  /* cmp eax, 0x7ff00000 -> jne 0x1d9f8f */
-  /* test ecx, ecx -> jne 0x1d9f4e */
-  FUN_001e07c0();
-  /* test eax, eax -> je 0x1dee5e */
-  FUN_001da059();
-  /* relift: test dword ptr [esp + 0x17], 0x80 -> je 0x1da01a */
-  /* relift: relift: fld xword ptr [0x331758] */
-  /* test (char)ecx, (char)ecx -> je 0x1da010 */
-  /* test (char)ecx, (char)ecx -> je 0x1dee5e */
-  FUN_001da059();
-  /* test (char)ecx, (char)ecx -> jne 0x1d9ee1 */
-  /* relift: relift: fld xword ptr [0x3314b8] */
-  FUN_001dd5c8();
-  __lock_file();
-  FUN_001e0984();
-  FUN_001da0c1();
-  __SEH_epilog();
-  __unlock_file();
-  FUN_001dee48();
-  FUN_001da0e9();
-  __fload_withFB();
-  /* relift: cmp word ptr [esp], 0x27f -> je 0x1da0fd */
-  FUN_001dedd5();
-  /* cmp eax, 0x3ff00000 -> jae 0x1da12f */
-  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
-  /* relift: relift: fld xword ptr [0x3314c2] */
-  FUN_001dedec();
-  /* test eax, 0xfffff -> jne 0x1da156 */
-  /* relift: cmp dword ptr [esp + 8], 0 -> jne 0x1da156 */
-  /* relift: relift: fld xword ptr [0x3314b8] */
-  /* relift: cmp dword ptr [0x4fc000], 0 -> jne 0x1dee5e */
-  __startOneArgErrorHandling();
-  FUN_001e153d();
-  FUN_001e153d();
-  FUN_001de452();
-  __flsbuf();
-  FUN_001de452();
-  /* cmp edi, esi -> jbe 0x1da2b0 */
-  /* cmp edi, eax -> jb 0x1da428 */
-  /* test edi, 3 -> jne 0x1da2cc */
-  /* cmp ecx, 8 -> jb 0x1da2ec */
-  /* cmp ecx, 8 -> jb 0x1da2ec */
-  /* cmp ecx, 8 -> jb 0x1da2ec */
-  /* cmp ecx, 8 -> jb 0x1da2ec */
-  /* mem[0xa3bc001d] = eax */
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  ((void (*)(void))*(void **)0x2532f4)();
 }
+
 
 /* 0x001e64e7 */
 void DbgBreakPoint(void)
@@ -2573,95 +1648,19 @@ void DbgBreakPoint(void)
   (void)ebp;
 }
 
-/* 0x001e657e */
+/* KeBugCheck (0x1e657e) — Capstone tip: IAT jmp [0x253318]. */
 void KeBugCheck(void)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (*)(void))*(void **)0x253318)();
 }
 
-/* 0x001e658a */
+
+/* RtlAnsiStringToUnicodeString (0x1e658a) — Capstone tip: IAT jmp [0x253320]. */
 void RtlAnsiStringToUnicodeString(void)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-  int ebp = 0;
-
-  /* relift: cmp dword ptr [ebp + 0x10], 0 -> je 0x1e65e7 */
-  /* relift: cmp dword ptr [0x4fc25c], 0 -> jne 0x1e65ae */
-  crt_tolower(0);
-  crt_tolower(0);
-  /* test ebx, ebx -> je 0x1e65de */
-  /* cmp ebx, ecx -> je 0x1e65b7 */
-  FUN_001dd5c8();
-  /* relift: cmp ecx, dword ptr [0x632ca8] -> jae 0x1e67f1 */
-  /* relift: test byte ptr [eax + edi + 4], 1 -> je 0x1e67f1 */
-  FUN_001e334f();
-  /* relift: test byte ptr [eax + edi + 4], 1 -> jne 0x1e6662 */
-  FUN_001db777();
-  FUN_001e67e7();
-  FUN_001d17d2();
-  /* test eax, eax -> jne 0x1e669d */
-  xapi_GetLastError();
-  __dosmaperr();
-  /* relift: test byte ptr [ebp - 0x50], 1 -> je 0x1e66ad */
-  FUN_001d0adb();
-  /* test eax, eax -> je 0x1e664d */
-  FUN_001d0589();
-  /* test eax, eax -> je 0x1e664d */
-  ___loctotime_t();
-  /* relift: cmp dword ptr [ebp - 0x44], edi -> jne 0x1e6712 */
-  /* relift: cmp dword ptr [ebp - 0x40], edi -> je 0x1e6764 */
-  FUN_001d0adb();
-  /* test eax, eax -> je 0x1e664d */
-  FUN_001d0589();
-  /* test eax, eax -> je 0x1e664d */
-  ___loctotime_t();
-  /* relift: cmp dword ptr [ebp - 0x4c], edi -> jne 0x1e6776 */
-  /* relift: cmp dword ptr [ebp - 0x48], edi -> jne 0x1e6776 */
-  FUN_001d0adb();
-  /* test eax, eax -> je 0x1e664d */
-  FUN_001d0589();
-  /* test eax, eax -> je 0x1e664d */
-  ___loctotime_t();
-  __unlock_fhandle();
-  FUN_001db777();
-  __SEH_epilog();
-  /* cmp (int16_t)edx, 0x41 -> jb 0x1e6828 */
-  /* cmp (int16_t)edx, 0x5a -> ja 0x1e6828 */
-  /* relift: cmp word ptr [ecx], 0 -> jne 0x1e6811 */
-  /* cmp (int16_t)edx, 0x61 -> jb 0x1e6854 */
-  /* cmp (int16_t)edx, 0x7a -> ja 0x1e6854 */
-  /* relift: cmp word ptr [ecx], 0 -> jne 0x1e683d */
-  /* cmp (char)eax, (char)ebx -> jb 0x1e6894 */
-  /* cmp (char)eax, (char)ebx -> ja 0x1e6894 */
-  /* cmp (char)eax, (char)ebx -> jb 0x1e689e */
-  /* cmp (char)eax, (char)ebx -> ja 0x1e689e */
-  /* cmp (char)eax, (char)eax -> jne 0x1e68ab */
-  /* cmp (char)eax, (char)eax -> je 0x1e68b4 */
-  /* cmp esi, 0x46 -> jl 0x1e69c3 */
-  /* cmp esi, 0x8a -> jg 0x1e69c3 */
-  /* test edx, edx -> jne 0x1e6907 */
-  /* test edx, edx -> jne 0x1e6919 */
-  /* test edx, edx -> jne 0x1e691f */
-  /* cmp ecx, 2 -> jle 0x1e691f */
-  FUN_001e1953();
-  /* relift: cmp dword ptr [ebp + 0x20], -1 -> jne 0x1e69bd */
-  /* relift: cmp dword ptr [0x3317d4], 0 -> je 0x1e69bd */
-  FUN_001e1997();
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
-  (void)ebp;
+  ((void (*)(void))*(void **)0x253320)();
 }
+
 
 /* 0x001e69f0 */
 void D3DDevice_GetDeviceCaps(void *caps)
@@ -2669,6 +1668,7 @@ void D3DDevice_GetDeviceCaps(void *caps)
   /* relift: no calls detected — manual review */
   (void)0;
 }
+
 
 /* D3DDevice_GetCreationParameters (0x1e6a10) — XBE naked draft (batch 349). */
 #if defined(__clang__)
@@ -3386,6 +2386,7 @@ void D3DDevice_GetProjectionViewportMatrix(void)
 #endif
 
 
+
 /* D3DDevice_GetModelView (0x1e7180) — XBE naked draft (batch 366). */
 #if defined(__clang__)
 
@@ -3497,56 +2498,24 @@ void D3DDevice_GetScissors(void)
 #endif
 
 
-/* D3DDevice_SetFlickerFilter (0x1e72a0) — XBE naked draft (batch 349). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void D3DDevice_SetFlickerFilter(void)
+/* D3DDevice_SetFlickerFilter (0x1e72a0) — Capstone tip: AvSendTVEncoderOption. */
+void __stdcall D3DDevice_SetFlickerFilter(unsigned int value)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "movl 0x1fe6a0, %%ecx\n\t"
-      "movl 0x2308(%%ecx), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xb\n\t"
-      "pushl %%edx\n\t"
-      "call *0x2532b0\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  void *dev = *(void **)0x1fe6a0;
+  void *enc = *(void **)((char *)dev + 0x2308);
+  ((void (__stdcall *)(void *, int, unsigned, int))*(void **)0x2532b0)(enc, 0xb, value, 0);
 }
-#else
-#error "D3DDevice_SetFlickerFilter: clang naked draft required"
-#endif
 
 
-/* D3DDevice_SetSoftDisplayFilter (0x1e72c0) — XBE naked draft (batch 349). */
-#if defined(__clang__)
 
-
-__attribute__((naked, noinline))
-void D3DDevice_SetSoftDisplayFilter(void)
+/* D3DDevice_SetSoftDisplayFilter (0x1e72c0) — Capstone tip: AvSendTVEncoderOption. */
+void __stdcall D3DDevice_SetSoftDisplayFilter(unsigned int value)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "movl 0x1fe6a0, %%ecx\n\t"
-      "movl 0x2308(%%ecx), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl %%eax\n\t"
-      "pushl $0xe\n\t"
-      "pushl %%edx\n\t"
-      "call *0x2532b0\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  void *dev = *(void **)0x1fe6a0;
+  void *enc = *(void **)((char *)dev + 0x2308);
+  ((void (__stdcall *)(void *, int, unsigned, int))*(void **)0x2532b0)(enc, 0xe, value, 0);
 }
-#else
-#error "D3DDevice_SetSoftDisplayFilter: clang naked draft required"
-#endif
+
 
 
 /* D3DDevice_InsertFence (0x1e73a0) — XBE naked draft (batch 393). */
@@ -3631,6 +2600,7 @@ void D3DBaseTexture_GetLevelCount(void)
 #else
 #error "D3DBaseTexture_GetLevelCount: clang naked draft required"
 #endif
+
 
 
 /* D3DDevice_GetDisplayMode (0x1e79d0) — XBE naked draft (batch 346). */
@@ -6715,39 +5685,20 @@ void D3DDevice_GetVertexShaderSize(void)
 #endif
 
 
-/* D3DDevice_GetVertexShaderType (0x1eb560) — XBE naked draft (batch 332). */
-#if defined(__clang__)
 
-
-__attribute__((naked, noinline))
-void D3DDevice_GetVertexShaderType(void)
+/* D3DDevice_GetVertexShaderType (0x1eb560) — Capstone tip: flags→type; null out ok. */
+void __stdcall D3DDevice_GetVertexShaderType(void *shader, unsigned *out_type)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "movl 0x3(%%eax), %%eax\n\t"
-      "testb $8, %%al\n\t"
-      "je .LD3DDevice_GetVertexShaderType_1\n\t"
-      "movl $3, %%eax\n\t"
-      "jmp .LD3DDevice_GetVertexShaderType_2\n\t"
-      ".LD3DDevice_GetVertexShaderType_1:\n\t"
-      "testb $1, %%al\n\t"
-      "movl $0, %%eax\n\t"
-      "setne %%al\n\t"
-      "incl %%eax\n\t"
-      ".LD3DDevice_GetVertexShaderType_2:\n\t"
-      "movl 0x8(%%esp), %%ecx\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "je .LD3DDevice_GetVertexShaderType_3\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      ".LD3DDevice_GetVertexShaderType_3:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char flags = *((unsigned char *)shader + 3);
+  unsigned type;
+  if (flags & 8)
+    type = 3;
+  else
+    type = ((flags & 1) != 0) + 1;
+  if (out_type)
+    *out_type = type;
 }
-#else
-#error "D3DDevice_GetVertexShaderType: clang naked draft required"
-#endif
+
 
 
 /* D3DDevice_SetShaderConstantMode (0x1eb590) — XBE naked draft (batch 315). */
@@ -7727,6 +6678,7 @@ void D3DDevice_GetPixelShader(void)
 #else
 #error "D3DDevice_GetPixelShader: clang naked draft required"
 #endif
+
 
 
 /* D3DDevice_SetPixelShader (0x1ec5c0) — XBE naked draft (batch 312). */
@@ -9408,6 +8360,7 @@ void D3D_GetDeviceCaps(void)
 #endif
 
 
+
 /* D3D_GetAdapterDisplayMode (0x1eed40) — XBE naked draft (batch 328). */
 #if defined(__clang__)
 static void b1eed40_c1f4840_tgt(void) { return; }
@@ -10202,7 +9155,7 @@ static void (*const b1efd80_c1ed870)(void) = b1efd80_c1ed870_tgt;
 static void __stdcall (*const b1efd80_c1efa80)(uint32_t time, int param2) = (void *)D3D_BlockOnTime;
 
 __attribute__((naked, noinline))
-void D3D_BlockOnResource(void)
+void __stdcall D3D_BlockOnResource(void *resource)
 {
   __asm__ volatile(
       "movl 0x1fe6a0, %%eax\n\t"
@@ -11631,32 +10584,15 @@ void Lock3DSurface(void)
 #endif
 
 
-/* CMiniport_GetDisplayCapabilities (0x1f4880) — XBE naked draft (batch 370). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void CMiniport_GetDisplayCapabilities(void)
+/* CMiniport_GetDisplayCapabilities (0x1f4880) — Capstone tip: lazy Av query. */
+void *CMiniport_GetDisplayCapabilities(void)
 {
-  __asm__ volatile(
-      "xorl %%eax, %%eax\n\t"
-      "cmpl %%eax, 0x1fb468\n\t"
-      "jne .LCMiniport_GetDisplayCapabilities_1\n\t"
-      "pushl $0x1fb468\n\t"
-      "pushl %%eax\n\t"
-      "pushl $6\n\t"
-      "pushl %%eax\n\t"
-      "call *0x2532b0\n\t"
-      ".LCMiniport_GetDisplayCapabilities_1:\n\t"
-      "movl 0x1fb468, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  if (*(void **)0x1fb468 == 0) {
+    ((void (__stdcall *)(int, int, int, void *))*(void **)0x2532b0)(0, 6, 0, (void *)0x1fb468);
+  }
+  return *(void **)0x1fb468;
 }
-#else
-#error "CMiniport_GetDisplayCapabilities: clang naked draft required"
-#endif
+
 
 
 /* CMiniport_IsFlipPending (0x1f4aa0) — XBE naked draft (batch 393). */
@@ -19462,12 +18398,12 @@ void IDirectSound_Release(void)
 #endif
 
 
-/* 0x00203877 */
-void IDirectSoundBuffer_Unlock(void)
+/* IDirectSoundBuffer_Unlock (0x203877) — Capstone tip: xor eax,eax; ret 0x14. */
+int __stdcall IDirectSoundBuffer_Unlock(int a0, int a1, int a2, int a3, int a4)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  return 0;
 }
+
 
 /* IDirectSoundBuffer_AddRef (0x203881) — XBE naked draft (batch 350). */
 #if defined(__clang__)
@@ -19527,6 +18463,7 @@ void DirectSoundGetSampleTime(void)
   /* relift: no calls detected — manual review */
   (void)0;
 }
+
 
 /* DirectSoundUseFullHRTF (0x2038df) — XBE naked draft (batch 362). */
 #if defined(__clang__)
@@ -19698,29 +18635,14 @@ void CDirectSound_GetCaps(void)
 #endif
 
 
-/* CDirectSound_GetSpeakerConfig (0x203a07) — XBE naked draft (batch 355). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void CDirectSound_GetSpeakerConfig(void)
+/* CDirectSound_GetSpeakerConfig (0x203a07) — Capstone tip: mask speaker flags → 0. */
+int __stdcall CDirectSound_GetSpeakerConfig(void *this_ptr, unsigned int *out_cfg)
 {
-  __asm__ volatile(
-      "movl 0x4(%%esp), %%eax\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl 0x8(%%eax), %%eax\n\t"
-      "movl 0x8(%%esp), %%ecx\n\t"
-      "andl $0x7fffffff, %%eax\n\t"
-      "movl %%eax, (%%ecx)\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned v = *(unsigned *)(*(unsigned **)((char *)this_ptr + 8) + 2);
+  *out_cfg = v & 0x7fffffffu;
+  return 0;
 }
-#else
-#error "CDirectSound_GetSpeakerConfig: clang naked draft required"
-#endif
+
 
 
 /* CDirectSound_DownloadEffectsImage (0x203a21) — XBE naked draft (batch 344). */
@@ -20362,6 +19284,7 @@ void CDirectSound_GetTime(void)
 #else
 #error "CDirectSound_GetTime: clang naked draft required"
 #endif
+
 
 
 /* CDirectSound_DoWork (0x203de3) — XBE naked draft (batch 377). */
@@ -28904,6 +27827,7 @@ void XGetDevices(void)
 #else
 #error "XGetDevices: clang naked draft required"
 #endif
+
 
 
 /* XGetDeviceChanges (0x24c954) — XBE naked draft (batch 321). */

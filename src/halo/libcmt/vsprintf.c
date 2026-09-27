@@ -53,19 +53,35 @@ void FUN_001da0e9(void)
   (void)eax;
 }
 
-/* 0x1da19f */
+/* crt_toupper (0x1da19f) — Capstone tip: ctype bit1 → c-0x20 (locale<=1). */
 int crt_toupper(int c)
 {
-  FUN_001e153d();
-  return 0;
+  unsigned char *table;
+  int is_lower;
+  if (*(int *)0x3317bc > 1)
+    return c;
+  table = *(unsigned char **)0x3317b4;
+  is_lower = table[(unsigned)c * 2] & 2;
+  if (is_lower)
+    return c - 0x20;
+  return c;
 }
 
-/* 0x1da1d8 */
+
+/* crt_tolower (0x1da1d8) — Capstone tip: ctype bit0 → c+0x20 (locale<=1). */
 int crt_tolower(int c)
 {
-  FUN_001e153d();
-  return 0;
+  unsigned char *table;
+  int is_upper;
+  if (*(int *)0x3317bc > 1)
+    return c;
+  table = *(unsigned char **)0x3317b4;
+  is_upper = table[(unsigned)c * 2] & 1;
+  if (is_upper)
+    return c + 0x20;
+  return c;
 }
+
 
 /* 0x1da209 */
 int vsprintf(char *buffer, const char *format, char *arglist)

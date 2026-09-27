@@ -1,0 +1,15 @@
+{
+  "description": "XapiBootToDash: cert+8 != 0xfffe0000 \u2192 XLaunchNewImageA",
+  "regions": {
+    "0x10118": "00000030",
+    "0x30000000": "000000000000000000000000"
+  },
+  "arg_overrides": {
+    "a": 1,
+    "b": 2,
+    "c": 3
+  },
+  "stub_returns": {
+    "XLaunchNewImageA": 0
+  }
+}

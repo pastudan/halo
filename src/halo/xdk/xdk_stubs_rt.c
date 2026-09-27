@@ -269,27 +269,13 @@ void RaiseException(void)
 #endif
 
 
-/* SwitchToThread (0x1cfb98) — XBE naked draft (batch 331). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void SwitchToThread(void)
+/* SwitchToThread (0x1cfb98) — Capstone tip: NtYieldExecution ≠ STATUS_NO_YIELD → bool. */
+int SwitchToThread(void)
 {
-  __asm__ volatile(
-      "call *0x2530c8\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "cmpl $0x40000024, %%eax\n\t"
-      "setne %%cl\n\t"
-      "movl %%ecx, %%eax\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  int status = ((int (*)(void))*(void **)0x2530c8)();
+  return status != (int)0x40000024;
 }
-#else
-#error "SwitchToThread: clang naked draft required"
-#endif
+
 
 
 /* 0x1cfbbd */
@@ -1229,40 +1215,18 @@ void FUN_001d03ee(void)
 #endif
 
 
-/* FUN_001d040f (0x1d040f) — XBE naked draft (batch 357). */
-#if defined(__clang__)
 
-
-__attribute__((naked, noinline))
-void FUN_001d040f(void)
+/* FUN_001d040f (0x1d040f) — Capstone tip: zero 16 bytes then pack 4 bytes→words. */
+void __stdcall FUN_001d040f(unsigned char *src, unsigned short *dst)
 {
-  __asm__ volatile(
-      "movl 0x8(%%esp), %%ecx\n\t"
-      "pushl %%edi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "movl %%ecx, %%edi\n\t"
-      ".byte 0xab\n\t"
-      ".byte 0xab\n\t"
-      ".byte 0xab\n\t"
-      ".byte 0xab\n\t"
-      "movl 0x8(%%esp), %%eax\n\t"
-      "movzbw (%%eax), %%dx\n\t"
-      "movw %%dx, 0x2(%%ecx)\n\t"
-      "movzbw 0x1(%%eax), %%dx\n\t"
-      "movw %%dx, 0x6(%%ecx)\n\t"
-      "movzbw 0x2(%%eax), %%dx\n\t"
-      "movw %%dx, 0x4(%%ecx)\n\t"
-      "movzbw 0x3(%%eax), %%ax\n\t"
-      "movw %%ax, 0x8(%%ecx)\n\t"
-      "popl %%edi\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned *d = (unsigned *)dst;
+  d[0] = 0; d[1] = 0; d[2] = 0; d[3] = 0;
+  dst[1] = src[0];
+  dst[3] = src[1];
+  dst[2] = src[2];
+  dst[4] = src[3];
 }
-#else
-#error "FUN_001d040f: clang naked draft required"
-#endif
+
 
 
 /* FUN_001d0447 (0x1d0447) — XBE naked draft (batch 301). */
@@ -1402,6 +1366,7 @@ void D3DDevice_GetTransform(uint32_t type, void *matrix_out)
   (void)esi;
 }
 
+
 /* D3DDevice_BlockUntilVerticalBlank (0x1e7110) — XBE naked draft (batch 340). */
 #if defined(__clang__)
 
@@ -1427,6 +1392,7 @@ void D3DDevice_BlockUntilVerticalBlank(void)
 #else
 #error "D3DDevice_BlockUntilVerticalBlank: clang naked draft required"
 #endif
+
 
 
 /* 0x1e7af0 */
@@ -1705,6 +1671,7 @@ void D3DDevice_SetRenderState_Simple(uint32_t reg __attribute__((unused)), uint3
 #else
 #error "D3DDevice_SetRenderState_Simple: clang naked draft required"
 #endif
+
 
 
 /* D3DDevice_SetRenderState_Deferred (0x1e9380) — XBE naked draft (batch 393). */

@@ -1,0 +1,7 @@
+{
+  "description": "HalReturnToFirmware: IAT jmp [0x2531f8] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531f8": "00000060"
+  }
+}

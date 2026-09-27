@@ -1,0 +1,7 @@
+{
+  "description": "MmAllocateContiguousMemoryEx: IAT jmp [0x25320c] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x0025320c": "00000060"
+  }
+}

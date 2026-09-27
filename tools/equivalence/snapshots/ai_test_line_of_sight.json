@@ -1,0 +1,12 @@
+{
+  "description": "ai_test_line_of_sight: flag clear + count>=0x20 \u2192 assert",
+  "regions": {
+    "0x5aca6a": "00",
+    "0x4761d8": "2000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0,
+    "ai_debug_lineofsight": 0
+  }
+}

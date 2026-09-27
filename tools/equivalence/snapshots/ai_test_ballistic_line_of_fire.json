@@ -1,0 +1,11 @@
+{
+  "description": "ai_test_ballistic_line_of_fire: count>=0x20 \u2192 assert",
+  "regions": {
+    "0x4761d8": "2000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0,
+    "datum_get": 0
+  }
+}

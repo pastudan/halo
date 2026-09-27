@@ -1,0 +1,7 @@
+{
+  "description": "MmClaimGpuInstanceMemory: IAT jmp [0x2532c4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532c4": "00000060"
+  }
+}

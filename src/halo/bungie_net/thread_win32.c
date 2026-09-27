@@ -242,6 +242,7 @@ void FUN_00081170(unsigned int *a, unsigned int *b, unsigned int *c)
 }
 
 
+
 /* FUN_00081250 (0x81250) — readable C lift: checked permute into d[], then log.
  * Inlines FUN_00081090 checks; calls FUN_00080fc0 via register ABI. */
 void FUN_00081250(unsigned int *a, unsigned int *b, unsigned int *c, unsigned int *d)

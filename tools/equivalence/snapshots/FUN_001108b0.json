@@ -1,0 +1,15 @@
+{
+  "description": "FUN_001108b0: tree=NULL \u2192 assert/exit",
+  "arg_overrides": {
+    "tree": 0,
+    "vector": 0,
+    "out_node": 0
+  },
+  "regions": {},
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0,
+    "FUN_00117ee0": 0,
+    "FUN_00117da0": 0
+  }
+}

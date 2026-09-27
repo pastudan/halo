@@ -1,0 +1,14 @@
+{
+  "description": "ai_communication_get_player_rating: empty player iter \u2192 1.0",
+  "arg_overrides": {
+    "unit": 0,
+    "use_teams": 0,
+    "out_unit": null,
+    "out_handle": null
+  },
+  "stub_returns": {
+    "data_iterator_next": 0,
+    "unit_get_head_position": 0,
+    "data_iterator_new": 0
+  }
+}

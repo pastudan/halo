@@ -26,7 +26,7 @@ from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Optional
 
-from capstone import CS_ARCH_X86, CS_MODE_32, CS_OP_IMM, Cs
+from capstone import CS_ARCH_X86, CS_MODE_32, CS_OP_IMM, CS_OP_MEM, Cs
 from capstone.x86 import X86_GRP_JUMP
 from xbe import Xbe
 
@@ -256,15 +256,25 @@ def synthesize_relocs(
                 "movsx",
             ):
                 imm = None
+            # mov dword ptr [mem], imm32 stores scalars (sizes/fills), not VAs.
+            # Only mov-reg-imm and memory *displacements* should become DIR32.
+            if imm is not None and insn.mnemonic == "mov" and insn.operands:
+                if insn.operands[0].type == CS_OP_MEM:
+                    imm = None
             # push imm32 is overloaded for both pointer args and size scalars
             # (csmemset/debug_malloc). Reject .text-window immediates that are
             # not kb function entries — those are almost always sizes
             # (e.g. push 0x85b2c before csmemset in ai_debug_initialize).
             # Keep .rdata/.data pushes (string literals, BSS pointers).
+            # Page-aligned data-window immediates without a kb symbol are almost
+            # always nbytes/protect sizes (0x500000, 0x512000), not pointers.
             if imm is not None and insn.mnemonic == "push":
                 u = imm & 0xFFFFFFFF
-                if CODE_ADDR_LO <= u < 0x253080 and u not in by_addr:
-                    imm = None
+                if u not in by_addr:
+                    if CODE_ADDR_LO <= u < CODE_ADDR_HI:
+                        imm = None
+                    elif DATA_ADDR_LO <= u < DATA_ADDR_HI and (u & 0xFFF) == 0:
+                        imm = None
             if imm is not None:
                 # Skip relative encodings: encoded dword must equal Capstone's
                 # absolute operand when the operand is an address-bearing imm.

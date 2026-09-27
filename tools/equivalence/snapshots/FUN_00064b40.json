@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00064b40: unit_handle==-1 → early return -1",
+  "arg_overrides": {
+    "unit_handle": -1
+  }
+}

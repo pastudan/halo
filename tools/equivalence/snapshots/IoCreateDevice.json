@@ -1,0 +1,7 @@
+{
+  "description": "IoCreateDevice: IAT jmp [0x2531b8] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531b8": "00000060"
+  }
+}

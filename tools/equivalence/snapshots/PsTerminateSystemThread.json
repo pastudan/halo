@@ -1,0 +1,7 @@
+{
+  "description": "PsTerminateSystemThread: IAT jmp [0x2530cc] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530cc": "00000060"
+  }
+}

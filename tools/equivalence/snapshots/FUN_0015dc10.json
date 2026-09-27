@@ -1,0 +1,7 @@
+{
+  "description": "FUN_0015dc10: *(void**)0x476ab0==NULL \u2192 assert",
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

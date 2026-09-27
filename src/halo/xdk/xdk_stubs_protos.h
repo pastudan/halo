@@ -273,7 +273,7 @@ void D3DDevice_InsertCallback(uint32_t type, void *callback, uint32_t context);
 void CDevice_KickOff(void);
 void D3D_SetFence(void);
 void CDevice_MakeSpace(void);
-void D3D_BlockOnResource(void);
+void __stdcall D3D_BlockOnResource(void *resource);
 void XMETAL_StartPush(void);
 void D3D_UpdateProjectionViewportTransform(void);
 void D3D_LazySetPointParams(void);

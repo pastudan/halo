@@ -1,0 +1,20 @@
+{
+  "description": "FUN_00021430: distance=0, stub RNG/ray \u2192 write center",
+  "regions": {
+    "0x0031fc44": "00100030",
+    "0x30001000": "00000000000000000000803f",
+    "0x002533ec": "0000c03f",
+    "0x002533c0": "00000000",
+    "0x0025496c": "cdcccc3d"
+  },
+  "arg_overrides": {
+    "target": "0000803f0000004000004040",
+    "distance": 0.0
+  },
+  "stub_returns": {
+    "get_global_random_seed_address": 809500672,
+    "random_real_range": 0,
+    "vector3d_from_angle": 0,
+    "FUN_0014df70": 0
+  }
+}

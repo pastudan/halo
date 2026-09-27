@@ -1,0 +1,7 @@
+{
+  "description": "HalIsResetOrShutdownPending: IAT jmp [0x25326c] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x0025326c": "00000060"
+  }
+}

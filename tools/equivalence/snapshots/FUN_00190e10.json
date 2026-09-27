@@ -1,0 +1,10 @@
+{
+  "description": "FUN_00190e10: map_animation==NULL \u2192 assert",
+  "arg_overrides": {
+    "map_animation": null
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

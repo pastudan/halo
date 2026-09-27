@@ -1,0 +1,7 @@
+{
+  "description": "NtUserIoApcDispatcher: IAT jmp [0x25318c] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x0025318c": "00000060"
+  }
+}

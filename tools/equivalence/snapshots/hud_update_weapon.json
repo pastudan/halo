@@ -1,0 +1,8 @@
+{
+  "description": "hud_update_weapon: local_player_get_next==-1 → return",
+  "stub_returns": {
+    "FUN_000d1540": 0,
+    "csmemset": 0,
+    "local_player_get_next": -1
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "KfRaiseIrql: IAT jmp [0x25327c] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x0025327c": "00000060"
+  }
+}

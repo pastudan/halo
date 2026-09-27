@@ -1,0 +1,7 @@
+{
+  "description": "NtQuerySymbolicLinkObject: IAT jmp [0x2531fc] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531fc": "00000060"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "IofCompleteRequest: IAT jmp [0x25325c] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x0025325c": "00000060"
+  }
+}

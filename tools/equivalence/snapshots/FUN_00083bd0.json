@@ -1,0 +1,15 @@
+{
+  "description": "bit4 clear + blocking \u2192 return 0",
+  "regions": {
+    "0x30000000": "00000000000000000000000000000000",
+    "0x335090": "01"
+  },
+  "arg_overrides": {
+    "endpoint": 805306368,
+    "blocking": 1
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

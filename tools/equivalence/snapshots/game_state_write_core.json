@@ -1,0 +1,17 @@
+{
+  "description": "game_state_write_core tip: CreateFileA fails \u2192 return 0",
+  "arg_overrides": {
+    "name": "636f726500",
+    "buffer": "00000000000000000000000000000000",
+    "size": 16
+  },
+  "regions": {},
+  "stub_returns": {
+    "CreateDirectoryA": 1,
+    "crt_sprintf": 4,
+    "CreateFileA": -1,
+    "CloseHandle": 1,
+    "XWriteFile": 0,
+    "FUN_001d14b6": 0
+  }
+}

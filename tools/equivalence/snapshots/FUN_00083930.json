@@ -1,0 +1,12 @@
+{
+  "description": "FUN_00083930: socket IAT @0x60000000 returns -1 \u2192 error path",
+  "regions": {
+    "0x60000000": "83c8ffc3",
+    "0x2255f6": "b800000060ffe0"
+  },
+  "stub_returns": {
+    "dat_002255f6": -1,
+    "GetLastError": 0,
+    "winsock_error_report": 0
+  }
+}

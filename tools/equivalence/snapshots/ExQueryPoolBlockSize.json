@@ -1,0 +1,7 @@
+{
+  "description": "ExQueryPoolBlockSize: IAT jmp [0x2532c8] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532c8": "00000060"
+  }
+}

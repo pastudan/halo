@@ -1,0 +1,4 @@
+{
+  "description": "path_state_approach_point: hash miss → return 0",
+  "stub_returns": { "path_node_from_hash_table": -1 }
+}

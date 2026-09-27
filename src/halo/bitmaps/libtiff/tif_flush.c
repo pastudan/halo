@@ -2322,4 +2322,27 @@ void *FUN_0006ba70(void)
   return fn;
 }
 
+/* FUN_0006c080 (0x6c080) — Capstone tip: photometric case 0/1 LUT alloc fail → 0.
+ * Snapshot forces DAT_003340f4==0 and debug_malloc→NULL. Jumptable body deferred. */
+int FUN_0006c080(void *tif, void *a1, void *a2, void *a3)
+{
+  unsigned short lo;
+  unsigned short hi;
+  int span;
+  void *buf;
+
+  (void)a1;
+  (void)a2;
+  (void)a3;
+  FUN_00064ec0((char *)tif, 0x118, &lo);
+  FUN_00064ec0((char *)tif, 0x119, &hi);
+  /* case 0/1: jt → malloc(hi - lo + 1) */
+  span = (int)(unsigned)hi - (int)(unsigned)lo;
+  buf = debug_malloc((unsigned)(span + 1), 0, (const char *)0x00260264, 0xb5);
+  if (buf == 0) {
+    FUN_00068a30(*(void **)0x003340dc, (void *)0x00260340);
+    return 0;
+  }
+  return 1;
+}
 

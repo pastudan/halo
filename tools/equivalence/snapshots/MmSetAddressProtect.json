@@ -1,0 +1,7 @@
+{
+  "description": "MmSetAddressProtect: IAT jmp [0x253214] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253214": "00000060"
+  }
+}

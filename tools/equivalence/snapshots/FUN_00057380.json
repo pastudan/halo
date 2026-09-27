@@ -1,0 +1,7 @@
+{
+  "description": "FUN_00057380: FUN_000ce450 returns NONE \u2192 0",
+  "stub_returns": {
+    "game_time_get": 0,
+    "FUN_000ce450": -1
+  }
+}

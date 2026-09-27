@@ -1,0 +1,15 @@
+{
+  "description": "FUN_00092110: empty symtab count \u2192 NULL",
+  "arg_overrides": {
+    "addr": 0,
+    "symtab": "000000000000000000000000"
+  },
+  "regions": {
+    "0x2ee780": "00000000",
+    "0x25b724": "00000000",
+    "0x449f00": "00000000"
+  },
+  "stub_returns": {
+    "csstrcpy": 0
+  }
+}

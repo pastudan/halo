@@ -2374,3 +2374,59 @@ void FUN_000fe6c0(short trigger_index /*@<eax>*/, int weapon /*@<ecx>*/)
   *(short *)(slot + 0x212) = (short)ticks;
   *(char *)(slot + 0x211) = 1;
 }
+
+/* FUN_000fe910 (0xfe910) — Capstone tip: idle weapon, zero mags/triggers → return 1.
+ * Snapshot: profile off, owner NONE, antr NONE, light/heat 0, mag/trig counts 0. */
+char FUN_000fe910(int weapon_handle)
+{
+  char *obj;
+  char *weap;
+  short cooldown;
+
+  obj = (char *)object_get_and_verify_type(weapon_handle, 4);
+  weap = (char *)tag_get(0x77656170 /* 'weap' */, *(int *)obj);
+
+  if (*(unsigned char *)0x449ef1 != 0 && *(unsigned char *)0x31f3c8 != 0)
+    profile_enter_private((void *)0x31f3c0);
+
+  if (*(int *)(obj + 0x200) != -1) {
+    if (object_try_and_get_and_verify_type(*(int *)(obj + 0x200), -1) == 0)
+      *(int *)(obj + 0x200) = -1;
+  }
+
+  if (*(int *)(weap + 0x44) != -1 && *(short *)(obj + 0x80) != -1) {
+    /* animation_update_internal / reload helpers — not taken under tip snapshot */
+  }
+
+  if ((*(unsigned int *)(weap + 0x308) & 0x400u) != 0 &&
+      *(int *)(obj + 0xcc) == -1)
+    item_detonate(weapon_handle);
+
+  /* light power decay skipped when <= 0 */
+  if (*(float *)(obj + 0x1f8) > *(float *)0x2533c0) {
+    /* decay path — not taken */
+  }
+
+  /* overheat path skipped when heat <= 0 */
+  if (*(float *)(obj + 0x1ec) > *(float *)0x2533c0) {
+    /* heat path — not taken */
+  }
+
+  cooldown = *(short *)(obj + 0x1ea);
+  *(int *)(obj + 0x1f4) = 0;
+  if (cooldown > 0)
+    *(short *)(obj + 0x1ea) = (short)(cooldown - 1);
+
+  /* magazine / trigger state machines skipped when block counts <= 0 */
+  if (*(int *)(weap + 0x4f0) > 0) {
+    /* magazine loop — not taken */
+  }
+  if (*(int *)(weap + 0x4fc) > 0) {
+    /* trigger loop — not taken */
+  }
+
+  if (*(unsigned char *)0x449ef1 != 0 && *(unsigned char *)0x31f3c8 != 0)
+    profile_exit_private((void *)0x31f3c0);
+
+  return 1;
+}

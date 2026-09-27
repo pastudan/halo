@@ -1,0 +1,11 @@
+{
+  "description": "path_state_estimated_distance: hash miss \u2192 FLT_MAX sentinels",
+  "stub_returns": {
+    "path_node_from_hash_table": -1
+  },
+  "arg_overrides": {
+    "result": "00000000",
+    "opt_min_clearance": null,
+    "opt_out_vec": null
+  }
+}

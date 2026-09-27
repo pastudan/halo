@@ -1,0 +1,7 @@
+{
+  "description": "IoInvalidDeviceRequest: IAT jmp [0x2531cc] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531cc": "00000060"
+  }
+}

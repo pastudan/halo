@@ -1,0 +1,7 @@
+{
+  "description": "KeSetDisableBoostThread: IAT jmp [0x2530b4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530b4": "00000060"
+  }
+}

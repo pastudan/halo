@@ -1,0 +1,14 @@
+{
+  "description": "FUN_000a6470 tip: perspective==2 \u2192 -1",
+  "arg_overrides": {
+    "local_player_index": 0,
+    "field_2c": "00000000",
+    "field_30": "00000000",
+    "scratch_a": "0000000000000000",
+    "scratch_b": "0000000000000000"
+  },
+  "regions": {},
+  "stub_returns": {
+    "director_get_perspective": 2
+  }
+}

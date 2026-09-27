@@ -1,0 +1,7 @@
+{
+  "description": "XcRC4Crypt: IAT jmp [0x2532ec] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532ec": "00000060"
+  }
+}

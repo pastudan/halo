@@ -1,0 +1,7 @@
+{
+  "description": "XeUnloadSection: IAT jmp [0x253298] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253298": "00000060"
+  }
+}

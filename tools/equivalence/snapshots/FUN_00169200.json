@@ -1,0 +1,6 @@
+{
+  "description": "FUN_00169200: scale<=0 \u2192 return 0",
+  "arg_overrides": {
+    "scale": 0
+  }
+}

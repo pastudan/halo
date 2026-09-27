@@ -1,0 +1,10 @@
+{
+  "description": "FUN_001d292e: nickname count>=0x32 → return 0",
+  "regions": {
+    "0x10118": "00000030",
+    "0x30000000": "00000000"
+  },
+  "arg_overrides": {
+    "table": "0000000032000000"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "FUN_0007f150: bitmap_verify\u21920 \u2192 assert",
+  "stub_returns": {
+    "bitmap_verify": 0,
+    "display_assert": 0
+  }
+}

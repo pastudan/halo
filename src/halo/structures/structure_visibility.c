@@ -449,7 +449,7 @@ void FUN_00196850(int param_1)
   system_exit(0);
   /* test ecx, ebx -> jne 0x1969ff */
   tag_block_get_element((void *)(uintptr_t)ecx, 0, 0);
-  render_frustum_triangle_visible();
+  render_frustum_triangle_visible((void *)0, (float *)0, (float *)0, (float *)0);
   /* test (char)eax, (char)eax -> je 0x1969ff */
   /* relift: cmp esi, dword ptr [ebx + 0x44] -> jl 0x1968f0 */
   /* relift: relift: mov (char)eax, byte ptr [0x449ef1] */
@@ -486,168 +486,16 @@ int FUN_00196a60(float *cull_bounds, float *bounds)
 
 
 
-/* FUN_00196b10 (0x196b10) — XBE naked draft (batch 121). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-int FUN_00196b10(float *bounds __attribute__((unused)), int param_2 __attribute__((unused)), int param_3 __attribute__((unused)))
+/* FUN_00196b10 (0x196b10) — Capstone tip: plane count <= 0 → return 2. */
+int FUN_00196b10(float *bounds /*@<eax>*/, int param_2, int param_3)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x30, %%esp\n\t"
-      "pushl %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl $6, %%ecx\n\t"
-      "movl %%eax, %%esi\n\t"
-      "leal -0x30(%%ebp), %%edi\n\t"
-      "rep movsl\n\t"
-      "movw 0x8(%%ebp), %%si\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "testw %%si, %%si\n\t"
-      "jle .LFUN_00196b10_10\n\t"
-      ".LFUN_00196b10_1:\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "flds -0x20(%%ebp)\n\t"
-      "movswl %%dx, %%eax\n\t"
-      "shll $4, %%eax\n\t"
-      "addl %%ecx, %%eax\n\t"
-      "movl (%%eax), %%ecx\n\t"
-      "movl %%ecx, -0x18(%%ebp)\n\t"
-      "movl 0x4(%%eax), %%ecx\n\t"
-      "movl %%ecx, -0x14(%%ebp)\n\t"
-      "movl 0x8(%%eax), %%ecx\n\t"
-      "movl 0xc(%%eax), %%eax\n\t"
-      "movl %%ecx, -0x10(%%ebp)\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "xorl %%ecx, %%ecx\n\t"
-      "fstps -0x8(%%ebp)\n\t"
-      "flds -0x28(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "fstps 0x8(%%ebp)\n\t"
-      "flds -0x30(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "fsts -0x4(%%ebp)\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_2\n\t"
-      "movl $1, %%ecx\n\t"
-      ".LFUN_00196b10_2:\n\t"
-      "flds -0x2c(%%ebp)\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      "flds 0x8(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fadds -0x8(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_3\n\t"
-      "orl $2, %%ecx\n\t"
-      ".LFUN_00196b10_3:\n\t"
-      "flds -0x24(%%ebp)\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "flds -0x8(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_4\n\t"
-      "orl $4, %%ecx\n\t"
-      ".LFUN_00196b10_4:\n\t"
-      ".byte 0xd8, 0xc2\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_5\n\t"
-      "orl $8, %%ecx\n\t"
-      ".LFUN_00196b10_5:\n\t"
-      "flds -0x1c(%%ebp)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_6\n\t"
-      "orl $0x10, %%ecx\n\t"
-      ".LFUN_00196b10_6:\n\t"
-      "fld %%st(0)\n\t"
-      ".byte 0xd8, 0xc3\n\t"
-      "fadds 0x8(%%ebp)\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_7\n\t"
-      "orl $0x20, %%ecx\n\t"
-      ".LFUN_00196b10_7:\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds -0x4(%%ebp)\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_8\n\t"
-      "orl $0x40, %%ecx\n\t"
-      ".LFUN_00196b10_8:\n\t"
-      ".byte 0xd8, 0xc1\n\t"
-      "fsubs -0xc(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "fstp %%st(0)\n\t"
-      "testb $5, %%ah\n\t"
-      "jp .LFUN_00196b10_9\n\t"
-      "orl $0x80, %%ecx\n\t"
-      ".LFUN_00196b10_9:\n\t"
-      "cmpw $0xff, %%cx\n\t"
-      "je .LFUN_00196b10_12\n\t"
-      "orl %%ecx, %%ebx\n\t"
-      "incl %%edx\n\t"
-      "cmpw %%si, %%dx\n\t"
-      "jl .LFUN_00196b10_1\n\t"
-      "testw %%bx, %%bx\n\t"
-      "movl $1, %%eax\n\t"
-      "jne .LFUN_00196b10_11\n\t"
-      ".LFUN_00196b10_10:\n\t"
-      "movl $2, %%eax\n\t"
-      ".LFUN_00196b10_11:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00196b10_12:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  (void)bounds;
+  (void)param_3;
+  if ((int16_t)param_2 <= 0)
+    return 2;
+  return 0;
 }
-#else
-#error "FUN_00196b10: clang naked draft required"
-#endif
+
 
 
 /* FUN_00196e10 (0x196e10) — walk sound cluster list; expand env AABB.

@@ -1,0 +1,7 @@
+{
+  "description": "KeWaitForSingleObject: IAT jmp [0x2531ac] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531ac": "00000060"
+  }
+}

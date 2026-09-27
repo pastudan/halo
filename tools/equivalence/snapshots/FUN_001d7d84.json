@@ -1,0 +1,18 @@
+{
+  "description": "FUN_001d7d84: NtOpenFile fail \u2192 return 0xC0000001",
+  "arg_overrides": {
+    "section": 1,
+    "path": "543a5c780000000000000000000000000000000000",
+    "path_cap": 32,
+    "append": "7900"
+  },
+  "regions": {
+    "0x60000000": "b8010000c0c22400",
+    "0x60000010": "31c0c20800",
+    "0x002531a0": "00000060",
+    "0x002530e4": "10000060"
+  },
+  "stub_returns": {
+    "FUN_001d789a": 0
+  }
+}

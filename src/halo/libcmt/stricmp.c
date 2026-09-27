@@ -407,6 +407,7 @@ void _store_dt(void)
 #endif
 
 
+
 /* 0x1dd49a */
 wchar_t *__wasctime(const void *timeptr)
 {
@@ -579,6 +580,7 @@ void __allmul(void)
 #endif
 
 
+
 /* __aullshr (0x1dd660) — XBE naked draft (batch 312). */
 #if defined(__clang__)
 
@@ -611,6 +613,7 @@ void __aullshr(void)
 #else
 #error "__aullshr: clang naked draft required"
 #endif
+
 
 
 /* __aullrem (0x1dd680) — XBE naked draft (batch 324). */
@@ -846,6 +849,7 @@ void __allshr(void)
 #endif
 
 
+
 /* crt_stricmp (0x1dd801) — XBE naked draft (batch 356). */
 #if defined(__clang__)
 static int (*const b1dd801_c1da1d8)(int c) = (void *)crt_tolower;
@@ -1022,38 +1026,16 @@ void __copysign(void)
 #endif
 
 
-/* __chgsign (0x1dd91b) — XBE naked draft (batch 328). */
-#if defined(__clang__)
 
-
-__attribute__((naked, noinline))
-void __chgsign(void)
+/* __chgsign (0x1dd91b) — Capstone tip: flip sign bit of double. */
+double __chgsign(double x)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "movl %%eax, -0x8(%%ebp)\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "notl %%ecx\n\t"
-      "xorl %%eax, %%ecx\n\t"
-      "andl $0x7fffffff, %%ecx\n\t"
-      "notl %%eax\n\t"
-      "xorl %%eax, %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "fldl -0x8(%%ebp)\n\t"
-      ".byte 0xc9\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  union { double d; unsigned u[2]; } v;
+  v.d = x;
+  v.u[1] ^= 0x80000000u;
+  return v.d;
 }
-#else
-#error "__chgsign: clang naked draft required"
-#endif
+
 
 
 /* FUN_001dd957 (0x1dd957) — XBE naked draft (batch 321). */
@@ -1467,6 +1449,7 @@ int FUN_001ddcc6(double x)
   unsigned short hi = *(unsigned short *)((char *)&x + 6);
   return (hi & 0x7ff0) != 0x7ff0;
 }
+
 
 /* FUN_001ddd09 (0x1ddd09) — XBE naked draft (batch 313). */
 #if defined(__clang__)

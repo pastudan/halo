@@ -1,0 +1,7 @@
+{
+  "description": "ExQueryNonVolatileSetting: IAT jmp [0x25323c] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x0025323c": "00000060"
+  }
+}

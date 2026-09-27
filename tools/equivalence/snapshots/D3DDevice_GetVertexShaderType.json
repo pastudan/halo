@@ -1,0 +1,7 @@
+{
+  "description": "GetVertexShaderType",
+  "regions": {},
+  "arg_overrides": {
+    "out_type": null
+  }
+}

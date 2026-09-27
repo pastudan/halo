@@ -1,0 +1,10 @@
+{
+  "description": "GetThreadPriority: ObReference IAT returns -1 → 0x7fffffff",
+  "regions": {
+    "0x60000000": "b8ffffffffc20c00",
+    "0x002530a8": "00000060"
+  },
+  "stub_returns": {
+    "XapiSetLastNTError": 0
+  }
+}

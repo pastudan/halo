@@ -1,0 +1,11 @@
+{
+  "description": "FUN_000564b0: encounter_handle==-1 early return",
+  "regions": {
+    "0x5aca57": "00",
+    "0x5aca59": "00"
+  },
+  "arg_overrides": {
+    "encounter_handle": -1,
+    "team_index": 0
+  }
+}

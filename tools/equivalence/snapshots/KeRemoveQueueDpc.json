@@ -1,0 +1,7 @@
+{
+  "description": "KeRemoveQueueDpc: IAT jmp [0x2532d0] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532d0": "00000060"
+  }
+}

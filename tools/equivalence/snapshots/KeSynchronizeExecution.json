@@ -1,0 +1,7 @@
+{
+  "description": "KeSynchronizeExecution: IAT jmp [0x2532d4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532d4": "00000060"
+  }
+}

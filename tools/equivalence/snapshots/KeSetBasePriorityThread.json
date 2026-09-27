@@ -1,0 +1,7 @@
+{
+  "description": "KeSetBasePriorityThread: IAT jmp [0x2530a4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530a4": "00000060"
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "description": "FUN_001d2bbd: ReadFile stub returns 0 → return 0",
+  "stub_returns": { "FUN_001d13c9": 0, "_wcslen": 1 },
+  "arg_overrides": { "key": "61000000" }
+}

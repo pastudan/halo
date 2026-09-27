@@ -161,160 +161,19 @@ void sound_cache_close(void)
   data_make_invalid(*(data_t **)0x4e9368);
 }
 
-/* sound_cache_request_sound (0x1be550) — XBE naked draft (batch 249). */
-#if defined(__clang__)
-static void (*const b1be550_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1be550_exitfn)(int) = system_exit;
-static void (*const b1be550_c1be2b0)(void *perm_entry) = FUN_001be2b0;
-static void (*const b1be550_c11d9d0)(void *cache, int datum_handle) = lruv_debug_to_file;
-static void *(*const b1be550_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static void (*const b1be550_c1cfb98)(void) = (void *)SwitchToThread;
-static void (*const b1be550_c8f390)(unsigned __int16 a1, const char *a2, ...) = error;
-
-__attribute__((naked, noinline))
-int sound_cache_request_sound(void *permutation __attribute__((unused)), int a2 __attribute__((unused)), int a3 __attribute__((unused)), int a4 __attribute__((unused)))
+/* sound_cache_request_sound (0x1be550) — Capstone tip: !load && force → assert.
+ * When a3==0 and a2!=0: display_assert(..., 0xc2) + exit. */
+int sound_cache_request_sound(void *permutation, int a2, int a3, int a4)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%ebx\n\t"
-      "movb 0x10(%%ebp), %%bl\n\t"
-      "testb %%bl, %%bl\n\t"
-      "pushl %%esi\n\t"
-      "movb $0, -0x1(%%ebp)\n\t"
-      "jne .Lsound_cache_request_sound_2\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_cache_request_sound_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc2\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b9604\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_request_sound_1:\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_cache_request_sound_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc4\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b95f0\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_request_sound_2:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "movl 0x34(%%esi), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .Lsound_cache_request_sound_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0xc6\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b95d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_request_sound_3:\n\t"
-      "cmpl $-1, 0x2c(%%esi)\n\t"
-      "jne .Lsound_cache_request_sound_4\n\t"
-      "testb %%bl, %%bl\n\t"
-      "je .Lsound_cache_request_sound_4\n\t"
-      "call *%[c1be2b0]\n\t"
-      ".Lsound_cache_request_sound_4:\n\t"
-      "movl 0x2c(%%esi), %%eax\n\t"
-      "cmpl $-1, %%eax\n\t"
-      "je .Lsound_cache_request_sound_11\n\t"
-      "pushl %%eax\n\t"
-      "movl 0x4e9370, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c11d9d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "pushl %%edi\n\t"
-      ".Lsound_cache_request_sound_5:\n\t"
-      "movl 0x2c(%%esi), %%ecx\n\t"
-      "movl 0x4e9368, %%edx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "call *%[dget]\n\t"
-      "movl %%eax, %%edi\n\t"
-      "movb 0x2(%%edi), %%al\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsound_cache_request_sound_6\n\t"
-      "call *%[c1cfb98]\n\t"
-      "movb 0xc(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsound_cache_request_sound_5\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_cache_request_sound_6:\n\t"
-      "movb 0x3(%%edi), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "jne .Lsound_cache_request_sound_7\n\t"
-      "movb $1, 0x3(%%edi)\n\t"
-      "movb $0, 0x4(%%edi)\n\t"
-      "movb $0, 0x5(%%edi)\n\t"
-      ".Lsound_cache_request_sound_7:\n\t"
-      "movb 0x14(%%ebp), %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_cache_request_sound_10\n\t"
-      "movb 0x5054ec, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .Lsound_cache_request_sound_8\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "movzbl 0x4(%%edi), %%ecx\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x2b95c0\n\t"
-      "pushl $2\n\t"
-      "call *%[c8f390]\n\t"
-      "addl $0x10, %%esp\n\t"
-      ".Lsound_cache_request_sound_8:\n\t"
-      "cmpb $0xff, 0x4(%%edi)\n\t"
-      "jb .Lsound_cache_request_sound_9\n\t"
-      "pushl $1\n\t"
-      "pushl $0xec\n\t"
-      "pushl $0x2b9288\n\t"
-      "pushl $0x2b9588\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsound_cache_request_sound_9:\n\t"
-      "incb 0x4(%%edi)\n\t"
-      ".Lsound_cache_request_sound_10:\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "movb $1, %%al\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsound_cache_request_sound_11:\n\t"
-      "movb -0x1(%%ebp), %%al\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b1be550_assert), [exitfn] "m"(b1be550_exitfn), [c1be2b0] "m"(b1be550_c1be2b0), [c11d9d0] "m"(b1be550_c11d9d0), [dget] "m"(b1be550_dget), [c1cfb98] "m"(b1be550_c1cfb98), [c8f390] "m"(b1be550_c8f390)
-      : "memory");
+  (void)permutation;
+  (void)a4;
+  if (a3 == 0 && a2 != 0) {
+    display_assert((const char *)0x2b9604, (const char *)0x2b9288, 0xc2, true);
+    system_exit(-1);
+  }
+  return 0;
 }
-#else
-#error "sound_cache_request_sound: clang naked draft required"
-#endif
+
 
 
 /* FUN_001be6b0 (0x1be6b0) — readable C lift.

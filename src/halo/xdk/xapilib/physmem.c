@@ -867,21 +867,29 @@ void FUN_001d33a2(int param_1)
   (void)edx;
 }
 
-/* 0x1d33e6 */
-bool QueryPerformanceCounter(void *counter)
+/* QueryPerformanceCounter (0x1d33e6) — Capstone tip: IAT KeQueryPerformanceCounter → write qword + TRUE. */
+bool __stdcall QueryPerformanceCounter(void *counter)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  unsigned lo, hi;
+  void *fn = *(void **)0x253204;
+  __asm__ volatile("call *%[fn]" : "=a"(lo), "=d"(hi) : [fn] "r"(fn) : "memory", "ecx");
+  ((unsigned *)counter)[0] = lo;
+  ((unsigned *)counter)[1] = hi;
+  return 1;
 }
 
-/* 0x1d33fb */
-bool QueryPerformanceFrequency(void *freq)
+
+/* QueryPerformanceFrequency (0x1d33fb) — Capstone tip: IAT KeQueryPerformanceFrequency → write qword + TRUE. */
+bool __stdcall QueryPerformanceFrequency(void *freq)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  unsigned lo, hi;
+  void *fn = *(void **)0x253208;
+  __asm__ volatile("call *%[fn]" : "=a"(lo), "=d"(hi) : [fn] "r"(fn) : "memory", "ecx");
+  ((unsigned *)freq)[0] = lo;
+  ((unsigned *)freq)[1] = hi;
+  return 1;
 }
+
 
 /* CreateDirectoryA (0x1d3410) — XBE naked draft (batch 345). */
 #if defined(__clang__)
@@ -1251,27 +1259,28 @@ void * XPhysicalAlloc(size_t size, unsigned int addr, unsigned int alignment, un
   (void)esi;
 }
 
-/* 0x1d371d */
-void physical_memory_protect(void *addr, unsigned int size, unsigned int protect)
+/* physical_memory_protect (0x1d371d) — Capstone tip: size==0 → ret; else MmSetAddressProtect. */
+void __stdcall physical_memory_protect(void *addr, unsigned int size, unsigned int protect)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  if (size == 0)
+    return;
+  ((void (__stdcall *)(void *, unsigned int, unsigned int))*(void **)0x253214)(addr, size, protect);
 }
 
-/* 0x1d372d */
-void MmFreeContiguousMemory(void *base_address)
+
+/* MmFreeContiguousMemory (0x1d372d) — Capstone tip: IAT jmp [0x2531f4]. */
+void __stdcall MmFreeContiguousMemory(void *base_address)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  ((void (__stdcall *)(void *))*(void **)0x2531f4)(base_address);
 }
 
-/* 0x1d3733 */
-unsigned long MmQueryAddressProtect(void *virtual_address)
+
+/* MmQueryAddressProtect (0x1d3733) — Capstone tip: IAT jmp [0x253218]. */
+unsigned long __stdcall MmQueryAddressProtect(void *virtual_address)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
-  return 0;
+  return ((unsigned long (__stdcall *)(void *))*(void **)0x253218)(virtual_address);
 }
+
 
 /* FUN_001d3739 (0x1d3739) — XBE naked draft (batch 351). */
 #if defined(__clang__)
@@ -2627,7 +2636,8 @@ void XapiFormatObjectAttributes(void)
 #endif
 
 
-/* FUN_001d4436 (0x1d4436) — readable C lift: ms → relative LARGE_INTEGER. */
+
+/* FUN_001d4436 (0x1d4436) — Capstone tip: ms → relative LARGE_INTEGER. */
 long long *__stdcall FUN_001d4436(long long *out, unsigned int ms)
 {
   unsigned long long prod;
@@ -2638,6 +2648,7 @@ long long *__stdcall FUN_001d4436(long long *out, unsigned int ms)
   *out = -(long long)prod;
   return out;
 }
+
 
 /* FUN_001d4464 (0x1d4464) — XBE naked draft (batch 388). */
 #if defined(__clang__)
@@ -3069,6 +3080,7 @@ void FUN_001d47c3(void)
 #else
 #error "FUN_001d47c3: clang naked draft required"
 #endif
+
 
 
 /* FUN_001d47e4 (0x1d47e4) — XBE naked draft (batch 315). */
@@ -4265,41 +4277,27 @@ void FUN_001d4ec6(void)
 #endif
 
 
-/* FUN_001d52c4 (0x1d52c4) — XBE naked draft (batch 328). */
-#if defined(__clang__)
-
-
-__attribute__((naked, noinline))
-void FUN_001d52c4(void)
+/* FUN_001d52c4 (0x1d52c4) — Capstone tip: heap block usable size from header. */
+unsigned int __stdcall FUN_001d52c4(void *heap, unsigned int flags, void *ptr)
 {
-  __asm__ volatile(
-      "movl 0xc(%%esp), %%ecx\n\t"
-      "movb -0xb(%%ecx), %%al\n\t"
-      "testb $1, %%al\n\t"
-      "jne .LFUN_001d52c4_1\n\t"
-      "orl $0xffffffff, %%eax\n\t"
-      "jmp .LFUN_001d52c4_3\n\t"
-      ".LFUN_001d52c4_1:\n\t"
-      "testb $8, %%al\n\t"
-      "je .LFUN_001d52c4_2\n\t"
-      "movzwl -0x10(%%ecx), %%edx\n\t"
-      "movl -0x18(%%ecx), %%eax\n\t"
-      "subl %%edx, %%eax\n\t"
-      "jmp .LFUN_001d52c4_3\n\t"
-      ".LFUN_001d52c4_2:\n\t"
-      "movzwl -0x10(%%ecx), %%eax\n\t"
-      "movzbl -0xa(%%ecx), %%ecx\n\t"
-      "shll $4, %%eax\n\t"
-      "subl %%ecx, %%eax\n\t"
-      ".LFUN_001d52c4_3:\n\t"
-      "ret\n\t"
-      :
-      :
-      : "memory");
+  unsigned char *p = (unsigned char *)ptr;
+  unsigned char al = p[-0xb];
+  (void)heap;
+  (void)flags;
+  if ((al & 1) == 0)
+    return 0xffffffffu;
+  if (al & 8) {
+    unsigned short edx = *(unsigned short *)(p - 0x10);
+    unsigned eax = *(unsigned *)(p - 0x18);
+    return eax - edx;
+  }
+  {
+    unsigned eax = *(unsigned short *)(p - 0x10);
+    unsigned ecx = p[-0xa];
+    return (eax << 4) - ecx;
+  }
 }
-#else
-#error "FUN_001d52c4: clang naked draft required"
-#endif
+
 
 
 /* FUN_001d52f3 (0x1d52f3) — XBE naked draft (batch 304). */

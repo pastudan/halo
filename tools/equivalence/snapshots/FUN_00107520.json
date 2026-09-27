@@ -1,0 +1,10 @@
+{
+  "description": "FUN_00107520: null a1 → assert",
+  "arg_overrides": {
+    "a1": null
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

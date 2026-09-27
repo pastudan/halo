@@ -1,0 +1,16 @@
+{
+  "description": "unit_cause_player_melee_damage: depth\u22650x20 \u2192 assert",
+  "regions": {
+    "0x4761d8": "2000"
+  },
+  "arg_overrides": {
+    "unit_handle": 1
+  },
+  "stub_returns": {
+    "object_get_and_verify_type": 805306368,
+    "tag_get": 805306624,
+    "display_assert": 0,
+    "system_exit": 0,
+    "object_get_markers_by_string_id": 0
+  }
+}

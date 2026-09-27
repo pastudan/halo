@@ -1,0 +1,7 @@
+{
+  "description": "RtlNtStatusToDosError: IAT jmp [0x2531d0] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531d0": "00000060"
+  }
+}

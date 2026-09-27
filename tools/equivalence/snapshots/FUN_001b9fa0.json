@@ -1,0 +1,16 @@
+{
+  "description": "FUN_001b9fa0: structure_bsp tag mismatch \u2192 assert+exit",
+  "arg_overrides": {
+    "ctx": 1
+  },
+  "regions": {
+    "0x4e5508": "00001030",
+    "0x30100000": "0000000000000000000000000000000000000000ffffffff00000000",
+    "0x2b8128": "00000000000000000000000000000000",
+    "0x2b7dc8": "00000000000000000000000000000000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

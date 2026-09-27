@@ -1,0 +1,7 @@
+{
+  "description": "KeQueryInterruptTime: IAT jmp [0x253270] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253270": "00000060"
+  }
+}

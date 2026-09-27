@@ -1,0 +1,12 @@
+{
+  "description": "FUN_00046f10: speech type \u2265 0x39 \u2192 assert",
+  "arg_overrides": {
+    "type": 57
+  },
+  "stub_returns": {
+    "FUN_001d90e0": 0,
+    "game_time_get": 0,
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

@@ -1,0 +1,10 @@
+{
+  "description": "null p0",
+  "arg_overrides": {
+    "p0": 0
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

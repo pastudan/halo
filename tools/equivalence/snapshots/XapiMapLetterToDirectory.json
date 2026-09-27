@@ -1,0 +1,17 @@
+{
+  "description": "XapiMapLetterToDirectory: NtOpenFile fail \u2192 return 0xC0000001",
+  "arg_overrides": {
+    "a": 0,
+    "ansi_string": 268472320,
+    "letter_buf": "4100",
+    "flag": 1,
+    "suffix": null,
+    "f": null
+  },
+  "regions": {
+    "0x10009000": "0200040010900010",
+    "0x10009010": "415c00",
+    "0x60000000": "b8010000c0c22400",
+    "0x002531a0": "00000060"
+  }
+}

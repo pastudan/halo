@@ -1,0 +1,6 @@
+{
+  "description": "input_get_raw_data_string tip: null buffer assert-continue return",
+  "arg_overrides": {"buffer": 0, "size": 0},
+  "regions": {},
+  "stub_returns": {}
+}

@@ -1,0 +1,7 @@
+{
+  "description": "NtReadFile: IAT jmp [0x253178] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253178": "00000060"
+  }
+}

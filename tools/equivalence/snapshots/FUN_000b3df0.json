@@ -1,0 +1,10 @@
+{
+  "description": "FUN_000b3df0: code-0x16 > 0xe \u2192 return 0",
+  "arg_overrides": {
+    "a": 0,
+    "code": 0,
+    "player_or_ctx": null,
+    "buf": 0,
+    "buf_size": 0
+  }
+}

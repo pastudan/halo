@@ -1,0 +1,9 @@
+{
+  "description": "debug_malloc fail \u2192 NULL",
+  "arg_overrides": {
+    "type": 4
+  },
+  "stub_returns": {
+    "debug_malloc": 0
+  }
+}

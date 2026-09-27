@@ -1,0 +1,7 @@
+{
+  "description": "NtClearEvent: IAT jmp [0x2530ec] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530ec": "00000060"
+  }
+}

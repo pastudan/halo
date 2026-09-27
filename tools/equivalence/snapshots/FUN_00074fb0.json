@@ -1,0 +1,11 @@
+{
+  "description": "FUN_00074fb0: bitmap_verify\u21920 \u2192 assert",
+  "arg_overrides": {
+    "pixel_data": 805306368,
+    "bitmap_data": 805306624
+  },
+  "stub_returns": {
+    "bitmap_verify": 0,
+    "display_assert": 0
+  }
+}

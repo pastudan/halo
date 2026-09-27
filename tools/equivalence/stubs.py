@@ -649,11 +649,13 @@ class StubManager:
         # relocs carry it, and an unmatched lookup falls back to a no-cleanup
         # default stub whose missing RET N drifts ESP on stdcall callees.
         canon = re.sub(r'@\d+$', '', symbol_name.lstrip("_"))
-        # Try FUN_XXXXXXXX format
-        m = re.match(r'FUN_([0-9a-fA-F]+)', canon)
+        # Try FUN_/DAT_/PTR_XXXXXXXX format (oracle often labels near-calls as DAT_)
+        m = re.match(r'(?:FUN|DAT|PTR|PTR_FUN)_([0-9a-fA-F]+)', canon)
         if m:
             addr = "0x" + m.group(1).lower().lstrip("0")
             if not addr.endswith("0"):
+                addr = "0x" + m.group(1).lower()
+            if addr == "0x":
                 addr = "0x" + m.group(1).lower()
         else:
             addr = None

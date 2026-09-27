@@ -1,0 +1,10 @@
+{
+  "description": "QueryPerformanceFrequency: IAT KeQPF xor-edx:eax \u2192 write 0 + TRUE",
+  "regions": {
+    "0x60000000": "31c031d2c3",
+    "0x00253208": "00000060"
+  },
+  "arg_overrides": {
+    "freq": "0000000000000000"
+  }
+}

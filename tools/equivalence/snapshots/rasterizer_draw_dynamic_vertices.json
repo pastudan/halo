@@ -1,0 +1,16 @@
+{
+  "description": "rasterizer_draw_dynamic_vertices: *(int*)0x476ab0==0 \u2192 assert",
+  "regions": {
+    "0x476ab0": "00000000"
+  },
+  "arg_overrides": {
+    "first_primitive_index": 0,
+    "primitive_count": 0,
+    "dynamic_vertex_buffer_index": 0,
+    "vertex_type": 0
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

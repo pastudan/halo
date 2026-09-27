@@ -1,0 +1,14 @@
+{
+  "description": "FUN_000633b0: count==1 → copy first element",
+  "arg_overrides": {
+    "param_2": 1,
+    "param_3": "01000000020000000300000004000000",
+    "param_4": "00000000",
+    "param_5": "00000000000000000000000000000000",
+    "param_6": "00"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

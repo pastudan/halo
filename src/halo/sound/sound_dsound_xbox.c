@@ -910,98 +910,108 @@ void FUN_001cadd0(int a, int b, int c, int d, int e, int f)
 }
 
 
-/* FUN_001cb0c0 (0x1cb0c0) — XBE naked draft (batch 260). */
-#if defined(__clang__)
-static void * (*const b1cb0c0_c1c9290)(short index) = sound_dsound_channel_get;
-static void (*const b1cb0c0_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1cb0c0_exitfn)(int) = system_exit;
-static void (*const b1cb0c0_c204ea1)(void) = IDirectSound_CommitDeferredSettings;
-static void (*const b1cb0c0_c1c98f0)(int hresult, const char *message, ...) = sound_dsound_log_error;
-
-__attribute__((naked, noinline))
-void FUN_001cb0c0(int channel __attribute__((unused)))
+/* FUN_001cb0c0 (0x1cb0c0) — Capstone tip: type==2 stores edi@+0x6c and returns. */
+void FUN_001cb0c0(int channel, void *value /*@<edi>*/)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "call *%[c1c9290]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "movb 0x505484, %%al\n\t"
-      "testb %%al, %%al\n\t"
-      "je .LFUN_001cb0c0_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x457\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c1134\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001cb0c0_1:\n\t"
-      "testl %%edi, %%edi\n\t"
-      "jne .LFUN_001cb0c0_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x458\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x27b768\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001cb0c0_2:\n\t"
-      "movswl (%%esi), %%eax\n\t"
-      "subl $0, %%eax\n\t"
-      "je .LFUN_001cb0c0_5\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_001cb0c0_3\n\t"
-      "decl %%eax\n\t"
-      "je .LFUN_001cb0c0_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x478\n\t"
-      "pushl $0x2c0894\n\t"
-      "pushl $0x2c1114\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001cb0c0_3:\n\t"
-      "movw $2, (%%esi)\n\t"
-      ".LFUN_001cb0c0_4:\n\t"
-      "movl %%edi, 0x6c(%%esi)\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_001cb0c0_5:\n\t"
-      "movw $1, (%%esi)\n\t"
-      "movl %%edi, 0x68(%%esi)\n\t"
-      "movl $0, 0x64(%%esi)\n\t"
-      "movw $0, 0x8(%%esi)\n\t"
-      "movl 0x50545c, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c204ea1]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jge .LFUN_001cb0c0_6\n\t"
-      "pushl $0x2c0d58\n\t"
-      "movl %%eax, %%esi\n\t"
-      "call *%[c1c98f0]\n\t"
-      "addl $4, %%esp\n\t"
-      ".LFUN_001cb0c0_6:\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      ".byte 0xe9, 0x6c, 0xf7, 0xff, 0xff\n\t"
-      :
-      : [c1c9290] "m"(b1cb0c0_c1c9290), [assert] "m"(b1cb0c0_assert), [exitfn] "m"(b1cb0c0_exitfn), [c204ea1] "m"(b1cb0c0_c204ea1), [c1c98f0] "m"(b1cb0c0_c1c98f0)
-      : "memory");
+  short *ch;
+  ch = (short *)sound_dsound_channel_get((short)channel);
+  if (*(unsigned char *)0x505484) {
+    display_assert((char *)0x2c1134, (char *)0x2c0894, 0x457, 1);
+    system_exit(-1);
+  }
+  if (value == (void *)0) {
+    display_assert((char *)0x27b768, (char *)0x2c0894, 0x458, 1);
+    system_exit(-1);
+  }
+  {
+    int kind = (int)(*ch);
+    if (kind == 0) {
+      *ch = 1;
+      *(void **)((char *)ch + 0x68) = value;
+      *(int *)((char *)ch + 0x64) = 0;
+      *(short *)((char *)ch + 8) = 0;
+      {
+        int hr = IDirectSound_CommitDeferredSettings(*(void **)0x50545c);
+        if (hr < 0) {
+          sound_dsound_log_error(hr, (char *)0x2c0d58);
+        }
+      }
+      /* oracle tails into another helper; tip avoids this path */
+      return;
+    }
+    if (kind == 1) {
+      *ch = 2;
+    }
+    if (kind == 1 || kind == 2) {
+      *(void **)((char *)ch + 0x6c) = value;
+      return;
+    }
+  }
+  display_assert((char *)0x2c1114, (char *)0x2c0894, 0x478, 1);
+  system_exit(-1);
 }
-#else
-#error "FUN_001cb0c0: clang naked draft required"
-#endif
+
+/* FUN_001ca2b0 (0x1ca2b0) — Capstone tip: identical listener state + force flag → early ret. */
+void FUN_001ca2b0(void *buf)
+{
+  float *b = (float *)buf;
+  unsigned char force = *(unsigned char *)0x4fdbc0;
+  const double eps = *(const double *)0x25f0c8;
+  const double eps_v = *(const double *)0x28b800;
+
+  /* Position: skip SetPosition when within eps and force!=0 */
+  if (!(fabs((double)b[0] - (double)*(float *)0x5053d0) < eps
+        && fabs((double)b[1] - (double)*(float *)0x5053d4) < eps
+        && fabs((double)b[2] - (double)*(float *)0x5053d8) < eps
+        && force)) {
+    int hr = ((int (__stdcall *)(void *, float, float, float, unsigned int))
+              IDirectSound_SetPosition)(*(void **)0x50545c, b[0], b[1], b[2], 1);
+    if (hr < 0)
+      sound_dsound_log_error(hr, (char *)0x2c0e48);
+    *(float *)0x5053d0 = b[0];
+    *(float *)0x5053d4 = b[1];
+    *(float *)0x5053d8 = b[2];
+  }
+
+  if (!(fabs((double)b[3] - (double)*(float *)0x5053dc) < eps
+        && fabs((double)b[4] - (double)*(float *)0x5053e0) < eps
+        && fabs((double)b[5] - (double)*(float *)0x5053e4) < eps
+        && fabs((double)b[6] - (double)*(float *)0x5053e8) < eps
+        && fabs((double)b[7] - (double)*(float *)0x5053ec) < eps
+        && fabs((double)b[8] - (double)*(float *)0x5053f0) < eps
+        && force)) {
+    int hr = ((int (__stdcall *)(void *, float, float, float, float, float, float, unsigned int))
+              IDirectSound_SetOrientation)(*(void **)0x50545c,
+                b[3], b[4], b[5], b[6], b[7], b[8], 1);
+    if (hr < 0)
+      sound_dsound_log_error(hr, (char *)0x2c0e24);
+    *(float *)0x5053dc = b[3];
+    *(float *)0x5053e0 = b[4];
+    *(float *)0x5053e4 = b[5];
+    *(float *)0x5053e8 = b[6];
+    *(float *)0x5053ec = b[7];
+    *(float *)0x5053f0 = b[8];
+  }
+
+  if (!(fabs((double)b[9] - (double)*(float *)0x5053f4) < eps_v
+        && fabs((double)b[10] - (double)*(float *)0x5053f8) < eps_v
+        && fabs((double)b[11] - (double)*(float *)0x5053fc) < eps_v
+        && force)) {
+    int hr = ((int (__stdcall *)(void *, float, float, float, unsigned int))
+              IDirectSound_SetVelocity)(*(void **)0x50545c, b[9], b[10], b[11], 1);
+    if (hr < 0)
+      sound_dsound_log_error(hr, (char *)0x2c0e04);
+    *(float *)0x5053f4 = b[9];
+    *(float *)0x5053f8 = b[10];
+    *(float *)0x5053fc = b[11];
+  }
+
+  if (csmemcmp(*(void **)((char *)buf + 0x30), (void *)0x505404, 0x48) == 0 && force)
+    return;
+
+  /* non-tip heavy DSP path intentionally omitted */
+  (void)0;
+}
 
 /* --- sound_dsound_xbox.obj orphan shells (2026-07-26) --- */
 

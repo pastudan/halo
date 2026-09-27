@@ -1,0 +1,9 @@
+{
+  "description": "FUN_00196b10: plane count<=0 \u2192 return 2",
+  "arg_overrides": {
+    "bounds": null,
+    "param_2": 0,
+    "param_3": 0
+  },
+  "stub_returns": {}
+}

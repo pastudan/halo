@@ -1,0 +1,6 @@
+{
+  "description": "game_state_write_to_persistent_storage: open==-1 → return",
+  "stub_returns": {
+    "FUN_001c0780": -1
+  }
+}

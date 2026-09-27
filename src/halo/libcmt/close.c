@@ -261,12 +261,15 @@ void __fload_withFB(void)
   (void)0;
 }
 
-/* 0x1dee48 */
-void FUN_001dee48(void)
+/* FUN_001dee48 (0x1dee48) — Capstone tip: masked exp field; Inf/NaN returns high. */
+unsigned FUN_001dee48(unsigned low, unsigned high)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  (void)low;
+  if ((high & 0x7ff00000u) != 0x7ff00000u)
+    return high & 0x7ff00000u;
+  return high;
 }
+
 
 /* 0x1dee5e */
 void FUN_001dee5e(void)
@@ -320,12 +323,13 @@ void FUN_001def4c(void)
   (void)esi;
 }
 
-/* 0x1defb3 */
-void FUN_001defb3(void)
+/* FUN_001defb3 (0x1defb3) — Capstone tip: LeaveCriticalSection on lock table. */
+void FUN_001defb3(int lock_id)
 {
-  OutputDebugStringA();
-  FUN_001d981d();
+  void *cs = *(void **)(0x3314e8 + lock_id * 8);
+  ((void (__stdcall *)(void *))*(void **)0x253098)(cs);
 }
+
 
 /* 0x1defd9 */
 void FUN_001defd9(void)
@@ -749,11 +753,13 @@ void FUN_001dfd23(void)
   (void)0;
 }
 
+
 /* 0x1dfd36 */
 void __set_exp(void)
 {
   /* relift: tail-call __set_exp(); */
 }
+
 
 /* 0x1dfd9f */
 void __set_bexp(void)
@@ -761,6 +767,7 @@ void __set_bexp(void)
   /* relift: no calls detected — manual review */
   (void)0;
 }
+
 
 /* 0x1dfdc4 */
 void __sptype(void)
@@ -812,6 +819,7 @@ void __ctrlfp(void)
   /* relift: no calls detected — manual review */
   (void)0;
 }
+
 
 /* 0x1dff10 */
 void FUN_001dff10(void)
@@ -1847,6 +1855,7 @@ void FUN_001e2669(void)
   (void)0;
 }
 
+
 /* 0x1e26a0 */
 void __ungetc_lk(void)
 {
@@ -2146,6 +2155,7 @@ void __unlock_fhandle(void)
   (void)0;
 }
 
+
 /* 0x1e33e4 */
 void FUN_001e33e4(void)
 {
@@ -2185,12 +2195,19 @@ void FUN_001e33e4(void)
   (void)ebp;
 }
 
-/* 0x1e35a9 */
-void FUN_001e35a9(void)
+/* FUN_001e35a9 (0x1e35a9) — Capstone tip: wcsnlen-ish; empty → count. */
+unsigned FUN_001e35a9(unsigned short *s, unsigned count)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  unsigned i;
+  if (count == 0)
+    return 0;
+  for (i = 0; i < count; i++) {
+    if (s[i] == 0)
+      return i + 1;
+  }
+  return count;
 }
+
 
 /* 0x1e35d8 */
 void FUN_001e35d8(void)
@@ -2375,7 +2392,7 @@ void __callnewh(void)
   (void)0;
 }
 
-/* __ZeroTail (0x1e3c9c) — readable C lift. */
+/* __ZeroTail (0x1e3c9c) — Capstone tip: check mantissa tail bits zero. */
 int __ZeroTail(unsigned int *man, int bit)
 {
   int idx;
@@ -2395,6 +2412,7 @@ int __ZeroTail(unsigned int *man, int bit)
   }
   return 1;
 }
+
 
 /* 0x1e3cce */
 void __IncMan(void)
@@ -2439,6 +2457,7 @@ void __CopyMan(unsigned int *dst, unsigned int *src)
   }
 }
 
+
 /* 0x1e3da8 */
 void FUN_001e3da8(void)
 {
@@ -2456,6 +2475,7 @@ int __IsZeroMan(unsigned int *man)
   }
   return 1;
 }
+
 
 /* 0x1e3dcd */
 void __ShrMan(void)
@@ -2621,12 +2641,14 @@ void FUN_001e4345(void)
   (void)eax;
 }
 
-/* 0x1e4422 */
-void FUN_001e4422(void)
+/* FUN_001e4422 (0x1e4422) — Capstone tip: IAT(arg0) → return TRUE (ret 8). */
+int __stdcall FUN_001e4422(void *a, void *b)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  (void)b;
+  ((void (__stdcall *)(void *))*(void **)0x253250)(a);
+  return 1;
 }
+
 
 /* 0x1e4432 */
 void FUN_001e4432(void)
@@ -3117,12 +3139,26 @@ void FUN_001e5743(void)
   (void)ebp;
 }
 
-/* 0x1e5753 */
-void FUN_001e5753(void)
+/* FUN_001e5753 (0x1e5753) — Capstone tip: null dst → strlen; else bounded copy. */
+unsigned FUN_001e5753(unsigned short *dst, const unsigned char *src, unsigned count)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  unsigned i;
+  if (dst == 0) {
+    const unsigned char *p = src;
+    while (*p)
+      p++;
+    return (unsigned)(p - src);
+  }
+  if (count == 0)
+    return 0;
+  for (i = 0; i < count; i++) {
+    dst[i] = src[i];
+    if (src[i] == 0)
+      return i;
+  }
+  return count;
 }
+
 
 /* 0x1e5794 */
 void FUN_001e5794(void)
@@ -3256,6 +3292,7 @@ void ___addl(void)
   (void)0;
 }
 
+
 /* 0x1e5a04 */
 void ___add_12(void)
 {
@@ -3272,19 +3309,28 @@ void ___add_12(void)
   (void)eax;
 }
 
-/* 0x1e5a62 */
-void ___shl_12(void)
+/* ___shl_12 (0x1e5a62) — Capstone tip: shift 96-bit left by 1. */
+void ___shl_12(unsigned *x)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  unsigned c0 = x[0] >> 31;
+  unsigned c1 = x[1] >> 31;
+  x[0] = x[0] + x[0];
+  x[1] = (x[1] + x[1]) | c0;
+  x[2] = (x[2] << 1) | c1;
 }
 
-/* 0x1e5a90 */
-void ___shr_12(void)
+
+/* ___shr_12 (0x1e5a90) — Capstone tip: shift 96-bit right by 1. */
+void ___shr_12(unsigned *x)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  unsigned lo = x[0];
+  unsigned mid = x[1];
+  unsigned hi = x[2];
+  x[1] = (mid >> 1) | (hi << 31);
+  x[2] = hi >> 1;
+  x[0] = (lo >> 1) | (mid << 31);
 }
+
 
 /* 0x1e5abd */
 void FUN_001e5abd(void)
@@ -3571,17 +3617,12 @@ void FUN_001e6520(void)
   (void)eax;
 }
 
-/* 0x1e6584 */
-void RtlUnwind(void *a, void *b, void *c, void *d)
+/* RtlUnwind (0x1e6584) — Capstone tip: IAT jmp [0x25331c]. */
+void RtlUnwind(void)
 {
-  if (a == 0 && b == 0 && c == 0 && d == 0) {
-    return;
-  }
-  (void)a;
-  (void)b;
-  (void)c;
-  (void)d;
+  ((void (*)(void))*(void **)0x25331c)();
 }
+
 
 /* 0x1e6596 */
 int __strnicmp(const char *a, const char *b, size_t n)

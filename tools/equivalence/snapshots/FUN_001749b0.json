@@ -1,0 +1,10 @@
+{
+  "description": "0x325740 flags clear \u2192 early return",
+  "regions": {
+    "0x325740": "0000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

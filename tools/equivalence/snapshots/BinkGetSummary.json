@@ -1,0 +1,7 @@
+{
+  "description": "BinkGetSummary: null handle \u2192 return",
+  "arg_overrides": {
+    "bink_handle": null,
+    "summary": null
+  }
+}

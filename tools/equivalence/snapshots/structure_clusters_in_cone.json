@@ -1,0 +1,10 @@
+{
+  "description": "structure_clusters_in_cone: reentrancy flag@0x4d92e1=1 \u2192 assert",
+  "regions": {
+    "0x4d92e1": "01"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "ExAllocatePoolWithTag: IAT jmp [0x2532cc] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532cc": "00000060"
+  }
+}

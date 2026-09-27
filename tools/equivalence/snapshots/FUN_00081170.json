@@ -1,0 +1,10 @@
+{
+  "description": "FUN_00081170: stub RNG yields valid (count,idx,val) triples",
+  "regions": {
+    "0x30000000": "000000000000000000000000000000000000000000000000"
+  },
+  "stub_returns": {
+    "FUN_00080eb0": 4096,
+    "FUN_00081410": 0
+  }
+}

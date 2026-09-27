@@ -1,0 +1,15 @@
+{
+  "description": "D3D_DestroyResource: type 0x10000 via scratch hex",
+  "arg_overrides": {
+    "resource": "000001000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "regions": {
+    "0x001fbb08": "00000000"
+  },
+  "stub_returns": {
+    "FUN_001ed4e0": 0,
+    "DAT_001ed4e0": 0,
+    "D3D_BlockOnResource": 0,
+    "FUN_001d0c16": 0
+  }
+}

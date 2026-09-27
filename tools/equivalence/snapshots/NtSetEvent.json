@@ -1,0 +1,7 @@
+{
+  "description": "NtSetEvent: IAT jmp [0x2530e8] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530e8": "00000060"
+  }
+}

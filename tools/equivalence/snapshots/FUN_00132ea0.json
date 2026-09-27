@@ -1,0 +1,12 @@
+{
+  "description": "FUN_00132ea0: data_next_index \u2192 -1",
+  "regions": {
+    "0x5a90d0": "0030000000"
+  },
+  "arg_overrides": {
+    "dt": 0
+  },
+  "stub_returns": {
+    "data_next_index": -1
+  }
+}

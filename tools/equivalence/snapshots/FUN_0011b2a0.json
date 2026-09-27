@@ -1,0 +1,12 @@
+{
+  "description": "FUN_0011b2a0: field type == 9 \u2192 return",
+  "arg_overrides": {
+    "definition": 0,
+    "decode_state": null,
+    "version": 0,
+    "output": null,
+    "decoded_size_out": null,
+    "field_defs": "0900",
+    "field_count_out": null
+  }
+}

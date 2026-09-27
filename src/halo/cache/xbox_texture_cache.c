@@ -408,76 +408,33 @@ int FUN_001bed50(int handle)
   }
   return 1;
 }
-/* FUN_001bed90 (0x1bed90) — XBE naked draft (batch 261). */
-#if defined(__clang__)
-static void *(*const b1bed90_dget)(void *, int) = (void *(*)(void *, int))datum_get;
-static int __stdcall (*const b1bed90_c1ed980)(void *resource) = D3DResource_IsBusy;
-static void (*const b1bed90_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b1bed90_exitfn)(int) = system_exit;
-static void (*const b1bed90_c1196d0)(data_t *data, int datum_handle) = datum_delete;
-
-__attribute__((naked, noinline))
+/* FUN_001bed90 (0x1bed90) — Capstone tip: wait-loop exit then clear slot.
+ * Spins until datum+4 nonzero and !D3DResource_IsBusy(datum+0xc); then
+ * clears owner links and datum_delete. */
 void FUN_001bed90(int cache_handle)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl 0x4ea978, %%eax\n\t"
-      "pushl %%esi\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[dget]\n\t"
-      "addl $8, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "leal (%%esp), %%esp\n\t"
-      ".LFUN_001bed90_1:\n\t"
-      "movl 0x4ea978, %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[dget]\n\t"
-      "movb 0x4(%%eax), %%cl\n\t"
-      "addl $8, %%esp\n\t"
-      "testb %%cl, %%cl\n\t"
-      "je .LFUN_001bed90_1\n\t"
-      "addl $0xc, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c1ed980]\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_001bed90_1\n\t"
-      "movl 0x8(%%edi), %%edx\n\t"
-      "cmpl %%esi, 0x24(%%edx)\n\t"
-      "je .LFUN_001bed90_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x187\n\t"
-      "pushl $0x2b96d8\n\t"
-      "pushl $0x2b9788\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_001bed90_2:\n\t"
-      "movl 0x8(%%edi), %%eax\n\t"
-      "movl $0xffffffff, 0x24(%%eax)\n\t"
-      "movl 0x8(%%edi), %%ecx\n\t"
-      "movl $0, 0x2c(%%ecx)\n\t"
-      "movl 0x4ea978, %%edx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edx\n\t"
-      "call *%[c1196d0]\n\t"
-      "addl $8, %%esp\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [dget] "m"(b1bed90_dget), [c1ed980] "m"(b1bed90_c1ed980), [assert] "m"(b1bed90_assert), [exitfn] "m"(b1bed90_exitfn), [c1196d0] "m"(b1bed90_c1196d0)
-      : "memory");
+  void *first;
+  void *ent;
+  void *owner;
+
+  first = datum_get(*(void **)0x4ea978, cache_handle);
+  for (;;) {
+    ent = datum_get(*(void **)0x4ea978, cache_handle);
+    if (*((unsigned char *)ent + 4) == 0)
+      continue;
+    if (D3DResource_IsBusy((char *)ent + 0xc))
+      continue;
+    break;
+  }
+  owner = *(void **)((char *)first + 8);
+  if (*(int *)((char *)owner + 0x24) != cache_handle) {
+    display_assert((const char *)0x2b9788, (const char *)0x2b96d8, 0x187, true);
+    system_exit(-1);
+  }
+  *(int *)((char *)owner + 0x24) = -1;
+  *(int *)((char *)owner + 0x2c) = 0;
+  datum_delete(*(void **)0x4ea978, cache_handle);
 }
-#else
-#error "FUN_001bed90: clang naked draft required"
-#endif
 
 
 /* FUN_001bef80 (0x1bef80) — readable C lift.

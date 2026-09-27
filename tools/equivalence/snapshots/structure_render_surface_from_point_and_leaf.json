@@ -1,0 +1,20 @@
+{
+  "description": "structure_render_surface_from_point_and_leaf: empty leaf \u2192 0",
+  "regions": {
+    "0x1000a100": "00000000000000000000000000000000"
+  },
+  "arg_overrides": {
+    "render_context": null,
+    "leaf_index": 0,
+    "material_type": 0,
+    "out_collection_index": null,
+    "out_geometry_index": null,
+    "out_surface": null,
+    "out_u": null,
+    "out_v": null
+  },
+  "stub_returns": {
+    "scenario_get": 268476416,
+    "tag_block_get_element": 268476672
+  }
+}

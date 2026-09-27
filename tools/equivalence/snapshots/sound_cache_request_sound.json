@@ -1,0 +1,13 @@
+{
+  "description": "sound_cache_request_sound: !a3 && a2 \u2192 assert",
+  "arg_overrides": {
+    "permutation": null,
+    "a2": 1,
+    "a3": 0,
+    "a4": 0
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

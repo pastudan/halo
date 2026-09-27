@@ -1,0 +1,7 @@
+{
+  "description": "XcBlockCryptCBC: IAT jmp [0x2532f8] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532f8": "00000060"
+  }
+}

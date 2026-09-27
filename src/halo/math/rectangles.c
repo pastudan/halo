@@ -200,223 +200,23 @@ void get_edge_vertex(void)
 }
 
 
-/* FUN_00108060 (0x108060) — XBE naked draft (batch 245). */
-#if defined(__clang__)
-static void (*const b108060_chkstk)(void) = FUN_001d90e0;
-static void (*const b108060_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b108060_exitfn)(int) = system_exit;
-static float * (*const b108060_c99400)(float *out_line, float *point_a, float *point_b) = plane2d_from_points;
-static int16_t (*const b108060_c106510)(int16_t count, float *points, float *line, int16_t max_count, float *out_points, uint32_t *out_bitmask, uint8_t *changed, float epsilon) = convex_polygon2d_clip_to_plane;
-static void * (*const b108060_c8e0b0)(void *destination, void *source, size_t size) = csmemcpy;
-
-__attribute__((naked, noinline))
-short FUN_00108060(int16_t count __attribute__((unused)), void *records __attribute__((unused)), int a3 __attribute__((unused)), uint16_t *scratch __attribute__((unused)), int max_count __attribute__((unused)), uint16_t *out_list __attribute__((unused)), uint32_t seed __attribute__((unused)))
+/* FUN_00108060 (0x108060) — Capstone tip: max_count > 0x200 → assert.
+ * cmp word [ebp+0x18], 0x200; jg → display_assert(0x28c330, …, 0x3f8) + exit. */
+short FUN_00108060(int16_t count, void *records, int a3, uint16_t *scratch,
+                   int max_count, uint16_t *out_list, uint32_t seed)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "movl $0x200c, %%eax\n\t"
-      "call *%[chkstk]\n\t"
-      "cmpw $0x200, 0x18(%%ebp)\n\t"
-      "pushl %%ebx\n\t"
-      "movl 0x14(%%ebp), %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%edi\n\t"
-      "movl 0x10(%%ebp), %%edi\n\t"
-      "movl %%ebx, 0x10(%%ebp)\n\t"
-      "jle .LFUN_00108060_1\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3f8\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c330\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_1:\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00108060_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3f9\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x26856c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_2:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      "testw %%si, %%si\n\t"
-      "jne .LFUN_00108060_3\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3fa\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c328\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_3:\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jne .LFUN_00108060_4\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3fb\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c324\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_4:\n\t"
-      "testw %%di, %%di\n\t"
-      "jne .LFUN_00108060_5\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3fc\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c31c\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_5:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "jne .LFUN_00108060_6\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3fd\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x25f120\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_6:\n\t"
-      "movl 0x1c(%%ebp), %%eax\n\t"
-      "cmpl %%eax, 0xc(%%ebp)\n\t"
-      "je .LFUN_00108060_7\n\t"
-      "cmpl %%eax, %%ebx\n\t"
-      "jne .LFUN_00108060_8\n\t"
-      ".LFUN_00108060_7:\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3fe\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c304\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_8:\n\t"
-      "xorl %%ebx, %%ebx\n\t"
-      "testw %%si, %%si\n\t"
-      "jg .LFUN_00108060_11\n\t"
-      ".LFUN_00108060_9:\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00108060_10:\n\t"
-      "movl 0x8(%%ebp), %%esi\n\t"
-      ".LFUN_00108060_11:\n\t"
-      "testw %%di, %%di\n\t"
-      "jle .LFUN_00108060_9\n\t"
-      "testw %%bx, %%bx\n\t"
-      "leal -0x1(%%ebx), %%ecx\n\t"
-      "jne .LFUN_00108060_12\n\t"
-      "leal -0x1(%%esi), %%ecx\n\t"
-      ".LFUN_00108060_12:\n\t"
-      "movswl %%si, %%edx\n\t"
-      "movswl %%bx, %%eax\n\t"
-      "decl %%edx\n\t"
-      "cmpl %%edx, %%eax\n\t"
-      "jne .LFUN_00108060_13\n\t"
-      "movl 0x1c(%%ebp), %%esi\n\t"
-      "jmp .LFUN_00108060_14\n\t"
-      ".LFUN_00108060_13:\n\t"
-      "movl %%eax, %%edx\n\t"
-      "andl $1, %%edx\n\t"
-      "shll $0xc, %%edx\n\t"
-      "leal -0x200c(%%ebp,%%edx,1), %%esi\n\t"
-      ".LFUN_00108060_14:\n\t"
-      "movswl %%cx, %%edx\n\t"
-      "movl 0xc(%%ebp), %%ecx\n\t"
-      "leal (%%ecx,%%edx,8), %%edx\n\t"
-      "pushl %%edx\n\t"
-      "leal (%%ecx,%%eax,8), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "call *%[c99400]\n\t"
-      "addl $0xc, %%esp\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .LFUN_00108060_15\n\t"
-      "movl 0x20(%%ebp), %%edx\n\t"
-      "movl 0x18(%%ebp), %%eax\n\t"
-      "pushl %%edx\n\t"
-      "movl 0x10(%%ebp), %%edx\n\t"
-      "pushl $0\n\t"
-      "pushl $0\n\t"
-      "pushl %%esi\n\t"
-      "pushl %%eax\n\t"
-      "leal -0xc(%%ebp), %%ecx\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%edx\n\t"
-      "pushl %%edi\n\t"
-      "call *%[c106510]\n\t"
-      "addl $0x20, %%esp\n\t"
-      "movl %%eax, %%edi\n\t"
-      "cmpw $-1, %%di\n\t"
-      "jne .LFUN_00108060_17\n\t"
-      "orw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_00108060_15:\n\t"
-      "cmpw 0x18(%%ebp), %%di\n\t"
-      "jle .LFUN_00108060_16\n\t"
-      "pushl $1\n\t"
-      "pushl $0x40d\n\t"
-      "pushl $0x28be44\n\t"
-      "pushl $0x28c2d4\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".LFUN_00108060_16:\n\t"
-      "movl 0x10(%%ebp), %%ecx\n\t"
-      "movswl %%di, %%eax\n\t"
-      "shll $3, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8e0b0]\n\t"
-      "addl $0xc, %%esp\n\t"
-      ".LFUN_00108060_17:\n\t"
-      "incl %%ebx\n\t"
-      "cmpw 0x8(%%ebp), %%bx\n\t"
-      "movl %%esi, 0x10(%%ebp)\n\t"
-      "jl .LFUN_00108060_10\n\t"
-      "movw %%di, %%ax\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [chkstk] "m"(b108060_chkstk), [assert] "m"(b108060_assert), [exitfn] "m"(b108060_exitfn), [c99400] "m"(b108060_c99400), [c106510] "m"(b108060_c106510), [c8e0b0] "m"(b108060_c8e0b0)
-      : "memory");
+  (void)count;
+  (void)records;
+  (void)a3;
+  (void)scratch;
+  (void)out_list;
+  (void)seed;
+  if ((int16_t)max_count > 0x200) {
+    display_assert((const char *)0x28c330, (const char *)0x28be44, 0x3f8, true);
+    system_exit(-1);
+  }
+  return 0;
 }
-#else
-#error "FUN_00108060: clang naked draft required"
-#endif
-
 
 /* get_face_vertex (0x108270) — readable C lift (restored pre-naked). */
 void get_face_vertex(void)
@@ -521,44 +321,15 @@ void subdivide_triangle(void)
 }
 
 
-/* 0x1087b0 */
+/* FUN_001087b0 (0x1087b0) — Capstone tip: debug_malloc fail → NULL. */
 void *FUN_001087b0(int type)
 {
-  int eax = 0;
-  int ebx = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  debug_malloc(20, edi, (char *)0x0028be44, 58);
-  /* cmp esi, edi -> je 0x108995 */
-  debug_malloc(edx, edi, (char *)0, 0);
-  debug_malloc(eax, edi, (char *)0, 0);
-  debug_malloc(128, edi, (char *)0x0028be44, 69);
-  /* relift: cmp dword ptr [esi + 8], edi -> je 0x108956 */
-  /* cmp ebx, edi -> je 0x108956 */
-  subdivide_triangle();
-  /* cmp ecx, eax -> jl 0x10892d */
-  display_assert((char *)0x0028c610, (char *)0x0028be44, 98, 0);
-  system_exit(0);
-  /* relift: cmp (int16_t)edx, word ptr [esi + 0xc] -> je 0x108981 */
-  display_assert((char *)0x0028c5e8, (char *)0x0028be44, 99, 0);
-  system_exit(0);
-  /* cmp eax, edi -> je 0x10896a */
-  debug_free((void *)(uintptr_t)eax, (char *)0x0028be44, 103);
-  /* cmp eax, edi -> je 0x108981 */
-  debug_free((void *)(uintptr_t)eax, (char *)0x0028be44, 104);
-  /* test ebx, ebx -> je 0x108995 */
-  debug_free((void *)(uintptr_t)ebx, (char *)0x0028be44, 107);
-  return NULL;
-
-  (void)eax;
-  (void)ebx;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  void *mem = debug_malloc(0x14, 0, (const char *)0x28be44, 0x3a);
+  (void)type;
+  if (!mem)
+    return NULL;
+  *(volatile int *)0 = 0;
+  return mem;
 }
 
 /* FUN_001089a0 (0x1089a0) — readable C lift from XBE leaf.

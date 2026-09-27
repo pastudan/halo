@@ -1,0 +1,14 @@
+{
+  "description": "sieve_of_eratosthenes: limit < 2 \u2192 *num_primes=0, return NULL",
+  "arg_overrides": {
+    "limit": 1,
+    "num_primes": 805306368
+  },
+  "regions": {
+    "0x30000000": "ffffffff"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

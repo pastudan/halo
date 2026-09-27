@@ -1,0 +1,7 @@
+{
+  "description": "XcModExp: IAT jmp [0x253308] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253308": "00000060"
+  }
+}

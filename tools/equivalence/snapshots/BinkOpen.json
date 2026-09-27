@@ -1,0 +1,18 @@
+{
+  "description": "BinkOpen: identity-relocate open @0x23f3a0 to xor-ret \u2192 NULL",
+  "arg_overrides": {
+    "filename": "0000000000000000",
+    "flags": 0
+  },
+  "regions": {
+    "0x0023f3a0": "31c0c20c00",
+    "0x004ee938": "00",
+    "0x00639bac": "00000000"
+  },
+  "stub_returns": {
+    "FUN_002328c0": 0,
+    "DAT_002328c0": 0,
+    "FUN_0022df50": 0,
+    "DAT_0022df50": 0
+  }
+}

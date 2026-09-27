@@ -1,0 +1,7 @@
+{
+  "description": "__ZeroTail bit in 0..95",
+  "regions": {},
+  "arg_overrides": {
+    "bit": 16
+  }
+}

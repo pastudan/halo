@@ -1,0 +1,10 @@
+{
+  "description": "animation_update_internal: state==NULL \u2192 assert",
+  "arg_overrides": {
+    "state": null
+  },
+  "stub_returns": {
+    "tag_get": 805306368,
+    "display_assert": 0
+  }
+}

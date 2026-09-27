@@ -1,0 +1,12 @@
+{
+  "description": "FUN_001c0780: profile path fail \u2192 -1",
+  "arg_overrides": {
+    "param_1": 0
+  },
+  "stub_returns": {
+    "FUN_001d90e0": 0,
+    "player_ui_get_path_to_local_player_profile_directory": 0,
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

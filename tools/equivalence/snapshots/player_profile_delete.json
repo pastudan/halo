@@ -1,0 +1,11 @@
+{
+  "description": "player_profile_delete: name/path NULL \u2192 assert",
+  "arg_overrides": {
+    "name": null,
+    "path": null
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

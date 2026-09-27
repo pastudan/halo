@@ -1,0 +1,7 @@
+{
+  "description": "ObfDereferenceObject: IAT jmp [0x2530a0] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530a0": "00000060"
+  }
+}

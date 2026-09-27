@@ -1,0 +1,11 @@
+{
+  "description": "0x3256bc nonzero early return",
+  "regions": {
+    "0x3256bc": "0100",
+    "0x476ab0": "01000000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0
+  }
+}

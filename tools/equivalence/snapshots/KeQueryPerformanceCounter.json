@@ -1,0 +1,7 @@
+{
+  "description": "KeQueryPerformanceCounter: IAT jmp [0x253204] xor-ret",
+  "regions": {
+    "0x60000000": "31c031d2c3",
+    "0x00253204": "00000060"
+  }
+}

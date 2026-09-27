@@ -1,0 +1,10 @@
+{
+  "description": "MmFreeContiguousMemory: IAT jmp [0x2531f4] xor-ret stdcall1",
+  "regions": {
+    "0x60000000": "31c0c20400",
+    "0x002531f4": "00000060"
+  },
+  "arg_overrides": {
+    "base_address": null
+  }
+}

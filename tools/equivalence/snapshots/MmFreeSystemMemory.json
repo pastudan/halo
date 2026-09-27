@@ -1,0 +1,7 @@
+{
+  "description": "MmFreeSystemMemory: IAT jmp [0x2531a4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002531a4": "00000060"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "PsCreateSystemThreadEx: IAT jmp [0x2530d4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530d4": "00000060"
+  }
+}

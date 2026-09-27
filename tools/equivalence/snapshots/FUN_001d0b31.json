@@ -1,0 +1,12 @@
+{
+  "description": "FUN_001d5842 stdcall stub returns nonzero",
+  "arg_overrides": {
+    "flags": 0,
+    "size_min": 0,
+    "size_hint": 4096
+  },
+  "stub_returns": {
+    "FUN_001d5842": 805310464,
+    "SetLastError": 0
+  }
+}

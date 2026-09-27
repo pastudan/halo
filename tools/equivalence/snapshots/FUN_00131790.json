@@ -1,0 +1,12 @@
+{
+  "description": "FUN_00131790: data_next_index=-1 empty list",
+  "regions": {
+    "0x005a90d4": "00000000"
+  },
+  "stub_returns": {
+    "data_next_index": -1,
+    "datum_get": 0,
+    "tag_get": 0,
+    "FUN_001313f0": 0
+  }
+}

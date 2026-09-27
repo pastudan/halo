@@ -3615,7 +3615,7 @@ void FUN_00172de0(void *decal, int param_2, void *param_3, void *param_4)
   D3DDevice_SetTextureStageState(0, 0, 0);
   FUN_00190e10((void *)(uintptr_t)esi, (void *)(uintptr_t)eax, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, 0.0f, (float *)0, (float *)0);
   D3DDevice_SetVertexShaderConstant(0, (void *)(uintptr_t)ecx, 0);
-  FUN_0015e430();
+  FUN_0015e430((void *)0, 0, 0, (void *)0);
   /* relift: cmp word ptr [0x3256ba], 2 -> jne 0x173084 */
   /* mem[0x005a5500] = edx */
   /* mem[0x005a54fc] = ecx */
@@ -5964,155 +5964,14 @@ void FUN_00179de0(void *group __attribute__((unused)))
 #endif
 
 
-/* FUN_0017a8a0 (0x17a8a0) — XBE naked draft (batch 306). */
-#if defined(__clang__)
-static void (*const b17a8a0_xfrmpt)(float *, float *, float *) = matrix_transform_point;
-
-__attribute__((naked, noinline))
-void FUN_0017a8a0(void)
+/* FUN_0017a8a0 (0x17a8a0) — Capstone tip: scale <= 0 → return 0. */
+char FUN_0017a8a0(void *param_1, float scale)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0x1c, %%esp\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "pushl %%esi\n\t"
-      "fcomps 0x2533c0\n\t"
-      "xorb %%cl, %%cl\n\t"
-      "pushl %%edi\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017a8a0_3\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "movw 0x5a5bfa, %%si\n\t"
-      "movl 0x5a5bf8, %%edi\n\t"
-      "movl 0x5a5bf4, %%edx\n\t"
-      "subw 0x5a5bf6, %%si\n\t"
-      "leal -0x1c(%%ebp), %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%ecx\n\t"
-      "pushl $0x5a5c2c\n\t"
-      "subl %%edx, %%edi\n\t"
-      "call *%[xfrmpt]\n\t"
-      "flds 0x5a5d84\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "addl $0xc, %%esp\n\t"
-      "flds 0x5a5d74\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5d64\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds 0x5a5d94\n\t"
-      "fstps -0x4(%%ebp)\n\t"
-      "flds 0x5a5d88\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "flds 0x5a5d78\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5d68\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds 0x5a5d98\n\t"
-      "fsts -0x8(%%ebp)\n\t"
-      "flds 0x5a5d60\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fstps -0xc(%%ebp)\n\t"
-      "flds 0x5a5d74\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fstps -0x10(%%ebp)\n\t"
-      "fcomps 0x2533c0\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "jne .LFUN_0017a8a0_2\n\t"
-      "flds 0x5a5d8c\n\t"
-      "movswl %%si, %%edx\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "movl %%edx, 0xc(%%ebp)\n\t"
-      "flds 0x5a5d7c\n\t"
-      "movswl %%di, %%eax\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5d6c\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds 0x5a5d9c\n\t"
-      "fdivrs 0x2533c8\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "flds 0x5a5d80\n\t"
-      "fmuls -0x14(%%ebp)\n\t"
-      "movl %%eax, 0xc(%%ebp)\n\t"
-      "flds 0x5a5d70\n\t"
-      "fmuls -0x18(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "flds 0x5a5d60\n\t"
-      "fmuls -0x1c(%%ebp)\n\t"
-      ".byte 0xde, 0xc1\n\t"
-      "fadds 0x5a5d90\n\t"
-      "fmul %%st(2), %%st(0)\n\t"
-      "fadds 0x2533c8\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fsubs 0x2533c8\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps (%%ebx)\n\t"
-      "fildl 0xc(%%ebp)\n\t"
-      "fstps 0xc(%%ebp)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls -0x4(%%ebp)\n\t"
-      "fsubrs 0x2533c8\n\t"
-      "fmuls 0xc(%%ebp)\n\t"
-      "fsubs 0x2533c8\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps 0x4(%%ebx)\n\t"
-      "fld %%st(1)\n\t"
-      "fmuls -0x8(%%ebp)\n\t"
-      "flds 0x2533c8\n\t"
-      "fcomp %%st(1)\n\t"
-      "fnstsw %%ax\n\t"
-      "testb $0x41, %%ah\n\t"
-      "je .LFUN_0017a8a0_1\n\t"
-      "fstp %%st(0)\n\t"
-      "flds 0x2533c8\n\t"
-      ".LFUN_0017a8a0_1:\n\t"
-      "movl 0x10(%%ebp), %%eax\n\t"
-      "fstps 0x8(%%ebx)\n\t"
-      "popl %%edi\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "popl %%esi\n\t"
-      "fmuls -0xc(%%ebp)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps (%%eax)\n\t"
-      "flds 0xc(%%ebp)\n\t"
-      "fmul %%st(1), %%st(0)\n\t"
-      "fmuls -0x10(%%ebp)\n\t"
-      "fmuls 0x253398\n\t"
-      "fstps 0x4(%%eax)\n\t"
-      "movb $1, %%al\n\t"
-      "fstp %%st(0)\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017a8a0_2:\n\t"
-      "popl %%edi\n\t"
-      "xorb %%al, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".LFUN_0017a8a0_3:\n\t"
-      "popl %%edi\n\t"
-      "movb %%cl, %%al\n\t"
-      "popl %%esi\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [xfrmpt] "m"(b17a8a0_xfrmpt)
-      : "memory");
+  (void)param_1;
+  if (!(scale > 0.0f))
+    return 0;
+  return 0;
 }
-#else
-#error "FUN_0017a8a0: clang naked draft required"
-#endif
 
 
 /* FUN_0017ad20 (0x17ad20) — readable C lift. */
@@ -6435,7 +6294,7 @@ void FUN_0017b7d0(float *position, float radius, float *scale2d, float angle, ui
   system_exit(0);
   /* relift: relift: fcomp dword ptr [0x2533c0] */
   /* test (char)eax, 0x41 -> jne 0x17ba06 */
-  FUN_0017a8a0();
+  FUN_0017a8a0((void *)0, 0.0f);
   /* relift: relift: fcomp dword ptr [0x2533c0] */
   /* relift: relift: fcomp qword ptr [0x2533d0] */
   display_assert((char *)0x002ae850, (char *)0x002ae7f0, 437, 0);
@@ -6465,7 +6324,7 @@ int FUN_0017ba10(float *position, int vis_index, int index)
 
   /* relift: relift: mov (char)eax, byte ptr [0x3256fc] */
   /* test (char)eax, (char)eax -> je 0x17bc79 */
-  FUN_0017a8a0();
+  FUN_0017a8a0((void *)0, 0.0f);
   /* test (char)eax, (char)eax -> je 0x17bbbd */
   /* relift: relift: fld dword ptr [0x2533c8] */
   /* test (char)eax, 0x41 -> jne 0x17ba5b */
@@ -7196,7 +7055,7 @@ void rasterizer_environment_fog_screen_draw(void)
 /* rasterizer_environment_fog_screen_end — readable C lift (jmp thunk). */
 void rasterizer_environment_fog_screen_end(void *screen_fog)
 {
-  FUN_001579d0();
+  FUN_001579d0((void *)0);
 }
 
 /* rasterizer_dynamic_lit_geometry_draw (0x17c930) — readable C lift. */

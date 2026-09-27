@@ -1,0 +1,11 @@
+{
+  "description": "FUN_00150550: word@0x4761d8>=0x20 → assert",
+  "regions": {
+    "0x4761d8": "2000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0,
+    "FUN_001d90e0": 0
+  }
+}

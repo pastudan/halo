@@ -1,0 +1,7 @@
+{
+  "description": "NtCreateSemaphore: IAT jmp [0x2530f4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530f4": "00000060"
+  }
+}

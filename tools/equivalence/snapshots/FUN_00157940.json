@@ -1,0 +1,9 @@
+{
+  "description": "FUN_00157940: *(0x476ab0)==0 \u2192 assert",
+  "regions": {
+    "0x476ab0": "00000000"
+  },
+  "stub_returns": {
+    "display_assert": 0
+  }
+}

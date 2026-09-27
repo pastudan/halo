@@ -669,75 +669,30 @@ uint32_t XNetGetEthernetLinkStatus(void)
 #endif
 
 
-/* 0x1d8df8 */
-void XcSHAUpdate(int a, int b, int c)
+/* XcSHAUpdate (0x1d8df8) — Capstone tip: IAT jmp [0x253228]. */
+void XcSHAUpdate(void)
 {
-  if (a == 0 && b == 0 && c == 0) {
-    return;
-  }
-  (void)a;
-  (void)b;
-  (void)c;
+  ((void (*)(void))*(void **)0x253228)();
 }
 
-/* 0x1d8dfe */
-void XcSHAInit(int ctx)
+
+/* XcSHAInit (0x1d8dfe) — Capstone tip: IAT jmp [0x25322c]. */
+void XcSHAInit(void)
 {
-  if (ctx == 0) {
-    return;
-  }
-  (void)ctx;
+  ((void (*)(void))*(void **)0x25322c)();
 }
 
-/* 0x1d8e04 */
-void XcSHAFinal(int a, int b)
+
+/* XcSHAFinal (0x1d8e04) — Capstone tip: IAT jmp [0x253230]. */
+void XcSHAFinal(void)
 {
-  if (a == 0 && b == 0) {
-    return;
-  }
-  (void)a;
-  (void)b;
+  ((void (*)(void))*(void **)0x253230)();
 }
 
-/* 0x1d8e0a */
-void ExQueryNonVolatileSetting(int a, int b, int c, int d)
+
+/* ExQueryNonVolatileSetting (0x1d8e0a) — Capstone tip: IAT jmp [0x25323c]. */
+void ExQueryNonVolatileSetting(void)
 {
-  (void)a;
-  (void)b;
-  (void)c;
-  (void)d;
-  int eax = 0;
-  int ecx = 0;
-  int edx = 0;
-  int esi = 0;
-  int edi = 0;
-
-  /* relift: FUN_001d8b2e(0, 0); */
-  /* relift: FUN_001d8b49(0, 0); */
-  /* test eax, eax -> jge 0x1d8ffc */
-  /* mem[0x003314a0] = eax */
-  /* mem[0x003314a4] = 0x1dded4 */
-  /* mem[0x003314a8] = 0x1ddf39 */
-  /* mem[0x003314ac] = 0x1dde7c */
-  /* mem[0x003314b0] = 0x1ddf1f */
-  /* mem[0x003314b4] = eax */
-  /* mem[0x004fc000] = ecx */
-  FUN_001d9011();
-  FUN_001de27a();
-  /* test eax, eax -> je 0x1d90c7 */
-  /* test edx, 0x7fffffff -> jne 0x1d908b */
-  /* test eax, eax -> je 0x1d90ef */
-  FUN_001de452();
-  __flsbuf();
-  FUN_001de452();
-  FUN_001de452();
-  __flsbuf();
-  /* test esi, esi -> je 0x1d91ee */
-  /* cmp edi, ecx -> jbe 0x1d925a */
-
-  (void)eax;
-  (void)ecx;
-  (void)edx;
-  (void)esi;
-  (void)edi;
+  ((void (*)(void))*(void **)0x25323c)();
 }
+

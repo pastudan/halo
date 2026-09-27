@@ -1,0 +1,10 @@
+{
+  "description": "CMiniport_GetDisplayCapabilities early cached",
+  "regions": {
+    "0x001fb468": "78563412",
+    "0x12345678": "00000000",
+    "0x002532b0": "00000060",
+    "0x60000000": "31c0c21000"
+  },
+  "arg_overrides": {}
+}

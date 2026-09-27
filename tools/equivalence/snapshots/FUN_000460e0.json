@@ -1,0 +1,10 @@
+{
+  "description": "FUN_000460e0: speech globals disabled \u2192 early return",
+  "regions": {
+    "0x00632574": "00000030",
+    "0x30000000": "0000000000000000000000000000000000000000000000000000000000000000"
+  },
+  "arg_overrides": {
+    "rating": 0
+  }
+}

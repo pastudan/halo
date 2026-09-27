@@ -1,0 +1,13 @@
+{
+  "description": "XapiCallThreadNotifyRoutines: empty list; CS enter/leave IAT xor-ret",
+  "regions": {
+    "0x60000000": "31c0c20400",
+    "0x60000010": "31c0c20400",
+    "0x0025309c": "00000060",
+    "0x00253098": "10000060",
+    "0x32fd1c": "1cfd3200"
+  },
+  "arg_overrides": {
+    "create": 0
+  }
+}

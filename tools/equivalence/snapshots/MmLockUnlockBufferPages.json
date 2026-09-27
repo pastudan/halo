@@ -1,0 +1,7 @@
+{
+  "description": "MmLockUnlockBufferPages: IAT jmp [0x2532a0] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002532a0": "00000060"
+  }
+}

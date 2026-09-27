@@ -1,0 +1,21 @@
+{
+  "description": "FUN_00108060 tip: max_count > 0x200 \u2192 assert+exit",
+  "arg_overrides": {
+    "count": 1,
+    "records": 0,
+    "a3": 0,
+    "scratch": 0,
+    "max_count": 513,
+    "out_list": 0,
+    "seed": 0
+  },
+  "regions": {
+    "0x28c330": "00000000000000000000000000000000",
+    "0x28be44": "00000000000000000000000000000000"
+  },
+  "stub_returns": {
+    "display_assert": 0,
+    "system_exit": 0,
+    "FUN_001d90e0": 0
+  }
+}

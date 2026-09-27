@@ -1,0 +1,7 @@
+{
+  "description": "MmQueryAllocationSize: IAT jmp [0x253210] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253210": "00000060"
+  }
+}

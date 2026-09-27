@@ -1,0 +1,17 @@
+{
+  "description": "FUN_00157010: Direct3DCreate→NULL → error return 0",
+  "regions": {
+    "0x325688": "0000",
+    "0x32568a": "0000",
+    "0x476a50": "00000000"
+  },
+  "stub_returns": {
+    "D3D_SetPushBufferSize": 0,
+    "Direct3DCreate8": 0,
+    "error": 0,
+    "FUN_00156e00": 0,
+    "rasterizer_screen_effects_initialize": 0,
+    "texture_cache_new": 0,
+    "FUN_0017e010": 0
+  }
+}

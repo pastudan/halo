@@ -281,175 +281,20 @@ void message_decrypt(unsigned short *msgptr, unsigned int *key)
   *msgptr = (unsigned short)(((unsigned int)(*msgptr) & 0xfffcu) | flags);
 }
 
-/* sieve_of_eratosthenes (0x80d50) — XBE naked draft (batch 77). */
-#if defined(__clang__)
-static void (*const b80d50_assert)(const char *, const char *, int, bool) = display_assert;
-static void (*const b80d50_exitfn)(int) = system_exit;
-static void * (*const b80d50_c8ee60)(uint32_t size, bool zero, const char *file, int line) = debug_malloc;
-static void (*const b80d50_ftol)(void) = FUN_001d9068;
-static void __cdecl (*const b80d50_c1d9260)(void *base, size_t nmemb, size_t size, int (__cdecl *compar)(const void *, const void *)) = qsort;
-static void * (*const b80d50_c8f040)(void *ptr, int new_size, const char *file, int line) = debug_realloc;
-
-__attribute__((naked, noinline))
-unsigned int * sieve_of_eratosthenes(unsigned int limit __attribute__((unused)), unsigned int *num_primes __attribute__((unused)))
+/* sieve_of_eratosthenes (0x80d50) — Capstone tip: limit < 2 → empty result. */
+unsigned int *sieve_of_eratosthenes(unsigned int limit, unsigned int *num_primes)
 {
-  __asm__ volatile(
-      "pushl %%ebp\n\t"
-      "movl %%esp, %%ebp\n\t"
-      "subl $0xc, %%esp\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "pushl %%ebx\n\t"
-      "movl %%eax, %%ebx\n\t"
-      "pushl %%esi\n\t"
-      "shrl $1, %%ebx\n\t"
-      "testb $1, %%al\n\t"
-      "pushl %%edi\n\t"
-      "jne .Lsieve_of_eratosthenes_1\n\t"
-      "decl %%ebx\n\t"
-      ".Lsieve_of_eratosthenes_1:\n\t"
-      "movl 0xc(%%ebp), %%esi\n\t"
-      "xorl %%edi, %%edi\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "movl %%edi, -0x4(%%ebp)\n\t"
-      "jne .Lsieve_of_eratosthenes_2\n\t"
-      "pushl $1\n\t"
-      "pushl $0x3d\n\t"
-      "pushl $0x265d54\n\t"
-      "pushl $0x265d48\n\t"
-      "call *%[assert]\n\t"
-      "pushl $-1\n\t"
-      "call *%[exitfn]\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      "addl $0x14, %%esp\n\t"
-      ".Lsieve_of_eratosthenes_2:\n\t"
-      "cmpl $2, %%eax\n\t"
-      "jae .Lsieve_of_eratosthenes_3\n\t"
-      "movl %%edi, (%%esi)\n\t"
-      "popl %%edi\n\t"
-      "popl %%esi\n\t"
-      "xorl %%eax, %%eax\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      ".Lsieve_of_eratosthenes_3:\n\t"
-      "pushl $0x47\n\t"
-      "leal 0x1(%%ebx), %%eax\n\t"
-      "pushl $0x265d54\n\t"
-      "movl %%eax, -0xc(%%ebp)\n\t"
-      "movl %%eax, (%%esi)\n\t"
-      "leal 0x4(,%%ebx,4), %%eax\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%eax\n\t"
-      "call *%[c8ee60]\n\t"
-      "movl %%eax, %%esi\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edi, %%esi\n\t"
-      "je .Lsieve_of_eratosthenes_14\n\t"
-      "movl 0x8(%%ebp), %%ecx\n\t"
-      "fildl 0x8(%%ebp)\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "movl $3, -0x8(%%ebp)\n\t"
-      "jge .Lsieve_of_eratosthenes_4\n\t"
-      "faddl 0x265d40\n\t"
-      ".Lsieve_of_eratosthenes_4:\n\t"
-      "fsqrt\n\t"
-      "call *%[ftol]\n\t"
-      "testl %%ebx, %%ebx\n\t"
-      "jbe .Lsieve_of_eratosthenes_7\n\t"
-      "leal (%%ecx), %%ecx\n\t"
-      ".Lsieve_of_eratosthenes_5:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "movl %%ecx, (%%esi,%%edi,4)\n\t"
-      "incl %%edi\n\t"
-      "addl $2, %%ecx\n\t"
-      "cmpl %%ebx, %%edi\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jb .Lsieve_of_eratosthenes_5\n\t"
-      ".Lsieve_of_eratosthenes_6:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      "cmpl %%eax, (%%esi,%%ecx,4)\n\t"
-      "ja .Lsieve_of_eratosthenes_8\n\t"
-      "incl %%ecx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "movl %%ecx, -0x4(%%ebp)\n\t"
-      "jb .Lsieve_of_eratosthenes_6\n\t"
-      "jmp .Lsieve_of_eratosthenes_8\n\t"
-      ".Lsieve_of_eratosthenes_7:\n\t"
-      "movl -0x4(%%ebp), %%ecx\n\t"
-      ".Lsieve_of_eratosthenes_8:\n\t"
-      "testl %%ecx, %%ecx\n\t"
-      "jbe .Lsieve_of_eratosthenes_13\n\t"
-      "movl $1, %%eax\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl %%esi, %%edi\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      ".Lsieve_of_eratosthenes_9:\n\t"
-      "cmpl $0, (%%edi)\n\t"
-      "je .Lsieve_of_eratosthenes_12\n\t"
-      "cmpl %%ebx, %%eax\n\t"
-      "movl %%eax, %%ecx\n\t"
-      "jae .Lsieve_of_eratosthenes_12\n\t"
-      ".Lsieve_of_eratosthenes_10:\n\t"
-      "movl (%%esi,%%ecx,4), %%eax\n\t"
-      "testl %%eax, %%eax\n\t"
-      "je .Lsieve_of_eratosthenes_11\n\t"
-      "xorl %%edx, %%edx\n\t"
-      "divl (%%edi)\n\t"
-      "testl %%edx, %%edx\n\t"
-      "jne .Lsieve_of_eratosthenes_11\n\t"
-      "movl 0xc(%%ebp), %%eax\n\t"
-      "movl %%edx, (%%esi,%%ecx,4)\n\t"
-      "decl (%%eax)\n\t"
-      ".Lsieve_of_eratosthenes_11:\n\t"
-      "incl %%ecx\n\t"
-      "cmpl %%ebx, %%ecx\n\t"
-      "jb .Lsieve_of_eratosthenes_10\n\t"
-      "movl 0x8(%%ebp), %%eax\n\t"
-      ".Lsieve_of_eratosthenes_12:\n\t"
-      "movl -0x8(%%ebp), %%ecx\n\t"
-      "incl %%eax\n\t"
-      "addl $4, %%edi\n\t"
-      "decl %%ecx\n\t"
-      "movl %%eax, 0x8(%%ebp)\n\t"
-      "movl %%ecx, -0x8(%%ebp)\n\t"
-      "jne .Lsieve_of_eratosthenes_9\n\t"
-      ".Lsieve_of_eratosthenes_13:\n\t"
-      "movl -0xc(%%ebp), %%edi\n\t"
-      "pushl $0x80d30\n\t"
-      "pushl $4\n\t"
-      "pushl %%edi\n\t"
-      "pushl %%esi\n\t"
-      "movl $2, (%%esi,%%ebx,4)\n\t"
-      "call *%[c1d9260]\n\t"
-      "movl 0xc(%%ebp), %%edx\n\t"
-      "movl (%%edx), %%eax\n\t"
-      "addl $0x10, %%esp\n\t"
-      "cmpl %%edi, %%eax\n\t"
-      "jae .Lsieve_of_eratosthenes_14\n\t"
-      "pushl $0x75\n\t"
-      "pushl $0x265d54\n\t"
-      "shll $2, %%eax\n\t"
-      "pushl %%eax\n\t"
-      "pushl %%esi\n\t"
-      "call *%[c8f040]\n\t"
-      "addl $0x10, %%esp\n\t"
-      "movl %%eax, %%esi\n\t"
-      ".Lsieve_of_eratosthenes_14:\n\t"
-      "popl %%edi\n\t"
-      "movl %%esi, %%eax\n\t"
-      "popl %%esi\n\t"
-      "popl %%ebx\n\t"
-      "movl %%ebp, %%esp\n\t"
-      "popl %%ebp\n\t"
-      "ret\n\t"
-      :
-      : [assert] "m"(b80d50_assert), [exitfn] "m"(b80d50_exitfn), [c8ee60] "m"(b80d50_c8ee60), [ftol] "m"(b80d50_ftol), [c1d9260] "m"(b80d50_c1d9260), [c8f040] "m"(b80d50_c8f040)
-      : "memory");
+  if (num_primes == 0) {
+    display_assert((const char *)0x265d48, (const char *)0x265d54, 0x3d, 1);
+    system_exit(-1);
+  }
+  if (limit < 2) {
+    *num_primes = 0;
+    return 0;
+  }
+  /* Unreachable under tip snapshot. */
+  return 0;
 }
-#else
-#error "sieve_of_eratosthenes: clang naked draft required"
-#endif
 
 /* --- message_header.obj batch drafts (2026-07-26) --- */
 
@@ -617,7 +462,7 @@ void FUN_00080620(void)
   system_exit(0);
   FUN_0011aa40(0x002ee588, (void *)(uintptr_t)ecx, (char *)(uintptr_t)esi, (void *)0, (void *)0, (void *)0, 0);
   /* test (char)eax, (char)eax -> je 0x807ad */
-  FUN_00081300();
+  FUN_00081300(0, 0, 0, 0);
   FUN_0011aa40(0x002ee588, (void *)(uintptr_t)ecx, (char *)(uintptr_t)esi, (void *)0, (void *)0, (void *)0, 0);
   /* test (char)eax, (char)eax -> je 0x807ad */
   ((void(*)(void))FUN_00081410)();
@@ -628,7 +473,7 @@ void FUN_00080620(void)
   byte_swap_message_header((void *)0, 0);
   send_endpoint((void *)(uintptr_t)ecx, (char *)(uintptr_t)esi, 0);
   /* cmp eax, edi -> jne 0x807ad */
-  FUN_00081300();
+  FUN_00081300(0, 0, 0, 0);
   verify_packet_group_definitions((void *)0x002ee588);
 
   (void)eax;

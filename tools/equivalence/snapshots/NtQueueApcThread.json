@@ -1,0 +1,7 @@
+{
+  "description": "NtQueueApcThread: IAT jmp [0x2530c4] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x002530c4": "00000060"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "description": "FUN_0017a8a0: scale <= 0 \u2192 return 0",
+  "arg_overrides": {
+    "param_1": null,
+    "scale": 0.0
+  }
+}

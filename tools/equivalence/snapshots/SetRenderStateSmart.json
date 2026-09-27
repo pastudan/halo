@@ -1,0 +1,11 @@
+{
+  "description": "state=0x52 \u2192 deferred",
+  "arg_overrides": {
+    "state": 82,
+    "value": 1
+  },
+  "stub_returns": {
+    "D3DDevice_SetRenderState_Simple": 0,
+    "D3DDevice_SetRenderState_Deferred": 0
+  }
+}

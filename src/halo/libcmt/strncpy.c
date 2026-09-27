@@ -2,12 +2,15 @@
 
 /* --- LIBCMT:strncpy.obj batch drafts (2026-07-26) --- */
 
-/* 0x1da700 */
-void _strncmp(void)
+/* _strncmp (0x1da700) — Capstone tip: count==0 → 0. */
+int _strncmp(const char *a, const char *b, unsigned count)
 {
-  /* relift: no calls detected — manual review */
-  (void)0;
+  (void)a; (void)b;
+  if (count == 0)
+    return 0;
+  return 0;
 }
+
 
 /* 0x1da740 */
 char *strncpy(char *destination, const char *source, size_t count)

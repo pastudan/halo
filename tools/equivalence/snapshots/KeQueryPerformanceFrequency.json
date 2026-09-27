@@ -1,0 +1,7 @@
+{
+  "description": "KeQueryPerformanceFrequency: IAT jmp [0x253208] xor-ret",
+  "regions": {
+    "0x60000000": "31c031d2c3",
+    "0x00253208": "00000060"
+  }
+}

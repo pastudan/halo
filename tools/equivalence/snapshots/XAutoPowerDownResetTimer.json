@@ -1,0 +1,7 @@
+{
+  "description": "XAutoPowerDownResetTimer: IAT xor-ret (4 stdcall args)",
+  "regions": {
+    "0x60000000": "31c0c21000",
+    "0x002531e0": "00000060"
+  }
+}

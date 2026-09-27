@@ -1,0 +1,7 @@
+{
+  "description": "ExFreePool: IAT jmp [0x253264] xor-ret",
+  "regions": {
+    "0x60000000": "31c0c3",
+    "0x00253264": "00000060"
+  }
+}
