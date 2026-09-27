@@ -1,4 +1,7 @@
 /*
+ * LEGACY — superseded by engine/ (Track B). Kept as historical reference.
+ * Build via physics/build.sh → engine/build.sh. Do not add features here.
+ *
  * halo_phys.c — Halo 1 player physics core (wasm32, freestanding).
  *
  * Runs in native Halo conventions: right-handed, z-up, world units (1 wu =

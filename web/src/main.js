@@ -5,6 +5,7 @@ import {
 } from 'three-mesh-bvh';
 import { loadPhysics, TICK } from './physics.js';
 import { loadHaloShaders, createHaloMaterial, haloTime } from './halo_materials.js';
+import { loadStagePrograms, createStageMaterial } from './stage_materials.js';
 
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
@@ -91,13 +92,23 @@ function upgradeMaterial(mesh) {
   const extras = src.userData || {};
   const cls = extras.shader_class || '';
 
-  if (haloReg && extras.shader) {
+  if (extras.shader) {
     const lm = extras.lightmap && mesh.geometry.attributes.uv1
       ? lightmapTex(`/${extras.lightmap}`) : null;
-    const hm = createHaloMaterial(haloReg, extras.shader, { lightmap: lm });
-    if (hm) {
-      hm.userData = { ...extras, ...hm.userData };
-      return hm;
+    // Prefer strict stage-program interpreter (Phase 2); fall back to tag GLSL.
+    if (stageReg) {
+      const sm = createStageMaterial(stageReg, extras.shader, { lightmap: lm });
+      if (sm) {
+        sm.userData = { ...extras, ...sm.userData };
+        return sm;
+      }
+    }
+    if (haloReg) {
+      const hm = createHaloMaterial(haloReg, extras.shader, { lightmap: lm });
+      if (hm) {
+        hm.userData = { ...extras, ...hm.userData };
+        return hm;
+      }
     }
   }
 
@@ -153,24 +164,37 @@ function loadBsp(url) {
     if (ev.total) loadingEl.textContent = `loading… ${Math.round((ev.loaded / ev.total) * 100)}%`;
   });
 }
-// shader registry first, so materials can be built tag-faithfully
+// shader registries first, so materials can be built tag-faithfully
 let haloReg = null;
-loadHaloShaders('/shaders.json')
-  .catch((e) => { console.warn('halo shaders unavailable, using fallbacks:', e); return null; })
-  .then((reg) => {
-    haloReg = reg;
-    loadBsp('/b30a.glb');
-    loadBsp('/b30b.glb');
-    loadScenery();
-  });
+let stageReg = null;
+Promise.all([
+  loadHaloShaders('/shaders.json').catch((e) => {
+    console.warn('halo shaders unavailable:', e); return null;
+  }),
+  loadStagePrograms('/stages.json').catch((e) => {
+    console.warn('stage programs unavailable:', e); return null;
+  }),
+]).then(([hReg, sReg]) => {
+  haloReg = hReg;
+  stageReg = sReg;
+  loadBsp('/b30a.glb');
+  loadBsp('/b30b.glb');
+  loadScenery();
+});
 
 // ---------------------------------------------------------------- scenery
 // trees/rocks/props from the scenario tag, instanced per model part
 function sceneryMaterial(src) {
   const extras = src.userData || {};
-  if (haloReg && extras.shader) {
-    const hm = createHaloMaterial(haloReg, extras.shader);
-    if (hm) return hm;
+  if (extras.shader) {
+    if (stageReg) {
+      const sm = createStageMaterial(stageReg, extras.shader);
+      if (sm) return sm;
+    }
+    if (haloReg) {
+      const hm = createHaloMaterial(haloReg, extras.shader);
+      if (hm) return hm;
+    }
   }
   const mat = new THREE.MeshLambertMaterial({
     map: src.map || null,
@@ -236,16 +260,19 @@ const player = {
   fly: false, grounded: false,
 };
 
-// ---- WASM physics (faithful Halo movement); ?jsphys falls back to the JS stub
-const useJsPhys = new URLSearchParams(location.search).has('jsphys');
-let phys = null;            // wasm bridge once loaded
-let physNeedsSpawn = true;  // sync wasm state to player.pos on next walk tick
+// ---- WASM engine (Track B); ?jsphys falls back to the JS stub
+// Fly mode is debug-only (?fly or ?debug); Phase 3 removes it as escape hatch.
+const qs = new URLSearchParams(location.search);
+const useJsPhys = qs.has('jsphys');
+const flyAllowed = qs.has('fly') || qs.has('debug');
+let phys = null;
+let physNeedsSpawn = true;
 let physAccum = 0;
 const physPrev = { eye: new THREE.Vector3(), grounded: false };
 const physCur = { eye: new THREE.Vector3(), grounded: false };
 if (!useJsPhys) {
-  loadPhysics().then((p) => { phys = p; window.__phys = p; })
-    .catch((e) => console.error('WASM physics failed, using JS fallback:', e));
+  loadPhysics().then((p) => { phys = p; window.__phys = p; console.log('physics core:', p.label, p.url); })
+    .catch((e) => console.error('WASM engine failed, using JS fallback:', e));
 }
 
 window.__player = player; // debug / scripted navigation
@@ -284,7 +311,10 @@ const TELEPORTS = {
 const keys = new Set();
 addEventListener('keydown', (e) => {
   keys.add(e.code);
-  if (e.code === 'KeyF') player.fly = !player.fly;
+  if (e.code === 'KeyF' && flyAllowed) player.fly = !player.fly;
+  else if (e.code === 'KeyF' && !flyAllowed) {
+    console.info('Fly mode disabled (add ?fly to URL for debug noclip)');
+  }
   if (e.code === 'KeyQ') flashlight.visible = !flashlight.visible;
   if (TELEPORTS[e.code]) TELEPORTS[e.code]();
 });
@@ -411,7 +441,7 @@ function tick() {
 
   hud.textContent =
     `${player.fly ? 'FLY' : player.grounded ? 'WALK' : 'AIR '} ` +
-    `[${player.fly ? 'js' : phys ? 'wasm' : 'js'}]  ` +
+    `[${player.fly ? 'js' : phys ? phys.label : 'js'}]  ` +
     `x ${player.pos.x.toFixed(1)}  y ${player.pos.y.toFixed(1)}  z ${player.pos.z.toFixed(1)}`;
 
   renderer.render(scene, camera);

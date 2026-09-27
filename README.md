@@ -1,14 +1,23 @@
 # halo-ring
 
-**OG Halo, in the browser. Eventually: the whole ring.**
+[![Track A decompilation](https://img.shields.io/endpoint?url=https://pastudan.github.io/halo/badge.json)](https://pastudan.github.io/halo/)
+[![Ported functions](https://img.shields.io/endpoint?url=https://pastudan.github.io/halo/functions-badge.json)](https://github.com/pastudan/halo)
+[![Unit Tests & Progress](https://github.com/pastudan/halo/actions/workflows/unit-tests-progress.yml/badge.svg)](https://github.com/pastudan/halo/actions/workflows/unit-tests-progress.yml)
+
+**OG Halo, in the browser — via binary-faithful engine slices, not approximations.**
+
+Eventually: the whole ring.
+
+Track A progress detail: [`docs/DECOMP_PROGRESS.md`](docs/DECOMP_PROGRESS.md).
 
 ## Vision
 
 Halo: Combat Evolved's campaign takes place *on* Installation 04 — but the game only ever
 lets you touch ten small slices of it. The idea:
 
-1. **Port OG Halo to the web browser** (WebGL/WASM). No install, click a link, you're on the beach
-   of the Silent Cartographer.
+1. **Port OG Halo to the web browser** (WebGL/WASM) by reimplementing engine subsystems
+   against the real binary ([stianeklund/halo](https://github.com/stianeklund/halo) / halo-re methodology), then
+   compiling portable slices to WASM.
 2. **Build the full ring.** Lay the original game's levels out across a complete, contiguous
    Halo ring — a megastructure ~10,000 km in circumference — with each OG level anchoring its
    region of the ring.
@@ -16,52 +25,51 @@ lets you touch ten small slices of it. The idea:
    create their own geometry inside their segment and commit it to IPFS, with the chain holding
    the canonical pointer. The ring becomes a persistent, player-authored world grown around the
    original campaign geometry.
-4. **Massively multiplayer.** Everyone explores the same ring. Walk (or fly, or drive) from the
-   Pillar of Autumn's crash site to the Silent Cartographer's island, passing through hundreds of
-   player-built segments on the way.
+4. **Massively multiplayer.** Everyone explores the same ring.
 
 ## Status / Roadmap
 
-- [x] **Proof of concept** — The Silent Cartographer (`b30`) level geometry extracted from the
-  original game files and rendered in the browser, navigable with WASD + mouse or gamepad.
-  Both BSPs work: the island exterior and the underground map room.
-- [ ] **Textures** — real diffuse maps + the original baked lightmaps. *(in progress)*
-- [ ] **Physics** — faithful reimplementation of Halo's player movement (30Hz tick, collision
-  BSP, biped movement constants from the actual game tags), in C compiled to WASM. *(in progress)*
-- [ ] Remaining 9 campaign levels through the same pipeline.
-- [ ] Ring assembly: level regions placed on a true ring; ring-scale sky/horizon (you should see
-  the ring arc overhead from the ground).
-- [ ] Multiplayer presence (shared exploration).
-- [ ] Segment ownership + player-authored geometry on IPFS.
+Dual-track plan (see [`docs/ENGINE.md`](docs/ENGINE.md)):
+
+| Phase | Goal | Status |
+|-------|------|--------|
+| **0** | RE lab: `docs/ENGINE.md`, portable [`engine/`](engine/) WASM skeleton, viewer hook | done |
+| **1** | Collision + `player_control` slice in `engine/` (denser biped hull); replace POC phys | scaffolded* |
+| **2** | Stage-program materials (`stages.json` + strict interpreter) | scaffolded* |
+| **3** | Thin end-to-end Silent Cartographer walk | integrated |
+| **4** | Deepen: object collision, glass/plasma, fog, bumped cubemap; upstream to halo-re | docs/stubs |
+| **5+** | Remaining campaign levels → ring / multiplayer / NFT | planned ([`docs/CAMPAIGN.md`](docs/CAMPAIGN.md)) |
+
+\*Scaffolded = structure and browser path land now; **binary-matched** bodies require Track A
+(Xbox XBE + Ghidra/xemu). Place `cachebeta.xbe` (MD5 `c7869590a1c64ad034e49a5ee0c02465`) in
+`halo-re/halo-patched/` to unlock validation.
+
+Also:
+
+- [x] **POC geometry** — Silent Cartographer (`b30`) both BSPs in the browser
+- [x] Tag-driven textures / lightmaps / scenery extractors
+- [ ] Full binary-matched `player_control` / `collision_usage` (Track A)
+- [ ] Rasterizer bind RE → regenerate `stages.json` from engine C
 
 ## How it works
 
 ```
-Halo Trial (b30.map, bitmaps.map)          [not in repo — see Legal]
-        │
-        │  tools/extract_bsp.py        (refinery + reclaimer parse the cache file)
-        ▼
-glTF (.glb) render geometry + spawn.json + collision BSP + movement constants
-        │
-        │  web/ (three.js viewer)
-        ▼
-Browser: WASD/gamepad navigation, WASM physics tick
+Track A (truth)                         Track B (browser)
+Xbox cachebeta.xbe                      PC Trial b30.map
+  → halo-re C + XBE patch                 → tools/extract_*.py
+  → xemu validate                           → engine/*.c → engine.wasm
+                                            → stages.json → WebGL interpreter
+                                            → web/ three.js shell
 ```
 
-- **Extraction** (`tools/`): Python. Loads the Halo 1 PC-demo cache format via
-  [refinery](https://pypi.org/project/refinery/)/[reclaimer](https://pypi.org/project/reclaimer/)
-  (the MEK toolset), walks the `scenario_structure_bsp` tags, and exports render geometry
-  (positions/normals/UVs/lightmap UVs per shader material) to GLB, plus textures decoded from
-  the game's DXT bitmaps.
-- **Viewer** (`web/`): Vite + three.js. Pointer-lock mouse look, WASD, gamepad, walk/fly modes.
-- **Physics** (`physics/`): C, compiled to WASM. Structured after the original engine's layout
-  (see [halo-re](https://github.com/halo-re/halo)'s `kb.json`: `point_physics`, `player_control`,
-  `collision_usage`), running a fixed 30 ticks/sec update against the level's real collision BSP
-  with movement constants pulled from the `cyborg` biped tag.
-
-`halo-re/` is a local clone of the [halo-re](https://github.com/halo-re/halo) decompilation
-project, used as reference for engine structure and naming. It is not built as part of this
-project.
+- **Engine** ([`engine/`](engine/)): freestanding C → WASM. Modules named after halo-re
+  (`collision_bsp`, `player_control`). Build with `engine/build.sh`.
+- **Materials**: [`tools/extract_stage_programs.py`](tools/extract_stage_programs.py) compiles
+  shader tags into stage programs; [`web/src/stage_materials.js`](web/src/stage_materials.js)
+  interprets them strictly.
+- **Extraction** (`tools/`): MEK (`reclaimer`/`refinery`) dumps geometry, collision, shaders,
+  scenery from the Trial cache until a RE’d tag loader exists.
+- **halo-re/**: local clone for Track A (gitignored). Not shipped; see their README for XBE setup.
 
 ## Quickstart
 
@@ -72,12 +80,20 @@ python3 -m venv .venv
 
 # 2. Provide game files (see Legal): place b30.map and bitmaps.map in assets/
 
-# 3. Extract geometry + textures
+# 3. Extract + compile stage programs + build engine WASM
 .venv/bin/python tools/extract_bsp.py assets/b30.map web/public
+.venv/bin/python tools/extract_collision.py assets/b30.map web/public
+.venv/bin/python tools/extract_shaders.py assets/b30.map web/public
+.venv/bin/python tools/extract_stage_programs.py web/public/shaders.json web/public/stages.json
+.venv/bin/python tools/extract_scenery.py assets/b30.map web/public
+./engine/build.sh
 
 # 4. Run the viewer
 cd web && npm install && npm run dev
 ```
+
+Debug: `?fly` enables noclip (disabled by default). `?jsphys` forces JS physics fallback.
+HUD shows `WALK [wasm-engine]` when Track B is active.
 
 ## Legal
 
@@ -86,6 +102,9 @@ The extraction pipeline runs against the **freely-distributed Halo Trial** (the 
 Microsoft/Gearbox released for PC, which contains The Silent Cartographer), or your own copy of
 the game. Extracted geometry/texture artifacts (`assets/`, `web/public/*.glb`) are derived from
 copyrighted content and are gitignored — they must not be redistributed.
+
+Xbox retail executables for Track A validation are likewise never committed; you must supply
+`cachebeta.xbe` yourself (see [`docs/ENGINE.md`](docs/ENGINE.md)).
 
 This is a research / preservation / interoperability project in the same spirit as
 [halo-re](https://github.com/halo-re/halo). The NFT/ownership layer of the vision is an open

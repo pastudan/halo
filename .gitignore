@@ -7,10 +7,12 @@ web/public/spawn.json
 web/public/scenery.json
 web/public/constants.json
 web/public/shaders.json
+web/public/stages.json
 web/public/textures/
 
 # build artifacts
 web/public/halo_phys.wasm
+web/public/engine.wasm
 
 # environments / deps
 .venv/
@@ -19,6 +21,14 @@ dist/
 
 # local clone of halo-re reference repo (has its own git history)
 halo-re/
+
+# game discs / dumps (never commit)
+*.iso
+*.xiso
+*.xiso.iso
+*.7z
+*.xbe
+Halo - Combat Evolved*
 
 # misc
 .DS_Store
